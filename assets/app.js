@@ -182,13 +182,16 @@
 
   /* ---------- catálogo ---------- */
   F.achar = (cod) => { for (const m of CATALOGO) for (const t of m.temas) if (t[0] === cod) return { cod, nome: t[1], marcas: t[2] || [], pronto: !!t[3], mod: m }; return null; };
+  const areaDe = (m) => m.area || "fisica";
+  const AREA = (id) => AREAS.find((a) => a.id === id) || AREAS[0];
+  F.area = "fisica";
   const feitos = () => F.store.get("feitos", {});
 
   /* ---------- menu ---------- */
   function montaMenu() {
     const menu = $("#menu-mods");
     const abertos = F.store.get("menuAbertos", ["C"]);
-    menu.innerHTML = CATALOGO.map((m) => `<div class="mod ${abertos.includes(m.id) ? "aberto" : ""}" data-mod="${m.id}" style="--c:var(${m.cor})">
+    menu.innerHTML = CATALOGO.map((m) => `<div class="mod ${abertos.includes(m.id) ? "aberto" : ""}" data-mod="${m.id}" data-area="${areaDe(m)}" style="--c:var(${m.cor})">
       <button><span class="letra">${m.letra}</span><span>${m.nome}</span><span class="seta">›</span></button>
       <ul>${m.temas.map((t) => `<li><a href="#/${t[0]}" data-cod="${t[0]}" class="${t[3] ? "" : "breve"}" title="${t[3] ? "" : "ainda não feito"}"><span class="cod">${t[0]}</span><span>${t[1]}</span><span class="bola"></span></a></li>`).join("")}</ul></div>`).join("");
     $$(".mod>button", menu).forEach((b) => b.addEventListener("click", () => {
@@ -208,6 +211,10 @@
   }
   function pintaMenu() {
     const f = feitos();
+    $$("#menu-mods .mod").forEach((m) => m.classList.toggle("outra-area", m.dataset.area !== F.area));
+    $$(".topo .aba").forEach((a) => a.classList.toggle("atual", a.dataset.area === F.area));
+    const ar = AREA(F.area);
+    $(".topo nav:not(.abas) a").setAttribute("href", "#/" + ar.inicio);
     $$("#menu-mods a[data-cod]").forEach((a) => {
       a.querySelector(".bola").classList.toggle("feito", !!f[a.dataset.cod]);
       a.classList.toggle("atual", a.dataset.cod === temaAtual);
@@ -215,23 +222,93 @@
   }
 
   /* ---------- páginas fixas ---------- */
-  function pgInicio(el) {
-    const f = feitos();
+  function pgInicio(el, areaId) {
+    const f = feitos(), ar = AREA(areaId);
+    const mods = CATALOGO.filter((m) => areaDe(m) === areaId);
     let total = 0, prontos = 0, nfeitos = 0;
-    CATALOGO.forEach((m) => m.temas.forEach((t) => { total++; if (t[3]) prontos++; if (f[t[0]]) nfeitos++; }));
-    el.innerHTML = `<div class="hero"><div class="det" style="color:var(--ink2)">Caderno de estudos do Lucas</div><h1>Física, da mecânica a Navier–Stokes</h1>
-      <p>Cada tema começa com uma pergunta e um laboratório para mexer. Depois vem a ideia física, a teoria completa com as demonstrações, exemplos passo a passo, exercícios com dicas escondidas e o chefão.</p></div>
+    mods.forEach((m) => m.temas.forEach((t) => { total++; if (t[3]) prontos++; if (f[t[0]]) nfeitos++; }));
+    const anim = F.id("anim");
+    el.innerHTML = `<div class="hero2"><h1>${ar.titulo}</h1><div class="anim" id="${anim}"></div></div>
       <div class="cartao"><div class="tit"><span class="tag">Progresso</span>${nfeitos} de ${total} temas feitos · ${prontos} já escritos</div>
-        <div class="barra" style="--c:var(--ok)"><i style="width:${(100 * nfeitos) / total}%"></i></div></div>
+        <div class="barra" style="--c:var(--ok)"><i style="width:${total ? (100 * nfeitos) / total : 0}%"></i></div></div>
       <h2 style="margin-top:32px">Módulos</h2>
-      <div class="mods">${CATALOGO.map((m) => { const n = m.temas.length, k = m.temas.filter((t) => f[t[0]]).length; const prim = m.temas.find((t) => t[3]) || m.temas[0];
+      <div class="mods">${mods.map((m) => { const n = m.temas.length, k = m.temas.filter((t) => f[t[0]]).length; const prim = m.temas.find((t) => t[3]) || m.temas[0];
         return `<a class="modc" href="#/${prim[0]}" style="--c:var(${m.cor})"><div class="letra">${m.letra}</div><h3>${m.nome}</h3><p>${m.desc}</p><div class="barra"><i style="width:${(100 * k) / n}%"></i></div><p style="margin-top:6px">${k}/${n} temas</p></a>`; }).join("")}</div>
       <h2 style="margin-top:36px">Como usar</h2>
       <div class="grade2" style="margin-top:12px">
-        <div class="cartao"><b>Ordem de um tema</b><ol style="margin:8px 0 0;padding-left:1.2em;color:var(--ink2)"><li>Pergunta de abertura</li><li>Laboratório (chute antes de mexer)</li><li>A ideia física, com números</li><li>Teoria completa e demonstrações</li><li>Exemplos passo a passo</li><li>Resumo, exercícios e chefão</li></ol></div>
+        <div class="cartao"><b>Ordem de um tema</b><ol style="margin:8px 0 0;padding-left:1.2em;color:var(--ink2)"><li>Pergunta de abertura</li><li>Laboratório (chute antes de mexer)</li><li>A ideia, com números</li><li>Teoria completa e demonstrações</li><li>Exemplos passo a passo</li><li>Resumo, exercícios e chefão</li></ol></div>
         <div class="cartao"><b>Marcação de certeza</b><p style="color:var(--ink2);margin:8px 0 0">Em cada exercício marque <b>●</b> certeza, <b>X</b> dúvida ou <b>/</b> chutei. Fica salvo neste navegador. O chefão destrava quando todos estiverem marcados. Dicas e respostas só abrem se você clicar.</p></div>
       </div>`;
+    (areaId === "calculo" ? animCalculo : animAtomo)(document.getElementById(anim));
   }
+
+  /* átomo girando: 3 órbitas com elétrons (com rastro); o conjunto precessa devagar */
+  function animAtomo(el) {
+    const NS = "http://www.w3.org/2000/svg";
+    el.innerHTML = `<svg viewBox="-170 -150 340 300" aria-label="átomo animado"><defs><radialGradient id="nuc"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><g class="orb"></g><g class="nucleo"></g><g class="ele"></g></svg>`;
+    const cores = ["var(--mC)", "var(--mA)", "var(--mU)"], RX = 150, RY = 52;
+    const nuc = [[0, 0, "var(--mM)"], [9, 4, "var(--mA)"], [-8, 6, "var(--mM)"], [3, -9, "var(--mA)"], [-5, -6, "var(--mM)"], [7, -4, "var(--mA)"], [-2, 9, "var(--mA)"]];
+    el.querySelector(".nucleo").innerHTML = `<circle r="34" fill="url(#nuc)" opacity=".18"/>` + nuc.map(([x, y, c]) => `<circle cx="${x}" cy="${y}" r="7.5" style="fill:${c};stroke:var(--bg);stroke-width:1.5"/>`).join("");
+    const ele = el.querySelector(".ele"), orb = el.querySelector(".orb");
+    const bolas = cores.map((c) => [0, 1, 2, 3].map((k) => { const b = document.createElementNS(NS, "circle"); b.setAttribute("r", k ? 6 - 1.3 * k : 6.5); b.setAttribute("opacity", k ? 0.5 - 0.12 * k : 1); b.style.fill = c; ele.appendChild(b); return b; }));
+    const vel = [1.0, 1.35, 0.8], fase0 = [0, 2.1, 4.2];
+    let vivo = true;
+    const t0 = performance.now();
+    const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function q(t) {
+      if (!vivo) return;
+      const s = reduz ? 1.2 : (t - t0) / 1000, prec = 0.15 * s;
+      orb.innerHTML = cores.map((c, j) => `<ellipse rx="${RX}" ry="${RY}" transform="rotate(${(j * 60 + (prec * 180) / Math.PI).toFixed(2)})" style="fill:none;stroke:${c};stroke-width:2;opacity:.75"/>`).join("");
+      cores.forEach((c, j) => {
+        const ang = (j * Math.PI) / 3 + prec, ca = Math.cos(ang), sa = Math.sin(ang);
+        bolas[j].forEach((b, k) => {
+          const u = fase0[j] + vel[j] * 2 * s - 0.13 * k, x = RX * Math.cos(u), y = RY * Math.sin(u);
+          b.setAttribute("cx", (x * ca - y * sa).toFixed(1)); b.setAttribute("cy", (x * sa + y * ca).toFixed(1));
+        });
+      });
+      if (!reduz) requestAnimationFrame(q);
+    }
+    requestAnimationFrame(q);
+    F.aoSair(() => (vivo = false));
+  }
+
+  /* cálculo: somas de Riemann convergindo para a integral + reta tangente passeando pela curva */
+  function animCalculo(el) {
+    el.innerHTML = `<svg viewBox="0 0 340 280" aria-label="somas de Riemann e reta tangente"><g class="g"></g></svg><div class="calc-leg"></div>`;
+    const f = (x) => 1.1 + 0.8 * Math.sin(1.25 * x) + 0.22 * x, df = (x) => 1.0 * Math.cos(1.25 * x) + 0.22;
+    const a = 0.2, b = 4.6, x0 = 26, y0 = 250, sx = (x) => x0 + (x / 4.8) * 300, sy = (y) => y0 - (y / 2.9) * 225;
+    let I = 0; const NN = 2000;
+    for (let k = 0; k < NN; k++) { const x = a + ((k + 0.5) * (b - a)) / NN; I += f(x) * ((b - a) / NN); }
+    let curva = "";
+    for (let k = 0; k <= 160; k++) { const x = (4.8 * k) / 160; curva += (k ? "L" : "M") + sx(x).toFixed(1) + " " + sy(f(x)).toFixed(1); }
+    const ns = [2, 4, 8, 16, 32, 64];
+    const g = el.querySelector(".g"), leg = el.querySelector(".calc-leg");
+    let vivo = true;
+    const t0 = performance.now();
+    const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function q(t) {
+      if (!vivo) return;
+      const s = reduz ? 5 : (t - t0) / 1000;
+      const ciclo = Math.floor(s / 1.4) % (2 * ns.length - 2), idx = ciclo < ns.length ? ciclo : 2 * ns.length - 2 - ciclo, n = ns[idx];
+      const h = (b - a) / n;
+      let soma = 0, ret = "";
+      for (let k = 0; k < n; k++) {
+        const xl = a + k * h, y = f(xl + h / 2); soma += y * h;
+        ret += `<rect x="${sx(xl).toFixed(1)}" y="${sy(y).toFixed(1)}" width="${(sx(xl + h) - sx(xl)).toFixed(2)}" height="${(y0 - sy(y)).toFixed(1)}" style="fill:color-mix(in srgb,var(--mK1) 28%,transparent);stroke:var(--mK1);stroke-width:${n > 32 ? 0.4 : 1}"/>`;
+      }
+      const xt = a + (b - a) * (0.5 + 0.5 * Math.sin(s * 0.7)), yt = f(xt), m = df(xt), dx = 0.75;
+      g.innerHTML = `<defs><clipPath id="clipcalc"><rect x="${x0}" y="10" width="305" height="${y0 - 10}"/></clipPath></defs>` + ret + `<line x1="${x0}" y1="${y0}" x2="${x0 + 305}" y2="${y0}" style="stroke:var(--ink2);stroke-width:1.4"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="18" style="stroke:var(--ink2);stroke-width:1.4"/>
+        <path d="${curva}" style="fill:none;stroke:var(--ink);stroke-width:2.4"/>
+        <line x1="${sx(xt - dx)}" y1="${sy(yt - m * dx)}" x2="${sx(xt + dx)}" y2="${sy(yt + m * dx)}" clip-path="url(#clipcalc)" style="stroke:var(--mK2);stroke-width:2.6;stroke-linecap:round"/>
+        <circle cx="${sx(xt)}" cy="${sy(yt)}" r="5.5" style="fill:var(--mK2);stroke:var(--bg);stroke-width:2"/>
+        <text x="${x0 + 8}" y="30" class="tx2">n = ${n} retângulos</text>`;
+      leg.innerHTML = `soma = ${F.t(soma, 3)} → ∫ = ${F.t(I, 3)} &nbsp;·&nbsp; inclinação f′ = ${F.t(m, 2)}`;
+      if (!reduz) requestAnimationFrame(q);
+    }
+    requestAnimationFrame(q);
+    F.aoSair(() => (vivo = false));
+  }
+
   function pgLegenda(el) {
     el.innerHTML = `<div class="cab-tema"><div class="sobre">Referência</div><h1>Legenda das marcações</h1></div>
       <table class="tb"><tr><th>Marca</th><th>Significado</th></tr>
@@ -247,7 +324,7 @@
   }
   function pgSumario(el) {
     el.innerHTML = `<div class="cab-tema"><div class="sobre">Mapa</div><h1>Sumário em árvore</h1><p style="color:var(--ink2)">Temas já escritos têm link para a teoria e para os exercícios.</p></div>` +
-      CATALOGO.map((m) => `<h3 style="margin:24px 0 8px;color:var(${m.cor})">${m.letra} · ${m.nome}</h3><pre style="font:14px/1.7 var(--f-text);margin:0;white-space:pre-wrap">${m.temas.map((t) => t[3]
+      CATALOGO.filter((m) => areaDe(m) === F.area).map((m) => `<h3 style="margin:24px 0 8px;color:var(${m.cor})">${m.letra} · ${m.nome}</h3><pre style="font:14px/1.7 var(--f-text);margin:0;white-space:pre-wrap">${m.temas.map((t) => t[3]
         ? `● <a href="#/${t[0]}">${t[0]} ${t[1]}</a>\n |___> <a href="#/${t[0]}/teoria">teoria</a>  <a href="#/${t[0]}/exercicios">[exercícios]</a>`
         : `<span style="color:var(--ink3)">○ ${t[0]} ${t[1]}</span>`).join("\n")}</pre>`).join("");
   }
@@ -299,7 +376,7 @@
     renderizado = null;
     temaAtual = null;
     document.documentElement.style.removeProperty("--mod");
-    if (cod === "inicio") pgInicio(pag);
+    if (cod === "inicio" || cod === "calculo") { F.area = cod === "calculo" ? "calculo" : "fisica"; pgInicio(pag, F.area); }
     else if (cod === "legenda") pgLegenda(pag);
     else if (cod === "sumario") pgSumario(pag);
     else {
@@ -308,7 +385,7 @@
       else if (!info.pronto) pag.innerHTML = `<div class="cab-tema"><div class="sobre" style="color:var(${info.mod.cor})">${info.mod.letra} · ${info.mod.nome}</div><h1>${info.cod} · ${info.nome}</h1></div><p style="color:var(--ink2)">Este tema ainda não foi escrito.</p>`;
       else if (carregaTema(cod)) { pgTema(pag, info, anc); renderizado = cod; }
       else pag.innerHTML = `<p style="color:var(--ink2)">Carregando…</p>`;
-      if (info) temaAtual = info.cod;
+      if (info) { temaAtual = info.cod; F.area = areaDe(info.mod); }
     }
     pintaMenu();
     if (!anc) window.scrollTo(0, 0);
@@ -349,5 +426,5 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", () => { tema(); montaMenu(); topo(); backup(); window.addEventListener("hashchange", rota); rota(); });
+  document.addEventListener("DOMContentLoaded", () => { const v = document.getElementById("versao"); if (v) v.textContent = "Site Física " + VERSAO; tema(); montaMenu(); topo(); backup(); window.addEventListener("hashchange", rota); rota(); });
 })();

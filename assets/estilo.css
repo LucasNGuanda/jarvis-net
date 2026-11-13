@@ -24,6 +24,7 @@
   /* uma cor por módulo */
   --mF:#9aa7bd; --mA:#5b9cf5; --mB:#e5884a; --mBo:#d9a43c; --mC:#c58af0;
   --mM:#e56b8f; --mU:#43b8a6; --mN:#4fb0d9;
+  --mX:#9cc95a; --mS:#ef7b6b; --mK1:#7f9dff; --mK2:#d08cff;
   --mod:var(--acc);                /* cor do módulo atual (trocada pelo JS) */
   --shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.25);
   --topo:56px; --menu:280px;
@@ -37,6 +38,7 @@
   --acc:#2f63d6; --ok:#1f8f5c; --warn:#a86d09; --bad:#c43c3c;
   --mF:#5d6b82; --mA:#2f6fd6; --mB:#c4621f; --mBo:#a8780f; --mC:#8b4fc4;
   --mM:#c13f66; --mU:#1d8a79; --mN:#1f7fab;
+  --mX:#5c8a1e; --mS:#c4473a; --mK1:#3d5fd6; --mK2:#9447c9;
   --shadow:0 1px 2px rgba(20,30,50,.06), 0 6px 18px rgba(20,30,50,.06);
   color-scheme:light;
 }
@@ -269,3 +271,20 @@ table.tb th{color:var(--ink2);font-weight:600;font-size:13px;text-transform:uppe
 
 @media (max-width:1100px){.principal{padding-left:32px;padding-right:32px}.lab .ctrls{grid-template-columns:1fr}.grade2,.resumo{grid-template-columns:1fr}}
 @media print{.topo,.menu{display:none}.principal{margin:0;padding:0}}
+
+/* ---------- β 0.2: abas de área, versão, animações de abertura ---------- */
+.abas{display:flex;gap:4px;margin-left:6px}
+.aba{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:8px;color:var(--ink2);font-weight:600;font-size:15px}
+.aba:hover{color:var(--ink);background:var(--card);text-decoration:none}
+.aba.atual{color:var(--ink);background:var(--card);box-shadow:inset 0 0 0 1px var(--line)}
+.aba svg{width:24px;height:24px}
+.versao{font:600 12px var(--f-text);color:var(--ink3);border:1px solid var(--line);border-radius:999px;padding:2px 9px;margin-left:4px;white-space:nowrap}
+.mod.outra-area{display:none!important}
+.hero2{display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:center;padding:4px 0 20px}
+.hero2 h1{font-size:44px;line-height:1.1}
+.hero2 .anim{width:340px;height:300px}
+.hero2 .anim svg{width:100%;height:100%;display:block}
+.calc-leg{font:14px var(--f-text);color:var(--ink2);text-align:center;margin-top:-4px;font-variant-numeric:tabular-nums}
+.vazio{border:1px dashed var(--line2);border-radius:12px;padding:28px;text-align:center;color:var(--ink2)}
+.vazio b{display:block;color:var(--ink);font-size:17px;margin-bottom:6px}
+.fonte{font:700 12px var(--f-text);color:var(--mS);border:1px solid color-mix(in srgb,var(--mS) 50%,transparent);border-radius:6px;padding:1px 7px}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Física · Caderno do Lucas</title>
+<title>Site Física β 0.2</title>
 <link rel="stylesheet" href="assets/katex/katex.min.css">
 <link rel="stylesheet" href="assets/estilo.css">
 <script defer src="assets/katex/katex.min.js"></script>
@@ -17,13 +17,22 @@
 </head>
 <body>
 <header class="topo">
-  <a class="logo" href="#/inicio" aria-label="Início">
+  <nav class="abas" aria-label="Áreas">
+    <a class="aba" data-area="fisica" href="#/inicio" aria-label="Física">
     <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
       <ellipse cx="16" cy="16" rx="13" ry="5" style="stroke:var(--mC)"/>
       <ellipse cx="16" cy="16" rx="13" ry="5" transform="rotate(60 16 16)" style="stroke:var(--mA)"/>
       <ellipse cx="16" cy="16" rx="13" ry="5" transform="rotate(120 16 16)" style="stroke:var(--mU)"/>
       <circle cx="16" cy="16" r="2.4" fill="currentColor" stroke="none"/>
     </svg>Física</a>
+    <a class="aba" data-area="calculo" href="#/calculo" aria-label="Cálculo">
+    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path d="M9.5 4.5c-1.8 0-2.3 1.6-2.6 3.6L5.2 23.9c-.3 2-.8 3.6-2.6 3.6" style="stroke:var(--mK1)" stroke-width="2.1" stroke-linecap="round"/>
+      <path d="M29.3 4.5c-1.8 0-2.3 1.6-2.6 3.6L25 23.9c-.3 2-.8 3.6-2.6 3.6" style="stroke:var(--mK2)" stroke-width="2.1" stroke-linecap="round"/>
+      <circle cx="16" cy="16" r="2.6" fill="currentColor"/>
+    </svg>Cálculo</a>
+  </nav>
+  <span class="versao" id="versao"></span>
   <span class="esp"></span>
   <nav><a href="#/inicio">Início</a><a href="#/sumario">Sumário</a><a href="#/legenda">Legenda</a></nav>
   <button class="btn-ic" id="bt-tema" title="Clarear / escurecer" aria-label="Alternar tema claro e escuro">

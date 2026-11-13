@@ -1,6 +1,11 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
+window.VERSAO = "β 0.2";
+window.AREAS = [
+  { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física, da mecânica a Navier–Stokes" },
+  { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo 1 e 2" },
+];
 window.CATALOGO = [
   { id:"F", letra:"F", cor:"--mF", nome:"Fundamentos e a matemática do físico", desc:"Vetores, trigonometria, cálculo, aproximações e análise dimensional.", temas:[
     ["F01","Fundamentos de Mecânica"],
@@ -104,5 +109,34 @@ window.CATALOGO = [
     ["N05","Dedução de Navier–Stokes",["!!","∫"]],
     ["N06","Couette, Poiseuille, Hagen–Poiseuille",["!","∫"]],
     ["N07","Reynolds, turbulência e o Problema do Milênio",["!"]],
+  ]},
+  { id:"X", letra:"★", cor:"--mX", nome:"Bônus", desc:"Coisas inventadas e curiosidades fora da ordem.", temas:[
+    ["X01","A função γ̃ do Lucas",["∫"],true],
+  ]},
+  { id:"S", letra:"S", cor:"--mS", nome:"Simulados", desc:"Questões escolhidas pelo Lucas, com a fonte de cada uma (ex.: [ITA 2010]).", temas:[
+    ["S00","Como funcionam os simulados",[],true],
+  ]},
+
+  /* ===================== ÁREA CÁLCULO ===================== */
+  { id:"K1", area:"calculo", letra:"1", cor:"--mK1", nome:"Cálculo 1", desc:"Limites, derivadas e integrais de uma variável.", temas:[
+    ["CI01","Funções e limites",["★"]],
+    ["CI02","Continuidade e limites fundamentais"],
+    ["CI03","Derivada: definição e significado",["★"]],
+    ["CI04","Regras de derivação e regra da cadeia"],
+    ["CI05","Aplicações da derivada: máximos, mínimos, L'Hôpital",["★"]],
+    ["CI06","Integral definida e somas de Riemann"],
+    ["CI07","Teorema Fundamental do Cálculo",["★","!"]],
+    ["CI08","Integral indefinida e substituição"],
+    ["CI09","Aplicações da integral: áreas, volumes, trabalho"],
+  ]},
+  { id:"K2", area:"calculo", letra:"2", cor:"--mK2", nome:"Cálculo 2", desc:"Técnicas de integração, séries, várias variáveis e EDOs.", temas:[
+    ["CII01","Técnicas de integração: partes, frações parciais, trigonométricas",["!"]],
+    ["CII02","Integrais impróprias"],
+    ["CII03","Sequências e séries numéricas",["!"]],
+    ["CII04","Séries de potências e de Taylor",["★"]],
+    ["CII05","Funções de várias variáveis e derivadas parciais"],
+    ["CII06","Gradiente, máximos e mínimos, multiplicadores de Lagrange",["!"]],
+    ["CII07","Integrais duplas e triplas",["!"]],
+    ["CII08","Equações diferenciais ordinárias",["★","!"]],
   ]},
 ];

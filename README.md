@@ -1,4 +1,4 @@
-# Física · Caderno do Lucas
+# Site Física β 0.2
 
 Site de estudo de física, da mecânica clássica até Navier–Stokes, com simulações interativas.
 
