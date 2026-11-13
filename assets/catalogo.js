@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 0.3";
+window.VERSAO = "β 0.4";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo 1 e 2" },
@@ -65,12 +65,12 @@ window.CATALOGO = [
     ["B14b","Óptica Ondulatória"],
   ]},
   { id:"C", letra:"C", cor:"--mC", nome:"Eletricidade e Magnetismo", desc:"Eletrostática, circuitos, magnetismo, indução e Maxwell.", temas:[
-    ["C01","Carga Elétrica e Eletrização"],
-    ["C02","Força Elétrica"],
-    ["C03","Campo Elétrico"],
-    ["C03b","Lei de Gauss",["!","∫"]],
-    ["C04","Potencial Elétrico",["★"]],
-    ["C05","Condutores"],
+    ["C01","Carga Elétrica e Eletrização",[],true],
+    ["C02","Força Elétrica",["★"],true],
+    ["C03","Campo Elétrico",["★","∫"],true],
+    ["C03b","Lei de Gauss",["!","∫"],true],
+    ["C04","Potencial Elétrico",["★"],true],
+    ["C05","Condutores",["!"],true],
     ["C11","Capacitores",["★"]],
     ["C06","Corrente Elétrica"],
     ["C07","Lei de Ohm e Resistores",["★","∫"],true],
