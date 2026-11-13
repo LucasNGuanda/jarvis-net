@@ -239,7 +239,7 @@
         <div class="cartao"><b>Ordem de um tema</b><ol style="margin:8px 0 0;padding-left:1.2em;color:var(--ink2)"><li>Pergunta de abertura</li><li>Laboratório (chute antes de mexer)</li><li>A ideia, com números</li><li>Teoria completa e demonstrações</li><li>Exemplos passo a passo</li><li>Resumo, exercícios e chefão</li></ol></div>
         <div class="cartao"><b>Marcação de certeza</b><p style="color:var(--ink2);margin:8px 0 0">Em cada exercício marque <b>●</b> certeza, <b>X</b> dúvida ou <b>/</b> chutei. Fica salvo neste navegador. O chefão destrava quando todos estiverem marcados. Dicas e respostas só abrem se você clicar.</p></div>
       </div>`;
-    (areaId === "calculo" ? animCalculo : animAtomo)(document.getElementById(anim));
+    (areaId === "calculo" ? animCalculo : areaId === "exp" ? animPendulo : animAtomo)(document.getElementById(anim));
   }
 
   /* átomo girando: 3 órbitas com elétrons (com rastro); o conjunto precessa devagar */
@@ -270,6 +270,24 @@
     }
     requestAnimationFrame(q);
     F.aoSair(() => (vivo = false));
+  }
+
+  /* experimentos: pêndulo duplo (pequeno, só enfeite) com rastro */
+  function animPendulo(el) {
+    el.innerHTML = `<svg viewBox="-170 -40 340 300" aria-label="pêndulo duplo animado"><g class="r"></g><g class="p"></g></svg>`;
+    let s = [2.2, 2.6, 0, 0], vivo = true, tr = []; const L = 1, g = 9.8;
+    const f = ([a1, a2, w1, w2]) => { const d = a1 - a2, den = 3 - Math.cos(2 * d); return [w1, w2, (-g * 3 * Math.sin(a1) - g * Math.sin(a1 - 2 * a2) - 2 * Math.sin(d) * (w2 * w2 + w1 * w1 * Math.cos(d))) / den, (2 * Math.sin(d) * (2 * w1 * w1 + 2 * g * Math.cos(a1) + w2 * w2 * Math.cos(d))) / den]; };
+    const rk = (st, h) => { const k1 = f(st), k2 = f(st.map((v, i) => v + (h / 2) * k1[i])), k3 = f(st.map((v, i) => v + (h / 2) * k2[i])), k4 = f(st.map((v, i) => v + h * k3[i])); return st.map((v, i) => v + (h / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i])); };
+    let t0 = performance.now(); const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function q(t) {
+      if (!vivo) return; const dt = Math.min(0.03, (t - t0) / 1000); t0 = t; if (!reduz) for (let k = 0; k < 20; k++) s = rk(s, dt / 20);
+      const e = 105, x1 = e * Math.sin(s[0]), y1 = e * Math.cos(s[0]), x2 = x1 + e * Math.sin(s[1]), y2 = y1 + e * Math.cos(s[1]);
+      tr.push([x2, y2]); if (tr.length > 220) tr.shift();
+      el.querySelector(".r").innerHTML = tr.map((p, i) => (i ? `<line x1="${tr[i - 1][0].toFixed(1)}" y1="${tr[i - 1][1].toFixed(1)}" x2="${p[0].toFixed(1)}" y2="${p[1].toFixed(1)}" style="stroke:var(--warn);stroke-width:1.6;opacity:${(i / tr.length).toFixed(2)}"/>` : "")).join("");
+      el.querySelector(".p").innerHTML = `<line x1="-40" y1="0" x2="40" y2="0" style="stroke:var(--ink3);stroke-width:3"/><path d="M0 0 L${x1} ${y1} L${x2} ${y2}" style="stroke:var(--ink);stroke-width:2.2;fill:none"/><circle cx="${x1}" cy="${y1}" r="10" style="fill:var(--mA)"/><circle cx="${x2}" cy="${y2}" r="10" style="fill:var(--mU)"/>`;
+      if (!reduz) requestAnimationFrame(q);
+    }
+    requestAnimationFrame(q); F.aoSair(() => (vivo = false));
   }
 
   /* cálculo: somas de Riemann convergindo para a integral + reta tangente passeando pela curva */
@@ -376,7 +394,7 @@
     renderizado = null;
     temaAtual = null;
     document.documentElement.style.removeProperty("--mod");
-    if (cod === "inicio" || cod === "calculo") { F.area = cod === "calculo" ? "calculo" : "fisica"; pgInicio(pag, F.area); }
+    if (cod === "inicio" || cod === "calculo" || cod === "experimentos") { F.area = cod === "calculo" ? "calculo" : cod === "experimentos" ? "exp" : "fisica"; pgInicio(pag, F.area); }
     else if (cod === "legenda") pgLegenda(pag);
     else if (cod === "sumario") pgSumario(pag);
     else {

@@ -1,10 +1,11 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 0.7";
+window.VERSAO = "β 0.8";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
+  { id:"exp", nome:"Experimentos", inicio:"experimentos", titulo:"Experimentos físicos" },
 ];
 window.CATALOGO = [
   { id:"F", letra:"F", cor:"--mF", nome:"Fundamentos e a matemática do físico", desc:"Vetores, trigonometria, cálculo, aproximações e análise dimensional.", temas:[
@@ -147,5 +148,16 @@ window.CATALOGO = [
     ["CE01","Função W de Lambert",["!"]],
     ["CE02","Função Gama de Euler",["∫","!"]],
     ["CE03","Integrais fechadas ∮ (curvas e superfícies)",["∫","!!"]],
+  ]},
+
+  /* ===================== ÁREA EXPERIMENTOS ===================== */
+  { id:"E1", area:"exp", letra:"1", cor:"--mA", nome:"Pêndulo simples", desc:"Da lagrangiana à equação exata; período com amplitude grande; espaço de fase.", temas:[
+    ["EP01","Pêndulo simples pela lagrangiana",["∫","★"],true],
+  ]},
+  { id:"E2", area:"exp", letra:"2", cor:"--mU", nome:"Pêndulo duplo", desc:"Lagrangiana completa, equações de movimento, modos normais e caos.", temas:[
+    ["EP02","Pêndulo duplo e caos",["∫","!!"],true],
+  ]},
+  { id:"E3", area:"exp", letra:"3", cor:"--mC", nome:"Eletromagnetismo em jogo", desc:"Acerte alvos com a força de Lorentz; lagrangiana de uma carga num campo.", temas:[
+    ["EP03","O jogo da força de Lorentz",["!"],true],
   ]},
 ];
