@@ -37,7 +37,7 @@
     if (!window.renderMathInElement) return;
     renderMathInElement(el, {
       delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
-      throwOnError: false, ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "svg"],
+      throwOnError: false, macros: { "\\gf": "\\mathord{\\htmlClass{gf}{\\kern0.6em}}" }, trust: (c) => c.command === "\\htmlClass", ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "svg"],
     });
   };
 
@@ -45,6 +45,9 @@
   let fila = [], uid = 0;
   F.id = (p = "c") => p + "-" + (++uid);
   F.depois = (fn) => fila.push(fn);
+  F.gf = (cls = "") => `<span class="gf ${cls}" role="img" aria-label="gam fresco"></span>`;
+  /* glifo do gam fresco dentro de SVG: canto superior esquerdo em (x, y), altura h */
+  F.gfSvg = (x, y, h, cor = "currentColor") => `<g transform="translate(${x},${y}) scale(${h / 60})" style="fill:none;stroke:${cor};stroke-width:3.8;stroke-linecap:round;stroke-linejoin:round"><path d="M5 17 C9 14 13 16 16.5 22"/><path d="M16.5 22 L32 8"/><path d="M28.5 4.5 L35 11"/><path d="M16.5 22 C16.5 32 14.5 40 14.5 47 C14.5 55 20 57 24 51"/></g>`;
 
   /* ---------- blocos de HTML ---------- */
   F.secao = (id, titulo, html, n) => `<section class="secao" id="${id}"><h2>${n ? `<span class="n">${n}</span>` : ""}${titulo}</h2>${html}</section>`;

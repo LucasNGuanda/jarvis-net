@@ -297,3 +297,9 @@ table.tb th{color:var(--ink2);font-weight:600;font-size:13px;text-transform:uppe
 .detalhes summary{cursor:pointer;font-weight:650;padding:8px 0;color:var(--ink)}
 .detalhes table.tb{font-size:13.5px;margin:4px 0 10px}
 .detalhes table.tb td{padding:6px 8px}
+
+/* gam fresco: o símbolo da função do Lucas (desenhado a partir das fotos do caderno: braço direito reto com um tracinho \\ na ponta, pé com gancho) */
+.gf{display:inline-block;width:.7em;height:.95em;vertical-align:-.3em;margin:0 .04em;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2044%2060%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%223.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2017%20C9%2014%2013%2016%2016.5%2022%22/%3E%3Cpath%20d%3D%22M16.5%2022%20L32%208%22/%3E%3Cpath%20d%3D%22M28.5%204.5%20L35%2011%22/%3E%3Cpath%20d%3D%22M16.5%2022%20C16.5%2032%2014.5%2040%2014.5%2047%20C14.5%2055%2020%2057%2024%2051%22/%3E%3C/g%3E%3C/svg%3E") no-repeat center/contain;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2044%2060%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%223.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2017%20C9%2014%2013%2016%2016.5%2022%22/%3E%3Cpath%20d%3D%22M16.5%2022%20L32%208%22/%3E%3Cpath%20d%3D%22M28.5%204.5%20L35%2011%22/%3E%3Cpath%20d%3D%22M16.5%2022%20C16.5%2032%2014.5%2040%2014.5%2047%20C14.5%2055%2020%2057%2024%2051%22/%3E%3C/g%3E%3C/svg%3E") no-repeat center/contain}
+.katex .gf{width:.76em;height:1.04em;vertical-align:-.3em;margin:0 .06em}
+.katex .gf>*{display:none}
+.gf.grande{width:1.1em;height:1.65em;vertical-align:-.5em;margin-left:.08em}

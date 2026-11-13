@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 1.0";
+window.VERSAO = "β 1.1";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -112,7 +112,7 @@ window.CATALOGO = [
     ["N07","Reynolds, turbulência e o Problema do Milênio",["!"]],
   ]},
   { id:"X", letra:"★", cor:"--mX", nome:"Bônus", desc:"Coisas inventadas e curiosidades fora da ordem.", temas:[
-    ["X01","A função γ̃ do Lucas",["∫"],true],
+    ["X01","A função gam fresco do Lucas",["∫"],true],
   ]},
   { id:"S", letra:"S", cor:"--mS", nome:"Simulados", desc:"Questões escolhidas pelo Lucas, com a fonte de cada uma (ex.: [ITA 2010]).", temas:[
     ["S00","Como funcionam os simulados",[],true],
@@ -145,9 +145,9 @@ window.CATALOGO = [
     ["CII08","Equações diferenciais ordinárias",["★","!"]],
   ]},
   { id:"K3", area:"calculo", letra:"∮", cor:"--mK3", nome:"Funções especiais e integrais", desc:"W de Lambert, Gama de Euler e integrais fechadas (as \"bolinhas\").", temas:[
-    ["CE01","Função W de Lambert",["!"]],
-    ["CE02","Função Gama de Euler",["∫","!"]],
-    ["CE03","Integrais fechadas ∮ (curvas e superfícies)",["∫","!!"]],
+    ["CE01","Função W de Lambert",["!"],true],
+    ["CE02","Função Gama de Euler",["∫","!"],true],
+    ["CE03","Integrais fechadas ∮ (curvas e superfícies)",["∫","!!"],true],
   ]},
 
   /* ===================== ÁREA EXPERIMENTOS ===================== */
