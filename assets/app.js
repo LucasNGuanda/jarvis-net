@@ -426,5 +426,5 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", () => { const v = document.getElementById("versao"); if (v) v.textContent = "Site Física " + VERSAO; tema(); montaMenu(); topo(); backup(); window.addEventListener("hashchange", rota); rota(); });
+  document.addEventListener("DOMContentLoaded", () => { const v = document.getElementById("versao"); if (v) v.textContent = "Site Física " + VERSAO; tema(); montaMenu(); topo(); backup(); if (window.montaDetalhes) montaDetalhes(F); window.addEventListener("hashchange", rota); rota(); });
 })();

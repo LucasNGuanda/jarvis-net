@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Site Física β 0.6</title>
+<title>Site Física β 0.7</title>
 <link rel="stylesheet" href="assets/katex/katex.min.css">
 <link rel="stylesheet" href="assets/estilo.css">
 <script defer src="assets/katex/katex.min.js"></script>
@@ -17,6 +17,7 @@
 <script defer src="assets/sims/eletrostatica2.js"></script>
 <script defer src="assets/sims/circuitos2.js"></script>
 <script defer src="assets/sims/magnetismo.js"></script>
+<script defer src="assets/detalhes.js"></script>
 <script defer src="assets/app.js"></script>
 </head>
 <body>
@@ -39,6 +40,7 @@
   <span class="versao" id="versao"></span>
   <span class="esp"></span>
   <nav><a href="#/inicio">Início</a><a href="#/sumario">Sumário</a><a href="#/legenda">Legenda</a></nav>
+  <div class="detalhes" id="detalhes"><button class="bt peq" aria-haspopup="true">Detalhes ▾</button><div class="painel" id="detalhes-painel"></div></div>
   <button class="btn-ic" id="bt-tema" title="Clarear / escurecer" aria-label="Alternar tema claro e escuro">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
   </button>

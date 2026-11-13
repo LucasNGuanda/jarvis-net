@@ -1,10 +1,10 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 0.6";
+window.VERSAO = "β 0.7";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
-  { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo 1 e 2" },
+  { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
 ];
 window.CATALOGO = [
   { id:"F", letra:"F", cor:"--mF", nome:"Fundamentos e a matemática do físico", desc:"Vetores, trigonometria, cálculo, aproximações e análise dimensional.", temas:[
@@ -142,5 +142,10 @@ window.CATALOGO = [
     ["CII06","Gradiente, máximos e mínimos, multiplicadores de Lagrange",["!"]],
     ["CII07","Integrais duplas e triplas",["!"]],
     ["CII08","Equações diferenciais ordinárias",["★","!"]],
+  ]},
+  { id:"K3", area:"calculo", letra:"∮", cor:"--mK3", nome:"Funções especiais e integrais", desc:"W de Lambert, Gama de Euler e integrais fechadas (as \"bolinhas\").", temas:[
+    ["CE01","Função W de Lambert",["!"]],
+    ["CE02","Função Gama de Euler",["∫","!"]],
+    ["CE03","Integrais fechadas ∮ (curvas e superfícies)",["∫","!!"]],
   ]},
 ];

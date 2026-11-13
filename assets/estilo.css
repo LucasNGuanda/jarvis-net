@@ -24,7 +24,7 @@
   /* uma cor por módulo */
   --mF:#9aa7bd; --mA:#5b9cf5; --mB:#e5884a; --mBo:#d9a43c; --mC:#c58af0;
   --mM:#e56b8f; --mU:#43b8a6; --mN:#4fb0d9;
-  --mX:#9cc95a; --mS:#ef7b6b; --mK1:#7f9dff; --mK2:#d08cff;
+  --mX:#9cc95a; --mS:#ef7b6b; --mK1:#7f9dff; --mK2:#d08cff; --mK3:#5fc9c0;
   --mod:var(--acc);                /* cor do módulo atual (trocada pelo JS) */
   --shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.25);
   --topo:56px; --menu:280px;
@@ -38,7 +38,7 @@
   --acc:#2f63d6; --ok:#1f8f5c; --warn:#a86d09; --bad:#c43c3c;
   --mF:#5d6b82; --mA:#2f6fd6; --mB:#c4621f; --mBo:#a8780f; --mC:#8b4fc4;
   --mM:#c13f66; --mU:#1d8a79; --mN:#1f7fab;
-  --mX:#5c8a1e; --mS:#c4473a; --mK1:#3d5fd6; --mK2:#9447c9;
+  --mX:#5c8a1e; --mS:#c4473a; --mK1:#3d5fd6; --mK2:#9447c9; --mK3:#1d8a80;
   --shadow:0 1px 2px rgba(20,30,50,.06), 0 6px 18px rgba(20,30,50,.06);
   color-scheme:light;
 }
@@ -288,3 +288,12 @@ table.tb th{color:var(--ink2);font-weight:600;font-size:13px;text-transform:uppe
 .vazio{border:1px dashed var(--line2);border-radius:12px;padding:28px;text-align:center;color:var(--ink2)}
 .vazio b{display:block;color:var(--ink);font-size:17px;margin-bottom:6px}
 .fonte{font:700 12px var(--f-text);color:var(--mS);border:1px solid color-mix(in srgb,var(--mS) 50%,transparent);border-radius:6px;padding:1px 7px}
+
+/* ---------- β 0.7: painel Detalhes ---------- */
+.detalhes{position:relative}
+.detalhes .painel{display:none;position:absolute;right:0;top:calc(100% + 8px);width:440px;max-height:75vh;overflow-y:auto;background:var(--card);border:1px solid var(--line2);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.35);padding:10px 14px;z-index:40}
+.detalhes:hover .painel,.detalhes.aberto .painel,.detalhes:focus-within .painel{display:block}
+.detalhes .painel::before{content:"";position:absolute;top:-10px;left:0;right:0;height:10px}
+.detalhes summary{cursor:pointer;font-weight:650;padding:8px 0;color:var(--ink)}
+.detalhes table.tb{font-size:13.5px;margin:4px 0 10px}
+.detalhes table.tb td{padding:6px 8px}
