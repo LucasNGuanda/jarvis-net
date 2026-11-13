@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 1.1";
+window.VERSAO = "β 1.2";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -124,11 +124,11 @@ window.CATALOGO = [
 
   /* ===================== ÁREA CÁLCULO ===================== */
   { id:"K1", area:"calculo", letra:"1", cor:"--mK1", nome:"Cálculo 1", desc:"Limites, derivadas e integrais de uma variável.", temas:[
-    ["CI01","Funções e limites",["★"]],
-    ["CI02","Continuidade e limites fundamentais"],
-    ["CI03","Derivada: definição e significado",["★"]],
-    ["CI04","Regras de derivação e regra da cadeia"],
-    ["CI05","Aplicações da derivada: máximos, mínimos, L'Hôpital",["★"]],
+    ["CI01","Funções e limites",["★"],true],
+    ["CI02","Continuidade e limites fundamentais",[],true],
+    ["CI03","Derivada: definição e significado",["★"],true],
+    ["CI04","Regras de derivação e regra da cadeia",[],true],
+    ["CI05","Aplicações da derivada: máximos, mínimos, L'Hôpital",["★"],true],
     ["CI06","Integral definida e somas de Riemann"],
     ["CI07","Teorema Fundamental do Cálculo",["★","!"]],
     ["CI08","Integral indefinida e substituição"],

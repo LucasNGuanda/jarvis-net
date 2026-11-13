@@ -55,6 +55,26 @@ F.registrar("X01", {
 
       F.secao("grafico", "O gráfico inteiro", R`<p>As duas formas lado a lado, para qualquer $x$: elas sempre dão o mesmo número.</p>${lab("lab-todo", "$x\\gf$ de perto e de longe")}`, 5),
 
+      F.secao("negativos", "Os negativos", R`
+        <p>A fórmula curta aceita $x$ negativo: $Я(x) = \frac{x(x+1)}{2}$ funciona com qualquer número. Nos inteiros negativos, o expoente sai inteiro e a conta é tranquila:</p>
+        <table class="tb"><tr><th style="text-transform:none">$x$</th><th style="text-transform:none">$Я(x)$</th><th style="text-transform:none">$x\gf$</th></tr>
+          <tr><td>$-1$</td><td>$0$</td><td>$(-1)^0 = 1$</td></tr>
+          <tr><td>$-2$</td><td>$1$</td><td>$(-2)^1 = -2$</td></tr>
+          <tr><td>$-3$</td><td>$3$</td><td>$(-3)^3 = -27$</td></tr>
+          <tr><td>$-4$</td><td>$6$</td><td>$(-4)^6 = 4096$</td></tr>
+          <tr><td>$-5$</td><td>$10$</td><td>$(-5)^{10} = 9\,765\,625$</td></tr>
+          <tr><td>$-6$</td><td>$15$</td><td>$(-6)^{15} \approx -4{,}70\times10^{11}$</td></tr></table>
+        <p>Repare: $Я(-n) = \frac{n(n-1)}{2} = Я(n-1)$. O expoente de $-5$ é o mesmo de $4$. E o sinal alterna em pares: $+, -, -, +, +, -, -, \dots$ (segue a paridade de $Я$).</p>
+        <h3>E entre os inteiros negativos?</h3>
+        <p>Aqui tem uma pegadinha séria. $(-8)^{1/3} = -2$ tudo bem, mas $(-1)^{1/2}$ não existe nos reais: é o $i$. Com base negativa e expoente quebrado, a resposta em geral é um <b>número complexo</b>. A fórmula de Euler $e^{i\pi} = -1$ diz como calcular:</p>
+        ${F.formula(R`x\gf = |x|^{Я(x)}\,e^{i\pi Я(x)} = \underbrace{|x|^{Я(x)}}_{\text{módulo}}\bigl[\cos(\piЯ(x)) + i\,\operatorname{sen}(\piЯ(x))\bigr]\qquad(x < 0)`, "Gam fresco para x negativo")}
+        <p>Então, para $x < 0$, a sua função sai da reta dos reais e anda pelo plano complexo. Ela só <b>volta para os reais</b> quando $Я(x)$ é inteiro: em todos os inteiros negativos e em mais alguns pontos (por exemplo $x \approx -2{,}5616$, onde $Я = 2$ e o valor é $\approx 6{,}5616$). No gráfico, a curva cheia é a <b>parte real</b>, a tracejada vermelha é a <b>parte imaginária</b> e a pontilhada é o <b>módulo</b>.</p>
+        ${lab("lab-neg", "$x\\gf$ para x negativo: parte real, imaginária e módulo")}
+        ${F.caixa("pegadinha", R`<p><b>A raiz cúbica real engana.</b> Em $x \approx -1{,}4574$, $Я(x) = \frac13$. Dá vontade de dizer $x\gf = \sqrt[3]{x} \approx -1{,}134$, que é real. Mas a regra que vale para todo $x$ (a de cima, com $e^{i\pi Я}$) dá $\approx 0{,}567 + 0{,}982i$, que tem o mesmo módulo $1{,}134$, girado de $60°$. As duas são "raízes cúbicas" de $x$; para a função ser contínua, é preciso escolher sempre a mesma regra, e a única que funciona para expoentes irracionais também é a complexa.</p>`)}
+        <ul><li><b>Perto do zero</b>, pela esquerda: $|x|^{Я} \to 1$ e o ângulo $\piЯ \to 0$, então $x\gf \to 1$ dos dois lados. Faz sentido chamar $0\gf = 1$ (como $0! = 1$).</li>
+          <li><b>Entre $-1$ e $0$</b>, $Я(x)$ é negativo (no máximo $-\frac18$, em $x = -\frac12$): o módulo fica um pouco acima de 1 (o maior é $\approx 1{,}139$, em $x \approx -0{,}236$) e o ângulo vai até $-22{,}5°$. Por exemplo, $(-0{,}5)\gf \approx 1{,}0075 - 0{,}4173i$.</li>
+          <li><b>Para $x < -1$</b>, o módulo $|x|^{Я(x)}$ explode como do lado positivo, e o ângulo gira cada vez mais rápido ($Я$ cresce como $x^2/2$): a parte real oscila com amplitude crescente.</li></ul>`, 6),
+
       F.secao("analise", "Análise (do Claude)", R`
         <h3>Onde fica o fundo</h3>
         <p>Seja $f(x) = \ln ${G} = Я(x)\ln x = \frac{x(x+1)}{2}\ln x$. O mínimo de ${"$"}${G}${"$"} é o mínimo de $f$:</p>
@@ -208,5 +228,41 @@ F.registrar("X01", {
     $("vLonge").addEventListener("click", () => setV("longe"));
     document.querySelectorAll("#lab-todo [data-x]").forEach((b) => b.addEventListener("click", () => { $("x5").value = b.dataset.x; if (+b.dataset.x > 1.15) setV("longe"); else d5(); }));
     d5();
+
+    /* 6 · negativos: x gam fresco = |x|^Я · e^(iπЯ) */
+    const zN = (x) => { const j = J(x), m = x === 0 ? 1 : Math.pow(Math.abs(x), j); return x >= 0 ? [Gt(x), 0, Gt(x)] : [m * Math.cos(Math.PI * j), m * Math.sin(Math.PI * j), m]; };
+    corpo("lab-neg", `<div class="palco"><svg id="sv6" viewBox="0 0 560 340" width="560"></svg></div>
+      <div class="leitor"><div class="vis"><small style="text-transform:none">Я(x)</small><b id="n6a"></b></div><div class="vis"><small style="text-transform:none">ângulo πЯ</small><b id="n6b"></b></div><div class="vis"><small>módulo</small><b id="n6c"></b></div><div class="vis"><small>valor</small><b id="n6d"></b></div></div>
+      <div class="ctrls"><div class="ctrl"><label>x</label><input type="range" min="-3.2" max="1.2" step="any" value="-0.5" id="x6"><output id="x6o"></output></div>
+      <div class="bts"><button class="bt peq" id="nPerto" aria-pressed="true">De perto</button><button class="bt peq" id="nLonge" aria-pressed="false">De longe</button>
+      <button class="bt peq" data-n="-0.5">−0,5</button><button class="bt peq" data-n="-1">−1</button><button class="bt peq" data-n="-1.4574271077563381">−1,4574</button><button class="bt peq" data-n="-2">−2</button><button class="bt peq" data-n="-2.5615528128088303">−2,5616</button><button class="bt peq" data-n="-3">−3</button></div></div>`);
+    const vN = { perto: { W: 560, H: 340, l: 44, r: 18, t: 16, b: 34, xmin: -2.2, xmax: 1.2, ymin: -3, ymax: 3, xt: [-2, -1.5, -1, -0.5, 0, 0.5, 1], yt: [-3, -2, -1, 0, 1, 2, 3] },
+      longe: { W: 560, H: 340, l: 44, r: 18, t: 16, b: 34, xmin: -3.2, xmax: 1.2, ymin: -32, ymax: 32, xt: [-3, -2, -1, 0, 1], yt: [-30, -20, -10, 0, 10, 20, 30] } };
+    let vn = "perto";
+    function d6() {
+      const x = +$("x6").value; $("x6o").textContent = F.t(x, 4);
+      const o = vN[vn], P = frame(o);
+      let g = `<defs><clipPath id="c6"><rect x="${o.l}" y="${o.t}" width="${o.W - o.l - o.r}" height="${o.H - o.t - o.b}"/></clipPath></defs>` + eixos(o, P, o.xt, o.yt, "x", "");
+      g += `<line class="ln2" x1="${P.sx(0)}" x2="${P.sx(0)}" y1="${o.t}" y2="${o.H - o.b}"/><line class="ln2" x1="${o.l}" x2="${o.W - o.r}" y1="${P.sy(0)}" y2="${P.sy(0)}"/>`;
+      const curvaN = (k, est) => { let d = ""; for (let i = 0; i <= 900; i++) { const t = o.xmin + ((o.xmax - o.xmin) * i) / 900; const v = zN(t)[k]; d += (i ? "L" : "M") + P.sx(t).toFixed(1) + " " + P.sy(Math.max(Math.min(v, o.ymax * 3), o.ymin * 3)).toFixed(1); } return `<path clip-path="url(#c6)" d="${d}" style="fill:none;${est}"/>`; };
+      g += curvaN(2, "stroke:var(--ink3);stroke-width:1.6;stroke-dasharray:2 4") + curvaN(1, "stroke:var(--bad);stroke-width:2;stroke-dasharray:7 5") + curvaN(0, "stroke:var(--mod);stroke-width:2.8");
+      [[-3, -27], [-2, -2], [-1, 1], [0, 1], [1, 1]].forEach(([a, v]) => { if (v >= o.ymin && v <= o.ymax && a >= o.xmin) g += pt(P.sx(a), P.sy(v), "var(--ink)", 5); });
+      const xr = -2.5615528128088303; if (xr >= o.xmin) g += pt(P.sx(xr), P.sy(6.5615528128088303), "var(--warn)", 5);
+      const [re, im, md] = zN(x);
+      if (re >= o.ymin && re <= o.ymax) g += `<line class="ln2" style="stroke-dasharray:4 4" x1="${P.sx(x)}" x2="${P.sx(x)}" y1="${P.sy(0)}" y2="${P.sy(re)}"/>` + pt(P.sx(x), P.sy(re));
+      g += `<g transform="translate(${o.W - o.r - 150},${o.t + 8})"><rect width="146" height="62" rx="6" style="fill:var(--card);stroke:var(--line)"/><line x1="10" x2="34" y1="16" y2="16" style="stroke:var(--mod);stroke-width:2.8"/><text class="tx2" x="40" y="20">parte real</text><line x1="10" x2="34" y1="33" y2="33" style="stroke:var(--bad);stroke-width:2;stroke-dasharray:7 5"/><text class="tx2" x="40" y="37">parte imaginária</text><line x1="10" x2="34" y1="50" y2="50" style="stroke:var(--ink3);stroke-width:1.6;stroke-dasharray:2 4"/><text class="tx2" x="40" y="54">módulo</text></g>`;
+      $("sv6").innerHTML = g;
+      const j = J(x), real = x >= 0 || Math.abs(j - Math.round(j)) < 1e-9 || Math.abs(im) < 1e-9 * Math.max(1, md);
+      $("n6a").textContent = F.t(j, 4);
+      $("n6b").textContent = x >= 0 ? "—" : F.t(j, 4) + "π = " + F.t(180 * j, 1) + "°";
+      $("n6c").textContent = F.t(md, 4);
+      $("n6d").textContent = real ? F.t(re, 4) + " (real)" : `${F.t(re, 4)} ${im < 0 ? "−" : "+"} ${F.t(Math.abs(im), 4)} i`;
+    }
+    const setN = (v) => { vn = v; $("nPerto").setAttribute("aria-pressed", v === "perto"); $("nLonge").setAttribute("aria-pressed", v === "longe"); d6(); };
+    $("x6").addEventListener("input", d6);
+    $("nPerto").addEventListener("click", () => setN("perto"));
+    $("nLonge").addEventListener("click", () => setN("longe"));
+    document.querySelectorAll("#lab-neg [data-n]").forEach((b) => b.addEventListener("click", () => { $("x6").value = b.dataset.n; if (+b.dataset.n < -2.2) setN("longe"); else d6(); }));
+    d6();
   },
 });
