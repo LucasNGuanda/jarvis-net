@@ -274,7 +274,7 @@
 
   /* experimentos: pêndulo duplo (pequeno, só enfeite) com rastro */
   function animPendulo(el) {
-    el.innerHTML = `<svg viewBox="-170 -40 340 300" aria-label="pêndulo duplo animado"><g class="r"></g><g class="p"></g></svg>`;
+    el.innerHTML = `<svg viewBox="-225 -225 450 450" aria-label="pêndulo duplo animado"><g class="r"></g><g class="p"></g></svg>`;
     let s = [2.2, 2.6, 0, 0], vivo = true, tr = []; const L = 1, g = 9.8;
     const f = ([a1, a2, w1, w2]) => { const d = a1 - a2, den = 3 - Math.cos(2 * d); return [w1, w2, (-g * 3 * Math.sin(a1) - g * Math.sin(a1 - 2 * a2) - 2 * Math.sin(d) * (w2 * w2 + w1 * w1 * Math.cos(d))) / den, (2 * Math.sin(d) * (2 * w1 * w1 + 2 * g * Math.cos(a1) + w2 * w2 * Math.cos(d))) / den]; };
     const rk = (st, h) => { const k1 = f(st), k2 = f(st.map((v, i) => v + (h / 2) * k1[i])), k3 = f(st.map((v, i) => v + (h / 2) * k2[i])), k4 = f(st.map((v, i) => v + h * k3[i])); return st.map((v, i) => v + (h / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i])); };

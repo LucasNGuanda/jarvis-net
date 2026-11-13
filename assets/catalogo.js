@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 0.9";
+window.VERSAO = "β 1.0";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -151,28 +151,23 @@ window.CATALOGO = [
   ]},
 
   /* ===================== ÁREA EXPERIMENTOS ===================== */
-  { id:"E1", area:"exp", letra:"1", cor:"--mA", nome:"Pêndulo simples", desc:"Da lagrangiana à equação exata; período com amplitude grande; espaço de fase.", temas:[
+  { id:"EPd", area:"exp", letra:"P", cor:"--mA", nome:"Pêndulos", desc:"Simples, duplo e triplo, todos pela lagrangiana.", temas:[
     ["EP01","Pêndulo simples pela lagrangiana",["∫","★"],true],
-  ]},
-  { id:"E2", area:"exp", letra:"2", cor:"--mU", nome:"Pêndulo duplo", desc:"Lagrangiana completa, equações de movimento, modos normais e caos.", temas:[
     ["EP02","Pêndulo duplo e caos",["∫","!!"],true],
+    ["EP08","Pêndulo triplo",["∫","!!"],true],
   ]},
-  { id:"E3", area:"exp", letra:"3", cor:"--mC", nome:"Eletromagnetismo em jogo", desc:"Acerte alvos com a força de Lorentz; lagrangiana de uma carga num campo.", temas:[
+  { id:"EEm", area:"exp", letra:"⚡", cor:"--mC", nome:"Eletromagnetismo", desc:"A parte mais abstrata, para ver acontecer.", temas:[
     ["EP03","O jogo da força de Lorentz",["!"],true],
-  ]},
-  { id:"E4", area:"exp", letra:"4", cor:"--mB", nome:"Bloco, mola e pêndulo", desc:"O do TikTok: equações acopladas e ressonância paramétrica 2 : 1.", temas:[
-    ["EP04","Pêndulo pendurado num bloco com mola",["∫","!"],true],
-  ]},
-  { id:"E5", area:"exp", letra:"5", cor:"--mC", nome:"Como uma carga irradia", desc:"Linhas de campo dobrando: a origem da luz e a fórmula de Larmor.", temas:[
     ["EP05","Radiação de uma carga acelerada",["!!"],true],
-  ]},
-  { id:"E6", area:"exp", letra:"6", cor:"--mC", nome:"Ímã no tubo de cobre", desc:"Lei de Lenz que dá para ver: freio magnético e velocidade terminal.", temas:[
     ["EP06","Ímã caindo num tubo condutor",["!"],true],
   ]},
-  { id:"E7", area:"exp", letra:"7", cor:"--mM", nome:"Exercício do professor", desc:"Conta num fio atraída por uma carga: MHS para x ≪ d.", temas:[
-    ["EP07","Conta no fio e MHS (aula no ITA)",["★","ITA"],true],
+  { id:"EAt", area:"exp", letra:"F", cor:"--mM", nome:"Força de atração", desc:"Forças centrais que viram osciladores.", temas:[
+    ["EP07","A bolinha elétrica no fio",["★","ITA"],true],
   ]},
-  { id:"E8", area:"exp", letra:"8", cor:"--mN", nome:"Pêndulo triplo", desc:"Lagrangiana de n elos, modos normais e caos.", temas:[
-    ["EP08","Pêndulo triplo",["∫","!!"],true],
+  { id:"EMo", area:"exp", letra:"M", cor:"--mU", nome:"Mola", desc:"Osciladores com molas: modos normais e batimento.", temas:[
+    ["EP09","Duas massas e três molas",["∫","★"],true],
+  ]},
+  { id:"EMi", area:"exp", letra:"∞", cor:"--mB", nome:"Mistos", desc:"Sistemas que juntam molas, pêndulos e o que mais vier.", temas:[
+    ["EP04","Pêndulo pendurado num bloco com mola",["∫","!"],true],
   ]},
 ];

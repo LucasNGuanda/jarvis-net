@@ -1,4 +1,4 @@
-# Site Física β 0.9
+# Site Física β 1.0
 
 Site de estudo de física do Lucas, da mecânica clássica até Navier–Stokes, com simulações interativas, mais Cálculo e Experimentos.
 

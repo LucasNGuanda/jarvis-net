@@ -367,7 +367,7 @@
   /* ---------- EP08: pêndulo triplo (forma matricial geral do pêndulo de n elos) ----------
      Σ_j M_ij cos(θi−θj) ℓiℓj θ̈j = −Σ_j M_ij ℓiℓj sen(θi−θj) θ̇j² − g ℓi sen θi Σ_{k≥i} m_k,  M_ij = Σ_{k≥max(i,j)} m_k */
   SIM.penduloTriplo = (el, F) => {
-    const W = 760, H = 460; const [cv, cx] = canvas(el, W, H);
+    const W = 760, H = 560; const [cv, cx] = canvas(el, W, H);
     el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls"><div class="bts" style="grid-column:1/-1">
       <button class="bt peq" data-a="gemeo" aria-pressed="true">Gêmeo (0,001 rad)</button><button class="bt peq" data-a="caos">Caos</button><button class="bt peq" data-a="modo">Modo normal mais lento</button><button class="bt peq" data-a="pausa">⏸ Pausar</button></div></div>
       <div class="status"><b>Arraste</b> qualquer uma das três massas para mudar a posição inicial. Três massas de 1 kg, fios de 1 m (escala da tela). A energia total é conservada; o resto é imprevisível.</div>`);
@@ -378,7 +378,7 @@
       for (let i = 0; i < n; i++) { A.push([]); let bi = 0; for (let j = 0; j < n; j++) { A[i].push(Mij(i, j) * ll[i] * ll[j] * Math.cos(th[i] - th[j])); bi -= Mij(i, j) * ll[i] * ll[j] * Math.sin(th[i] - th[j]) * w[j] * w[j]; } bi -= g * ll[i] * Math.sin(th[i]) * Mij(i, i); b.push(bi); }
       return [...w, ...resolve(A, b)]; };
     const energia = (st) => { let T = 0, V = 0, vx = 0, vy = 0, y = 0; for (let i = 0; i < n; i++) { vx += ll[i] * Math.cos(st[i]) * st[n + i]; vy += ll[i] * Math.sin(st[i]) * st[n + i]; y -= ll[i] * Math.cos(st[i]); T += 0.5 * mm[i] * (vx * vx + vy * vy); V += mm[i] * g * y; } return T + V; };
-    const ox = 380, oy = 70, esc = 120;
+    const ox = 380, oy = 280, esc = 88; // raio total 3·88 = 264 px: cabe girando em qualquer direção
     const pts = (st) => { let x = ox, y = oy; const p = []; for (let i = 0; i < n; i++) { x += ll[i] * esc * Math.sin(st[i]); y += ll[i] * esc * Math.cos(st[i]); p.push([x, y]); } return p; };
     function inicia(a) { s = [...a, 0, 0, 0]; sg = [a[0] + 0.001, a[1], a[2], 0, 0, 0]; tr = []; tempo = 0; dist = []; E0 = energia(s); }
     function desenha() {
@@ -387,7 +387,7 @@
       const bob = (st, cor, al) => { const p = pts(st); cx.globalAlpha = al; cx.strokeStyle = ink; cx.lineWidth = 2; cx.beginPath(); cx.moveTo(ox, oy); p.forEach((q2) => cx.lineTo(...q2)); cx.stroke(); p.forEach((q2, i) => { cx.fillStyle = cor || cores[i]; cx.beginPath(); cx.arc(q2[0], q2[1], 11, 0, 7); cx.fill(); }); cx.globalAlpha = 1; };
       if (gemeo && sg) bob(sg, "rgb(150,160,180)", 0.45); bob(s, null, 1);
       cx.fillStyle = cssv("--ink3"); cx.fillRect(ox - 40, oy - 5, 80, 5);
-      if (gemeo && dist.length > 1) { const gx = 20, gy = 440, gw = 200, gh = 90; cx.strokeStyle = cssv("--line"); cx.strokeRect(gx, gy - gh, gw, gh); cx.strokeStyle = cssv("--warn"); cx.beginPath(); dist.forEach(([t, d2], i) => { const X = gx + (t / Math.max(20, tempo)) * gw, Y = gy - ((Math.log10(Math.max(d2, 1e-4)) + 4) / 4.5) * gh; i ? cx.lineTo(X, Y) : cx.moveTo(X, Y); }); cx.stroke(); cx.fillStyle = cssv("--ink2"); cx.font = "12px Inter"; cx.fillText("separação dos gêmeos (log)", gx, gy - gh - 6); }
+      if (gemeo && dist.length > 1) { const gx = 14, gy = 550, gw = 150, gh = 70; cx.strokeStyle = cssv("--line"); cx.strokeRect(gx, gy - gh, gw, gh); cx.strokeStyle = cssv("--warn"); cx.beginPath(); dist.forEach(([t, d2], i) => { const X = gx + (t / Math.max(20, tempo)) * gw, Y = gy - ((Math.log10(Math.max(d2, 1e-4)) + 4) / 4.5) * gh; i ? cx.lineTo(X, Y) : cx.moveTo(X, Y); }); cx.stroke(); cx.fillStyle = cssv("--ink2"); cx.font = "12px Inter"; cx.fillText("separação dos gêmeos (log)", gx, gy - gh - 6); }
       const E = energia(s); q('[data-v="l"]').innerHTML = `<div class="vis"><small>t</small><b>${F.t(tempo, 1)} s</b></div><div class="vis"><small>energia</small><b>${F.t(E, 4)} J</b></div><div class="vis"><small>erro relativo de E</small><b>${F.t(Math.abs((E - E0) / E0) * 100, 5)}%</b></div>`;
     }
     let t0 = performance.now();
@@ -404,5 +404,62 @@
     q('[data-a="modo"]').addEventListener("click", () => inicia([0.05, 0.05 * 1.2921, 0.05 * 1.6312]));
     q('[data-a="pausa"]').addEventListener("click", (ev) => { pausa = !pausa; ev.currentTarget.setAttribute("aria-pressed", pausa); });
     inicia([2.4, 2.6, 2.9]); requestAnimationFrame(loop); F.aoSair(() => (vivo = false));
+  };
+})();
+
+/* ---------- EP09: duas massas e três molas (parede–k–m–k_c–m–k–parede) ----------
+   m ẍ1 = −k x1 − k_c (x1 − x2) ;  m ẍ2 = −k x2 − k_c (x2 − x1).  Solução exata (soltas do repouso):
+   x1 = ½(A+B) cos ω1 t + ½(A−B) cos ω2 t ;  x2 = ½(A+B) cos ω1 t − ½(A−B) cos ω2 t ;  ω1 = √(k/m), ω2 = √((k+2k_c)/m) */
+(function () {
+  const SIM = window.SIM;
+  const cssv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  SIM.duasMolas = (el, F) => {
+    const W = 760, H = 400;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><canvas width="${W * 2}" height="${H * 2}" style="width:${W}px;height:${H}px;border-radius:8px;background:var(--bg);touch-action:none"></canvas></div>
+      <div class="leitor" data-v="l"></div><div class="ctrls">
+      <div class="ctrl"><label>k (molas das pontas)</label><input type="range" min="2" max="40" step="0.5" value="10" data-c="k"><output data-o="k"></output></div>
+      <div class="ctrl"><label>k_c (mola do meio)</label><input type="range" min="0" max="40" step="0.5" value="1.5" data-c="kc"><output data-o="kc"></output></div>
+      <div class="ctrl"><label>m</label><input type="range" min="0.2" max="3" step="0.1" value="1" data-c="m"><output data-o="m"></output></div>
+      <div class="bts"><button class="bt peq" data-a="m1">Modo 1 (juntas)</button><button class="bt peq" data-a="m2">Modo 2 (opostas)</button><button class="bt peq pri" data-a="bat">Batimento (só a 1ª deslocada)</button></div></div>
+      <div class="status"><b>Arraste</b> qualquer massa para escolher o deslocamento inicial (elas partem do repouso). As curvas finas tracejadas são a fórmula exata x₁(t), x₂(t); as grossas, a simulação: ficam uma em cima da outra.</div>`);
+    const cv = el.querySelector("canvas"), cx = cv.getContext("2d"); cx.scale(2, 2);
+    const p = { k: 10, kc: 1.5, m: 1 }; let A = 0.3, B = 0, s = [0.3, 0, 0, 0], t = 0, hist = [], arr = -1, vivo = true;
+    const q = (x) => el.querySelector(x);
+    const w1 = () => Math.sqrt(p.k / p.m), w2 = () => Math.sqrt((p.k + 2 * p.kc) / p.m);
+    const exato = (tt) => [0.5 * (A + B) * Math.cos(w1() * tt) + 0.5 * (A - B) * Math.cos(w2() * tt), 0.5 * (A + B) * Math.cos(w1() * tt) - 0.5 * (A - B) * Math.cos(w2() * tt)];
+    const f = ([x1, x2, v1, v2]) => [v1, v2, (-p.k * x1 - p.kc * (x1 - x2)) / p.m, (-p.k * x2 - p.kc * (x2 - x1)) / p.m];
+    const rk = (st, h) => { const k1 = f(st), k2 = f(st.map((v, i) => v + (h / 2) * k1[i])), k3 = f(st.map((v, i) => v + (h / 2) * k2[i])), k4 = f(st.map((v, i) => v + h * k3[i])); return st.map((v, i) => v + (h / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i])); };
+    const inicia = (a, b) => { A = a; B = b; s = [a, b, 0, 0]; t = 0; hist = []; };
+    const PX = 300, X1 = 260, X2 = 500, Y = 90;
+    function mola(xa, xb, y, nv, cor) { cx.strokeStyle = cor; cx.lineWidth = 1.8; cx.beginPath(); cx.moveTo(xa, y); const n = nv, L = xb - xa; for (let i = 1; i < n; i++) cx.lineTo(xa + (L * i) / n, y + (i % 2 ? -10 : 10)); cx.lineTo(xb, y); cx.stroke(); }
+    function desenha() {
+      cx.clearRect(0, 0, W, H); const ink = cssv("--ink"), ink3 = cssv("--ink3"), mod = cssv("--mod") || "#43b8a6", warn = cssv("--warn");
+      cx.fillStyle = ink3; cx.fillRect(40, Y - 40, 10, 80); cx.fillRect(W - 50, Y - 40, 10, 80); cx.fillRect(40, Y + 26, W - 80, 3);
+      const xa = X1 + s[0] * PX, xb = X2 + s[1] * PX;
+      mola(50, xa - 22, Y, 14, ink); mola(xa + 22, xb - 22, Y, 14, warn); mola(xb + 22, W - 50, Y, 14, ink);
+      [[xa, mod], [xb, cssv("--mA")]].forEach(([x, c]) => { cx.fillStyle = c; cx.fillRect(x - 22, Y - 22, 44, 44); });
+      cx.fillStyle = cssv("--ink2"); cx.font = "13px Inter"; cx.fillText("k", 120, Y - 18); cx.fillText("k_c", (xa + xb) / 2 - 8, Y - 18); cx.fillText("k", W - 140, Y - 18);
+      // gráficos
+      const gx = 60, gw = 660, T = 20, gy1 = 210, gy2 = 330, sc = 100;
+      cx.strokeStyle = cssv("--line"); [gy1, gy2].forEach((y) => { cx.beginPath(); cx.moveTo(gx, y); cx.lineTo(gx + gw, y); cx.stroke(); });
+      cx.fillStyle = cssv("--ink2"); cx.fillText("x₁(t)", 14, gy1 + 4); cx.fillText("x₂(t)", 14, gy2 + 4);
+      const X = (tt) => gx + ((tt - Math.max(0, t - T)) / T) * gw;
+      [[1, gy1, mod], [2, gy2, cssv("--mA")]].forEach(([k, y0, c]) => {
+        cx.strokeStyle = c; cx.lineWidth = 3; cx.beginPath(); hist.forEach((h, i) => (i ? cx.lineTo(X(h[0]), y0 - h[k] * sc) : cx.moveTo(X(h[0]), y0 - h[k] * sc))); cx.stroke();
+        cx.strokeStyle = ink; cx.lineWidth = 1; cx.setLineDash([3, 4]); cx.beginPath(); hist.forEach((h, i) => { const e = exato(h[0])[k - 1]; i ? cx.lineTo(X(h[0]), y0 - e * sc) : cx.moveTo(X(h[0]), y0 - e * sc); }); cx.stroke(); cx.setLineDash([]);
+      });
+      ["k", "kc", "m"].forEach((k) => (q(`[data-o="${k}"]`).textContent = F.t(p[k], 1) + (k === "m" ? " kg" : " N/m")));
+      const Tb = p.kc > 0 ? (2 * Math.PI) / (w2() - w1()) : Infinity;
+      q('[data-v="l"]').innerHTML = `<div class="vis"><small>ω₁ = √(k/m)</small><b>${F.t(w1(), 3)} rad/s</b></div><div class="vis"><small>ω₂ = √((k+2k_c)/m)</small><b>${F.t(w2(), 3)} rad/s</b></div><div class="vis"><small>período do batimento 2π/(ω₂−ω₁)</small><b>${isFinite(Tb) ? F.t(Tb, 2) + " s" : "∞"}</b></div><div class="vis"><small>erro simulação × fórmula</small><b>${F.t(Math.abs(s[0] - exato(t)[0]) * 1000, 4)} mm</b></div>`;
+    }
+    let t0 = performance.now();
+    function loop(tt) { if (!vivo) return; const dt = Math.min(0.03, (tt - t0) / 1000); t0 = tt; if (arr < 0) { for (let k = 0; k < 20; k++) s = rk(s, dt / 20); t += dt; hist.push([t, s[0], s[1]]); hist = hist.filter((h) => h[0] > t - 20); } desenha(); requestAnimationFrame(loop); }
+    const pos = (ev) => { const r = cv.getBoundingClientRect(); return [((ev.clientX - r.left) * W) / r.width, ((ev.clientY - r.top) * H) / r.height]; };
+    cv.addEventListener("pointerdown", (ev) => { const [x, y] = pos(ev); if (Math.abs(y - Y) > 30) return; const xa = X1 + s[0] * PX, xb = X2 + s[1] * PX; arr = Math.abs(x - xa) < 30 ? 0 : Math.abs(x - xb) < 30 ? 1 : -1; if (arr >= 0) cv.setPointerCapture(ev.pointerId); });
+    cv.addEventListener("pointermove", (ev) => { if (arr < 0) return; const [x] = pos(ev); const d = Math.max(-0.5, Math.min(0.5, (x - (arr ? X2 : X1)) / PX)); if (arr === 0) inicia(d, s[1]); else inicia(s[0], d); });
+    cv.addEventListener("pointerup", () => (arr = -1));
+    el.querySelectorAll("[data-c]").forEach((r) => r.addEventListener("input", () => { p[r.dataset.c] = +r.value; inicia(A, B); }));
+    q('[data-a="m1"]').addEventListener("click", () => inicia(0.25, 0.25)); q('[data-a="m2"]').addEventListener("click", () => inicia(0.25, -0.25)); q('[data-a="bat"]').addEventListener("click", () => inicia(0.3, 0));
+    inicia(0.3, 0); requestAnimationFrame(loop); F.aoSair(() => (vivo = false));
   };
 })();
