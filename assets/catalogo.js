@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 0.4";
+window.VERSAO = "β 0.5";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo 1 e 2" },
@@ -71,13 +71,13 @@ window.CATALOGO = [
     ["C03b","Lei de Gauss",["!","∫"],true],
     ["C04","Potencial Elétrico",["★"],true],
     ["C05","Condutores",["!"],true],
-    ["C11","Capacitores",["★"]],
-    ["C06","Corrente Elétrica"],
+    ["C11","Capacitores",["★"],true],
+    ["C06","Corrente Elétrica",[],true],
     ["C07","Lei de Ohm e Resistores",["★","∫"],true],
-    ["C08","Associação de Resistores",["★"]],
-    ["C09","Instrumentos de Medida Elétrica"],
-    ["C10","Geradores e Receptores"],
-    ["C10b","Leis de Kirchhoff e circuitos RC",["∫","ITA"]],
+    ["C08","Associação de Resistores",["★"],true],
+    ["C09","Instrumentos de Medida Elétrica",[],true],
+    ["C10","Geradores e Receptores",["★"],true],
+    ["C10b","Leis de Kirchhoff e circuitos RC",["∫","ITA"],true],
     ["C12","Campo Magnético"],
     ["C13","Força Magnética"],
     ["C14","Fontes de Campo Magnético",["∫"]],

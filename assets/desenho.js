@@ -36,7 +36,7 @@
       <line x1="${-L / 2}" y1="0" x2="-9" y2="0" class="ln"/><line x1="8" y1="0" x2="${L / 2}" y2="0" class="ln"/>
       <path d="M0 -13 l6 -8 M2 -21 l4 0 0 4 M7 -12 l6 -8 M9 -20 l4 0 0 4" style="stroke:var(--ink);stroke-width:1.4;fill:none"/>`,
     lampada: () => `<circle r="11" class="ln" style="fill:var(--card)"/><path d="M-7.8 -7.8 L7.8 7.8 M-7.8 7.8 L7.8 -7.8" class="ln" style="stroke-width:1.6"/>`,
-    medidor: (L, o) => `<circle r="12" class="ln" style="fill:var(--card)"/><text x="0" y="5" text-anchor="middle" class="tx" style="font-weight:700">${o.letra || "A"}</text>`,
+    medidor: () => `<circle r="12" class="ln" style="fill:var(--card)"/>`,
     vazio: () => "",
   };
   const COMPR = { resistor: 44, resistorCaixa: 40, bateria: 8, led: 20, lampada: 22, medidor: 24, vazio: 0 };
@@ -54,6 +54,7 @@
       s += `<line class="ln" x1="${x1}" y1="${y1}" x2="${f(cx - ux * 4)}" y2="${f(cy - uy * 4)}"/><line class="ln" x1="${f(cx + ux * 4)}" y1="${f(cy + uy * 4)}" x2="${x2}" y2="${y2}"/>`;
     }
     s += `<g transform="translate(${f(cx)} ${f(cy)}) rotate(${f(ang)})" ${o.cor ? `style="--ink:${o.cor}"` : ""}>${CORPO[tipo](tipo === "bateria" ? 8 : L, o)}</g>`;
+    if (tipo === "medidor") s += `<text x="${f(cx)}" y="${f(cy + 5)}" text-anchor="middle" class="tx" style="font-weight:700">${o.letra || "A"}</text>`;
     if (o.rot) {
       // rótulo do lado "lado" (+1 = esquerda de quem anda de 1 para 2)
       const lado = o.lado || 1, dist = o.dist || (tipo === "bateria" ? 26 : 22);
