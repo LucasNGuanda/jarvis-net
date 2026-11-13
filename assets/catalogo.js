@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 0.5";
+window.VERSAO = "β 0.6";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo 1 e 2" },
@@ -78,13 +78,13 @@ window.CATALOGO = [
     ["C09","Instrumentos de Medida Elétrica",[],true],
     ["C10","Geradores e Receptores",["★"],true],
     ["C10b","Leis de Kirchhoff e circuitos RC",["∫","ITA"],true],
-    ["C12","Campo Magnético"],
-    ["C13","Força Magnética"],
-    ["C14","Fontes de Campo Magnético",["∫"]],
-    ["C15","Indução Eletromagnética",["★","!"]],
-    ["C15b","Indutância, circuitos RL e LC",["∫"]],
-    ["C15c","Corrente Alternada"],
-    ["C15d","Equações de Maxwell e Ondas EM",["!!","∫"]],
+    ["C12","Campo Magnético",[],true],
+    ["C13","Força Magnética",["★"],true],
+    ["C14","Fontes de Campo Magnético",["∫","★"],true],
+    ["C15","Indução Eletromagnética",["★","!"],true],
+    ["C15b","Indutância, circuitos RL e LC",["∫"],true],
+    ["C15c","Corrente Alternada",[],true],
+    ["C15d","Equações de Maxwell e Ondas EM",["!!","∫"],true],
   ]},
   { id:"M", letra:"M", cor:"--mM", nome:"Física Moderna", desc:"Quântica, fotoelétrico, Bohr, relatividade e física nuclear.", temas:[
     ["C16","Física Quântica"],
