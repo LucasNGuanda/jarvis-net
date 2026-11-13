@@ -1,9 +1,9 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 0.2";
+window.VERSAO = "β 0.3";
 window.AREAS = [
-  { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física, da mecânica a Navier–Stokes" },
+  { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo 1 e 2" },
 ];
 window.CATALOGO = [
@@ -115,6 +115,10 @@ window.CATALOGO = [
   ]},
   { id:"S", letra:"S", cor:"--mS", nome:"Simulados", desc:"Questões escolhidas pelo Lucas, com a fonte de cada uma (ex.: [ITA 2010]).", temas:[
     ["S00","Como funcionam os simulados",[],true],
+    ["S01","Exercícios da SOIF",[],true],
+    ["S02","Vestibulares militares",["ITA"],true],
+    ["S03","Vestibulares ao redor do mundo",[],true],
+    ["S04","Olimpíadas de Física (BR e RU)",["RU"],true],
   ]},
 
   /* ===================== ÁREA CÁLCULO ===================== */

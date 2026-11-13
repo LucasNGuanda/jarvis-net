@@ -1,4 +1,4 @@
-# Site Física β 0.2
+# Site Física β 0.3
 
 Site de estudo de física, da mecânica clássica até Navier–Stokes, com simulações interativas.
 
