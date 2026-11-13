@@ -179,3 +179,230 @@
     requestAnimationFrame(loop); F.aoSair(() => (vivo = false));
   };
 })();
+
+/* ===================== β 0.9: mais 5 experimentos ===================== */
+(function () {
+  const SIM = window.SIM;
+  const cssv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const rk4 = (f, s, h) => { const k1 = f(s), k2 = f(s.map((v, i) => v + (h / 2) * k1[i])), k3 = f(s.map((v, i) => v + (h / 2) * k2[i])), k4 = f(s.map((v, i) => v + h * k3[i])); return s.map((v, i) => v + (h / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i])); };
+  const canvas = (el, W, H) => { el.insertAdjacentHTML("beforeend", `<div class="palco"><canvas width="${W * 2}" height="${H * 2}" style="width:${W}px;height:${H}px;border-radius:8px;background:var(--bg);touch-action:none"></canvas></div>`); const cv = el.querySelector("canvas"), cx = cv.getContext("2d"); cx.scale(2, 2); return [cv, cx]; };
+  const linha = (cx, pts, cor, w = 1.6) => { cx.strokeStyle = cor; cx.lineWidth = w; cx.beginPath(); pts.forEach(([x, y], i) => (i ? cx.lineTo(x, y) : cx.moveTo(x, y))); cx.stroke(); };
+  const resolve = (A, b) => { const n = b.length, M = A.map((r, i) => [...r, b[i]]); for (let c = 0; c < n; c++) { let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r; [M[c], M[p]] = [M[p], M[c]]; for (let r = 0; r < n; r++) if (r !== c) { const f = M[r][c] / M[c][c]; for (let k = c; k <= n; k++) M[r][k] -= f * M[c][k]; } } return M.map((r, i) => r[n] / r[i]); };
+
+  /* ---------- EP04: pêndulo pendurado num bloco com mola (vertical) ----------
+     (M+m)ẍ − mℓφ̈ sen φ − mℓφ̇² cos φ + kx = (M+m)g ;  mℓ²φ̈ − mℓẍ sen φ + mgℓ sen φ = 0   (x para baixo) */
+  SIM.massaPendulo = (el, F) => {
+    const W = 760, H = 420; const [cv, cx] = canvas(el, W, H);
+    el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls">
+      <div class="ctrl"><label>M (bloco)</label><input type="range" min="0.2" max="3" step="0.1" value="1" data-c="M"><output data-o="M"></output></div>
+      <div class="ctrl"><label>m (pêndulo)</label><input type="range" min="0.1" max="2" step="0.05" value="0.3" data-c="m"><output data-o="m"></output></div>
+      <div class="ctrl"><label>ℓ</label><input type="range" min="0.2" max="1.2" step="0.05" value="0.5" data-c="l"><output data-o="l"></output></div>
+      <div class="ctrl"><label>k</label><input type="range" min="5" max="200" step="1" value="60" data-c="k"><output data-o="k"></output></div>
+      <div class="bts" style="grid-column:1/-1"><button class="bt peq pri" data-a="res">Ressonância 2 : 1 (mágica)</button><button class="bt peq" data-a="sol">Soltar com o pêndulo inclinado</button><button class="bt peq" data-a="caos">Caos (ângulo grande)</button><button class="bt peq" data-a="pausa">⏸ Pausar</button></div></div>
+      <div class="status" data-v="st"></div>`);
+    const p = { M: 1, m: 0.3, l: 0.5, k: 60, g: 9.8 }; let s = [0, 0, 0.5, 0], vivo = true, pausa = false, hist = [], tempo = 0, modo = "sol";
+    const q = (x) => el.querySelector(x);
+    const x0 = () => ((p.M + p.m) * p.g) / p.k; // equilíbrio do bloco
+    const f = ([x, xd, fi, fd]) => { const { M, m, l, k, g } = p, sn = Math.sin(fi), cs = Math.cos(fi);
+      const a = resolve([[M + m, -m * l * sn], [-m * l * sn, m * l * l]], [(M + m) * g - k * x + m * l * fd * fd * cs, -m * g * l * sn]); return [xd, a[0], fd, a[1]]; };
+    const E = ([x, xd, fi, fd]) => { const { M, m, l, k, g } = p; return 0.5 * M * xd * xd + 0.5 * m * ((l * Math.cos(fi) * fd) ** 2 + (xd - l * Math.sin(fi) * fd) ** 2) - M * g * x - m * g * (x + l * Math.cos(fi)) + 0.5 * k * x * x; };
+    function inicia(m) { modo = m; tempo = 0; hist = [];
+      if (m === "res") { p.k = (4 * (p.M + p.m) * p.g) / p.l; q('[data-c="k"]').value = Math.min(200, p.k); s = [x0() + 0.06, 0, 0.02, 0]; }
+      if (m === "sol") s = [x0(), 0, 0.5, 0]; if (m === "caos") s = [x0() + 0.1, 0, 2.6, 0];
+    }
+    let E0 = 0;
+    function desenha() {
+      cx.clearRect(0, 0, W, H); const ink = cssv("--ink"), ink3 = cssv("--ink3"), mod = cssv("--mod") || "#5b9cf5";
+      const esc = 220, bx = 230, by = 40 + (s[0] - x0()) * esc + 110;
+      cx.fillStyle = ink3; cx.fillRect(bx - 50, 20, 100, 8); cx.fillRect(bx - 50, 20, 6, 380); cx.fillRect(bx + 44, 20, 6, 380);
+      // mola
+      const n = 14, y1 = 28, y2 = by - 22; cx.strokeStyle = ink; cx.lineWidth = 1.8; cx.beginPath(); cx.moveTo(bx, y1); for (let i = 1; i < n; i++) cx.lineTo(bx + (i % 2 ? -12 : 12), y1 + ((y2 - y1) * i) / n); cx.lineTo(bx, y2); cx.stroke();
+      cx.fillStyle = cssv("--card2"); cx.strokeStyle = ink; cx.fillRect(bx - 34, by - 22, 68, 44); cx.strokeRect(bx - 34, by - 22, 68, 44);
+      const lx = bx + p.l * esc * 0.6 * Math.sin(s[2]), ly = by + p.l * esc * 0.6 * Math.cos(s[2]);
+      cx.strokeStyle = ink; cx.lineWidth = 2.2; cx.beginPath(); cx.moveTo(bx, by); cx.lineTo(lx, ly); cx.stroke(); cx.fillStyle = mod; cx.beginPath(); cx.arc(lx, ly, 8 + 8 * Math.sqrt(p.m), 0, 7); cx.fill();
+      // gráficos x(t) e φ(t)
+      const gx = 420, gw = 320; cx.fillStyle = cssv("--ink2"); cx.font = "12px Inter"; cx.fillText("x − x₀ (bloco)", gx, 40); cx.fillText("φ (pêndulo)", gx, 230);
+      cx.strokeStyle = cssv("--line"); cx.beginPath(); cx.moveTo(gx, 110); cx.lineTo(gx + gw, 110); cx.moveTo(gx, 300); cx.lineTo(gx + gw, 300); cx.stroke();
+      const T = 15, mx = Math.max(0.02, ...hist.map((h) => Math.abs(h[1]))), mf = Math.max(0.05, ...hist.map((h) => Math.abs(h[2])));
+      linha(cx, hist.map((h) => [gx + ((h[0] - Math.max(0, tempo - T)) / T) * gw, 110 - (h[1] / mx) * 60]), cssv("--warn"));
+      linha(cx, hist.map((h) => [gx + ((h[0] - Math.max(0, tempo - T)) / T) * gw, 300 - (h[2] / mf) * 60]), mod);
+      const wm = Math.sqrt(p.k / (p.M + p.m)), wp = Math.sqrt(p.g / p.l);
+      ["M", "m", "l", "k"].forEach((k) => (q(`[data-o="${k}"]`).textContent = F.t(p[k], k === "k" ? 0 : 2) + { M: " kg", m: " kg", l: " m", k: " N/m" }[k]));
+      q('[data-v="l"]').innerHTML = `<div class="vis"><small>ω mola = √(k/(M+m))</small><b>${F.t(wm, 2)} rad/s</b></div><div class="vis"><small>ω pêndulo = √(g/ℓ)</small><b>${F.t(wp, 2)} rad/s</b></div><div class="vis"><small>razão</small><b>${F.t(wm / wp, 2)}</b></div><div class="vis"><small>erro relativo de E</small><b>${E0 ? F.t(Math.abs((E(s) - E0) / E0) * 100, 5) + "%" : "—"}</b></div>`;
+      q('[data-v="st"]').innerHTML = modo === "res" ? "<b>Ressonância paramétrica 2 : 1.</b> A mola foi ajustada para oscilar no dobro da frequência do pêndulo. O pêndulo começa quase parado (0,02 rad) e a mola quicando; a energia passa da mola para o pêndulo e volta, de novo e de novo. Mexa em k e veja o efeito sumir." : "O bloco sobe e desce na mola; o pêndulo balança pendurado nele. As duas equações (do TikTok) estão acopladas pelos termos com sen φ e cos φ.";
+    }
+    let t0 = performance.now();
+    function loop(t) { if (!vivo) return; const dt = Math.min(0.03, (t - t0) / 1000); t0 = t; if (!pausa) { if (!E0 || tempo === 0) E0 = E(s); for (let k = 0; k < 30; k++) s = rk4(f, s, dt / 30); tempo += dt; hist.push([tempo, s[0] - x0(), s[2]]); hist = hist.filter((h) => h[0] > tempo - 15); } desenha(); requestAnimationFrame(loop); }
+    el.querySelectorAll("[data-c]").forEach((r) => r.addEventListener("input", () => { p[r.dataset.c] = +r.value; E0 = 0; inicia("sol"); }));
+    q('[data-a="res"]').addEventListener("click", () => { E0 = 0; inicia("res"); }); q('[data-a="sol"]').addEventListener("click", () => { E0 = 0; inicia("sol"); }); q('[data-a="caos"]').addEventListener("click", () => { E0 = 0; inicia("caos"); });
+    q('[data-a="pausa"]').addEventListener("click", (ev) => { pausa = !pausa; ev.currentTarget.setAttribute("aria-pressed", pausa); });
+    inicia("res"); requestAnimationFrame(loop); F.aoSair(() => (vivo = false));
+  };
+
+  /* ---------- EP05: como uma carga irradia (linhas de campo com "dobra") ----------
+     Aproximação não relativística (v ≪ c): a parte da linha de campo a uma distância c(t − t_r) do ponto de emissão
+     aponta radialmente a partir da posição que a carga TERIA se seguisse com a velocidade de t_r. Onde houve aceleração, aparece a dobra. */
+  SIM.radiacao = (el, F) => {
+    const W = 760, H = 440; const [cv, cx] = canvas(el, W, H);
+    el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls">
+      <div class="bts" style="grid-column:1/-1">${[["parada", "Parada"], ["const", "Velocidade constante"], ["freada", "Freada brusca"], ["osc", "Oscilando (antena)"]].map(([k, t], i) => `<button class="bt peq" data-m="${k}" aria-pressed="${i === 2}">${t}</button>`).join("")}<button class="bt peq" data-a="re">↺ Recomeçar</button></div>
+      <div class="ctrl"><label>velocidade máxima (fração de c)</label><input type="range" min="0.1" max="0.6" step="0.05" value="0.4" data-c="v"><output></output></div></div>
+      <div class="status" data-v="st"></div>`);
+    const c = 110, N = 18; let modo = "freada", vmax = 0.4, t = 0, vivo = true;
+    const q = (x) => el.querySelector(x);
+    // trajetória: posição e velocidade (px, px/s) em função do tempo
+    function traj(tt) {
+      const v = vmax * c;
+      if (modo === "parada") return [380, 0];
+      if (modo === "const") return [200 + v * tt, v];
+      if (modo === "freada") { const tf = 3, td = 0.25; if (tt < tf) return [140 + v * tt, v]; if (tt < tf + td) { const u = tt - tf; return [140 + v * tf + v * u - (v / (2 * td)) * u * u, v - (v / td) * u]; } return [140 + v * tf + (v * td) / 2, 0]; }
+      const w = 2.2, A = v / w; return [380 + A * Math.sin(w * tt), A * w * Math.cos(w * tt)];
+    }
+    function desenha() {
+      cx.clearRect(0, 0, W, H); const ink2 = cssv("--ink2"), y0 = H / 2;
+      for (let i = 0; i < N; i++) {
+        const th = (2 * Math.PI * (i + 0.5)) / N, nx = Math.cos(th), ny = Math.sin(th), pts = [];
+        for (let tr = t; tr > t - 9; tr -= 0.02) { const [xr, vr] = traj(Math.max(tr, -50)), d = c * (t - tr), xe = xr + vr * (t - tr); pts.push([xe + d * nx, y0 + d * ny]); if (d > 520) break; }
+        linha(cx, pts, ink2, 1.3);
+      }
+      cx.strokeStyle = "rgba(232,176,75,.35)"; cx.setLineDash([4, 6]); const [xa] = traj(modo === "freada" ? 3 : 0);
+      if (modo === "freada" && t > 3) { cx.beginPath(); cx.arc(xa, y0, c * (t - 3), 0, 7); cx.stroke(); }
+      cx.setLineDash([]);
+      const [xq] = traj(t); cx.fillStyle = "#ef5b5b"; cx.beginPath(); cx.arc(xq, y0, 9, 0, 7); cx.fill(); cx.fillStyle = "#fff"; cx.font = "700 12px Inter"; cx.textAlign = "center"; cx.fillText("+", xq, y0 + 4); cx.textAlign = "start";
+      q("output").textContent = F.t(vmax, 2) + " c";
+      q('[data-v="l"]').innerHTML = `<div class="vis"><small>t</small><b>${F.t(t, 1)} s</b></div><div class="vis"><small>c (na tela)</small><b>${c} px/s</b></div>`;
+      q('[data-v="st"]').innerHTML = { parada: "Carga parada: linhas radiais, campo de Coulomb. Nada se propaga.", const: "Velocidade constante: as linhas continuam retas, saindo da posição <b>atual</b>. Uma carga em movimento uniforme não irradia (num referencial que anda com ela, ela está parada).", freada: "<b>Freada brusca:</b> dentro do círculo tracejado (raio c·Δt desde a freada), as linhas já \"sabem\" que a carga parou; fora, ainda apontam para onde ela estaria. A ligação entre as duas regiões é a <b>dobra</b>: um pulso de campo transversal que se afasta à velocidade da luz. Isso é radiação (raios X de freamento, \"bremsstrahlung\").", osc: "<b>Carga oscilando</b> (uma antena): ela gera dobras sem parar, que formam uma onda. As dobras são mais fortes perpendicularmente ao movimento (sen θ) e somem na direção do movimento." }[modo] + ' <span style="color:var(--ink3)">(Visualização aproximada, válida para v ≪ c.)</span>';
+    }
+    let t0 = performance.now();
+    function loop(tt) { if (!vivo) return; const dt = Math.min(0.04, (tt - t0) / 1000); t0 = tt; t += dt; if ((modo === "freada" || modo === "const") && t > 9) t = 0; desenha(); requestAnimationFrame(loop); }
+    el.querySelectorAll("[data-m]").forEach((b) => b.addEventListener("click", () => { modo = b.dataset.m; t = 0; el.querySelectorAll("[data-m]").forEach((x) => x.setAttribute("aria-pressed", x === b)); }));
+    q('[data-a="re"]').addEventListener("click", () => (t = 0)); q("input").addEventListener("input", (ev) => { vmax = +ev.target.value; t = 0; });
+    requestAnimationFrame(loop); F.aoSair(() => (vivo = false));
+  };
+
+  /* ---------- EP06: ímã caindo num tubo condutor ----------
+     m dv/dt = mg − b v, com b = 45 μ0² μ² σ w / (1024 a⁴) (dipolo pontual, tubo de parede fina). */
+  SIM.imaTubo = (el, F) => {
+    el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 340 420" width="340" class="cena"></svg><svg viewBox="0 0 340 300" width="340" class="gr"></svg></div>
+      <div class="leitor" data-v="l"></div><div class="ctrls">
+      <div class="bts">${[["cobre", "Cobre"], ["aluminio", "Alumínio"], ["latao", "Latão"]].map(([k, t], i) => `<button class="bt peq" data-m="${k}" aria-pressed="${i === 0}">${t}</button>`).join("")}</div>
+      <div class="ctrl"><label>espessura da parede</label><input type="range" min="0.5" max="3" step="0.1" value="1" data-c="w"><output data-o="w"></output></div>
+      <div class="bts"><button class="bt peq pri" data-a="soltar">⬇ Soltar os dois ímãs</button></div></div>
+      <div class="status">À esquerda, tubo de PVC (isolante); à direita, tubo de metal. Mesmos ímãs (neodímio, 7,5 g, 1 cm). Em vermelho, os anéis de corrente induzida abaixo do ímã (repelem); em azul, acima (atraem). <span style="color:var(--ink3)">Modelo: dipolo pontual e parede fina (fórmula de b no texto).</span></div>`);
+    const MAT = { cobre: 5.96e7, aluminio: 3.77e7, latao: 1.5e7 }; let mat = "cobre", w = 1e-3, vivo = true;
+    const mass = 7.5e-3, mu = 1.3e-6 / (4e-7 * Math.PI), a = 8e-3, Ltubo = 1.0, MU0 = 4e-7 * Math.PI;
+    const b = () => (45 * MU0 * MU0 * mu * mu * MAT[mat] * w) / (1024 * Math.pow(a, 4));
+    let A = { y: 0, v: 0 }, P = { y: 0, v: 0 }, t = 0, hist = [], rodando = false;
+    const q = (x) => el.querySelector(x);
+    function desenha() {
+      const sy = (y) => 30 + (y / Ltubo) * 360, vt = (mass * 9.8) / b();
+      let g = "";
+      [[80, "PVC", "var(--ink3)"], [250, mat, "#c98a4a"]].forEach(([x, n, cor]) => (g += `<rect x="${x - 22}" y="30" width="44" height="360" rx="4" style="fill:none;stroke:${cor};stroke-width:4"/>${D.txt(x, 410, n, "tx2")}`));
+      const ima = (x, y) => `<rect x="${x - 12}" y="${sy(y) - 12}" width="24" height="12" style="fill:#ef5b5b"/><rect x="${x - 12}" y="${sy(y)}" width="24" height="12" style="fill:#4f8dff"/>`;
+      g += ima(80, P.y) + ima(250, A.y);
+      if (rodando && A.y < Ltubo) { const al = Math.min(1, A.v / vt); g += `<ellipse cx="250" cy="${sy(A.y) + 26}" rx="22" ry="6" style="fill:none;stroke:#ef5b5b;stroke-width:3;opacity:${al}"/><ellipse cx="250" cy="${sy(A.y) - 26}" rx="22" ry="6" style="fill:none;stroke:#4f8dff;stroke-width:3;opacity:${al}"/>`; }
+      q(".cena").innerHTML = g;
+      const x0 = 40, y0 = 260, gw = 280, gh = 220, Tm = Math.max(1, Ltubo / vt * 1.05), vm = vt * 1.5;
+      const path = (k) => hist.map((h, i) => (i ? "L" : "M") + (x0 + (h[0] / Tm) * gw).toFixed(1) + " " + (y0 - (Math.min(h[k], vm * 1.08) / vm) * gh).toFixed(1)).join("");
+      q(".gr").innerHTML = `<line x1="${x0}" y1="${y0}" x2="${x0 + gw}" y2="${y0}" class="ln2"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="30" class="ln2"/><line x1="${x0}" y1="${y0 - (vt / vm) * gh}" x2="${x0 + gw}" y2="${y0 - (vt / vm) * gh}" style="stroke:#c98a4a;stroke-dasharray:4 4"/>${D.txt(x0 + gw, y0 - (vt / vm) * gh - 6, "v terminal", "tx2", "end")}<path d="${path(1)}" style="fill:none;stroke:var(--ink3);stroke-width:2"/><path d="${path(2)}" style="fill:none;stroke:#c98a4a;stroke-width:2.4"/>${D.txt(x0, 22, "v (escala do metal; o PVC sai por cima)", "tx2", "start")}${D.txt(x0 + gw, y0 + 18, "t (s)", "tx2", "end")}`;
+      q('[data-o="w"]').textContent = F.t(w * 1000, 1) + " mm";
+      q('[data-v="l"]').innerHTML = `<div class="vis"><small>b (amortecimento)</small><b>${F.t(b(), 2)} N·s/m</b></div><div class="vis"><small>v terminal = mg/b</small><b>${F.t(vt * 100, 1)} cm/s</b></div><div class="vis"><small>tempo no tubo de 1 m</small><b>${F.t(Ltubo / vt, 1)} s (PVC: 0,45 s)</b></div><div class="vis"><small>calor b·v² na terminal</small><b>${F.t(b() * vt * vt * 1000, 1)} mW</b></div>`;
+    }
+    let t0 = performance.now();
+    function loop(tt) {
+      if (!vivo) return; const dt = Math.min(0.03, (tt - t0) / 1000); t0 = tt;
+      if (rodando) { for (let k = 0; k < 40; k++) { const h = dt / 40; if (A.y < Ltubo) { A.v += (9.8 - (b() / mass) * A.v) * h; A.y += A.v * h; } if (P.y < Ltubo) { P.v += 9.8 * h; P.y += P.v * h; } } t += dt; hist.push([t, Math.min(P.v, 99), A.v]); if (A.y >= Ltubo && P.y >= Ltubo) rodando = false; }
+      desenha(); requestAnimationFrame(loop);
+    }
+    const solta = () => { A = { y: 0, v: 0 }; P = { y: 0, v: 0 }; t = 0; hist = []; rodando = true; };
+    el.querySelectorAll("[data-m]").forEach((x) => x.addEventListener("click", () => { mat = x.dataset.m; el.querySelectorAll("[data-m]").forEach((y) => y.setAttribute("aria-pressed", y === x)); solta(); }));
+    q('[data-c="w"]').addEventListener("input", (ev) => { w = +ev.target.value / 1000; solta(); });
+    q('[data-a="soltar"]').addEventListener("click", solta);
+    solta(); requestAnimationFrame(loop); F.aoSair(() => (vivo = false));
+  };
+
+  /* ---------- EP07: conta num fio horizontal atraída por uma carga abaixo (exercício do professor) ----------
+     F_x = −k q1 q2 x / (d² + x²)^{3/2}  ≈  −(k q1 q2 / d³) x  para x ≪ d. */
+  SIM.profMHS = (el, F) => {
+    const W = 760, H = 380; const [cv, cx] = canvas(el, W, H);
+    el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls">
+      <div class="ctrl"><label>distância d</label><input type="range" min="5" max="30" step="0.5" value="10" data-c="d"><output data-o="d"></output></div>
+      <div class="ctrl"><label>amplitude inicial x₀</label><input type="range" min="0.5" max="30" step="0.5" value="2" data-c="A"><output data-o="A"></output></div>
+      <div class="bts"><button class="bt peq" data-a="fant" aria-pressed="true">Fantasma: MHS (x ≪ d)</button><button class="bt peq" data-a="re">↺ Soltar de novo</button></div></div>
+      <div class="status" data-v="st"></div>`);
+    const K = 8.99e9, q1 = 1e-6, q2 = 1e-6, m = 1e-3; let d = 0.1, A = 0.02, s = [0.02, 0], sf = [0.02, 0], fant = true, t = 0, hist = [], cruz = [], vivo = true;
+    const q = (x) => el.querySelector(x);
+    const w0 = () => Math.sqrt((K * q1 * q2) / (m * d ** 3));
+    const fex = ([x, v]) => [v, (-K * q1 * q2 * x) / (m * Math.pow(d * d + x * x, 1.5))], fap = ([x, v]) => [v, -(w0() ** 2) * x];
+    function reset() { s = [A, 0]; sf = [A, 0]; t = 0; hist = []; cruz = []; }
+    function desenha() {
+      cx.clearRect(0, 0, W, H); const ink = cssv("--ink"), ink3 = cssv("--ink3"), mod = cssv("--mod") || "#5b9cf5";
+      const esc = 6 / 0.01, cx0 = 230, yf = 70, yq = yf + Math.min(260, d * 1000 * 0.9);
+      cx.strokeStyle = ink3; cx.lineWidth = 2; cx.beginPath(); cx.moveTo(20, yf); cx.lineTo(440, yf); cx.stroke();
+      cx.setLineDash([3, 4]); cx.beginPath(); cx.moveTo(cx0, yf); cx.lineTo(cx0, yq); cx.stroke(); cx.setLineDash([]);
+      cx.fillStyle = cssv("--ink2"); cx.font = "italic 15px Lora"; cx.fillText("d", cx0 + 8, (yf + yq) / 2);
+      cx.fillStyle = "#4f8dff"; cx.beginPath(); cx.arc(cx0, yq, 11, 0, 7); cx.fill(); cx.fillStyle = "#fff"; cx.font = "700 12px Inter"; cx.textAlign = "center"; cx.fillText("−", cx0, yq + 4);
+      const X = cx0 + s[0] * 1000 * 6;
+      if (fant) { cx.fillStyle = "rgba(150,160,180,.4)"; cx.beginPath(); cx.arc(cx0 + sf[0] * 6000, yf, 10, 0, 7); cx.fill(); }
+      cx.strokeStyle = "rgba(232,176,75,.6)"; cx.lineWidth = 1.2; cx.beginPath(); cx.moveTo(X, yf); cx.lineTo(cx0, yq); cx.stroke();
+      cx.fillStyle = "#ef5b5b"; cx.beginPath(); cx.arc(X, yf, 10, 0, 7); cx.fill(); cx.fillStyle = "#fff"; cx.fillText("+", X, yf + 4); cx.textAlign = "start";
+      // gráfico
+      const gx = 470, gy = 190, gw = 270, T = 0.4, mA = Math.max(...hist.map((h) => Math.max(Math.abs(h[1]), Math.abs(h[2]))), 1e-4);
+      cx.strokeStyle = cssv("--line"); cx.beginPath(); cx.moveTo(gx, gy); cx.lineTo(gx + gw, gy); cx.stroke(); cx.fillStyle = cssv("--ink2"); cx.font = "12px Inter"; cx.fillText("x(t): exato (cor) × MHS (cinza)", gx, 40);
+      const px = (h, k) => [gx + ((h[0] - Math.max(0, t - T)) / T) * gw, gy - (h[k] / mA) * 120];
+      if (fant) linha(cx, hist.map((h) => px(h, 2)), "rgba(150,160,180,.6)"); linha(cx, hist.map((h) => px(h, 1)), mod, 2);
+      const Tm = cruz.length > 1 ? (cruz[cruz.length - 1] - cruz[0]) / (cruz.length - 1) : null;
+      q('[data-o="d"]').textContent = F.t(d * 100, 1) + " cm"; q('[data-o="A"]').textContent = F.t(A * 100, 1) + " cm";
+      q('[data-v="l"]').innerHTML = `<div class="vis"><small>ω = √(kq₁q₂/md³)</small><b>${F.t(w0(), 1)} rad/s</b></div><div class="vis"><small>T (MHS)</small><b>${F.t((2 * Math.PI) / w0() * 1000, 1)} ms</b></div><div class="vis"><small>T medido (exato)</small><b>${Tm ? F.t(Tm * 1000, 1) + " ms" : "…"}</b></div><div class="vis"><small>x₀/d</small><b>${F.t(A / d, 2)}</b></div>`;
+      q('[data-v="st"]').innerHTML = `Cargas de 1 µC, conta de 1 g, câmera lenta ×10. ${A / d < 0.2 ? "Com x₀ ≪ d, o exato e o MHS ficam praticamente juntos." : "<b>x₀ não é pequeno perto de d:</b> a força real cresce menos que linearmente (o fator (d² + x²)^(3/2) aumenta), o período fica maior e o movimento deixa de ser senoidal."}`;
+    }
+    let t0 = performance.now();
+    function loop(tt) { if (!vivo) return; const dt = Math.min(0.03, (tt - t0) / 1000) / 10; t0 = tt; for (let k = 0; k < 20; k++) { const prev = s[0]; s = rk4(fex, s, dt / 20); sf = rk4(fap, sf, dt / 20); t += dt / 20; if (prev < 0 && s[0] >= 0) cruz.push(t); } hist.push([t, s[0], sf[0]]); hist = hist.filter((h) => h[0] > t - 0.4); desenha(); requestAnimationFrame(loop); }
+    el.querySelectorAll("[data-c]").forEach((r) => r.addEventListener("input", () => { if (r.dataset.c === "d") d = +r.value / 100; else A = +r.value / 100; reset(); }));
+    q('[data-a="fant"]').addEventListener("click", (ev) => { fant = !fant; ev.currentTarget.setAttribute("aria-pressed", fant); });
+    q('[data-a="re"]').addEventListener("click", reset);
+    reset(); requestAnimationFrame(loop); F.aoSair(() => (vivo = false));
+  };
+
+  /* ---------- EP08: pêndulo triplo (forma matricial geral do pêndulo de n elos) ----------
+     Σ_j M_ij cos(θi−θj) ℓiℓj θ̈j = −Σ_j M_ij ℓiℓj sen(θi−θj) θ̇j² − g ℓi sen θi Σ_{k≥i} m_k,  M_ij = Σ_{k≥max(i,j)} m_k */
+  SIM.penduloTriplo = (el, F) => {
+    const W = 760, H = 460; const [cv, cx] = canvas(el, W, H);
+    el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls"><div class="bts" style="grid-column:1/-1">
+      <button class="bt peq" data-a="gemeo" aria-pressed="true">Gêmeo (0,001 rad)</button><button class="bt peq" data-a="caos">Caos</button><button class="bt peq" data-a="modo">Modo normal mais lento</button><button class="bt peq" data-a="pausa">⏸ Pausar</button></div></div>
+      <div class="status"><b>Arraste</b> qualquer uma das três massas para mudar a posição inicial. Três massas de 1 kg, fios de 1 m (escala da tela). A energia total é conservada; o resto é imprevisível.</div>`);
+    const n = 3, mm = [1, 1, 1], ll = [1, 1, 1], g = 9.8; let s = [2.4, 2.6, 2.9, 0, 0, 0], sg = null, gemeo = true, pausa = false, vivo = true, arr = -1, tr = [], tempo = 0, E0 = 0, dist = [];
+    const q = (x) => el.querySelector(x);
+    const Mij = (i, j) => { let s2 = 0; for (let k = Math.max(i, j); k < n; k++) s2 += mm[k]; return s2; };
+    const f = (st) => { const th = st.slice(0, n), w = st.slice(n), A = [], b = [];
+      for (let i = 0; i < n; i++) { A.push([]); let bi = 0; for (let j = 0; j < n; j++) { A[i].push(Mij(i, j) * ll[i] * ll[j] * Math.cos(th[i] - th[j])); bi -= Mij(i, j) * ll[i] * ll[j] * Math.sin(th[i] - th[j]) * w[j] * w[j]; } bi -= g * ll[i] * Math.sin(th[i]) * Mij(i, i); b.push(bi); }
+      return [...w, ...resolve(A, b)]; };
+    const energia = (st) => { let T = 0, V = 0, vx = 0, vy = 0, y = 0; for (let i = 0; i < n; i++) { vx += ll[i] * Math.cos(st[i]) * st[n + i]; vy += ll[i] * Math.sin(st[i]) * st[n + i]; y -= ll[i] * Math.cos(st[i]); T += 0.5 * mm[i] * (vx * vx + vy * vy); V += mm[i] * g * y; } return T + V; };
+    const ox = 380, oy = 70, esc = 120;
+    const pts = (st) => { let x = ox, y = oy; const p = []; for (let i = 0; i < n; i++) { x += ll[i] * esc * Math.sin(st[i]); y += ll[i] * esc * Math.cos(st[i]); p.push([x, y]); } return p; };
+    function inicia(a) { s = [...a, 0, 0, 0]; sg = [a[0] + 0.001, a[1], a[2], 0, 0, 0]; tr = []; tempo = 0; dist = []; E0 = energia(s); }
+    function desenha() {
+      cx.clearRect(0, 0, W, H); const ink = cssv("--ink"), cores = [cssv("--mA"), cssv("--mU"), cssv("--mC")];
+      for (let i = 1; i < tr.length; i++) { cx.strokeStyle = `rgba(232,176,75,${(i / tr.length) * 0.8})`; cx.lineWidth = 1.3; cx.beginPath(); cx.moveTo(...tr[i - 1]); cx.lineTo(...tr[i]); cx.stroke(); }
+      const bob = (st, cor, al) => { const p = pts(st); cx.globalAlpha = al; cx.strokeStyle = ink; cx.lineWidth = 2; cx.beginPath(); cx.moveTo(ox, oy); p.forEach((q2) => cx.lineTo(...q2)); cx.stroke(); p.forEach((q2, i) => { cx.fillStyle = cor || cores[i]; cx.beginPath(); cx.arc(q2[0], q2[1], 11, 0, 7); cx.fill(); }); cx.globalAlpha = 1; };
+      if (gemeo && sg) bob(sg, "rgb(150,160,180)", 0.45); bob(s, null, 1);
+      cx.fillStyle = cssv("--ink3"); cx.fillRect(ox - 40, oy - 5, 80, 5);
+      if (gemeo && dist.length > 1) { const gx = 20, gy = 440, gw = 200, gh = 90; cx.strokeStyle = cssv("--line"); cx.strokeRect(gx, gy - gh, gw, gh); cx.strokeStyle = cssv("--warn"); cx.beginPath(); dist.forEach(([t, d2], i) => { const X = gx + (t / Math.max(20, tempo)) * gw, Y = gy - ((Math.log10(Math.max(d2, 1e-4)) + 4) / 4.5) * gh; i ? cx.lineTo(X, Y) : cx.moveTo(X, Y); }); cx.stroke(); cx.fillStyle = cssv("--ink2"); cx.font = "12px Inter"; cx.fillText("separação dos gêmeos (log)", gx, gy - gh - 6); }
+      const E = energia(s); q('[data-v="l"]').innerHTML = `<div class="vis"><small>t</small><b>${F.t(tempo, 1)} s</b></div><div class="vis"><small>energia</small><b>${F.t(E, 4)} J</b></div><div class="vis"><small>erro relativo de E</small><b>${F.t(Math.abs((E - E0) / E0) * 100, 5)}%</b></div>`;
+    }
+    let t0 = performance.now();
+    function loop(t) { if (!vivo) return; const dt = Math.min(0.03, (t - t0) / 1000); t0 = t;
+      if (!pausa && arr < 0) { for (let k = 0; k < 50; k++) { s = rk4(f, s, dt / 50); if (gemeo) sg = rk4(f, sg, dt / 50); } tempo += dt; const p = pts(s); tr.push(p[2]); if (tr.length > 450) tr.shift(); if (gemeo) { const pg = pts(sg); dist.push([tempo, Math.hypot(p[2][0] - pg[2][0], p[2][1] - pg[2][1]) / esc]); } }
+      desenha(); requestAnimationFrame(loop); }
+    const pos = (ev) => { const r = cv.getBoundingClientRect(); return [((ev.clientX - r.left) * W) / r.width, ((ev.clientY - r.top) * H) / r.height]; };
+    cv.addEventListener("pointerdown", (ev) => { const [x, y] = pos(ev); const p = pts(s); arr = p.findIndex((q2) => Math.hypot(q2[0] - x, q2[1] - y) < 22); if (arr >= 0) cv.setPointerCapture(ev.pointerId); });
+    cv.addEventListener("pointermove", (ev) => { if (arr < 0) return; const [x, y] = pos(ev); const p = pts(s), base = arr ? p[arr - 1] : [ox, oy]; const a = s.slice(0, 3); a[arr] = Math.atan2(x - base[0], y - base[1]); inicia(a); });
+    cv.addEventListener("pointerup", () => (arr = -1));
+    q('[data-a="gemeo"]').addEventListener("click", (ev) => { gemeo = !gemeo; ev.currentTarget.setAttribute("aria-pressed", gemeo); inicia(s.slice(0, 3)); });
+    q('[data-a="caos"]').addEventListener("click", () => inicia([2.4, 2.6, 2.9]));
+    // modo normal mais lento (m, ℓ iguais): ω² = 0,4158 g/ℓ, autovetor (1 ; 1,2921 ; 1,6312) (numpy)
+    q('[data-a="modo"]').addEventListener("click", () => inicia([0.05, 0.05 * 1.2921, 0.05 * 1.6312]));
+    q('[data-a="pausa"]').addEventListener("click", (ev) => { pausa = !pausa; ev.currentTarget.setAttribute("aria-pressed", pausa); });
+    inicia([2.4, 2.6, 2.9]); requestAnimationFrame(loop); F.aoSair(() => (vivo = false));
+  };
+})();
