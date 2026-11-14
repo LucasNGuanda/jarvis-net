@@ -46,7 +46,7 @@ window.CATALOGO = [
     ["T03","Dilatometria",[],true],
     ["T04","Calorimetria",[],true],
     ["T04b","Calorimetria (Aprofundamento)",[],true],
-    ["T05","Gases"],
+    ["T05","Gases",[],true],
     ["T05b","Teoria Cinética dos Gases",["∫"]],
     ["T06","Lei Zero da Termodinâmica"],
     ["T07","1ª Lei da Termodinâmica",["★"]],

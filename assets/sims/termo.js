@@ -1,4 +1,4 @@
-/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; */
+/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; T05 gás ideal p × V; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -152,6 +152,50 @@
       if (h > 0) { const Teq = 20 + P / h; if (Teq < 118) sv += `<line x1="${gx}" x2="${gx + gw}" y1="${Y(Teq)}" y2="${Y(Teq)}" style="stroke:var(--warn);stroke-dasharray:6 4"/>` + D.txt(gx + gw, Y(Teq) - 6, "equilíbrio com perdas", "tx2", "end"); }
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("temperatura", n2(T, 1) + " °C") + vis("estado", fase) + vis("sem perdas: começa a ferver em", n2(tp.t3, 0) + " s") + vis("sem perdas: termina de ferver em", n2(tp.t4, 0) + " s");
+    });
+  };
+
+  /* ---------- T05 · gás ideal no cilindro e no diagrama p × V ---------- */
+  SIM.gas = (el, F) => {
+    const W = 680, H = 320, R = 0.082;
+    let modo = "T", rastro = [];
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("quantidade de gás n (mol)", "n", 0.2, 2, 0.05, 1)}${sl("volume V (L)", "V", 5, 50, 0.5, 24.6)}${sl("temperatura T (K)", "T", 100, 600, 5, 300)}
+      <div class="bts">${botoes([["T", "isotérmica (T fixa)"], ["p", "isobárica (p fixa)"], ["V", "isocórica (V fixo)"]], "modo", "T")}<button class="bt" data-a="lp">Limpar rastro</button></div></div>
+      <div class="status">Escolha o que fica fixo e mexa nos controles: o programa ajusta o resto pela equação de Clapeyron, pV = nRT (R = 0,082 atm·L/mol·K). No diagrama p × V, as curvas tracejadas são isotermas (hipérboles, pV = constante). Isotérmica anda sobre uma delas; isobárica é uma reta horizontal; isocórica, uma reta vertical.</div>`);
+    const q = (s) => el.querySelector(s);
+    let p = (1 * R * 300) / 24.6;
+    SIM.gas._conta = (n, V, T) => (n * R * T) / V;
+    const trava = () => { q("[data-c=T]").disabled = modo === "T"; q("[data-c=V]").disabled = modo === "V"; };
+    liga(el, "modo", (k) => { modo = k; p = SIM.gas._conta(val(el, "n"), val(el, "V"), val(el, "T")); trava(); });
+    q("[data-a=lp]").addEventListener("click", () => (rastro = []));
+    /* na isobárica, mexer em V muda T (e vice-versa) para manter p; nas outras, a pressão é que se ajusta */
+    const ajusta = (quem) => {
+      if (modo !== "p") return;
+      const n = val(el, "n");
+      let V = val(el, "V"), T = val(el, "T");
+      if (quem === "V") T = (p * V) / (n * R); else V = (n * R * T) / p;
+      q("[data-c=V]").value = Math.max(5, Math.min(50, V)); q("[data-c=T]").value = Math.max(100, Math.min(600, T));
+    };
+    ["n", "V", "T"].forEach((k) => q(`[data-c=${k}]`).addEventListener("input", () => ajusta(k)));
+    trava();
+    anima(el, F, () => {
+      const n = val(el, "n"), V = val(el, "V"), T = val(el, "T"); p = (n * R * T) / V;
+      mostra(el, ["n"], 2); mostra(el, ["V"], 1); mostra(el, ["T"], 0);
+      if (!rastro.length || Math.hypot(rastro[rastro.length - 1][0] - V, rastro[rastro.length - 1][1] - p) > 0.05) { rastro.push([V, p]); if (rastro.length > 400) rastro.shift(); }
+      /* cilindro */
+      let sv = D.pistao(40, 40, 120, 240, V / 55, "", "var(--mT)");
+      for (let i = 0; i < Math.round(n * 12); i++) { const x = 52 + ((i * 37) % 96), y = 280 - 8 - ((i * 53) % Math.max(10, (240 * V) / 55 - 24)); sv += `<circle cx="${x}" cy="${y}" r="3" style="fill:var(--warn)"/>`; }
+      /* diagrama p × V */
+      const gx = 250, gy = 280, gw = 400, gh = 240, pmax = 5 * n, X = (v) => gx + (v / 55) * gw, Y = (pp) => gy - (Math.min(pp, pmax) / pmax) * gh;
+      sv += D.seta(gx, gy, gx + gw + 10, gy, "var(--ink2)", 1.4) + D.seta(gx, gy, gx, gy - gh - 10, "var(--ink2)", 1.4) + D.txt(gx + gw + 10, gy + 18, "V (L)", "tx2", "end") + D.txt(gx + 8, gy - gh - 4, "p (atm)", "tx2", "start");
+      [10, 20, 30, 40, 50].forEach((v) => (sv += D.txt(X(v), gy + 16, String(v), "tx2")));
+      [0.25, 0.5, 0.75, 1].map((f) => +(f * pmax).toFixed(2)).forEach((pp) => (sv += D.txt(gx - 6, Y(pp) + 4, String(pp), "tx2", "end")));
+      [200, 300, 400, 500, 600].forEach((TT) => { let d = ""; for (let v = 5; v <= 52; v += 0.5) { const pp = (n * R * TT) / v; if (pp > pmax) continue; d += (d ? "L" : "M") + X(v).toFixed(1) + " " + Y(pp).toFixed(1); } sv += `<path d="${d}" style="fill:none;stroke:var(--ink3);stroke-dasharray:3 4"/>`; const pe = (n * R * TT) / 12; if (pe < pmax) sv += D.txt(X(12) + 4, Y(pe) - 4, TT + " K", "tx2", "start"); });
+      let d = ""; rastro.forEach(([v, pp], i) => (d += (i ? "L" : "M") + X(v).toFixed(1) + " " + Y(pp).toFixed(1)));
+      sv += `<path d="${d}" style="fill:none;stroke:var(--warn);stroke-width:2"/><circle cx="${X(V)}" cy="${Y(p)}" r="6" style="fill:var(--mT)"/>`;
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("pressão p = nRT/V", n2(p, 2) + " atm") + vis("volume", n2(V, 1) + " L") + vis("temperatura", n2(T, 0) + " K (" + n2(T - 273.15, 0) + " °C)") + vis("pV/T (= nR)", n2((p * V) / T, 4) + " atm·L/K");
     });
   };
 })();
