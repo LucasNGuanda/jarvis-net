@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -277,5 +277,35 @@
     });
     q("[data-a=re]").addEventListener("click", () => { y = 0; v = 0; });
     liga(el, "m", (k) => { modo = k; y = 0; v = 0; });
+  };
+  /* ---------- A09 · plano inclinado com atrito ---------- */
+  SIM.planoAtrito = (el, F) => {
+    const W = 680, H = 330, g = 10;
+    let x = 0, v = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("ângulo do plano θ (graus)", "th", 0, 60, 1, 30)}${sl("atrito estático μe", "me", 0, 1.2, 0.01, 0.7)}${sl("atrito cinético μc", "mc", 0, 1.2, 0.01, 0.5)}
+      <div class="bts"><button class="bt pri" data-a="re">Recolocar o bloco</button></div></div>
+      <div class="status">Aumente o ângulo devagar: enquanto tg θ ≤ μe, o atrito estático segura o bloco (ele vale exatamente mg sen θ, não μe·N). Quando tg θ passa de μe, o bloco escorrega e o atrito vira o cinético, μc·N, menor. Por isso é mais fácil manter algo deslizando do que tirá-lo do lugar.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.planoAtrito._conta = (thDeg, me, mc) => { const t = (thDeg * Math.PI) / 180, N = Math.cos(t), comp = Math.sin(t); const desliza = Math.tan(t) > me + 1e-12; return { desliza, a: desliza ? g * (comp - mc * N) : 0, fat: desliza ? mc * N * g : comp * g, Nm: N * g, crit: (Math.atan(me) * 180) / Math.PI }; };
+    anima(el, F, (dt) => {
+      const th = val(el, "th"), me = val(el, "me"), mc = Math.min(val(el, "mc"), val(el, "me"));
+      q("[data-o=th]").textContent = n2(th, 0) + "°"; mostra(el, ["me", "mc"], 2);
+      const c = SIM.planoAtrito._conta(th, me, mc);
+      if (c.desliza && x < 2.4) { v += c.a * dt; x += v * dt * 0.5; } else if (!c.desliza) { v = 0; }
+      const t = (th * Math.PI) / 180, L = 340, x0 = 150, y0 = 280, xt = x0 + L * Math.cos(t), yt = y0 - L * Math.sin(t);
+      const s = 280 - Math.min(x, 2.4) * 100, cx = x0 + s * Math.cos(t), cy = y0 - s * Math.sin(t);
+      let sv = `<polygon points="${x0},${y0} ${xt},${y0} ${xt},${yt}" style="fill:var(--line2);stroke:var(--ink2)"/>`;
+      sv += `<g transform="translate(${cx} ${cy}) rotate(${-th})"><rect x="-22" y="-30" width="44" height="30" style="fill:color-mix(in srgb,var(--mA) 30%,transparent);stroke:var(--mA);stroke-width:2"/></g>`;
+      const nx = -Math.sin(t), ny = -Math.cos(t), mx = cx + nx * 15, my = cy + ny * 15, k = 6;
+      sv += D.seta(mx, my, mx, my + 10 * k, "var(--warn)", 2) + D.txt(mx + 8, my + 10 * k, "P", "txm", "start");
+      sv += D.seta(mx, my, mx + nx * c.Nm * k, my + ny * c.Nm * k, "var(--mC)", 2) + D.txt(mx + nx * c.Nm * k - 6, my + ny * c.Nm * k, "N", "txm", "end");
+      if (c.fat > 0.01) sv += D.seta(mx, my, mx + Math.cos(t) * c.fat * k, my - Math.sin(t) * c.fat * k, "var(--mT)", 2) + D.txt(mx + Math.cos(t) * c.fat * k + 8, my - Math.sin(t) * c.fat * k - 4, "f", "txm", "start");
+      sv += `<text class="tx2" x="${x0 + 40}" y="${y0 - 8}">θ</text><text class="tx2" x="16" y="22">${c.desliza ? "deslizando: atrito cinético" : "parado: atrito estático"}</text>`;
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("ângulo crítico arctg μe", n2(c.crit, 1) + "°") + vis("normal (por kg) g cos θ", n2(c.Nm, 2) + " N") + vis("atrito (por kg)", n2(c.fat, 2) + " N") + vis("aceleração g(sen θ − μc cos θ)", n2(c.a, 2) + " m/s²");
+    });
+    q("[data-a=re]").addEventListener("click", () => { x = 0; v = 0; });
+    ["th", "me"].forEach((c) => q(`[data-c=${c}]`).addEventListener("input", () => { if (!SIM.planoAtrito._conta(val(el, "th"), val(el, "me"), val(el, "mc")).desliza) { x = 0; v = 0; } }));
   };
 })();
