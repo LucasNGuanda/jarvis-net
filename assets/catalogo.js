@@ -21,7 +21,7 @@ window.CATALOGO = [
     ["A01","Introdução à Cinemática",[],true],
     ["A02","Movimento Retilíneo Uniforme",[],true],
     ["A03","Movimento Retilíneo Uniformemente Variado",[],true],
-    ["A04","Análise Gráfica",["★"]],
+    ["A04","Análise Gráfica",["★"],true],
     ["A05","Cinemática Vetorial"],
     ["A06","Lançamentos",["★"]],
     ["A07","Movimento Circular"],

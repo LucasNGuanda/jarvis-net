@@ -131,9 +131,9 @@
       const vp = TS.map((t, i) => [t, vs[i]]), vSel = D.amostra((t) => vDe(vs, t), 0, tl, 50);
       const ap = []; for (let i = 0; i < 5; i++) { const a = (vs[i + 1] - vs[i]) / 2; ap.push([TS[i], a], [TS[i + 1], a]); }
       const amax = Math.max(1, ...ap.map((p) => Math.abs(p[1])));
-      let sv = D.graf({ x0: 60, y0: 120, w: 560, h: 95, xmax: 10, ymin: smin, ymax: smax, xlab: "t (s)", ylab: "s (m)", xt: TS, yt: [Math.round(smin), Math.round(smax)].filter((v, i, ar) => ar.indexOf(v) === i), curvas: [{ pts: sp, cor: "var(--mA)" }], pontos: [[tl, sDe(vs, tl)]] });
-      sv += D.graf({ x0: 60, y0: 285, w: 560, h: 120, xmax: 10, ymin: -10, ymax: 10, xlab: "t (s)", ylab: "v (m/s)", xt: TS, yt: [-10, 0, 10], curvas: [{ pts: vSel.length > 1 ? vSel : vp.slice(0, 2), cor: "var(--warn)", area: true }, { pts: vp, cor: "var(--mT)" }], pontos: vp.map(([t, v]) => [t, v]) });
-      sv += D.graf({ x0: 60, y0: 445, w: 560, h: 90, xmax: 10, ymin: -amax, ymax: amax, xlab: "t (s)", ylab: "a (m/s²)", xt: TS, yt: [-Math.round(amax), 0, Math.round(amax)], curvas: [{ pts: ap, cor: "var(--mO)" }] });
+      let sv = D.graf({ x0: 60, y0: 120, w: 560, h: 95, xmax: 10, ymin: smin, ymax: smax, xlab: "t (s)", ylab: "s (m)", xt: TS.slice(0, 5), yt: [Math.round(smin), Math.round(smax)].filter((v, i, ar) => ar.indexOf(v) === i), curvas: [{ pts: sp, cor: "var(--mA)" }], pontos: [[tl, sDe(vs, tl)]] });
+      sv += D.graf({ x0: 60, y0: 285, w: 560, h: 120, xmax: 10, ymin: -10, ymax: 10, xlab: "t (s)", ylab: "v (m/s)", xt: TS.slice(0, 5), yt: [-10, 0, 10], curvas: [{ pts: vSel.length > 1 ? vSel : vp.slice(0, 2), cor: "var(--warn)", area: true }, { pts: vp, cor: "var(--mT)" }], pontos: vp.map(([t, v]) => [t, v]) });
+      sv += D.graf({ x0: 60, y0: 445, w: 560, h: 90, xmax: 10, ymin: -amax, ymax: amax, xlab: "t (s)", ylab: "a (m/s²)", xt: TS.slice(0, 5), yt: [-Math.round(amax), 0, Math.round(amax)], curvas: [{ pts: ap, cor: "var(--mO)" }] });
       sv += `<line x1="${60 + tl * 56}" x2="${60 + tl * 56}" y1="10" y2="${H - 10}" style="stroke:var(--ink3);stroke-dasharray:3 3"/>`;
       q("[data-v=sv]").innerHTML = sv;
       const r = SIM.graficos._conta(vs, tl);
