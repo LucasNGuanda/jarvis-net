@@ -1,13 +1,13 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado atual (14/11/2026, depois da β 3.2)
+## Estado atual (14/11/2026, depois da β 3.3)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
 
-### Física — 85 de 96 temas escritos
+### Física — 96 de 96 temas escritos
 Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto" = com correção automática; todos têm chefão, salvo indicação):
 - **F Fundamentos** (6/6): F01–F05 e A19, 7 exercícios cada, sem correção automática.
 - **A Mecânica** (21/21): A01 12, A02 13, A03 14, A04 12, A05 12, A06 13, A07 13, A08 14, A09 12, A10 12, A11 12, A12 13, A12b 12, A13 13, A14a 13, A14 12, A15 12, A16 13, A17 13, A18 12, A20 12 (todos com correção automática e nível Físico/Máximo).
-- **T Termodinâmica** (0/11): T01–T08b, nenhum escrito.
+- **T Termodinâmica** (11/11): T01, T02, T03, T04, T04b, T05, T05b, T06, T07, T08, T08b com 16 exercícios cada, todos com figura, correção automática e nível; todos com `F.chute`, laboratório e chefão. Primeiro módulo inteiro no padrão completo do CLAUDE.md.
 - **O Ondas e Óptica** (11/11): 7 exercícios cada.
 - **C Eletricidade e Magnetismo** (20/20): de 7 a 16 por tema (C07 16; C04 11; C01, C02, C03, C03b, C11, C14 10; os outros 7 a 9).
 - **M Física Moderna** (8/8), **U Universitária** (6/6), **N Navier–Stokes** (7/7): 7 exercícios cada.
@@ -23,7 +23,7 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 
 ### Diferenças em relação ao padrão do CLAUDE.md (honesto)
 - Exercícios: o padrão pede 15 a 20. A Mecânica tem 12 a 14; os módulos antigos, 7 (o C, de 7 a 16).
-- "Chuta antes de ver" (`F.chute`): só os 20 temas do módulo C usam. A Mecânica inteira ainda não tem.
+- "Chuta antes de ver" (`F.chute`): os módulos C e T usam. A Mecânica e os outros ainda não têm.
 - Figuras: nem todo exercício da Mecânica tem figura (todos os exemplos têm).
 
 ### Dívida técnica (pedido do Lucas em 14/11/2026: resolver depois da Termodinâmica)
@@ -32,8 +32,8 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 - Regra a partir de agora: tema novo já nasce no padrão completo (15–20 exercícios, figura em todo exercício, `F.chute`).
 
 ### O que ainda falta na Física (ordem de prioridade do Lucas)
-1. **Mecânica**: temas escritos (A01–A20). Falta completar até o padrão: 15 a 20 exercícios, `F.chute` e figura em todo exercício.
-2. **Termodinâmica**: o módulo T inteiro, do T01 ao T08b.
+1. [x] **Mecânica**: temas escritos (A01–A20). Falta completar até o padrão (ver dívida técnica).
+2. [x] **Termodinâmica**: T01–T08b escritos no padrão completo (β 3.3).
 3. **Aba Experimental**: o capítulo de teoria da física experimental inteiro: medida e erro, algarismos significativos, precisão × acurácia, erro estatístico × sistemático, desvio padrão e desvio da média, propagação de incerteza pela derivada logarítmica (o método do professor do Lucas), ajuste de reta e mínimos quadrados, linearização de gráficos, como escrever um relatório e como comparar um resultado com o valor de referência.
 4. **Experimentos físicos**: faltam **8 experimentos** para fechar a aba (o Lucas corrigiu de 5 para 8 em 14/11).
 
@@ -330,6 +330,12 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Corrigido antes de entregar: resposta errada no ex. 10 do A12b (semidisco: estava 9,5 cm, o certo é 4R/(3π) ≈ 12,7 cm); a pista de skate do A11 travava no ponto de retorno e a energia sem atrito não fechava (agora 2789 J constantes); elipse do laboratório de Kepler estourava a altura; a energia do massa–mola variava 0,5% (troquei o integrador por Verlet); o tubo em U do A17 estava desenhado com a água abaixo da superfície de separação; rótulos sobrepostos (gangorra, rolamento, impulso); link para um tema que não existe (R01 → C18).
   - Honesto: nos temas novos, nem todo exercício tem figura (2 a 7 figuras por tema, contando os exemplos); as contas estão todas conferidas, mas é bom o Lucas dar uma olhada no estilo dos chefões.
 
+- **β 3.3** — **Termodinâmica completa** (T01–T08b, os 11 temas), já no padrão completo do CLAUDE.md: abertura com "chuta antes de ver" (`F.chute`), laboratório, 3 teoremas demonstrados, 3 exemplos sorteáveis com figura, as 4 caixas, folha de fórmulas, **16 exercícios por tema, todos com figura**, correção automática e nível, chefão com dicas em degraus.
+  - **Temas** (laboratório; chefão): T01 Temperatura (quatro termômetros com escala inventada; termômetro de platina não linear); T02 Propagação do Calor (parede de duas camadas com perfil de temperatura; gelo crescendo no lago, x ∝ √t); T03 Dilatometria (chapa com furo e lâmina bimetálica; curvatura da lâmina, com a comparação honesta com a teoria de Timoshenko); T04 Calorimetria (calorímetro água + gelo com o teste "derrete tudo?"; cubos de gelo na limonada); T04b Calorimetria aprofundamento (curva de aquecimento com perdas de Newton; leite antes ou depois no café); T05 Gases (gás ideal com diagrama p × V e modos isotérmico/isobárico/isocórico; balão de ar quente); T05b Teoria Cinética (gás de discos 2D com colisões, histograma de Maxwell e pressão medida nas paredes; atmosfera isotérmica); T06 Lei Zero (dois corpos em contato com τ; termômetro atrasado num forno que esquenta); T07 1ª Lei (os quatro processos com W, Q e ΔU; gradiente adiabático da atmosfera); T08 2ª Lei (ciclo de Carnot com fluxo de energia; motor entre dois corpos finitos, √(T₁T₂)); T08b Entropia (microestados de Boltzmann; mistura de água quente e fria).
+  - Arquivos novos: `assets/sims/termo.js` (11 laboratórios); peças de desenho `D.bloco`, `D.termo`, `D.chama`, `D.pistao`, `D.copo` em `assets/desenho.js`. `tests/tmec.js` agora também conta `F.chute` e exercícios sem figura.
+  - Todas as contas conferidas em Python antes de escrever; chefões também por simulação ou integração numérica (gelo no lago, termômetro atrasado, motor entre corpos finitos com milhares de ciclos de Carnot pequenos, raiz numérica no termômetro de platina do T01).
+  - Corrigido antes de entregar: fórmulas quebradas em alternativas do T05b (faltava `String.raw`); escala errada do gráfico de radiação linearizada (T02) e da curva do aquecedor (T04b); ciclo de Carnot desenhado com volumes errados (T08); a pressão medida no laboratório do T05b dava ~10% acima da teoria ideal, o que é física de verdade (as moléculas têm tamanho): o laboratório agora mostra também a previsão descontando a área ocupada, e as duas batem.
+  - Física: 96 de 96 temas escritos.
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.
