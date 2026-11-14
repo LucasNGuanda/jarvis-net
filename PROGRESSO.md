@@ -1,9 +1,9 @@
 # PROGRESSO — Site de Física do Lucas
 
-## Estado atual (14/11/2026, depois da β 3.0)
-- **Física**: 64 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
+## Estado atual (14/11/2026, depois da β 3.1)
+- **Física**: 71 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
   - Prontos: Fundamentos inteiro (6); Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes inteiro (7); Bônus (X01); Simulados (S00–S04; S02 já tem o IME 2026/27, os outros só a página de entrada).
-  - Vazios: Mecânica (21), Termodinâmica (11).
+  - Mecânica: 7 de 21 (A01–A07). Vazios: Mecânica (14: A08–A18 e A20), Termodinâmica (11).
 - **Cálculo**: 27 de 27 (Cálculo 1, Cálculo 2, Funções especiais, Teoremas, Simulados de Cálculo).
 - **Experimental**: 0 de 11 (módulos criados, temas a decidir).
 - **Experimentos**: 10 de 10.
@@ -253,6 +253,23 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - **Planeta parava de girar** ao voltar para a tela inicial (da Física, de um tema ou de outra aba do navegador). Causa: a animação era SMIL (animação dentro do SVG), que no Chrome não recomeça quando o desenho é recolocado na página. Agora é animação quadro a quadro em JavaScript (requestAnimationFrame), que para sozinha quando a tela inicial sai e recomeça quando volta.
   - **Cor do Jarvis**: passando o mouse no título (ou tocando, no celular) aparece um controle de cor do vermelho ao lilás. O planeta e o degradê do título mudam juntos, com três tons vizinhos da cor escolhida. Botão "voltar à cor original" volta ao degradê de antes. A cor fica salva em `jarvis:cor` (o prefixo reservado para a tela inicial no modelo de dados).
   - Conferências: 13 testes novos (giro depois de voltar de cada jeito, seletor aparece e some, cores mudam juntas, cor salva, voltar à original, celular) e os 13 da tela inicial.
+
+- **β 3.1** — Mecânica: os 7 primeiros temas (A01–A07), feitos sozinho enquanto o Lucas estava fora.
+  - Não existe CLAUDE.md ainda e nenhum tema da Mecânica estava escrito; o padrão seguido foi o dos temas prontos do mesmo nível (F01–F05, N03): abertura, teoria com teoremas demonstrados passo a passo, laboratório, exemplário com 3 casos (fácil, médio, olimpíada) com figura, as 4 caixas (Pense como físico, Pegadinha, Nível olimpíada, Ponte para a universidade), folha de fórmulas, 12 a 14 exercícios e chefão Impossível 99 com dicas em degraus.
+  - **Temas**:
+    - A01 Introdução à Cinemática (deslocamento × distância, média aritmética × harmônica com demonstração, classificação dos movimentos; chefão: metades sem fim, v̄ = v(2r − 1)/r);
+    - A02 MRU (função horária, gráficos, encontro e velocidade relativa, corpos extensos; olimpíada: os ônibus e o pedestre; chefão: as formigas do triângulo, conferido por simulação);
+    - A03 MUV (funções horárias pela área, Torricelli, velocidade média no MUV, regra de Galileu 1:3:5, queda livre, freada; chefão: zona de dilema do sinal amarelo);
+    - A04 Análise Gráfica (secante, tangente, concavidade, as três áreas; olimpíada: a "elipse" disfarçada de semicírculo; chefão: perseguição só pelo gráfico);
+    - A05 Cinemática Vetorial (velocidade tangente, composição de velocidades, aceleração tangencial e centrípeta com a demonstração de v²/R; chefão: barco mais lento que a correnteza, deriva mínima L√(w² − u²)/u);
+    - A06 Lançamentos (independência, horizontal, oblíquo, trajetória parabólica, equação em tg θ; chefão: velocidade mínima para passar por cima de um muro e parábola de segurança);
+    - A07 Movimento Circular (grandezas angulares, v = ωR, MCU e MCUV, transmissão por correia/engrenagem/eixo; olimpíada: ponteiros do relógio; chefão: período sinódico, Lua e Marte).
+  - **Laboratórios** (`assets/sims/mecanica.js`): vai e volta, encontro de dois carros com gráfico, MUV com gráficos e freada, do gráfico v × t para s × t e a × t, barco no rio, lançamento oblíquo com parábola de segurança, MCU e engrenagens.
+  - **Correção automática nos exercícios**: o `F.exercicio` ganhou campos opcionais (não é componente novo; os exercícios antigos não mudam): `certa` (alternativas clicáveis), `num: {v, tol, un}` (campo numérico com tolerância, aceita vírgula ou ponto e 3,2e5) e `nivel` ("Físico" ou "Máximo"). A primeira tentativa fica em `resultado:COD-n`, o começo do mapa de erros previsto no modelo de dados (seção 6).
+  - Kit de desenho: `D.carro`, `D.estrada`, `D.graf` e `D.amostra` (figuras dos exemplos e exercícios). Formatador `F.nt` (número limpo em texto comum).
+  - Todos os números conferidos em Python (os chefões das formigas, do barco e do muro também por simulação ou busca numérica).
+  - Corrigido antes de entregar: números sorteados aparecendo como "2{,}5" em texto comum (5 temas) e a correção lendo "1.333" como 1333 (agora um ponto sozinho é decimal; "1.000.000" e "1.234,5" são milhar).
+  - Faltam na Mecânica: A08–A18 e A20 (14 temas).
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
