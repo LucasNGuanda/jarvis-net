@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Site Física β 1.3</title>
+<title>Site Física β 1.4</title>
 <link rel="stylesheet" href="assets/katex/katex.min.css">
 <link rel="stylesheet" href="assets/estilo.css">
 <script defer src="assets/katex/katex.min.js"></script>
@@ -45,9 +45,19 @@
   <span class="esp"></span>
   <nav><a href="#/inicio">Início</a><a href="#/sumario">Sumário</a><a href="#/legenda">Legenda</a></nav>
   <div class="detalhes" id="detalhes"><button class="bt peq" aria-haspopup="true">Detalhes ▾</button><div class="painel" id="detalhes-painel"></div></div>
-  <button class="btn-ic" id="bt-tema" title="Clarear / escurecer" aria-label="Alternar tema claro e escuro">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
-  </button>
+  <div class="config" id="config">
+    <button class="btn-ic" id="bt-config" title="Configurações" aria-label="Configurações" aria-haspopup="true" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M10.3 2.6h3.4l.5 2.6a7.4 7.4 0 0 1 1.9 1.1l2.5-.9 1.7 2.9-2 1.7a7.6 7.6 0 0 1 0 2.2l2 1.7-1.7 2.9-2.5-.9a7.4 7.4 0 0 1-1.9 1.1l-.5 2.6h-3.4l-.5-2.6a7.4 7.4 0 0 1-1.9-1.1l-2.5.9-1.7-2.9 2-1.7a7.6 7.6 0 0 1 0-2.2l-2-1.7 1.7-2.9 2.5.9a7.4 7.4 0 0 1 1.9-1.1z"/><circle cx="12" cy="12" r="3"/></svg>
+    </button>
+    <div class="painel-config" id="painel-config" role="dialog" aria-label="Configurações">
+      <div class="cfg-tit">Configurações</div>
+      <div class="cfg-grupo"><div class="cfg-rot">Aparência</div>
+        <div class="cfg-ops" data-cfg="tema"><button class="bt peq" data-v="escuro">Escuro</button><button class="bt peq" data-v="claro">Claro</button><button class="bt peq" data-v="sistema">Do sistema</button></div></div>
+      <div class="cfg-grupo"><div class="cfg-rot">Idioma</div>
+        <div class="cfg-ops" data-cfg="idioma"><button class="bt peq" data-v="pt">Português</button><button class="bt peq" data-v="en">English</button></div>
+        <p class="cfg-nota" id="nota-idioma" hidden>A versão em inglês escrita à mão fica para o final. Por enquanto, use o tradutor do navegador: <b>botão direito na página → "Traduzir para inglês"</b> (Chrome ou Edge). As fórmulas estão marcadas para o tradutor não mexer nelas.</p></div>
+    </div>
+  </div>
 </header>
 
 <aside class="menu">

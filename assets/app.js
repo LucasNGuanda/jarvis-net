@@ -43,6 +43,8 @@
       delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
       throwOnError: false, macros: { "\\gf": "\\mathord{\\htmlClass{gf}{\\kern0.6em}}" }, trust: (c) => c.command === "\\htmlClass", ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "svg"],
     });
+    /* fórmulas ficam fora do tradutor automático do navegador */
+    el.querySelectorAll(".katex").forEach((x) => { x.setAttribute("translate", "no"); x.classList.add("notranslate"); });
   };
 
   /* ---------- fila de montagem dos componentes ---------- */
@@ -429,11 +431,31 @@
     }, { passive: true });
   }
 
-  /* ---------- tema claro/escuro ---------- */
+  /* ---------- configurações (engrenagem): aparência e idioma ---------- */
   function tema() {
-    const set = (v) => { if (v === "claro") document.documentElement.setAttribute("data-tema", "claro"); else document.documentElement.removeAttribute("data-tema"); };
-    set(F.store.get("tema", "escuro"));
-    $("#bt-tema").addEventListener("click", () => { const v = F.store.get("tema", "escuro") === "escuro" ? "claro" : "escuro"; F.store.set("tema", v); set(v); F.evento("tema"); });
+    const mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
+    const aplica = () => {
+      const v = F.store.get("tema", "escuro"), claro = v === "claro" || (v === "sistema" && mq && mq.matches);
+      if (claro) document.documentElement.setAttribute("data-tema", "claro"); else document.documentElement.removeAttribute("data-tema");
+      F.evento("tema");
+    };
+    aplica();
+    if (mq && mq.addEventListener) mq.addEventListener("change", () => { if (F.store.get("tema", "escuro") === "sistema") aplica(); });
+    const box = $("#config"), bt = $("#bt-config");
+    if (!box) return;
+    const pinta = () => {
+      const tv = F.store.get("tema", "escuro"), idi = F.store.get("idioma", "pt");
+      $$("[data-cfg=tema] .bt", box).forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === tv));
+      $$("[data-cfg=idioma] .bt", box).forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === idi));
+      $("#nota-idioma").hidden = idi !== "en";
+    };
+    const abre = (on) => { box.classList.toggle("aberto", on); bt.setAttribute("aria-expanded", on); };
+    bt.addEventListener("click", (e) => { e.stopPropagation(); abre(!box.classList.contains("aberto")); });
+    document.addEventListener("click", (e) => { if (!box.contains(e.target)) abre(false); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") abre(false); });
+    $$("[data-cfg=tema] .bt", box).forEach((b) => b.addEventListener("click", () => { F.store.set("tema", b.dataset.v); aplica(); pinta(); }));
+    $$("[data-cfg=idioma] .bt", box).forEach((b) => b.addEventListener("click", () => { F.store.set("idioma", b.dataset.v); pinta(); }));
+    pinta();
   }
 
   /* ---------- exportar / importar progresso ---------- */

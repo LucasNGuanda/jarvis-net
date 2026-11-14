@@ -303,3 +303,15 @@ table.tb th{color:var(--ink2);font-weight:600;font-size:13.5px}
 .katex .gf{width:.76em;height:1.04em;vertical-align:-.3em;margin:0 .06em}
 .katex .gf>*{display:none}
 .gf.grande{width:1.1em;height:1.65em;vertical-align:-.5em;margin-left:.08em}
+
+/* engrenagem de configurações */
+.config{position:relative}
+.config .painel-config{display:none;position:absolute;right:0;top:calc(100% + 8px);width:300px;background:var(--card);border:1px solid var(--line2);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.35);padding:14px 16px;z-index:45}
+.config.aberto .painel-config{display:block}
+.config .btn-ic svg{transition:transform .3s}
+.config.aberto .btn-ic svg{transform:rotate(60deg)}
+.cfg-tit{font-weight:700;font-size:15px;margin-bottom:10px}
+.cfg-grupo{margin:12px 0 4px}
+.cfg-rot{font-size:12.5px;font-weight:600;color:var(--ink2);margin-bottom:6px}
+.cfg-ops{display:flex;gap:6px;flex-wrap:wrap}
+.cfg-nota{font-size:13px;line-height:1.5;color:var(--ink2);margin:10px 0 0;padding:8px 10px;border-radius:8px;background:color-mix(in srgb,var(--mod) 8%,transparent)}

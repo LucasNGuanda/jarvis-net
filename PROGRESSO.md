@@ -50,6 +50,12 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
     - Teste de estresse em todos os laboratórios de Cálculo e na X01: todos os botões e controles nos extremos, sem NaN e sem erro de JS.
     - Exemplos sorteados sem "1x", "e^{1}", "2,0" ou "x − −1". Novos formatadores `F.n` (número limpo) e `F.c` (coeficiente), corrigidos também em CE01–CE03.
     - Cabeçalho das tabelas deixou de ser forçado para maiúsculas, porque "f(x)" virava "F(X)".
+- **β 1.4**:
+  - Botão do sol trocado por uma **engrenagem de configurações**.
+  - Aparência: escuro, claro ou do sistema (segue o Windows e muda junto).
+  - Idioma: português, ou English com a orientação de usar o tradutor do navegador por enquanto.
+  - As fórmulas ficam marcadas com `translate="no"`, para o tradutor não estragá-las.
+  - Tradução feita à mão: fica para o final.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
