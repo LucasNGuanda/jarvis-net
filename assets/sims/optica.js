@@ -180,4 +180,167 @@
     el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha));
     desenha();
   };
+  /* ================= Óptica, parte 2 (B09, B10, B11, B14) ================= */
+  /* ---------- B09 · sombra e penumbra ---------- */
+  SIM.sombra = (el, F) => {
+    const W = 700, H = 320, xs = 70, xo = 330, xsc = 650, c = 160;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="ctrl"><label>tamanho da fonte de luz</label><input type="range" min="0" max="120" step="1" value="40" data-c="s"><output data-o="s"></output></div>
+      <div class="ctrl"><label>tamanho do obstáculo</label><input type="range" min="10" max="120" step="1" value="60" data-c="h"><output data-o="h"></output></div>
+      <div class="ctrl"><label>posição do obstáculo</label><input type="range" min="130" max="600" step="1" value="330" data-c="x"><output data-o="x"></output></div></div>
+      <div class="status">A luz anda em linha reta. Com uma fonte <b>pontual</b> (tamanho 0), a sombra tem borda nítida. Com uma fonte <b>extensa</b>, aparece a <b>penumbra</b>: regiões que veem só parte da fonte. Leve o obstáculo para perto da tela ou da fonte, ou diminua o obstáculo até a sombra própria (umbra) sumir: é a diferença entre eclipse total e anular.</div>`);
+    const q = (s) => el.querySelector(s);
+    function desenha() {
+      const s = +q("[data-c=s]").value, h = +q("[data-c=h]").value, xo = +q("[data-c=x]").value; q("[data-o=s]").textContent = s; q("[data-o=h]").textContent = h; q("[data-o=x]").textContent = xo;
+      const k = (xo - xs) / (xsc - xs);
+      const Lu = (c - h / 2 - (1 - k) * (c - s / 2)) / k, Uu = (c + h / 2 - (1 - k) * (c + s / 2)) / k, Lp = (c - h / 2 - (1 - k) * (c + s / 2)) / k, Up = (c + h / 2 - (1 - k) * (c - s / 2)) / k;
+      let g = `<rect x="${xsc}" y="10" width="14" height="${H - 20}" style="fill:#f4efe0"/>`;
+      g += `<rect x="${xsc}" y="${Math.max(10, Lp)}" width="14" height="${Math.max(0, Math.min(H - 10, Up) - Math.max(10, Lp))}" style="fill:#8a8478"/>`;
+      if (Uu > Lu) g += `<rect x="${xsc}" y="${Math.max(10, Lu)}" width="14" height="${Math.max(0, Math.min(H - 10, Uu) - Math.max(10, Lu))}" style="fill:#1b1b1b"/>`;
+      const raio = (y1, y2, cor) => { const yt = y1 + ((y2 - y1) * (xsc - xs)) / (xo - xs); return `<line x1="${xs}" y1="${y1}" x2="${xsc}" y2="${yt}" style="stroke:${cor};stroke-width:1.2;opacity:.8"/>`; };
+      g += raio(c - s / 2, c - h / 2, "#f2c94c") + raio(c + s / 2, c + h / 2, "#f2c94c") + raio(c + s / 2, c - h / 2, "#e88fd0") + raio(c - s / 2, c + h / 2, "#e88fd0");
+      g += s > 0 ? `<rect x="${xs - 8}" y="${c - s / 2}" width="16" height="${s}" rx="6" style="fill:#f2c94c"/>` : `<circle cx="${xs}" cy="${c}" r="6" style="fill:#f2c94c"/>`;
+      g += `<rect x="${xo - 5}" y="${c - h / 2}" width="10" height="${h}" rx="3" style="fill:var(--ink2)"/>`;
+      g += `<text class="tx2" x="${xs}" y="${H - 12}" text-anchor="middle">fonte</text><text class="tx2" x="${xo}" y="${H - 12}" text-anchor="middle">obstáculo</text><text class="tx2" x="${xsc + 7}" y="${H - 1}" text-anchor="middle">tela</text>`;
+      q("[data-v=sv]").innerHTML = g;
+      q("[data-v=lt]").innerHTML = vis("umbra (sombra total)", Uu > Lu ? F.t(Uu - Lu, 0) + " px" : "não há (região de antumbra)") + vis("penumbra (cada lado)", s > 0 ? F.t((Up - Lp - Math.max(0, Uu - Lu)) / 2, 0) + " px" : "0 (fonte pontual)");
+    }
+    el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha)); desenha();
+  };
+
+  /* ---------- B10 · dois espelhos planos em ângulo (caleidoscópio) ---------- */
+  SIM.caleidoscopio = (el, F) => {
+    const W = 520, H = 420, ox = 260, oy = 210, R0 = 150;
+    el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg><div class="leitor" data-v="lt" style="flex-direction:column;align-items:stretch"></div></div>
+      <div class="ctrls"><div class="ctrl"><label>ângulo entre os espelhos α (°)</label><input type="range" min="20" max="180" step="1" value="60" data-c="a"><output data-o="a"></output></div>
+      <div class="ctrl"><label>posição do objeto (fração do ângulo)</label><input type="range" min="0.05" max="0.95" step="0.01" value="0.35" data-c="t"><output data-o="t"></output></div>
+      <div class="bts"><button class="bt peq" data-p="90">90°</button><button class="bt peq" data-p="72">72°</button><button class="bt peq" data-p="60">60°</button><button class="bt peq" data-p="45">45°</button><button class="bt peq" data-p="30">30°</button></div></div>
+      <div class="status">Dois espelhos (linhas grossas) com vértice no centro. O objeto (estrela amarela) fica entre eles. Cada imagem de um espelho funciona como objeto para o outro, até a imagem cair "atrás" dos dois. Todas ficam numa circunferência centrada no vértice. Quando 360°/α é inteiro, o número de imagens é 360°/α − 1, qualquer que seja a posição do objeto.</div>`);
+    const q = (s) => el.querySelector(s);
+    const norm = (x) => { while (x <= -Math.PI) x += 2 * Math.PI; while (x > Math.PI) x -= 2 * Math.PI; return x; };
+    function imagens(al, th0) {
+      const res = [], visto = (t) => res.some((u) => Math.abs(norm(u.t - t)) < 1e-6) || Math.abs(norm(t - th0)) < 1e-6;
+      const frente1 = (t) => Math.sin(t) > 1e-9, frente2 = (t) => Math.sin(al - t) > 1e-9;
+      [0, 1].forEach((primeiro) => {
+        let t = th0, esp = primeiro, ordem = 0;
+        for (let i = 0; i < 40; i++) {
+          if (esp === 0) { if (!frente1(t)) break; t = norm(-t); } else { if (!frente2(t)) break; t = norm(2 * al - t); }
+          ordem++; if (!visto(t)) res.push({ t, ordem }); esp = 1 - esp;
+        }
+      });
+      return res;
+    }
+    function desenha() {
+      const ag = +q("[data-c=a]").value, al = (ag * Math.PI) / 180, fr = +q("[data-c=t]").value, th0 = fr * al; q("[data-o=a]").textContent = ag + "°"; q("[data-o=t]").textContent = F.t(fr, 2);
+      const P = (t, r = R0) => [ox + r * Math.cos(t), oy - r * Math.sin(t)];
+      let g = `<circle cx="${ox}" cy="${oy}" r="${R0}" style="fill:none;stroke:var(--ink3);stroke-dasharray:3 5"/>`;
+      let cunha = `${ox},${oy} `; for (let i = 0; i <= 40; i++) { const [x, y] = P((al * i) / 40, 200); cunha += `${x.toFixed(1)},${y.toFixed(1)} `; }
+      g += `<polygon points="${cunha}" style="fill:color-mix(in srgb,#f2c94c 8%,transparent)"/>`;
+      [0, al].forEach((t) => { const [x, y] = P(t, 200); g += `<line x1="${ox}" y1="${oy}" x2="${x}" y2="${y}" style="stroke:#7ab8e6;stroke-width:5;stroke-linecap:round"/>`; });
+      const ims = imagens(al, th0);
+      ims.forEach(({ t, ordem }) => { const [x, y] = P(t); g += `<circle cx="${x}" cy="${y}" r="9" style="fill:color-mix(in srgb,#f2c94c ${Math.max(25, 85 - 12 * ordem)}%,transparent);stroke:#f2c94c"/><text class="tx2" x="${x}" y="${y + 4}" text-anchor="middle">${ordem}</text>`; });
+      const [x0, y0] = P(th0); g += `<path d="${estrela(x0, y0, 12)}" style="fill:#f2c94c;stroke:var(--ink)"/>`;
+      q("[data-v=sv]").innerHTML = g;
+      const n = 360 / ag, inteiro = Math.abs(n - Math.round(n)) < 1e-9;
+      q("[data-v=lt]").innerHTML = vis("imagens contadas", ims.length) + vis("360°/α", F.t(n, 3)) + vis("fórmula 360°/α − 1", inteiro ? Math.round(n) - 1 : "só vale com 360°/α inteiro") + `<p class="det" style="color:var(--ink2);margin:6px 0 0">O número dentro de cada círculo é quantas reflexões aquela imagem levou.</p>`;
+    }
+    function estrela(x, y, r) { let d = ""; for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + (i * Math.PI) / 5, rr = i % 2 ? r * 0.45 : r; d += (i ? "L" : "M") + (x + rr * Math.cos(a)).toFixed(1) + " " + (y + rr * Math.sin(a)).toFixed(1); } return d + "Z"; }
+    el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha));
+    el.querySelectorAll("[data-p]").forEach((b) => b.addEventListener("click", () => { q("[data-c=a]").value = b.dataset.p; desenha(); }));
+    desenha();
+  };
+
+  /* ---------- B11 · espelho esférico ---------- */
+  SIM.espelhoEsf = (el, F) => {
+    const W = 760, H = 380, ox = 600, oy = 190, esc = 7, yo = 5;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="ctrl"><label>distância do objeto p (cm)</label><input type="range" min="3" max="75" step="0.1" value="30" data-c="p"><output data-o="p"></output></div>
+      <div class="ctrl"><label>distância focal f (cm)</label><input type="range" min="-25" max="25" step="0.5" value="10" data-c="f"><output data-o="f"></output></div>
+      <div class="bts"><button class="bt peq" data-pr="10,30">além de C</button><button class="bt peq" data-pr="10,20">em C</button><button class="bt peq" data-pr="10,15">entre C e F</button><button class="bt peq" data-pr="10,6">antes de F</button><button class="bt peq" data-pr="-10,20">convexo</button></div></div>
+      <div class="status">f &gt; 0: espelho côncavo (foco na frente, f = R/2); f &lt; 0: convexo (foco atrás). Raios: <b style="color:#f2c94c">(1)</b> paralelo ao eixo → reflete passando pelo foco F; <b style="color:#7ad08f">(2)</b> no vértice → reflete simétrico ao eixo; <b style="color:#e88fd0">(3)</b> rumo ao centro C → volta sobre si mesmo. Tracejados: prolongamentos atrás do espelho (imagem virtual).</div>`);
+    const q = (s) => el.querySelector(s);
+    const X = (d) => ox - d * esc, Y = (y) => oy - y * esc;
+    function desenha() {
+      let f = +q("[data-c=f]").value; if (Math.abs(f) < 3) f = f < 0 ? -3 : 3; const p = +q("[data-c=p]").value, R = 2 * f;
+      q("[data-o=p]").textContent = F.t(p, 1); q("[data-o=f]").textContent = F.t(f, 1);
+      const inf = Math.abs(p - f) < 0.05, pp = inf ? Infinity : 1 / (1 / f - 1 / p), A = -pp / p, yi = A * yo;
+      const dmax = ox / esc, dmin = -(W - ox) / esc;
+      let g = `<line x1="0" x2="${W}" y1="${oy}" y2="${oy}" style="stroke:var(--ink3)"/>`;
+      const cur = f > 0 ? 18 : -18;
+      g += `<path d="M${ox + cur} ${oy - 150} Q${ox - cur} ${oy} ${ox + cur} ${oy + 150}" style="fill:none;stroke:#7ab8e6;stroke-width:4"/>`;
+      for (let i = -140; i <= 140; i += 14) g += `<line x1="${ox + cur * (1 - (i / 150) ** 2) * 0 + (f > 0 ? 10 : -10) + (cur * (i / 150) ** 2)}" y1="${oy + i}" x2="${ox + (f > 0 ? 18 : -2) + cur * (i / 150) ** 2}" y2="${oy + i - 7}" style="stroke:#7ab8e6;opacity:.5"/>`;
+      [[f, "F"], [R, "C"]].forEach(([d, n]) => { if (d < dmax && d > dmin) g += `<circle cx="${X(d)}" cy="${oy}" r="3.5" style="fill:var(--ink)"/><text class="tx2" x="${X(d)}" y="${oy + 18}" text-anchor="middle">${n}</text>`; });
+      g += `<line x1="${X(p)}" y1="${oy}" x2="${X(p)}" y2="${Y(yo)}" style="stroke:var(--ok);stroke-width:3"/><path d="M${X(p) - 6} ${Y(yo) + 9} L${X(p)} ${Y(yo)} L${X(p) + 6} ${Y(yo) + 9}" style="fill:none;stroke:var(--ok);stroke-width:3"/>`;
+      const seg = (d1, y1, d2, y2, cor, tr) => `<line x1="${X(d1)}" y1="${Y(y1)}" x2="${X(d2)}" y2="${Y(y2)}" style="stroke:${cor};stroke-width:1.8${tr ? ";stroke-dasharray:5 4;opacity:.75" : ""}"/>`;
+      const reta = (d0, y0, d1, y1, d) => y0 + ((y1 - y0) * (d - d0)) / (d1 - d0);
+      /* raio 1 */
+      g += seg(p, yo, 0, yo, "#f2c94c") + seg(0, yo, dmax, reta(0, yo, f, 0, dmax), "#f2c94c");
+      if (f < 0 || pp < 0) g += seg(0, yo, dmin, reta(0, yo, f, 0, dmin), "#f2c94c", true);
+      /* raio 2: vértice */
+      g += seg(p, yo, 0, 0, "#7ad08f") + seg(0, 0, dmax, -yo * dmax / p, "#7ad08f");
+      if (pp < 0) g += seg(0, 0, dmin, -yo * dmin / p, "#7ad08f", true);
+      /* raio 3: rumo ao centro */
+      if (Math.abs(p - R) > 0.3) { const yc = reta(p, yo, R, 0, 0); if (Math.abs(yc) < 150 / esc) { g += seg(p, yo, 0, yc, "#e88fd0") + seg(0, yc, dmax, reta(0, yc, R, 0, dmax), "#e88fd0"); if (pp < 0 || f < 0) g += seg(0, yc, dmin, reta(0, yc, R, 0, dmin), "#e88fd0", true); } }
+      if (isFinite(pp) && pp < dmax && pp > dmin && Math.abs(yi) < 150 / esc) {
+        const cor = pp > 0 ? "var(--warn)" : "var(--ink2)", tr = pp > 0 ? "" : ";stroke-dasharray:4 3";
+        g += `<line x1="${X(pp)}" y1="${oy}" x2="${X(pp)}" y2="${Y(yi)}" style="stroke:${cor};stroke-width:3${tr}"/><path d="M${X(pp) - 6} ${Y(yi) + (yi > 0 ? 9 : -9)} L${X(pp)} ${Y(yi)} L${X(pp) + 6} ${Y(yi) + (yi > 0 ? 9 : -9)}" style="fill:none;stroke:${cor};stroke-width:3"/>`;
+      }
+      q("[data-v=sv]").innerHTML = g;
+      const nat = inf ? "no infinito (raios refletidos paralelos)" : `${pp > 0 ? "real (na frente)" : "virtual (atrás)"}, ${A < 0 ? "invertida" : "direita"}, ${Math.abs(A) > 1.001 ? "maior" : Math.abs(A) < 0.999 ? "menor" : "mesmo tamanho"}`;
+      q("[data-v=lt]").innerHTML = vis("p′", inf ? "∞" : F.t(pp, 2) + " cm") + vis("A = −p′/p", inf ? "—" : F.t(A, 3)) + vis("imagem", nat) + vis("raio de curvatura R = 2f", F.t(R, 1) + " cm");
+    }
+    el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha));
+    el.querySelectorAll("[data-pr]").forEach((b) => b.addEventListener("click", () => { const [f, p] = b.dataset.pr.split(","); q("[data-c=f]").value = f; q("[data-c=p]").value = p; desenha(); }));
+    desenha();
+  };
+
+  /* ---------- B14 · microscópio e luneta ---------- */
+  SIM.instrumento = (el, F) => {
+    const W = 760, H = 320, oy = 160;
+    let modo = "micro";
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="bts">${botoes([["micro", "microscópio"], ["lun", "luneta (telescópio refrator)"]], "m", modo)}</div>
+      <div class="ctrl"><label data-v="r1">f da objetiva</label><input type="range" min="1" max="10" step="0.1" value="2" data-c="f1"><output data-o="f1"></output></div>
+      <div class="ctrl"><label>f da ocular</label><input type="range" min="1" max="8" step="0.1" value="4" data-c="f2"><output data-o="f2"></output></div></div>
+      <div class="status">Unidades arbitrárias, fora de escala real. <b>Microscópio</b>: a objetiva (perto do objeto) forma uma imagem real e ampliada perto do foco da ocular; a ocular funciona como lupa sobre essa imagem. <b>Luneta</b>: raios de uma estrela chegam paralelos e inclinados; a objetiva junta no foco, e a ocular manda de volta paralelos, mais inclinados. O aumento angular é a razão entre os ângulos.</div>`);
+    const q = (s) => el.querySelector(s);
+    function lenteSVG(x, h = 110) { return `<path d="M${x} ${oy - h} Q${x + 14} ${oy} ${x} ${oy + h} Q${x - 14} ${oy} ${x} ${oy - h} Z" style="fill:color-mix(in srgb,#7ab8e6 30%,transparent);stroke:#7ab8e6;stroke-width:1.5"/>`; }
+    function desenha() {
+      const f1 = +q("[data-c=f1]").value, f2 = +q("[data-c=f2]").value; q("[data-o=f1]").textContent = F.t(f1, 1); q("[data-o=f2]").textContent = F.t(f2, 1);
+      let g = `<line x1="0" x2="${W}" y1="${oy}" y2="${oy}" style="stroke:var(--ink3)"/>`;
+      const ln = (x1, y1, x2, y2, cor, tr) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${cor};stroke-width:1.7${tr ? ";stroke-dasharray:5 4;opacity:.7" : ""}"/>`;
+      if (modo === "micro") {
+        q("[data-v=r1]").textContent = "f da objetiva";
+        const p1 = f1 * 1.25, p1l = 1 / (1 / f1 - 1 / p1), e = Math.min(18, (W - 260) / (p1 + p1l + f2)), x1 = 40 + p1 * e, x2 = x1 + (p1l + f2) * e, yo = Math.min(1.5, 30 / e), yi = -yo * (p1l / p1);
+        const X = (u) => x1 + u * e, Yv = (y) => oy - y * e;
+        g += lenteSVG(x1) + lenteSVG(x2, Math.max(90, -yi * e + 20)) + `<text class="tx2" x="${x1}" y="${oy + 128}" text-anchor="middle">objetiva</text><text class="tx2" x="${x2}" y="${oy + 108}" text-anchor="middle">ocular</text>`;
+        g += `<line x1="${X(-p1)}" y1="${oy}" x2="${X(-p1)}" y2="${Yv(yo)}" style="stroke:var(--ok);stroke-width:3"/>`;
+        g += ln(X(-p1), Yv(yo), x1, Yv(yo), "#f2c94c") + ln(x1, Yv(yo), X(p1l), Yv(yi), "#f2c94c") + ln(X(-p1), Yv(yo), X(p1l), Yv(yi), "#7ad08f");
+        g += `<line x1="${X(p1l)}" y1="${oy}" x2="${X(p1l)}" y2="${Yv(yi)}" style="stroke:var(--warn);stroke-width:3"/><text class="tx2" x="${X(p1l)}" y="${Yv(yi) + 18}" text-anchor="middle">imagem 1 (real)</text>`;
+        /* a imagem 1 está no foco da ocular: os raios saem paralelos, inclinados */
+        /* a imagem 1 está no foco da ocular: os raios saem paralelos ao raio que passa pelo centro da ocular */
+        const sl = (oy - Yv(yi)) / (x2 - X(p1l));
+        g += ln(X(p1l), Yv(yi), x2, Yv(yi), "#e88fd0") + ln(x2, Yv(yi), W, Yv(yi) + sl * (W - x2), "#e88fd0") + ln(X(p1l), Yv(yi), x2, oy, "#7ab8e6") + ln(x2, oy, W, oy + sl * (W - x2), "#7ab8e6");
+        const A1 = -p1l / p1, Aoc = 25 / f2;
+        q("[data-v=lt]").innerHTML = vis("aumento da objetiva", F.t(A1, 2) + "×") + vis("aumento da ocular (25 cm / f)", F.t(Aoc, 2) + "×") + vis("aumento total ≈ A_obj · A_oc", F.t(A1 * Aoc, 1) + "×");
+      } else {
+        q("[data-v=r1]").textContent = "f da objetiva (grande)";
+        const e = 26, x1 = 90, x2 = x1 + (f1 + f2) * e, th = 0.06, G = f1 / f2;
+        g += lenteSVG(x1, 120) + lenteSVG(x2, 70) + `<text class="tx2" x="${x1}" y="${oy + 138}" text-anchor="middle">objetiva</text><text class="tx2" x="${x2}" y="${oy + 88}" text-anchor="middle">ocular</text>`;
+        const yF = -f1 * e * Math.tan(th); /* ponto da imagem no plano focal (px, abaixo do eixo) */
+        [-80, -40, 0, 40, 80].forEach((h) => {
+          const ya = oy + h, yf = oy - yF;
+          g += ln(0, ya - Math.tan(th) * x1, x1, ya, "#f2c94c") + ln(x1, ya, x1 + f1 * e, yf, "#f2c94c");
+          const ye = yf + ((yf - ya) / (f1 * e)) * (f2 * e);
+          if (Math.abs(ye - oy) < 70) g += ln(x1 + f1 * e, yf, x2, ye, "#f2c94c") + ln(x2, ye, W, ye - Math.tan(G * th) * (W - x2), "#f2c94c");
+        });
+        g += `<circle cx="${x1 + f1 * e}" cy="${oy - yF}" r="4" style="fill:var(--warn)"/><text class="tx2" x="${x1 + f1 * e}" y="${oy - yF + 18}" text-anchor="middle">foco comum</text>`;
+        q("[data-v=lt]").innerHTML = vis("aumento angular G = f_ob/f_oc", F.t(G, 2) + "×") + vis("comprimento do tubo f_ob + f_oc", F.t(f1 + f2, 1)) + vis("a imagem final", "invertida, no infinito");
+      }
+      q("[data-v=sv]").innerHTML = g;
+    }
+    el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha));
+    liga(el, "m", (v) => { modo = v; if (v === "lun") { q("[data-c=f1]").value = 8; q("[data-c=f2]").value = 2; } else { q("[data-c=f1]").value = 2; q("[data-c=f2]").value = 4; } desenha(); });
+    desenha();
+  };
 })();
