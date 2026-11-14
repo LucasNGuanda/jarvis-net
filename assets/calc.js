@@ -39,7 +39,7 @@
   CALC.CONST = CONST; CALC.CONV = CONV;
 
   /* ---------------- estado ---------------- */
-  const novoEd = () => ({ tok: [], cur: 0 });
+  const novoEd = () => { const r = []; return { tok: r, cur: { L: r, i: 0 } }; };
   const st = {
     modo: "COMP", tela: "edit", shift: false, alpha: false, hyp: false, sto: false, rcl: false, ins: false,
     ed: novoEd(), buf: novoEd(), hist: [], hpos: -1,
@@ -150,6 +150,79 @@
   const FN = (f, s, x = {}) => T("fn", s, { f, ...x });
   const POST = (p, s, x = {}) => T("post", s, { p, ...x });
   const contem = (tok, pred) => tok.some(pred);
+
+  /* ---------------- editor "de livro" (MathIO): moldes com casinhas ----------------
+     Um molde (fração, ∫, √, Σ…) é {k:"tpl", t, slots:[lista, …]}; cada casinha é uma lista de tokens e moldes.
+     O cursor é {L: lista, i: posição}. Cada casinha guarda o seu molde (_tpl) e o seu índice (_idx); o molde guarda a lista onde está (_lista).
+     ◀ ▶ andam pelas casinhas na ordem de digitação; ▲ ▼ sobem e descem (numerador ↔ denominador, limites da ∫ e da Σ). */
+  const MOLDES = {
+    frac: { n: 2, cap: true, entra: (c) => (c ? 1 : 0), vert: { 0: { d: 1 }, 1: { u: 0 } } },
+    mista: { n: 3, cap: true, entra: (c) => (c ? 1 : 0), vert: { 1: { d: 2 }, 2: { u: 1 } } },
+    sqrt: { n: 1 }, cbrt: { n: 1 }, abs: { n: 1 }, exp10: { n: 1 }, exp: { n: 1 }, pow: { n: 1 },
+    root: { n: 2, cap: true, entra: (c) => (c ? 1 : 0), vert: { 0: { d: 1 }, 1: { u: 0 } } },
+    logab: { n: 2, vert: { 0: { u: 1 }, 1: { d: 0 } } },
+    integ: { n: 3, vert: { 0: { u: 2, d: 1 }, 1: { u: 2 }, 2: { d: 1 } } },
+    sum: { n: 3, vert: { 0: { u: 2, d: 1 }, 1: { u: 2 }, 2: { d: 1 } } },
+    deriv: { n: 2, vert: { 0: { d: 1 }, 1: { u: 0 } } },
+  };
+  const ligaArv = (lista) => { lista.forEach((it) => { if (it.k === "tpl") { it._lista = lista; it.slots.forEach((sl, k) => { sl._tpl = it; sl._idx = k; ligaArv(sl); }); } }); return lista; };
+  const clona = (lista) => ligaArv(lista.map((it) => (it.k === "tpl" ? { k: "tpl", t: it.t, slots: it.slots.map(clona) } : { ...it })));
+  const edDe = (lista, fim = true) => { const r = clona(lista || []); return { tok: r, cur: { L: r, i: fim ? r.length : 0 } }; };
+  const moldeVazio = (tpl) => tpl.slots.every((sl) => !sl.length);
+  function insMolde(ed, tipo) {
+    const c = ed.cur, M = MOLDES[tipo], tpl = { k: "tpl", t: tipo, slots: Array.from({ length: M.n }, () => []) };
+    let cap = [];
+    if (M.cap) { /* o número (ou Ans, variável, π) logo antes do cursor vai para a primeira casinha */
+      let j = c.i; while (j > 0 && c.L[j - 1].k === "dig") j--;
+      if (j === c.i && c.i > 0 && ["ans", "var", "pi", "e", "const"].includes(c.L[c.i - 1].k)) j = c.i - 1;
+      cap = c.L.splice(j, c.i - j); c.i = j;
+    }
+    tpl.slots[0].push(...cap);
+    c.L.splice(c.i, 0, tpl); ligaArv(c.L);
+    const k = M.entra ? M.entra(cap.length > 0) : 0;
+    ed.cur = { L: tpl.slots[k], i: tpl.slots[k].length };
+  }
+  function saiMolde(ed, depois) { const tpl = ed.cur.L._tpl; if (!tpl) return false; const P = tpl._lista, pos = P.indexOf(tpl); ed.cur = { L: P, i: depois ? pos + 1 : pos }; return true; }
+  function direita(ed) {
+    const { L, i } = ed.cur;
+    if (i < L.length) { const it = L[i]; if (it.k === "tpl") ed.cur = { L: it.slots[0], i: 0 }; else ed.cur = { L, i: i + 1 }; return; }
+    if (L._tpl) { const tpl = L._tpl, k = L._idx; if (k + 1 < tpl.slots.length) ed.cur = { L: tpl.slots[k + 1], i: 0 }; else saiMolde(ed, true); return; }
+    ed.cur = { L, i: 0 };
+  }
+  function esquerda(ed) {
+    const { L, i } = ed.cur;
+    if (i > 0) { const it = L[i - 1]; if (it.k === "tpl") { const sl = it.slots[it.slots.length - 1]; ed.cur = { L: sl, i: sl.length }; } else ed.cur = { L, i: i - 1 }; return; }
+    if (L._tpl) { const tpl = L._tpl, k = L._idx; if (k > 0) { const sl = tpl.slots[k - 1]; ed.cur = { L: sl, i: sl.length }; } else saiMolde(ed, false); return; }
+    ed.cur = { L, i: L.length };
+  }
+  function vertical(ed, dir) {
+    let L = ed.cur.L;
+    while (L && L._tpl) {
+      const tpl = L._tpl, mv = MOLDES[tpl.t].vert && MOLDES[tpl.t].vert[L._idx];
+      if (mv && mv[dir] !== undefined) { const sl = tpl.slots[mv[dir]]; ed.cur = { L: sl, i: sl.length }; return true; }
+      L = tpl._lista;
+    }
+    return false;
+  }
+  /* árvore → tokens lineares que o analisador entende */
+  function serial(lista) {
+    const out = [];
+    for (const it of lista || []) {
+      if (it.k !== "tpl") { out.push(it); continue; }
+      const [a, b, c] = it.slots, lp = () => T("lp", "("), rp = () => T("rp", ")"), cm = () => T("comma", ",");
+      switch (it.t) {
+        case "frac": out.push(lp(), lp(), ...serial(a), rp(), T("op", "÷", { o: "÷", frac: true }), lp(), ...serial(b), rp(), rp()); break;
+        case "mista": out.push(lp(), lp(), ...serial(a), rp(), T("frac", "⌟"), lp(), ...serial(b), rp(), T("frac", "⌟"), lp(), ...serial(c), rp(), rp()); break;
+        case "pow": out.push(T("pow", "^("), ...serial(a), rp()); break;
+        case "root": out.push(lp(), ...serial(a), rp(), T("root", "ˣ√("), ...serial(b), rp()); break;
+        case "sqrt": case "cbrt": case "abs": case "exp10": case "exp": out.push(FN(it.t, it.t + "("), ...serial(a), rp()); break;
+        case "logab": out.push(FN("log", "log("), ...serial(a), cm(), ...serial(b), rp()); break;
+        case "integ": case "sum": out.push(FN(it.t, it.t + "("), ...serial(a), cm(), ...serial(b), cm(), ...serial(c), rp()); break;
+        case "deriv": out.push(FN("deriv", "d/dx("), ...serial(a), cm(), ...serial(b), rp()); break;
+      }
+    }
+    return out;
+  }
 
   /* ---------------- análise (tokens → árvore) ---------------- */
   function analisa(tokens) {
@@ -528,11 +601,20 @@
 
   /* ---------------- edição ---------------- */
   function ins(ed, t) {
-    if (st.ins && ed.cur < ed.tok.length) ed.tok.splice(ed.cur, 1, t); else ed.tok.splice(ed.cur, 0, t);
-    ed.cur++;
-    if (ed.tok.length > 199) { ed.tok.length = 199; ed.cur = Math.min(ed.cur, 199); }
+    if (t.tpl) { insMolde(ed, t.tpl); return; }
+    const c = ed.cur;
+    if (st.ins && c.i < c.L.length && c.L[c.i].k !== "tpl") c.L.splice(c.i, 1, t); else c.L.splice(c.i, 0, t);
+    c.i++;
   }
-  function apaga(ed) { if (st.ins && ed.cur < ed.tok.length) ed.tok.splice(ed.cur, 1); else if (ed.cur > 0) { ed.tok.splice(ed.cur - 1, 1); ed.cur--; } }
+  function apaga(ed) {
+    const c = ed.cur;
+    if (c.i > 0) {
+      const it = c.L[c.i - 1];
+      if (it.k === "tpl") { if (moldeVazio(it)) { c.L.splice(c.i - 1, 1); c.i--; } else { const sl = it.slots[it.slots.length - 1]; ed.cur = { L: sl, i: sl.length }; } return; }
+      c.L.splice(c.i - 1, 1); c.i--; return;
+    }
+    if (c.L._tpl) { const tpl = c.L._tpl; if (moldeVazio(tpl)) { const P = tpl._lista, pos = P.indexOf(tpl); P.splice(pos, 1); ed.cur = { L: P, i: pos }; } else esquerda(ed); }
+  }
 
   /* tecla → token (no modo atual); null = não é de digitar */
   function tokenDe(id, sh, al) {
@@ -551,17 +633,17 @@
     }
     if (sh) {
       switch (id) {
-        case "integ": return FN("deriv", "d/dx(");
+        case "integ": return { tpl: "deriv" };
         case "inv": return POST("fact", "!");
-        case "logab": return FN("sum", "Σ(");
-        case "frac": return T("frac", "⌟");
-        case "sqrt": return FN("cbrt", "∛(");
+        case "logab": return { tpl: "sum" };
+        case "frac": return { tpl: "mista" };
+        case "sqrt": return { tpl: "cbrt" };
         case "sq": return POST("cube", "³");
-        case "pow": return T("root", "ˣ√(");
-        case "log": return FN("exp10", "10^(");
-        case "ln": return FN("exp", "e^(");
+        case "pow": return { tpl: "root" };
+        case "log": return { tpl: "exp10" };
+        case "ln": return { tpl: "exp" };
         case "neg": return m === "CMPLX" ? T("ang", "∠") : null;
-        case "hyp": return FN("abs", "Abs(");
+        case "hyp": return { tpl: "abs" };
         case "sin": return FN(st.hyp ? "asinh" : "asin", st.hyp ? "sinh⁻¹(" : "sin⁻¹(");
         case "cos": return FN(st.hyp ? "acosh" : "acos", st.hyp ? "cosh⁻¹(" : "cos⁻¹(");
         case "tan": return FN(st.hyp ? "atanh" : "atan", st.hyp ? "tanh⁻¹(" : "tan⁻¹(");
@@ -585,15 +667,15 @@
       case "mul": return T("op", "×", { o: "×" }); case "div": return T("op", "÷", { o: "÷" });
       case "lp": return T("lp", "("); case "rp": return T("rp", ")");
       case "neg": return T("neg", "-");
-      case "frac": return T("frac", "⌟");
-      case "sqrt": return FN("sqrt", "√(");
+      case "frac": return { tpl: "frac" };
+      case "sqrt": return { tpl: "sqrt" };
       case "sq": return POST("sq", "²");
-      case "pow": return T("pow", "^(");
+      case "pow": return { tpl: "pow" };
       case "log": return FN("log", "log(");
-      case "logab": return FN("log", "log(");
+      case "logab": return { tpl: "logab" };
       case "ln": return FN("ln", "ln(");
       case "inv": return POST("inv", "⁻¹");
-      case "integ": return FN("integ", "∫(");
+      case "integ": return { tpl: "integ" };
       case "sin": case "cos": case "tan": return FN(st.hyp ? id + "h" : id, (st.hyp ? id + "h" : id) + "(");
       case "dms": return T("dms", "°");
       case "ans": return T("ans", "Ans");
@@ -603,11 +685,11 @@
   }
 
   /* ---------------- calcular ---------------- */
-  function dicasDe(tok) { return { raiz: contem(tok, (t) => t.f === "sqrt" || t.k === "root" || t.p === "inv" || t.k === "frac"), pi: contem(tok, (t) => t.k === "pi" || (st.cfg.ang === "R" && /^a(sin|cos|tan)$/.test(t.f || ""))), semExato: contem(tok, (t) => ["integ", "deriv", "ranint"].includes(t.f) || t.k === "ran" || t.k === "E") };
+  function dicasDe(arv) { const tok = serial(arv); return { raiz: contem(tok, (t) => t.f === "sqrt" || t.k === "root" || t.p === "inv" || t.k === "frac" || t.frac), pi: contem(tok, (t) => t.k === "pi" || (st.cfg.ang === "R" && /^a(sin|cos|tan)$/.test(t.f || ""))), semExato: contem(tok, (t) => ["integ", "deriv", "ranint"].includes(t.f) || t.k === "ran" || t.k === "E") };
   }
   function executa(tok) {
     st.forma = null;
-    const arv = analisa(tok);
+    const arv = analisa(serial(tok));
     if (arv.t === "eq") ERR("Syntax");
     let v = avalia(arv);
     if (typeof v === "number") { if (!isFinite(v)) ERR("Math"); if (Math.abs(v) >= 1e100) ERR("Math"); v = +v.toPrecision(15); if (Object.is(v, -0)) v = 0; }
@@ -626,14 +708,14 @@
     } catch (e) { if (!(e instanceof Erro)) { console.error(e); e = new Erro("Math"); } mostraErro(e.message); }
   }
   function guardaResultado(v, tok) {
-    if (v && v.par) { st.res = { par: v.par, tok: [...tok] }; st.ans = v.par[0][1]; }
+    if (v && v.par) { st.res = { par: v.par, tok: clona(tok) }; st.ans = v.par[0][1]; }
     else {
       st.ans = v;
       if (isM(v)) st.mats.Ans = v;
       if (isV(v)) st.vcts.Ans = v;
-      st.res = { v, tok: [...tok], exato: st.cfg.io === "Math", misto: false, dms: false, eng: null, forma: st.forma };
+      st.res = { v, tok: clona(tok), exato: st.cfg.io === "Math", misto: false, dms: false, eng: null, forma: st.forma };
     }
-    if (!st.hist.length || st.hist[st.hist.length - 1] !== tok) st.hist.push([...tok]);
+    st.hist.push(clona(tok));
     if (st.hist.length > 30) st.hist.shift();
     st.hpos = st.hist.length;
     st.tela = isM(v) ? "matres" : isV(v) ? "vctres" : "res";
@@ -711,8 +793,8 @@
   function iniciaPerguntas(modo) {
     const tok = st.tela === "res" && st.res && st.res.tok ? st.res.tok : st.ed.tok;
     if (!tok.length) return;
-    st.ed = { tok: [...tok], cur: tok.length };
-    const nomes = []; tok.forEach((t) => { if (t.k === "var" && !nomes.includes(t.n)) nomes.push(t.n); });
+    st.ed = edDe(tok);
+    const nomes = []; serial(tok).forEach((t) => { if (t.k === "var" && !nomes.includes(t.n)) nomes.push(t.n); });
     if (modo === "solve") { if (!nomes.length) { mostraErro("Syntax"); return; } const alvo = nomes.includes("X") ? "X" : nomes[0]; nomes.splice(nomes.indexOf(alvo), 1); nomes.push(alvo); st.prompt = { modo, nomes, i: 0, alvo }; }
     else { if (!nomes.length) { igual(); return; } st.prompt = { modo, nomes, i: 0 }; }
     st.buf = novoEd(); st.tela = "prompt";
@@ -724,10 +806,10 @@
     if (P.i < P.nomes.length) return;
     if (P.modo === "calc") { try { const v = executa(st.ed.tok); guardaResultado(v, st.ed.tok); st.res.calc = true; } catch (e) { mostraErro(e instanceof Erro ? e.message : "Math"); } return; }
     try {
-      const arv = analisa(st.ed.tok), alvo = P.alvo;
+      const arv = analisa(serial(st.ed.tok)), alvo = P.alvo;
       const [x, resid] = resolveSolve(arv, alvo, st.vars[alvo]);
       st.vars[alvo] = +x.toPrecision(15); st.ans = st.vars[alvo];
-      st.res = { solve: true, nome: alvo, v: st.vars[alvo], lr: resid, tok: [...st.ed.tok] }; st.tela = "res";
+      st.res = { solve: true, nome: alvo, v: st.vars[alvo], lr: resid, tok: clona(st.ed.tok) }; st.tela = "res";
     } catch (e) { mostraErro(e instanceof Erro ? e.message : "Can't Solve"); }
   }
 
@@ -742,7 +824,7 @@
     if (h === 0 || (b - a) / h < 0) { mostraErro("Math"); return; }
     const n = Math.floor((b - a) / h + 1e-9) + 1; if (n > 30) { mostraErro("Insufficient MEM"); return; }
     Object.assign(st.tab, { ini: a, fim: b, passo: h, cur: 0 });
-    try { const arv = analisa(st.tab.f.tok); st.tab.linhas = Array.from({ length: n }, (_, i) => { const x = +(a + i * h).toPrecision(12); let y; try { y = real(avalia(arv, { X: x })); } catch (e) { y = NaN; } return [x, y]; }); }
+    try { const arv = analisa(serial(st.tab.f.tok)); st.tab.linhas = Array.from({ length: n }, (_, i) => { const x = +(a + i * h).toPrecision(12); let y; try { y = real(avalia(arv, { X: x })); } catch (e) { y = NaN; } return [x, y]; }); }
     catch (e) { mostraErro("Syntax"); return; }
     st.tela = "tab";
   }
@@ -814,18 +896,21 @@
 
   /* editor genérico: tok + cur. emRes = o visor está mostrando um resultado */
   function teclaEditor(ed, id, sh, al, hypAntes, aoIgual, aoAC, emRes) {
+    if (id !== "up" && id !== "down") st.navHist = false; /* ▲▼ seguidos continuam andando pelo histórico; qualquer outra tecla para */
     if (id === "igual") { aoIgual(); return; }
     if (id === "ac") { aoAC(); return; }
     if (id === "left" || id === "right") {
-      if (emRes) { st.ed = { tok: [...(st.res.tok || [])], cur: id === "left" ? (st.res.tok || []).length : 0 }; st.tela = "edit"; return; }
-      ed.cur = id === "left" ? (ed.cur > 0 ? ed.cur - 1 : ed.tok.length) : ed.cur < ed.tok.length ? ed.cur + 1 : 0; return;
+      if (emRes) { st.ed = edDe(st.res.tok, id === "left"); st.tela = "edit"; return; }
+      if (id === "left") esquerda(ed); else direita(ed); return;
     }
     if (id === "up" || id === "down") {
-      if (ed !== st.ed || !st.hist.length) return;
+      /* dentro de fração, ∫, Σ, raiz…: sobe e desce entre as casinhas. Só puxa o histórico depois de um resultado ou com o visor vazio */
+      if (!emRes && vertical(ed, id === "up" ? "u" : "d")) return;
+      if (ed !== st.ed || !st.hist.length || (!emRes && ed.tok.length && !st.navHist)) return;
       st.hpos = Math.max(0, Math.min(st.hist.length - 1, st.hpos + (id === "up" ? -1 : 1)));
-      st.ed = { tok: [...st.hist[st.hpos]], cur: st.hist[st.hpos].length }; st.tela = "edit"; return;
+      st.ed = edDe(st.hist[st.hpos]); st.tela = "edit"; st.navHist = true; return;
     }
-    if (id === "del") { if (emRes) { st.ed = { tok: [...(st.res.tok || [])], cur: (st.res.tok || []).length }; st.tela = "edit"; return; } apaga(ed); return; }
+    if (id === "del") { if (emRes) { st.ed = edDe(st.res.tok); st.tela = "edit"; return; } apaga(ed); return; }
     if (id === "hyp" && !sh && !al) { st.hyp = !hypAntes; return; }
     if (id === "hyp" && !sh) return;
     if (hypAntes && !sh && !al && ["sin", "cos", "tan"].includes(id)) st.hyp = true;
@@ -834,7 +919,7 @@
     if (!t) return;
     if (emRes) {
       /* depois de um resultado: operador continua do Ans; número começa conta nova */
-      const continua = (t.k === "op" || t.k === "post" || t.k === "pow" || t.k === "root" || t.k === "binop" || t.k === "frac" || t.k === "ang") && !(t.k === "op" && false);
+      const continua = ["op", "post", "binop", "ang"].includes(t.k) || ["frac", "mista", "pow", "root"].includes(t.tpl);
       st.ed = novoEd(); st.tela = "edit";
       if (continua) ins(st.ed, T("ans", "Ans"));
       ins(st.ed, t); return;
@@ -900,12 +985,34 @@
 
   /* ---------------- desenho do visor ---------------- */
   const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
-  function linhaEd(ed, ativo = true) {
+  function rend(lista, cur, ativo) {
+    const cursor = `<span class="cur${st.ins ? " ins" : ""}"></span>`, temCur = ativo && cur && cur.L === lista;
     let h = "";
-    ed.tok.forEach((t, i) => { if (ativo && i === ed.cur) h += `<span class="cur${st.ins ? " ins" : ""}"></span>`; h += `<span class="tk${t.k === "var" || t.k === "svar" ? " vr" : ""}">${esc(t.s)}</span>`; });
-    if (ativo && ed.cur >= ed.tok.length) h += `<span class="cur${st.ins ? " ins" : ""}"></span>`;
-    return h;
+    lista.forEach((it, i) => { if (temCur && cur.i === i) h += cursor; h += it.k === "tpl" ? rendMolde(it, cur, ativo) : `<span class="tk${it.k === "var" || it.k === "svar" ? " vr" : ""}">${esc(it.s)}</span>`; });
+    if (temCur && cur.i >= lista.length) h += cursor;
+    return lista._tpl && !lista.length ? `<span class="t-vazio">${h}</span>` : h;
   }
+  function rendMolde(t, cur, at) {
+    const r = (k) => `<span class="t-slot">${rend(t.slots[k], cur, at)}</span>`;
+    const fr = (a, b) => `<span class="t-frac"><span class="t-num">${a}</span><span class="t-den">${b}</span></span>`;
+    switch (t.t) {
+      case "frac": return fr(r(0), r(1));
+      case "mista": return r(0) + fr(r(1), r(2));
+      case "sqrt": return `<span class="t-raiz"><span class="t-rs">√</span><span class="t-sob">${r(0)}</span></span>`;
+      case "cbrt": return `<span class="t-raiz"><sup class="t-ind">3</sup><span class="t-rs">√</span><span class="t-sob">${r(0)}</span></span>`;
+      case "root": return `<span class="t-raiz"><sup class="t-ind">${r(0)}</sup><span class="t-rs">√</span><span class="t-sob">${r(1)}</span></span>`;
+      case "pow": return `<sup class="t-sup">${r(0)}</sup>`;
+      case "exp10": return `10<sup class="t-sup">${r(0)}</sup>`;
+      case "exp": return `<i>e</i><sup class="t-sup">${r(0)}</sup>`;
+      case "abs": return `<span class="t-abs">|${r(0)}|</span>`;
+      case "logab": return `log<sub class="t-sub">${r(0)}</sub>(${r(1)})`;
+      case "integ": return `<span class="t-int"><span class="t-lim"><span class="t-up">${r(2)}</span><span class="t-sig">∫</span><span class="t-lo">${r(1)}</span></span>${r(0)}<span class="t-dx">d<i>x</i></span></span>`;
+      case "sum": return `<span class="t-int"><span class="t-lim"><span class="t-up">${r(2)}</span><span class="t-sig">Σ</span><span class="t-lo"><i>x</i>=${r(1)}</span></span>(${r(0)})</span>`;
+      case "deriv": return `<span class="t-int">${fr("d", "d<i>x</i>")}(${r(0)})<sub class="t-sub">|<i>x</i>=${r(1)}</sub></span>`;
+    }
+    return "";
+  }
+  const linhaEd = (ed, ativo = true) => rend(ed.tok, ed.cur, ativo);
   const tex = (s) => { try { return window.katex ? katex.renderToString(s, { throwOnError: false }) : esc(s); } catch (e) { return esc(s); } };
   function mostraNumero(v, r) {
     if (st.modo === "BASE") return mostraBase(v, st.base);
@@ -943,7 +1050,7 @@
     switch (st.tela) {
       case "edit": cima = linhaEd(st.ed); break;
       case "res": {
-        const r = st.res; cima = linhaEd({ tok: r.tok || [], cur: -1 }, false);
+        const r = st.res; cima = rend(r.tok || [], null, false);
         if (r.par) baixo = r.par.map(([k, x]) => `<div>${k}=${formata(x)}</div>`).join("");
         else if (r.solve) baixo = `<div class="sol">${r.nome}= ${mostraNumero(r.v, { tok: [] })}</div><div class="lr">L−R= ${formata(+r.lr.toPrecision(10))}</div>`;
         else baixo = (r.rotulo ? `<span class="rot">${r.rotulo}</span> ` : "") + mostraNumero(r.v, r);

@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 2.3";
+window.VERSAO = "β 2.4";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -54,10 +54,10 @@ window.CATALOGO = [
     ["T08b","Entropia",["!","∫"]],
   ]},
   { id:"O", letra:"O", cor:"--mO", nome:"Ondas e Óptica", desc:"Ondulatória, acústica, óptica geométrica e ondulatória.", temas:[
-    ["O01","Introdução à Ondulatória"],
-    ["O02","Fenômenos Ondulatórios"],
-    ["O03","Ondas Estacionárias"],
-    ["O04","Acústica e efeito Doppler"],
+    ["O01","Introdução à Ondulatória",[],true],
+    ["O02","Fenômenos Ondulatórios",[],true],
+    ["O03","Ondas Estacionárias",[],true],
+    ["O04","Acústica e efeito Doppler",[],true],
     ["O05","Fundamentos da Óptica Geométrica",[],true],
     ["O06","Espelhos Planos",[],true],
     ["O07","Espelhos Esféricos",[],true],
@@ -107,10 +107,10 @@ window.CATALOGO = [
     ["U06","Equação de Schrödinger",["!!","∫"],true],
   ]},
   { id:"N", letra:"N", cor:"--mN", nome:"Fluidos até Navier–Stokes", desc:"Do Bernoulli às equações de Navier–Stokes e ao Problema do Milênio.", temas:[
-    ["N01","Euler × Lagrange e derivada material",["∫"]],
-    ["N02","Equação da continuidade",["∫"]],
-    ["N03","Equação de Euler e Bernoulli",["∫"]],
-    ["N04","Tensor de tensões e viscosidade",["!!","∫"]],
+    ["N01","Euler × Lagrange e derivada material",["∫"],true],
+    ["N02","Equação da continuidade",["∫"],true],
+    ["N03","Equação de Euler e Bernoulli",["∫"],true],
+    ["N04","Tensor de tensões e viscosidade",["!!","∫"],true],
     ["N05","Dedução de Navier–Stokes",["!!","∫"]],
     ["N06","Couette, Poiseuille, Hagen–Poiseuille",["!","∫"]],
     ["N07","Reynolds, turbulência e o Problema do Milênio",["!"]],

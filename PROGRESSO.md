@@ -1,9 +1,9 @@
 # PROGRESSO — Site de Física do Lucas
 
 ## Estado atual (14/11/2026, depois da β 1.9)
-- **Física**: 47 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
-  - Prontos: Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica (7 de 11: O05–O10b; faltam O01–O04, as ondas); Bônus (X01); Simulados (S00–S04, só as páginas de entrada).
-  - Vazios: Fundamentos (6), Mecânica (21), Termodinâmica (11), Navier–Stokes (7), Ondas (4).
+- **Física**: 55 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
+  - Prontos: Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes (4 de 7: N01–N04); Bônus (X01); Simulados (S00–S04, só as páginas de entrada).
+  - Vazios: Fundamentos (6), Mecânica (21), Termodinâmica (11); faltam N05–N07.
 - **Cálculo**: 25 de 25 (Cálculo 1, Cálculo 2, Funções especiais, Teoremas).
 - **Experimental**: 0 de 11 (módulos criados, temas a decidir).
 - **Experimentos**: 9 de 9.
@@ -163,6 +163,25 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
     - **TE05 Noether**: enunciado e demonstração, tabela simetria → conservada, momento canônico com campo magnético, hélice. Laboratório: E, L e pₓ em 4 potenciais. Chefão: a prova e a energia de um oscilador com k(t).
   - Conferências: números em Python; laboratórios contra fórmulas independentes (cicloide 1,0030 s × reta 1,1890 s; arco de circunferência conferido com scipy; Pappus = fatias; circulação = fluxo para qualquer h; Noether: o que se conserva em cada potencial). Corrigido durante o teste: o arco de circunferência ia pela metade de cima do círculo (tempo absurdo) e a integral de superfície da TE04 tinha erro na 4ª casa.
   - Regressão: 141 páginas, 0 katex-error, 0 erro de JS, 981 links; 47 testes de funcionamento; calculadora 88 de 88.
+
+- **β 2.4** — Calculadora "de livro", Ondas completas e o começo de Navier–Stokes.
+  - **Calculadora corrigida** (bugs relatados pelo Lucas):
+    - A entrada agora é "de livro" (MathIO), com **casinhas**: a fração tem numerador e denominador, a ∫ tem os limites de baixo e de cima, e Σ, d/dx, logₐb, ˣ√, 10ˣ, eˣ, |x| e a fração mista também têm casinhas.
+    - ◀ ▶ andam pelas casinhas na ordem de digitação; **▲ ▼ sobem e descem** (numerador ↔ denominador, limites da ∫ e da Σ). Antes, as setas ▲▼ puxavam o histórico e apagavam a conta. Agora o histórico só vem depois de um resultado (ou com o visor vazio), e ▲▼ seguidos andam por ele.
+    - Fração pela tecla primeiro (▭/▭ 1 ▼ 3) ou com o número antes (1 ▭/▭ 3); fração ÷ fração; fração dentro de fração; DEL apaga molde vazio.
+    - 103 testes tecla por tecla (14 novos só para esses casos), todos ok.
+  - **Ondas (O01–O04)**, escritas do zero com as minhas palavras (o Halliday vol. 2 ainda não chegou), cada uma com laboratório (`assets/sims/ondas.js`), exemplário, 7 exercícios e chefão:
+    - O01 Introdução (corda: transversal, longitudinal, pulso com reflexão; chefão: v = √(T/μ) por Newton e pela "lombada");
+    - O02 Fenômenos (cuba de ondas com duas fontes e linhas nodais; chefão: antena direcional);
+    - O03 Estacionárias (corda e tubos aberto/fechado com nós e ventres; chefão: onde pinçar a corda e o timbre);
+    - O04 Acústica e Doppler (frentes de onda e cone de Mach; chefão: radar da polícia).
+  - **Navier–Stokes (N01–N04)**, com laboratórios (`assets/sims/fluidos.js`):
+    - N01 Euler × Lagrange e derivada material (partícula × sensor parado);
+    - N02 Continuidade (bocal com contagem de partículas);
+    - N03 Euler e Bernoulli (tanque de Torricelli esvaziando e tubo de Venturi; chefão: tempo de esvaziar);
+    - N04 Tensor de tensões e viscosidade (elemento de fluido: deformação × rotação; chefão: por que σ é simétrico).
+  - Corrigido também: a busca do menu abria módulos que ficavam gravados como abertos; agora, ao limpar a busca, o menu volta como estava.
+  - Conferências: números em Python; 19 conferências novas de física nos laboratórios de Ondas e Fluidos; regressão: 141 páginas, 0 katex-error, 0 erro de JS, 1068 links, estresse limpo em 89 páginas, 47 testes de funcionamento.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.

@@ -515,3 +515,21 @@ body:not(.mostra-breve) #menu-mods:not(.buscando) li:has(>a.breve){display:none}
 @media (prefers-reduced-motion:reduce){.calc-dock{transition:none}.lcd .cur{animation:none}}
 @media print{.calc-dock{display:none}}
 .k-blocoA .k-linha1,.k-blocoA .k-topo{display:contents}
+/* calculadora: moldes "de livro" (fração, ∫, Σ, raízes, expoentes) */
+.lcd-cima{line-height:1.25}
+.lcd .t-slot{display:inline-block}
+.lcd .t-vazio{display:inline-block;min-width:.62em;min-height:.9em;border:1px dashed currentColor;border-radius:2px;vertical-align:middle;opacity:.75;line-height:.9}
+.lcd .t-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.92em;line-height:1.15}
+.lcd .t-num{padding:0 2px 1px}
+.lcd .t-den{border-top:1.5px solid currentColor;padding:1px 2px 0;align-self:stretch;text-align:center}
+.lcd .t-raiz{display:inline-flex;align-items:flex-end;vertical-align:middle}
+.lcd .t-rs{font-size:1.1em;line-height:1}
+.lcd .t-sob{border-top:1.5px solid currentColor;padding:1px 2px 0;margin-left:-1px}
+.lcd .t-ind{font-size:.6em;margin-right:-.25em;align-self:flex-start}
+.lcd .t-sup{font-size:.7em;vertical-align:.7em}
+.lcd .t-sub{font-size:.7em;vertical-align:-.35em}
+.lcd .t-int{display:inline-flex;align-items:center;vertical-align:middle}
+.lcd .t-lim{display:inline-flex;flex-direction:column;align-items:center;font-size:.7em;line-height:1.05;margin-right:2px}
+.lcd .t-sig{font-size:1.9em;line-height:.95}
+.lcd .t-dx{margin-left:3px}
+.lcd .t-abs{white-space:nowrap}

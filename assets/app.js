@@ -284,6 +284,7 @@
     $("#busca").addEventListener("input", (ev) => {
       const q = ev.target.value.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
       menu.classList.toggle("buscando", !!q); /* buscando: mostra também os temas em breve */
+      if (!q) { const ab = F.store.get("menuAbertos", ["C"]); $$(".mod", menu).forEach((m) => { m.classList.toggle("aberto", ab.includes(m.dataset.mod)); m.style.display = ""; m.querySelectorAll("li").forEach((li) => (li.style.display = "")); }); return; } /* busca vazia: o menu volta como estava */
       $$(".mod", menu).forEach((m) => {
         let algum = false;
         $$("li", m).forEach((li) => { const s = li.textContent.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); const ok = !q || s.includes(q); li.style.display = ok ? "" : "none"; algum = algum || ok; });
