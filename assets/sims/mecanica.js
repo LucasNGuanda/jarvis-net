@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t),
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -373,5 +373,46 @@
     });
     q("[data-a=re]").addEventListener("click", reinicia);
     q("[data-c=x0]").addEventListener("input", reinicia);
+  };
+
+  /* ---------- A12 · impulso: a mesma Δp com tempos de contato diferentes ---------- */
+  SIM.impulso = (el, F) => {
+    const W = 680, H = 320;
+    let t = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("massa da bola m (kg)", "m", 0.1, 2, 0.05, 0.4)}${sl("velocidade de chegada v (m/s)", "v", 1, 30, 0.5, 10)}${sl("fração da velocidade que volta", "r", 0, 1, 0.05, 0.8)}${sl("tempo de contato Δt (ms)", "dt", 5, 200, 1, 20)}
+      <div class="bts"><button class="bt pri" data-a="re">Recomeçar</button></div></div>
+      <div class="status">Uma bola bate numa parede e volta. A variação da quantidade de movimento, Δp = m(v + v'), é a área sob o gráfico F × t (o impulso). Aumentar o tempo de contato (bola mais mole, luva, airbag, dobrar os joelhos) não muda a área, mas abaixa o pico de força. A curva tracejada é o mesmo choque durando 100 ms. O contato aparece em câmera lenta.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.impulso._conta = (m, v, r, dtms) => { const dp = m * v * (1 + r), Fm = dp / (dtms / 1000); return { dp, Fm, Fp: (Math.PI / 2) * Fm, p0: m * v, p1: -m * r * v }; };
+    anima(el, F, (dt) => {
+      const m = val(el, "m"), v = val(el, "v"), r = val(el, "r"), dc = val(el, "dt"), c = SIM.impulso._conta(m, v, r, dc);
+      mostra(el, ["m", "r"], 2); mostra(el, ["v"], 1); q("[data-o=dt]").textContent = n2(dc, 0) + " ms";
+      t = (t + dt) % 3.6;
+      const xw = 300, R0 = 18, x0 = 40, cy = 170, lim = xw - R0;
+      let xb = x0, sq = 0, fase = -1, vel = 0;
+      if (t < 1.2) { xb = x0 + (lim - x0) * (t / 1.2); vel = 1; }
+      else if (t < 1.8) { fase = (t - 1.2) / 0.6; sq = Math.sin(Math.PI * fase); xb = lim + sq * 7; }
+      else if (t < 3.0) { xb = lim - (lim - x0) * r * ((t - 1.8) / 1.2); vel = -r; }
+      else xb = lim - (lim - x0) * r;
+      let sv = `<rect x="${xw}" y="70" width="16" height="150" style="fill:var(--line2);stroke:var(--ink3)"/><line x1="20" x2="${xw}" y1="${cy + R0}" y2="${cy + R0}" style="stroke:var(--ink3)"/>`;
+      sv += `<ellipse cx="${xb}" cy="${cy}" rx="${R0 * (1 - 0.35 * sq)}" ry="${R0 * (1 + 0.2 * sq)}" style="fill:var(--mA)"/>`;
+      if (vel) sv += D.seta(xb, cy - 34, xb + vel * 60, cy - 34, "var(--ink2)", 1.8) + D.txt(xb + vel * 30, cy - 42, vel > 0 ? "v" : "v' = r·v", "tx2");
+      if (fase >= 0) sv += D.seta(xb, cy, xb - 30 - 40 * sq, cy, "var(--warn)", 2.4) + D.txt(xb - 40, cy - 26, "F da parede", "tx2", "end");
+      /* gráfico F × t: escala vertical fixa para cada Δp (cheia com Δt = 10 ms) */
+      const gx = 380, gy = 280, gw = 270, gh = 210, ys = gh / ((Math.PI / 2) * c.dp / 0.01), X = (ms) => gx + (ms * gw) / 200;
+      sv += `<line x1="${gx}" x2="${gx + gw + 6}" y1="${gy}" y2="${gy}" style="stroke:var(--ink2)"/><line x1="${gx}" x2="${gx}" y1="${gy}" y2="${gy - gh - 10}" style="stroke:var(--ink2)"/>`;
+      sv += D.txt(gx + gw, gy - 8, "t (ms)", "tx2", "end") + D.txt(gx - 6, gy - gh - 2, "F", "tx2", "end");
+      [0, 50, 100, 150, 200].forEach((k) => (sv += D.txt(X(k), gy + 14, String(k), "tx2")));
+      const curva = (dur, Fp) => { let d = ""; for (let k = 0; k <= 60; k++) { const tm = (dur * k) / 60; d += (k ? "L" : "M") + X(tm).toFixed(1) + " " + (gy - Math.min(Fp * Math.sin((Math.PI * k) / 60) * ys, gh)).toFixed(1); } return d; };
+      sv += `<path d="${curva(100, (Math.PI / 2) * c.dp / 0.1)}" style="fill:none;stroke:var(--ink3);stroke-dasharray:5 4;stroke-width:1.5"/>`;
+      sv += `<path d="${curva(dc, c.Fp)} Z" style="fill:color-mix(in srgb,var(--mA) 30%,transparent);stroke:var(--mA);stroke-width:2"/>`;
+      if (c.Fp * ys > gh) sv += D.txt(X(dc) + 6, gy - gh + 4, "pico fora da escala ↑", "tx2", "start");
+      if (fase >= 0) sv += `<line x1="${X(fase * dc)}" x2="${X(fase * dc)}" y1="${gy}" y2="${gy - gh}" style="stroke:var(--warn);stroke-width:1.5"/>`;
+      sv += D.txt(gx + gw, gy - gh - 2, "área = Δp", "tx2", "end");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("impulso = Δp", n2(c.dp, 2) + " N·s") + vis("força média Δp/Δt", n2(c.Fm, 0) + " N") + vis("força de pico", n2(c.Fp, 0) + " N") + vis("a força média equivale ao peso de", n2(c.Fm / 10, 1) + " kg");
+    });
+    q("[data-a=re]").addEventListener("click", () => (t = 0));
   };
 })();
