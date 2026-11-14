@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 1.4";
+window.VERSAO = "β 1.5";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -139,10 +139,10 @@ window.CATALOGO = [
     ["CII02","Integrais impróprias",[],true],
     ["CII03","Sequências e séries numéricas",["!"],true],
     ["CII04","Séries de potências e de Taylor",["★"],true],
-    ["CII05","Funções de várias variáveis e derivadas parciais"],
-    ["CII06","Gradiente, máximos e mínimos, multiplicadores de Lagrange",["!"]],
-    ["CII07","Integrais duplas e triplas",["!"]],
-    ["CII08","Equações diferenciais ordinárias",["★","!"]],
+    ["CII05","Funções de várias variáveis e derivadas parciais",[],true],
+    ["CII06","Gradiente, máximos e mínimos, multiplicadores de Lagrange",["!"],true],
+    ["CII07","Integrais duplas e triplas",["!"],true],
+    ["CII08","Equações diferenciais ordinárias",["★","!"],true],
   ]},
   { id:"K3", area:"calculo", letra:"∮", cor:"--mK3", nome:"Funções especiais e integrais", desc:"W de Lambert, Gama de Euler e integrais fechadas (as \"bolinhas\").", temas:[
     ["CE01","Função W de Lambert",["!"],true],

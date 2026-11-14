@@ -726,4 +726,206 @@
     liga(el, "k", (v) => { k = v; desenha(); });
     desenha();
   };
+  /* ================= CÁLCULO 2 (CII05–CII08) ================= */
+  /* cor de um mapa de calor: t em [0, 1] → azul (baixo) … amarelo (alto) */
+  const corMapa = (t) => { t = Math.max(0, Math.min(1, t)); const h = 250 - 200 * t, l = 32 + 26 * t; return `hsl(${h.toFixed(0)} 65% ${l.toFixed(0)}%)`; };
+  function mapaCalor(f, o, P, n = 70) {
+    let lo = Infinity, hi = -Infinity; const V = [];
+    for (let i = 0; i < n; i++) { V.push([]); for (let j = 0; j < n; j++) { const x = o.x0 + ((i + 0.5) * (o.x1 - o.x0)) / n, y = o.y0 + ((j + 0.5) * (o.y1 - o.y0)) / n, v = f(x, y); V[i].push(v); if (isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); } } }
+    const w = (P.sx(o.x1) - P.sx(o.x0)) / n + 0.6, h = (P.sy(o.y0) - P.sy(o.y1)) / n + 0.6; let s = "";
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const x = o.x0 + (i * (o.x1 - o.x0)) / n, y = o.y0 + ((j + 1) * (o.y1 - o.y0)) / n; s += `<rect x="${P.sx(x).toFixed(1)}" y="${P.sy(y).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${corMapa((V[i][j] - lo) / (hi - lo || 1))}" opacity=".55"/>`; }
+    return [s, lo, hi];
+  }
+  /* curvas de nível por "marching squares" */
+  function niveis(f, o, P, L, n = 90, est = "stroke:var(--ink);stroke-width:1;opacity:.55") {
+    const gx = (i) => o.x0 + (i * (o.x1 - o.x0)) / n, gy = (j) => o.y0 + (j * (o.y1 - o.y0)) / n, V = [];
+    for (let i = 0; i <= n; i++) { V.push([]); for (let j = 0; j <= n; j++) V[i].push(f(gx(i), gy(j))); }
+    let d = "";
+    L.forEach((lv) => {
+      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+        const c = [[gx(i), gy(j), V[i][j]], [gx(i + 1), gy(j), V[i + 1][j]], [gx(i + 1), gy(j + 1), V[i + 1][j + 1]], [gx(i), gy(j + 1), V[i][j + 1]]], pts = [];
+        for (let k = 0; k < 4; k++) { const a = c[k], b = c[(k + 1) % 4]; if (!isFinite(a[2]) || !isFinite(b[2])) continue; if ((a[2] - lv) * (b[2] - lv) < 0) { const s = (lv - a[2]) / (b[2] - a[2]); pts.push([a[0] + s * (b[0] - a[0]), a[1] + s * (b[1] - a[1])]); } }
+        for (let k = 0; k + 1 < pts.length; k += 2) d += `M${P.sx(pts[k][0]).toFixed(1)} ${P.sy(pts[k][1]).toFixed(1)}L${P.sx(pts[k + 1][0]).toFixed(1)} ${P.sy(pts[k + 1][1]).toFixed(1)}`;
+      }
+    });
+    return `<path d="${d}" style="fill:none;${est}"/>`;
+  }
+  const faixaNiveis = (lo, hi, k = 9) => Array.from({ length: k }, (_, i) => lo + ((i + 1) * (hi - lo)) / (k + 1));
+
+  /* ---------- CII05 · superfície, curvas de nível e fatias ---------- */
+  SIM.superficie = (el, F) => {
+    const FS = {
+      parab: { nome: "x² + y²", f: (x, y) => x * x + y * y, fx: (x, y) => 2 * x, fy: (x, y) => 2 * y },
+      sela: { nome: "x² − y² (sela)", f: (x, y) => x * x - y * y, fx: (x, y) => 2 * x, fy: (x, y) => -2 * y },
+      onda: { nome: "sen x · cos y", f: (x, y) => Math.sin(x) * Math.cos(y), fx: (x, y) => Math.cos(x) * Math.cos(y), fy: (x, y) => -Math.sin(x) * Math.sin(y) },
+      morro: { nome: "e^(−(x² + y²))", f: (x, y) => Math.exp(-(x * x + y * y)), fx: (x, y) => -2 * x * Math.exp(-(x * x + y * y)), fy: (x, y) => -2 * y * Math.exp(-(x * x + y * y)) },
+    };
+    let k = "parab";
+    const o = { W: 400, H: 400, l: 34, r: 10, t: 10, b: 28, x0: -2.5, x1: 2.5, y0: -2.5, y1: 2.5 }, P = quadro(o);
+    const oc = { W: 330, H: 185, l: 40, r: 10, t: 10, b: 26, x0: -2.5, x1: 2.5 };
+    el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:start"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="s0"></svg>
+      <div><svg viewBox="0 0 ${oc.W} ${oc.H}" width="${oc.W}" data-v="s1"></svg><svg viewBox="0 0 ${oc.W} ${oc.H}" width="${oc.W}" data-v="s2"></svg></div></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="ctrl"><label>x₀</label><input type="range" min="-2" max="2" step="0.02" value="0.8" data-c="x"><output data-o="x"></output></div>
+      <div class="ctrl"><label>y₀</label><input type="range" min="-2" max="2" step="0.02" value="0.6" data-c="y"><output data-o="y"></output></div>
+      <div class="bts">${botoes(Object.entries(FS).map(([kk, c]) => [kk, "f = " + c.nome]), "k", k)}</div></div>
+      <div class="status">Esquerda: o "mapa topográfico" de f (cores = altura, linhas = curvas de nível). A reta <b style="color:var(--warn)">laranja</b> é a fatia y = y₀ e a <b style="color:var(--ok)">verde</b>, a fatia x = x₀. À direita, o perfil de cada fatia: a inclinação da tangente na laranja é ∂f/∂x; na verde, ∂f/∂y.</div>`);
+    const q = (s) => el.querySelector(s);
+    function fatia(sel, g, d, a, cor, rot) {
+      const ys = []; for (let i = 0; i <= 200; i++) ys.push(g(-2.5 + i / 40)); let lo = Math.min(...ys), hi = Math.max(...ys); if (hi - lo < 0.5) { lo -= 0.25; hi += 0.25; }
+      const oo = { ...oc, y0: lo - 0.1 * (hi - lo), y1: hi + 0.1 * (hi - lo) }, Q = quadro(oo), v = g(a), m = d;
+      let s = clip("clf" + sel, oo) + grade(oo, Q, [-2, -1, 0, 1, 2], ticks(oo.y0, oo.y1, 3), rot, "") + `<g clip-path="url(#clf${sel})">` + curva(amostra(g, -2.5, 2.5, 300), Q, `stroke:${cor};stroke-width:2.4`);
+      s += `<line x1="${Q.sx(a - 1)}" y1="${Q.sy(v - m)}" x2="${Q.sx(a + 1)}" y2="${Q.sy(v + m)}" style="stroke:var(--ink);stroke-width:1.6;stroke-dasharray:5 4"/>` + ponto(Q.sx(a), Q.sy(v), cor, 4.5) + `</g>`;
+      q(`[data-v=${sel}]`).innerHTML = s;
+    }
+    function desenha() {
+      const C = FS[k], x0 = +q("[data-c=x]").value, y0 = +q("[data-c=y]").value; q("[data-o=x]").textContent = F.t(x0, 2); q("[data-o=y]").textContent = F.t(y0, 2);
+      const [mapa, lo, hi] = mapaCalor(C.f, o, P);
+      let g = clip("cls5", o) + `<g clip-path="url(#cls5)">${mapa}${niveis(C.f, o, P, faixaNiveis(lo, hi, 10))}`;
+      g += `<line x1="${P.sx(-2.5)}" x2="${P.sx(2.5)}" y1="${P.sy(y0)}" y2="${P.sy(y0)}" style="stroke:var(--warn);stroke-width:2.2"/><line x1="${P.sx(x0)}" x2="${P.sx(x0)}" y1="${P.sy(-2.5)}" y2="${P.sy(2.5)}" style="stroke:var(--ok);stroke-width:2.2"/>` + ponto(P.sx(x0), P.sy(y0), "var(--ink)", 5) + `</g>` + grade(o, P, [-2, -1, 0, 1, 2], [-2, -1, 0, 1, 2], "x", "y");
+      q("[data-v=s0]").innerHTML = g;
+      const fx = C.fx(x0, y0), fy = C.fy(x0, y0);
+      fatia("s1", (x) => C.f(x, y0), fx, x0, "var(--warn)", "x (com y = y₀)");
+      fatia("s2", (y) => C.f(x0, y), fy, y0, "var(--ok)", "y (com x = x₀)");
+      q("[data-v=lt]").innerHTML = visT("f(x₀, y₀)", F.t(C.f(x0, y0), 4)) + visT("∂f/∂x", F.t(fx, 4)) + visT("∂f/∂y", F.t(fy, 4));
+    }
+    el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha));
+    liga(el, "k", (v) => { k = v; desenha(); });
+    desenha();
+  };
+
+  /* ---------- CII06 · gradiente e multiplicadores de Lagrange ---------- */
+  SIM.lagrange = (el, F) => {
+    const FS = {
+      soma: { nome: "f = x + 2y", f: (x, y) => x + 2 * y, g: (x, y) => [1, 2] },
+      prod: { nome: "f = x·y", f: (x, y) => x * y, g: (x, y) => [y, x] },
+      quad: { nome: "f = x² + 3y²", f: (x, y) => x * x + 3 * y * y, g: (x, y) => [2 * x, 6 * y] },
+    };
+    let k = "soma";
+    const o = { W: 440, H: 440, l: 34, r: 10, t: 10, b: 28, x0: -2, x1: 2, y0: -2, y1: 2 }, P = quadro(o);
+    const o2 = { W: 320, H: 220, l: 40, r: 10, t: 10, b: 28, x0: 0, x1: 360 };
+    el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:start"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="s0"></svg>
+      <div><b>f ao longo do círculo</b><svg viewBox="0 0 ${o2.W} ${o2.H}" width="${o2.W}" data-v="s1"></svg><div class="leitor" data-v="lt" style="flex-direction:column;align-items:stretch"></div></div></div>
+      <div class="ctrls"><div class="ctrl"><label>ângulo do ponto no círculo (°)</label><input type="range" min="0" max="360" step="0.5" value="20" data-c="t"><output data-o="t"></output></div>
+      <div class="bts">${botoes(Object.entries(FS).map(([kk, c]) => [kk, c.nome]), "k", k)}<button class="bt pri" data-a="max">Ir para o máximo</button></div></div>
+      <div class="status">Restrição: andar só sobre o círculo x² + y² = 1. A seta <b style="color:var(--mod)">azul</b> é ∇f (aponta para onde f sobe mais rápido); a <b style="color:var(--warn)">laranja</b> é ∇g, perpendicular ao círculo. No máximo e no mínimo de f sobre o círculo, as duas ficam <b>paralelas</b>: ∇f = λ∇g. Lá, a curva de nível de f encosta no círculo sem cortar.</div>`);
+    const q = (s) => el.querySelector(s);
+    const ang = (C, th) => C.f(Math.cos(th), Math.sin(th));
+    function desenha() {
+      const C = FS[k], tg = +q("[data-c=t]").value, th = (tg * Math.PI) / 180, x = Math.cos(th), y = Math.sin(th); q("[data-o=t]").textContent = F.t(tg, 1);
+      const [mapa, lo, hi] = mapaCalor(C.f, o, P, 60);
+      let s = clip("clL", o) + `<g clip-path="url(#clL)">${mapa}${niveis(C.f, o, P, faixaNiveis(lo, hi, 12))}`;
+      s += niveis(C.f, o, P, [C.f(x, y)], 120, "stroke:var(--mod);stroke-width:2.2");
+      s += `<circle cx="${P.sx(0)}" cy="${P.sy(0)}" r="${P.sx(1) - P.sx(0)}" style="fill:none;stroke:var(--ink);stroke-width:2.6"/>`;
+      const [gx, gy] = C.g(x, y), ng = Math.hypot(gx, gy) || 1, Lf = 0.55;
+      s += D.seta(P.sx(x), P.sy(y), P.sx(x + (Lf * gx) / ng), P.sy(y + (Lf * gy) / ng), "var(--mod)", 2.6) + D.seta(P.sx(x), P.sy(y), P.sx(x + 0.45 * x), P.sy(y + 0.45 * y), "var(--warn)", 2.2) + ponto(P.sx(x), P.sy(y), "var(--ink)", 5) + `</g>` + grade(o, P, [-2, -1, 0, 1, 2], [-2, -1, 0, 1, 2], "x", "y");
+      q("[data-v=s0]").innerHTML = s;
+      const vals = []; for (let i = 0; i <= 360; i++) vals.push([i, ang(C, (i * Math.PI) / 180)]);
+      const vlo = Math.min(...vals.map((v) => v[1])), vhi = Math.max(...vals.map((v) => v[1])), pad = 0.1 * (vhi - vlo || 1);
+      const oo = { ...o2, y0: vlo - pad, y1: vhi + pad }, Q = quadro(oo);
+      q("[data-v=s1]").innerHTML = grade(oo, Q, [0, 90, 180, 270, 360], ticks(oo.y0, oo.y1, 4), "θ (°)", "") + curva(vals, Q, "stroke:var(--mod);stroke-width:2.4") + ponto(Q.sx(tg), Q.sy(C.f(x, y)), "var(--ink)", 5);
+      const cross = gx * y - gy * x, angulo = (Math.acos(Math.max(-1, Math.min(1, (gx * x + gy * y) / ng))) * 180) / Math.PI;
+      q("[data-v=lt]").innerHTML = visT("f no ponto", F.t(C.f(x, y), 4)) + visT("ângulo entre ∇f e ∇g", F.t(angulo, 1) + "°") + visT("máximo sobre o círculo", F.t(vhi, 4)) + (Math.abs(cross) < 0.02 * ng ? `<p class="det" style="color:var(--ok);margin:4px 0 0">∇f ∥ ∇g aqui: ponto crítico com restrição.</p>` : "");
+    }
+    q("[data-c=t]").addEventListener("input", desenha);
+    q("[data-a=max]").addEventListener("click", () => { const C = FS[k]; let best = 0, bv = -Infinity; for (let i = 0; i < 3600; i++) { const v = ang(C, (i * Math.PI) / 1800); if (v > bv) { bv = v; best = i / 10; } } q("[data-c=t]").value = best; desenha(); });
+    liga(el, "k", (v) => { k = v; desenha(); });
+    desenha();
+  };
+
+  /* ---------- CII07 · integral dupla como soma de prismas ---------- */
+  SIM.dupla = (el, F) => {
+    const FS = {
+      quad: { nome: "x + y no quadrado [0,1]²", f: (x, y) => x + y, dentro: (x, y) => x >= 0 && x <= 1 && y >= 0 && y <= 1, v: [-0.1, 1.1], ex: 1, exTex: "1" },
+      disco: { nome: "x² + y² no disco de raio 1", f: (x, y) => x * x + y * y, dentro: (x, y) => x * x + y * y <= 1, v: [-1.1, 1.1], ex: Math.PI / 2, exTex: "π/2" },
+      gauss: { nome: "e^(−x²−y²) no disco de raio 2", f: (x, y) => Math.exp(-(x * x + y * y)), dentro: (x, y) => x * x + y * y <= 4, v: [-2.2, 2.2], ex: Math.PI * (1 - Math.exp(-4)), exTex: "π(1 − e⁻⁴)" },
+      tri: { nome: "x·y no triângulo 0 ≤ y ≤ x ≤ 1", f: (x, y) => x * y, dentro: (x, y) => y >= 0 && y <= x && x <= 1, v: [-0.1, 1.1], ex: 1 / 8, exTex: "1/8" },
+    };
+    let k = "disco";
+    const o = { W: 440, H: 440, l: 34, r: 10, t: 10, b: 28 };
+    el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg><div class="leitor" data-v="lt" style="flex-direction:column;align-items:stretch"></div></div>
+      <div class="ctrls"><div class="ctrl"><label>n (quadradinhos por lado)</label><input type="range" min="2" max="80" step="1" value="8" data-c="n"><output data-o="n"></output></div>
+      <div class="bts">${botoes(Object.entries(FS).map(([kk, c]) => [kk, c.nome]), "k", k)}</div></div>
+      <div class="status">Visto de cima: cada quadradinho cujo centro cai na região vira um prisma de altura f(centro). A cor é a altura. Soma dos volumes → integral dupla. Repare que no disco a borda "em escadinha" atrapalha: é por isso que, em regiões redondas, se usa coordenadas polares.</div>`);
+    const q = (s) => el.querySelector(s);
+    function desenha() {
+      const C = FS[k], n = +q("[data-c=n]").value; q("[data-o=n]").textContent = n;
+      const oo = { ...o, x0: C.v[0], x1: C.v[1], y0: C.v[0], y1: C.v[1] }, P = quadro(oo), h = (C.v[1] - C.v[0]) / n;
+      let lo = Infinity, hi = -Infinity, S = 0, cont = 0; const cel = [];
+      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const x = C.v[0] + (i + 0.5) * h, y = C.v[0] + (j + 0.5) * h; if (!C.dentro(x, y)) continue; const v = C.f(x, y); cel.push([i, j, v]); lo = Math.min(lo, v); hi = Math.max(hi, v); S += v * h * h; cont++; }
+      let g = "";
+      cel.forEach(([i, j, v]) => { const x = C.v[0] + i * h, y = C.v[0] + (j + 1) * h; g += `<rect x="${P.sx(x)}" y="${P.sy(y)}" width="${P.sx(x + h) - P.sx(x) - (n < 30 ? 1 : 0)}" height="${P.sy(y - h) - P.sy(y) - (n < 30 ? 1 : 0)}" fill="${corMapa((v - lo) / (hi - lo || 1))}"/>`; });
+      if (k === "disco" || k === "gauss") { const R = k === "disco" ? 1 : 2; g += `<circle cx="${P.sx(0)}" cy="${P.sy(0)}" r="${P.sx(R) - P.sx(0)}" style="fill:none;stroke:var(--ink);stroke-width:2"/>`; }
+      else if (k === "quad") g += `<rect x="${P.sx(0)}" y="${P.sy(1)}" width="${P.sx(1) - P.sx(0)}" height="${P.sy(0) - P.sy(1)}" style="fill:none;stroke:var(--ink);stroke-width:2"/>`;
+      else g += `<polygon points="${P.sx(0)},${P.sy(0)} ${P.sx(1)},${P.sy(0)} ${P.sx(1)},${P.sy(1)}" style="fill:none;stroke:var(--ink);stroke-width:2"/>`;
+      q("[data-v=sv]").innerHTML = g + grade(oo, P, ticks(C.v[0], C.v[1], 5), ticks(C.v[0], C.v[1], 5), "x", "y");
+      q("[data-v=lt]").innerHTML = visT(`${cont} prismas`, F.t(S, 5)) + visT(`exato (${C.exTex})`, F.t(C.ex, 5)) + visT("erro", F.t(S - C.ex, 5));
+    }
+    q("[data-c=n]").addEventListener("input", desenha);
+    liga(el, "k", (v) => { k = v; desenha(); });
+    desenha();
+  };
+
+  /* ---------- CII08 · campo de direções e método de Euler ---------- */
+  SIM.edo1 = (el, F) => {
+    const ES = {
+      dec: { nome: "y′ = −y (decaimento)", f: (t, y) => -y, ex: (t, y0) => y0 * Math.exp(-t), y: [-0.2, 3.2] },
+      cres: { nome: "y′ = y (crescimento)", f: (t, y) => y, ex: (t, y0) => y0 * Math.exp(t), y: [-0.2, 8] },
+      log: { nome: "y′ = y(1 − y/3) (logística)", f: (t, y) => y * (1 - y / 3), ex: (t, y0) => 3 / (1 + (3 / y0 - 1) * Math.exp(-t)), y: [0, 4] },
+      queda: { nome: "v′ = 9,8 − v (queda com arrasto)", f: (t, v) => 9.8 - v, ex: (t, v0) => 9.8 + (v0 - 9.8) * Math.exp(-t), y: [-0.5, 14] },
+    };
+    let k = "dec";
+    const o = { W: 600, H: 360, l: 44, r: 14, t: 12, b: 30, x0: 0, x1: 4 };
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="ctrl"><label>valor inicial y(0)</label><input type="range" min="0" max="1" step="0.005" value="0.5" data-c="y0"><output data-o="y0"></output></div>
+      <div class="ctrl"><label>passo h do método de Euler</label><input type="range" min="0.05" max="1" step="0.05" value="0.5" data-c="h"><output data-o="h"></output></div>
+      <div class="bts">${botoes(Object.entries(ES).map(([kk, c]) => [kk, c.nome]), "k", k)}</div></div>
+      <div class="status">Os tracinhos têm a inclinação que a equação manda em cada ponto. A solução exata (<b style="color:var(--mod)">azul</b>) segue os tracinhos. O método de Euler (<b style="color:var(--warn)">laranja</b>) anda em linha reta por um passo h, recalcula a inclinação, anda de novo… Diminua o h: o erro cai mais ou menos pela metade quando o h cai pela metade.</div>`);
+    const q = (s) => el.querySelector(s);
+    function desenha() {
+      const C = ES[k], y0 = C.y[0] + 0.05 + (C.y[1] - C.y[0] - 0.1) * +q("[data-c=y0]").value, h = +q("[data-c=h]").value;
+      q("[data-o=y0]").textContent = F.t(y0, 2); q("[data-o=h]").textContent = F.t(h, 2);
+      const oo = { ...o, y0: C.y[0], y1: C.y[1] }, P = quadro(oo);
+      let g = clip("cle", oo) + grade(oo, P, [0, 1, 2, 3, 4], ticks(C.y[0], C.y[1], 5), "t", "y") + `<g clip-path="url(#cle)">`;
+      const sx = (oo.W - oo.l - oo.r) / 4, sy = (oo.H - oo.t - oo.b) / (C.y[1] - C.y[0]);
+      for (let i = 0.5; i < 20; i++) for (let j = 0.5; j < 14; j++) { const t = (i * 4) / 20, y = C.y[0] + (j * (C.y[1] - C.y[0])) / 14, s = C.f(t, y), ux = sx, uy = s * sy, L = Math.hypot(ux, uy), c = 8 / L; g += `<line x1="${P.sx(t) - ux * c}" y1="${P.sy(y) + uy * c}" x2="${P.sx(t) + ux * c}" y2="${P.sy(y) - uy * c}" style="stroke:var(--ink3);stroke-width:1.2"/>`; }
+      g += curva(amostra((t) => C.ex(t, y0), 0, 4, 300), P, "stroke:var(--mod);stroke-width:2.6");
+      const pe = [[0, y0]]; let t = 0, y = y0; while (t < 4 - 1e-9) { y += h * C.f(t, y); t += h; pe.push([t, y]); }
+      g += `<polyline points="${pe.map(([a, b]) => `${P.sx(a)},${P.sy(b)}`).join(" ")}" style="fill:none;stroke:var(--warn);stroke-width:2"/>` + pe.map(([a, b]) => ponto(P.sx(a), P.sy(b), "var(--warn)", 3.2)).join("") + `</g>`;
+      q("[data-v=sv]").innerHTML = g;
+      const tf = pe[pe.length - 1][0], ye = C.ex(tf, y0), yu = pe[pe.length - 1][1];
+      q("[data-v=lt]").innerHTML = visT(`exata em t = ${F.t(tf, 2)}`, F.t(ye, 4)) + visT("Euler", F.t(yu, 4)) + visT("erro", F.t(yu - ye, 4)) + visT("passos", pe.length - 1);
+    }
+    el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha));
+    liga(el, "k", (v) => { k = v; desenha(); });
+    desenha();
+  };
+
+  /* ---------- CII08 · oscilador amortecido ---------- */
+  SIM.oscilador = (el, F) => {
+    const o = { W: 600, H: 300, l: 44, r: 14, t: 12, b: 30, x0: 0, x1: 10, y0: -1.15, y1: 1.15 }, P = quadro(o);
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="ctrl"><label>ω₀ (rad/s)</label><input type="range" min="1" max="6" step="0.1" value="3" data-c="w"><output data-o="w"></output></div>
+      <div class="ctrl"><label>γ (amortecimento, 1/s)</label><input type="range" min="0" max="8" step="0.05" value="0.4" data-c="g"><output data-o="g"></output></div>
+      <div class="bts"><button class="bt peq" data-p="sub">subamortecido</button><button class="bt peq" data-p="crit">crítico</button><button class="bt peq" data-p="super">superamortecido</button></div></div>
+      <div class="status">x″ + 2γx′ + ω₀²x = 0, saindo de x = 1 parado. A equação característica r² + 2γr + ω₀² = 0 decide tudo: raízes complexas (γ &lt; ω₀) dão oscilação que morre; raiz dupla (γ = ω₀, crítico) volta ao zero o mais rápido possível sem passar dele; raízes reais (γ &gt; ω₀) voltam devagar. Amortecedor de carro e ponteiro de instrumento são ajustados perto do crítico.</div>`);
+    const q = (s) => el.querySelector(s);
+    function x(t, w, g) {
+      if (Math.abs(g - w) < 1e-6) return (1 + w * t) * Math.exp(-w * t);
+      if (g < w) { const wd = Math.sqrt(w * w - g * g); return Math.exp(-g * t) * (Math.cos(wd * t) + (g / wd) * Math.sin(wd * t)); }
+      const s = Math.sqrt(g * g - w * w), r1 = -g + s, r2 = -g - s, A = -r2 / (r1 - r2), B = r1 / (r1 - r2); return A * Math.exp(r1 * t) + B * Math.exp(r2 * t);
+    }
+    function desenha() {
+      const w = +q("[data-c=w]").value, g = +q("[data-c=g]").value; q("[data-o=w]").textContent = F.t(w, 1); q("[data-o=g]").textContent = F.t(g, 2);
+      let s = clip("clo", o) + grade(o, P, [0, 2, 4, 6, 8, 10], [-1, -0.5, 0, 0.5, 1], "t (s)", "x") + `<g clip-path="url(#clo)">`;
+      if (g < w) s += curva(amostra((t) => Math.exp(-g * t), 0, 10, 200), P, "stroke:var(--ink3);stroke-dasharray:4 4") + curva(amostra((t) => -Math.exp(-g * t), 0, 10, 200), P, "stroke:var(--ink3);stroke-dasharray:4 4");
+      s += curva(amostra((t) => x(t, w, g), 0, 10, 800), P, "stroke:var(--mod);stroke-width:2.6") + `</g>`;
+      q("[data-v=sv]").innerHTML = s;
+      const D = g * g - w * w, tipo = Math.abs(g - w) < 0.051 ? "crítico" : g < w ? "subamortecido" : "superamortecido";
+      const raizes = D < 0 ? `−${F.t(g, 2)} ± ${F.t(Math.sqrt(-D), 2)} i` : `${F.t(-g + Math.sqrt(D), 2)} e ${F.t(-g - Math.sqrt(D), 2)}`;
+      q("[data-v=lt]").innerHTML = visT("regime", tipo) + visT("raízes de r² + 2γr + ω₀²", raizes) + (g < w ? visT("período da oscilação", F.t((2 * Math.PI) / Math.sqrt(w * w - g * g), 3) + " s") : "");
+    }
+    el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha));
+    el.querySelectorAll("[data-p]").forEach((b) => b.addEventListener("click", () => { const w = +q("[data-c=w]").value; q("[data-c=g]").value = b.dataset.p === "sub" ? w / 8 : b.dataset.p === "crit" ? w : Math.min(8, w * 2.2); desenha(); }));
+    desenha();
+  };
 })();

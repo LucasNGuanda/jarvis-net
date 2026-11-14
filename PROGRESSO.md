@@ -56,6 +56,13 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Idioma: português, ou English com a orientação de usar o tradutor do navegador por enquanto.
   - As fórmulas ficam marcadas com `translate="no"`, para o tradutor não estragá-las.
   - Tradução feita à mão: fica para o final.
+- **β 1.5**:
+  - **Cálculo inteiro concluído**.
+    - **CII05** várias variáveis e derivadas parciais. Laboratório do mapa topográfico com as fatias.
+    - **CII06** gradiente, máximos e mínimos, Lagrange e mínimos quadrados. Laboratório dos gradientes paralelos no círculo. Chefão: Boltzmann por Lagrange.
+    - **CII07** integrais duplas e triplas, polares e esféricas. Laboratório dos prismas. Chefão: esfera × cilindro × anel na rampa.
+    - **CII08** EDOs. Laboratórios do campo de direções com Euler e do oscilador amortecido. Chefão: paraquedista com arrasto quadrático.
+  - Testes: KaTeX, exemplos sorteados, estresse de todos os laboratórios e scan de formatação, sem problemas.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
