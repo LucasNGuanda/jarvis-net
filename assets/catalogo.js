@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 2.5";
+window.VERSAO = "β 2.6";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -10,12 +10,12 @@ window.AREAS = [
 ];
 window.CATALOGO = [
   { id:"F", letra:"F", cor:"--mF", nome:"Fundamentos e a matemática do físico", desc:"Vetores, trigonometria, cálculo, aproximações e análise dimensional.", temas:[
-    ["F01","Fundamentos de Mecânica"],
-    ["F02","Vetores"],
-    ["F03","Trigonometria para física"],
-    ["F04","Derivada e integral para física",["∫"]],
-    ["F05","Séries, aproximações e ordens de grandeza",["★"]],
-    ["A19","Análise Dimensional",["★","RU"]],
+    ["F01","Fundamentos de Mecânica",[],true],
+    ["F02","Vetores",[],true],
+    ["F03","Trigonometria para física",[],true],
+    ["F04","Derivada e integral para física",["∫"],true],
+    ["F05","Séries, aproximações e ordens de grandeza",["★"],true],
+    ["A19","Análise Dimensional",["★","RU"],true],
   ]},
   { id:"A", letra:"A", cor:"--mA", nome:"Mecânica", desc:"Da cinemática à gravitação, fluidos e oscilações.", temas:[
     ["A01","Introdução à Cinemática"],
@@ -198,8 +198,9 @@ window.CATALOGO = [
   { id:"EAt", area:"exp", letra:"F", cor:"--mM", nome:"Força de atração", desc:"Forças centrais que viram osciladores.", temas:[
     ["EP07","A bolinha elétrica no fio",["★","ITA"],true],
   ]},
-  { id:"EMo", area:"exp", letra:"M", cor:"--mU", nome:"Mola", desc:"Osciladores com molas: modos normais e batimento.", temas:[
+  { id:"EMo", area:"exp", letra:"M", cor:"--mU", nome:"Mola", desc:"Osciladores com molas: modos normais, batimento e discos rolando.", temas:[
     ["EP08","Duas massas e três molas",["∫","★"],true],
+    ["EP10","Dois discos rolando ligados por molas",["∫","!!"],true],
   ]},
   { id:"EMi", area:"exp", letra:"∞", cor:"--mT", nome:"Mistos", desc:"Sistemas que juntam molas, pêndulos e o que mais vier.", temas:[
     ["EP09","Pêndulo pendurado num bloco com mola",["∫","!"],true],

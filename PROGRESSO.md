@@ -1,12 +1,12 @@
 # PROGRESSO — Site de Física do Lucas
 
-## Estado atual (14/11/2026, depois da β 2.5)
-- **Física**: 58 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
-  - Prontos: Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes inteiro (7); Bônus (X01); Simulados (S00–S04; S02 já tem o IME 2026/27, os outros só a página de entrada).
-  - Vazios: Fundamentos (6), Mecânica (21), Termodinâmica (11).
+## Estado atual (14/11/2026, depois da β 2.6)
+- **Física**: 64 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
+  - Prontos: Fundamentos inteiro (6); Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes inteiro (7); Bônus (X01); Simulados (S00–S04; S02 já tem o IME 2026/27, os outros só a página de entrada).
+  - Vazios: Mecânica (20), Termodinâmica (11).
 - **Cálculo**: 27 de 27 (Cálculo 1, Cálculo 2, Funções especiais, Teoremas, Simulados de Cálculo).
 - **Experimental**: 0 de 11 (módulos criados, temas a decidir).
-- **Experimentos**: 9 de 9.
+- **Experimentos**: 10 de 10.
 - Exercícios: 7 por tema (a meta do briefing era 15–20).
 - Versão em inglês: só pelo tradutor do navegador.
 
@@ -197,6 +197,23 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Corrigido no teste: a vazão do canal (N06) aparecia em "cm²/s" com o número em mm²/s.
   - Site da SBF (repositório de aulas de ensino superior): o acesso foi liberado no ambiente "site-fisica", mas a leitura foi bloqueada pela checagem automática de permissões da sessão. Nada dele entrou no site.
   - Conferências: 15 novas (laboratórios N05–N07, figuras e numeração do IME, contagem dos simulados); regressão: 143 páginas, 0 katex-error, 0 erro de JS, 1135 links; testes de funcionamento sem falhas; calculadora 103/103; física 118 + 32 + 19.
+
+- **β 2.6** — Módulo F inteiro e o experimento dos dois discos.
+  - **Fundamentos e a matemática do físico (F01–F05 e A19)**, cada um com laboratório (`assets/sims/fundamentos.js`), exemplário, 7 exercícios e chefão:
+    - F01 Fundamentos de Mecânica (laboratório: bola jogada num trem, vista de dentro e da plataforma; chefão: a mosca entre os trens);
+    - F02 Vetores (laboratório: soma, diferença, produto escalar e vetorial; chefão: o hexágono e a soma de cinco vetores);
+    - F03 Trigonometria para física (laboratório: círculo trigonométrico e senoides; chefão: alcance máximo num plano inclinado);
+    - F04 Derivada e integral para física (laboratório: tangente = velocidade, área = deslocamento; chefão: as equações do movimento por integração);
+    - F05 Séries, aproximações e ordens de grandeza (laboratório: polinômios de Taylor e raio de convergência; chefão: o campo do dipolo de longe);
+    - A19 Análise dimensional (laboratório: descobridor de fórmulas por sistema linear e a bola de fogo de Taylor; chefão: o que a análise dimensional não diz, teorema Π).
+  - **EP10 Dois discos rolando ligados por molas** (o vídeo do TikTok @_ctnbeh_ que o Lucas mandou), classificado no módulo **Mola** dos Experimentos (é um oscilador de 2 graus de liberdade com modos normais, como o EP08):
+    - dedução passo a passo da equação do vídeo pela lagrangiana (o 3/2 vem do momento de inércia em relação ao ponto de contato; K vem das molas horizontais nas alturas r₁ + a e r₂ − b);
+    - conferido com sympy: a matriz das derivadas segundas da energia exata das molas é exatamente a K do vídeo;
+    - modos normais: ω = 0 (o conjunto "anda", daí as colisões sem fim) e ω = √(κ(1/A + 1/B));
+    - laboratório com o modelo exato (não linear) e o linearizado, colisões elásticas com rolamento mantido, contador de colisões e energia conservada;
+    - avisado o que a equação do vídeo deixa de fora: o termo Ṁq̇ da massa variando, ângulos grandes, e que as molas do desenho estão em outra posição.
+  - Corrigido antes de entregar: um erro meu no exercício 1 do F02 (3 N e 4 N a 60° dão √37 ≈ 6,1 N, não 7).
+  - Conferências: 19 novas (6 laboratórios do F e 6 do EP10, incluindo energia conservada com 32 colisões e período medido = 2π/ω); regressão: 144 páginas, 0 katex-error, 0 erro de JS, 1211 links; testes de funcionamento sem falhas; calculadora 103/103; física 118 + 32 + 19 + 15.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
