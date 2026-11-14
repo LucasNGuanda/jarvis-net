@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento, A14 gangorra,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -517,5 +517,34 @@
     });
     q("[data-a=re]").addEventListener("click", () => (t = 0));
     ["th", "L"].forEach((k) => q(`[data-c=${k}]`).addEventListener("input", () => (t = 0)));
+  };
+
+  /* ---------- A14 · gangorra: torques dos dois lados ---------- */
+  SIM.gangorra = (el, F) => {
+    const W = 680, H = 290, g = 10;
+    let ang = 0, w = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("massa da esquerda (kg)", "m1", 5, 80, 5, 30)}${sl("distância da esquerda ao apoio (m)", "d1", 0, 2.5, 0.1, 2)}${sl("massa da direita (kg)", "m2", 5, 80, 5, 40)}${sl("distância da direita ao apoio (m)", "d2", 0, 2.5, 0.1, 1.5)}
+      <div class="bts"><button class="bt pri" data-a="re">Nivelar</button></div></div>
+      <div class="status">A gangorra (tábua leve, apoio no meio) fica em equilíbrio quando o torque que gira para um lado é igual ao que gira para o outro: m₁·g·d₁ = m₂·g·d₂. Uma criança leve longe do apoio equilibra um adulto perto dele. O apoio faz uma força para cima igual à soma dos pesos.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.gangorra._conta = (m1, d1, m2, d2) => ({ t1: m1 * g * d1, t2: m2 * g * d2, liq: m2 * g * d2 - m1 * g * d1, N: (m1 + m2) * g, d2eq: (m1 * d1) / m2 });
+    anima(el, F, (dt) => {
+      const m1 = val(el, "m1"), d1 = val(el, "d1"), m2 = val(el, "m2"), d2 = val(el, "d2"), c = SIM.gangorra._conta(m1, d1, m2, d2);
+      mostra(el, ["m1", "m2"], 0); mostra(el, ["d1", "d2"], 1);
+      const lim = 0.22, Ieff = (m1 * d1 * d1 + m2 * d2 * d2 + 20) * 1;
+      w += ((c.liq * Math.cos(ang)) / Ieff - 2.5 * w) * dt; ang += w * dt;
+      if (ang > lim) { ang = lim; w = 0; } if (ang < -lim) { ang = -lim; w = 0; }
+      const cx = 340, cy = 190, esc = 105, deg = (ang * 180) / Math.PI;
+      let sv = `<path d="M${cx - 26} ${cy + 60} L${cx + 26} ${cy + 60} L${cx} ${cy + 4} Z" style="fill:var(--line2);stroke:var(--ink3)"/><line x1="40" x2="640" y1="${cy + 60}" y2="${cy + 60}" style="stroke:var(--ink2)"/>`;
+      sv += `<g transform="rotate(${deg} ${cx} ${cy})"><rect x="${cx - 2.7 * esc}" y="${cy - 6}" width="${5.4 * esc}" height="10" rx="3" style="fill:color-mix(in srgb,var(--mC) 35%,transparent);stroke:var(--mC)"/>`;
+      for (let k = -2.5; k <= 2.51; k += 0.5) sv += `<line x1="${cx + k * esc}" x2="${cx + k * esc}" y1="${cy + 4}" y2="${cy + 10}" style="stroke:var(--ink3)"/>`;
+      const caixa = (x, m, cor) => { const s = 18 + m * 0.45; return `<rect x="${x - s / 2}" y="${cy - 6 - s}" width="${s}" height="${s}" style="fill:color-mix(in srgb,${cor} 35%,transparent);stroke:${cor};stroke-width:2"/>` + D.txt(x, cy - 14 - s, m + " kg", "tx2"); };
+      sv += caixa(cx - d1 * esc, m1, "var(--mA)") + caixa(cx + d2 * esc, m2, "var(--warn)") + `</g>`;
+      sv += D.txt(cx, 30, Math.abs(c.liq) < 1e-6 ? "equilíbrio: torques iguais" : c.liq > 0 ? "gira para a direita" : "gira para a esquerda", "tx2");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("torque da esquerda m₁gd₁", n2(c.t1, 0) + " N·m") + vis("torque da direita m₂gd₂", n2(c.t2, 0) + " N·m") + vis("força do apoio", n2(c.N, 0) + " N") + vis("distância que equilibraria a direita", n2(c.d2eq, 2) + " m");
+    });
+    q("[data-a=re]").addEventListener("click", () => { ang = 0; w = 0; });
   };
 })();
