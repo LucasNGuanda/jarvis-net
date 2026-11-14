@@ -19,7 +19,7 @@ F.registrar("A02", {
           const t = (alvo - s0) / v;
           return { enun: R`<p>Um carrinho está na posição $s_0 = ${s0}$ m e anda em MRU com velocidade $v = ${v}$ m/s. Escreva a função horária e diga em que instante ele passa pela posição $${alvo}$ m.</p>`,
             fig: fig(D.estrada(40, 520, 90, 3.2, 25, "m") + D.carro(40 + s0 * 3.2, 84, "var(--mA)", v > 0 ? 1 : -1) + D.seta(40 + s0 * 3.2, 46, 40 + s0 * 3.2 + (v > 0 ? 60 : -60), 46, "var(--warn)") + D.txt(40 + s0 * 3.2, 36, `${v} m/s`, "tx2")),
-            passos: [R`<p>(i) MRU: $s = s_0 + vt = ${s0} ${v < 0 ? "-" : "+"} ${Math.abs(v)}t$ (SI).</p>`, R`<p>(ii) $${alvo} = ${s0} ${v < 0 ? "-" : "+"} ${Math.abs(v)}t \Rightarrow t = \frac{${alvo} - ${s0}}{${v}} = ${F.n(t, 3)}$ s.</p>`, t < 0 ? R`<p>(iii) O tempo deu negativo: ele passou por lá <b>antes</b> de $t = 0$ (está se afastando dessa posição). Fisicamente, depois de $t = 0$ ele não passa mais por ali.</p>` : R`<p>(iii) Tempo positivo: ele chega lá ${F.n(t, 3)} s depois de começarmos a contar.</p>`] };
+            passos: [R`<p>(i) MRU: $s = s_0 + vt = ${s0} ${v < 0 ? "-" : "+"} ${Math.abs(v)}t$ (SI).</p>`, R`<p>(ii) $${alvo} = ${s0} ${v < 0 ? "-" : "+"} ${Math.abs(v)}t \Rightarrow t = \frac{${alvo} - ${s0}}{${v}} = ${F.n(t, 3)}$ s.</p>`, t < 0 ? R`<p>(iii) O tempo deu negativo: ele passou por lá <b>antes</b> de $t = 0$ (está se afastando dessa posição). Fisicamente, depois de $t = 0$ ele não passa mais por ali.</p>` : R`<p>(iii) Tempo positivo: ele chega lá ${F.nt(t, 3)} s depois de começarmos a contar.</p>`] };
         } },
         { nome: "Médio: encontro", gerar: (p) => {
           const sb = p ? 150 : F.escolha([120, 150, 200]), va = p ? 15 : F.escolha([10, 15, 20]), vb = p ? -10 : F.escolha([-10, -5, 5]);

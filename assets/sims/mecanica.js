@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -203,5 +203,39 @@
     q("[data-a=go]").addEventListener("click", () => { const v0 = val(el, "v0"), th = (val(el, "th") * Math.PI) / 180, h = val(el, "h"), r = SIM.lancamento._conta(v0, val(el, "th"), h), esc = Math.min(580 / 100, 260 / 60); let d = ""; for (let i = 0; i <= 60; i++) { const s = (r.tv * i) / 60; d += (i ? "L" : "M") + (60 + v0 * Math.cos(th) * s * esc).toFixed(1) + " " + (320 - (h + v0 * Math.sin(th) * s - 5 * s * s) * esc).toFixed(1); } rastros.push(d); if (rastros.length > 8) rastros.shift(); t = 0; });
     q("[data-a=limpa]").addEventListener("click", () => (rastros = []));
     q("[data-a=env]").addEventListener("click", (e) => { env = !env; e.currentTarget.textContent = env ? "Esconder parábola de segurança" : "Mostrar parábola de segurança"; });
+  };
+  /* ---------- A07 · MCU e transmissão por engrenagens ---------- */
+  SIM.circular = (el, F) => {
+    const W = 680, H = 330;
+    let modo = "mcu", ang = 0, ang2 = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("frequência f (voltas por segundo)", "f", 0.05, 1, 0.01, 0.25)}${sl("raio R (m), ou raio da engrenagem 1", "r1", 0.2, 1.2, 0.05, 0.8)}${sl("raio da engrenagem 2 (m)", "r2", 0.2, 1.2, 0.05, 0.4)}
+      <div class="bts">${botoes([["mcu", "MCU: velocidade e aceleração"], ["eng", "duas engrenagens"]], "m", modo)}</div></div>
+      <div class="status" data-v="txt"></div>`);
+    const q = (s) => el.querySelector(s);
+    const txt = { mcu: "No movimento circular uniforme, a rapidez é constante, mas a velocidade (seta azul, tangente) muda de direção o tempo todo. A aceleração (seta laranja) aponta sempre para o centro: a centrípeta, ω²R = v²/R.", eng: "Engrenagens em contato têm a mesma velocidade linear no ponto de contato (os dentes não escorregam): ω₁R₁ = ω₂R₂. A menor gira mais rápido, e no sentido contrário." };
+    SIM.circular._conta = (f, R) => ({ w: 2 * Math.PI * f, v: 2 * Math.PI * f * R, ac: (2 * Math.PI * f) ** 2 * R, T: 1 / f });
+    anima(el, F, (dt) => {
+      const f = val(el, "f"), r1 = val(el, "r1"), r2 = val(el, "r2");
+      mostra(el, ["f", "r1", "r2"], 2);
+      q("[data-v=txt]").textContent = txt[modo];
+      const w = 2 * Math.PI * f; ang += w * dt;
+      let sv = "";
+      if (modo === "mcu") {
+        const esc = 120, cx = 230, cy = 165, Rp = r1 * esc, x = cx + Rp * Math.cos(ang), y = cy - Rp * Math.sin(ang), c = SIM.circular._conta(f, r1);
+        sv += `<circle cx="${cx}" cy="${cy}" r="${Rp}" style="fill:none;stroke:var(--ink3);stroke-dasharray:4 4"/><circle cx="${cx}" cy="${cy}" r="3" style="fill:var(--ink)"/><line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" style="stroke:var(--ink3)"/>`;
+        const kv = 40, ka = 22; sv += D.seta(x, y, x - Math.sin(ang) * c.v * kv, y - Math.cos(ang) * c.v * kv, "var(--mA)", 2.4) + D.seta(x, y, x - Math.cos(ang) * Math.min(90, c.ac * ka), y + Math.sin(ang) * Math.min(90, c.ac * ka), "var(--warn)", 2.4);
+        sv += `<circle cx="${x}" cy="${y}" r="8" style="fill:var(--mod)"/><text class="tx2" x="${cx}" y="${cy + Rp + 22}" text-anchor="middle">R = ${n2(r1)} m</text>`;
+        sv += `<text class="tx2" x="440" y="110" style="fill:var(--mA)">velocidade (tangente)</text><text class="tx2" x="440" y="134" style="fill:var(--warn)">aceleração (para o centro)</text><text class="tx2" x="440" y="170">θ = ${n2((ang % (2 * Math.PI)) * 180 / Math.PI, 0)}°</text>`;
+        q("[data-v=lt]").innerHTML = vis("período T = 1/f", n2(c.T, 2) + " s") + vis("velocidade angular ω = 2πf", n2(c.w, 3) + " rad/s") + vis("rapidez v = ωR", n2(c.v, 3) + " m/s") + vis("aceleração centrípeta ω²R", n2(c.ac, 3) + " m/s²");
+      } else {
+        const esc = 110, c1 = [200, 165], c2 = [200 + (r1 + r2) * esc, 165], w2 = (w * r1) / r2; ang2 = -(ang * r1) / r2;
+        const engr = ([cx, cy], R, a, cor) => { const n = Math.max(8, Math.round(R * 22)); let d = ""; for (let i = 0; i < 2 * n; i++) { const t = a + (i * Math.PI) / n, rr = R * esc + (i % 2 ? -5 : 5); d += (i ? "L" : "M") + (cx + rr * Math.cos(t)).toFixed(1) + " " + (cy - rr * Math.sin(t)).toFixed(1); } return `<path d="${d} Z" style="fill:color-mix(in srgb,${cor} 20%,transparent);stroke:${cor};stroke-width:2"/><line x1="${cx}" y1="${cy}" x2="${cx + R * esc * 0.85 * Math.cos(a)}" y2="${cy - R * esc * 0.85 * Math.sin(a)}" style="stroke:${cor};stroke-width:3"/><circle cx="${cx}" cy="${cy}" r="4" style="fill:var(--ink)"/>`; };
+        sv += engr(c1, r1, ang, "var(--mA)") + engr(c2, r2, ang2 + Math.PI / Math.max(8, Math.round(r2 * 22)), "var(--mT)");
+        q("[data-v=lt]").innerHTML = vis("ω₁ = 2πf", n2(w, 3) + " rad/s") + vis("ω₂ = ω₁R₁/R₂", n2(w2, 3) + " rad/s") + vis("rapidez no contato ω₁R₁", n2(w * r1, 3) + " m/s") + vis("f₂ (voltas por segundo)", n2(w2 / (2 * Math.PI), 3));
+      }
+      q("[data-v=sv]").innerHTML = sv;
+    });
+    liga(el, "m", (v) => (modo = v));
   };
 })();

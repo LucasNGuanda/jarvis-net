@@ -14,7 +14,7 @@ F.registrar("A01", {
       casos: [
         { nome: "Fácil: viagem com parada", gerar: (p) => {
           const d = p ? 150 : F.escolha([120, 150, 180, 240]), h = p ? 2 : F.escolha([1.5, 2, 2.5]), par = p ? 0.5 : F.escolha([0.25, 0.5]), vm = d / (h + par);
-          return { enun: R`<p>Um carro faz uma viagem de ${d} km. Ele roda ${F.n(h)} h e para ${F.n(par * 60)} min num posto no meio do caminho. Qual a velocidade escalar média da viagem, em km/h e em m/s?</p>`,
+          return { enun: R`<p>Um carro faz uma viagem de ${d} km. Ele roda ${F.nt(h)} h e para ${F.nt(par * 60)} min num posto no meio do caminho. Qual a velocidade escalar média da viagem, em km/h e em m/s?</p>`,
             fig: est(D.estrada(40, 520, 80, 480 / d, d / 4, "km") + D.carro(60, 74, "var(--mA)") + D.txt(280, 40, `parada de ${F.t(par * 60, 0)} min`, "tx2") + `<circle cx="280" cy="80" r="5" style="fill:var(--warn)"/>`),
             passos: [R`<p>(i) Velocidade média usa o <b>tempo total</b>, com a parada: $\Delta t = ${F.n(h)} + ${F.n(par)} = ${F.n(h + par)}$ h.</p>`, R`<p>(ii) $v_m = \frac{\Delta s}{\Delta t} = \frac{${d}}{${F.n(h + par)}} \approx ${F.n(vm, 2)}$ km/h.</p>`, R`<p>(iii) Em m/s, divide por 3,6: $\approx ${F.n(vm / 3.6, 2)}$ m/s. Se você esquecesse a parada, acharia $${F.n(d / h, 2)}$ km/h: a velocidade média do <i>movimento</i>, não da viagem.</p>`] };
         } },

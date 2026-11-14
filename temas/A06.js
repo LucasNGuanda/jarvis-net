@@ -20,7 +20,7 @@ F.registrar("A06", {
       casos: [
         { nome: "Fácil: lançamento horizontal", gerar: (p) => {
           const h = p ? 1.25 : F.escolha([0.8, 1.25, 1.8, 5]), v0 = p ? 2 : F.escolha([1, 2, 3, 4]), t = Math.sqrt((2 * h) / g), x = v0 * t, vc = Math.hypot(v0, g * t);
-          return { enun: R`<p>Uma bolinha rola para fora de uma mesa de ${F.n(h)} m de altura com ${v0} m/s. A que distância do pé da mesa ela cai, e com que velocidade chega ao chão?</p>`,
+          return { enun: R`<p>Uma bolinha rola para fora de uma mesa de ${F.nt(h)} m de altura com ${v0} m/s. A que distância do pé da mesa ela cai, e com que velocidade chega ao chão?</p>`,
             fig: traj(v0, 0, h, Math.max(1.5, x * 1.4), h * 1.3, "", 180),
             passos: [R`<p>(i) Vertical: queda livre a partir do repouso ${F.ret("A03")}: $${F.n(h)} = 5t^2 \Rightarrow t = ${F.n(t, 4)}$ s. A velocidade horizontal não interfere.</p>`, R`<p>(ii) Horizontal: MRU, $x = ${v0}\cdot${F.n(t, 4)} = ${F.n(x, 3)}$ m.</p>`, R`<p>(iii) No chão: $v_x = ${v0}$, $v_y = gt = ${F.n(g * t, 3)}$ m/s, $|\vec v| = \sqrt{${v0}^2 + ${F.n(g * t, 3)}^2} \approx ${F.n(vc, 3)}$ m/s ${F.ret("F02")}.</p>`] };
         } },

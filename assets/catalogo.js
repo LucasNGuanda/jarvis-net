@@ -24,7 +24,7 @@ window.CATALOGO = [
     ["A04","Análise Gráfica",["★"],true],
     ["A05","Cinemática Vetorial",[],true],
     ["A06","Lançamentos",["★"],true],
-    ["A07","Movimento Circular"],
+    ["A07","Movimento Circular",[],true],
     ["A08","Leis de Newton",["★","ITA"]],
     ["A09","Atrito e Resistência do Ar"],
     ["A10","Dinâmica do Movimento Circular"],

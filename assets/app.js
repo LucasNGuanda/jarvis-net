@@ -65,6 +65,8 @@
     const mant = v / Math.pow(10, e);
     return F.m(mant, n - 1) + "\\times 10^{" + e + "}";
   };
+  /* número limpo para TEXTO comum (fora do $...$): 2,5 em vez de 2{,}5 */
+  F.nt = (v, d = 4) => F.n(v, d).replace("{,}", ",").replace(/^-/, "−");
   /* igual ao sigM, mas sem zeros à direita na mantissa: 3,0 × 10⁻⁵ → 3 × 10⁻⁵, 0,010 → 0,01 */
   F.sigL = (v, n = 3) => F.sigM(v, n).replace(/(\{,\}\d*?)0+(?=\\times|$)/, "$1").replace(/\{,\}(?=\\times|$)/, "");
   /* notação científica para texto (fora do KaTeX): F.cient(64168764, 2) -> "6,42 × 10⁷" */
@@ -212,7 +214,7 @@
      A primeira tentativa fica em resultado:COD-n = {r: "certo"|"errado", dada} (mapa de erros, docs/MODELO_DE_DADOS.md §6).
      nivel: "Físico" ou "Máximo" (selo no cabeçalho). */
   let temaAtual = null, exercicios = [];
-  const lerNumero = (s) => { s = String(s).trim().replace(/\s/g, "").replace(/−/g, "-").replace(/[×·]10\^?/g, "e"); if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g, ""); s = s.replace(",", "."); const v = Number(s); return s !== "" && isFinite(v) ? v : NaN; };
+  const lerNumero = (s) => { s = String(s).trim().replace(/\s/g, "").replace(/−/g, "-").replace(/[×·]10\^?/g, "e"); if (/^-?\d{1,3}(\.\d{3}){2,}(,\d+)?$/.test(s) || /^-?\d{1,3}(\.\d{3})+,\d+$/.test(s)) s = s.replace(/\./g, ""); /* "1.000.000" ou "1.234,5": ponto de milhar; um ponto sozinho é decimal */ s = s.replace(",", "."); const v = Number(s); return s !== "" && isFinite(v) ? v : NaN; };
   F.lerNumero = lerNumero;
   const fmtNum = (v) => String(+(+v).toPrecision(4)).replace(".", ",").replace("-", "−");
   F.exercicio = (e) => {
