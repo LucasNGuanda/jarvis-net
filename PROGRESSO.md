@@ -1,12 +1,13 @@
 # PROGRESSO — Site de Física do Lucas
 
-## Estado atual (14/11/2026, depois da β 2.6)
+## Estado atual (14/11/2026, depois da β 2.7)
 - **Física**: 64 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
   - Prontos: Fundamentos inteiro (6); Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes inteiro (7); Bônus (X01); Simulados (S00–S04; S02 já tem o IME 2026/27, os outros só a página de entrada).
   - Vazios: Mecânica (21), Termodinâmica (11).
 - **Cálculo**: 27 de 27 (Cálculo 1, Cálculo 2, Funções especiais, Teoremas, Simulados de Cálculo).
 - **Experimental**: 0 de 11 (módulos criados, temas a decidir).
 - **Experimentos**: 10 de 10.
+- Calculadoras: 1 (estilo fx-991ES PLUS) e 2 (estilo fx-82LA CW), uma de cada vez.
 - Exercícios: 7 por tema (a meta do briefing era 15–20).
 - Versão em inglês: só pelo tradutor do navegador.
 
@@ -214,6 +215,18 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
     - avisado o que a equação do vídeo deixa de fora: o termo Ṁq̇ da massa variando, ângulos grandes, e que as molas do desenho estão em outra posição.
   - Corrigido antes de entregar: um erro meu no exercício 1 do F02 (3 N e 4 N a 60° dão √37 ≈ 6,1 N, não 7).
   - Conferências: 19 novas (6 laboratórios do F e 6 do EP10, incluindo energia conservada com 32 colisões e período medido = 2π/ω); regressão: 144 páginas, 0 katex-error, 0 erro de JS, 1211 links; testes de funcionamento sem falhas; calculadora 103/103; física 118 + 32 + 19 + 15.
+
+- **β 2.7** — Calculadora 2, no estilo da Casio fx-82LA CW (ClassWiz).
+  - Nas configurações agora há duas calculadoras, com interruptores separados, e **só uma fica ligada por vez** (ligar uma desliga a outra; vale também ao recarregar a página). As duas aparecem no canto inferior esquerdo com a mesma animação.
+  - **Calculadora 2** (`assets/calc2.js`): corpo preto, teclas redondas na ordem da fx-82LA CW, SHIFT azul com as funções escritas em cima, vírgula decimal.
+    - Teclas de sistema: ON, HOME, CONFIG, ↶ (voltar), setas com OK, rolar página (⇑⇓), VARIABLE, FUNCTION, CATALOG, TOOLS, FORMAT.
+    - HOME com os 4 apps: **Calcular**, **Estatística** (1-Variável e y=a+bx, com x̄, σx, sx, quartis, a, b, r), **Tabela** (f(x) e g(x), início/fim/passo) e **Caixa Matemática** (lançar 1–3 dados ou moedas, até 250 vezes, com frequência relativa).
+    - Entrada "de livro" (fração, fração mista, √, ⁿ√, potência, log de base, ×10^▭); Entrada/Saída Matem./Matem., Matem./Decimal, Linear/Linear e Linear/Decimal.
+    - FORMAT: padrão, decimal, fração imprópria, fração mista, engenharia, sexagesimal e fatoração em primos. SHIFT EXE (≈) dá o decimal; SHIFT Ans (Simp) simplifica uma fração um fator por vez.
+    - VARIABLE (A–F, x, y, z: recuperar e armazenar Ans), FUNCTION (definir e usar f(x) e g(x), as mesmas da Tabela), CATALOG (funções, probabilidade, MDC, MMC, Int, Intg, Rnd, %, ÷R, ângulos, Pol, Rec, hiperbólicas), ÷R (quociente e resto), "=" para conferir igualdades (Verdadeiro/Falso).
+    - O que não tem no site: QR Code (a tecla avisa).
+  - As contas usam o mesmo motor da calculadora 1 (o `calc.js` agora expõe o motor e aceita outro estado), com funções novas: MDC, MMC, Int, Intg, ÷R, f( e g(.
+  - Conferências: 41 testes tecla por tecla na calculadora 2 (contas exatas, FORMAT, Simp, variáveis, funções, Estatística, Tabela, Caixa, OFF/ON, uma calculadora por vez), calculadora 1 103/103, regressão do site: 144 páginas, 0 katex-error, 0 erro de JS.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.

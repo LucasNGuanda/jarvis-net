@@ -40,7 +40,7 @@
 
   /* ---------------- estado ---------------- */
   const novoEd = () => { const r = []; return { tok: r, cur: { L: r, i: 0 } }; };
-  const st = {
+  let st = {
     modo: "COMP", tela: "edit", shift: false, alpha: false, hyp: false, sto: false, rcl: false, ins: false,
     ed: novoEd(), buf: novoEd(), hist: [], hpos: -1,
     cfg: { io: "Math", ang: "D", fmt: { t: "Norm", n: 1 }, frac: "d/c", cx: "a+bi" },
@@ -164,6 +164,7 @@
     integ: { n: 3, vert: { 0: { u: 2, d: 1 }, 1: { u: 2 }, 2: { d: 1 } } },
     sum: { n: 3, vert: { 0: { u: 2, d: 1 }, 1: { u: 2 }, 2: { d: 1 } } },
     deriv: { n: 2, vert: { 0: { d: 1 }, 1: { u: 0 } } },
+    e10: { n: 1 }, /* ×10^▭ da calculadora 2 (ClassWiz) */
   };
   const ligaArv = (lista) => { lista.forEach((it) => { if (it.k === "tpl") { it._lista = lista; it.slots.forEach((sl, k) => { sl._tpl = it; sl._idx = k; ligaArv(sl); }); } }); return lista; };
   const clona = (lista) => ligaArv(lista.map((it) => (it.k === "tpl" ? { k: "tpl", t: it.t, slots: it.slots.map(clona) } : { ...it })));
@@ -216,6 +217,7 @@
         case "pow": out.push(T("pow", "^("), ...serial(a), rp()); break;
         case "root": out.push(lp(), ...serial(a), rp(), T("root", "ˣ√("), ...serial(b), rp()); break;
         case "sqrt": case "cbrt": case "abs": case "exp10": case "exp": out.push(FN(it.t, it.t + "("), ...serial(a), rp()); break;
+        case "e10": out.push(FN("exp10", "×10^("), ...serial(a), rp()); break;
         case "logab": out.push(FN("log", "log("), ...serial(a), cm(), ...serial(b), rp()); break;
         case "integ": case "sum": out.push(FN(it.t, it.t + "("), ...serial(a), cm(), ...serial(b), cm(), ...serial(c), rp()); break;
         case "deriv": out.push(FN("deriv", "d/dx("), ...serial(a), cm(), ...serial(b), rp()); break;
@@ -253,7 +255,7 @@
     function eLog() { let a = soma(); while (olha() && olha().k === "binop" && olha().o === "and") { p++; a = { t: "bin", o: "and", a, b: soma() }; } return a; }
     function soma() { let a = produto(); while (olha() && olha().k === "op" && (olha().o === "+" || olha().o === "−")) { const o = pega().o; a = { t: "bin", o, a, b: produto() }; } return a; }
     function produto() { let a = perm(); while (olha() && olha().k === "op" && (olha().o === "×" || olha().o === "÷")) { const o = pega().o; a = { t: "bin", o, a, b: perm() }; } return a; }
-    function perm() { let a = angulo(); while (olha() && olha().k === "binop" && (olha().o === "nPr" || olha().o === "nCr")) { const o = pega().o; a = { t: "bin", o, a, b: angulo() }; } return a; }
+    function perm() { let a = angulo(); while (olha() && olha().k === "binop" && (olha().o === "nPr" || olha().o === "nCr" || olha().o === "divR")) { const o = pega().o; a = { t: "bin", o, a, b: angulo() }; } return a; }
     function angulo() { let a = implicita(); while (olha() && olha().k === "ang") { p++; a = { t: "polar", r: a, th: implicita() }; } return a; }
     function implicita() { let a = unario(); while (comeca(olha())) a = { t: "bin", o: "×", a, b: unario(true) }; return a; }
     function unario(semNeg) { if (!semNeg && olha() && olha().k === "neg") { p++; return { t: "neg", a: unario() }; } return fracao_(); }
@@ -325,6 +327,7 @@
         if (st.modo === "BASE") return base32(opBase(n.o, a, b));
         switch (n.o) {
           case "+": return chk(add(a, b)); case "−": return chk(sub(a, b)); case "×": return chk(mul(a, b)); case "÷": return chk(div(a, b));
+          case "divR": { const x = real(a), y = real(b); if (!Number.isInteger(x) || !Number.isInteger(y) || y === 0) ERR("Math"); const q = Math.trunc(x / y); return { par: [["Q", q], ["R", x - q * y]] }; }
           case "nPr": case "nCr": { const x = real(a), y = real(b); if (!Number.isInteger(x) || !Number.isInteger(y) || y < 0 || x < 0 || y > x) ERR("Math"); let r = 1; for (let k = 0; k < y; k++) r = (r * (x - k)) / (n.o === "nCr" ? k + 1 : 1); return Math.round(r); }
           default: ERR("Syntax");
         }
@@ -401,6 +404,10 @@
       case "conjg": { const z = toC(A(0)); return simpC(cx(z.re, -z.im)); }
       case "not": return base32(~R(0));
       case "negb": return base32(-R(0));
+      case "gcd": case "lcm": { const g = (m, n) => (n ? g(n, m % n) : Math.abs(m)); const v = n.args.map((_, k) => R(k)); if (v.length < 2 || v.some((x) => !Number.isInteger(x))) ERR("Math"); return n.f === "gcd" ? v.reduce((a, b) => g(a, b)) : v.reduce((a, b) => (a && b ? Math.abs(a * b) / g(a, b) : 0)); }
+      case "int": return Math.trunc(R(0));
+      case "intg": return Math.floor(R(0));
+      case "uf_f": case "uf_g": { /* f(x) e g(x) definidas pelo usuário (calculadora 2) */ const def = st.funcoes && st.funcoes[n.f[3]]; if (!def || !def.length) ERR("Syntax"); st._prof = (st._prof || 0) + 1; try { if (st._prof > 8) ERR("Stack"); return avalia(analisa(serial(def)), { ...env, X: A(0) }); } finally { st._prof--; } }
       case "P": return phi(R(0));
       case "Q": return phi(R(0)) - 0.5;
       case "R": return 1 - phi(R(0));
@@ -1146,10 +1153,14 @@
     const sw = document.getElementById("cfg-calc");
     const ler = () => { try { return JSON.parse(localStorage.getItem("fisica:calculadora") || "false"); } catch (e) { return false; } };
     const pinta = () => { const on = ler(); if (sw) sw.setAttribute("aria-checked", on); };
-    if (sw) sw.addEventListener("click", () => { const on = !ler(); try { localStorage.setItem("fisica:calculadora", JSON.stringify(on)); } catch (e) {} pinta(); liga(on); });
+    if (sw) sw.addEventListener("click", () => { const on = !ler(); try { localStorage.setItem("fisica:calculadora", JSON.stringify(on)); } catch (e) {} pinta(); liga(on); if (on && window.CALC2) CALC2.ligaSalvo(false); /* só uma calculadora por vez */ });
     pinta(); if (ler()) liga(true);
   });
 
   /* para testes */
   CALC._ = { analisa, avalia, executa, formata, exato, fracao, resolveEqn, estat, tokenDe, T };
+  /* motor para a calculadora 2 (ClassWiz): roda as mesmas funções com outro estado */
+  CALC.motor = { Erro, T, FN, POST, novoEd, edDe, clona, ligaArv, insMolde, saiMolde, direita, esquerda, vertical, serial, analisa, avalia, exato, fracao, formata, dicasDe, ins, apaga, CONST,
+    comEstado(outro, fn) { const velho = st; st = outro; try { return fn(); } finally { st = velho; } } };
+  CALC.ligaSalvo = (on) => { try { localStorage.setItem("fisica:calculadora", JSON.stringify(on)); } catch (e) {} const sw = document.getElementById("cfg-calc"); if (sw) sw.setAttribute("aria-checked", on); liga(on); };
 })();
