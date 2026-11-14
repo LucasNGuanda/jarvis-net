@@ -1,4 +1,4 @@
-/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; T05 gás ideal p × V; T05b gás de moléculas 2D; */
+/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; T05 gás ideal p × V; T05b gás de moléculas 2D; T06 dois corpos em contato; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -236,6 +236,42 @@
       sv += `<path d="${d}" style="fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:5 4"/>` + D.seta(gx, gy, gx + gw + 10, gy, "var(--ink2)", 1.4) + D.txt(gx + gw + 10, gy + 18, "|v|", "tx2", "end") + D.txt(gx, gy - gh - 6, "quantas moléculas", "tx2", "start");
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("velocidade quadrática média √⟨v²⟩", n2(Math.sqrt(v2), 1) + " px/s") + vis("pressão medida nas paredes", pMed ? n2(pMed, 2) : "medindo…") + vis("pressão prevista N⟨v²⟩/(2A)", n2(pT, 2)) + vis("prevista descontando o tamanho das moléculas", n2((ps.length * v2) / 2 / ((L - 2 * r) ** 2 - ps.length * 2 * Math.PI * r * r), 2)) + vis("energia cinética média", n2(v2 / 2, 0) + " (∝ T)");
+    });
+  };
+
+  /* ---------- T06 · dois corpos em contato térmico caminhando para o equilíbrio ---------- */
+  SIM.contato = (el, F) => {
+    const W = 680, H = 300;
+    let T1, T2, t, hist;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("capacidade térmica do corpo A (J/K)", "C1", 20, 500, 10, 100)}${sl("capacidade térmica do corpo B (J/K)", "C2", 20, 500, 10, 300)}${sl("temperatura inicial de A (°C)", "Ta", 0, 100, 1, 80)}${sl("temperatura inicial de B (°C)", "Tb", 0, 100, 1, 20)}${sl("condutância do contato G (W/K)", "G", 0.5, 10, 0.5, 2)}
+      <div class="bts"><button class="bt pri" data-a="re">Encostar de novo</button></div></div>
+      <div class="status">Dois corpos isolados do resto do mundo são encostados. O calor flui do mais quente para o mais frio, a uma taxa G·(T_A − T_B), até as temperaturas ficarem iguais: o equilíbrio térmico. A temperatura final é a média ponderada pelas capacidades térmicas, e a diferença entre os dois cai exponencialmente, com tempo característico τ = C_A·C_B / (G·(C_A + C_B)).</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.contato._conta = (C1, C2, Ta, Tb, G) => ({ Teq: (C1 * Ta + C2 * Tb) / (C1 + C2), tau: (C1 * C2) / (G * (C1 + C2)) });
+    const reinicia = () => { T1 = val(el, "Ta"); T2 = val(el, "Tb"); t = 0; hist = []; };
+    reinicia();
+    q("[data-a=re]").addEventListener("click", reinicia);
+    ["C1", "C2", "Ta", "Tb", "G"].forEach((k) => q(`[data-c=${k}]`).addEventListener("input", reinicia));
+    anima(el, F, (dt) => {
+      const C1 = val(el, "C1"), C2 = val(el, "C2"), G = val(el, "G"), c = SIM.contato._conta(C1, C2, val(el, "Ta"), val(el, "Tb"), G);
+      mostra(el, ["C1", "C2"], 0); q("[data-o=Ta]").textContent = n2(val(el, "Ta"), 0) + " °C"; q("[data-o=Tb]").textContent = n2(val(el, "Tb"), 0) + " °C"; mostra(el, ["G"], 1);
+      const tmax = 5 * c.tau, passo = (tmax / 8) * dt, n = 20;
+      for (let i = 0; i < n && t < tmax; i++) { const P = G * (T1 - T2), h = passo / n; T1 -= (P / C1) * h; T2 += (P / C2) * h; t += h; }
+      hist.push([t, T1, T2]);
+      const cor = (T) => `color-mix(in srgb,var(--bad) ${Math.round(T)}%,var(--mA))`;
+      const w1 = 40 + C1 / 6, w2 = 40 + C2 / 6;
+      let sv = `<rect x="${150 - w1}" y="60" width="${w1}" height="100" style="fill:${cor(T1)};opacity:.55;stroke:var(--ink2)"/><rect x="150" y="60" width="${w2}" height="100" style="fill:${cor(T2)};opacity:.55;stroke:var(--ink2)"/>`;
+      sv += D.txt(150 - w1 / 2, 115, "A", "txm") + D.txt(150 + w2 / 2, 115, "B", "txm") + D.txt(150 - w1 / 2, 180, n2(T1, 1) + " °C", "tx2") + D.txt(150 + w2 / 2, 180, n2(T2, 1) + " °C", "tx2");
+      if (Math.abs(T1 - T2) > 0.3) sv += D.seta(T1 > T2 ? 130 : 170, 40, T1 > T2 ? 170 : 130, 40, "var(--bad)", 2) + D.txt(150, 30, "calor", "tx2");
+      const gx = 330, gy = 260, gw = 320, gh = 220, X = (tt) => gx + (tt / tmax) * gw, Y = (T) => gy - (T / 100) * gh;
+      sv += D.seta(gx, gy, gx + gw + 10, gy, "var(--ink2)", 1.4) + D.seta(gx, gy, gx, gy - gh - 10, "var(--ink2)", 1.4) + D.txt(gx + gw + 10, gy + 18, "tempo", "tx2", "end") + D.txt(gx + 6, gy - gh - 4, "T (°C)", "tx2", "start");
+      sv += `<line x1="${gx}" x2="${gx + gw}" y1="${Y(c.Teq)}" y2="${Y(c.Teq)}" style="stroke:var(--ink3);stroke-dasharray:5 4"/>` + D.txt(gx + gw, Y(c.Teq) - 6, "equilíbrio", "tx2", "end");
+      [1, 2, 3, 4].forEach((k) => (sv += `<line x1="${X(k * c.tau)}" x2="${X(k * c.tau)}" y1="${gy}" y2="${gy + 5}" style="stroke:var(--ink3)"/>` + D.txt(X(k * c.tau), gy + 18, k + "τ", "tx2")));
+      let d1 = "", d2 = ""; hist.forEach(([tt, a, b], i) => { d1 += (i ? "L" : "M") + X(tt).toFixed(1) + " " + Y(a).toFixed(1); d2 += (i ? "L" : "M") + X(tt).toFixed(1) + " " + Y(b).toFixed(1); });
+      sv += `<path d="${d1}" style="fill:none;stroke:var(--bad);stroke-width:2.5"/><path d="${d2}" style="fill:none;stroke:var(--mA);stroke-width:2.5"/>`;
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("temperatura de equilíbrio", n2(c.Teq, 2) + " °C") + vis("tempo característico τ", n2(c.tau, 1) + " s") + vis("tempo agora", n2(t, 0) + " s") + vis("calor já transferido de A para B", n2(C1 * (val(el, "Ta") - T1), 0) + " J");
     });
   };
 })();
