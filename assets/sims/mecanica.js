@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -307,5 +307,35 @@
     });
     q("[data-a=re]").addEventListener("click", () => { x = 0; v = 0; });
     ["th", "me"].forEach((c) => q(`[data-c=${c}]`).addEventListener("input", () => { if (!SIM.planoAtrito._conta(val(el, "th"), val(el, "me"), val(el, "mc")).desliza) { x = 0; v = 0; } }));
+  };
+  /* ---------- A10 · carro na curva (plana ou inclinada, com atrito) ---------- */
+  SIM.curva = (el, F) => {
+    const W = 680, H = 330, g = 10;
+    let ang = 0, sai = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("velocidade v (m/s)", "v", 1, 40, 0.5, 18)}${sl("raio da curva R (m)", "R", 20, 200, 5, 80)}${sl("atrito estático μe", "mu", 0, 1.2, 0.01, 0.5)}${sl("inclinação da pista θ (graus)", "th", 0, 45, 1, 0)}
+      <div class="bts"><button class="bt pri" data-a="re">Recomeçar</button></div></div>
+      <div class="status">Visto de cima (à esquerda) e em corte (à direita). Para fazer a curva, a resultante precisa apontar para o centro e valer mv²/R. Na pista plana, quem faz isso é o atrito. Na pista inclinada, a normal também ajuda: existe uma velocidade em que nem precisa de atrito, v = √(gR tg θ). Passando de v_máx, o carro escapa pela tangente.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.curva._conta = (R, thDeg, mu) => { const t = (thDeg * Math.PI) / 180, s = Math.sin(t), c = Math.cos(t); const den = c - mu * s; return { vmax: den > 0 ? Math.sqrt((R * g * (s + mu * c)) / den) : Infinity, vmin: s > mu * c ? Math.sqrt((R * g * (s - mu * c)) / (c + mu * s)) : 0, vsem: Math.sqrt(R * g * Math.tan(t)) }; };
+    anima(el, F, (dt) => {
+      const v = val(el, "v"), Rr = val(el, "R"), mu = val(el, "mu"), th = val(el, "th"), c = SIM.curva._conta(Rr, th, mu);
+      mostra(el, ["v", "R", "mu"], 2); q("[data-o=th]").textContent = n2(th, 0) + "°";
+      const ok = v <= c.vmax + 1e-9 && v >= c.vmin - 1e-9;
+      const cx = 170, cy = 165, Rp = 120;
+      if (ok) { sai = 0; ang += (v / Rr) * dt * 2; } else sai += dt * v * 3;
+      const px = cx + Rp * Math.cos(ang), py = cy - Rp * Math.sin(ang), tx = -Math.sin(ang), ty = -Math.cos(ang);
+      const X = px + tx * sai, Y = py + ty * sai;
+      let sv = `<circle cx="${cx}" cy="${cy}" r="${Rp}" style="fill:none;stroke:var(--ink3);stroke-width:14;opacity:.35"/><circle cx="${cx}" cy="${cy}" r="3" style="fill:var(--ink)"/>`;
+      sv += `<circle cx="${X}" cy="${Y}" r="9" style="fill:${ok ? "var(--mA)" : "var(--bad)"}"/>` + D.seta(X, Y, X + tx * 40, Y + ty * 40, "var(--ink2)", 1.6) + (ok ? D.seta(X, Y, X + (cx - X) * 0.35, Y + (cy - Y) * 0.35, "var(--warn)", 2.2) : "");
+      /* corte da pista */
+      const t = (th * Math.PI) / 180, bx = 500, by = 230;
+      sv += `<g transform="translate(${bx} ${by}) rotate(${-th})"><line x1="-110" y1="0" x2="110" y2="0" style="stroke:var(--ink2);stroke-width:4"/><rect x="-25" y="-22" width="50" height="22" style="fill:color-mix(in srgb,var(--mA) 30%,transparent);stroke:var(--mA);stroke-width:2"/></g>`;
+      sv += D.seta(bx, by - 12, bx - 70, by - 12, "var(--warn)", 2) + D.txt(bx - 74, by - 18, "para o centro", "tx2", "end");
+      sv += `<text class="tx2" x="16" y="22">${ok ? "fazendo a curva" : v > c.vmax ? "rápido demais: escapa para fora" : "devagar demais: escorrega para dentro"}</text>`;
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("aceleração centrípeta v²/R", n2((v * v) / Rr, 2) + " m/s²") + vis("velocidade máxima", isFinite(c.vmax) ? n2(c.vmax, 1) + " m/s" : "sem limite") + vis("velocidade mínima", n2(c.vmin, 1) + " m/s") + vis("velocidade sem precisar de atrito √(gR tg θ)", n2(c.vsem, 1) + " m/s");
+    });
+    q("[data-a=re]").addEventListener("click", () => { sai = 0; ang = 0; });
   };
 })();
