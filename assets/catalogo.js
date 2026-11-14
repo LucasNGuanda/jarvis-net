@@ -36,7 +36,7 @@ window.CATALOGO = [
     ["A14","Equilíbrio de Corpo Extenso",[],true],
     ["A15","Leis de Kepler",[],true],
     ["A16","Gravitação",["★"],true],
-    ["A17","Hidrostática"],
+    ["A17","Hidrostática",[],true],
     ["A18","Hidrodinâmica"],
     ["A20","Movimento Harmônico Simples e oscilações",["!","∫","ITA"]],
   ]},

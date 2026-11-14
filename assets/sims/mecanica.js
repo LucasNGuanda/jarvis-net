@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento, A14 gangorra, A15 órbita de Kepler, A16 canhão de Newton,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento, A14 gangorra, A15 órbita de Kepler, A16 canhão de Newton, A17 empuxo,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -619,5 +619,35 @@
     });
     q("[data-a=go]").addEventListener("click", dispara);
     q("[data-a=lp]").addEventListener("click", () => { rastros = []; dispara(); });
+  };
+
+  /* ---------- A17 · empuxo: bloco pendurado num dinamômetro e mergulhado ---------- */
+  SIM.empuxo = (el, F) => {
+    const W = 680, H = 340, g = 10, V = 0.001, a = 0.1;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("densidade do bloco (kg/m³)", "rb", 200, 3000, 50, 2500)}${sl("densidade do líquido (kg/m³)", "rl", 600, 1800, 10, 1000)}${sl("quanto do bloco está mergulhado (%)", "im", 0, 100, 1, 50)}
+      <div class="bts">${botoes([["800", "óleo"], ["1000", "água"], ["1030", "água do mar"], ["1260", "glicerina"]], "liq", "1000")}</div></div>
+      <div class="status">Um cubo de 10 cm (1 litro) pendurado num dinamômetro. O líquido empurra o bloco para cima com o peso do líquido deslocado: E = ρ_líquido·V_mergulhado·g (Arquimedes). O dinamômetro marca o "peso aparente", P − E. Se o bloco for menos denso que o líquido, o fio afrouxa antes de o bloco afundar inteiro: solto, ele flutuaria com a fração ρ_bloco/ρ_líquido mergulhada.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.empuxo._conta = (rb, rl, fr) => { const P = rb * V * g, E = rl * V * fr * g; return { P, E, T: P - E, frac: rb / rl }; };
+    liga(el, "liq", (k) => { q("[data-c=rl]").value = k; });
+    anima(el, F, () => {
+      const rb = val(el, "rb"), rl = val(el, "rl"), im = val(el, "im") / 100, c = SIM.empuxo._conta(rb, rl, im);
+      mostra(el, ["rb", "rl"], 0); q("[data-o=im]").textContent = n2(im * 100, 0) + "%";
+      const esc = 900, lado = a * esc, tx = 230, tw = 220, base = 320, nivel0 = 200;
+      const sobe = (lado * lado * im) / tw; /* o volume deslocado sobe o nível do tanque (desenho em corte) */
+      const nivel = nivel0 - sobe, by = nivel - lado * (1 - im), bx = tx + tw / 2 - lado / 2;
+      let sv = `<rect x="${tx}" y="${nivel}" width="${tw}" height="${base - nivel}" style="fill:color-mix(in srgb,var(--mA) ${Math.round(12 + (rl - 600) / 60)}%,transparent)"/><path d="M${tx} 120 L${tx} ${base} L${tx + tw} ${base} L${tx + tw} 120" style="fill:none;stroke:var(--ink2);stroke-width:2"/>`;
+      sv += `<line x1="${tx - 30}" x2="${tx}" y1="${nivel0}" y2="${nivel0}" style="stroke:var(--ink3);stroke-dasharray:3 3"/>` + D.txt(tx - 34, nivel0 + 4, "nível sem bloco", "tx2", "end");
+      sv += `<rect x="${bx}" y="${by}" width="${lado}" height="${lado}" style="fill:color-mix(in srgb,var(--mC) ${Math.round(25 + rb / 100)}%,transparent);stroke:var(--mC);stroke-width:2"/>`;
+      const topo = 20, mola = by - 46;
+      sv += `<line x1="${tx - 20}" x2="${tx + tw + 20}" y1="${topo}" y2="${topo}" style="stroke:var(--ink2);stroke-width:3"/><rect x="${bx + lado / 2 - 18}" y="${topo}" width="36" height="${Math.max(30, mola - topo)}" rx="6" style="fill:var(--line2);stroke:var(--ink3)"/>`;
+      sv += `<line x1="${bx + lado / 2}" x2="${bx + lado / 2}" y1="${Math.max(topo + 30, mola)}" y2="${by}" style="stroke:var(--ink);stroke-width:${c.T > 0 ? 1.6 : 0.8};${c.T > 0 ? "" : "stroke-dasharray:3 3"}"/>`;
+      if (im > 0) sv += D.seta(bx + lado + 26, by + lado, bx + lado + 26, by + lado - Math.min(80, c.E * 2.4), "var(--mA)", 2.2) + D.txt(bx + lado + 32, by + lado - 10, "E", "txm", "start");
+      sv += D.seta(bx - 26, by + lado / 2, bx - 26, by + lado / 2 + Math.min(80, c.P * 2.4), "var(--bad)", 2.2) + D.txt(bx - 32, by + lado / 2 + 20, "P", "txm", "end");
+      sv += D.txt(bx + lado / 2, topo + 22, n2(Math.max(0, c.T), 1) + " N", "tx2");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("peso P = ρ_bloco·V·g", n2(c.P, 1) + " N") + vis("empuxo E = ρ_líq·V_merg·g", n2(c.E, 1) + " N") + vis("dinamômetro (P − E)", c.T >= 0 ? n2(c.T, 2) + " N" : "fio frouxo") + vis(c.frac < 1 ? "solto, flutuaria com" : "solto, ele", c.frac < 1 ? n2(c.frac * 100, 0) + "% mergulhado" : "afunda");
+    });
   };
 })();
