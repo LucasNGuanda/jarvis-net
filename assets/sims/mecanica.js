@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -484,5 +484,38 @@
     });
     q("[data-a=re]").addEventListener("click", reinicia);
     ["v1", "v2", "m1", "m2", "e"].forEach((k) => q(`[data-c=${k}]`).addEventListener("input", reinicia));
+  };
+
+  /* ---------- A14a · corrida de rolamento num plano inclinado ---------- */
+  SIM.rolamento = (el, F) => {
+    const W = 680, H = 350, g = 10;
+    const corpos = [["esfera maciça", 2 / 5, "var(--mA)"], ["disco (cilindro maciço)", 1 / 2, "var(--mC)"], ["esfera oca", 2 / 3, "var(--warn)"], ["anel (cilindro oco)", 1, "var(--bad)"]];
+    let t = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("inclinação θ (graus)", "th", 5, 50, 1, 20)}${sl("comprimento da rampa L (m)", "L", 1, 5, 0.5, 3)}
+      <div class="bts"><button class="bt pri" data-a="re">Soltar de novo</button></div></div>
+      <div class="status">Quatro corpos rolam sem deslizar, soltos juntos do repouso. Com I = k·M·R², a aceleração é a = g·sen θ / (1 + k): não depende da massa nem do raio, só da forma (de k). Quem tem a massa mais perto do eixo (k pequeno) gasta menos energia girando e chega primeiro.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.rolamento._conta = (k, thDeg, L) => { const a = (g * Math.sin((thDeg * Math.PI) / 180)) / (1 + k); return { a, t: Math.sqrt((2 * L) / a), v: Math.sqrt(2 * a * L) }; };
+    anima(el, F, (dt) => {
+      const th = val(el, "th"), L = val(el, "L"), tr = (th * Math.PI) / 180;
+      q("[data-o=th]").textContent = n2(th, 0) + "°"; mostra(el, ["L"], 1);
+      t += dt;
+      const Lp = Math.min(440, 180 / Math.sin(tr)), esc = Lp / L, dx = Math.cos(tr), dy = Math.sin(tr), r = 13;
+      const tmax = Math.max(...corpos.map(([, k]) => SIM.rolamento._conta(k, th, L).t));
+      if (t > tmax + 1.5) t = 0;
+      let sv = "";
+      corpos.forEach(([nome, k, cor], i) => {
+        const ax = 60, ay = 36 + i * 42, bx = ax + dx * Lp, by = ay + dy * Lp;
+        sv += `<line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" style="stroke:var(--ink3);stroke-width:2"/>` + D.txt(bx + 30, by + 2, nome, "tx2", "start");
+        const c = SIM.rolamento._conta(k, th, L), sp = Math.min(0.5 * c.a * t * t, L) * esc;
+        const px = ax + dx * sp + r * dy, py = ay + dy * sp - r * dx, ang = sp / r;
+        sv += `<circle cx="${px}" cy="${py}" r="${r}" style="fill:color-mix(in srgb,${cor} 35%,transparent);stroke:${cor};stroke-width:2"/><line x1="${px}" y1="${py}" x2="${px + r * Math.cos(ang)}" y2="${py + r * Math.sin(ang)}" style="stroke:${cor};stroke-width:2"/>`;
+      });
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = corpos.map(([nome, k]) => { const c = SIM.rolamento._conta(k, th, L); return vis(nome + " (k = " + n2(k, 2) + ")", n2(c.t, 2) + " s · " + n2(c.v, 2) + " m/s"); }).join("");
+    });
+    q("[data-a=re]").addEventListener("click", () => (t = 0));
+    ["th", "L"].forEach((k) => q(`[data-c=${k}]`).addEventListener("input", () => (t = 0)));
   };
 })();
