@@ -77,4 +77,32 @@
   // cilindro (fio) visto de lado: comprimento L, raio r, em (x,y) centro esquerdo
   D.cilindro = (x, y, L, r, cls = "preen") =>
     `<path class="${cls}" d="M${x} ${y - r} L${x + L} ${y - r} A${r * 0.35} ${r} 0 0 1 ${x + L} ${y + r} L${x} ${y + r} A${r * 0.35} ${r} 0 0 1 ${x} ${y - r} Z"/><ellipse class="${cls}" cx="${x}" cy="${y}" rx="${r * 0.35}" ry="${r}"/>`;
+  /* carrinho visto de lado: centro da base em (x, y); dir = 1 (para a direita) ou −1; cor = variável CSS (β 3.1, Mecânica) */
+  D.carro = (x, y, cor = "var(--mA)", dir = 1, rot = "") => {
+    const w = 46, h = 18;
+    return `<g transform="translate(${f(x)} ${f(y)}) scale(${dir} 1)"><path d="M${-w / 2} ${-6} L${-w / 2} ${-h} L${-6} ${-h} L${4} ${-h - 10} L${16} ${-h - 10} L${w / 2} ${-h} L${w / 2} ${-6} Z" style="fill:color-mix(in srgb,${cor} 30%,transparent);stroke:${cor};stroke-width:2"/><circle cx="${-w / 2 + 10}" cy="-5" r="5" style="fill:var(--ink)"/><circle cx="${w / 2 - 10}" cy="-5" r="5" style="fill:var(--ink)"/></g>` + (rot ? D.txt(x, y - h - 16, rot, "tx2") : "");
+  };
+  /* estrada reta com marcas a cada "passo" unidades: de x0 a x1 (px), na altura y; esc = px por unidade; origem em x0 */
+  D.estrada = (x0, x1, y, esc, passo, un = "m", rotulos = true) => {
+    let s = `<line x1="${x0 - 10}" y1="${y}" x2="${x1 + 10}" y2="${y}" style="stroke:var(--ink2);stroke-width:2"/>`;
+    for (let u = 0; x0 + u * esc <= x1 + 0.1; u += passo) { const px = f(x0 + u * esc); s += `<line x1="${px}" y1="${y - 4}" x2="${px}" y2="${y + 4}" style="stroke:var(--ink3)"/>` + (rotulos ? D.txt(px, y + 18, String(u).replace(".", ","), "tx2") : ""); }
+    return s + (rotulos ? D.txt(x1 + 14, y + 18, un, "tx2", "start") : "");
+  };
+  /* gráfico simples: o = {x0, y0, w, h, xmax, ymin, ymax, xlab, ylab, xt:[ticks], yt:[ticks], curvas:[{pts:[[x,y]...], cor, area, trac}], pontos:[[x,y,rot]]} */
+  D.graf = (o) => {
+    const ymin = o.ymin || 0, X = (x) => o.x0 + (x / o.xmax) * o.w, Y = (y) => o.y0 - ((y - ymin) / (o.ymax - ymin)) * o.h, y0 = Y(Math.max(ymin, 0));
+    let s = D.seta(o.x0, y0, o.x0 + o.w + 14, y0, "var(--ink2)", 1.4) + D.seta(o.x0, o.y0 + 4, o.x0, o.y0 - o.h - 14, "var(--ink2)", 1.4);
+    (o.xt || []).forEach((t) => (s += `<line x1="${f(X(t))}" y1="${f(y0 - 3)}" x2="${f(X(t))}" y2="${f(y0 + 3)}" style="stroke:var(--ink3)"/>` + D.txt(X(t), y0 + 17, String(t).replace(".", ","), "tx2")));
+    (o.yt || []).forEach((t) => (s += `<line x1="${o.x0 - 3}" y1="${f(Y(t))}" x2="${o.x0 + o.w}" y2="${f(Y(t))}" style="stroke:var(--line2);stroke-dasharray:3 4"/>` + D.txt(o.x0 - 6, Y(t) + 4, String(t).replace(".", ",").replace("-", "−"), "tx2", "end")));
+    (o.curvas || []).forEach((c) => {
+      const d = c.pts.map(([x, y], i) => (i ? "L" : "M") + f(X(x)) + " " + f(Y(y))).join(" ");
+      if (c.area) s += `<path d="${d} L${f(X(c.pts[c.pts.length - 1][0]))} ${f(y0)} L${f(X(c.pts[0][0]))} ${f(y0)} Z" style="fill:color-mix(in srgb,${c.cor || "var(--mod)"} 22%,transparent);stroke:none"/>`;
+      s += `<path d="${d}" style="fill:none;stroke:${c.cor || "var(--mod)"};stroke-width:2.4${c.trac ? ";stroke-dasharray:6 4" : ""}"/>`;
+    });
+    (o.pontos || []).forEach(([x, y, r]) => (s += `<circle cx="${f(X(x))}" cy="${f(Y(y))}" r="3.5" style="fill:var(--ink)"/>` + (r ? D.txt(X(x) + 6, Y(y) - 7, r, "tx2", "start") : "")));
+    s += (o.xlab ? D.txt(o.x0 + o.w + 14, y0 + 17, o.xlab, "txm", "end") : "") + (o.ylab ? D.txt(o.x0 + 8, o.y0 - o.h - 6, o.ylab, "txm", "start") : "");
+    return s;
+  };
+  /* função amostrada para D.graf: pts de f no intervalo [a, b] */
+  D.amostra = (fn, a, b, n = 60) => Array.from({ length: n + 1 }, (_, i) => { const x = a + ((b - a) * i) / n; return [x, fn(x)]; });
 })();

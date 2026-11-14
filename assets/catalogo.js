@@ -18,7 +18,7 @@ window.CATALOGO = [
     ["A19","Análise Dimensional",["★","RU"],true],
   ]},
   { id:"A", letra:"A", cor:"--mA", nome:"Mecânica", desc:"Da cinemática à gravitação, fluidos e oscilações.", temas:[
-    ["A01","Introdução à Cinemática"],
+    ["A01","Introdução à Cinemática",[],true],
     ["A02","Movimento Retilíneo Uniforme"],
     ["A03","Movimento Retilíneo Uniformemente Variado"],
     ["A04","Análise Gráfica",["★"]],

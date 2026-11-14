@@ -690,3 +690,21 @@ a.jv-mat:focus-visible{outline:2px solid var(--cor);outline-offset:3px}
 .jv-cor button{border:1px solid var(--line2);background:var(--bg2);color:var(--ink);border-radius:999px;padding:5px 12px;font:600 12.5px var(--f-text);cursor:pointer}
 .jv-cor button:hover{border-color:var(--jv2)}
 @media (max-width:520px){.jv-cor{flex-direction:column;gap:8px}}
+
+/* exercícios com correção automática (β 3.1) */
+.ex .nivel{font:700 11px var(--f-text);padding:2px 8px;border-radius:999px;border:1px solid}
+.ex .nivel.fis{color:var(--mA);border-color:color-mix(in srgb,var(--mA) 50%,transparent)}
+.ex .nivel.max{color:var(--mT);border-color:color-mix(in srgb,var(--mT) 50%,transparent)}
+.ex .alts.clicaveis li{padding:0}
+.ex .alt{display:flex;gap:6px;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:8px;padding:4px 8px;color:var(--ink);font:inherit;cursor:pointer}
+.ex .alt:hover{background:var(--bg2);border-color:var(--line)}
+.ex .alt.certa{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}
+.ex .alt.errada{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.ex .ex-num{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 4px}
+.ex .ex-num label{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink2)}
+.ex .ex-num input{width:150px;padding:6px 10px;border-radius:8px;border:1px solid var(--line2);background:var(--bg2);color:var(--ink);font:15px var(--f-text)}
+.ex .ex-num .un{color:var(--ink2);font-size:14px}
+.ex .ex-fb{font-size:14px;font-weight:600;margin:4px 0}
+.ex .ex-fb.certo{color:var(--ok)}.ex .ex-fb.errado{color:var(--bad)}
+.ex .ex-prim{font-size:12px;color:var(--ink3)}
+.ex .ex-prim:empty,.ex .ex-fb:empty{display:none}

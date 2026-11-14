@@ -206,10 +206,17 @@
     const abre = painel.hidden; painel.hidden = !abre; b.setAttribute("aria-expanded", abre);
   });
 
-  /* exercício estático: {n, nivel, marcas, enun, fig, alts?, dicas:[..], resp, sol} */
+  /* exercício estático: {n, nivel, marcas, enun, fig, alts?, dicas:[..], resp, sol}
+     Correção automática (opcional, β 3.1): certa: "B" (com alts) deixa as alternativas clicáveis;
+     num: {v, tol?, un?} mostra um campo para a resposta numérica (tol = tolerância relativa, padrão 2%).
+     A primeira tentativa fica em resultado:COD-n = {r: "certo"|"errado", dada} (mapa de erros, docs/MODELO_DE_DADOS.md §6).
+     nivel: "Físico" ou "Máximo" (selo no cabeçalho). */
   let temaAtual = null, exercicios = [];
+  const lerNumero = (s) => { s = String(s).trim().replace(/\s/g, "").replace(/−/g, "-").replace(/[×·]10\^?/g, "e"); if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g, ""); s = s.replace(",", "."); const v = Number(s); return s !== "" && isFinite(v) ? v : NaN; };
+  F.lerNumero = lerNumero;
+  const fmtNum = (v) => String(+(+v).toPrecision(4)).replace(".", ",").replace("-", "−");
   F.exercicio = (e) => {
-    const chave = `marca:${temaAtual}-${e.n}`;
+    const chave = `marca:${temaAtual}-${e.n}`, chaveRes = `resultado:${temaAtual}-${e.n}`, auto = !!(e.certa || e.num);
     exercicios.push(chave);
     const id = F.id("ex");
     F.depois(() => {
@@ -218,13 +225,40 @@
       const pinta = () => { const v = F.store.get(chave, ""); bs.forEach((b) => b.setAttribute("aria-pressed", b.dataset.m === v)); };
       bs.forEach((b) => b.addEventListener("click", () => { const v = F.store.get(chave, ""); F.store.set(chave, v === b.dataset.m ? "" : b.dataset.m); pinta(); F.evento("marca"); }));
       pinta();
+      if (!auto) return;
+      const fb = $(".ex-fb", el);
+      const registra = (certo, dada) => { if (!F.store.get(chaveRes, null)) F.store.set(chaveRes, { r: certo ? "certo" : "errado", dada }); F.evento("resultado"); };
+      const avisa = (certo, txt) => { fb.className = "ex-fb " + (certo ? "certo" : "errado"); fb.innerHTML = txt; };
+      const ant = F.store.get(chaveRes, null);
+      if (ant) $(".ex-prim", el).textContent = `Primeira tentativa: ${ant.dada} (${ant.r}).`;
+      if (e.certa) $$(".alt", el).forEach((b) => b.addEventListener("click", () => {
+        const certo = b.dataset.l === e.certa;
+        $$(".alt", el).forEach((x) => x.classList.remove("certa", "errada"));
+        b.classList.add(certo ? "certa" : "errada");
+        avisa(certo, certo ? "Certo!" : "Ainda não. Tente de novo ou abra uma dica.");
+        registra(certo, b.dataset.l);
+      }));
+      if (e.num) {
+        const inp = $(".ex-num input", el), confere = () => {
+          const v = lerNumero(inp.value); if (isNaN(v)) { avisa(false, "Escreva só o número (vírgula ou ponto; 3,2e5 para 3,2 × 10⁵)."); return; }
+          const tol = e.num.tol ?? 0.02, alvo = e.num.v, certo = alvo === 0 ? Math.abs(v) <= (e.num.abs ?? 1e-9) : Math.abs(v - alvo) <= tol * Math.abs(alvo);
+          avisa(certo, certo ? "Certo!" : "Ainda não. Confira a conta e as unidades, ou abra uma dica.");
+          registra(certo, fmtNum(v));
+        };
+        $(".ex-num button", el).addEventListener("click", confere);
+        inp.addEventListener("keydown", (ev) => { if (ev.key === "Enter") { ev.preventDefault(); confere(); } });
+      }
     });
-    const alts = e.alts ? `<ol class="alts">${e.alts.map((a, i) => `<li><b>${String.fromCharCode(65 + i)})</b>${a}</li>`).join("")}</ol>` : "";
+    const alts = e.alts ? (e.certa
+      ? `<ol class="alts clicaveis">${e.alts.map((a, i) => `<li><button type="button" class="alt" data-l="${String.fromCharCode(65 + i)}"><b>${String.fromCharCode(65 + i)})</b><span>${a}</span></button></li>`).join("")}</ol>`
+      : `<ol class="alts">${e.alts.map((a, i) => `<li><b>${String.fromCharCode(65 + i)})</b>${a}</li>`).join("")}</ol>`) : "";
+    const campo = e.num ? `<div class="ex-num"><label>sua resposta <input type="text" inputmode="decimal" autocomplete="off" aria-label="sua resposta numérica"></label>${e.num.un ? `<span class="un">${e.num.un}</span>` : ""}<button type="button" class="bt peq">Conferir</button></div>` : "";
+    const correcao = auto ? `${campo}<div class="ex-fb" aria-live="polite"></div><div class="ex-prim"></div>` : "";
     const rev = F.revela([...(e.dicas || []).map((d, i) => ({ rot: `Dica ${i + 1}`, html: d })), { rot: "Resposta e resolução", html: `<p><b>Resposta:</b> ${e.resp}</p>${e.sol}`, resp: true }]);
     return `<div class="ex" id="${id}">
-      <div class="ex-cab"><span class="num">${temaAtual}.${String(e.n).padStart(2, "0")}</span><span class="marcas">${F.selos(e.marcas)}</span>
+      <div class="ex-cab"><span class="num">${temaAtual}.${String(e.n).padStart(2, "0")}</span>${e.nivel ? `<span class="nivel ${e.nivel === "Máximo" ? "max" : "fis"}">${e.nivel}</span>` : ""}<span class="marcas">${F.selos(e.marcas)}</span>
         <span class="certeza" title="● certeza · X dúvida · / chutei">sua marcação <button data-m="●">●</button><button data-m="X">X</button><button data-m="/">/</button></span></div>
-      <div>${e.enun}</div>${e.fig ? F.fig(e.fig) : ""}${alts}
+      <div>${e.enun}</div>${e.fig ? F.fig(e.fig) : ""}${alts}${correcao}
       ${rev}
     </div>`;
   };
