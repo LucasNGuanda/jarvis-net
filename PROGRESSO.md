@@ -83,6 +83,12 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
     - **C21 Partículas e Cosmologia**: Modelo Padrão, quarks (laboratório para montar hádrons), Hubble, Big Bang, matéria e energia escuras.
   - **Revisão geral**: as 66 páginas publicadas passaram no teste de KaTeX, nos exemplos sorteados e no estresse de todos os laboratórios.
     - Corrigidos: "1x" na C04; ponto decimal na C15; zeros inúteis (tipo "12,000 Ω") nos exemplos de C01–C15d; rótulos sobrepostos na curva de energia de ligação.
+- **β 1.9** — Óptica geométrica completa e módulo Universitária aberto.
+  - Óptica: B09 Fundamentos, B10 Espelhos planos (caleidoscópio), B11 Espelhos esféricos, B14 Instrumentos ópticos e olho (microscópio e luneta).
+  - Universitária (novo `assets/sims/univ.js`): U01 grad/div/rot (rodinha de pás), U02 Gauss e Stokes (fluxo de cargas em 2D; chefão: túnel pela Terra, 84,4 min),
+    U03 Lagrange (conta no aro girando, bifurcação), U04 Hamilton e mínima ação (S(ε) mínima no caminho real; Bohr–Sommerfeld),
+    U05 Maxwell diferencial (FDTD de Yee, r = −0,200 conferido), U06 Schrödinger (poço infinito e superposição; oscilador gaussiano).
+  - Todos os números conferidos em Python; t6, tstress e texemp limpos em todas as páginas novas.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.

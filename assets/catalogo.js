@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 1.8";
+window.VERSAO = "β 1.9";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -98,12 +98,12 @@ window.CATALOGO = [
     ["C21","Partículas e Cosmologia",["!"],true],
   ]},
   { id:"U", letra:"U", cor:"--mU", nome:"Universitária", desc:"Cálculo vetorial, Lagrange, Hamilton, Maxwell diferencial e Schrödinger.", temas:[
-    ["U01","Cálculo vetorial: grad, div, rot",["∫"]],
-    ["U02","Teoremas de Gauss e de Stokes",["∫"]],
-    ["U03","Mecânica analítica: Lagrange",["!!","∫"]],
-    ["U04","Hamilton e a mínima ação",["!!","∫"]],
-    ["U05","Maxwell na forma diferencial",["!!","∫"]],
-    ["U06","Equação de Schrödinger",["!!","∫"]],
+    ["U01","Cálculo vetorial: grad, div, rot",["∫"],true],
+    ["U02","Teoremas de Gauss e de Stokes",["∫"],true],
+    ["U03","Mecânica analítica: Lagrange",["!!","∫"],true],
+    ["U04","Hamilton e a mínima ação",["!!","∫"],true],
+    ["U05","Maxwell na forma diferencial",["!!","∫"],true],
+    ["U06","Equação de Schrödinger",["!!","∫"],true],
   ]},
   { id:"N", letra:"N", cor:"--mN", nome:"Fluidos até Navier–Stokes", desc:"Do Bernoulli às equações de Navier–Stokes e ao Problema do Milênio.", temas:[
     ["N01","Euler × Lagrange e derivada material",["∫"]],
