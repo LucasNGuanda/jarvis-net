@@ -10,10 +10,10 @@ F.registrar("B12", {
       titulo: "Refração passo a passo",
       casos: [
         { nome: "Lei de Snell", gerar: (p) => {
-          const M = [["ar", 1], ["água", 1.33], ["vidro", 1.5], ["diamante", 2.42]];
+          const M = [["ar", 1, "o"], ["água", 1.33, "a"], ["vidro", 1.5, "o"], ["diamante", 2.42, "o"]];
           const [a, b] = p ? [M[0], M[2]] : (() => { let x, y; do { x = F.escolha(M); y = F.escolha(M); } while (x === y); return [x, y]; })();
           const t1 = p ? 30 : F.escolha([20, 30, 40, 50, 60]), s2 = (a[1] / b[1]) * Math.sin(rd(t1));
-          return { enun: R`<p>Um raio passa do ${a[0]} ($n = ${F.n(a[1])}$) para o ${b[0]} ($n = ${F.n(b[1])}$) com incidência de ${t1}°. Qual o ângulo de refração?</p>`, fig: "",
+          return { enun: R`<p>Um raio passa ${a[2] === "a" ? "da" : "do"} ${a[0]} ($n = ${F.n(a[1])}$) para ${b[2]} ${b[0]} ($n = ${F.n(b[1])}$) com incidência de ${t1}°. Qual o ângulo de refração?</p>`, fig: "",
             passos: [
               R`<p>Snell: $n_1\operatorname{sen}\theta_1 = n_2\operatorname{sen}\theta_2$, com os ângulos medidos a partir da <b>normal</b>.</p>`,
               R`<p>$\operatorname{sen}\theta_2 = \frac{${F.n(a[1])}}{${F.n(b[1])}}\operatorname{sen}${t1}° = ${F.n(s2, 4)}$.</p>`,

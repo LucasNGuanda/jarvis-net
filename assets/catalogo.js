@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 1.6";
+window.VERSAO = "β 1.7";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -89,9 +89,9 @@ window.CATALOGO = [
   ]},
   { id:"M", letra:"M", cor:"--mM", nome:"Física Moderna", desc:"Quântica, fotoelétrico, Bohr, relatividade e física nuclear.", temas:[
     ["C16","Física Quântica"],
-    ["C17","Efeito Fotoelétrico e Comportamento Dual"],
-    ["C17b","Átomo de Bohr"],
-    ["C18","Relatividade Especial",["!"]],
+    ["C17","Efeito Fotoelétrico e Comportamento Dual",[],true],
+    ["C17b","Átomo de Bohr",[],true],
+    ["C18","Relatividade Especial",["!"],true],
     ["C19","Física Nuclear"],
   ]},
   { id:"U", letra:"U", cor:"--mU", nome:"Universitária", desc:"Cálculo vetorial, Lagrange, Hamilton, Maxwell diferencial e Schrödinger.", temas:[

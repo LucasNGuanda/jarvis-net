@@ -68,6 +68,12 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - **B13 Lentes**: Gauss por semelhança, equação dos fabricantes, olho e óculos. Laboratório de traçado dos 3 raios principais. Chefão: 4f e método de Bessel.
   - **B14b Óptica ondulatória**: Young e a intensidade cos², filmes finos, difração, Rayleigh e rede. Laboratórios das fendas (N = 1 a 10) e das cores do filme de sabão. Chefão: N fendas por fasores e fórmula de Euler.
   - Novo arquivo `assets/sims/optica.js`.
+- **β 1.7**: Moderna (base: Halliday vol. 4, caps. 37–40).
+  - **C18 Relatividade**: postulados, relógio de luz, dilatação e contração (múons, GPS), Lorentz, simultaneidade, soma de velocidades, Doppler e E = mc². Laboratório do relógio de luz animado. Chefão: paradoxo dos gêmeos com contagem de sinais.
+  - **C17 Fotoelétrico e dualidade**: fóton, Einstein, Millikan, de Broglie, fenda dupla com elétrons, incerteza e túnel. Laboratório animado do fotoelétrico com o gráfico K × f. Chefão: efeito Compton.
+  - **C17b Átomo de Bohr**: modelo, Rydberg, séries, números quânticos, Pauli, Stern–Gerlach e laser. Laboratório de níveis e espectro. Chefão: dedução de Bohr e a constante 1/137.
+  - Novo arquivo `assets/sims/moderna.js`.
+  - Revisão de Óptica e Moderna: corrigidos o artigo no exemplo da B12 ("da água"), o erro de KaTeX na C17, os níveis de Bohr invertidos no laboratório e o gráfico do fotoelétrico sem recorte.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
