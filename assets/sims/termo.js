@@ -1,4 +1,4 @@
-/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; T05 gás ideal p × V; */
+/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; T05 gás ideal p × V; T05b gás de moléculas 2D; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -196,6 +196,46 @@
       sv += `<path d="${d}" style="fill:none;stroke:var(--warn);stroke-width:2"/><circle cx="${X(V)}" cy="${Y(p)}" r="6" style="fill:var(--mT)"/>`;
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("pressão p = nRT/V", n2(p, 2) + " atm") + vis("volume", n2(V, 1) + " L") + vis("temperatura", n2(T, 0) + " K (" + n2(T - 273.15, 0) + " °C)") + vis("pV/T (= nR)", n2((p * V) / T, 4) + " atm·L/K");
+    });
+  };
+
+  /* ---------- T05b · gás de discos em 2D: colisões, histograma de velocidades e pressão nas paredes ---------- */
+  SIM.moleculas = (el, F) => {
+    const W = 680, H = 320, L = 260, r = 4;
+    let ps = [], imp = 0, tAc = 0, pMed = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("número de moléculas N", "N", 20, 120, 5, 80)}${sl("temperatura (escala do programa)", "T", 20, 400, 5, 100)}
+      <div class="bts"><button class="bt pri" data-a="re">Recomeçar (todas com a mesma velocidade)</button></div></div>
+      <div class="status">As moléculas começam todas com a mesma velocidade, em direções sorteadas. Batendo umas nas outras (choques elásticos), elas espalham as velocidades até chegar à distribuição de Maxwell (em 2D, a curva tracejada), sozinhas. A pressão nas paredes é medida somando os impulsos 2mv das batidas; ela confere com a teoria cinética, p·A = N·m⟨v²⟩/2 em 2D (p·V = N·m⟨v²⟩/3 em 3D), a menos de uns 10%: as moléculas daqui têm tamanho e ocupam parte da caixa, o que a teoria do gás ideal despreza. Descontando a área "proibida" (como na equação de van der Waals), a previsão bate.</div>`);
+    const q = (s) => el.querySelector(s);
+    const reinicia = () => { const N = val(el, "N"), v0 = Math.sqrt(val(el, "T")) * 6; ps = []; for (let i = 0; i < N; i++) { const a = Math.random() * 2 * Math.PI; ps.push({ x: r + Math.random() * (L - 2 * r), y: r + Math.random() * (L - 2 * r), vx: v0 * Math.cos(a), vy: v0 * Math.sin(a) }); } imp = 0; tAc = 0; pMed = 0; };
+    SIM.moleculas._pTeo = (N, v2med) => (N * v2med) / 2 / ((L - 2 * r) * (L - 2 * r)); /* m = 1; pressão 2D (força por comprimento); o centro das moléculas só anda num quadrado de lado L − 2r */
+    reinicia();
+    q("[data-a=re]").addEventListener("click", reinicia);
+    q("[data-c=N]").addEventListener("input", reinicia);
+    q("[data-c=T]").addEventListener("input", () => { const alvo = Math.sqrt(val(el, "T")) * 6, atual = Math.sqrt(ps.reduce((s, p) => s + p.vx * p.vx + p.vy * p.vy, 0) / ps.length), f = alvo / atual; ps.forEach((p) => { p.vx *= f; p.vy *= f; }); imp = 0; tAc = 0; });
+    anima(el, F, (dt) => {
+      mostra(el, ["N", "T"], 0);
+      const n = 6, h = dt / n;
+      for (let s = 0; s < n; s++) {
+        for (const p of ps) { p.x += p.vx * h; p.y += p.vy * h; if (p.x < r) { p.x = 2 * r - p.x; p.vx = -p.vx; imp += 2 * Math.abs(p.vx); } if (p.x > L - r) { p.x = 2 * (L - r) - p.x; p.vx = -p.vx; imp += 2 * Math.abs(p.vx); } if (p.y < r) { p.y = 2 * r - p.y; p.vy = -p.vy; imp += 2 * Math.abs(p.vy); } if (p.y > L - r) { p.y = 2 * (L - r) - p.y; p.vy = -p.vy; imp += 2 * Math.abs(p.vy); } }
+        for (let i = 0; i < ps.length; i++) for (let j = i + 1; j < ps.length; j++) { const a = ps[i], b = ps[j], dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy; if (d2 < 4 * r * r && d2 > 1e-9) { const d = Math.sqrt(d2), nx = dx / d, ny = dy / d, vn = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny; if (vn < 0) { a.vx += vn * nx; a.vy += vn * ny; b.vx -= vn * nx; b.vy -= vn * ny; } } }
+        tAc += h;
+      }
+      if (tAc > 2) { pMed = imp / (4 * (L - 2 * r)) / tAc; imp = 0; tAc = 0; }
+      const v2 = ps.reduce((s, p) => s + p.vx * p.vx + p.vy * p.vy, 0) / ps.length, pT = SIM.moleculas._pTeo(ps.length, v2);
+      const bx = 30, by = 30;
+      let sv = `<rect x="${bx}" y="${by}" width="${L}" height="${L}" style="fill:color-mix(in srgb,var(--mT) 8%,transparent);stroke:var(--ink2);stroke-width:2"/>`;
+      ps.forEach((p, i) => (sv += `<circle cx="${(bx + p.x).toFixed(1)}" cy="${(by + p.y).toFixed(1)}" r="${r}" style="fill:${i === 0 ? "var(--bad)" : "var(--warn)"}"/>`));
+      /* histograma de |v| comparado com Maxwell 2D: f(v) = (v/σ²) e^(−v²/2σ²), σ² = ⟨v²⟩/2 */
+      const gx = 340, gy = 280, gw = 310, gh = 210, vmax = 3 * Math.sqrt(v2), nb = 15, bins = new Array(nb).fill(0);
+      ps.forEach((p) => { const v = Math.hypot(p.vx, p.vy), k = Math.floor((v / vmax) * nb); if (k < nb) bins[k]++; });
+      const s2 = v2 / 2, fmax = 1 / Math.sqrt(s2) * Math.exp(-0.5), dv = vmax / nb, esc = gh / (ps.length * dv * fmax * 1.3);
+      bins.forEach((c, k) => (sv += `<rect x="${gx + (k * gw) / nb + 1}" y="${gy - c * esc}" width="${gw / nb - 2}" height="${c * esc}" style="fill:color-mix(in srgb,var(--mT) 45%,transparent)"/>`));
+      let d = ""; for (let i = 0; i <= 60; i++) { const v = (vmax * i) / 60, f = (v / s2) * Math.exp(-(v * v) / (2 * s2)); d += (i ? "L" : "M") + (gx + (v / vmax) * gw).toFixed(1) + " " + (gy - f * ps.length * dv * esc).toFixed(1); }
+      sv += `<path d="${d}" style="fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:5 4"/>` + D.seta(gx, gy, gx + gw + 10, gy, "var(--ink2)", 1.4) + D.txt(gx + gw + 10, gy + 18, "|v|", "tx2", "end") + D.txt(gx, gy - gh - 6, "quantas moléculas", "tx2", "start");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("velocidade quadrática média √⟨v²⟩", n2(Math.sqrt(v2), 1) + " px/s") + vis("pressão medida nas paredes", pMed ? n2(pMed, 2) : "medindo…") + vis("pressão prevista N⟨v²⟩/(2A)", n2(pT, 2)) + vis("prevista descontando o tamanho das moléculas", n2((ps.length * v2) / 2 / ((L - 2 * r) ** 2 - ps.length * 2 * Math.PI * r * r), 2)) + vis("energia cinética média", n2(v2 / 2, 0) + " (∝ T)");
     });
   };
 })();
