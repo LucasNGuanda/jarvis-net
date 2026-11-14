@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento, A14 gangorra,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento, A14 gangorra, A15 órbita de Kepler,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -546,5 +546,37 @@
       q("[data-v=lt]").innerHTML = vis("torque da esquerda m₁gd₁", n2(c.t1, 0) + " N·m") + vis("torque da direita m₂gd₂", n2(c.t2, 0) + " N·m") + vis("força do apoio", n2(c.N, 0) + " N") + vis("distância que equilibraria a direita", n2(c.d2eq, 2) + " m");
     });
     q("[data-a=re]").addEventListener("click", () => { ang = 0; w = 0; });
+  };
+
+  /* ---------- A15 · órbita de Kepler: elipse, áreas iguais e 3ª lei ---------- */
+  SIM.orbita = (el, F) => {
+    const W = 680, H = 330;
+    let t = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("excentricidade e", "e", 0, 0.9, 0.01, 0.5)}${sl("semieixo maior a (UA)", "a", 0.4, 30, 0.1, 1)}
+      <div class="bts"><button class="bt pri" data-a="re">Recomeçar</button></div></div>
+      <div class="status">O planeta percorre uma elipse com o Sol num dos focos (1ª lei). As duas regiões sombreadas são varridas no mesmo intervalo de tempo e têm a mesma área (2ª lei): perto do Sol ele anda muito mais rápido. O período só depende do semieixo maior: T² = a³, com T em anos e a em UA (3ª lei). O tamanho do desenho é fixo; mudar a muda só o período.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.orbita._conta = (a, e) => ({ T: Math.pow(a, 1.5), rp: a * (1 - e), ra: a * (1 + e), razao: (1 + e) / (1 - e) });
+    const kepler = (M, e) => { let E = M; for (let k = 0; k < 30; k++) E -= (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); return E; };
+    anima(el, F, (dt) => {
+      const e = val(el, "e"), a = val(el, "a"), c = SIM.orbita._conta(a, e);
+      mostra(el, ["e"], 2); mostra(el, ["a"], 1);
+      t += dt;
+      const A = Math.min(250, 145 / Math.sqrt(1 - e * e)), B = A * Math.sqrt(1 - e * e), fx = 340 + A * e, fy = 165, Tanim = 7;
+      const pos = (M) => { const E = kepler(M, e); return [fx + A * (Math.cos(E) - e), fy - B * Math.sin(E)]; };
+      const setor = (M0, M1, cor) => { let d = `M${fx} ${fy}`; for (let k = 0; k <= 30; k++) { const [x, y] = pos(M0 + ((M1 - M0) * k) / 30); d += `L${x.toFixed(1)} ${y.toFixed(1)}`; } return `<path d="${d}Z" style="fill:color-mix(in srgb,${cor} 30%,transparent);stroke:${cor}"/>`; };
+      let sv = `<ellipse cx="${fx - A * e}" cy="${fy}" rx="${A}" ry="${B}" style="fill:none;stroke:var(--ink3);stroke-width:1.5"/>`;
+      sv += setor(-0.35, 0.35, "var(--mA)") + setor(Math.PI - 0.35, Math.PI + 0.35, "var(--mC)");
+      sv += `<circle cx="${fx}" cy="${fy}" r="11" style="fill:var(--warn)"/>` + D.txt(fx, fy + 28, "Sol (foco)", "tx2");
+      if (e > 0.02) sv += `<circle cx="${fx - 2 * A * e}" cy="${fy}" r="3" style="fill:var(--ink3)"/>` + D.txt(fx - 2 * A * e, fy + 18, "outro foco", "tx2");
+      const M = ((2 * Math.PI * t) / Tanim) % (2 * Math.PI), [px, py] = pos(M);
+      sv += `<line x1="${fx}" y1="${fy}" x2="${px}" y2="${py}" style="stroke:var(--ink2);stroke-dasharray:3 3"/><circle cx="${px}" cy="${py}" r="8" style="fill:var(--mA)"/>`;
+      sv += D.txt(fx + A * (1 - e) + 8, fy - 8, "periélio", "tx2", "start") + D.txt(fx - A * (1 + e) + 8, fy - 8, "afélio", "tx2", "start");
+      q("[data-v=sv]").innerHTML = sv;
+      const E = kepler(M, e), r = a * (1 - e * Math.cos(E)), vr = Math.sqrt((2 / r - 1 / a) / (2 / c.ra - 1 / a));
+      q("[data-v=lt]").innerHTML = vis("período T = a^1,5", n2(c.T, 2) + (n2(c.T, 2) === "1" ? " ano" : " anos")) + vis("periélio | afélio", n2(c.rp, 2) + " | " + n2(c.ra, 2) + " UA") + vis("v no periélio ÷ v no afélio", n2(c.razao, 2)) + vis("agora: distância | v ÷ v(afélio)", n2(r, 2) + " UA | " + n2(vr, 2));
+    });
+    q("[data-a=re]").addEventListener("click", () => (t = 0));
   };
 })();

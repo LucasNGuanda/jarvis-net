@@ -34,7 +34,7 @@ window.CATALOGO = [
     ["A13","Colisões",["★"],true],
     ["A14a","Rotação e Corpo Rígido",["!!","∫","ITA"],true],
     ["A14","Equilíbrio de Corpo Extenso",[],true],
-    ["A15","Leis de Kepler"],
+    ["A15","Leis de Kepler",[],true],
     ["A16","Gravitação",["★"]],
     ["A17","Hidrostática"],
     ["A18","Hidrodinâmica"],
