@@ -1,4 +1,4 @@
-/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; T05 gás ideal p × V; T05b gás de moléculas 2D; T06 dois corpos em contato; T07 os quatro processos; */
+/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; T05 gás ideal p × V; T05b gás de moléculas 2D; T06 dois corpos em contato; T07 os quatro processos; T08 ciclo de Carnot; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -314,6 +314,43 @@
       sv += `<circle cx="${X(VA)}" cy="${Y(pA)}" r="6" style="fill:var(--ink)"/><circle cx="${X(c.VB)}" cy="${Y(c.pB)}" r="6" style="fill:var(--warn)"/>` + D.txt(X(VA) + 8, Y(pA) - 8, "A", "txm", "start") + D.txt(X(c.VB) + 8, Y(c.pB) - 8, "B", "txm", "start");
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("estado B", n2(c.pB, 2) + " atm · " + n2(c.VB, 1) + " L · " + n2(c.TB, 0) + " K") + vis("trabalho do gás W (área)", n2(c.W, 0) + " J") + vis("variação da energia interna ΔU", n2(c.dU, 0) + " J") + vis("calor recebido Q = ΔU + W", n2(c.Q, 0) + " J");
+    });
+  };
+
+  /* ---------- T08 · ciclo de Carnot de 1 mol de gás monoatômico ---------- */
+  SIM.carnot = (el, F) => {
+    const W = 680, H = 320, R = 8.314, g = 5 / 3;
+    let s = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("temperatura da fonte quente T_q (K)", "Tq", 300, 900, 10, 600)}${sl("temperatura da fonte fria T_f (K)", "Tf", 100, 500, 10, 300)}${sl("expansão isotérmica V_B/V_A", "r", 1.5, 4, 0.1, 2.5)}</div>
+      <div class="status">O ciclo de Carnot: expansão isotérmica a T_q (recebe Q_q da fonte quente), expansão adiabática até T_f, compressão isotérmica a T_f (entrega Q_f à fonte fria), compressão adiabática de volta. O trabalho por ciclo é a área dentro da curva. O rendimento η = 1 − T_f/T_q só depende das duas temperaturas: nenhum motor entre essas fontes pode passar disso.</div>`);
+    const q = (s0) => el.querySelector(s0);
+    SIM.carnot._conta = (Tq, Tf, r) => { const Qq = R * Tq * Math.log(r), Qf = R * Tf * Math.log(r); return { Qq, Qf, W: Qq - Qf, eta: 1 - Tf / Tq }; };
+    anima(el, F, (dt) => {
+      let Tq = val(el, "Tq"), Tf = val(el, "Tf"); if (Tf >= Tq - 20) { Tf = Tq - 20; q("[data-c=Tf]").value = Tf; }
+      const r = val(el, "r"), c = SIM.carnot._conta(Tq, Tf, r);
+      mostra(el, ["Tq", "Tf"], 0); mostra(el, ["r"], 1);
+      const VA = 10, VB = VA * r, k = Math.pow(Tq / Tf, 1 / (g - 1)), VC = VB * k, VD = VA * k, P = (V, T) => (0.082 * T) / V;
+      const pts = []; const N = 40;
+      for (let i = 0; i <= N; i++) { const v = VA + ((VB - VA) * i) / N; pts.push([v, P(v, Tq)]); }
+      for (let i = 1; i <= N; i++) { const v = VB + ((VC - VB) * i) / N; pts.push([v, P(VB, Tq) * Math.pow(VB / v, g)]); }
+      for (let i = 1; i <= N; i++) { const v = VC + ((VD - VC) * i) / N; pts.push([v, P(v, Tf)]); }
+      for (let i = 1; i <= N; i++) { const v = VD + ((VA - VD) * i) / N; pts.push([v, P(VD, Tf) * Math.pow(VD / v, g)]); }
+      s = (s + dt / 6) % 1;
+      const vmax = VC * 1.08, pmax = P(VA, Tq) * 1.1, gx = 60, gy = 280, gw = 380, gh = 240, X = (v) => gx + (v / vmax) * gw, Y = (p) => gy - (p / pmax) * gh;
+      let d = ""; pts.forEach(([v, p], i) => (d += (i ? "L" : "M") + X(v).toFixed(1) + " " + Y(p).toFixed(1)));
+      let sv = D.seta(gx, gy, gx + gw + 10, gy, "var(--ink2)", 1.4) + D.seta(gx, gy, gx, gy - gh - 10, "var(--ink2)", 1.4) + D.txt(gx + gw + 10, gy + 18, "V", "txm", "end") + D.txt(gx + 6, gy - gh - 4, "p", "txm", "start");
+      sv += `<path d="${d}Z" style="fill:color-mix(in srgb,var(--mT) 22%,transparent);stroke:var(--mT);stroke-width:2.5"/>`;
+      [[VA, Tq, "A"], [VB, Tq, "B"], [VC, Tf, "C"], [VD, Tf, "D"]].forEach(([v, T, rr]) => (sv += `<circle cx="${X(v)}" cy="${Y(P(v, T))}" r="4" style="fill:var(--ink)"/>` + D.txt(X(v) + 6, Y(P(v, T)) - 6, rr, "txm", "start")));
+      const [pv, pp] = pts[Math.floor(s * (pts.length - 1))];
+      sv += `<circle cx="${X(pv)}" cy="${Y(pp)}" r="7" style="fill:var(--warn)"/>`;
+      /* diagrama de fluxo de energia */
+      const fx = 560, esc = 120 / c.Qq;
+      sv += D.bloco(fx - 50, 20, 100, 34, "var(--bad)", "quente " + n2(Tq, 0) + " K") + D.bloco(fx - 50, 246, 100, 34, "var(--mA)", "fria " + n2(Tf, 0) + " K") + `<circle cx="${fx}" cy="150" r="24" style="fill:none;stroke:var(--ink2);stroke-width:2"/>` + D.txt(fx, 155, "motor", "tx2");
+      sv += `<line x1="${fx}" x2="${fx}" y1="54" y2="126" style="stroke:var(--bad);stroke-width:${Math.max(2, c.Qq * esc / 6)}"/><line x1="${fx}" x2="${fx}" y1="174" y2="246" style="stroke:var(--mA);stroke-width:${Math.max(2, c.Qf * esc / 6)}"/><line x1="${fx + 24}" x2="${fx + 90}" y1="150" y2="150" style="stroke:var(--warn);stroke-width:${Math.max(2, c.W * esc / 6)}"/>`;
+      sv += D.txt(fx + 8, 92, "Q_q", "tx2", "start") + D.txt(fx + 8, 214, "Q_f", "tx2", "start") + D.txt(fx + 60, 140, "W", "tx2");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("calor recebido Q_q = RT_q ln(V_B/V_A)", n2(c.Qq, 0) + " J") + vis("calor rejeitado Q_f", n2(c.Qf, 0) + " J") + vis("trabalho por ciclo W = Q_q − Q_f", n2(c.W, 0) + " J") + vis("rendimento η = 1 − T_f/T_q", n2(c.eta * 100, 1) + "%");
     });
   };
 })();
