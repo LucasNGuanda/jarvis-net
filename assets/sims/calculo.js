@@ -807,7 +807,7 @@
       <div><b>f ao longo do círculo</b><svg viewBox="0 0 ${o2.W} ${o2.H}" width="${o2.W}" data-v="s1"></svg><div class="leitor" data-v="lt" style="flex-direction:column;align-items:stretch"></div></div></div>
       <div class="ctrls"><div class="ctrl"><label>ângulo do ponto no círculo (°)</label><input type="range" min="0" max="360" step="0.5" value="20" data-c="t"><output data-o="t"></output></div>
       <div class="bts">${botoes(Object.entries(FS).map(([kk, c]) => [kk, c.nome]), "k", k)}<button class="bt pri" data-a="max">Ir para o máximo</button></div></div>
-      <div class="status">Restrição: andar só sobre o círculo x² + y² = 1. A seta <b style="color:var(--mod)">azul</b> é ∇f (aponta para onde f sobe mais rápido); a <b style="color:var(--warn)">laranja</b> é ∇g, perpendicular ao círculo. No máximo e no mínimo de f sobre o círculo, as duas ficam <b>paralelas</b>: ∇f = λ∇g. Lá, a curva de nível de f encosta no círculo sem cortar.</div>`);
+      <div class="status">Restrição: andar só sobre o círculo x² + y² = 1. A seta <b style="color:var(--mod)">roxa</b> é ∇f (aponta para onde f sobe mais rápido); a <b style="color:var(--warn)">laranja</b> é ∇g, perpendicular ao círculo. No máximo e no mínimo de f sobre o círculo, as duas ficam <b>paralelas</b>: ∇f = λ∇g. Lá, a curva de nível de f encosta no círculo sem cortar.</div>`);
     const q = (s) => el.querySelector(s);
     const ang = (C, th) => C.f(Math.cos(th), Math.sin(th));
     function desenha() {
@@ -879,7 +879,7 @@
       <div class="ctrls"><div class="ctrl"><label>valor inicial y(0)</label><input type="range" min="0" max="1" step="0.005" value="0.5" data-c="y0"><output data-o="y0"></output></div>
       <div class="ctrl"><label>passo h do método de Euler</label><input type="range" min="0.05" max="1" step="0.05" value="0.5" data-c="h"><output data-o="h"></output></div>
       <div class="bts">${botoes(Object.entries(ES).map(([kk, c]) => [kk, c.nome]), "k", k)}</div></div>
-      <div class="status">Os tracinhos têm a inclinação que a equação manda em cada ponto. A solução exata (<b style="color:var(--mod)">azul</b>) segue os tracinhos. O método de Euler (<b style="color:var(--warn)">laranja</b>) anda em linha reta por um passo h, recalcula a inclinação, anda de novo… Diminua o h: o erro cai mais ou menos pela metade quando o h cai pela metade.</div>`);
+      <div class="status">Os tracinhos têm a inclinação que a equação manda em cada ponto. A solução exata (<b style="color:var(--mod)">roxa</b>) segue os tracinhos. O método de Euler (<b style="color:var(--warn)">laranja</b>) anda em linha reta por um passo h, recalcula a inclinação, anda de novo… Diminua o h: o erro cai mais ou menos pela metade quando o h cai pela metade.</div>`);
     const q = (s) => el.querySelector(s);
     function desenha() {
       const C = ES[k], y0 = C.y[0] + 0.05 + (C.y[1] - C.y[0] - 0.1) * +q("[data-c=y0]").value, h = +q("[data-c=h]").value;
