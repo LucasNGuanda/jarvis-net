@@ -28,7 +28,7 @@ window.CATALOGO = [
     ["A08","Leis de Newton",["★","ITA"],true],
     ["A09","Atrito e Resistência do Ar",[],true],
     ["A10","Dinâmica do Movimento Circular",[],true],
-    ["A11","Trabalho e Energia",["★"]],
+    ["A11","Trabalho e Energia",["★"],true],
     ["A12","Impulso e Quantidade de Movimento"],
     ["A12b","Centro de Massa"],
     ["A13","Colisões",["★"]],

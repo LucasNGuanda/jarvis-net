@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -337,5 +337,41 @@
       q("[data-v=lt]").innerHTML = vis("aceleração centrípeta v²/R", n2((v * v) / Rr, 2) + " m/s²") + vis("velocidade máxima", isFinite(c.vmax) ? n2(c.vmax, 1) + " m/s" : "sem limite") + vis("velocidade mínima", n2(c.vmin, 1) + " m/s") + vis("velocidade sem precisar de atrito √(gR tg θ)", n2(c.vsem, 1) + " m/s");
     });
     q("[data-a=re]").addEventListener("click", () => { sai = 0; ang = 0; });
+  };
+  /* ---------- A11 · pista de skate: energia cinética, potencial e dissipada ---------- */
+  SIM.pista = (el, F) => {
+    const W = 680, H = 340, g = 10, m = 50;
+    const yDe = (x) => 3.2 + 2.8 * Math.cos((Math.PI * x) / 10) * (1 - 0.15 * Math.abs(x - 10) / 10) - 0.9 * Math.exp(-((x - 13) ** 2) / 2) + 0.8 * Math.exp(-((x - 6) ** 2) / 1.5);
+    let x = 0.4, dir = 1, Ed = 0, E0 = null, parado = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("posição de largada (m)", "x0", 0, 4, 0.1, 0.4)}${sl("atrito (μ)", "mu", 0, 0.15, 0.005, 0)}
+      <div class="bts"><button class="bt pri" data-a="re">Soltar</button></div></div>
+      <div class="status">Um skatista de 50 kg é solto do repouso. Sem atrito, a energia mecânica (cinética + potencial) é constante: ele volta exatamente à altura de onde saiu e nunca passa dela. Com atrito, parte vira calor (a barra vermelha), e cada subida é mais baixa. A energia total (as três barras somadas) continua constante.</div>`);
+    const q = (s) => el.querySelector(s);
+    const reinicia = () => { x = val(el, "x0"); dir = 1; Ed = 0; E0 = m * g * yDe(x); parado = false; };
+    SIM.pista._v = (h0, h) => Math.sqrt(Math.max(0, 2 * g * (h0 - h)));
+    reinicia();
+    anima(el, F, (dt) => {
+      const mu = val(el, "mu"); mostra(el, ["x0"], 1); mostra(el, ["mu"], 3);
+      const n = 40, h = dt / n;
+      for (let i = 0; i < n && !parado; i++) {
+        const Ep = m * g * yDe(x), Ec = E0 - Ed - Ep;
+        if (Ec <= 0) { const dy = (yDe(x + 1e-3) - yDe(x - 1e-3)) / 2e-3; if (mu > 0 && Math.abs(dy) < mu) { parado = true; break; } dir = dy > 0 ? -1 : 1; x += dir * 0.003; continue; } /* ponto de virada: segue morro abaixo */
+        const v = Math.sqrt((2 * Ec) / m), dydx = (yDe(x + 1e-4) - yDe(x - 1e-4)) / 2e-4, cosA = 1 / Math.sqrt(1 + dydx * dydx), dx = dir * v * cosA * h;
+        Ed += mu * m * g * Math.abs(dx); x += dx;
+        if (x < 0) { x = 0; dir = 1; } if (x > 20) { x = 20; dir = -1; }
+      }
+      const X = (xx) => 30 + xx * 25, Y = (yy) => 300 - yy * 42;
+      let d = ""; for (let i = 0; i <= 200; i++) { const xx = i / 10; d += (i ? "L" : "M") + X(xx).toFixed(1) + " " + Y(yDe(xx)).toFixed(1); }
+      let sv = `<path d="${d} L${X(20)} 320 L${X(0)} 320 Z" style="fill:var(--line2)"/><path d="${d}" style="fill:none;stroke:var(--ink2);stroke-width:3"/>`;
+      sv += `<line x1="${X(0)}" x2="${X(20)}" y1="${Y(E0 / (m * g))}" y2="${Y(E0 / (m * g))}" style="stroke:var(--warn);stroke-dasharray:6 5"/><text class="tx2" x="${X(20)}" y="${Y(E0 / (m * g)) - 6}" text-anchor="end">altura de largada</text>`;
+      sv += `<circle cx="${X(x)}" cy="${Y(yDe(x)) - 9}" r="9" style="fill:var(--mA)"/>`;
+      const Ep = m * g * yDe(x), Ec = Math.max(0, E0 - Ed - Ep), tot = E0, bw = 26, bh = 200, bx = 560;
+      [[Ec, "var(--mA)", "Ec"], [Ep, "var(--mC)", "Ep"], [Ed, "var(--bad)", "calor"]].forEach(([e, cor, r], i) => { const hh = (e / tot) * bh; sv += `<rect x="${bx + i * (bw + 8)}" y="${40 + bh - hh}" width="${bw}" height="${hh}" style="fill:${cor}"/><text class="tx2" x="${bx + i * (bw + 8) + bw / 2}" y="${40 + bh + 16}" text-anchor="middle">${r}</text>`; });
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("energia cinética", n2(Ec, 0) + " J") + vis("energia potencial (mgh)", n2(Ep, 0) + " J") + vis("dissipada pelo atrito", n2(Ed, 0) + " J") + vis("velocidade", n2(Math.sqrt((2 * Ec) / m), 2) + " m/s");
+    });
+    q("[data-a=re]").addEventListener("click", reinicia);
+    q("[data-c=x0]").addEventListener("input", reinicia);
   };
 })();
