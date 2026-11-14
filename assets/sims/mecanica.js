@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -237,5 +237,45 @@
       q("[data-v=sv]").innerHTML = sv;
     });
     liga(el, "m", (v) => (modo = v));
+  };
+  /* ---------- A08 · máquina de Atwood e elevador (peso aparente) ---------- */
+  SIM.atwood = (el, F) => {
+    const W = 680, H = 360, g = 10;
+    let modo = "atwood", y = 0, v = 0, t = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("massa 1 (kg), ou massa da pessoa", "m1", 0.5, 80, 0.5, 3)}${sl("massa 2 (kg)", "m2", 0.5, 10, 0.5, 2)}${sl("aceleração do elevador a (m/s²)", "ae", -10, 10, 0.5, 2)}
+      <div class="bts">${botoes([["atwood", "máquina de Atwood"], ["elev", "elevador com balança"]], "m", modo)}<button class="bt pri" data-a="re">Soltar de novo</button></div></div>
+      <div class="status" data-v="txt"></div>`);
+    const q = (s) => el.querySelector(s);
+    const txt = { atwood: "Dois blocos ligados por um fio ideal numa polia ideal. A massa maior desce e puxa a menor com a mesma aceleração. Segunda lei em cada bloco: m₁g − T = m₁a e T − m₂g = m₂a. Somando, a = (m₁ − m₂)g/(m₁ + m₂). A tração fica entre os dois pesos.", elev: "Uma pessoa sobre uma balança dentro de um elevador. A balança mede a normal N, não o peso. Com o elevador acelerando para cima, N = m(g + a) é maior que mg; acelerando para baixo, menor; em queda livre (a = −g), a balança marca zero: \"sem peso\"." };
+    SIM.atwood._conta = (m1, m2) => ({ a: ((m1 - m2) * g) / (m1 + m2), T: (2 * m1 * m2 * g) / (m1 + m2) });
+    SIM.atwood._balanca = (m, a) => m * (g + a);
+    anima(el, F, (dt) => {
+      const m1 = val(el, "m1"), m2 = val(el, "m2"), ae = val(el, "ae");
+      mostra(el, ["m1", "m2", "ae"], 1);
+      q("[data-v=txt]").textContent = txt[modo];
+      let sv = "";
+      if (modo === "atwood") {
+        const c = SIM.atwood._conta(m1, m2);
+        if (Math.abs(y) < 0.75) { v += c.a * dt; y += v * dt * 0.25; } else { v = 0; y = Math.sign(y) * 0.75; }
+        const cx = 300, cy = 50, r = 34, L1 = 120 + y * 100, L2 = 120 - y * 100, s1 = 20 + Math.cbrt(m1) * 10, s2 = 20 + Math.cbrt(m2) * 10;
+        sv += `<line x1="${cx - 60}" y1="14" x2="${cx + 60}" y2="14" style="stroke:var(--ink2);stroke-width:4"/><line x1="${cx}" y1="14" x2="${cx}" y2="${cy}" style="stroke:var(--ink2);stroke-width:2"/><circle cx="${cx}" cy="${cy}" r="${r}" style="fill:color-mix(in srgb,var(--ink3) 25%,transparent);stroke:var(--ink2);stroke-width:2"/>`;
+        sv += `<line x1="${cx - r}" y1="${cy}" x2="${cx - r}" y2="${cy + L1}" style="stroke:var(--ink);stroke-width:1.6"/><line x1="${cx + r}" y1="${cy}" x2="${cx + r}" y2="${cy + L2}" style="stroke:var(--ink);stroke-width:1.6"/>`;
+        sv += `<rect x="${cx - r - s1 / 2}" y="${cy + L1}" width="${s1}" height="${s1}" style="fill:color-mix(in srgb,var(--mA) 35%,transparent);stroke:var(--mA);stroke-width:2"/><text class="tx2" x="${cx - r}" y="${cy + L1 + s1 / 2 + 4}" text-anchor="middle">1</text>`;
+        sv += `<rect x="${cx + r - s2 / 2}" y="${cy + L2}" width="${s2}" height="${s2}" style="fill:color-mix(in srgb,var(--mT) 35%,transparent);stroke:var(--mT);stroke-width:2"/><text class="tx2" x="${cx + r}" y="${cy + L2 + s2 / 2 + 4}" text-anchor="middle">2</text>`;
+        sv += D.seta(cx - r - s1 / 2 - 14, cy + L1 + 4, cx - r - s1 / 2 - 14, cy + L1 - 36, "var(--ink2)", 1.6) + D.txt(cx - r - s1 / 2 - 20, cy + L1 - 18, "T", "txm", "end") + D.seta(cx - r - s1 / 2 - 14, cy + L1 + s1 - 4, cx - r - s1 / 2 - 14, cy + L1 + s1 + 30, "var(--warn)", 1.6) + D.txt(cx - r - s1 / 2 - 20, cy + L1 + s1 + 24, "m₁g", "tx2", "end");
+        q("[data-v=lt]").innerHTML = vis("aceleração (m₁ − m₂)g/(m₁ + m₂)", n2(c.a, 3) + " m/s²") + vis("tração 2m₁m₂g/(m₁ + m₂)", n2(c.T, 2) + " N") + vis("pesos m₁g e m₂g", n2(m1 * g, 1) + " N e " + n2(m2 * g, 1) + " N") + vis("quem desce", c.a > 0 ? "bloco 1" : c.a < 0 ? "bloco 2" : "ninguém (equilíbrio)");
+      } else {
+        t += dt; const N = SIM.atwood._balanca(m1, ae), ex = 200, ey = 40;
+        sv += `<rect x="${ex}" y="${ey}" width="280" height="280" rx="6" style="fill:color-mix(in srgb,var(--mod) 8%,transparent);stroke:var(--mod);stroke-width:2"/><line x1="${ex + 140}" y1="0" x2="${ex + 140}" y2="${ey}" style="stroke:var(--ink2);stroke-width:2"/>`;
+        sv += `<rect x="${ex + 100}" y="${ey + 250}" width="80" height="16" style="fill:var(--ink3)"/><text class="tx2" x="${ex + 140}" y="${ey + 246}" text-anchor="middle">${n2(Math.max(0, N), 0)} N</text>`;
+        sv += `<circle cx="${ex + 140}" cy="${ey + 120}" r="16" style="fill:var(--warn)"/><line x1="${ex + 140}" y1="${ey + 136}" x2="${ex + 140}" y2="${ey + 200}" style="stroke:var(--warn);stroke-width:6"/><line x1="${ex + 140}" y1="${ey + 200}" x2="${ex + 124}" y2="${ey + 248}" style="stroke:var(--warn);stroke-width:5"/><line x1="${ex + 140}" y1="${ey + 200}" x2="${ex + 156}" y2="${ey + 248}" style="stroke:var(--warn);stroke-width:5"/>`;
+        if (ae !== 0) sv += D.seta(ex + 320, ey + 140, ex + 320, ey + 140 - Math.sign(ae) * Math.min(90, Math.abs(ae) * 9), "var(--mA)", 2.4) + D.txt(ex + 334, ey + 140, "a", "txm", "start");
+        q("[data-v=lt]").innerHTML = vis("peso real mg", n2(m1 * g, 0) + " N") + vis("balança marca N = m(g + a)", n2(Math.max(0, N), 0) + " N") + vis("\"peso aparente\" em kg", n2(Math.max(0, N) / g, 1) + " kg") + vis("situação", ae > 0 ? "parece mais pesado" : ae < 0 ? (ae <= -g ? "queda livre: sem peso aparente" : "parece mais leve") : "como parado (ou em MRU)");
+      }
+      q("[data-v=sv]").innerHTML = sv;
+    });
+    q("[data-a=re]").addEventListener("click", () => { y = 0; v = 0; });
+    liga(el, "m", (k) => { modo = k; y = 0; v = 0; });
   };
 })();
