@@ -1,4 +1,4 @@
-/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; */
+/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -118,6 +118,40 @@
       sv += D.txt(bx + 17, 268, "água até 0 °C", "tx2") + D.txt(bx + 67, 284, "derreter tudo", "tx2");
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("calor da água até 0 °C (m·c·ΔT)", n2(c.disp, 0) + " cal") + vis("calor para derreter todo o gelo (m·L)", n2(c.prec, 0) + " cal") + vis("temperatura final", n2(c.T, 2) + " °C") + vis("gelo que sobra", n2(c.sobra, 1) + " g");
+    });
+  };
+
+  /* ---------- T04b · curva de aquecimento com potência constante e perdas (Newton) ---------- */
+  SIM.aquecimento = (el, F) => {
+    const W = 680, H = 300;
+    let t, Q, hist;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("massa de gelo (g)", "m", 50, 500, 10, 200)}${sl("potência do aquecedor (cal/s)", "P", 50, 500, 10, 200)}${sl("perdas para o ar a 20 °C (cal/s por °C)", "h", 0, 4, 0.1, 0)}
+      <div class="bts"><button class="bt pri" data-a="re">Recomeçar</button></div></div>
+      <div class="status">Gelo a −20 °C recebe calor a uma taxa constante. Nos trechos inclinados, a temperatura sobe com inclinação P/(mc): o gelo (c = 0,5) esquenta duas vezes mais rápido que a água (c = 1). Nos patamares, o calor vai para a mudança de fase. Com perdas (lei de Newton: perda proporcional a T − 20 °C), a curva se achata e pode nem chegar a ferver: o equilíbrio é onde a potência que entra iguala a que sai.</div>`);
+    const q = (s) => el.querySelector(s);
+    /* estado pela energia recebida Q (cal) a partir de −20 °C */
+    const estado = (m, Qr) => { const e1 = m * 0.5 * 20, e2 = e1 + 80 * m, e3 = e2 + 100 * m, e4 = e3 + 540 * m; if (Qr < e1) return [-20 + Qr / (m * 0.5), "gelo"]; if (Qr < e2) return [0, "derretendo: " + n2(((Qr - e1) / (80 * m)) * 100, 0) + "%"]; if (Qr < e3) return [(Qr - e2) / m, "água"]; if (Qr < e4) return [100, "fervendo: " + n2(((Qr - e3) / (540 * m)) * 100, 0) + "% virou vapor"]; return [100 + (Qr - e4) / (0.48 * m), "vapor"]; };
+    SIM.aquecimento._estado = estado;
+    SIM.aquecimento._tempos = (m, P) => ({ t1: (m * 10) / P, t2: (m * 90) / P, t3: (m * 190) / P, t4: (m * 730) / P });
+    const reinicia = () => { t = 0; Q = 0; hist = []; };
+    reinicia();
+    q("[data-a=re]").addEventListener("click", reinicia);
+    ["m", "P", "h"].forEach((k) => q(`[data-c=${k}]`).addEventListener("input", reinicia));
+    anima(el, F, (dt) => {
+      const m = val(el, "m"), P = val(el, "P"), h = val(el, "h"), tp = SIM.aquecimento._tempos(m, P), tmax = tp.t4 * 1.1;
+      mostra(el, ["m", "P"], 0); mostra(el, ["h"], 1);
+      const passo = (tmax / 12) * dt, n = 20;
+      for (let i = 0; i < n && t < tmax; i++) { const [T] = estado(m, Q); Q += (P - h * (T - 20)) * (passo / n); if (Q < 0) Q = 0; t += passo / n; }
+      const [T, fase] = estado(m, Q); hist.push([t, T]);
+      const gx = 70, gy = 250, gw = 560, gh = 200, X = (tt) => gx + (tt / tmax) * gw, Y = (TT) => gy - ((TT + 20) / 140) * gh;
+      let sv = `<line x1="${gx}" x2="${gx + gw}" y1="${Y(0)}" y2="${Y(0)}" style="stroke:var(--line2);stroke-dasharray:3 4"/><line x1="${gx}" x2="${gx + gw}" y1="${Y(100)}" y2="${Y(100)}" style="stroke:var(--line2);stroke-dasharray:3 4"/>`;
+      sv += D.seta(gx, gy + 4, gx, gy - gh - 10, "var(--ink2)", 1.4) + D.seta(gx, Y(-20), gx + gw + 12, Y(-20), "var(--ink2)", 1.4) + D.txt(gx - 6, Y(0) + 4, "0", "tx2", "end") + D.txt(gx - 6, Y(100) + 4, "100", "tx2", "end") + D.txt(gx - 6, Y(-20) + 4, "−20", "tx2", "end") + D.txt(gx + gw, Y(-20) + 18, "tempo", "tx2", "end") + D.txt(gx + 6, gy - gh - 4, "θ (°C)", "tx2", "start");
+      let d = ""; hist.forEach(([tt, TT], i) => (d += (i ? "L" : "M") + X(tt).toFixed(1) + " " + Y(Math.min(TT, 118)).toFixed(1)));
+      sv += `<path d="${d}" style="fill:none;stroke:var(--mT);stroke-width:2.5"/>`;
+      if (h > 0) { const Teq = 20 + P / h; if (Teq < 118) sv += `<line x1="${gx}" x2="${gx + gw}" y1="${Y(Teq)}" y2="${Y(Teq)}" style="stroke:var(--warn);stroke-dasharray:6 4"/>` + D.txt(gx + gw, Y(Teq) - 6, "equilíbrio com perdas", "tx2", "end"); }
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("temperatura", n2(T, 1) + " °C") + vis("estado", fase) + vis("sem perdas: começa a ferver em", n2(tp.t3, 0) + " s") + vis("sem perdas: termina de ferver em", n2(tp.t4, 0) + " s");
     });
   };
 })();
