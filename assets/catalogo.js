@@ -30,7 +30,7 @@ window.CATALOGO = [
     ["A10","Dinâmica do Movimento Circular",[],true],
     ["A11","Trabalho e Energia",["★"],true],
     ["A12","Impulso e Quantidade de Movimento",[],true],
-    ["A12b","Centro de Massa"],
+    ["A12b","Centro de Massa",[],true],
     ["A13","Colisões",["★"]],
     ["A14a","Rotação e Corpo Rígido",["!!","∫","ITA"]],
     ["A14","Equilíbrio de Corpo Extenso"],

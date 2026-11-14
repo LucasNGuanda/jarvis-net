@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t),
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -414,5 +414,36 @@
       q("[data-v=lt]").innerHTML = vis("impulso = Δp", n2(c.dp, 2) + " N·s") + vis("força média Δp/Δt", n2(c.Fm, 0) + " N") + vis("força de pico", n2(c.Fp, 0) + " N") + vis("a força média equivale ao peso de", n2(c.Fm / 10, 1) + " kg");
     });
     q("[data-a=re]").addEventListener("click", () => (t = 0));
+  };
+
+  /* ---------- A12b · pessoa andando num barco: o centro de massa não sai do lugar ---------- */
+  SIM.barcoCM = (el, F) => {
+    const W = 680, H = 280;
+    let s = 0, ind = 1;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("massa da pessoa m (kg)", "m", 20, 120, 5, 80)}${sl("massa do barco M (kg)", "M", 20, 400, 10, 120)}${sl("comprimento do barco L (m)", "L", 2, 8, 0.5, 4)}
+      <div class="bts"><button class="bt pri" data-a="re">Recomeçar</button></div></div>
+      <div class="status">A água não tem atrito na horizontal, então ninguém de fora empurra o sistema pessoa + barco: o centro de massa (linha tracejada) fica parado. Quando a pessoa anda para a direita, o barco desliza para a esquerda, de modo que m·(deslocamento da pessoa) = M·(deslocamento do barco), ambos em relação à água.</div>`);
+    const q = (s0) => el.querySelector(s0);
+    SIM.barcoCM._conta = (m, M, L) => ({ barco: (m * L) / (m + M), pessoa: (M * L) / (m + M), vb: m / (m + M) });
+    anima(el, F, (dt) => {
+      const m = val(el, "m"), M = val(el, "M"), L = val(el, "L"), c = SIM.barcoCM._conta(m, M, L);
+      mostra(el, ["m", "M"], 0); mostra(el, ["L"], 1);
+      s += ind * dt * 1; if (s > L + 0.8) { s = 0; } const sp = Math.min(Math.max(s, 0), L);
+      const esc = 52, x0 = 340, xb = -(m * sp) / (m + M), xcm0 = (m * 0 + M * (L / 2)) / (m + M) - L / 2;
+      /* barco: de xb - L/2 a xb + L/2 (o meio do barco começa na origem); a pessoa está em xb - L/2 + sp */
+      const X = (xx) => x0 + xx * esc, yA = 180;
+      let sv = `<rect x="0" y="${yA}" width="${W}" height="${H - yA}" style="fill:color-mix(in srgb,var(--mA) 14%,transparent)"/>`;
+      sv += `<path d="M${X(xb - L / 2) - 12} ${yA - 24} L${X(xb + L / 2) + 12} ${yA - 24} L${X(xb + L / 2) - 10} ${yA + 8} L${X(xb - L / 2) + 10} ${yA + 8} Z" style="fill:color-mix(in srgb,var(--mC) 35%,transparent);stroke:var(--mC);stroke-width:2"/>`;
+      const px = X(xb - L / 2 + sp), py = yA - 24;
+      sv += `<circle cx="${px}" cy="${py - 58}" r="9" style="fill:none;stroke:var(--ink);stroke-width:2.5"/><line x1="${px}" y1="${py - 49}" x2="${px}" y2="${py - 22}" style="stroke:var(--ink);stroke-width:2.5"/><line x1="${px}" y1="${py - 22}" x2="${px - 8 * Math.sin(s * 6)}" y2="${py}" style="stroke:var(--ink);stroke-width:2.5"/><line x1="${px}" y1="${py - 22}" x2="${px + 8 * Math.sin(s * 6)}" y2="${py}" style="stroke:var(--ink);stroke-width:2.5"/><line x1="${px - 10}" y1="${py - 40}" x2="${px + 10}" y2="${py - 40}" style="stroke:var(--ink);stroke-width:2.5"/>`;
+      sv += `<line x1="${X(xcm0)}" x2="${X(xcm0)}" y1="30" y2="${H - 10}" style="stroke:var(--warn);stroke-width:2;stroke-dasharray:6 5"/>` + D.txt(X(xcm0) + 6, 44, "centro de massa", "tx2", "start");
+      sv += `<line x1="${X(-L / 2)}" x2="${X(-L / 2)}" y1="${yA + 14}" y2="${yA + 40}" style="stroke:var(--ink3)"/>` + D.txt(X(-L / 2), yA + 56, "popa no início", "tx2");
+      for (let k = -6; k <= 6; k++) sv += `<line x1="${X(k)}" x2="${X(k)}" y1="${H - 14}" y2="${H - 4}" style="stroke:var(--ink3)"/>`;
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("o barco recua (total)", n2(c.barco, 2) + " m") + vis("a pessoa avança, vista da água", n2(c.pessoa, 2) + " m") + vis("agora: barco já recuou", n2(-xb, 2) + " m") + vis("velocidade do barco se a pessoa anda a 1 m/s no barco", n2(c.vb, 2) + " m/s");
+    });
+    q("[data-a=re]").addEventListener("click", () => (s = 0));
+    ["m", "M", "L"].forEach((k) => q(`[data-c=${k}]`).addEventListener("input", () => (s = 0)));
   };
 })();
