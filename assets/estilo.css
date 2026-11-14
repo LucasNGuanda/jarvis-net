@@ -644,3 +644,40 @@ body:not(.mostra-breve) #menu-mods:not(.buscando) li:has(>a.breve){display:none}
 .c2-format{font:800 8px var(--f-text);letter-spacing:-.02em}
 @media (prefers-reduced-motion:reduce){.c2-lcd .cur{animation:none}}
 .cfg-dupla{display:flex;flex-direction:column;line-height:1.25}.cfg-dupla small{font-size:12px;color:var(--ink3)}
+
+/* ===== tela inicial do projeto (#/home) ===== */
+body.modo-home .topo,body.modo-home .menu,body.modo-home .veu{display:none}
+body.modo-home .principal{margin-left:0;padding:40px 24px 64px}
+.jv{max-width:980px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:28px}
+.jv-cab{text-align:center}
+.jv-cab h1{margin:0;font:800 clamp(40px,6vw,64px)/1.05 var(--f-text);letter-spacing:.02em;background:linear-gradient(90deg,var(--mC),var(--mA),var(--mO));-webkit-background-clip:text;background-clip:text;color:transparent}
+.jv-cab p{margin:6px 0 0;font:italic 18px var(--f-det);color:var(--ink2)}
+.jv-materias{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;width:100%}
+.jv-mat{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:22px 14px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);color:var(--ink);text-align:center;transition:transform .15s,border-color .15s,box-shadow .15s}
+a.jv-mat:hover{text-decoration:none;transform:translateY(-3px);border-color:var(--cor);box-shadow:0 10px 30px color-mix(in srgb,var(--cor) 22%,transparent)}
+a.jv-mat:focus-visible{outline:2px solid var(--cor);outline-offset:3px}
+.jv-mat.desativada{opacity:.55;cursor:not-allowed;border-style:dashed}
+.jv-ic svg{width:46px;height:46px;display:block}
+.jv-ic.grande svg{width:72px;height:72px}
+.jv-nome{font:700 20px var(--f-text)}
+.jv-desc{font-size:13.5px;color:var(--ink2);line-height:1.4}
+.jv-breve{display:inline-block;padding:2px 10px;border-radius:999px;border:1px dashed var(--ink3);color:var(--ink2);font:600 12px var(--f-text);letter-spacing:.02em;margin-top:4px}
+.jv-ilu{width:min(100%,420px)}
+.jv-globo{width:100%;height:auto;display:block}
+.jv-globo .jv-borda{stroke:var(--mA);stroke-width:1.6}
+.jv-globo .jv-mer{fill:none;stroke:var(--mA);stroke-width:1.1;opacity:.75}
+.jv-globo .jv-lat{fill:none;stroke:var(--mC);stroke-width:1;opacity:.6}
+.jv-globo .jv-anel{fill:none;stroke:var(--mO);stroke-width:2;opacity:.85}
+.jv-globo .jv-lua{fill:var(--mO)}
+.jv-pergunta{position:relative;display:flex;align-items:center;gap:8px;width:min(100%,680px);padding:8px 8px 8px 18px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.jv-pergunta input{flex:1;min-width:0;border:0;background:none;color:var(--ink);font:16px var(--f-text);padding:8px 0}
+.jv-pergunta input:disabled{cursor:not-allowed}
+.jv-pergunta input::placeholder{color:var(--ink3)}
+.jv-pergunta button{width:40px;height:40px;border-radius:50%;border:0;background:var(--line2);color:var(--ink3);display:grid;place-items:center;cursor:not-allowed}
+.jv-pergunta button svg{width:20px;height:20px}
+.jv-pergunta .jv-breve{position:absolute;top:-11px;right:22px;background:var(--bg);margin:0}
+.jv-so{min-height:60vh;justify-content:center;text-align:center;gap:10px}
+.jv-so h1{margin:0;font:800 40px var(--f-text)}
+.jv-volta a{color:var(--ink2)}
+.aba-home svg{width:22px;height:22px}
+@media (max-width:860px){.jv-materias{grid-template-columns:repeat(2,1fr)}}

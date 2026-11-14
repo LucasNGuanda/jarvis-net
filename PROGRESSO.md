@@ -1,12 +1,13 @@
 # PROGRESSO — Site de Física do Lucas
 
-## Estado atual (14/11/2026, depois da β 2.8)
+## Estado atual (14/11/2026, depois da β 2.9)
 - **Física**: 64 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
   - Prontos: Fundamentos inteiro (6); Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes inteiro (7); Bônus (X01); Simulados (S00–S04; S02 já tem o IME 2026/27, os outros só a página de entrada).
   - Vazios: Mecânica (21), Termodinâmica (11).
 - **Cálculo**: 27 de 27 (Cálculo 1, Cálculo 2, Funções especiais, Teoremas, Simulados de Cálculo).
 - **Experimental**: 0 de 11 (módulos criados, temas a decidir).
 - **Experimentos**: 10 de 10.
+- Tela inicial do projeto (Jarvis) em #/home: Física pronta; Química, Matemática e Russo "em breve". Modelo de dados em docs/MODELO_DE_DADOS.md.
 - Calculadoras: 1 (estilo fx-991ES PLUS) e 2 (estilo fx-82LA CW), uma de cada vez.
 - Exercícios: 7 por tema (a meta do briefing era 15–20).
 - Versão em inglês: só pelo tradutor do navegador.
@@ -234,6 +235,18 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - As duas calculadoras agora encolhem sozinhas para caber na altura da janela (e reajustam quando a janela muda de tamanho), então a aba fica sempre visível.
   - Botão ✕ de fechar dentro das duas calculadoras, além da aba.
   - Testado em 1280×950, 1366×768, 1366×657, 1280×600 e 1280×520: aba visível, ✕ fecha, aba abre e fecha. Calculadora 2: 41/41; calculadora 1: 103/103.
+
+- **β 2.9** — Tela inicial do projeto (Jarvis).
+  - Antes de tudo, o documento `docs/MODELO_DE_DADOS.md`: uma página só com rotas no hash, palavras reservadas, registro das matérias, códigos únicos no projeto (a química não pode usar "C"), prefixos do `localStorage` (`fisica:` continua; `jarvis:` reservado; um prefixo por matéria nova) e o plano do mapa de erros (`resultado:COD-n`, ainda não feito). Não havia conflito com a tela inicial, mas a decisão de como registrar e rotear as matérias é a mesma, então o documento veio primeiro.
+  - **Tela inicial** (`#/home`, e também quando abre sem hash), desenhada a partir do esboço do Lucas:
+    - título "Jarvis" e um globo de arame girando com um anel em órbita;
+    - um botão grande por matéria, lidos de `assets/materias.js`: Física leva para o site de física (`#/inicio`) sem mudar nada dentro dele; Química, Matemática e Russo aparecem desativados, com "em breve";
+    - campo "Perguntar algo ao Jarvis…" só com o visual, desativado, com "em breve".
+  - Acrescentar uma matéria = acrescentar um objeto em `assets/materias.js`. Uma matéria registrada que ainda não existe abre uma página "em breve" (por exemplo `#/quimica/inicio`), nunca uma tela em branco; `#/fisica` leva para `#/inicio`.
+  - Faixa do topo do site de física: botão **Home** (casinha) antes do átomo da Física, que volta para a tela inicial. O resto da faixa ficou igual.
+  - Tudo continua num `index.html` só, então o progresso fica no mesmo `localStorage` (testado: a marcação de um exercício sobrevive à ida e volta pela tela inicial).
+  - Nome do projeto: o site passou a se chamar **Jarvis** (título da aba do navegador, selo de versão na faixa do topo e README). O site de física continua o mesmo por dentro.
+  - Conferências: 13 testes novos da tela inicial; regressão completa (resultado na resposta da β 2.9).
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.

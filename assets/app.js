@@ -535,17 +535,23 @@
   F.aoSair = (fn) => paradas.push(fn); // simulações registram como parar a animação
   function rota() {
     {
-      const h0 = (location.hash || "#/inicio").slice(2).split("/");
+      const h0 = (location.hash || "#/home").slice(2).split("/");
       if (h0[0] === renderizado && h0[1] && achaAncora(h0[1])) { achaAncora(h0[1]).scrollIntoView(); return; }
     }
     paradas.forEach((fn) => { try { fn(); } catch (e) {} }); paradas = [];
     gaveta(false);
-    const h = (location.hash || "#/inicio").slice(2).split("/");
+    const h = (location.hash || "#/home").slice(2).split("/");
     const pag = $("#pagina");
-    const cod = h[0] || "inicio", anc = h[1];
+    const cod = h[0] || "home", anc = h[1];
     renderizado = null;
     temaAtual = null;
     document.documentElement.style.removeProperty("--mod");
+    /* tela inicial do projeto e matérias registradas em assets/materias.js (docs/MODELO_DE_DADOS.md) */
+    const J = window.JARVIS, mat = J ? J.materia(cod) : null;
+    document.body.classList.toggle("modo-home", !!J && (cod === "home" || (!!mat && !mat.pronta)));
+    if (J && cod === "home") { J.home(pag); window.scrollTo(0, 0); return; }
+    if (mat && !mat.pronta) { J.emBreve(pag, mat); window.scrollTo(0, 0); return; }
+    if (mat && mat.pronta && !h[1] && mat.rota !== "#/" + cod) { location.replace(mat.rota); return; } /* só o id da matéria: #/fisica → #/inicio */
     if (cod === "inicio" || cod === "calculo" || cod === "experimentos" || cod === "experimental") { F.area = { calculo: "calculo", experimentos: "exp", experimental: "lab" }[cod] || "fisica"; pgInicio(pag, F.area); }
     else if (cod === "legenda") { location.replace("#/" + AREA(F.area).inicio); setTimeout(() => { const d = $("#detalhes"); if (d) d.classList.add("aberto"); }, 50); return; } /* a legenda agora fica só no painel do topo */
     else if (cod === "sumario") pgSumario(pag);
@@ -642,5 +648,5 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", () => { const v = document.getElementById("versao"); if (v) v.textContent = "Site Física " + VERSAO; tema(); montaMenu(); montaGaveta(); topo(); backup(); if (window.montaDetalhes) montaDetalhes(F); window.addEventListener("hashchange", rota); rota(); });
+  document.addEventListener("DOMContentLoaded", () => { const v = document.getElementById("versao"); if (v) v.textContent = "Jarvis " + VERSAO; tema(); montaMenu(); montaGaveta(); topo(); backup(); if (window.montaDetalhes) montaDetalhes(F); window.addEventListener("hashchange", rota); rota(); });
 })();
