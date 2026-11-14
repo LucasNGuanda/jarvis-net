@@ -13,11 +13,11 @@ F.registrar("C14", {
       { nome: "Fio longo", gerar: (p) => {
         const i = p ? 10 : F.escolha([1, 5, 10, 20, 100]), r = p ? 5 : F.escolha([1, 2, 5, 10, 50]), B = (4e-7 * Math.PI * i) / (2 * Math.PI * r / 100);
         return { enun: R`<p>Fio longo com $${i}$ A. Campo a $${r}$ cm? Compare com o da Terra (~50 µT).</p>`, fig: figFio,
-          passos: [R`<p>Ampère num círculo de raio $r$ centrado no fio: $B\cdot2\pi r = \mu_0i$.</p>`, R`$$B = \frac{\mu_0i}{2\pi r} = \frac{2\times10^{-7}\times${i}}{${F.m(r / 100, 2)}} = ${F.sigM(B, 3)}\ \text{T} = ${F.m(B * 1e6, 1)}\ \mu\text{T}$$`, R`<p>${B > 5e-5 ? "Maior" : "Menor"} que o da Terra. Por isso uma bússola perto de um fio com corrente gira (experimento de Ørsted, 1820).</p>`] }; } },
+          passos: [R`<p>Ampère num círculo de raio $r$ centrado no fio: $B\cdot2\pi r = \mu_0i$.</p>`, R`$$B = \frac{\mu_0i}{2\pi r} = \frac{2\times10^{-7}\times${i}}{${F.n(r / 100, 2)}} = ${F.sigM(B, 3)}\ \text{T} = ${F.n(B * 1e6, 1)}\ \mu\text{T}$$`, R`<p>${B > 5e-5 ? "Maior" : "Menor"} que o da Terra. Por isso uma bússola perto de um fio com corrente gira (experimento de Ørsted, 1820).</p>`] }; } },
       { nome: "Solenoide", gerar: (p) => {
         const N = p ? 500 : F.escolha([200, 500, 1000]), L = p ? 25 : F.escolha([10, 20, 25, 50]), i = p ? 2 : F.escolha([0.5, 1, 2, 5]), B = (4e-7 * Math.PI * N * i) / (L / 100);
         return { enun: R`<p>Solenoide de $${N}$ espiras em $${L}$ cm, com $${i}$ A. Campo no interior?</p>`, fig: figSol,
-          passos: [R`<p>$n = N/L = ${F.m(N / (L / 100), 0)}$ espiras/m. Retângulo amperiano com um lado dentro (comprimento $h$) e outro fora: $Bh = \mu_0(nh)i$.</p>`, R`$$B = \mu_0ni = ${F.sigM(B, 3)}\ \text{T}$$`, R`<p>Uniforme dentro (longe das pontas) e não depende do raio do solenoide.</p>`] }; } },
+          passos: [R`<p>$n = N/L = ${F.n(N / (L / 100), 0)}$ espiras/m. Retângulo amperiano com um lado dentro (comprimento $h$) e outro fora: $Bh = \mu_0(nh)i$.</p>`, R`$$B = \mu_0ni = ${F.sigM(B, 3)}\ \text{T}$$`, R`<p>Uniforme dentro (longe das pontas) e não depende do raio do solenoide.</p>`] }; } },
     ] });
 
     const X = F.exercicio;

@@ -16,12 +16,12 @@ F.registrar("C01", {
         const ab = (a + b) / 2, ac = (ab + c) / 2;
         return { enun: R`<p>Três esferas condutoras <b>idênticas</b>: A com $${a}q$, B com $${b}q$, C com $${c}q$. Toca-se A em B e separa; depois A em C e separa. Qual a carga final de cada uma?</p>`, fig: figContato,
           passos: [R`<p>Esferas idênticas em contato viram um condutor só e, por simetria, dividem a carga total <b>igualmente</b>. A carga total se conserva.</p>`,
-            R`<p>A + B: total $${a}q + (${b}q) = ${a + b}q$, cada uma fica com $${F.m(ab, 1)}q$.</p>`,
-            R`<p>A + C: total $${F.m(ab, 1)}q + (${c}q) = ${F.m(ab + c, 1)}q$, cada uma fica com $${F.m(ac, 2)}q$.</p>`,
-            R`<p><b>Resposta:</b> $q_A = ${F.m(ac, 2)}q$, $q_B = ${F.m(ab, 1)}q$, $q_C = ${F.m(ac, 2)}q$. Confere: soma $= ${F.m(ac + ab + ac, 1)}q = ${a + b + c}q$ ✓.</p>`] }; } },
+            R`<p>A + B: total $${a}q + (${b}q) = ${a + b}q$, cada uma fica com $${F.n(ab, 1)}q$.</p>`,
+            R`<p>A + C: total $${F.n(ab, 1)}q + (${c}q) = ${F.n(ab + c, 1)}q$, cada uma fica com $${F.n(ac, 2)}q$.</p>`,
+            R`<p><b>Resposta:</b> $q_A = ${F.n(ac, 2)}q$, $q_B = ${F.n(ab, 1)}q$, $q_C = ${F.n(ac, 2)}q$. Confere: soma $= ${F.n(ac + ab + ac, 1)}q = ${a + b + c}q$ ✓.</p>`] }; } },
       { nome: "Contar elétrons", gerar: (p) => {
         const Q = p ? -3.2 : F.escolha([-1.6, -3.2, -4.8, 8.0, -12.8]), un = p ? "nC" : F.escolha(["nC", "µC", "pC"]), f = { nC: 1e-9, "µC": 1e-6, pC: 1e-12 }[un], n = Math.abs(Q * f) / 1.602e-19;
-        return { enun: R`<p>Um corpo tem carga $Q = ${F.m(Q, 1)}$ ${un}. Quantos elétrons ele ${Q < 0 ? "ganhou" : "perdeu"}?</p>`, fig: "",
+        return { enun: R`<p>Um corpo tem carga $Q = ${F.n(Q, 1)}$ ${un}. Quantos elétrons ele ${Q < 0 ? "ganhou" : "perdeu"}?</p>`, fig: "",
           passos: [R`<p>Quantização: $Q = \pm n e$, com $e = 1{,}602\times10^{-19}$ C. ${Q < 0 ? "Negativo: sobram elétrons." : "Positivo: faltam elétrons (prótons não saem do núcleo)."}</p>`,
             R`$$n = \frac{|Q|}{e} = \frac{${F.sigM(Math.abs(Q * f), 2)}}{1{,}602\times10^{-19}} \approx ${F.sigM(n, 3)}$$`,
             R`<p><b>Resposta:</b> uns $${F.sigM(n, 2)}$ elétrons. Muito, mas perto dos ~$10^{23}$ elétrons de um grama de matéria, é uma fração ridícula.</p>`] }; } },
@@ -30,8 +30,8 @@ F.registrar("C01", {
         return { enun: R`<p>Duas esferas condutoras <b>distantes</b> uma da outra, de raios $${r1}$ cm e $${r2}$ cm, são ligadas por um fio fino. A carga total é $${Q}$ µC. Como ela se divide?</p>`, fig: D.svg(420, 110, esf(80, 55, 12 * r1, "R₁") + `<line x1="${80 + 12 * r1}" y1="55" x2="${330 - 12 * r2}" y2="55" class="ln2"/>` + esf(330, 55, Math.min(50, 10 * r2), "R₂"), "duas esferas ligadas"),
           passos: [R`<p>Ligadas, viram um condutor só: ficam no <b>mesmo potencial</b> ${F.ret("C05")}. Para uma esfera isolada, $V = kq/R$.</p>`,
             R`$$\frac{kq_1}{R_1} = \frac{kq_2}{R_2}\;\Rightarrow\;\frac{q_1}{q_2} = \frac{R_1}{R_2}$$<p>A carga se divide na proporção dos <b>raios</b> (não das áreas!).</p>`,
-            R`$$q_1 = Q\frac{R_1}{R_1+R_2} = ${F.m((Q * r1) / (r1 + r2), 2)}\ \mu\text{C},\qquad q_2 = ${F.m((Q * r2) / (r1 + r2), 2)}\ \mu\text{C}$$`,
-            R`<p><b>Resposta:</b> $q_1 = ${F.m((Q * r1) / (r1 + r2), 2)}$ µC e $q_2 = ${F.m((Q * r2) / (r1 + r2), 2)}$ µC. A esfera pequena tem menos carga, mas <b>densidade</b> maior: $\sigma \propto q/R^2 \propto 1/R$.</p>`] }; } },
+            R`$$q_1 = Q\frac{R_1}{R_1+R_2} = ${F.n((Q * r1) / (r1 + r2), 2)}\ \mu\text{C},\qquad q_2 = ${F.n((Q * r2) / (r1 + r2), 2)}\ \mu\text{C}$$`,
+            R`<p><b>Resposta:</b> $q_1 = ${F.n((Q * r1) / (r1 + r2), 2)}$ µC e $q_2 = ${F.n((Q * r2) / (r1 + r2), 2)}$ µC. A esfera pequena tem menos carga, mas <b>densidade</b> maior: $\sigma \propto q/R^2 \propto 1/R$.</p>`] }; } },
     ] });
 
     const X = F.exercicio;

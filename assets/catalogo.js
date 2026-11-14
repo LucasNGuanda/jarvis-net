@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 1.7";
+window.VERSAO = "β 1.8";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -87,12 +87,15 @@ window.CATALOGO = [
     ["C15c","Corrente Alternada",[],true],
     ["C15d","Equações de Maxwell e Ondas EM",["!!","∫"],true],
   ]},
-  { id:"M", letra:"M", cor:"--mM", nome:"Física Moderna", desc:"Quântica, fotoelétrico, Bohr, relatividade e física nuclear.", temas:[
-    ["C16","Física Quântica"],
+  { id:"M", letra:"M", cor:"--mM", nome:"Física Moderna", desc:"Quântica, fotoelétrico, Bohr, relatividade, núcleo, energia nuclear, sólidos, partículas e cosmologia.", temas:[
+    ["C16","Física Quântica: corpo negro e Planck",["∫"],true],
     ["C17","Efeito Fotoelétrico e Comportamento Dual",[],true],
     ["C17b","Átomo de Bohr",[],true],
     ["C18","Relatividade Especial",["!"],true],
-    ["C19","Física Nuclear"],
+    ["C19","Física Nuclear",["★"],true],
+    ["C19b","Energia Nuclear: fissão e fusão",[],true],
+    ["C20","Sólidos e Semicondutores",[],true],
+    ["C21","Partículas e Cosmologia",["!"],true],
   ]},
   { id:"U", letra:"U", cor:"--mU", nome:"Universitária", desc:"Cálculo vetorial, Lagrange, Hamilton, Maxwell diferencial e Schrödinger.", temas:[
     ["U01","Cálculo vetorial: grad, div, rot",["∫"]],

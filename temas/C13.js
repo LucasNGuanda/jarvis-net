@@ -20,7 +20,7 @@ F.registrar("C13", {
         const U = p ? 1000 : F.escolha([500, 1000, 2000]), B = p ? 0.2 : F.escolha([0.1, 0.2, 0.3]), m1 = p ? 35 : F.escolha([35, 12, 39, 63]), m2 = m1 + 2, u = 1.6605e-27;
         const r = (m) => Math.sqrt((2 * m * u * U) / 1.602e-19) / B;
         return { enun: R`<p>Íons de carga $+e$ e massas $${m1}$ u e $${m2}$ u são acelerados por $${U}$ V e entram num campo de $${B}$ T. A que distância um do outro eles batem no detector (depois de meia volta)?</p>`, fig: figEspec,
-          passos: [R`<p>Aceleração: $\frac12mv^2 = eU$. Círculo: $r = \frac{mv}{eB}$. Juntando: $r = \frac1B\sqrt{\frac{2mU}{e}}$.</p>`, R`<p>$r_1 = ${F.m(r(m1) * 100, 2)}$ cm e $r_2 = ${F.m(r(m2) * 100, 2)}$ cm.</p>`, R`<p>Eles batem a $2r$ da entrada: separação $2(r_2 - r_1) = ${F.m(2 * (r(m2) - r(m1)) * 1000, 2)}$ mm. Como $r \propto \sqrt m$, isótopos pesados ficam mais difíceis de separar.</p>`] }; } },
+          passos: [R`<p>Aceleração: $\frac12mv^2 = eU$. Círculo: $r = \frac{mv}{eB}$. Juntando: $r = \frac1B\sqrt{\frac{2mU}{e}}$.</p>`, R`<p>$r_1 = ${F.n(r(m1) * 100, 2)}$ cm e $r_2 = ${F.n(r(m2) * 100, 2)}$ cm.</p>`, R`<p>Eles batem a $2r$ da entrada: separação $2(r_2 - r_1) = ${F.n(2 * (r(m2) - r(m1)) * 1000, 2)}$ mm. Como $r \propto \sqrt m$, isótopos pesados ficam mais difíceis de separar.</p>`] }; } },
     ] });
 
     const X = F.exercicio;

@@ -10,13 +10,13 @@ F.registrar("C06", {
     const exemplario = F.exemplo({ casos: [
       { nome: "Velocidade de deriva", gerar: (p) => {
         const i = p ? 5 : F.escolha([1, 2, 5, 10, 20]), A = p ? 2 : F.escolha([0.5, 1, 1.5, 2.5, 4]), n = 8.5e28, vd = i / (n * 1.602e-19 * A * 1e-6);
-        return { enun: R`<p>Um fio de cobre de $${F.m(A, 1)}$ mm² conduz $${i}$ A. Com $n = 8{,}5\times10^{28}$ elétrons livres/m³, qual a velocidade de deriva? Quanto tempo um elétron leva para andar 1 m?</p>`, fig: figSecao,
+        return { enun: R`<p>Um fio de cobre de $${F.n(A, 1)}$ mm² conduz $${i}$ A. Com $n = 8{,}5\times10^{28}$ elétrons livres/m³, qual a velocidade de deriva? Quanto tempo um elétron leva para andar 1 m?</p>`, fig: figSecao,
           passos: [R`<p>Em $dt$, passam pela seção os elétrons de um cilindro de comprimento $v_d\,dt$: carga $neAv_d\,dt$. Logo $i = neAv_d$.</p>`, R`$$v_d = \frac{i}{neA} = \frac{${i}}{8{,}5\times10^{28}\times1{,}602\times10^{-19}\times${F.sigM(A * 1e-6, 2)}} = ${F.sigM(vd, 3)}\ \text{m/s}$$`,
-            R`<p><b>Resposta:</b> $v_d \approx ${F.m(vd * 1000, 3)}$ mm/s; 1 m leva $${F.m(1 / vd / 60, 0)}$ min. A lâmpada acende na hora porque o <b>sinal</b> (o campo) se propaga perto da velocidade da luz, empurrando os elétrons que já estão no fio inteiro.</p>`] }; } },
+            R`<p><b>Resposta:</b> $v_d \approx ${F.n(vd * 1000, 3)}$ mm/s; 1 m leva $${F.n(1 / vd / 60, 0)}$ min. A lâmpada acende na hora porque o <b>sinal</b> (o campo) se propaga perto da velocidade da luz, empurrando os elétrons que já estão no fio inteiro.</p>`] }; } },
       { nome: "Carga com i(t)", gerar: (p) => {
         const a = p ? 4 : F.escolha([1, 2, 3, 4]), b = p ? 2 : F.escolha([1, 2, 3]), T = p ? 3 : F.escolha([2, 3, 4, 5]), q = a * T + (b * T * T) / 2;
         return { enun: R`<p>A corrente num fio varia como $i(t) = ${a} + ${b}t$ (A, com t em s). Quanta carga passa entre $t = 0$ e $t = ${T}$ s?</p>`, fig: D.svg(300, 170, `${D.eixos({ x0: 40, y0: 150, w: 240, h: 130, xlab: "t", ylab: "i" })}<polygon points="40,150 40,${150 - 12 * a} ${40 + 45 * T},${150 - 12 * (a + b * T)} ${40 + 45 * T},150" class="preen"/>`, "área sob i(t)"),
-          passos: [R`<p>$i = dq/dt \Rightarrow q = \int i\,dt$: a carga é a <b>área</b> sob o gráfico de $i(t)$.</p>`, R`$$q = \int_0^{${T}}(${a} + ${b}t)\,dt = ${a}\cdot${T} + \frac{${b}\cdot${T}^2}{2} = ${F.m(q, 1)}\ \text{C}$$`, R`<p>Aqui o gráfico é um trapézio: dá para conferir sem integral, $\frac{(${a} + ${a + b * T})}{2}\times${T} = ${F.m(q, 1)}$ ✓.</p>`] }; } },
+          passos: [R`<p>$i = dq/dt \Rightarrow q = \int i\,dt$: a carga é a <b>área</b> sob o gráfico de $i(t)$.</p>`, R`$$q = \int_0^{${T}}(${a} + ${b}t)\,dt = ${a}\cdot${T} + \frac{${b}\cdot${T}^2}{2} = ${F.n(q, 1)}\ \text{C}$$`, R`<p>Aqui o gráfico é um trapézio: dá para conferir sem integral, $\frac{(${a} + ${a + b * T})}{2}\times${T} = ${F.n(q, 1)}$ ✓.</p>`] }; } },
     ] });
 
     const X = F.exercicio;

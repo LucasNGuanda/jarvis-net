@@ -18,7 +18,7 @@ F.registrar("C12", {
             R`<p>${part[1] < 0 ? "Carga negativa: o sentido é o <b>oposto</b> do que a regra da mão direita dá para $\\vec v\\times\\vec B$." : "Carga positiva: o sentido é o de $\\vec v\\times\\vec B$."} Como $\vec F\perp\vec v$, a força nunca muda o módulo da velocidade.</p>`] }; } },
       { nome: "Seletor de velocidades", gerar: (p) => {
         const E = p ? 1.5 : F.escolha([1, 1.5, 2, 3]), B = p ? 30 : F.escolha([10, 20, 30, 50]), v = (E * 1e4) / (B * 1e-3);
-        return { enun: R`<p>Num seletor, $E = ${F.m(E, 1)}\times10^4$ V/m e $B = ${B}$ mT, cruzados. Que velocidade passa sem desviar? Depende da carga ou da massa?</p>`, fig: "",
+        return { enun: R`<p>Num seletor, $E = ${F.n(E, 1)}\times10^4$ V/m e $B = ${B}$ mT, cruzados. Que velocidade passa sem desviar? Depende da carga ou da massa?</p>`, fig: "",
           passos: [R`<p>Sem desvio: força elétrica e magnética se cancelam, $qE = qvB$.</p>`, R`<p>$v = E/B = ${F.sigM(v, 3)}$ m/s. Não depende de $q$ nem de $m$ (nem do sinal!).</p>`] }; } },
     ] });
 

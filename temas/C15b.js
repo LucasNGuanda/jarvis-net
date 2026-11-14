@@ -18,7 +18,7 @@ F.registrar("C15b", {
         const E = p ? 12 : F.escolha([6, 9, 12, 24]), Rr = p ? 10 : F.escolha([5, 10, 20, 50]), L = p ? 0.5 : F.escolha([0.1, 0.2, 0.5, 1]), f = p ? 90 : F.escolha([50, 63, 90, 99]);
         const tau = L / Rr, t = -tau * Math.log(1 - f / 100);
         return { enun: R`<p>Circuito RL: $E = ${E}$ V, $R = ${Rr}\ \Omega$, $L = ${L}$ H. Fecha-se a chave. Corrente final, constante de tempo, e quando a corrente chega a $${f}\%$ do final?</p>`, fig: figRL,
-          passos: [R`<p>Malha: $E - Ri - L\frac{di}{dt} = 0$. Solução: $i = \frac ER\left(1 - e^{-t/\tau}\right)$, $\tau = L/R$.</p>`, R`<p>$i_\infty = ${F.m(E / Rr, 3)}$ A; $\tau = ${F.m(tau * 1000, 1)}$ ms.</p>`, R`<p>$t = -\tau\ln(1 - ${F.m(f / 100, 2)}) = ${F.m(t * 1000, 1)}$ ms.</p>`] }; } },
+          passos: [R`<p>Malha: $E - Ri - L\frac{di}{dt} = 0$. Solução: $i = \frac ER\left(1 - e^{-t/\tau}\right)$, $\tau = L/R$.</p>`, R`<p>$i_\infty = ${F.n(E / Rr, 3)}$ A; $\tau = ${F.n(tau * 1000, 1)}$ ms.</p>`, R`<p>$t = -\tau\ln(1 - ${F.n(f / 100, 2)}) = ${F.n(t * 1000, 1)}$ ms.</p>`] }; } },
     ] });
 
     const X = F.exercicio;

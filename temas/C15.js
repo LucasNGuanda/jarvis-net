@@ -12,14 +12,14 @@ F.registrar("C15", {
       { nome: "Bobina num campo variável", gerar: (p) => {
         const N = p ? 200 : F.escolha([50, 100, 200, 500]), A = p ? 20 : F.escolha([5, 10, 20, 50]), B1 = p ? 0.1 : F.escolha([0, 0.1, 0.2]), B2 = p ? 0.5 : F.escolha([0.4, 0.5, 0.8, 1.0]), dt = p ? 0.2 : F.escolha([0.05, 0.1, 0.2, 0.5]);
         const fem = (N * (B2 - B1) * A * 1e-4) / dt;
-        return { enun: R`<p>Uma bobina de $${N}$ espiras e área $${A}$ cm², perpendicular a um campo que sobe de $${B1}$ T para $${B2}$ T em $${dt}$ s. Fem média?</p>`, fig: "",
-          passos: [R`<p>Fluxo por espira: $\Phi = BA$ (campo perpendicular). Variação: $\Delta\Phi = (${B2} - ${B1})\times${F.sigM(A * 1e-4, 2)} = ${F.sigM((B2 - B1) * A * 1e-4, 3)}$ Wb.</p>`, R`$$|\varepsilon| = N\frac{\Delta\Phi}{\Delta t} = ${F.m(fem, 3)}\ \text{V}$$`, R`<p>Sentido (Lenz): a corrente induzida cria um campo <b>oposto</b> ao aumento, isto é, contra o campo externo dentro da bobina.</p>`] }; } },
+        return { enun: R`<p>Uma bobina de $${N}$ espiras e área $${A}$ cm², perpendicular a um campo que sobe de $${F.n(B1)}$ T para $${F.n(B2)}$ T em $${F.n(dt)}$ s. Fem média?</p>`, fig: "",
+          passos: [R`<p>Fluxo por espira: $\Phi = BA$ (campo perpendicular). Variação: $\Delta\Phi = (${F.n(B2)} - ${F.n(B1)})\times${F.sigM(A * 1e-4, 2)} = ${F.sigM((B2 - B1) * A * 1e-4, 3)}$ Wb.</p>`, R`$$|\varepsilon| = N\frac{\Delta\Phi}{\Delta t} = ${F.n(fem, 3)}\ \text{V}$$`, R`<p>Sentido (Lenz): a corrente induzida cria um campo <b>oposto</b> ao aumento, isto é, contra o campo externo dentro da bobina.</p>`] }; } },
       { nome: "Barra nos trilhos", gerar: (p) => {
         const L = p ? 0.5 : F.escolha([0.2, 0.4, 0.5, 1]), v = p ? 4 : F.escolha([1, 2, 4, 5]), B = p ? 0.3 : F.escolha([0.1, 0.3, 0.5]), Rr = p ? 2 : F.escolha([0.5, 1, 2, 5]);
         const e = B * L * v, i = e / Rr;
         return { enun: R`<p>Uma barra de $${L}$ m desliza a $${v}$ m/s sobre trilhos ligados por $R = ${Rr}\ \Omega$, num campo de $${B}$ T perpendicular. Fem, corrente, força para manter a velocidade e potência.</p>`, fig: figBarra,
-          passos: [R`<p>Fem de movimento: $\varepsilon = BLv = ${F.m(e, 3)}$ V (ou: a área do circuito cresce $Lv$ por segundo, $d\Phi/dt = BLv$).</p>`, R`<p>$i = \varepsilon/R = ${F.m(i, 3)}$ A. Força magnética na barra: $iLB = ${F.m(i * L * B, 4)}$ N, <b>contra</b> o movimento (Lenz).</p>`,
-            R`<p>Para manter $v$, sua mão faz $F = ${F.m(i * L * B, 4)}$ N; potência $Fv = ${F.m(i * L * B * v, 4)}$ W $= Ri^2 = ${F.m(Rr * i * i, 4)}$ W ✓. Energia mecânica vira elétrica, que vira calor.</p>`] }; } },
+          passos: [R`<p>Fem de movimento: $\varepsilon = BLv = ${F.n(e, 3)}$ V (ou: a área do circuito cresce $Lv$ por segundo, $d\Phi/dt = BLv$).</p>`, R`<p>$i = \varepsilon/R = ${F.n(i, 3)}$ A. Força magnética na barra: $iLB = ${F.n(i * L * B, 4)}$ N, <b>contra</b> o movimento (Lenz).</p>`,
+            R`<p>Para manter $v$, sua mão faz $F = ${F.n(i * L * B, 4)}$ N; potência $Fv = ${F.n(i * L * B * v, 4)}$ W $= Ri^2 = ${F.n(Rr * i * i, 4)}$ W ✓. Energia mecânica vira elétrica, que vira calor.</p>`] }; } },
     ] });
 
     const X = F.exercicio;

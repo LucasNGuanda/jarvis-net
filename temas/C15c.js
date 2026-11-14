@@ -13,12 +13,12 @@ F.registrar("C15c", {
         const Rr = p ? 100 : F.escolha([20, 50, 100, 200]), L = p ? 0.5 : F.escolha([0.1, 0.2, 0.5]), Cc = p ? 20 : F.escolha([10, 20, 50]), V = p ? 220 : F.escolha([127, 220]), f = p ? 60 : F.escolha([50, 60, 100]);
         const w = 2 * Math.PI * f, XL = w * L, XC = 1 / (w * Cc * 1e-6), Z = Math.hypot(Rr, XL - XC), I = V / Z, phi = (Math.atan2(XL - XC, Rr) * 180) / Math.PI;
         return { enun: R`<p>RLC série: $R = ${Rr}\ \Omega$, $L = ${L}$ H, $C = ${Cc}$ µF, ligado a $${V}$ V (eficaz), $${f}$ Hz. Ache a impedância, a corrente, a fase e a potência média.</p>`, fig: figRLC,
-          passos: [R`<p>Reatâncias: $X_L = \omega L = ${F.m(XL, 1)}\ \Omega$; $X_C = \frac{1}{\omega C} = ${F.m(XC, 1)}\ \Omega$.</p>`, R`$$Z = \sqrt{R^2 + (X_L - X_C)^2} = ${F.m(Z, 1)}\ \Omega,\qquad I_\text{ef} = \frac{V_\text{ef}}{Z} = ${F.m(I, 3)}\ \text{A}$$`,
-            R`<p>Fase: $\tan\varphi = \frac{X_L - X_C}{R}$, $\varphi = ${F.m(phi, 1)}°$ (${phi > 0 ? "indutivo: a corrente atrasa" : "capacitivo: a corrente adianta"}).</p>`, R`<p>Potência média: só o resistor dissipa: $P = I_\text{ef}^2R = ${F.m(I * I * Rr, 1)}$ W; fator de potência $\cos\varphi = ${F.m(Rr / Z, 3)}$.</p>`] }; } },
+          passos: [R`<p>Reatâncias: $X_L = \omega L = ${F.n(XL, 1)}\ \Omega$; $X_C = \frac{1}{\omega C} = ${F.n(XC, 1)}\ \Omega$.</p>`, R`$$Z = \sqrt{R^2 + (X_L - X_C)^2} = ${F.n(Z, 1)}\ \Omega,\qquad I_\text{ef} = \frac{V_\text{ef}}{Z} = ${F.n(I, 3)}\ \text{A}$$`,
+            R`<p>Fase: $\tan\varphi = \frac{X_L - X_C}{R}$, $\varphi = ${F.n(phi, 1)}°$ (${phi > 0 ? "indutivo: a corrente atrasa" : "capacitivo: a corrente adianta"}).</p>`, R`<p>Potência média: só o resistor dissipa: $P = I_\text{ef}^2R = ${F.n(I * I * Rr, 1)}$ W; fator de potência $\cos\varphi = ${F.n(Rr / Z, 3)}$.</p>`] }; } },
       { nome: "Transformador", gerar: (p) => {
         const V1 = p ? 220 : F.escolha([127, 220]), V2 = p ? 12 : F.escolha([5, 9, 12, 24]), N1 = p ? 1100 : F.escolha([500, 1000, 1100, 2200]), I2 = p ? 2 : F.escolha([0.5, 1, 2, 5]);
         return { enun: R`<p>Transformador ideal de $${V1}$ V para $${V2}$ V com $${N1}$ espiras no primário, alimentando uma carga que puxa $${I2}$ A. Quantas espiras no secundário e qual a corrente no primário?</p>`, fig: figTrafo,
-          passos: [R`<p>Mesmo fluxo por espira nas duas bobinas: $\frac{V_2}{V_1} = \frac{N_2}{N_1}$, então $N_2 = ${F.m((N1 * V2) / V1, 0)}$.</p>`, R`<p>Ideal: potência entra = sai: $V_1I_1 = V_2I_2 \Rightarrow I_1 = ${F.m((V2 * I2) / V1, 4)}$ A.</p>`] }; } },
+          passos: [R`<p>Mesmo fluxo por espira nas duas bobinas: $\frac{V_2}{V_1} = \frac{N_2}{N_1}$, então $N_2 = ${F.n((N1 * V2) / V1, 0)}$.</p>`, R`<p>Ideal: potência entra = sai: $V_1I_1 = V_2I_2 \Rightarrow I_1 = ${F.n((V2 * I2) / V1, 4)}$ A.</p>`] }; } },
     ] });
 
     const X = F.exercicio;

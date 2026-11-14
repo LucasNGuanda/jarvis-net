@@ -14,21 +14,21 @@ F.registrar("C02", {
       { nome: "Força entre duas cargas", gerar: (p) => {
         const q1 = p ? 3 : F.escolha([1, 2, 3, 4, 5]), q2 = p ? -5 : F.escolha([-5, -2, 2, 4, 6]), r = p ? 20 : F.escolha([5, 10, 15, 20, 30]), Fm = (8.99e9 * Math.abs(q1 * q2) * 1e-12) / (r / 100) ** 2;
         return { enun: R`<p>$q_1 = ${q1}$ µC e $q_2 = ${q2}$ µC estão a $${r}$ cm uma da outra. Calcule a força.</p>`, fig: figPar,
-          passos: [R`<p>Lei de Coulomb, em SI: $k = 8{,}99\times10^9$ N·m²/C², cargas em C, distância em m.</p>`, R`$$F = k\frac{|q_1q_2|}{r^2} = 8{,}99\times10^9\cdot\frac{${q1}\times10^{-6}\cdot${Math.abs(q2)}\times10^{-6}}{(${F.m(r / 100, 2)})^2}$$`,
-            R`<p><b>Resposta:</b> $F \approx ${F.m(Fm, Fm < 1 ? 3 : 2)}$ N, ${q1 * q2 < 0 ? "<b>atração</b> (sinais opostos)" : "<b>repulsão</b> (mesmo sinal)"}. Pela 3ª lei de Newton, cada carga sente a mesma força, em sentidos opostos.</p>`] }; } },
+          passos: [R`<p>Lei de Coulomb, em SI: $k = 8{,}99\times10^9$ N·m²/C², cargas em C, distância em m.</p>`, R`$$F = k\frac{|q_1q_2|}{r^2} = 8{,}99\times10^9\cdot\frac{${q1}\times10^{-6}\cdot${Math.abs(q2)}\times10^{-6}}{(${F.n(r / 100, 2)})^2}$$`,
+            R`<p><b>Resposta:</b> $F \approx ${F.n(Fm, Fm < 1 ? 3 : 2)}$ N, ${q1 * q2 < 0 ? "<b>atração</b> (sinais opostos)" : "<b>repulsão</b> (mesmo sinal)"}. Pela 3ª lei de Newton, cada carga sente a mesma força, em sentidos opostos.</p>`] }; } },
       { nome: "Onde a força se anula", gerar: (p) => {
         const n = p ? 4 : F.escolha([4, 9, 16, 25]), L = p ? 30 : F.escolha([20, 30, 40, 60]), s = Math.sqrt(n), x = (L * s) / (s + 1);
         return { enun: R`<p>Cargas fixas $+${n}q$ em $x = 0$ e $+q$ em $x = ${L}$ cm. Onde uma terceira carga fica em equilíbrio?</p>`, fig: D.svg(460, 90, q(60, 45, "+" + n + "q", 18) + q(400, 45, "+q") + `<line x1="40" y1="45" x2="440" y2="45" class="ln2" style="stroke-dasharray:4 4"/>` + `<circle cx="${60 + (340 * x) / L}" cy="45" r="7" style="fill:var(--mod)"/>` + D.txt(60 + (340 * x) / L, 78, "?", "tx"), "equilíbrio"),
           passos: [R`<p>Com as duas positivas, só no meio as forças têm sentidos opostos. Fora delas, as duas empurram para o mesmo lado.</p>`, R`$$\frac{k\,${n}q\,Q}{x^2} = \frac{k\,q\,Q}{(${L} - x)^2}\;\Rightarrow\;\frac{${L} - x}{x} = \frac{1}{\sqrt{${n}}}$$<p>O valor e o sinal de $Q$ cancelam!</p>`,
-            R`<p><b>Resposta:</b> $x = \dfrac{${L}\sqrt{${n}}}{\sqrt{${n}}+1} = ${F.m(x, 1)}$ cm. Mais perto da carga menor, como era de esperar. O equilíbrio é <b>estável</b> ao longo do eixo para $Q > 0$ e instável para $Q < 0$ (e sempre instável fora do eixo, teorema de Earnshaw).</p>`] }; } },
+            R`<p><b>Resposta:</b> $x = \dfrac{${L}\sqrt{${n}}}{\sqrt{${n}}+1} = ${F.n(x, 1)}$ cm. Mais perto da carga menor, como era de esperar. O equilíbrio é <b>estável</b> ao longo do eixo para $Q > 0$ e instável para $Q < 0$ (e sempre instável fora do eixo, teorema de Earnshaw).</p>`] }; } },
       { nome: "Pêndulos eletrostáticos", gerar: (p) => {
         const th = p ? 10 : F.escolha([8, 10, 15, 20]), Lc = p ? 50 : F.escolha([30, 50, 80]), m = p ? 1 : F.escolha([1, 2, 5]);
         const t = (th * Math.PI) / 180, d = (2 * Lc * Math.sin(t)) / 100, Fe = (m / 1000) * 9.8 * Math.tan(t), qq = d * Math.sqrt(Fe / 8.99e9);
         return { enun: R`<p>Duas bolinhas iguais ($m = ${m}$ g, mesma carga $q$) penduradas no mesmo ponto por fios de $${Lc}$ cm ficam em equilíbrio com cada fio a $${th}°$ da vertical. Ache $q$ ($g = 9{,}8$ m/s²).</p>`, fig: figPend,
           passos: [R`<p>Em cada bolinha: tração $T$, peso $mg$, força elétrica $F$ horizontal. Equilíbrio: $T\cos\theta = mg$ e $T\sin\theta = F$, logo $F = mg\tan\theta$.</p>`,
-            R`$$F = ${F.m(m / 1000, 3)}\times9{,}8\times\tan ${th}° = ${F.sigM(Fe, 3)}\ \text{N}$$`,
-            R`<p>Distância entre as bolinhas: $d = 2L\sin\theta = ${F.m(d, 4)}$ m. Coulomb: $F = kq^2/d^2$:</p>$$q = d\sqrt{F/k} = ${F.sigM(qq, 3)}\ \text{C}$$`,
-            R`<p><b>Resposta:</b> $q \approx ${F.m(qq * 1e9, 0)}$ nC. O sinal não dá para saber: as duas podem ser + ou −.</p>`] }; } },
+            R`$$F = ${F.n(m / 1000, 3)}\times9{,}8\times\tan ${th}° = ${F.sigM(Fe, 3)}\ \text{N}$$`,
+            R`<p>Distância entre as bolinhas: $d = 2L\sin\theta = ${F.n(d, 4)}$ m. Coulomb: $F = kq^2/d^2$:</p>$$q = d\sqrt{F/k} = ${F.sigM(qq, 3)}\ \text{C}$$`,
+            R`<p><b>Resposta:</b> $q \approx ${F.n(qq * 1e9, 0)}$ nC. O sinal não dá para saber: as duas podem ser + ou −.</p>`] }; } },
     ] });
 
     const X = F.exercicio;

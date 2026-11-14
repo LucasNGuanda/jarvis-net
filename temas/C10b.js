@@ -17,12 +17,12 @@ F.registrar("C10b", {
         const V = (E1 / R1 + E2 / R2) / (1 / R1 + 1 / R2 + 1 / R3), i1 = (E1 - V) / R1, i2 = (E2 - V) / R2, i3 = V / R3;
         return { enun: R`<p>Duas baterias ($E_1 = ${E1}$ V com $R_1 = ${R1}\ \Omega$; $E_2 = ${E2}$ V com $R_2 = ${R2}\ \Omega$) ligadas em paralelo a $R_3 = ${R3}\ \Omega$ (figura). Ache as três correntes.</p>`, fig: f2m(E1, E2, R1, R2, R3),
           passos: [R`<p><b>Método dos potenciais de nó:</b> aterre o nó de baixo ($V = 0$) e chame o de cima de $V$. Cada corrente "chegando" ao nó de cima: $i_1 = \frac{E_1 - V}{R_1}$, $i_2 = \frac{E_2 - V}{R_2}$; saindo por $R_3$: $i_3 = V/R_3$.</p>`,
-            R`<p>Lei dos nós: $\frac{${E1} - V}{${R1}} + \frac{${E2} - V}{${R2}} = \frac{V}{${R3}}$ $\Rightarrow V = ${F.m(V, 3)}$ V.</p>`,
-            R`<p>$i_1 = ${F.m(i1, 3)}$ A, $i_2 = ${F.m(i2, 3)}$ A, $i_3 = ${F.m(i3, 3)}$ A. ${i2 < 0 ? "O sinal negativo de $i_2$ diz que a bateria 2 está sendo <b>carregada</b> (corrente entrando pelo +)." : "As duas baterias fornecem corrente."} Confere: $i_1 + i_2 = i_3$ ✓.</p>`] }; } },
+            R`<p>Lei dos nós: $\frac{${E1} - V}{${R1}} + \frac{${E2} - V}{${R2}} = \frac{V}{${R3}}$ $\Rightarrow V = ${F.n(V, 3)}$ V.</p>`,
+            R`<p>$i_1 = ${F.n(i1, 3)}$ A, $i_2 = ${F.n(i2, 3)}$ A, $i_3 = ${F.n(i3, 3)}$ A. ${i2 < 0 ? "O sinal negativo de $i_2$ diz que a bateria 2 está sendo <b>carregada</b> (corrente entrando pelo +)." : "As duas baterias fornecem corrente."} Confere: $i_1 + i_2 = i_3$ ✓.</p>`] }; } },
       { nome: "Carga do capacitor", gerar: (p) => {
         const Rr = p ? 10 : F.escolha([1, 4.7, 10, 47]), C = p ? 100 : F.escolha([10, 47, 100, 470]), f = p ? 90 : F.escolha([50, 63, 90, 99]), tau = (Rr * 1e3 * C * 1e-6), t = -tau * Math.log(1 - f / 100);
-        return { enun: R`<p>$R = ${F.m(Rr, 1)}$ kΩ, $C = ${C}$ µF, capacitor descarregado. Fecha-se a chave. Quanto tempo até ele chegar a $${f}\%$ da tensão final?</p>`, fig: figRC,
-          passos: [R`<p>$V_C(t) = E\left(1 - e^{-t/\tau}\right)$, com $\tau = RC = ${F.m(tau, 3)}$ s.</p>`, R`$$1 - e^{-t/\tau} = ${F.m(f / 100, 2)}\;\Rightarrow\;t = -\tau\ln(1 - ${F.m(f / 100, 2)}) = ${F.m(t, 3)}\ \text{s}$$`, R`<p>Ou $${F.m(t / tau, 2)}\tau$. Regras para lembrar: 63% em $\tau$, 90% em $2{,}3\tau$, 99% em $4{,}6\tau$.</p>`] }; } },
+        return { enun: R`<p>$R = ${F.n(Rr, 1)}$ kΩ, $C = ${C}$ µF, capacitor descarregado. Fecha-se a chave. Quanto tempo até ele chegar a $${f}\%$ da tensão final?</p>`, fig: figRC,
+          passos: [R`<p>$V_C(t) = E\left(1 - e^{-t/\tau}\right)$, com $\tau = RC = ${F.n(tau, 3)}$ s.</p>`, R`$$1 - e^{-t/\tau} = ${F.n(f / 100, 2)}\;\Rightarrow\;t = -\tau\ln(1 - ${F.n(f / 100, 2)}) = ${F.n(t, 3)}\ \text{s}$$`, R`<p>Ou $${F.n(t / tau, 2)}\tau$. Regras para lembrar: 63% em $\tau$, 90% em $2{,}3\tau$, 99% em $4{,}6\tau$.</p>`] }; } },
     ] });
 
     const X = F.exercicio;

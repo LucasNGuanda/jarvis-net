@@ -13,10 +13,10 @@ F.registrar("C05", {
       { nome: "Esfera condutora carregada", gerar: (p) => {
         const Q = p ? 5 : F.escolha([2, 5, 10, 20]), Rr = p ? 10 : F.escolha([5, 10, 20]), r = p ? 20 : F.escolha([0.5, 1, 2, 3]) * Rr, k = 8.99e9;
         const V = r < Rr ? (k * Q * 1e-9) / (Rr / 100) : (k * Q * 1e-9) / (r / 100), E = r < Rr ? 0 : (k * Q * 1e-9) / (r / 100) ** 2;
-        return { enun: R`<p>Esfera metálica de raio $${Rr}$ cm com $${Q}$ nC. Ache $E$ e $V$ a $${F.m(r, 1)}$ cm do centro.</p>`, fig: D.svg(260, 200, esf(110, 100, 70, "") + `<circle cx="${110 + (70 * r) / Rr > 250 ? 250 : 110 + (70 * r) / Rr}" cy="100" r="5" style="fill:var(--ink)"/>`, "esfera"),
+        return { enun: R`<p>Esfera metálica de raio $${Rr}$ cm com $${Q}$ nC. Ache $E$ e $V$ a $${F.n(r, 1)}$ cm do centro.</p>`, fig: D.svg(260, 200, esf(110, 100, 70, "") + `<circle cx="${110 + (70 * r) / Rr > 250 ? 250 : 110 + (70 * r) / Rr}" cy="100" r="5" style="fill:var(--ink)"/>`, "esfera"),
           passos: [R`<p>Em equilíbrio, a carga fica na superfície e o volume todo está no mesmo potencial. De fora, a esfera age como carga pontual no centro ${F.ret("C03b")}.</p>`,
             r < Rr ? R`<p>Dentro ($r < R$): $E = 0$ e $V = V_\text{superfície} = kQ/R$.</p>` : R`<p>Fora ($r \ge R$): $E = kQ/r^2$, $V = kQ/r$.</p>`,
-            R`<p><b>Resposta:</b> $E = ${F.m(E, 0)}$ N/C e $V = ${F.m(V, 1)}$ V.</p>`] }; } },
+            R`<p><b>Resposta:</b> $E = ${F.n(E, 0)}$ N/C e $V = ${F.n(V, 1)}$ V.</p>`] }; } },
       { nome: "Carga máxima no ar", gerar: (p) => {
         const Rr = p ? 10 : F.escolha([1, 5, 10, 50, 100]), Q = (3e6 * (Rr / 100) ** 2) / 8.99e9, V = 3e6 * (Rr / 100);
         return { enun: R`<p>O ar vira condutor (faísca) com campo de $3\times10^6$ V/m. Qual a maior carga e o maior potencial de uma esfera condutora de raio $${Rr}$ cm?</p>`, fig: "",

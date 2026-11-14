@@ -11,15 +11,15 @@ F.registrar("C10", {
     const exemplario = F.exemplo({ casos: [
       { nome: "Gerador com carga", gerar: (p) => {
         const E = p ? 12 : F.escolha([6, 9, 12, 24]), r = p ? 0.5 : F.escolha([0.2, 0.5, 1, 2]), Rr = p ? 5.5 : F.escolha([2, 3.5, 5.5, 10]), i = E / (Rr + r), U = E - r * i;
-        return { enun: R`<p>Gerador de $E = ${E}$ V e $r = ${F.m(r, 1)}\ \Omega$ ligado a $R = ${F.m(Rr, 1)}\ \Omega$. Ache $i$, a tensão nos terminais, as potências e o rendimento.</p>`, fig: figGer,
-          passos: [R`<p>Malha: $E = (R + r)i \Rightarrow i = \frac{${E}}{${F.m(Rr + r, 1)}} = ${F.m(i, 3)}$ A.</p>`, R`<p>Tensão nos terminais: $U = E - ri = ${F.m(U, 2)}$ V. A diferença $ri$ "fica" dentro do gerador.</p>`,
-            R`<p>$P_\text{total} = Ei = ${F.m(E * i, 2)}$ W; $P_\text{útil} = Ui = ${F.m(U * i, 2)}$ W; dissipada dentro: $ri^2 = ${F.m(r * i * i, 2)}$ W.</p>`, R`<p>Rendimento $\eta = U/E = R/(R + r) = ${F.m((100 * U) / E, 1)}\%$.</p>`] }; } },
+        return { enun: R`<p>Gerador de $E = ${E}$ V e $r = ${F.n(r, 1)}\ \Omega$ ligado a $R = ${F.n(Rr, 1)}\ \Omega$. Ache $i$, a tensão nos terminais, as potências e o rendimento.</p>`, fig: figGer,
+          passos: [R`<p>Malha: $E = (R + r)i \Rightarrow i = \frac{${E}}{${F.n(Rr + r, 1)}} = ${F.n(i, 3)}$ A.</p>`, R`<p>Tensão nos terminais: $U = E - ri = ${F.n(U, 2)}$ V. A diferença $ri$ "fica" dentro do gerador.</p>`,
+            R`<p>$P_\text{total} = Ei = ${F.n(E * i, 2)}$ W; $P_\text{útil} = Ui = ${F.n(U * i, 2)}$ W; dissipada dentro: $ri^2 = ${F.n(r * i * i, 2)}$ W.</p>`, R`<p>Rendimento $\eta = U/E = R/(R + r) = ${F.n((100 * U) / E, 1)}\%$.</p>`] }; } },
       { nome: "Gerador + motor", gerar: (p) => {
         const E = p ? 12 : F.escolha([12, 24, 36]), r = p ? 1 : F.escolha([0.5, 1, 2]), r2 = p ? 1 : F.escolha([0.5, 1, 2]), E2 = p ? 10 : Math.round(E * F.escolha([0.5, 0.6, 0.75, 0.8]));
         const Ev = Math.min(E2, E - 1), i = (E - Ev) / (r + r2);
-        return { enun: R`<p>Um gerador ($E = ${E}$ V, $r = ${F.m(r, 1)}\ \Omega$) alimenta um motor de força contraeletromotriz $E' = ${Ev}$ V e resistência interna $r' = ${F.m(r2, 1)}\ \Omega$. Ache a corrente e a potência mecânica do motor.</p>`, fig: figMotor,
-          passos: [R`<p>O motor é um <b>receptor</b>: a corrente entra pelo seu polo +, e ele "consome" $E'$ convertendo em trabalho mecânico. Malha: $E - E' = (r + r')i$.</p>`, R`$$i = \frac{${E} - ${Ev}}{${F.m(r + r2, 1)}} = ${F.m(i, 3)}\ \text{A}$$`,
-            R`<p>Potência mecânica: $E'i = ${F.m(Ev * i, 2)}$ W; calor no motor: $r'i^2 = ${F.m(r2 * i * i, 2)}$ W. Se o motor travar ($E' = 0$), $i = E/(r + r') = ${F.m(E / (r + r2), 2)}$ A: é por isso que motor travado queima.</p>`] }; } },
+        return { enun: R`<p>Um gerador ($E = ${E}$ V, $r = ${F.n(r, 1)}\ \Omega$) alimenta um motor de força contraeletromotriz $E' = ${Ev}$ V e resistência interna $r' = ${F.n(r2, 1)}\ \Omega$. Ache a corrente e a potência mecânica do motor.</p>`, fig: figMotor,
+          passos: [R`<p>O motor é um <b>receptor</b>: a corrente entra pelo seu polo +, e ele "consome" $E'$ convertendo em trabalho mecânico. Malha: $E - E' = (r + r')i$.</p>`, R`$$i = \frac{${E} - ${Ev}}{${F.n(r + r2, 1)}} = ${F.n(i, 3)}\ \text{A}$$`,
+            R`<p>Potência mecânica: $E'i = ${F.n(Ev * i, 2)}$ W; calor no motor: $r'i^2 = ${F.n(r2 * i * i, 2)}$ W. Se o motor travar ($E' = 0$), $i = E/(r + r') = ${F.n(E / (r + r2), 2)}$ A: é por isso que motor travado queima.</p>`] }; } },
     ] });
 
     const X = F.exercicio;

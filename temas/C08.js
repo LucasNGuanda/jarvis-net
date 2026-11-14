@@ -16,14 +16,14 @@ F.registrar("C08", {
         const E = p ? 12 : F.escolha([6, 9, 12, 24]), R1 = p ? 4 : F.escolha([2, 4, 5, 10]), R2 = p ? 6 : F.escolha([3, 6, 12, 20]), R3 = p ? 3 : F.escolha([3, 4, 6, 30]);
         const Rp = (R2 * R3) / (R2 + R3), Re = R1 + Rp, i = E / Re, Up = i * Rp;
         return { enun: R`<p>Fonte de $${E}$ V; $R_1 = ${R1}\ \Omega$ em série com o paralelo de $R_2 = ${R2}\ \Omega$ e $R_3 = ${R3}\ \Omega$. Ache todas as correntes e tensões.</p>`, fig: figMisto,
-          passos: [R`<p>De dentro para fora: $R_2 \parallel R_3 = \frac{R_2R_3}{R_2+R_3} = ${F.m(Rp, 3)}\ \Omega$ ("produto pela soma").</p>`, R`<p>Em série com $R_1$: $R_\text{eq} = ${F.m(Re, 3)}\ \Omega$; corrente total $i = E/R_\text{eq} = ${F.m(i, 3)}$ A.</p>`,
-            R`<p>Voltando: $U_1 = R_1i = ${F.m(R1 * i, 2)}$ V e $U_p = ${F.m(Up, 2)}$ V (confere: soma $= ${E}$ V).</p>`, R`<p>$i_2 = U_p/R_2 = ${F.m(Up / R2, 3)}$ A, $i_3 = U_p/R_3 = ${F.m(Up / R3, 3)}$ A, somando $${F.m(i, 3)}$ A ✓.</p>`] }; } },
+          passos: [R`<p>De dentro para fora: $R_2 \parallel R_3 = \frac{R_2R_3}{R_2+R_3} = ${F.n(Rp, 3)}\ \Omega$ ("produto pela soma").</p>`, R`<p>Em série com $R_1$: $R_\text{eq} = ${F.n(Re, 3)}\ \Omega$; corrente total $i = E/R_\text{eq} = ${F.n(i, 3)}$ A.</p>`,
+            R`<p>Voltando: $U_1 = R_1i = ${F.n(R1 * i, 2)}$ V e $U_p = ${F.n(Up, 2)}$ V (confere: soma $= ${E}$ V).</p>`, R`<p>$i_2 = U_p/R_2 = ${F.n(Up / R2, 3)}$ A, $i_3 = U_p/R_3 = ${F.n(Up / R3, 3)}$ A, somando $${F.n(i, 3)}$ A ✓.</p>`] }; } },
       { nome: "Divisor com carga", gerar: (p) => {
         const E = p ? 10 : F.escolha([5, 9, 10, 12]), Ra = p ? 10 : F.escolha([1, 4.7, 10]), Rb = p ? 10 : F.escolha([1, 4.7, 10]), Rl = p ? 10 : F.escolha([1, 10, 100]);
         const V0 = (E * Rb) / (Ra + Rb), Rp = (Rb * Rl) / (Rb + Rl), V = (E * Rp) / (Ra + Rp);
-        return { enun: R`<p>Divisor de tensão: $${F.m(Ra, 1)}$ kΩ em cima, $${F.m(Rb, 1)}$ kΩ embaixo, $E = ${E}$ V. Quanto sai sem carga, e com uma carga de $${Rl}$ kΩ ligada na saída?</p>`, fig: "",
-          passos: [R`<p>Sem carga: $V_0 = E\frac{R_b}{R_a+R_b} = ${F.m(V0, 2)}$ V.</p>`, R`<p>Com carga, embaixo fica $R_b \parallel R_L = ${F.m(Rp, 3)}$ kΩ: $V = E\frac{R_b\parallel R_L}{R_a + R_b\parallel R_L} = ${F.m(V, 2)}$ V.</p>`,
-            R`<p>Queda de $${F.m((100 * (V0 - V)) / V0, 0)}\%$. Regra prática: o divisor só funciona bem se $R_L \gg R_b$. ${Rl >= 10 * Rb ? "Aqui está ok." : "Aqui a carga é pesada demais."}</p>`] }; } },
+        return { enun: R`<p>Divisor de tensão: $${F.n(Ra, 1)}$ kΩ em cima, $${F.n(Rb, 1)}$ kΩ embaixo, $E = ${E}$ V. Quanto sai sem carga, e com uma carga de $${Rl}$ kΩ ligada na saída?</p>`, fig: "",
+          passos: [R`<p>Sem carga: $V_0 = E\frac{R_b}{R_a+R_b} = ${F.n(V0, 2)}$ V.</p>`, R`<p>Com carga, embaixo fica $R_b \parallel R_L = ${F.n(Rp, 3)}$ kΩ: $V = E\frac{R_b\parallel R_L}{R_a + R_b\parallel R_L} = ${F.n(V, 2)}$ V.</p>`,
+            R`<p>Queda de $${F.n((100 * (V0 - V)) / V0, 0)}\%$. Regra prática: o divisor só funciona bem se $R_L \gg R_b$. ${Rl >= 10 * Rb ? "Aqui está ok." : "Aqui a carga é pesada demais."}</p>`] }; } },
     ] });
 
     const X = F.exercicio;

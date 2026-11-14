@@ -17,21 +17,21 @@ F.registrar("C11", {
       { nome: "Capacitor plano", gerar: (p) => {
         const A = p ? 100 : F.escolha([50, 100, 200, 400]), d = p ? 1 : F.escolha([0.5, 1, 2]), V = p ? 12 : F.escolha([9, 12, 50, 100]), k = p ? 1 : F.escolha([1, 1, 2.2, 4.5]);
         const C = (k * 8.854e-12 * A * 1e-4) / (d * 1e-3), Q = C * V, U = 0.5 * C * V * V;
-        return { enun: R`<p>Placas de $${A}$ cm², separadas por $${F.m(d, 1)}$ mm${k > 1 ? `, preenchido com dielétrico de $\\kappa = ${F.m(k, 1)}$` : " (vácuo)"}, ligadas a $${V}$ V. Ache $C$, $Q$ e a energia.</p>`, fig: figPlano,
-          passos: [R`$$C = \frac{\kappa\varepsilon_0A}{d} = \frac{${F.m(k, 1)}\times8{,}854\times10^{-12}\times${F.sigM(A * 1e-4, 2)}}{${F.sigM(d * 1e-3, 2)}} = ${F.m(C * 1e12, 1)}\ \text{pF}$$`,
+        return { enun: R`<p>Placas de $${A}$ cm², separadas por $${F.n(d, 1)}$ mm${k > 1 ? `, preenchido com dielétrico de $\\kappa = ${F.n(k, 1)}$` : " (vácuo)"}, ligadas a $${V}$ V. Ache $C$, $Q$ e a energia.</p>`, fig: figPlano,
+          passos: [R`$$C = \frac{\kappa\varepsilon_0A}{d} = \frac{${F.n(k, 1)}\times8{,}854\times10^{-12}\times${F.sigM(A * 1e-4, 2)}}{${F.sigM(d * 1e-3, 2)}} = ${F.n(C * 1e12, 1)}\ \text{pF}$$`,
             R`$$Q = CV = ${F.sigM(Q, 3)}\ \text{C},\qquad U = \tfrac12CV^2 = ${F.sigM(U, 3)}\ \text{J}$$`, R`<p>Ordem de grandeza: capacitores de placas paralelas no ar são de picofarads. Os de microfarad usam placas enroladas com centenas de cm² e dielétricos finíssimos.</p>`] }; } },
       { nome: "Série e paralelo", gerar: (p) => {
         const C1 = p ? 2 : F.escolha([1, 2, 3, 4, 6]), C2 = p ? 3 : F.escolha([2, 3, 6, 12]), V = p ? 10 : F.escolha([6, 10, 12, 20]), Cs = (C1 * C2) / (C1 + C2);
         return { enun: R`<p>$C_1 = ${C1}$ µF e $C_2 = ${C2}$ µF ligados (a) em série e (b) em paralelo numa fonte de $${V}$ V. Ache carga e tensão em cada.</p>`, fig: figSerie,
-          passos: [R`<p><b>Série:</b> a placa de saída de $C_1$ e a de entrada de $C_2$ formam um pedaço isolado, neutro: a carga é a <b>mesma</b> nos dois. $\frac{1}{C_s} = \frac{1}{C_1} + \frac{1}{C_2} \Rightarrow C_s = ${F.m(Cs, 3)}$ µF.</p>`,
-            R`<p>$Q = C_sV = ${F.m(Cs * V, 2)}$ µC; $V_1 = Q/C_1 = ${F.m((Cs * V) / C1, 2)}$ V, $V_2 = ${F.m((Cs * V) / C2, 2)}$ V. O <b>menor</b> capacitor fica com a <b>maior</b> tensão.</p>`,
+          passos: [R`<p><b>Série:</b> a placa de saída de $C_1$ e a de entrada de $C_2$ formam um pedaço isolado, neutro: a carga é a <b>mesma</b> nos dois. $\frac{1}{C_s} = \frac{1}{C_1} + \frac{1}{C_2} \Rightarrow C_s = ${F.n(Cs, 3)}$ µF.</p>`,
+            R`<p>$Q = C_sV = ${F.n(Cs * V, 2)}$ µC; $V_1 = Q/C_1 = ${F.n((Cs * V) / C1, 2)}$ V, $V_2 = ${F.n((Cs * V) / C2, 2)}$ V. O <b>menor</b> capacitor fica com a <b>maior</b> tensão.</p>`,
             R`<p><b>Paralelo:</b> mesma tensão; $C_p = ${C1 + C2}$ µF; $Q_1 = ${C1 * V}$ µC, $Q_2 = ${C2 * V}$ µC. Tudo ao contrário dos resistores ${F.ret("C08")}.</p>`] }; } },
       { nome: "Dielétrico: ligado × isolado", gerar: (p) => {
         const C0 = p ? 10 : F.escolha([5, 10, 20]), V0 = p ? 100 : F.escolha([50, 100, 200]), k = p ? 3 : F.escolha([2, 3, 4, 5]), U0 = 0.5 * C0 * 1e-12 * V0 * V0;
         return { enun: R`<p>Capacitor de $${C0}$ pF carregado a $${V0}$ V. Enfia-se um dielétrico de $\kappa = ${k}$ preenchendo tudo, (a) com a bateria ligada; (b) com a bateria desligada antes. Compare $Q$, $V$ e $U$.</p>`, fig: figPlano,
-          passos: [R`<p>Em qualquer caso, $C \to \kappa C_0 = ${k * C0}$ pF. Antes: $Q_0 = ${F.m((C0 * V0) / 1000, 2)}$ nC, $U_0 = ${F.m(U0 * 1e9, 1)}$ nJ.</p>`,
-            R`<p><b>Ligado</b> (V fixo): $Q = \kappa Q_0 = ${F.m((k * C0 * V0) / 1000, 2)}$ nC, $U = \kappa U_0 = ${F.m(k * U0 * 1e9, 1)}$ nJ. A bateria entregou $V\Delta Q = 2\Delta U$: metade guardada, metade virou o trabalho de puxar o dielétrico (e calor).</p>`,
-            R`<p><b>Isolado</b> (Q fixo): $V = V_0/\kappa = ${F.m(V0 / k, 1)}$ V, $U = U_0/\kappa = ${F.m((U0 / k) * 1e9, 1)}$ nJ. A energia <i>diminuiu</i>: o campo puxou o dielétrico para dentro e fez trabalho.</p>`] }; } },
+          passos: [R`<p>Em qualquer caso, $C \to \kappa C_0 = ${k * C0}$ pF. Antes: $Q_0 = ${F.n((C0 * V0) / 1000, 2)}$ nC, $U_0 = ${F.n(U0 * 1e9, 1)}$ nJ.</p>`,
+            R`<p><b>Ligado</b> (V fixo): $Q = \kappa Q_0 = ${F.n((k * C0 * V0) / 1000, 2)}$ nC, $U = \kappa U_0 = ${F.n(k * U0 * 1e9, 1)}$ nJ. A bateria entregou $V\Delta Q = 2\Delta U$: metade guardada, metade virou o trabalho de puxar o dielétrico (e calor).</p>`,
+            R`<p><b>Isolado</b> (Q fixo): $V = V_0/\kappa = ${F.n(V0 / k, 1)}$ V, $U = U_0/\kappa = ${F.n((U0 / k) * 1e9, 1)}$ nJ. A energia <i>diminuiu</i>: o campo puxou o dielétrico para dentro e fez trabalho.</p>`] }; } },
     ] });
 
     const X = F.exercicio;

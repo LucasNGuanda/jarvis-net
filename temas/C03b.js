@@ -13,20 +13,20 @@ F.registrar("C03b", {
       { nome: "Esfera uniforme", gerar: (p) => {
         const Q = p ? 8 : F.escolha([4, 8, 12]), Rr = p ? 10 : F.escolha([5, 10, 20]), r = p ? 5 : F.escolha([0.25, 0.5, 0.75, 1.5, 2]) * Rr, k = 8.99e9;
         const E = r < Rr ? (k * Q * 1e-9 * (r / 100)) / (Rr / 100) ** 3 : (k * Q * 1e-9) / (r / 100) ** 2;
-        return { enun: R`<p>Uma esfera isolante de raio $${Rr}$ cm tem $${Q}$ nC distribuídos uniformemente no volume. Qual o campo a $${F.m(r, 1)}$ cm do centro?</p>`, fig: figEsf,
+        return { enun: R`<p>Uma esfera isolante de raio $${Rr}$ cm tem $${Q}$ nC distribuídos uniformemente no volume. Qual o campo a $${F.n(r, 1)}$ cm do centro?</p>`, fig: figEsf,
           passos: [R`<p>Simetria esférica: $\vec E$ é radial e só depende de $r$. Superfície gaussiana: esfera de raio $r$. Fluxo $= E\cdot4\pi r^2$.</p>`,
             r < Rr ? R`<p>$r < R$: carga dentro $q_\text{int} = Q\,\frac{r^3}{R^3}$ (fração do volume). Gauss: $E\,4\pi r^2 = \frac{Qr^3}{\varepsilon_0R^3} \Rightarrow E = \frac{kQr}{R^3}$.</p>` : R`<p>$r > R$: toda a carga está dentro. $E\,4\pi r^2 = Q/\varepsilon_0 \Rightarrow E = kQ/r^2$, como uma carga pontual.</p>`,
-            R`<p><b>Resposta:</b> $E \approx ${F.m(E, 0)}$ N/C. ${r < Rr ? "Dentro, o campo cresce linearmente com r." : "Fora, cai com 1/r²."}</p>`] }; } },
+            R`<p><b>Resposta:</b> $E \approx ${F.n(E, 0)}$ N/C. ${r < Rr ? "Dentro, o campo cresce linearmente com r." : "Fora, cai com 1/r²."}</p>`] }; } },
       { nome: "Fio infinito", gerar: (p) => {
         const l = p ? 4 : F.escolha([2, 4, 5, 8]), r = p ? 2 : F.escolha([1, 2, 5, 10]), E = (2 * 8.99e9 * l * 1e-9) / (r / 100);
         return { enun: R`<p>Um fio muito longo tem $\lambda = ${l}$ nC/m. Qual o campo a $${r}$ cm dele?</p>`, fig: figCil,
           passos: [R`<p>Simetria cilíndrica: $\vec E$ radial (para fora do fio), mesmo módulo a uma dada distância. Superfície: cilindro de raio $r$ e altura $h$.</p>`, R`<p>Nas tampas, $\vec E \perp d\vec A$: fluxo zero. Na lateral: $E\cdot2\pi rh$. Carga dentro: $\lambda h$.</p>$$E\,2\pi rh = \frac{\lambda h}{\varepsilon_0}\Rightarrow E = \frac{\lambda}{2\pi\varepsilon_0 r} = \frac{2k\lambda}{r}$$`,
-            R`<p><b>Resposta:</b> $E = ${F.m(E, 0)}$ N/C. Mesma resposta da integral do C03, em três linhas.</p>`] }; } },
+            R`<p><b>Resposta:</b> $E = ${F.n(E, 0)}$ N/C. Mesma resposta da integral do C03, em três linhas.</p>`] }; } },
       { nome: "Carga no canto do cubo", gerar: (p) => {
         const qq = p ? 3 : F.escolha([1, 2, 3, 6]), phi = (qq * 1e-9) / 8.854e-12;
         return { enun: R`<p>Uma carga $${qq}$ nC está num <b>vértice</b> de um cubo. Qual o fluxo pelo cubo inteiro? E por uma face que não toca o vértice?</p>`, fig: D.svg(240, 200, `<path d="M60 70 L160 70 L160 170 L60 170 Z M60 70 L100 30 L200 30 L160 70 M200 30 L200 130 L160 170" class="ln2" style="fill:none"/><circle cx="60" cy="170" r="7" fill="#ef5b5b"/>`, "cubo"),
-          passos: [R`<p>Truque: monte 8 cubos iguais em volta da carga, formando um cubo maior com ela no centro. O cubão tem fluxo $q/\varepsilon_0$, igualmente dividido entre os 8.</p>`, R`<p>Um cubo: $\Phi = \frac{q}{8\varepsilon_0} = ${F.m(phi / 8, 1)}$ N·m²/C.</p>`,
-            R`<p>As 3 faces que tocam o vértice contêm a carga no plano delas: $\vec E$ é paralelo a elas, fluxo zero. As outras 3 dividem igualmente: cada uma $\frac{q}{24\varepsilon_0} = ${F.m(phi / 24, 1)}$ N·m²/C.</p>`] }; } },
+          passos: [R`<p>Truque: monte 8 cubos iguais em volta da carga, formando um cubo maior com ela no centro. O cubão tem fluxo $q/\varepsilon_0$, igualmente dividido entre os 8.</p>`, R`<p>Um cubo: $\Phi = \frac{q}{8\varepsilon_0} = ${F.n(phi / 8, 1)}$ N·m²/C.</p>`,
+            R`<p>As 3 faces que tocam o vértice contêm a carga no plano delas: $\vec E$ é paralelo a elas, fluxo zero. As outras 3 dividem igualmente: cada uma $\frac{q}{24\varepsilon_0} = ${F.n(phi / 24, 1)}$ N·m²/C.</p>`] }; } },
     ] });
 
     const X = F.exercicio;

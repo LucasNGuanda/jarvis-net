@@ -17,20 +17,20 @@ F.registrar("C03", {
         [[q1, 0, 0], [q2, d / 100, 0]].forEach(([qq, a, b]) => { const dx = P[0] - a, dy = P[1] - b, r = Math.hypot(dx, dy); Ex += (k * qq * 1e-9 * dx) / r ** 3; Ey += (k * qq * 1e-9 * dy) / r ** 3; });
         const r1 = Math.hypot(d / 2, h) / 100, E1 = (k * Math.abs(q1) * 1e-9) / r1 ** 2, E2 = (k * Math.abs(q2) * 1e-9) / r1 ** 2;
         return { enun: R`<p>$q_1 = ${q1}$ nC na origem e $q_2 = ${q2}$ nC em $(${d}\text{ cm}, 0)$. Ache $\vec E$ no ponto $P = (${d / 2}, ${h})$ cm.</p>`, fig: D.svg(420, 180, q(80, 150, (q1 > 0 ? "+" : "−") + Math.abs(q1)) + q(340, 150, (q2 > 0 ? "+" : "−") + Math.abs(q2)) + `<circle cx="210" cy="${150 - 25 * h}" r="5" style="fill:var(--ink)"/>${D.txt(222, 150 - 25 * h, "P", "txm", "start")}<line x1="80" y1="150" x2="210" y2="${150 - 25 * h}" class="ln2" style="stroke-dasharray:3 4"/><line x1="340" y1="150" x2="210" y2="${150 - 25 * h}" class="ln2" style="stroke-dasharray:3 4"/>`, "duas cargas e P"),
-          passos: [R`<p>$P$ está à mesma distância das duas: $r = \sqrt{${F.m(d / 2, 0)}^2 + ${h}^2}$ cm $= ${F.m(r1 * 100, 2)}$ cm.</p>`,
-            R`<p>Módulos: $E_1 = k|q_1|/r^2 = ${F.m(E1, 0)}$ N/C e $E_2 = ${F.m(E2, 0)}$ N/C. Direções: $\vec E_1$ ${q1 > 0 ? "sai de" : "aponta para"} $q_1$; $\vec E_2$ ${q2 > 0 ? "sai de" : "aponta para"} $q_2$.</p>`,
-            R`<p>Componentes (cada vetor tem cosseno diretor $\pm${F.m(d / 2 / (r1 * 100), 3)}$ em $x$ e $${F.m(h / (r1 * 100), 3)}$ em $y$):</p>$$E_x = ${F.m(Ex, 0)}\ \text{N/C},\qquad E_y = ${F.m(Ey, 0)}\ \text{N/C}$$`,
-            R`<p><b>Resposta:</b> $|\vec E| = ${F.m(Math.hypot(Ex, Ey), 0)}$ N/C, fazendo $${F.m((Math.atan2(Ey, Ex) * 180) / Math.PI, 1)}°$ com o eixo $x$.</p>`] }; } },
+          passos: [R`<p>$P$ está à mesma distância das duas: $r = \sqrt{${F.n(d / 2, 0)}^2 + ${h}^2}$ cm $= ${F.n(r1 * 100, 2)}$ cm.</p>`,
+            R`<p>Módulos: $E_1 = k|q_1|/r^2 = ${F.n(E1, 0)}$ N/C e $E_2 = ${F.n(E2, 0)}$ N/C. Direções: $\vec E_1$ ${q1 > 0 ? "sai de" : "aponta para"} $q_1$; $\vec E_2$ ${q2 > 0 ? "sai de" : "aponta para"} $q_2$.</p>`,
+            R`<p>Componentes (cada vetor tem cosseno diretor $\pm${F.n(d / 2 / (r1 * 100), 3)}$ em $x$ e $${F.n(h / (r1 * 100), 3)}$ em $y$):</p>$$E_x = ${F.n(Ex, 0)}\ \text{N/C},\qquad E_y = ${F.n(Ey, 0)}\ \text{N/C}$$`,
+            R`<p><b>Resposta:</b> $|\vec E| = ${F.n(Math.hypot(Ex, Ey), 0)}$ N/C, fazendo $${F.n((Math.atan2(Ey, Ex) * 180) / Math.PI, 1)}°$ com o eixo $x$.</p>`] }; } },
       { nome: "Elétron entre placas", gerar: (p) => {
         const E = p ? 2 : F.escolha([1, 2, 3, 5]), L = p ? 4 : F.escolha([2, 3, 4, 5]), v = p ? 2 : F.escolha([1.5, 2, 3]), a = (1.602e-19 * E * 1e4) / 9.109e-31, t = L / 100 / (v * 1e7), y = 0.5 * a * t * t;
-        return { enun: R`<p>Um elétron entra com $v_0 = ${F.m(v, 1)}\times10^7$ m/s, paralelo a placas de comprimento $${L}$ cm, onde $E = ${E}\times10^4$ N/C. Quanto ele desvia até sair?</p>`, fig: figEletron,
+        return { enun: R`<p>Um elétron entra com $v_0 = ${F.n(v, 1)}\times10^7$ m/s, paralelo a placas de comprimento $${L}$ cm, onde $E = ${E}\times10^4$ N/C. Quanto ele desvia até sair?</p>`, fig: figEletron,
           passos: [R`<p>Força constante $eE$ perpendicular às placas (gravidade desprezível: $eE/mg \sim 10^{14}$). É um "lançamento horizontal" ${F.ret("A06")}.</p>`, R`$$a = \frac{eE}{m} = ${F.sigM(a, 3)}\ \text{m/s}^2,\qquad t = \frac{L}{v_0} = ${F.sigM(t, 3)}\ \text{s}$$`,
-            R`$$y = \tfrac12 a t^2 = \frac{eEL^2}{2mv_0^2} = ${F.m(y * 1000, 2)}\ \text{mm}$$`, R`<p><b>Resposta:</b> $${F.m(y * 1000, 2)}$ mm, para o lado da placa <b>positiva</b> (o elétron é negativo). É assim que funcionava o tubo de TV.</p>`] }; } },
+            R`$$y = \tfrac12 a t^2 = \frac{eEL^2}{2mv_0^2} = ${F.n(y * 1000, 2)}\ \text{mm}$$`, R`<p><b>Resposta:</b> $${F.n(y * 1000, 2)}$ mm, para o lado da placa <b>positiva</b> (o elétron é negativo). É assim que funcionava o tubo de TV.</p>`] }; } },
       { nome: "Anel: onde E é máximo", gerar: (p) => {
         const Q = p ? 10 : F.escolha([5, 10, 20]), Rr = p ? 5 : F.escolha([3, 5, 8]), Em = (2 * 8.99e9 * Q * 1e-9) / (3 * Math.sqrt(3) * (Rr / 100) ** 2);
         return { enun: R`<p>Anel de raio $${Rr}$ cm com $${Q}$ nC. Em que ponto do eixo o campo é máximo e quanto vale?</p>`, fig: "",
-          passos: [R`<p>$E(z) = \dfrac{kQz}{(R^2+z^2)^{3/2}}$. Derivando: $\dfrac{dE}{dz} = kQ\dfrac{R^2 - 2z^2}{(R^2+z^2)^{5/2}} = 0$.</p>`, R`<p>$z = R/\sqrt2 = ${F.m(Rr / Math.SQRT2, 2)}$ cm. Lá, $R^2 + z^2 = \frac32R^2$.</p>`,
-            R`$$E_\text{max} = \frac{kQ\,R/\sqrt2}{(3R^2/2)^{3/2}} = \frac{2kQ}{3\sqrt3\,R^2} = ${F.m(Em, 0)}\ \text{N/C}$$`] }; } },
+          passos: [R`<p>$E(z) = \dfrac{kQz}{(R^2+z^2)^{3/2}}$. Derivando: $\dfrac{dE}{dz} = kQ\dfrac{R^2 - 2z^2}{(R^2+z^2)^{5/2}} = 0$.</p>`, R`<p>$z = R/\sqrt2 = ${F.n(Rr / Math.SQRT2, 2)}$ cm. Lá, $R^2 + z^2 = \frac32R^2$.</p>`,
+            R`$$E_\text{max} = \frac{kQ\,R/\sqrt2}{(3R^2/2)^{3/2}} = \frac{2kQ}{3\sqrt3\,R^2} = ${F.n(Em, 0)}\ \text{N/C}$$`] }; } },
     ] });
 
     const X = F.exercicio;

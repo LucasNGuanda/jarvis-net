@@ -11,11 +11,11 @@ F.registrar("C15d", {
       { nome: "Intensidade e campos", gerar: (p) => {
         const I = p ? 1361 : F.escolha([100, 500, 1361, 5000]), E0 = Math.sqrt(2 * 4e-7 * Math.PI * 2.998e8 * I);
         return { enun: R`<p>Uma onda plana tem intensidade $${I}$ W/m². Quanto valem as amplitudes dos campos e a pressão de radiação (absorvida)?</p>`, fig: "",
-          passos: [R`<p>$I = \bar S = \frac{E_0B_0}{2\mu_0} = \frac{E_0^2}{2\mu_0c}$.</p>`, R`$$E_0 = \sqrt{2\mu_0cI} = ${F.m(E0, 1)}\ \text{V/m},\qquad B_0 = \frac{E_0}{c} = ${F.sigM(E0 / 2.998e8, 3)}\ \text{T}$$`, R`<p>Pressão: $p = I/c = ${F.sigM(I / 2.998e8, 3)}$ Pa (o dobro, se refletir).</p>`] }; } },
+          passos: [R`<p>$I = \bar S = \frac{E_0B_0}{2\mu_0} = \frac{E_0^2}{2\mu_0c}$.</p>`, R`$$E_0 = \sqrt{2\mu_0cI} = ${F.n(E0, 1)}\ \text{V/m},\qquad B_0 = \frac{E_0}{c} = ${F.sigM(E0 / 2.998e8, 3)}\ \text{T}$$`, R`<p>Pressão: $p = I/c = ${F.sigM(I / 2.998e8, 3)}$ Pa (o dobro, se refletir).</p>`] }; } },
       { nome: "Corrente de deslocamento", gerar: (p) => {
         const Rr = p ? 5 : F.escolha([2, 5, 10]), dE = p ? 1 : F.escolha([0.5, 1, 2, 5]), id = 8.854e-12 * Math.PI * (Rr / 100) ** 2 * dE * 1e13, B = (4e-7 * Math.PI * id) / (2 * Math.PI * (Rr / 100));
-        return { enun: R`<p>Entre placas circulares de raio $${Rr}$ cm, o campo cresce a $${F.m(dE, 1)}\times10^{13}$ V/(m·s). Corrente de deslocamento e campo magnético na borda?</p>`, fig: figDesl,
-          passos: [R`<p>$i_d = \varepsilon_0\frac{d\Phi_E}{dt} = \varepsilon_0A\frac{dE}{dt} = ${F.m(id, 3)}$ A.</p>`, R`<p>Ampère–Maxwell num círculo na borda: $B\cdot2\pi R = \mu_0i_d$, $B = ${F.sigM(B, 3)}$ T.</p>`, R`<p>Pequeno: por isso Maxwell "adivinhou" esse termo (1865) antes de alguém medi-lo. A prova veio com as ondas de Hertz (1887).</p>`] }; } },
+        return { enun: R`<p>Entre placas circulares de raio $${Rr}$ cm, o campo cresce a $${F.n(dE, 1)}\times10^{13}$ V/(m·s). Corrente de deslocamento e campo magnético na borda?</p>`, fig: figDesl,
+          passos: [R`<p>$i_d = \varepsilon_0\frac{d\Phi_E}{dt} = \varepsilon_0A\frac{dE}{dt} = ${F.n(id, 3)}$ A.</p>`, R`<p>Ampère–Maxwell num círculo na borda: $B\cdot2\pi R = \mu_0i_d$, $B = ${F.sigM(B, 3)}$ T.</p>`, R`<p>Pequeno: por isso Maxwell "adivinhou" esse termo (1865) antes de alguém medi-lo. A prova veio com as ondas de Hertz (1887).</p>`] }; } },
     ] });
 
     const X = F.exercicio;

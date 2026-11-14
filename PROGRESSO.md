@@ -74,6 +74,15 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - **C17b Átomo de Bohr**: modelo, Rydberg, séries, números quânticos, Pauli, Stern–Gerlach e laser. Laboratório de níveis e espectro. Chefão: dedução de Bohr e a constante 1/137.
   - Novo arquivo `assets/sims/moderna.js`.
   - Revisão de Óptica e Moderna: corrigidos o artigo no exemplo da B12 ("da água"), o erro de KaTeX na C17, os níveis de Bohr invertidos no laboratório e o gráfico do fotoelétrico sem recorte.
+- **β 1.8**: Moderna completa (base: Halliday vol. 4, caps. 38 e 41–44).
+  - **C16 Física Quântica**: corpo negro, Planck, Wien e Stefan. Chefão: dedução da energia média de Planck.
+  - **C19 Física Nuclear**: núcleo, energia de ligação, decaimentos e meia-vida. Laboratórios da curva B/A e do decaimento aleatório. Chefão: datação por carbono-14.
+  - Temas **novos**:
+    - **C19b Energia Nuclear**: fissão, reação em cadeia, fusão, ITER e NIF.
+    - **C20 Sólidos e Semicondutores**: bandas, dopagem, junção p–n, LED, célula solar, supercondutores.
+    - **C21 Partículas e Cosmologia**: Modelo Padrão, quarks (laboratório para montar hádrons), Hubble, Big Bang, matéria e energia escuras.
+  - **Revisão geral**: as 66 páginas publicadas passaram no teste de KaTeX, nos exemplos sorteados e no estresse de todos os laboratórios.
+    - Corrigidos: "1x" na C04; ponto decimal na C15; zeros inúteis (tipo "12,000 Ω") nos exemplos de C01–C15d; rótulos sobrepostos na curva de energia de ligação.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.

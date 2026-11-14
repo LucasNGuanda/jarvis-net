@@ -14,19 +14,19 @@ F.registrar("C04", {
         const part = p ? ["próton", 1.673e-27, 1] : F.escolha([["próton", 1.673e-27, 1], ["elétron", 9.109e-31, 1], ["partícula α", 6.645e-27, 2]]), U = p ? 5000 : F.escolha([100, 500, 1000, 5000, 20000]);
         const K = part[2] * 1.602e-19 * U, v = Math.sqrt((2 * K) / part[1]);
         return { enun: R`<p>Um ${part[0]} parte do repouso e é acelerado por uma ddp de $${U}$ V. Qual a velocidade final? (não relativístico)</p>`, fig: D.svg(400, 120, `<rect x="80" y="10" width="10" height="100" style="fill:#ef5b5b"/><rect x="310" y="10" width="10" height="100" style="fill:#4f8dff"/><circle cx="100" cy="60" r="6" fill="#ef5b5b"/>${D.seta(110, 60, 290, 60, "var(--warn)")}`, "acelerador"),
-          passos: [R`<p>Energia: o trabalho do campo é $W = q\,\Delta V$ e vira energia cinética: $K = |q|U$.</p>`, R`$$K = ${part[2]}\times1{,}602\times10^{-19}\times${U} = ${F.sigM(K, 3)}\ \text{J} = ${F.m((part[2] * U) / 1000, 3)}\ \text{keV}$$`,
-            R`$$v = \sqrt{\frac{2K}{m}} = ${F.sigM(v, 3)}\ \text{m/s}$$`, R`<p><b>Resposta:</b> $v \approx ${F.sigM(v, 2)}$ m/s, ou $${F.m((100 * v) / 2.998e8, 2)}\%$ de $c$. ${v > 0.1 * 2.998e8 ? "<b>Acima de 10% de c:</b> a correção relativística já importa " + F.ret("C18") + "." : "Bem abaixo de c: Newton serve."}</p>`] }; } },
+          passos: [R`<p>Energia: o trabalho do campo é $W = q\,\Delta V$ e vira energia cinética: $K = |q|U$.</p>`, R`$$K = ${part[2]}\times1{,}602\times10^{-19}\times${U} = ${F.sigM(K, 3)}\ \text{J} = ${F.n((part[2] * U) / 1000, 3)}\ \text{keV}$$`,
+            R`$$v = \sqrt{\frac{2K}{m}} = ${F.sigM(v, 3)}\ \text{m/s}$$`, R`<p><b>Resposta:</b> $v \approx ${F.sigM(v, 2)}$ m/s, ou $${F.n((100 * v) / 2.998e8, 2)}\%$ de $c$. ${v > 0.1 * 2.998e8 ? "<b>Acima de 10% de c:</b> a correção relativística já importa " + F.ret("C18") + "." : "Bem abaixo de c: Newton serve."}</p>`] }; } },
       { nome: "Energia de uma configuração", gerar: (p) => {
         const qq = p ? 1 : F.escolha([1, 2, 3]), a = p ? 10 : F.escolha([5, 10, 20]), U = ((8.99e9 * (qq * 1e-6) ** 2) / (a / 100)) * (4 + Math.SQRT2);
         return { enun: R`<p>Quanto trabalho é preciso para trazer quatro cargas $q = ${qq}$ µC do infinito até os vértices de um quadrado de lado $${a}$ cm?</p>`, fig: figQuad,
           passos: [R`<p>A energia de um sistema é a soma de $kq_iq_j/r_{ij}$ sobre todos os <b>pares</b> (cada par uma vez).</p>`, R`<p>São 6 pares: 4 lados ($r = a$) e 2 diagonais ($r = a\sqrt2$).</p>$$U = \frac{kq^2}{a}\left(4 + \frac{2}{\sqrt2}\right) = \frac{kq^2}{a}\left(4 + \sqrt2\right)$$`,
-            R`<p><b>Resposta:</b> $U = ${F.m(U, 3)}$ J. Se soltar, essa energia vira cinética das quatro cargas (é o chefão).</p>`] }; } },
+            R`<p><b>Resposta:</b> $U = ${F.n(U, 3)}$ J. Se soltar, essa energia vira cinética das quatro cargas (é o chefão).</p>`] }; } },
       { nome: "E a partir de V", gerar: (p) => {
         const A = p ? 3 : F.escolha([1, 2, 3, 4]), x = p ? 1 : F.escolha([1, 2]), y = p ? 2 : F.escolha([1, 2, 3]);
         const Ex = -2 * A * x * y, Ey = -(A * x * x - 3 * y * y);
-        return { enun: R`<p>Numa região, $V(x, y) = ${A}x^2y - y^3$ (V, com $x, y$ em m). Ache $\vec E$ em $(${x}, ${y})$.</p>`, fig: figCampoPot,
-          passos: [R`<p>$\vec E = -\nabla V$: $E_x = -\partial V/\partial x$, $E_y = -\partial V/\partial y$.</p>`, R`$$E_x = -${2 * A}xy = ${Ex},\qquad E_y = -(${A}x^2 - 3y^2) = ${Ey}$$`,
-            R`<p><b>Resposta:</b> $\vec E = (${Ex},\ ${Ey})$ V/m, $|\vec E| = ${F.m(Math.hypot(Ex, Ey), 2)}$ V/m. Repare: $\nabla^2V = ${2 * A}y - 6y$, que só é zero se $A = 3$; ${A === 3 ? "aqui é, então a região pode ser vazia de carga." : "aqui não é, então há carga na região (" + F.ret("U01") + ")."}</p>`] }; } },
+        return { enun: R`<p>Numa região, $V(x, y) = ${F.c(A)}x^2y - y^3$ (V, com $x, y$ em m). Ache $\vec E$ em $(${x}, ${y})$.</p>`, fig: figCampoPot,
+          passos: [R`<p>$\vec E = -\nabla V$: $E_x = -\partial V/\partial x$, $E_y = -\partial V/\partial y$.</p>`, R`$$E_x = -${2 * A}xy = ${Ex},\qquad E_y = -(${F.c(A)}x^2 - 3y^2) = ${Ey}$$`,
+            R`<p><b>Resposta:</b> $\vec E = (${Ex},\ ${Ey})$ V/m, $|\vec E| = ${F.n(Math.hypot(Ex, Ey), 2)}$ V/m. Repare: $\nabla^2V = ${2 * A}y - 6y$, que só é zero se $A = 3$; ${A === 3 ? "aqui é, então a região pode ser vazia de carga." : "aqui não é, então há carga na região (" + F.ret("U01") + ")."}</p>`] }; } },
     ] });
 
     const X = F.exercicio;

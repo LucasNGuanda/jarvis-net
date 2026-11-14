@@ -56,14 +56,14 @@ F.registrar("C07", {
         { nome: "LED com resistor", gerar: (p) => {
           const E = p ? 9 : F.escolha([5, 9, 12]), led = p ? ["vermelho", 2.0] : F.escolha([["vermelho", 2.0], ["verde", 2.2], ["azul", 3.1]]), i = p ? 20 : F.escolha([10, 12, 15, 18, 20]);
           const Ur = E - led[1], Rid = Ur / (i / 1000), Rc = comercialAcima(Rid), ir = Ur / Rc, P = Ur * ir;
-          return { enun: R`<p><b>Objetivo:</b> ${i} mA num LED ${led[0]} ($U_\text{LED} = ${F.m(led[1], 1)}$ V) usando uma fonte de ${E} V. Qual resistor comercial (série E12) usar, e quanto ele dissipa?</p>`,
+          return { enun: R`<p><b>Objetivo:</b> ${i} mA num LED ${led[0]} ($U_\text{LED} = ${F.n(led[1], 1)}$ V) usando uma fonte de ${E} V. Qual resistor comercial (série E12) usar, e quanto ele dissipa?</p>`,
             fig: figCircLED(E + " V"),
             passos: [
-              R`<p>O LED "segura" ${F.t(led[1], 1)} V. A tensão que sobra fica no resistor (as tensões em série se somam, como na subida e descida de um morro):</p>$$U_R = E - U_\text{LED} = ${E} - ${F.m(led[1], 1)} = ${F.m(Ur, 1)}\ \text{V}$$`,
-              R`<p>A corrente é a mesma no LED e no resistor (estão em série). Lei de Ohm no resistor:</p>$$R = \frac{U_R}{i} = \frac{${F.m(Ur, 1)}}{${F.m(i / 1000, 3)}} \approx ${F.m(Rid, 0)}\ \Omega$$`,
+              R`<p>O LED "segura" ${F.t(led[1], 1)} V. A tensão que sobra fica no resistor (as tensões em série se somam, como na subida e descida de um morro):</p>$$U_R = E - U_\text{LED} = ${E} - ${F.n(led[1], 1)} = ${F.n(Ur, 1)}\ \text{V}$$`,
+              R`<p>A corrente é a mesma no LED e no resistor (estão em série). Lei de Ohm no resistor:</p>$$R = \frac{U_R}{i} = \frac{${F.n(Ur, 1)}}{${F.n(i / 1000, 3)}} \approx ${F.n(Rid, 0)}\ \Omega$$`,
               R`<p>Não existe resistor de ${F.t(Rid, 0)} Ω. Pegamos o <b>comercial logo acima</b> (série E12: 10, 12, 15, 18, 22, 27, 33, 39, 47, 56, 68, 82 × 10ⁿ), para a corrente ficar um pouco <i>menor</i> e o LED ficar seguro: $R = ${Rc}\ \Omega$.</p>`,
-              R`<p>Corrente de verdade e potência no resistor:</p>$$i = \frac{${F.m(Ur, 1)}}{${Rc}} = ${F.m(ir * 1000, 1)}\ \text{mA},\qquad P = U_R\, i = ${F.m(P, 3)}\ \text{W}$$`,
-              R`<p><b>Resposta:</b> $R = ${Rc}\ \Omega$, $i \approx ${F.m(ir * 1000, 1)}$ mA e $P \approx ${F.m(P * 1000, 0)}$ mW. ${P < 0.25 ? "Abaixo de 0,25 W: um resistor comum de 1/4 W aguenta." : "<b>Acima de 0,25 W:</b> precisa de um resistor de 1/2 W ou mais!"}</p>`,
+              R`<p>Corrente de verdade e potência no resistor:</p>$$i = \frac{${F.n(Ur, 1)}}{${Rc}} = ${F.n(ir * 1000, 1)}\ \text{mA},\qquad P = U_R\, i = ${F.n(P, 3)}\ \text{W}$$`,
+              R`<p><b>Resposta:</b> $R = ${Rc}\ \Omega$, $i \approx ${F.n(ir * 1000, 1)}$ mA e $P \approx ${F.n(P * 1000, 0)}$ mW. ${P < 0.25 ? "Abaixo de 0,25 W: um resistor comum de 1/4 W aguenta." : "<b>Acima de 0,25 W:</b> precisa de um resistor de 1/2 W ou mais!"}</p>`,
             ] }; } },
         { nome: "Esticando o fio", gerar: (p) => {
           const R0 = p ? 10 : F.escolha([5, 8, 10, 12, 20]), k = p ? 2 : F.escolha([1.5, 2, 3, 4]);
@@ -71,9 +71,9 @@ F.registrar("C07", {
             fig: D.svg(520, 120, `${D.cilindro(60, 35, 140, 16)}${D.txt(130, 70, "antes: L, A", "tx2")}${D.cilindro(60, 95, Math.min(420, 140 * k), 16 / Math.sqrt(k))}${D.txt(60 + Math.min(420, 140 * k) / 2, 118, "depois: " + F.t(k, 1) + "L, A'", "tx2")}`, "fio esticado"),
             passos: [
               R`<p>O que <b>não muda</b> é o volume (o material é o mesmo): $V = L A = L' A'$.</p>`,
-              R`<p>Com $L' = ${F.m(k, 1)}L$: $\;A' = \dfrac{LA}{L'} = \dfrac{A}{${F.m(k, 1)}}$. O fio fica ${F.t(k, 1)} vezes mais comprido <i>e</i> ${F.t(k, 1)} vezes mais fino.</p>`,
-              R`$$R' = \rho\frac{L'}{A'} = \rho\frac{${F.m(k, 1)}L}{A/${F.m(k, 1)}} = ${F.m(k * k, 2)}\,\rho\frac{L}{A} = ${F.m(k * k, 2)}\,R_0$$`,
-              R`<p><b>Resposta:</b> $R' = ${F.m(k * k, 2)} \times ${R0} = ${F.m(k * k * R0, 1)}\ \Omega$. Esticar $k$ vezes multiplica a resistência por $k^2$.</p>`,
+              R`<p>Com $L' = ${F.n(k, 1)}L$: $\;A' = \dfrac{LA}{L'} = \dfrac{A}{${F.n(k, 1)}}$. O fio fica ${F.t(k, 1)} vezes mais comprido <i>e</i> ${F.t(k, 1)} vezes mais fino.</p>`,
+              R`$$R' = \rho\frac{L'}{A'} = \rho\frac{${F.n(k, 1)}L}{A/${F.n(k, 1)}} = ${F.n(k * k, 2)}\,\rho\frac{L}{A} = ${F.n(k * k, 2)}\,R_0$$`,
+              R`<p><b>Resposta:</b> $R' = ${F.n(k * k, 2)} \times ${R0} = ${F.n(k * k * R0, 1)}\ \Omega$. Esticar $k$ vezes multiplica a resistência por $k^2$.</p>`,
             ] }; } },
         { nome: "Fio do chuveiro", gerar: (p) => {
           const P = p ? 5500 : F.escolha([4400, 5500, 6600, 7500]), U = p ? 220 : F.escolha([127, 220]), d = p ? 0.6 : F.escolha([0.5, 0.6, 0.7, 0.8]);
@@ -81,33 +81,33 @@ F.registrar("C07", {
           return { enun: R`<p>Um chuveiro de ${P} W foi feito para ${U} V. A resistência é um fio de nicromo ($\rho = 1{,}1 \times 10^{-6}\ \Omega\cdot\text{m}$, quente) com ${F.t(d, 1)} mm de diâmetro. Qual o comprimento do fio?</p>`,
             fig: D.svg(380, 150, D.fio([[60, 30], [320, 30], [320, 120], [60, 120], [60, 30]]) + `<rect x="45" y="50" width="30" height="50" style="fill:var(--card)"/>${D.comp("bateria", 60, 100, 60, 50, { mais: 1, rot: U + " V", lado: 1 })}<rect x="160" y="18" width="60" height="24" style="fill:var(--card)"/>${D.comp("resistor", 160, 30, 220, 30, { rot: "R (nicromo)", lado: 1 })}`, "chuveiro"),
             passos: [
-              R`<p>Na tomada, quem é fixo é a <b>tensão</b>. Então use a forma da potência que tem $U$: $P = U^2/R$.</p>$$R = \frac{U^2}{P} = \frac{${U}^2}{${P}} = ${F.m(Rr, 2)}\ \Omega$$`,
-              R`<p>Área do fio: $$A = \frac{\pi d^2}{4} = \frac{\pi\,(${F.m(d, 1)}\times10^{-3})^2}{4} = ${F.sigM(A, 3)}\ \text{m}^2$$</p>`,
-              R`<p>2ª lei de Ohm, isolando $L$:</p>$$L = \frac{R\,A}{\rho} = \frac{${F.m(Rr, 2)} \times ${F.sigM(A, 3)}}{1{,}1\times10^{-6}} \approx ${F.m(L, 2)}\ \text{m}$$`,
-              R`<p><b>Resposta:</b> uns ${F.t(L, 1)} m de fio, enrolado em espiral. Corrente: $i = P/U = ${F.m(P / U, 1)}$ A.</p>`,
+              R`<p>Na tomada, quem é fixo é a <b>tensão</b>. Então use a forma da potência que tem $U$: $P = U^2/R$.</p>$$R = \frac{U^2}{P} = \frac{${U}^2}{${P}} = ${F.n(Rr, 2)}\ \Omega$$`,
+              R`<p>Área do fio: $$A = \frac{\pi d^2}{4} = \frac{\pi\,(${F.n(d, 1)}\times10^{-3})^2}{4} = ${F.sigM(A, 3)}\ \text{m}^2$$</p>`,
+              R`<p>2ª lei de Ohm, isolando $L$:</p>$$L = \frac{R\,A}{\rho} = \frac{${F.n(Rr, 2)} \times ${F.sigM(A, 3)}}{1{,}1\times10^{-6}} \approx ${F.n(L, 2)}\ \text{m}$$`,
+              R`<p><b>Resposta:</b> uns ${F.t(L, 1)} m de fio, enrolado em espiral. Corrente: $i = P/U = ${F.n(P / U, 1)}$ A.</p>`,
             ] }; } },
         { nome: "Com margem de erro (OBF)", gerar: (p) => {
           const U = p ? 6.0 : F.escolha([4.5, 6.0, 9.0, 12.0]), dU = p ? 0.05 : F.escolha([0.05, 0.1]), i = p ? 24.0 : F.escolha([15.0, 18.0, 24.0, 30.0]), di = p ? 0.3 : F.escolha([0.2, 0.3, 0.5]);
           const Rr = U / (i / 1000), rel = dU / U + di / i, dR = Rr * rel;
           const casas = Math.max(0, -Math.floor(Math.log10(dR))), dRr = +dR.toPrecision(1), Rarr = Math.round(Rr / Math.pow(10, -casas)) * Math.pow(10, -casas);
-          return { enun: R`<p>Num experimento, o voltímetro marca $U = (${F.m(U, 2)} \pm ${F.m(dU, 2)})$ V e o amperímetro $i = (${F.m(i, 1)} \pm ${F.m(di, 1)})$ mA. Dê $R$ com a sua incerteza.</p>`,
+          return { enun: R`<p>Num experimento, o voltímetro marca $U = (${F.n(U, 2)} \pm ${F.n(dU, 2)})$ V e o amperímetro $i = (${F.n(i, 1)} \pm ${F.n(di, 1)})$ mA. Dê $R$ com a sua incerteza.</p>`,
             fig: D.svg(380, 170, D.fio([[60, 40], [320, 40], [320, 140], [60, 140], [60, 40]]) + `<rect x="45" y="65" width="30" height="50" style="fill:var(--card)"/>${D.comp("bateria", 60, 115, 60, 65, { mais: 1, rot: "E", lado: 1 })}<rect x="300" y="70" width="40" height="40" style="fill:var(--card)"/>${D.comp("medidor", 320, 70, 320, 110, { letra: "A" })}<rect x="160" y="28" width="60" height="24" style="fill:var(--card)"/>${D.comp("resistor", 160, 40, 220, 40, { rot: "R", lado: -1, dist: 20 })}${D.fio([[150, 40], [150, 0 + 8], [230, 8], [230, 40]])}<rect x="176" y="0" width="28" height="16" style="fill:var(--card)"/>${D.comp("medidor", 176, 8, 204, 8, { letra: "V", L: 24 })}`, "voltímetro e amperímetro"),
             passos: [
-              R`<p>Valor central: $$R = \frac{U}{i} = \frac{${F.m(U, 2)}}{${F.m(i / 1000, 4)}} = ${F.m(Rr, 1)}\ \Omega$$`,
+              R`<p>Valor central: $$R = \frac{U}{i} = \frac{${F.n(U, 2)}}{${F.n(i / 1000, 4)}} = ${F.n(Rr, 1)}\ \Omega$$`,
               R`<p><b>Derivada logarítmica</b> (o método do seu professor): $\ln R = \ln U - \ln i$. Diferenciando e somando os módulos (pior caso):</p>$$\frac{\Delta R}{R} = 1\cdot\frac{\Delta U}{U} + |{-1}|\cdot\frac{\Delta i}{i}$$`,
-              R`$$\frac{\Delta R}{R} = \frac{${F.m(dU, 2)}}{${F.m(U, 2)}} + \frac{${F.m(di, 1)}}{${F.m(i, 1)}} = ${F.m(dU / U, 4)} + ${F.m(di / i, 4)} = ${F.m(rel, 4)}$$`,
-              R`<p>$\Delta R = ${F.m(rel, 4)} \times ${F.m(Rr, 1)} = ${F.m(dR, 2)}\ \Omega$. A incerteza fica com <b>1 algarismo significativo</b>, e o valor é arredondado na mesma casa.</p>`,
-              R`<p><b>Resposta:</b> $R = (${F.m(Rarr, casas)} \pm ${F.m(dRr, casas)})\ \Omega$, incerteza relativa de ${F.t(100 * rel, 1)}%.</p>`,
+              R`$$\frac{\Delta R}{R} = \frac{${F.n(dU, 2)}}{${F.n(U, 2)}} + \frac{${F.n(di, 1)}}{${F.n(i, 1)}} = ${F.n(dU / U, 4)} + ${F.n(di / i, 4)} = ${F.n(rel, 4)}$$`,
+              R`<p>$\Delta R = ${F.n(rel, 4)} \times ${F.n(Rr, 1)} = ${F.n(dR, 2)}\ \Omega$. A incerteza fica com <b>1 algarismo significativo</b>, e o valor é arredondado na mesma casa.</p>`,
+              R`<p><b>Resposta:</b> $R = (${F.n(Rarr, casas)} \pm ${F.n(dRr, casas)})\ \Omega$, incerteza relativa de ${F.t(100 * rel, 1)}%.</p>`,
             ] }; } },
         { nome: "Cone (∫)", gerar: (p) => {
           const a = p ? 1 : F.escolha([0.5, 1, 1.5]), b = p ? 3 : a * F.escolha([2, 3, 4]), L = p ? 10 : F.escolha([5, 10, 20]), rho = p ? 3.0e-5 : F.escolha([1.0e-5, 3.0e-5, 5.0e-5]);
           const Rr = (rho * L * 1e-2) / (Math.PI * a * 1e-3 * b * 1e-3);
-          return { enun: R`<p>Um bastão de grafite tem forma de tronco de cone: raios $a = ${F.m(a, 1)}$ mm e $b = ${F.m(b, 1)}$ mm, comprimento $L = ${L}$ cm, $\rho = ${F.sigM(rho, 2)}\ \Omega\cdot\text{m}$. Qual a resistência entre as bases?</p>`, fig: figCone,
+          return { enun: R`<p>Um bastão de grafite tem forma de tronco de cone: raios $a = ${F.n(a, 1)}$ mm e $b = ${F.n(b, 1)}$ mm, comprimento $L = ${L}$ cm, $\rho = ${F.sigM(rho, 2)}\ \Omega\cdot\text{m}$. Qual a resistência entre as bases?</p>`, fig: figCone,
             passos: [
               R`<p>A seção muda ao longo do bastão, então $R = \rho L/A$ não vale direto. Corte uma fatia fina de espessura $dx$: ela é um cilindrinho, e as fatias estão <b>em série</b>, então as resistências se somam:</p>$$dR = \rho\,\frac{dx}{\pi r(x)^2} \quad\Rightarrow\quad R = \int_0^L \frac{\rho\,dx}{\pi r(x)^2}$$`,
               R`<p>O raio cresce linearmente: $r(x) = a + \dfrac{b-a}{L}\,x$, então $dr = \dfrac{b-a}{L}dx$. Trocando a variável:</p>$$R = \frac{\rho L}{\pi(b-a)}\int_a^b \frac{dr}{r^2} = \frac{\rho L}{\pi(b-a)}\left(\frac1a - \frac1b\right) = \frac{\rho L}{\pi a b}$$`,
-              R`<p>Confere os casos limite: se $b = a$, volta a $\rho L/(\pi a^2)$ ✓. A "área efetiva" é a <b>média geométrica</b> $\pi a b$, não a área média.</p>$$R = \frac{${F.sigM(rho, 2)} \times ${F.m(L / 100, 2)}}{\pi \times ${F.sigM(a * 1e-3, 2)} \times ${F.sigM(b * 1e-3, 2)}} \approx ${F.m(Rr, 2)}\ \Omega$$`,
-              R`<p><b>Resposta:</b> $R \approx ${F.m(Rr, 2)}\ \Omega$.</p>`,
+              R`<p>Confere os casos limite: se $b = a$, volta a $\rho L/(\pi a^2)$ ✓. A "área efetiva" é a <b>média geométrica</b> $\pi a b$, não a área média.</p>$$R = \frac{${F.sigM(rho, 2)} \times ${F.n(L / 100, 2)}}{\pi \times ${F.sigM(a * 1e-3, 2)} \times ${F.sigM(b * 1e-3, 2)}} \approx ${F.n(Rr, 2)}\ \Omega$$`,
+              R`<p><b>Resposta:</b> $R \approx ${F.n(Rr, 2)}\ \Omega$.</p>`,
             ] }; } },
       ],
     });
