@@ -1,4 +1,4 @@
-/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; T05 gás ideal p × V; T05b gás de moléculas 2D; T06 dois corpos em contato; */
+/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; T05 gás ideal p × V; T05b gás de moléculas 2D; T06 dois corpos em contato; T07 os quatro processos; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -272,6 +272,48 @@
       sv += `<path d="${d1}" style="fill:none;stroke:var(--bad);stroke-width:2.5"/><path d="${d2}" style="fill:none;stroke:var(--mA);stroke-width:2.5"/>`;
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("temperatura de equilíbrio", n2(c.Teq, 2) + " °C") + vis("tempo característico τ", n2(c.tau, 1) + " s") + vis("tempo agora", n2(t, 0) + " s") + vis("calor já transferido de A para B", n2(C1 * (val(el, "Ta") - T1), 0) + " J");
+    });
+  };
+
+  /* ---------- T07 · os quatro processos no diagrama p × V: trabalho, calor e energia interna ---------- */
+  SIM.processos = (el, F) => {
+    const W = 680, H = 320, R = 8.314, Ra = 0.082, VA = 24.6, TA = 300, pA = (Ra * TA) / VA;
+    let proc = "p", f = 3;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("volume final V_B (L)", "VB", 5, 50, 0.5, 40)}${sl("temperatura final T_B (K), só na isocórica", "TB", 100, 900, 10, 600)}
+      <div class="bts">${botoes([["p", "isobárico"], ["V", "isocórico"], ["T", "isotérmico"], ["Q", "adiabático"]], "proc", "p")}${botoes([["3", "monoatômico"], ["5", "diatômico"]], "f", "3")}</div></div>
+      <div class="status">1 mol de gás ideal sai do estado A (1 atm, 24,6 L, 300 K). A área sob a curva no diagrama p × V é o trabalho que o gás faz (positivo se ele expande). A energia interna só depende da temperatura: ΔU = n·(f/2)·R·ΔT. O calor sai da 1ª lei: Q = ΔU + W. Na adiabática não entra calor: o trabalho sai da energia interna, e o gás esfria ao expandir.</div>`);
+    const q = (s) => el.querySelector(s);
+    liga(el, "proc", (k) => (proc = k));
+    liga(el, "f", (k) => (f = +k));
+    SIM.processos._conta = (pr, ff, VB, TBv) => {
+      const Cv = (ff / 2) * R, g = (ff + 2) / ff;
+      let TB, Wj, curva;
+      if (pr === "p") { TB = (TA * VB) / VA; Wj = pA * (VB - VA) * 101.325; curva = (v) => pA; }
+      else if (pr === "V") { VB = VA; TB = TBv; Wj = 0; curva = null; }
+      else if (pr === "T") { TB = TA; Wj = R * TA * Math.log(VB / VA); curva = (v) => (Ra * TA) / v; }
+      else { TB = TA * Math.pow(VA / VB, g - 1); Wj = Cv * (TA - TB); curva = (v) => pA * Math.pow(VA / v, g); }
+      const dU = Cv * (TB - TA);
+      return { VB, TB, pB: (Ra * TB) / VB, W: Wj, dU, Q: dU + Wj, curva, g };
+    };
+    anima(el, F, () => {
+      const c = SIM.processos._conta(proc, f, val(el, "VB"), val(el, "TB"));
+      mostra(el, ["VB"], 1); mostra(el, ["TB"], 0);
+      q("[data-c=VB]").disabled = proc === "V"; q("[data-c=TB]").disabled = proc !== "V";
+      const gx = 70, gy = 280, gw = 560, gh = 240, pmax = 4, X = (v) => gx + (v / 55) * gw, Y = (p) => gy - (Math.min(p, pmax) / pmax) * gh;
+      let sv = D.seta(gx, gy, gx + gw + 10, gy, "var(--ink2)", 1.4) + D.seta(gx, gy, gx, gy - gh - 10, "var(--ink2)", 1.4) + D.txt(gx + gw + 10, gy + 18, "V (L)", "tx2", "end") + D.txt(gx + 6, gy - gh - 4, "p (atm)", "tx2", "start");
+      [10, 20, 30, 40, 50].forEach((v) => (sv += D.txt(X(v), gy + 16, String(v), "tx2")));
+      [1, 2, 3, 4].forEach((p) => (sv += D.txt(gx - 6, Y(p) + 4, String(p), "tx2", "end")));
+      [150, 300, 600, 900].forEach((T) => { let d = ""; for (let v = 3; v <= 52; v += 0.5) { const p = (Ra * T) / v; if (p > pmax) continue; d += (d ? "L" : "M") + X(v).toFixed(1) + " " + Y(p).toFixed(1); } sv += `<path d="${d}" style="fill:none;stroke:var(--line2);stroke-dasharray:3 4"/>`; });
+      if (c.curva) {
+        const a = Math.min(VA, c.VB), b = Math.max(VA, c.VB); let d = "", area = `M${X(a)} ${gy}`;
+        for (let i = 0; i <= 60; i++) { const v = a + ((b - a) * i) / 60, p = c.curva(v); d += (i ? "L" : "M") + X(v).toFixed(1) + " " + Y(p).toFixed(1); area += "L" + X(v).toFixed(1) + " " + Y(p).toFixed(1); }
+        area += `L${X(b)} ${gy} Z`;
+        sv += `<path d="${area}" style="fill:color-mix(in srgb,${c.W >= 0 ? "var(--mT)" : "var(--mA)"} 22%,transparent)"/><path d="${d}" style="fill:none;stroke:var(--warn);stroke-width:3"/>`;
+      } else sv += `<line x1="${X(VA)}" x2="${X(VA)}" y1="${Y(pA)}" y2="${Y(c.pB)}" style="stroke:var(--warn);stroke-width:3"/>`;
+      sv += `<circle cx="${X(VA)}" cy="${Y(pA)}" r="6" style="fill:var(--ink)"/><circle cx="${X(c.VB)}" cy="${Y(c.pB)}" r="6" style="fill:var(--warn)"/>` + D.txt(X(VA) + 8, Y(pA) - 8, "A", "txm", "start") + D.txt(X(c.VB) + 8, Y(c.pB) - 8, "B", "txm", "start");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("estado B", n2(c.pB, 2) + " atm · " + n2(c.VB, 1) + " L · " + n2(c.TB, 0) + " K") + vis("trabalho do gás W (área)", n2(c.W, 0) + " J") + vis("variação da energia interna ΔU", n2(c.dU, 0) + " J") + vis("calor recebido Q = ΔU + W", n2(c.Q, 0) + " J");
     });
   };
 })();

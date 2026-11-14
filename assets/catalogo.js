@@ -49,7 +49,7 @@ window.CATALOGO = [
     ["T05","Gases",[],true],
     ["T05b","Teoria Cinética dos Gases",["∫"],true],
     ["T06","Lei Zero da Termodinâmica",[],true],
-    ["T07","1ª Lei da Termodinâmica",["★"]],
+    ["T07","1ª Lei da Termodinâmica",["★"],true],
     ["T08","2ª Lei da Termodinâmica",["★"]],
     ["T08b","Entropia",["!","∫"]],
   ]},
