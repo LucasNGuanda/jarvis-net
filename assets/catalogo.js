@@ -42,7 +42,7 @@ window.CATALOGO = [
   ]},
   { id:"T", letra:"T", cor:"--mT", nome:"Termodinâmica", desc:"Temperatura, calor, gases, as leis da termodinâmica e entropia.", temas:[
     ["T01","Temperatura",[],true],
-    ["T02","Propagação do Calor"],
+    ["T02","Propagação do Calor",[],true],
     ["T03","Dilatometria"],
     ["T04","Calorimetria"],
     ["T04b","Calorimetria (Aprofundamento)"],
