@@ -63,7 +63,7 @@
       sv += `<text class="tx2" x="${X(xa)}" y="${yE - 34}" text-anchor="middle" style="fill:var(--mA)">A</text><text class="tx2" x="${X(xb)}" y="${yE - 34}" text-anchor="middle" style="fill:var(--mT)">B</text>`;
       if (window.D) {
         const smin = Math.min(0, sa + va * Tmax, sb + vb * Tmax), smax = Math.max(220, sa + va * Tmax, sb + vb * Tmax);
-        sv += D.graf({ x0: 70, y0: 335, w: W - 130, h: 200, xmax: Tmax, ymin: smin, ymax: smax, xlab: "t (s)", ylab: "s (m)", xt: [0, Math.round(Tmax / 2), Math.round(Tmax)], yt: [0, 100, 200].filter((v) => v >= smin && v <= smax),
+        sv += D.graf({ x0: 70, y0: 335, w: W - 130, h: 200, xmax: Tmax, ymin: smin, ymax: smax, xlab: "t (s)", ylab: "s (m)", xt: [0, Math.round(Tmax / 4), Math.round(Tmax / 2), Math.round((3 * Tmax) / 4)], yt: [0, 100, 200].filter((v) => v >= smin && v <= smax),
           curvas: [{ pts: [[0, sa], [Tmax, sa + va * Tmax]], cor: "var(--mA)" }, { pts: [[0, sb], [Tmax, sb + vb * Tmax]], cor: "var(--mT)" }], pontos: e && e.te <= Tmax ? [[e.te, e.se, "encontro"]] : [] });
         const Xg = 70 + (Math.min(t, Tmax) / Tmax) * (W - 130); sv += `<line x1="${Xg}" x2="${Xg}" y1="135" y2="335" style="stroke:var(--ink3);stroke-dasharray:3 3"/>`;
       }

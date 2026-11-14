@@ -19,7 +19,7 @@ window.CATALOGO = [
   ]},
   { id:"A", letra:"A", cor:"--mA", nome:"Mecânica", desc:"Da cinemática à gravitação, fluidos e oscilações.", temas:[
     ["A01","Introdução à Cinemática",[],true],
-    ["A02","Movimento Retilíneo Uniforme"],
+    ["A02","Movimento Retilíneo Uniforme",[],true],
     ["A03","Movimento Retilíneo Uniformemente Variado"],
     ["A04","Análise Gráfica",["★"]],
     ["A05","Cinemática Vetorial"],
