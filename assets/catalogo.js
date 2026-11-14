@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 1.5";
+window.VERSAO = "β 1.6";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -60,10 +60,10 @@ window.CATALOGO = [
     ["B09","Fundamentos da Óptica Geométrica"],
     ["B10","Espelhos Planos"],
     ["B11","Espelhos Esféricos"],
-    ["B12","Refração",["★"]],
-    ["B13","Lentes",["★"]],
+    ["B12","Refração",["★"],true],
+    ["B13","Lentes",["★"],true],
     ["B14","Instrumentos Ópticos e Olho Humano"],
-    ["B14b","Óptica Ondulatória"],
+    ["B14b","Óptica Ondulatória",["!"],true],
   ]},
   { id:"C", letra:"C", cor:"--mC", nome:"Eletricidade e Magnetismo", desc:"Eletrostática, circuitos, magnetismo, indução e Maxwell.", temas:[
     ["C01","Carga Elétrica e Eletrização",[],true],
