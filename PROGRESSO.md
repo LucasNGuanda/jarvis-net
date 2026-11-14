@@ -3,7 +3,7 @@
 ## Estado atual (14/11/2026, depois da β 2.6)
 - **Física**: 64 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
   - Prontos: Fundamentos inteiro (6); Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes inteiro (7); Bônus (X01); Simulados (S00–S04; S02 já tem o IME 2026/27, os outros só a página de entrada).
-  - Vazios: Mecânica (20), Termodinâmica (11).
+  - Vazios: Mecânica (21), Termodinâmica (11).
 - **Cálculo**: 27 de 27 (Cálculo 1, Cálculo 2, Funções especiais, Teoremas, Simulados de Cálculo).
 - **Experimental**: 0 de 11 (módulos criados, temas a decidir).
 - **Experimentos**: 10 de 10.
