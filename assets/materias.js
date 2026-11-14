@@ -6,4 +6,4 @@ window.MATERIAS = [
   { id: "matematica", nome: "Matemática", desc: "Em construção.", rota: "#/matematica/inicio", cor: "--mK2", icone: "integral", pronta: false, prefixo: "matematica" },
   { id: "russo", nome: "Russo", desc: "Em construção.", rota: "#/russo/inicio", cor: "--mT", icone: "cirilico", pronta: false, prefixo: "russo" },
 ];
-window.PROJETO = { nome: "Jarvis", subtitulo: "meu sistema de estudo" };
+window.PROJETO = { nome: "Jarvis" };

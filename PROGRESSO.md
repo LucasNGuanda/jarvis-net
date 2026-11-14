@@ -1,6 +1,6 @@
 # PROGRESSO — Site de Física do Lucas
 
-## Estado atual (14/11/2026, depois da β 2.9)
+## Estado atual (14/11/2026, depois da β 3.0)
 - **Física**: 64 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
   - Prontos: Fundamentos inteiro (6); Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes inteiro (7); Bônus (X01); Simulados (S00–S04; S02 já tem o IME 2026/27, os outros só a página de entrada).
   - Vazios: Mecânica (21), Termodinâmica (11).
@@ -246,7 +246,13 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Faixa do topo do site de física: botão **Home** (casinha) antes do átomo da Física, que volta para a tela inicial. O resto da faixa ficou igual.
   - Tudo continua num `index.html` só, então o progresso fica no mesmo `localStorage` (testado: a marcação de um exercício sobrevive à ida e volta pela tela inicial).
   - Nome do projeto: o site passou a se chamar **Jarvis** (título da aba do navegador, selo de versão na faixa do topo e README). O site de física continua o mesmo por dentro.
-  - Conferências: 13 testes novos da tela inicial; regressão completa (resultado na resposta da β 2.9).
+  - Conferências: 13 testes novos da tela inicial; regressão completa sem falhas (144 páginas, funcionamento, calculadoras 103/103 e 41/41, física).
+
+- **β 3.0** — Ajustes na tela inicial (pedidos do Lucas).
+  - Tirado o texto "meu sistema de estudo" embaixo de Jarvis.
+  - **Planeta parava de girar** ao voltar para a tela inicial (da Física, de um tema ou de outra aba do navegador). Causa: a animação era SMIL (animação dentro do SVG), que no Chrome não recomeça quando o desenho é recolocado na página. Agora é animação quadro a quadro em JavaScript (requestAnimationFrame), que para sozinha quando a tela inicial sai e recomeça quando volta.
+  - **Cor do Jarvis**: passando o mouse no título (ou tocando, no celular) aparece um controle de cor do vermelho ao lilás. O planeta e o degradê do título mudam juntos, com três tons vizinhos da cor escolhida. Botão "voltar à cor original" volta ao degradê de antes. A cor fica salva em `jarvis:cor` (o prefixo reservado para a tela inicial no modelo de dados).
+  - Conferências: 13 testes novos (giro depois de voltar de cada jeito, seletor aparece e some, cores mudam juntas, cor salva, voltar à original, celular) e os 13 da tela inicial.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.

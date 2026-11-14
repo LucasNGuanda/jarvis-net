@@ -52,7 +52,7 @@ Toda chave é `prefixo:nome`, sempre lida e gravada com try/catch (o `F.store` j
 |---|---|---|
 | `fisica:` | site de física (hoje) | `feitos`, `marca:COD-n`, `chefao:COD`, `menuAbertos`, `mostrarBreve`, `ultimo:<área>`, `codigos` (versão dos códigos) |
 | `fisica:` (configurações globais, por herança) | site inteiro | `tema`, `idioma`, `calculadora`, `calculadora2` |
-| `jarvis:` | tela inicial e, no futuro, o portal | nenhuma ainda (reservado: perguntas, progresso geral) |
+| `jarvis:` | tela inicial e, no futuro, o portal | `cor` (matiz escolhido para o título e o planeta, desde a β 3.0); reservado: perguntas, progresso geral |
 | `quimica:`, `matematica:`, `russo:` | matérias novas | mesmas chaves da física, com os códigos delas |
 
 - As configurações globais ficam em `fisica:` por enquanto, para não perder o que já está salvo. Quando o portal precisar, elas migram para `jarvis:cfg:...` com uma função de migração única (como `F.migraDados` da β 2.0).

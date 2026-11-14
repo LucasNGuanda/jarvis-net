@@ -11,26 +11,65 @@
     cirilico: `<svg viewBox="0 0 32 32" aria-hidden="true"><text x="16" y="23" text-anchor="middle" style="font:700 19px var(--f-text);fill:currentColor">Я</text><path d="M6 27h20" style="stroke:var(--mT)" stroke-width="2" stroke-linecap="round"/></svg>`,
   };
   /* globo de arame girando, inclinado, com um anel em órbita (desenho do Lucas: "fica rodando") */
+  /* globo de arame girando, inclinado, com um anel em órbita (desenho do Lucas: "fica rodando").
+     Animado por requestAnimationFrame (β 3.0): a animação SVG (SMIL) parava quando a tela inicial era desenhada de novo. */
+  const R = 92, MERIDIANOS = 6, GIRO = Math.PI / 9, ORBITA = (2 * Math.PI) / 7;
   function globo() {
-    const R = 92, meridianos = 6, amostras = 13;
     let mer = "";
-    for (let k = 0; k < meridianos; k++) {
-      const fase = (k * Math.PI) / meridianos, vals = [];
-      for (let i = 0; i < amostras; i++) vals.push((R * Math.abs(Math.cos(fase + (i * Math.PI) / (amostras - 1)))).toFixed(1));
-      mer += `<ellipse cx="0" cy="0" rx="${vals[0]}" ry="${R}" class="jv-mer"><animate attributeName="rx" dur="9s" repeatCount="indefinite" values="${vals.join(";")}"/></ellipse>`;
-    }
+    for (let k = 0; k < MERIDIANOS; k++) mer += `<ellipse cx="0" cy="0" rx="${R}" ry="${R}" class="jv-mer"/>`;
     let lat = "";
     [-60, -30, 0, 30, 60].forEach((g) => { const y = R * Math.sin((g * Math.PI) / 180), rx = R * Math.cos((g * Math.PI) / 180); lat += `<ellipse cx="0" cy="${y.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${(rx * 0.16).toFixed(1)}" class="jv-lat"/>`; });
     return `<svg class="jv-globo" viewBox="-160 -130 320 260" role="img" aria-label="Globo girando com um anel em órbita">
-      <defs><radialGradient id="jv-luz" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="var(--mO)" stop-opacity=".22"/><stop offset="1" stop-color="var(--mA)" stop-opacity="0"/></radialGradient></defs>
+      <defs><radialGradient id="jv-luz" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="var(--jv3)" stop-opacity=".22"/><stop offset="1" stop-color="var(--jv2)" stop-opacity="0"/></radialGradient></defs>
       <g transform="rotate(-23)">
         <circle r="${R}" fill="url(#jv-luz)" class="jv-borda"/>
         ${lat}${mer}
-        <ellipse rx="150" ry="34" class="jv-anel" transform="rotate(18)"/>
-        <circle r="5" class="jv-lua"><animateMotion dur="7s" repeatCount="indefinite" rotate="auto" path="M150 0 A150 34 0 1 1 -150 0 A150 34 0 1 1 150 0" transform="rotate(18)"/></circle>
+        <g transform="rotate(18)"><ellipse rx="150" ry="34" class="jv-anel"/><circle r="5" cx="150" cy="0" class="jv-lua"/></g>
       </g>
     </svg>`;
   }
+  /* desenha o quadro no instante t (s); devolve false se o globo saiu da página */
+  function quadro(sv, t) {
+    if (!sv.isConnected) return false;
+    sv.querySelectorAll(".jv-mer").forEach((e, k) => e.setAttribute("rx", (R * Math.abs(Math.cos((k * Math.PI) / MERIDIANOS + GIRO * t))).toFixed(1)));
+    const a = ORBITA * t, lua = sv.querySelector(".jv-lua");
+    lua.setAttribute("cx", (150 * Math.cos(a)).toFixed(1)); lua.setAttribute("cy", (34 * Math.sin(a)).toFixed(1));
+    lua.style.opacity = Math.sin(a) < 0 && Math.abs(150 * Math.cos(a)) < R ? 0.3 : 1; /* atrás do globo fica apagadinha */
+    return true;
+  }
+  function anima(sv) {
+    let parado = false; try { parado = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+    const t0 = performance.now();
+    if (parado) { quadro(sv, 2); return; }
+    const laco = (agora) => { if (quadro(sv, (agora - t0) / 1000)) requestAnimationFrame(laco); };
+    requestAnimationFrame(laco);
+  }
+  J._quadro = quadro;
+
+  /* cor do Jarvis: o título e o planeta mudam juntos. Guardada em jarvis:cor (docs/MODELO_DE_DADOS.md, seção 5). */
+  const CHAVE_COR = "jarvis:cor", MATIZ_MAX = 285; /* 0 = vermelho … 285 = lilás */
+  const lerCor = () => { try { const v = JSON.parse(localStorage.getItem(CHAVE_COR)); return typeof v === "number" ? v : null; } catch (e) { return null; } };
+  const gravarCor = (h) => { try { if (h === null) localStorage.removeItem(CHAVE_COR); else localStorage.setItem(CHAVE_COR, JSON.stringify(h)); } catch (e) {} };
+  function aplicaCor(raiz, h) {
+    if (h === null) { ["--jv1", "--jv2", "--jv3"].forEach((v) => raiz.style.removeProperty(v)); raiz.classList.remove("cor-propria"); return; }
+    /* degradê com três tons vizinhos da cor escolhida */
+    raiz.style.setProperty("--jv1", `hsl(${h - 12}, 85%, 66%)`);
+    raiz.style.setProperty("--jv2", `hsl(${h}, 80%, 60%)`);
+    raiz.style.setProperty("--jv3", `hsl(${h + 14}, 88%, 56%)`);
+    raiz.classList.add("cor-propria");
+  }
+  J._aplicaCor = aplicaCor;
+  function seletorCor(raiz) {
+    const t = raiz.querySelector(".jv-titulo"), inp = raiz.querySelector(".jv-cor input"), bt = raiz.querySelector(".jv-cor button");
+    const h0 = lerCor(); if (h0 !== null) inp.value = h0;
+    aplicaCor(raiz, h0);
+    inp.addEventListener("input", () => { const h = +inp.value; aplicaCor(raiz, h); gravarCor(h); });
+    bt.addEventListener("click", () => { aplicaCor(raiz, null); gravarCor(null); inp.value = 50; });
+    /* no celular não há "passar o mouse": tocar no título abre e fecha o seletor */
+    t.querySelector("h1").addEventListener("click", () => t.classList.toggle("aberto"));
+  }
+  /* tocar fora do título fecha o seletor (um ouvinte só, para a página toda) */
+  document.addEventListener("click", (ev) => { const t = document.querySelector(".jv-titulo.aberto"); if (t && !t.contains(ev.target)) t.classList.remove("aberto"); });
   function cartao(m) {
     const conteudo = `<span class="jv-ic" style="color:var(${esc(m.cor)})">${ICONE[m.icone] || ""}</span><span class="jv-nome">${esc(m.nome)}</span><span class="jv-desc">${esc(m.desc || "")}</span>${m.pronta ? "" : `<span class="jv-breve">em breve</span>`}`;
     return m.pronta
@@ -38,9 +77,10 @@
       : `<div class="jv-mat desativada" aria-disabled="true" title="${esc(m.nome)}: em breve" style="--cor:var(${esc(m.cor)})" data-materia="${esc(m.id)}">${conteudo}</div>`;
   }
   J.home = (el) => {
-    const P = window.PROJETO || { nome: "Jarvis", subtitulo: "" }, mats = window.MATERIAS || [];
+    const P = window.PROJETO || { nome: "Jarvis" }, mats = window.MATERIAS || [];
     el.innerHTML = `<div class="jv">
-      <header class="jv-cab"><h1>${esc(P.nome)}</h1><p>${esc(P.subtitulo)}</p></header>
+      <header class="jv-cab"><div class="jv-titulo" tabindex="-1"><h1 title="Passe o mouse para mudar a cor">${esc(P.nome)}</h1>
+        <div class="jv-cor" role="group" aria-label="Cor do ${esc(P.nome)}"><label>cor<input type="range" min="0" max="${MATIZ_MAX}" step="1" value="50" aria-label="Cor, do vermelho ao lilás"></label><button type="button">voltar à cor original</button></div></div></header>
       <nav class="jv-materias" aria-label="Matérias">${mats.map(cartao).join("")}</nav>
       <div class="jv-ilu">${globo()}</div>
       <form class="jv-pergunta" onsubmit="return false" aria-label="Perguntar ao ${esc(P.nome)} (em breve)">
@@ -49,8 +89,8 @@
         <span class="jv-breve">em breve</span>
       </form>
     </div>`;
-    const sv = el.querySelector(".jv-globo");
-    try { if (sv && window.matchMedia("(prefers-reduced-motion: reduce)").matches) sv.pauseAnimations(); } catch (e) {}
+    seletorCor(el.querySelector(".jv"));
+    anima(el.querySelector(".jv-globo"));
   };
   /* rota de uma matéria registrada que ainda não existe (ex.: #/quimica/inicio): nunca tela em branco */
   J.emBreve = (el, m) => {
