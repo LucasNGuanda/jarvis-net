@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -445,5 +445,44 @@
     });
     q("[data-a=re]").addEventListener("click", () => (s = 0));
     ["m", "M", "L"].forEach((k) => q(`[data-c=${k}]`).addEventListener("input", () => (s = 0)));
+  };
+
+  /* ---------- A13 · colisão em 1D com coeficiente de restituição ---------- */
+  SIM.colisao = (el, F) => {
+    const W = 680, H = 250;
+    let x1, x2, u1, u2, bateu, t;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("massa 1 (kg)", "m1", 0.5, 5, 0.5, 2)}${sl("massa 2 (kg)", "m2", 0.5, 5, 0.5, 3)}${sl("velocidade 1 (m/s)", "v1", -2, 4, 0.5, 3)}${sl("velocidade 2 (m/s)", "v2", -3, 2, 0.5, 0)}${sl("coeficiente de restituição e", "e", 0, 1, 0.05, 1)}
+      <div class="bts"><button class="bt pri" data-a="re">Recomeçar</button></div></div>
+      <div class="status">e = 1: colisão elástica (a velocidade relativa só troca de sinal e a energia cinética se conserva). e = 0: perfeitamente inelástica (os dois saem juntos). A quantidade de movimento total é a mesma antes e depois em qualquer caso; a energia cinética perdida é ½·μ·v_rel²·(1 − e²), com μ = m₁m₂/(m₁+m₂).</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.colisao._conta = (m1, m2, v1, v2, e) => { const M = m1 + m2, p = m1 * v1 + m2 * v2, w1 = (p - m2 * e * (v1 - v2)) / M, w2 = (p + m1 * e * (v1 - v2)) / M, E0 = 0.5 * m1 * v1 * v1 + 0.5 * m2 * v2 * v2, E1 = 0.5 * m1 * w1 * w1 + 0.5 * m2 * w2 * w2; return { p, w1, w2, E0, E1, perda: E0 - E1, vcm: p / M }; };
+    const larg = (m) => 0.35 + 0.18 * Math.sqrt(m);
+    const reinicia = () => { x1 = 2.5; x2 = 6.5; u1 = val(el, "v1"); u2 = val(el, "v2"); bateu = false; t = 0; };
+    reinicia();
+    anima(el, F, (dt) => {
+      const m1 = val(el, "m1"), m2 = val(el, "m2"), e = val(el, "e"), c = SIM.colisao._conta(m1, m2, val(el, "v1"), val(el, "v2"), e);
+      mostra(el, ["m1", "m2", "v1", "v2"], 1); mostra(el, ["e"], 2);
+      t += dt;
+      const sub = 10;
+      for (let k = 0; k < sub; k++) {
+        x1 += (u1 * dt) / sub; x2 += (u2 * dt) / sub;
+        if (!bateu && x2 - x1 <= (larg(m1) + larg(m2)) / 2 && u1 > u2) { u1 = c.w1; u2 = c.w2; bateu = true; }
+      }
+      if (t > 7 || (bateu && (x1 < -1 || x2 > 12)) || (!bateu && u1 <= u2 && t > 3)) reinicia();
+      const esc = 56, X = (xx) => 20 + xx * esc, yT = 170;
+      let sv = `<line x1="10" x2="${W - 10}" y1="${yT}" y2="${yT}" style="stroke:var(--ink2);stroke-width:2"/>`;
+      for (let k = 0; k <= 11; k++) sv += `<line x1="${X(k)}" x2="${X(k)}" y1="${yT}" y2="${yT + 6}" style="stroke:var(--ink3)"/>`;
+      [[x1, m1, u1, "var(--mA)", "1"], [x2, m2, u2, "var(--mC)", "2"]].forEach(([xx, m, u, cor, r]) => {
+        const w = larg(m) * esc, h = 26 + 8 * Math.sqrt(m);
+        sv += `<rect x="${X(xx) - w / 2}" y="${yT - h}" width="${w}" height="${h}" rx="4" style="fill:color-mix(in srgb,${cor} 35%,transparent);stroke:${cor};stroke-width:2"/>` + D.txt(X(xx), yT - h / 2 + 5, r, "tx2");
+        if (Math.abs(u) > 0.05) sv += D.seta(X(xx), yT - h - 14, X(xx) + u * 22, yT - h - 14, cor, 2) + D.txt(X(xx) + u * 11, yT - h - 22, n2(u, 2) + " m/s", "tx2");
+      });
+      sv += D.txt(16, 24, bateu ? "depois da colisão" : "antes da colisão", "tx2", "start");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("quantidade de movimento total", n2(c.p, 2) + " kg·m/s") + vis("velocidades depois (1 | 2)", n2(c.w1, 2) + " | " + n2(c.w2, 2) + " m/s") + vis("energia cinética antes → depois", n2(c.E0, 2) + " → " + n2(c.E1, 2) + " J") + vis("energia perdida", n2(c.perda, 2) + " J");
+    });
+    q("[data-a=re]").addEventListener("click", reinicia);
+    ["v1", "v2", "m1", "m2", "e"].forEach((k) => q(`[data-c=${k}]`).addEventListener("input", reinicia));
   };
 })();
