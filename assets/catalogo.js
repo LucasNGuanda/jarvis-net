@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 2.4";
+window.VERSAO = "β 2.5";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -111,9 +111,9 @@ window.CATALOGO = [
     ["N02","Equação da continuidade",["∫"],true],
     ["N03","Equação de Euler e Bernoulli",["∫"],true],
     ["N04","Tensor de tensões e viscosidade",["!!","∫"],true],
-    ["N05","Dedução de Navier–Stokes",["!!","∫"]],
-    ["N06","Couette, Poiseuille, Hagen–Poiseuille",["!","∫"]],
-    ["N07","Reynolds, turbulência e o Problema do Milênio",["!"]],
+    ["N05","Dedução de Navier–Stokes",["!!","∫"],true],
+    ["N06","Couette, Poiseuille, Hagen–Poiseuille",["!","∫"],true],
+    ["N07","Reynolds, turbulência e o Problema do Milênio",["!"],true],
   ]},
   { id:"X", letra:"★", cor:"--mX", nome:"Bônus", desc:"Coisas inventadas e curiosidades fora da ordem.", temas:[
     ["X01","A função gam fresco do Lucas",["∫"],true],
@@ -121,7 +121,7 @@ window.CATALOGO = [
   { id:"S", letra:"S", cor:"--mS", nome:"Simulados", desc:"Questões escolhidas pelo Lucas, com a fonte de cada uma (ex.: [ITA 2010]).", temas:[
     ["S00","Como funcionam os simulados",[],true],
     ["S01","Exercícios da SOIF",[],true],
-    ["S02","Vestibulares militares",["ITA"],true],
+    ["S02","Vestibulares militares",["ITA","IME"],true],
     ["S03","Vestibulares ao redor do mundo",[],true],
     ["S04","Olimpíadas de Física (BR e RU)",["RU"],true],
   ]},
@@ -159,6 +159,10 @@ window.CATALOGO = [
     ["TE03","Teoremas de Pappus–Guldin",["∫"],true],
     ["TE04","Teorema de Stokes",["∫","!!"],true],
     ["TE05","Teorema de Noether",["!!"],true],
+  ]},
+  { id:"K5", area:"calculo", letra:"S", cor:"--mK5", nome:"Simulados de Cálculo", desc:"Provas de verdade, com a fonte e a resolução: MIT Integration Bee e USP.", temas:[
+    ["SC01","MIT Integration Bee 2026: classificatória",["MIT","∫","!"],true],
+    ["SC02","USP · MAT 111 (Cálculo I): Prova 1, 2015",["USP"],true],
   ]},
 
   /* ===================== ÁREA EXPERIMENTAL (medidas, incertezas, gráficos) — temas a definir com o Lucas ===================== */

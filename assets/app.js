@@ -65,6 +65,8 @@
     const mant = v / Math.pow(10, e);
     return F.m(mant, n - 1) + "\\times 10^{" + e + "}";
   };
+  /* igual ao sigM, mas sem zeros à direita na mantissa: 3,0 × 10⁻⁵ → 3 × 10⁻⁵, 0,010 → 0,01 */
+  F.sigL = (v, n = 3) => F.sigM(v, n).replace(/(\{,\}\d*?)0+(?=\\times|$)/, "$1").replace(/\{,\}(?=\\times|$)/, "");
   /* notação científica para texto (fora do KaTeX): F.cient(64168764, 2) -> "6,42 × 10⁷" */
   F.cient = (v, d = 2) => {
     if (!isFinite(v)) return "—";
@@ -125,7 +127,7 @@
   F.fig = (svg, leg) => `<figure class="fig" style="margin:14px 0">${svg}${leg ? `<figcaption>${leg}</figcaption>` : ""}</figure>`;
   F.ret = (cod) => { const t = F.achar(cod), ok = t && t.pronto; return `<a class="selo ret${ok ? "" : " breve"}" href="#/${cod}" title="retoma ${t ? t.nome : cod}${ok ? "" : " (em breve: ainda não escrito)"}">[${cod}]←</a>`; };
   F.selos = (arr = []) => arr.map((m) => `<span class="selo" title="${LEG[m] || ""}">${m}</span>`).join("");
-  const LEG = { "★": "cai muito em OBF/ITA", "!": "difícil", "!!": "muito difícil", "?": "confuso, não bobear", "∫": "exige cálculo", ITA: "cobrado no ITA", RU: "aparece em olimpíada russa" };
+  const LEG = { "★": "cai muito em OBF/ITA", "!": "difícil", "!!": "muito difícil", "?": "confuso, não bobear", "∫": "exige cálculo", ITA: "cobrado no ITA", IME: "cobrado no IME", MIT: "MIT Integration Bee", USP: "prova da USP", RU: "aparece em olimpíada russa" };
   F.LEG = LEG;
 
   /* chuta antes de ver */

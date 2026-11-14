@@ -25,7 +25,7 @@
   /* uma cor por módulo, ~35° de matiz entre vizinhos dentro de cada área */
   --mF:#9aa7bd; --mA:#6f8dff; --mT:#ef5350; --mO:#ecd04a; --mC:#b48cf5;
   --mM:#ec6fa6; --mU:#3fbf8a; --mN:#38c4dc;
-  --mX:#a5cf4e; --mS:#f39c3c; --mK1:#f5b942; --mK2:#d58cff; --mK3:#4fc3c9; --mK4:#ef6f6f;
+  --mX:#a5cf4e; --mS:#f39c3c; --mK1:#f5b942; --mK2:#d58cff; --mK3:#4fc3c9; --mK4:#ef6f6f; --mK5:#f07fb5;
   --mod:var(--acc);                /* cor do módulo atual (trocada pelo JS) */
   --shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.25);
   --topo:56px; --menu:280px;
@@ -39,7 +39,7 @@
   --acc:#2f63d6; --ok:#1f8f5c; --warn:#a86d09; --bad:#c43c3c;
   --mF:#5d6b82; --mA:#3f5fd6; --mT:#c62828; --mO:#9c7a00; --mC:#7c4fc4;
   --mM:#c23c78; --mU:#1a8a5e; --mN:#0f8aa0;
-  --mX:#5c8a1e; --mS:#b86010; --mK1:#a87400; --mK2:#9447c9; --mK3:#14848a; --mK4:#c23b3b;
+  --mX:#5c8a1e; --mS:#b86010; --mK1:#a87400; --mK2:#9447c9; --mK3:#14848a; --mK4:#c23b3b; --mK5:#b8326f;
   --shadow:0 1px 2px rgba(20,30,50,.06), 0 6px 18px rgba(20,30,50,.06);
   color-scheme:light;
 }
@@ -150,6 +150,7 @@ button{font:inherit;color:inherit}
 /* figuras */
 .fig{margin:14px 0;text-align:center}
 .fig svg{max-width:100%;height:auto}
+.fig img.scan{display:inline-block;height:auto;background:#fff;padding:10px;border-radius:10px;border:1px solid var(--line)}
 .fig figcaption,.leg{font:italic 14px var(--f-det);color:var(--ink2);margin-top:4px}
 svg .ln{stroke:var(--ink);stroke-width:2;fill:none}
 svg .ln2{stroke:var(--ink2);stroke-width:1.4;fill:none}

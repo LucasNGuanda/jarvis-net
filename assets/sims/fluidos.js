@@ -1,4 +1,4 @@
-/* Simulações de Fluidos (N01–N04): Euler × Lagrange e derivada material, bocal (continuidade), Torricelli e Venturi (Bernoulli),
+/* Simulações de Fluidos (N01–N07): Euler × Lagrange e derivada material, bocal (continuidade), Torricelli e Venturi (Bernoulli),
    deformação de um elemento de fluido e tensões viscosas. */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -163,6 +163,138 @@
     }
     function laco(ts) { if (!vivo) return; const dt = ult === null ? 0 : Math.min(0.05, (ts - ult) / 1000); ult = ts; desenha(dt); requestAnimationFrame(laco); }
     liga(el, "k", (v) => { k = v; t = 0; });
+    liga(el, "f", (v) => { fl = v; });
+    requestAnimationFrame(laco); F.aoSair(() => (vivo = false));
+  };
+  /* ---------- N05 · o termo viscoso é difusão de momento: placa posta em movimento de repente (1º problema de Stokes) ---------- */
+  const erfc = (x) => { /* Abramowitz–Stegun 7.1.26, erro < 1,5e-7 */ const s = x < 0 ? -1 : 1, z = Math.abs(x), t = 1 / (1 + 0.3275911 * z); const y = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429)))) * Math.exp(-z * z); return s > 0 ? y : 2 - y; };
+  SIM.stokes1 = (el, F) => {
+    const FL = { agua: ["água", 1.0e-6], oleo: ["óleo de motor", 1.1e-4], mel: ["mel", 7e-3] };
+    let fl = "agua", t = 0, vivo = true, ult = null, rodando = true;
+    const W = 640, H = 320, U = 1;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("altura da janela (mm)", "L", 2, 60, 1, 10)}${sl("velocidade da simulação (× tempo real)", "ac", 0.1, 20, 0.1, 1)}
+      <div class="bts">${botoes(Object.entries(FL).map(([k, c]) => [k, c[0]]), "f", fl)}<button class="bt pri" data-a="re">Recomeçar</button><button class="bt peq" data-a="pa">Pausar</button></div></div>
+      <div class="status">No instante 0, a placa de baixo passa a andar a 1 m/s; o fluido acima estava parado. Navier–Stokes, neste caso, vira ∂u/∂t = ν ∂²u/∂y²: a mesma equação do calor. O movimento "se espalha" para cima por difusão, e a espessura da camada que já foi arrastada cresce como √(νt), não proporcional a t. A curva laranja é a solução exata u = U·erfc(y / 2√(νt)); as setas são a velocidade em cada altura.</div>`);
+    const q = (s) => el.querySelector(s);
+    const u = (y, tt, nu) => (tt <= 0 ? (y <= 0 ? U : 0) : U * erfc(y / (2 * Math.sqrt(nu * tt))));
+    SIM.stokes1._u = (y, tt, nu) => u(y, tt, nu);
+    function desenha(dt) {
+      const Lmm = +q("[data-c=L]").value, ac = +q("[data-c=ac]").value, nu = FL[fl][1];
+      q("[data-o=L]").textContent = n2(Lmm, 0); q("[data-o=ac]").textContent = n2(ac, 1);
+      if (rodando) t += dt * ac;
+      const L = Lmm / 1000, x0 = 60, x1 = 330, base = H - 30, topo = 20, Y = (y) => base - (y / L) * (base - topo), X = (v) => x0 + v * (x1 - x0);
+      let s = `<rect x="${x0 - 10}" y="${base}" width="${x1 - x0 + 40}" height="10" style="fill:var(--ink3)"/>`;
+      s += seta(x0 + 20, base + 22, x0 + 90, base + 22, "var(--ink2)", 1.6) + `<text class="tx2" x="${x0 + 96}" y="${base + 26}">placa: U = 1 m/s</text>`;
+      for (let i = 1; i <= 12; i++) { const y = (L * i) / 12.5, v = u(y, t, nu); if (v > 0.004) s += seta(x0, Y(y), X(v), Y(y), "#7ab8e6", 1.6); }
+      let d = ""; for (let i = 0; i <= 120; i++) { const y = (L * i) / 120; d += (i ? "L" : "M") + X(u(y, t, nu)).toFixed(1) + " " + Y(y).toFixed(1); }
+      s += `<path d="${d}" style="fill:none;stroke:var(--warn);stroke-width:2.5"/><line x1="${x0}" x2="${x0}" y1="${topo}" y2="${base}" style="stroke:var(--ink3)"/>`;
+      const delta = 3.64 * Math.sqrt(nu * t); /* onde u cai a 1% de U: erfc(η) = 0,01 em η ≈ 1,82 */
+      if (delta < L) s += `<line x1="${x0}" x2="${x1}" y1="${Y(delta)}" y2="${Y(delta)}" style="stroke:var(--ink3);stroke-dasharray:4 4"/><text class="tx2" x="${x1 + 6}" y="${Y(delta) + 4}">u = 1% de U</text>`;
+      [0, 0.5, 1].forEach((v) => (s += `<text class="tx2" x="${X(v)}" y="${topo - 6}" text-anchor="middle">${n2(v, 1)}</text>`));
+      /* gráfico δ × t à direita */
+      const gx0 = 420, gx1 = W - 20, gy0 = base, gy1 = topo + 20, T = Math.max(1, t * 1.2), Dm = 3.64 * Math.sqrt(nu * T);
+      s += `<line x1="${gx0}" x2="${gx1}" y1="${gy0}" y2="${gy0}" style="stroke:var(--ink3)"/><line x1="${gx0}" x2="${gx0}" y1="${gy0}" y2="${gy1}" style="stroke:var(--ink3)"/><text class="tx2" x="${(gx0 + gx1) / 2}" y="${gy0 + 18}" text-anchor="middle">tempo</text><text class="tx2" x="${gx0 - 6}" y="${gy1 - 6}">espessura arrastada</text>`;
+      let g = ""; for (let i = 0; i <= 60; i++) { const tt = (T * i) / 60; g += (i ? "L" : "M") + (gx0 + ((gx1 - gx0) * tt) / T).toFixed(1) + " " + (gy0 - ((gy0 - gy1) * 3.64 * Math.sqrt(nu * tt)) / Dm).toFixed(1); }
+      s += `<path d="${g}" style="fill:none;stroke:var(--mod);stroke-width:2"/><circle cx="${gx0 + ((gx1 - gx0) * t) / T}" cy="${gy0 - ((gy0 - gy1) * delta) / Dm}" r="4" style="fill:var(--warn)"/>`;
+      q("[data-v=sv]").innerHTML = s;
+      q("[data-v=lt]").innerHTML = vis("tempo desde a partida", n2(t, 2) + " s") + vis(`viscosidade cinemática ν (${FL[fl][0]})`, F.cient(nu, 2) + " m²/s") + vis("espessura arrastada (u > 1% de U) ≈ 3,64√(νt)", n2(delta * 1000, 2) + " mm") + vis("u na metade da janela", n2(u(L / 2, t, nu), 3) + " m/s");
+    }
+    function laco(ts) { if (!vivo) return; const dt = ult === null ? 0 : Math.min(0.05, (ts - ult) / 1000); ult = ts; desenha(dt); requestAnimationFrame(laco); }
+    q("[data-a=re]").addEventListener("click", () => { t = 0; rodando = true; q("[data-a=pa]").textContent = "Pausar"; });
+    q("[data-a=pa]").addEventListener("click", (e) => { rodando = !rodando; e.currentTarget.textContent = rodando ? "Pausar" : "Continuar"; });
+    liga(el, "f", (v) => { fl = v; t = 0; });
+    SIM.stokes1._t = (v) => { t = v; rodando = false; };
+    requestAnimationFrame(laco); F.aoSair(() => (vivo = false));
+  };
+
+  /* ---------- N06 · Couette, Poiseuille plano e Hagen–Poiseuille ---------- */
+  SIM.canal = (el, F) => {
+    let modo = "canal", vivo = true, ult = null, fase = 0;
+    const W = 640, H = 320, mu = 1.0e-3, rho = 1000; /* água */
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div data-v="cc" style="display:contents">${sl("velocidade da placa de cima U (mm/s)", "U", -20, 20, 0.5, 10)}${sl("gradiente de pressão G = −dp/dx (Pa/m)", "G", -40, 40, 0.5, 0)}${sl("distância entre as placas h (mm)", "h", 0.5, 4, 0.1, 2)}</div>
+      <div data-v="ct" style="display:none">${sl("gradiente de pressão G = −dp/dx (Pa/m)", "Gt", 1, 100, 1, 20)}${sl("raio do cano R (mm)", "R", 0.2, 3, 0.05, 1)}</div>
+      <div class="bts">${botoes([["canal", "entre placas (Couette + Poiseuille)"], ["tubo", "cano (Hagen–Poiseuille)"]], "m", modo)}</div></div>
+      <div class="status" data-v="txt"></div>`);
+    const q = (s) => el.querySelector(s);
+    const txt = { canal: "Água entre duas placas paralelas muito largas. Duas causas de movimento: a placa de cima andando (Couette: perfil reto) e a diferença de pressão empurrando (Poiseuille: perfil parabólico). Como a equação ficou linear, os perfis simplesmente se somam: u(y) = U·y/h + (G/2μ)·y(h − y). Com G negativo (pressão crescendo no sentido da placa) dá para ter fluido voltando perto da placa de baixo.", tubo: "Água num cano fino, empurrada pela diferença de pressão. O perfil é um paraboloide: u(r) = G(R² − r²)/(4μ), máximo no centro e zero na parede. A vazão é Q = πGR⁴/(8μ): com metade do raio, a vazão cai 16 vezes. Por isso uma artéria um pouco entupida é tão perigosa." };
+    const perfil = (y, U, G, h) => U * (y / h) + (G / (2 * mu)) * y * (h - y);
+    SIM.canal._u = perfil; SIM.canal._Q = (G, R) => (Math.PI * G * R ** 4) / (8 * mu);
+    function desenha(dt) {
+      fase += dt;
+      q("[data-v=cc]").style.display = modo === "canal" ? "contents" : "none"; q("[data-v=ct]").style.display = modo === "tubo" ? "contents" : "none"; q("[data-v=txt]").textContent = txt[modo];
+      ["U", "G", "h", "Gt", "R"].forEach((c) => (q(`[data-o=${c}]`).textContent = n2(+q(`[data-c=${c}]`).value, c === "h" || c === "R" ? 2 : 1)));
+      const x0 = 80, x1 = W - 80, yb = H - 50, yt = 50, mid = (x0 + x1) / 2;
+      let s = "";
+      if (modo === "canal") {
+        const U = +q("[data-c=U]").value / 1000, G = +q("[data-c=G]").value, h = +q("[data-c=h]").value / 1000;
+        const us = []; for (let i = 0; i <= 60; i++) us.push(perfil((h * i) / 60, U, G, h));
+        const umax = Math.max(1e-6, ...us.map(Math.abs)), esc = (x1 - mid - 30) / umax, Y = (y) => yb - (y / h) * (yb - yt);
+        s += `<rect x="${x0}" y="${yb}" width="${x1 - x0}" height="8" style="fill:var(--ink3)"/><rect x="${x0}" y="${yt - 8}" width="${x1 - x0}" height="8" style="fill:var(--ink3)"/><line x1="${mid}" x2="${mid}" y1="${yt}" y2="${yb}" style="stroke:var(--ink3);stroke-dasharray:3 3"/>`;
+        if (Math.abs(U) > 1e-6) s += seta(x1 - 80, yt - 20, x1 - 80 + 50 * Math.sign(U), yt - 20, "var(--ink2)", 1.8) + `<text class="tx2" x="${x1 - 80}" y="${yt - 26}" text-anchor="middle">U</text>`;
+        for (let i = 1; i < 12; i++) { const y = (h * i) / 12, v = perfil(y, U, G, h); if (Math.abs(v * esc) > 3) s += seta(mid, Y(y), mid + v * esc, Y(y), "#7ab8e6", 1.6); }
+        s += `<path d="${us.map((v, i) => (i ? "L" : "M") + (mid + v * esc).toFixed(1) + " " + Y((h * i) / 60).toFixed(1)).join("")}" style="fill:none;stroke:var(--warn);stroke-width:2.5"/>`;
+        for (let i = 0; i < 14; i++) { const yy = (h * (i + 0.5)) / 14, v = perfil(yy, U, G, h), xx = x0 + ((((fase * v * esc * 0.6 + i * 37) % (x1 - x0)) + (x1 - x0)) % (x1 - x0)); s += `<circle cx="${xx.toFixed(1)}" cy="${Y(yy).toFixed(1)}" r="2.5" style="fill:var(--mod);opacity:.7"/>`; }
+        const Qw = (U * h) / 2 + (G * h ** 3) / (12 * mu), tb = mu * (U / h + (G * h) / (2 * mu)), tt = mu * (U / h - (G * h) / (2 * mu));
+        const volta = us.some((v) => v < -1e-9) && us.some((v) => v > 1e-9);
+        q("[data-v=lt]").innerHTML = vis("vazão por metro de largura Q/b = Uh/2 + Gh³/12μ", n2(Qw * 1e6, 2) + " mm²/s") + vis("velocidade média", n2((Qw / h) * 1000, 2) + " mm/s") + vis("tensão na placa de baixo τ = μ du/dy", n2(tb * 1000, 2) + " mPa") + vis("tensão na placa de cima", n2(tt * 1000, 2) + " mPa") + vis("tem fluido voltando?", volta ? "sim" : "não");
+      } else {
+        const G = +q("[data-c=Gt]").value, R = +q("[data-c=R]").value / 1000, umax = (G * R * R) / (4 * mu), Q = SIM.canal._Q(G, R), vm = Q / (Math.PI * R * R), Re = (rho * vm * 2 * R) / mu;
+        const Y = (r) => (yb + yt) / 2 - (r / R) * ((yb - yt) / 2), esc = (x1 - mid - 30) / umax;
+        s += `<rect x="${x0}" y="${yb}" width="${x1 - x0}" height="8" style="fill:var(--ink3)"/><rect x="${x0}" y="${yt - 8}" width="${x1 - x0}" height="8" style="fill:var(--ink3)"/><line x1="${mid}" x2="${mid}" y1="${yt}" y2="${yb}" style="stroke:var(--ink3);stroke-dasharray:3 3"/>`;
+        for (let i = -10; i <= 10; i++) { if (i === -10 || i === 10) continue; const r = (R * i) / 10, v = (G * (R * R - r * r)) / (4 * mu); s += seta(mid, Y(r), mid + v * esc, Y(r), "#7ab8e6", 1.6); }
+        let d = ""; for (let i = -40; i <= 40; i++) { const r = (R * i) / 40; d += (i > -40 ? "L" : "M") + (mid + ((G * (R * R - r * r)) / (4 * mu)) * esc).toFixed(1) + " " + Y(r).toFixed(1); } s += `<path d="${d}" style="fill:none;stroke:var(--warn);stroke-width:2.5"/>`;
+        q("[data-v=lt]").innerHTML = vis("velocidade no centro GR²/4μ", n2(umax * 1000, 2) + " mm/s") + vis("vazão Q = πGR⁴/8μ", F.cient(Q * 1e6, 3) + " mL/s") + vis("velocidade média (metade da máxima)", n2(vm * 1000, 2) + " mm/s") + vis("número de Reynolds ρv̄D/μ", n2(Re, 1)) + vis("tensão na parede τ = GR/2", n2((G * R) / 2 * 1000, 2) + " mPa");
+      }
+      q("[data-v=sv]").innerHTML = s;
+    }
+    function laco(ts) { if (!vivo) return; const dt = ult === null ? 0 : Math.min(0.05, (ts - ult) / 1000); ult = ts; desenha(dt); requestAnimationFrame(laco); }
+    liga(el, "m", (v) => { modo = v; });
+    requestAnimationFrame(laco); F.aoSair(() => (vivo = false));
+  };
+
+  /* ---------- N07 · o experimento de Reynolds (1883): filete de corante num cano ---------- */
+  SIM.reynolds = (el, F) => {
+    const FL = { agua: ["água", 1000, 1.0e-3], ar: ["ar", 1.2, 1.8e-5], oleo: ["óleo de motor", 900, 0.1], glic: ["glicerina", 1260, 1.4] };
+    let fl = "agua", vivo = true, ult = null, tt = 0;
+    const W = 680, H = 300;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("velocidade média v (m/s)", "v", 0.01, 3, 0.01, 0.05)}${sl("diâmetro do cano D (cm)", "D", 0.5, 10, 0.1, 2)}
+      <div class="bts">${botoes(Object.entries(FL).map(([k, c]) => [k, c[0]]), "f", fl)}</div></div>
+      <div class="status">Reynolds injetou um filete de corante no meio de um cano de vidro. Com Re = ρvD/μ baixo, o filete segue reto (<b>laminar</b>); acima de uns 2300 começam a aparecer "baforadas" turbulentas (<b>transição</b>); acima de uns 4000, o corante se mistura no cano inteiro logo depois de entrar (<b>turbulento</b>). O desenho é uma ilustração qualitativa; os números (Re, regime, fator de atrito) são calculados de verdade.</div>`);
+    const q = (s) => el.querySelector(s);
+    const regime = (Re) => (Re < 2300 ? "laminar" : Re < 4000 ? "transição" : "turbulento");
+    const atrito = (Re) => (Re < 2300 ? 64 / Re : 0.316 * Math.pow(Re, -0.25));
+    SIM.reynolds._Re = (rho, v, D, mu) => (rho * v * D) / mu; SIM.reynolds._f = atrito; SIM.reynolds._regime = regime;
+    /* ruído suave determinístico */
+    const rn = (x) => { const s = Math.sin(x * 12.9898) * 43758.5453; return s - Math.floor(s); };
+    const ruido = (x) => { const i = Math.floor(x), f = x - i, a = rn(i), b = rn(i + 1); return a + (b - a) * f * f * (3 - 2 * f) - 0.5; };
+    function desenha(dt) {
+      tt += dt;
+      const v = +q("[data-c=v]").value, D = +q("[data-c=D]").value / 100, [nome, rho, mu] = FL[fl], Re = SIM.reynolds._Re(rho, v, D, mu), reg = regime(Re);
+      q("[data-o=v]").textContent = n2(v, 2); q("[data-o=D]").textContent = n2(D * 100, 1);
+      const x0 = 30, x1 = W - 30, cy = H / 2, r = 70;
+      let s = `<rect x="${x0}" y="${cy - r - 6}" width="${x1 - x0}" height="6" style="fill:var(--ink3)"/><rect x="${x0}" y="${cy + r}" width="${x1 - x0}" height="6" style="fill:var(--ink3)"/>`;
+      s += `<rect x="${x0 - 14}" y="${cy - 4}" width="30" height="8" rx="3" style="fill:var(--ink2)"/>`;
+      /* intensidade da bagunça: 0 (laminar) → 1 (turbulento); na transição, liga e desliga em baforadas */
+      let amp = Re < 2300 ? 0 : Re < 4000 ? (ruido(tt * 0.8) > 0.05 ? (Re - 2300) / 1700 : 0) : 1;
+      const linhas = amp > 0.6 ? 7 : 1;
+      for (let L = 0; L < linhas; L++) {
+        let d = "";
+        for (let x = x0 + 16; x <= x1; x += 4) {
+          const s0 = (x - x0) / (x1 - x0), cresce = Math.min(1, s0 * (amp > 0.6 ? 6 : 2.5)), off = L === 0 ? 0 : (L - 3) * 14 * cresce;
+          const y = cy + off + amp * cresce * r * 0.85 * (ruido((x - tt * 260) * 0.035 + L * 7.1) * 1.6 + 0.6 * ruido((x - tt * 300) * 0.11 + L * 3.3));
+          d += (x > x0 + 16 ? "L" : "M") + x + " " + Math.max(cy - r + 3, Math.min(cy + r - 3, y)).toFixed(1);
+        }
+        s += `<path d="${d}" style="fill:none;stroke:#d9468a;stroke-width:${L === 0 ? 2.5 : 1.6};opacity:${L === 0 ? 0.95 : 0.55}"/>`;
+      }
+      if (amp > 0.6) s += `<rect x="${x0 + 120}" y="${cy - r}" width="${x1 - x0 - 120}" height="${2 * r}" style="fill:#d9468a;opacity:.12"/>`;
+      s += `<text class="tx2" x="${W / 2}" y="${H - 12}" text-anchor="middle">${reg}</text>`;
+      q("[data-v=sv]").innerHTML = s;
+      q("[data-v=lt]").innerHTML = vis(`Re = ρvD/μ (${nome})`, Re >= 1e5 ? F.cient(Re, 2) : n2(Re, Re < 10 ? 2 : 0)) + vis("regime", reg) + vis(Re < 2300 ? "fator de atrito 64/Re" : "fator de atrito (Blasius) 0,316·Re^(−1/4)", n2(atrito(Re), 4)) + vis("queda de pressão por metro Δp/L = f·ρv²/2D", n2((atrito(Re) * rho * v * v) / (2 * D), 2) + " Pa/m");
+    }
+    function laco(ts) { if (!vivo) return; const dt = ult === null ? 0 : Math.min(0.05, (ts - ult) / 1000); ult = ts; desenha(dt); requestAnimationFrame(laco); }
     liga(el, "f", (v) => { fl = v; });
     requestAnimationFrame(laco); F.aoSair(() => (vivo = false));
   };

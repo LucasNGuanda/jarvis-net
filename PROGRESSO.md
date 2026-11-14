@@ -1,10 +1,10 @@
 # PROGRESSO — Site de Física do Lucas
 
-## Estado atual (14/11/2026, depois da β 1.9)
-- **Física**: 55 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
-  - Prontos: Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes (4 de 7: N01–N04); Bônus (X01); Simulados (S00–S04, só as páginas de entrada).
-  - Vazios: Fundamentos (6), Mecânica (21), Termodinâmica (11); faltam N05–N07.
-- **Cálculo**: 25 de 25 (Cálculo 1, Cálculo 2, Funções especiais, Teoremas).
+## Estado atual (14/11/2026, depois da β 2.5)
+- **Física**: 58 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
+  - Prontos: Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes inteiro (7); Bônus (X01); Simulados (S00–S04; S02 já tem o IME 2026/27, os outros só a página de entrada).
+  - Vazios: Fundamentos (6), Mecânica (21), Termodinâmica (11).
+- **Cálculo**: 27 de 27 (Cálculo 1, Cálculo 2, Funções especiais, Teoremas, Simulados de Cálculo).
 - **Experimental**: 0 de 11 (módulos criados, temas a decidir).
 - **Experimentos**: 9 de 9.
 - Exercícios: 7 por tema (a meta do briefing era 15–20).
@@ -182,6 +182,21 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
     - N04 Tensor de tensões e viscosidade (elemento de fluido: deformação × rotação; chefão: por que σ é simétrico).
   - Corrigido também: a busca do menu abria módulos que ficavam gravados como abertos; agora, ao limpar a busca, o menu volta como estava.
   - Conferências: números em Python; 19 conferências novas de física nos laboratórios de Ondas e Fluidos; regressão: 141 páginas, 0 katex-error, 0 erro de JS, 1068 links, estresse limpo em 89 páginas, 47 testes de funcionamento.
+
+- **β 2.5** — Navier–Stokes completo, Simulados de Cálculo e o IME de física.
+  - **Navier–Stokes (N05–N07)**, cada um com laboratório (`assets/sims/fluidos.js`), exemplário, 7 exercícios e chefão:
+    - N05 Dedução de Navier–Stokes (Cauchy + tensor viscoso; laboratório: placa que parte de repente, u = U·erfc(y/2√(νt)); chefão: o 1º problema de Stokes);
+    - N06 Couette, Poiseuille, Hagen–Poiseuille (laboratório: perfis entre placas e num cano, com vazão, tensões e "fluido voltando"; chefão: Hagen–Poiseuille a partir de Navier–Stokes);
+    - N07 Reynolds, turbulência e o Problema do Milênio (laboratório: o experimento de Reynolds com Re, regime e fator de atrito; chefão: a cascata de Kolmogorov).
+  - **Simulados de Cálculo** (módulo novo K5, cor rosa, na aba Cálculo):
+    - SC01 MIT Integration Bee 2026, classificatória: as 20 integrais com dicas e resolução;
+    - SC02 USP MAT 111 (Cálculo I), Prova 1 tipo C de 2015 (prof. Piccione): as 20 questões a–e com resolução e "por que a errada é tentadora".
+    - Gabaritos: os arquivos não traziam gabarito, então as respostas são minhas, conferidas em Python (integrais numéricas, derivada da primitiva, limites, desigualdades numa grade).
+  - **IME 2026/27, questões 16–30 (física)** em S02 Vestibulares militares: enunciados transcritos, figuras recortadas da prova (`assets/img/ime2027/`), alternativas, dicas e resolução. Respostas minhas, conferidas em Python, **não comparadas com o gabarito oficial** (está avisado na página). Q25 resolvida pela simetria (R₁ = 11R/20, R₂ = 3R/4) e conferida pela matriz de Kirchhoff.
+  - Selos novos: IME, MIT, USP. Formatador novo `F.sigL` (sem zeros à direita: 3 × 10⁻⁵ em vez de 3,0 × 10⁻⁵).
+  - Corrigido no teste: a vazão do canal (N06) aparecia em "cm²/s" com o número em mm²/s.
+  - Site da SBF (repositório de aulas de ensino superior): o acesso foi liberado no ambiente "site-fisica", mas a leitura foi bloqueada pela checagem automática de permissões da sessão. Nada dele entrou no site.
+  - Conferências: 15 novas (laboratórios N05–N07, figuras e numeração do IME, contagem dos simulados); regressão: 143 páginas, 0 katex-error, 0 erro de JS, 1135 links; testes de funcionamento sem falhas; calculadora 103/103; física 118 + 32 + 19.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
