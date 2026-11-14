@@ -38,7 +38,7 @@ window.CATALOGO = [
     ["A16","Gravitação",["★"],true],
     ["A17","Hidrostática",[],true],
     ["A18","Hidrodinâmica",[],true],
-    ["A20","Movimento Harmônico Simples e oscilações",["!","∫","ITA"]],
+    ["A20","Movimento Harmônico Simples e oscilações",["!","∫","ITA"],true],
   ]},
   { id:"T", letra:"T", cor:"--mT", nome:"Termodinâmica", desc:"Temperatura, calor, gases, as leis da termodinâmica e entropia.", temas:[
     ["T01","Temperatura"],

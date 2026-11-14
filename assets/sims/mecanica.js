@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento, A14 gangorra, A15 órbita de Kepler, A16 canhão de Newton, A17 empuxo, A18 jato de Torricelli,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento, A14 gangorra, A15 órbita de Kepler, A16 canhão de Newton, A17 empuxo, A18 jato de Torricelli, A20 massa–mola,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -684,5 +684,42 @@
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("velocidade de saída √(2g(H − y))", n2(c.v, 2) + " m/s") + vis("tempo de queda √(2y/g)", n2(c.tq, 2) + " s") + vis("alcance 2√(y(H − y))", n2(c.x, 2) + " m") + vis("alcance máximo (furo em H/2)", n2(c.xmax, 2) + " m");
     });
+  };
+
+  /* ---------- A20 · massa–mola com amortecimento e o gráfico x × t ---------- */
+  SIM.mhs = (el, F) => {
+    const W = 680, H = 320;
+    let x, v, t, hist;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("constante da mola k (N/m)", "k", 5, 100, 1, 40)}${sl("massa m (kg)", "m", 0.2, 5, 0.1, 1)}${sl("amplitude inicial A (m)", "A", 0.05, 0.5, 0.01, 0.3)}${sl("amortecimento b (kg/s)", "b", 0, 3, 0.05, 0)}
+      <div class="bts"><button class="bt pri" data-a="re">Soltar de novo</button></div></div>
+      <div class="status">Um bloco preso a uma mola, sobre uma mesa sem atrito, é puxado até x = A e solto. A força da mola, −kx, produz um movimento harmônico simples: x = A·cos(ωt), com ω = √(k/m). O período não depende da amplitude. Com amortecimento (uma força −bv, como a do ar ou de um líquido), a amplitude cai exponencialmente e a energia vai embora.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.mhs._conta = (k, m, A) => { const w = Math.sqrt(k / m); return { w, T: (2 * Math.PI) / w, vmax: A * w, amax: A * w * w, E: 0.5 * k * A * A }; };
+    const reinicia = () => { x = val(el, "A"); v = 0; t = 0; hist = []; };
+    reinicia();
+    anima(el, F, (dt) => {
+      const k = val(el, "k"), m = val(el, "m"), A = val(el, "A"), b = val(el, "b"), c = SIM.mhs._conta(k, m, A);
+      mostra(el, ["k"], 0); mostra(el, ["m", "b"], 2); mostra(el, ["A"], 2);
+      const n = 20, h = dt / n;
+      for (let i = 0; i < n; i++) { const a0 = (-k * x - b * v) / m; x += v * h + 0.5 * a0 * h * h; const a1 = (-k * x - b * (v + a0 * h)) / m; v += 0.5 * (a0 + a1) * h; t += h; }
+      hist.push([t, x]); while (hist.length && t - hist[0][0] > 8) hist.shift();
+      const esc = 300, x0 = 200, y0 = 80;
+      let sv = `<line x1="20" x2="380" y1="${y0 + 26}" y2="${y0 + 26}" style="stroke:var(--ink2);stroke-width:2"/><rect x="20" y="${y0 - 40}" width="10" height="66" style="fill:var(--ink3)"/>`;
+      const px = x0 + x * esc, nm = 14; let d = `M30 ${y0}`; for (let i = 1; i <= nm; i++) d += `L${30 + ((px - 52) * i) / nm} ${y0 + (i % 2 ? -12 : 12)}`; d += `L${px - 22} ${y0}`;
+      sv += `<path d="${d}" style="fill:none;stroke:var(--ink2);stroke-width:2"/><rect x="${px - 22}" y="${y0 - 22}" width="44" height="44" rx="4" style="fill:color-mix(in srgb,var(--mA) 35%,transparent);stroke:var(--mA);stroke-width:2"/>`;
+      sv += `<line x1="${x0}" x2="${x0}" y1="${y0 + 26}" y2="${y0 + 36}" style="stroke:var(--warn);stroke-width:2"/>` + D.txt(x0, y0 + 50, "x = 0", "tx2");
+      /* gráfico x × t (últimos 8 s) */
+      const gx = 40, gy = 230, gw = 620, gh = 70, t0 = Math.max(0, t - 8);
+      sv += `<line x1="${gx}" x2="${gx + gw}" y1="${gy}" y2="${gy}" style="stroke:var(--ink3)"/><line x1="${gx}" x2="${gx}" y1="${gy - gh - 6}" y2="${gy + gh + 6}" style="stroke:var(--ink3)"/>` + D.txt(gx + gw, gy - 6, "t", "tx2", "end") + D.txt(gx - 6, gy - gh, "x", "tx2", "end");
+      if (b > 0) { let e1 = "", e2 = ""; for (let i = 0; i <= 60; i++) { const tt = t0 + (8 * i) / 60, env = A * Math.exp((-b * tt) / (2 * m)); e1 += (i ? "L" : "M") + (gx + ((tt - t0) / 8) * gw).toFixed(1) + " " + (gy - (env / 0.5) * gh).toFixed(1); e2 += (i ? "L" : "M") + (gx + ((tt - t0) / 8) * gw).toFixed(1) + " " + (gy + (env / 0.5) * gh).toFixed(1); } sv += `<path d="${e1}" style="fill:none;stroke:var(--ink3);stroke-dasharray:4 4"/><path d="${e2}" style="fill:none;stroke:var(--ink3);stroke-dasharray:4 4"/>`; }
+      let dg = ""; hist.forEach(([tt, xx], i) => (dg += (i ? "L" : "M") + (gx + ((tt - t0) / 8) * gw).toFixed(1) + " " + (gy - (xx / 0.5) * gh).toFixed(1)));
+      sv += `<path d="${dg}" style="fill:none;stroke:var(--mA);stroke-width:2"/>`;
+      q("[data-v=sv]").innerHTML = sv;
+      const E = 0.5 * k * x * x + 0.5 * m * v * v;
+      q("[data-v=lt]").innerHTML = vis("ω = √(k/m) | período T", n2(c.w, 2) + " rad/s | " + n2(c.T, 2) + " s") + vis("velocidade máxima Aω", n2(c.vmax, 2) + " m/s") + vis("energia inicial ½kA²", n2(c.E, 2) + " J") + vis("energia agora", n2(E, 2) + " J");
+    });
+    q("[data-a=re]").addEventListener("click", reinicia);
+    ["k", "m", "A"].forEach((kk) => q(`[data-c=${kk}]`).addEventListener("input", reinicia));
   };
 })();
