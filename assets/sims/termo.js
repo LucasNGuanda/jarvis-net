@@ -1,4 +1,4 @@
-/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; */
+/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -56,6 +56,37 @@
       if (Math.abs(c.phi) > 0.01) for (let k = 0; k < 3; k++) { const s = (fase + k / 3) % 1, x = 60 + s * (W - 120), dir = c.phi > 0 ? 1 : -1, xx = dir > 0 ? x : W - x; sv += D.seta(xx, 270, xx + dir * 26, 270, "var(--bad)", 2); }
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("resistências L/(kA): 1 | 2", n2(c.R1, 3) + " | " + n2(c.R2, 3) + " K/W") + vis("fluxo de calor (1 m²)", n2(c.phi, 1) + " W") + vis("temperatura na junção", n2(c.Ti, 1) + " °C") + vis("energia perdida por dia", n2((c.phi * 86400) / 3.6e6, 2) + " kWh");
+    });
+  };
+
+  /* ---------- T03 · chapa com furo e lâmina bimetálica aquecidas (dilatação exagerada no desenho) ---------- */
+  SIM.dilatacao = (el, F) => {
+    const W = 680, H = 300, alfas = { aco: 12e-6, aluminio: 23e-6, cobre: 17e-6, vidro: 9e-6, invar: 1.2e-6 };
+    let mat = "aco";
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("variação de temperatura ΔT (°C)", "dT", -100, 300, 5, 150)}${sl("lado da chapa L₀ (cm)", "L", 10, 100, 1, 50)}${sl("exagero do desenho (×)", "ex", 1, 300, 1, 150)}
+      <div class="bts">${botoes([["aco", "aço"], ["aluminio", "alumínio"], ["cobre", "cobre"], ["vidro", "vidro"], ["invar", "invar"]], "mat", "aco")}</div></div>
+      <div class="status">A chapa (à esquerda) dilata em todas as direções, e o furo dilata junto, como se fosse feito do mesmo material: tudo se amplia na mesma proporção, como uma foto ampliada. A lâmina bimetálica (à direita) é aço colado com alumínio: o alumínio dilata mais, e a lâmina se curva para o lado do aço. No desenho a dilatação está exagerada; os números são os reais.</div>`);
+    const q = (s) => el.querySelector(s);
+    liga(el, "mat", (k) => (mat = k));
+    SIM.dilatacao._conta = (alfa, L0, dT) => ({ dL: L0 * alfa * dT, dA: L0 * L0 * 2 * alfa * dT, dV: L0 ** 3 * 3 * alfa * dT, fator: 1 + alfa * dT });
+    anima(el, F, () => {
+      const dT = val(el, "dT"), L0 = val(el, "L"), ex = val(el, "ex"), a = alfas[mat], c = SIM.dilatacao._conta(a, L0, dT);
+      q("[data-o=dT]").textContent = n2(dT, 0) + " °C"; mostra(el, ["L"], 0); q("[data-o=ex]").textContent = "×" + n2(ex, 0);
+      const s = 1 + Math.max(-0.3, Math.min(0.5, a * dT * ex)), lado = 160 * s, cx = 190, cy = 150, furo = 40 * s;
+      let sv = `<rect x="${cx - 80}" y="${cy - 80}" width="160" height="160" style="fill:none;stroke:var(--ink3);stroke-dasharray:4 4"/><circle cx="${cx}" cy="${cy}" r="40" style="fill:none;stroke:var(--ink3);stroke-dasharray:4 4"/>`;
+      sv += `<path d="M${cx - lado / 2} ${cy - lado / 2} h${lado} v${lado} h${-lado} Z M${cx + furo} ${cy} A${furo} ${furo} 0 1 0 ${cx - furo} ${cy} A${furo} ${furo} 0 1 0 ${cx + furo} ${cy} Z" style="fill:color-mix(in srgb,${dT >= 0 ? "var(--bad)" : "var(--mA)"} ${Math.round(15 + Math.abs(dT) / 15)}%,transparent);stroke:var(--mT);stroke-width:2;fill-rule:evenodd"/>`;
+      sv += D.txt(cx, 284, "tracejado: antes", "tx2");
+      /* lâmina bimetálica: aço (12e-6) em cima, alumínio (23e-6) embaixo, comprimento 200 px, espessura total 1 mm */
+      const x0 = 440, y0 = 150, Lb = 200;
+      let kpx = ((3 * (23e-6 - 12e-6) * dT) / (2 * 1e-3) / 4000) * (ex / 40); /* curvatura (1/px): lâmina de 5 cm e 1 mm, exagerada */
+      kpx = Math.max(-3 / Lb, Math.min(3 / Lb, kpx));
+      let d1 = "", d2 = "";
+      for (let i = 0; i <= 40; i++) { const sa = (Lb * i) / 40, th = sa * kpx, x = Math.abs(kpx) < 1e-7 ? x0 + sa : x0 + Math.sin(th) / kpx, y = Math.abs(kpx) < 1e-7 ? y0 : y0 - (1 - Math.cos(th)) / kpx, nx = -Math.sin(th), ny = -Math.cos(th); d1 += (i ? "L" : "M") + (x + 4 * nx).toFixed(1) + " " + (y + 4 * ny).toFixed(1); d2 += (i ? "L" : "M") + (x - 4 * nx).toFixed(1) + " " + (y - 4 * ny).toFixed(1); }
+      sv += `<rect x="${x0 - 14}" y="${y0 - 30}" width="14" height="60" style="fill:var(--ink3)"/><path d="${d1}" style="fill:none;stroke:var(--ink2);stroke-width:8"/><path d="${d2}" style="fill:none;stroke:var(--warn);stroke-width:8"/>`;
+      sv += D.txt(x0 + 100, 284, "aço (cinza) + alumínio (laranja)", "tx2");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("α do material", n2(a * 1e6, 1) + " × 10⁻⁶ /°C") + vis("ΔL do lado (αL₀ΔT)", n2(c.dL * 10, 3) + " mm") + vis("ΔA da chapa (2αA₀ΔT)", n2(c.dA, 2) + " cm²") + vis("diâmetro do furo multiplicado por", n2(c.fator, 5));
     });
   };
 })();
