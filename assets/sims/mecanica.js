@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU),
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -139,5 +139,69 @@
       const r = SIM.graficos._conta(vs, tl);
       q("[data-v=lt]").innerHTML = vis("v no instante", n2(r.v, 2) + " m/s") + vis("s = área acumulada sob v × t", n2(r.s, 2) + " m") + vis("a = inclinação de v × t", n2(r.a, 2) + " m/s²") + vis("distância percorrida (área de |v|)", n2(r.dist, 2) + " m");
     });
+  };
+  /* ---------- A05 · barco atravessando o rio (composição de velocidades) ---------- */
+  SIM.barcoRio = (el, F) => {
+    const W = 680, H = 360, Lrio = 100;
+    let t = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("velocidade do barco em relação à água u (m/s)", "u", 0.5, 6, 0.1, 4)}${sl("correnteza w (m/s)", "w", 0, 6, 0.1, 3)}${sl("ângulo da proa θ (graus, + = rio acima)", "th", -80, 80, 1, 0)}
+      <div class="bts"><button class="bt pri" data-a="re">Atravessar de novo</button><button class="bt peq" data-a="reto">Proa para chegar em frente</button></div></div>
+      <div class="status">O rio tem 100 m de largura. A velocidade do barco em relação à margem é a soma vetorial da velocidade em relação à água (para onde a proa aponta) com a da correnteza: v = u + w (vetores). O tempo de travessia só depende da componente perpendicular à margem, u·cos θ.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.barcoRio._conta = (u, w, thDeg) => { const th = (thDeg * Math.PI) / 180, vy = u * Math.cos(th), vx = w - u * Math.sin(th); return { vy, vx, v: Math.hypot(vx, vy), t: Lrio / vy, deriva: (vx * Lrio) / vy }; };
+    anima(el, F, (dt) => {
+      mostra(el, ["u", "w"], 1); q("[data-o=th]").textContent = n2(val(el, "th"), 0) + "°";
+      const u = val(el, "u"), w = val(el, "w"), th = val(el, "th"), r = SIM.barcoRio._conta(u, w, th);
+      t += dt * 4; if (t > r.t + 3) t = 0;
+      const tt = Math.min(t, r.t), esc = 2.2, y0 = 300, X0 = 300, X = (x) => X0 + x * esc, Y = (y) => y0 - y * esc;
+      let sv = `<rect x="0" y="${Y(Lrio)}" width="${W}" height="${Lrio * esc}" style="fill:color-mix(in srgb,var(--mC) 14%,transparent)"/><line x1="0" x2="${W}" y1="${y0}" y2="${y0}" style="stroke:var(--ink2);stroke-width:2"/><line x1="0" x2="${W}" y1="${Y(Lrio)}" y2="${Y(Lrio)}" style="stroke:var(--ink2);stroke-width:2"/>`;
+      for (let i = 0; i < 7; i++) { const xx = ((i * 110 + t * w * esc * 3) % (W + 60)) - 30; sv += D.seta(xx, Y(Lrio / 2) + 30, xx + 26, Y(Lrio / 2) + 30, "color-mix(in srgb,var(--mC) 60%,transparent)", 1.2); }
+      const bx = r.vx * tt, by = r.vy * tt;
+      sv += `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(r.deriva)}" y2="${Y(Lrio)}" style="stroke:var(--warn);stroke-dasharray:5 4;stroke-width:1.6"/><circle cx="${X(0)}" cy="${Y(0)}" r="4" style="fill:var(--ink)"/><circle cx="${X(0)}" cy="${Y(Lrio)}" r="4" style="fill:var(--ink3)"/>`;
+      const bxp = X(bx), byp = Y(by), k = 9, ang = (Math.atan2(-u * Math.cos((th * Math.PI) / 180), -u * Math.sin((th * Math.PI) / 180)) * 180) / Math.PI;
+      sv += `<g transform="translate(${bxp} ${byp}) rotate(${ang + 90})"><path d="M0 -14 L7 6 L-7 6 Z" style="fill:var(--mA)"/></g>`;
+      sv += D.seta(bxp, byp, bxp - u * Math.sin((th * Math.PI) / 180) * k, byp - u * Math.cos((th * Math.PI) / 180) * k, "var(--mA)", 2) + D.seta(bxp, byp, bxp + w * k, byp, "var(--mC)", 2) + D.seta(bxp, byp, bxp + r.vx * k, byp - r.vy * k, "var(--warn)", 2.4);
+      sv += `<text class="tx2" x="12" y="20"><tspan style="fill:var(--mA)">vetor u (proa)</tspan> + <tspan style="fill:var(--mC)">vetor w (correnteza)</tspan> = <tspan style="fill:var(--warn)">vetor v (em relação à margem)</tspan></text>`;
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("tempo de travessia L/(u cos θ)", r.vy > 0 ? n2(r.t, 1) + " s" : "não atravessa") + vis("deslocamento rio abaixo na chegada", n2(r.deriva, 1) + " m") + vis("velocidade em relação à margem |v|", n2(r.v) + " m/s") + vis("proa para chegar em frente (sen θ = w/u)", w <= u ? n2((Math.asin(w / u) * 180) / Math.PI, 1) + "°" : "impossível (w > u)");
+    });
+    q("[data-a=re]").addEventListener("click", () => (t = 0));
+    q("[data-a=reto]").addEventListener("click", () => { const u = val(el, "u"), w = val(el, "w"); if (w <= u) { const i = q("[data-c=th]"); i.value = Math.round((Math.asin(w / u) * 180) / Math.PI); t = 0; } });
+  };
+
+  /* ---------- A06 · lançamento oblíquo ---------- */
+  SIM.lancamento = (el, F) => {
+    const W = 680, H = 360, g = 10;
+    let t = 0, rastros = [];
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("velocidade inicial v₀ (m/s)", "v0", 5, 30, 0.5, 20)}${sl("ângulo θ (graus)", "th", 0, 90, 1, 45)}${sl("altura de lançamento h (m)", "h", 0, 30, 1, 0)}
+      <div class="bts"><button class="bt pri" data-a="go">Lançar</button><button class="bt peq" data-a="limpa">Apagar trajetórias</button><button class="bt peq" data-a="env">Mostrar parábola de segurança</button></div></div>
+      <div class="status">Sem resistência do ar: na horizontal, MRU com v₀ cos θ; na vertical, MUV com aceleração −g (g = 10 m/s²). Lance várias vezes com a mesma velocidade e ângulos diferentes: 30° e 60° dão o mesmo alcance (do chão), e 45° dá o maior. A linha tracejada é a parábola de segurança: nenhum lançamento com essa v₀ passa dela.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.lancamento._conta = (v0, thDeg, h) => { const th = (thDeg * Math.PI) / 180, vx = v0 * Math.cos(th), vy = v0 * Math.sin(th), tv = (vy + Math.sqrt(vy * vy + 2 * g * h)) / g; return { tv, alc: vx * tv, H: h + (vy * vy) / (2 * g), ts: vy / g, vChao: Math.sqrt(v0 * v0 + 2 * g * h) }; };
+    let env = false;
+    anima(el, F, (dt) => {
+      mostra(el, ["v0", "h"], 1); q("[data-o=th]").textContent = n2(val(el, "th"), 0) + "°";
+      const v0 = val(el, "v0"), th = val(el, "th"), h = val(el, "h"), r = SIM.lancamento._conta(v0, th, h), thr = (th * Math.PI) / 180;
+      t += dt; const tt = Math.min(t, r.tv);
+      const esc = Math.min(580 / 100, 260 / 60), X = (x) => 60 + x * esc, Y = (y) => 320 - y * esc;
+      let sv = `<line x1="40" x2="${W - 20}" y1="320" y2="320" style="stroke:var(--ink2);stroke-width:2"/>`;
+      for (let x = 0; x <= 100; x += 10) sv += `<line x1="${X(x)}" x2="${X(x)}" y1="317" y2="323" style="stroke:var(--ink3)"/><text class="tx2" x="${X(x)}" y="340" text-anchor="middle">${x}</text>`;
+      if (h > 0) sv += `<rect x="${X(0) - 18}" y="${Y(h)}" width="18" height="${h * esc}" style="fill:var(--line2)"/>`;
+      if (env) { let d = ""; for (let i = 0; i <= 100; i++) { const x = i; const y = h + (v0 * v0) / (2 * g) - (g * x * x) / (2 * v0 * v0); if (y < 0) break; d += (i ? "L" : "M") + X(x).toFixed(1) + " " + Y(y).toFixed(1); } sv += `<path d="${d}" style="fill:none;stroke:var(--warn);stroke-width:1.6;stroke-dasharray:6 5"/>`; }
+      rastros.forEach((rr) => (sv += `<path d="${rr}" style="fill:none;stroke:var(--ink3);stroke-width:1.4;opacity:.7"/>`));
+      let d = ""; for (let i = 0; i <= 60; i++) { const s = (tt * i) / 60; d += (i ? "L" : "M") + X(v0 * Math.cos(thr) * s).toFixed(1) + " " + Y(h + v0 * Math.sin(thr) * s - (g * s * s) / 2).toFixed(1); }
+      sv += `<path d="${d}" style="fill:none;stroke:var(--mA);stroke-width:2.4"/>`;
+      const xb = v0 * Math.cos(thr) * tt, yb = h + v0 * Math.sin(thr) * tt - (g * tt * tt) / 2, vy = v0 * Math.sin(thr) - g * tt;
+      sv += `<circle cx="${X(xb)}" cy="${Y(yb)}" r="6" style="fill:var(--mA)"/>` + D.seta(X(xb), Y(yb), X(xb) + v0 * Math.cos(thr) * 2.2, Y(yb), "var(--mC)", 1.8);
+      sv += D.seta(X(xb), Y(yb), X(xb), Y(yb) - vy * 2.2, "var(--mT)", 1.8) + D.seta(X(xb), Y(yb), X(xb) + v0 * Math.cos(thr) * 2.2, Y(yb) - vy * 2.2, "var(--warn)", 2.2);
+      sv += `<text class="tx2" x="12" y="20">t = ${n2(tt, 2)} s · <tspan style="fill:var(--mC)">vₓ = ${n2(v0 * Math.cos(thr), 2)} m/s (constante)</tspan> · <tspan style="fill:var(--mT)">v_y = ${n2(vy, 2)} m/s</tspan></text>`;
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("tempo de voo", n2(r.tv, 2) + " s") + vis("alcance horizontal", n2(r.alc, 2) + " m") + vis("altura máxima h + (v₀ sen θ)²/2g", n2(r.H, 2) + " m") + vis("velocidade ao chegar ao chão", n2(r.vChao, 2) + " m/s");
+    });
+    q("[data-a=go]").addEventListener("click", () => { const v0 = val(el, "v0"), th = (val(el, "th") * Math.PI) / 180, h = val(el, "h"), r = SIM.lancamento._conta(v0, val(el, "th"), h), esc = Math.min(580 / 100, 260 / 60); let d = ""; for (let i = 0; i <= 60; i++) { const s = (r.tv * i) / 60; d += (i ? "L" : "M") + (60 + v0 * Math.cos(th) * s * esc).toFixed(1) + " " + (320 - (h + v0 * Math.sin(th) * s - 5 * s * s) * esc).toFixed(1); } rastros.push(d); if (rastros.length > 8) rastros.shift(); t = 0; });
+    q("[data-a=limpa]").addEventListener("click", () => (rastros = []));
+    q("[data-a=env]").addEventListener("click", (e) => { env = !env; e.currentTarget.textContent = env ? "Esconder parábola de segurança" : "Mostrar parábola de segurança"; });
   };
 })();
