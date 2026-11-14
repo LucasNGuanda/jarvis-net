@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento, A14 gangorra, A15 órbita de Kepler,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento, A14 gangorra, A15 órbita de Kepler, A16 canhão de Newton,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -578,5 +578,46 @@
       q("[data-v=lt]").innerHTML = vis("período T = a^1,5", n2(c.T, 2) + (n2(c.T, 2) === "1" ? " ano" : " anos")) + vis("periélio | afélio", n2(c.rp, 2) + " | " + n2(c.ra, 2) + " UA") + vis("v no periélio ÷ v no afélio", n2(c.razao, 2)) + vis("agora: distância | v ÷ v(afélio)", n2(r, 2) + " UA | " + n2(vr, 2));
     });
     q("[data-a=re]").addEventListener("click", () => (t = 0));
+  };
+
+  /* ---------- A16 · canhão de Newton: queda, órbita e escape ---------- */
+  SIM.canhao = (el, F) => {
+    const W = 680, H = 340, GM = 398600, RT = 6371;
+    let r, v, rastros = [], atual = "", t = 0, fim = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("velocidade horizontal v (km/s)", "v", 3, 12, 0.1, 7.8)}${sl("altura da montanha h (km)", "h", 100, 2000, 50, 400)}
+      <div class="bts"><button class="bt pri" data-a="go">Disparar</button><button class="bt" data-a="lp">Limpar</button></div></div>
+      <div class="status">A ideia de Newton: um canhão no alto de uma montanha (altíssima, fora do ar) atira na horizontal. Devagar, a bala cai. Mais rápido, ela cai mais longe, porque a Terra se curva embaixo dela. Na velocidade orbital, ela cai para sempre sem chegar ao chão: está em órbita. Acima dela, órbitas elípticas; a partir da velocidade de escape, ela não volta mais.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.canhao._conta = (vv, h) => { const r0 = RT + h, beta = (r0 * vv * vv) / GM, r2 = beta < 2 ? r0 / (2 / beta - 1) : Infinity; const vc = Math.sqrt(GM / r0), ve = Math.sqrt((2 * GM) / r0); return { vc, ve, r2, E: (vv * vv) / 2 - GM / r0, tipo: vv >= ve ? "escapa (não volta)" : r2 < RT ? "cai no chão" : Math.abs(vv - vc) < 0.05 ? "órbita circular" : "órbita elíptica" }; };
+    const esc = 62 / RT, cx = 340, cy = 170, P = (x, y) => (cx + x * esc).toFixed(1) + " " + (cy - y * esc).toFixed(1);
+    const dispara = () => { if (atual) { rastros.push(atual); if (rastros.length > 6) rastros.shift(); } const h = val(el, "h"); r = [0, RT + h]; v = [val(el, "v"), 0]; atual = "M" + P(r[0], r[1]); t = 0; fim = false; };
+    dispara();
+    anima(el, F, (dt) => {
+      const vv = val(el, "v"), h = val(el, "h"), c = SIM.canhao._conta(vv, h);
+      mostra(el, ["v"], 1); mostra(el, ["h"], 0);
+      if (!fim) {
+        const passo = 5, n = Math.round((dt * 900) / passo);
+        for (let k = 0; k < n && !fim; k++) {
+          let d = Math.hypot(r[0], r[1]), a = -GM / (d * d * d);
+          v[0] += a * r[0] * passo * 0.5; v[1] += a * r[1] * passo * 0.5;
+          r[0] += v[0] * passo; r[1] += v[1] * passo; t += passo;
+          d = Math.hypot(r[0], r[1]); a = -GM / (d * d * d);
+          v[0] += a * r[0] * passo * 0.5; v[1] += a * r[1] * passo * 0.5;
+          if (k % 4 === 0) atual += "L" + P(r[0], r[1]);
+          if (d < RT) fim = true;
+          if (d > 4 * RT || t > 4e5) fim = true;
+          if (t > 600 && r[0] < 0 && r[0] + v[0] * passo >= 0 && r[1] > 0) fim = true; /* deu uma volta */
+        }
+      }
+      let sv = `<circle cx="${cx}" cy="${cy}" r="${RT * esc}" style="fill:color-mix(in srgb,var(--mA) 30%,transparent);stroke:var(--mA)"/>`;
+      sv += `<path d="M${cx - 8} ${cy - RT * esc} L${cx} ${cy - (RT + h) * esc} L${cx + 8} ${cy - RT * esc} Z" style="fill:var(--ink3)"/>`;
+      rastros.forEach((d) => (sv += `<path d="${d}" style="fill:none;stroke:var(--ink3);stroke-width:1.2;opacity:.6"/>`));
+      sv += `<path d="${atual}" style="fill:none;stroke:var(--warn);stroke-width:2"/><circle cx="${cx + r[0] * esc}" cy="${cy - r[1] * esc}" r="4" style="fill:var(--warn)"/>`;
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("velocidade orbital √(GM/r)", n2(c.vc, 2) + " km/s") + vis("velocidade de escape √(2GM/r)", n2(c.ve, 2) + " km/s") + vis("com esta velocidade", c.tipo) + vis("energia por kg (v²/2 − GM/r)", n2(c.E, 1) + " MJ/kg");
+    });
+    q("[data-a=go]").addEventListener("click", dispara);
+    q("[data-a=lp]").addEventListener("click", () => { rastros = []; dispara(); });
   };
 })();
