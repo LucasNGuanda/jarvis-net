@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Site Física β 2.0</title>
+<title>Site Física β 2.1</title>
 <link rel="stylesheet" href="assets/katex/katex.min.css">
 <link rel="stylesheet" href="assets/estilo.css">
 <script defer src="assets/katex/katex.min.js"></script>
@@ -67,10 +67,11 @@
 <div class="veu" id="veu" hidden></div>
 <aside class="menu" id="menu">
   <input class="busca" id="busca" type="search" placeholder="Buscar tema…" aria-label="Buscar tema">
+  <button class="filtro-breve" id="bt-breve" type="button" aria-pressed="false">Mostrar temas em breve</button>
   <div id="menu-mods"></div>
   <div class="rodape">
-    <button id="bt-exp">⬇ Exportar progresso (.json)</button>
-    <button id="bt-imp">⬆ Importar progresso</button>
+    <button id="bt-exp"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Exportar progresso (.json)</button>
+    <button id="bt-imp"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V9M7 13.5l5-5 5 5M5 4h14"/></svg>Importar progresso</button>
     <input type="file" id="arq-imp" accept="application/json" hidden>
   </div>
 </aside>

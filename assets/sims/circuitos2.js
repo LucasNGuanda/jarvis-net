@@ -33,7 +33,7 @@
         <div class="ctrl"><label>Distância d</label><input type="range" min="0.5" max="4" step="0.1" value="2" data-c="d"><output data-o="d"></output></div>
         <div class="ctrl"><label>Dielétrico inserido</label><input type="range" min="0" max="1" step="0.01" value="0" data-c="f"><output data-o="f"></output></div>
         <div class="bts"><span style="color:var(--ink2);font-size:14px;align-self:center">κ =</span>${[2, 3, 5].map((k, i) => `<button class="bt peq" data-k="${k}" aria-pressed="${i === 1}">${k}</button>`).join("")}
-          <button class="bt peq" data-a="bat" aria-pressed="true">🔋 Bateria ligada (V fixo)</button></div>
+          <button class="bt peq" data-a="bat" aria-pressed="true">Bateria ligada (V fixo)</button></div>
       </div><div class="status" data-v="st"></div>`);
     const st = { A: 200, d: 2, f: 0, k: 3, bat: true, V0: 100, Q: null };
     const q = (s) => el.querySelector(s);
@@ -63,7 +63,7 @@
     }
     el.querySelectorAll("[data-c]").forEach((r) => r.addEventListener("input", () => { st[r.dataset.c] = +r.value; desenha(); }));
     el.querySelectorAll("[data-k]").forEach((b) => b.addEventListener("click", () => { st.k = +b.dataset.k; el.querySelectorAll("[data-k]").forEach((x) => x.setAttribute("aria-pressed", x === b)); desenha(); }));
-    q('[data-a="bat"]').addEventListener("click", (ev) => { st.bat = !st.bat; ev.currentTarget.setAttribute("aria-pressed", st.bat); ev.currentTarget.textContent = st.bat ? "🔋 Bateria ligada (V fixo)" : "✂ Bateria desligada (Q fixo)"; desenha(); });
+    q('[data-a="bat"]').addEventListener("click", (ev) => { st.bat = !st.bat; ev.currentTarget.setAttribute("aria-pressed", st.bat); ev.currentTarget.textContent = st.bat ? "Bateria ligada (V fixo)" : "Bateria desligada (Q fixo)"; desenha(); });
     desenha();
   };
 
@@ -72,7 +72,7 @@
     const W = 760, H = 240;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><canvas width="${W * 2}" height="${H * 2}" style="width:${W}px;height:${H}px;border-radius:8px;background:var(--bg)"></canvas></div>
       <div class="leitor" data-v="l"></div>
-      <div class="ctrls"><div class="ctrl"><label>Campo no fio</label><input type="range" min="0" max="100" step="1" value="40"><output></output></div>
+      <div class="ctrls"><div class="ctrl"><label>Campo no fio (unidades da simulação)</label><input type="range" min="0" max="100" step="1" value="40"><output></output></div>
       <div class="bts"><button class="bt peq" data-a="term" aria-pressed="true">Mostrar agitação térmica</button><button class="bt peq" data-a="rastro" aria-pressed="false">Rastro de um elétron</button></div></div>
       <div class="status">Cada elétron anda rápido e em zigue-zague (agitação térmica), batendo nos íons. O campo só adiciona uma deriva lenta, <b>contra</b> o campo. A linha tracejada conta quantos passam por segundo: é a corrente. <span style="color:var(--ink3)">(Fora de escala: num fio real, a velocidade térmica é ~10¹⁰ vezes maior que a de deriva.)</span></div>`);
     const cv = el.querySelector("canvas"), cx = cv.getContext("2d"); cx.scale(2, 2);
@@ -167,7 +167,7 @@
       sol = resolve();
       ["E", "R1", "R2", "R3"].forEach((k) => (q(`[data-o="${k}"]`).textContent = k === "E" ? F.t(st.E, 1) + " V" : st[k] + " Ω"));
       const U = (i, R) => F.t(i * R, 2);
-      q('[data-v="l"]').innerHTML = `<div class="vis"><small>R equivalente</small><b>${F.t(sol.Re, 1)} Ω</b></div><div class="vis"><small>i total</small><b>${F.t(sol.i * 1000, 2)} mA</b></div>` +
+      q('[data-v="l"]').innerHTML = `<div class="vis"><small>R equivalente</small><b>${F.t(sol.Re, sol.Re >= 100 ? 0 : 1)} Ω</b></div><div class="vis"><small>i total</small><b>${F.t(sol.i * 1000, 2)} mA</b></div>` +
         [1, 2, 3].map((k) => `<div class="vis"><small>R${"₁₂₃"[k - 1]}: i · U</small><b>${F.t(sol["i" + k] * 1000, 1)} mA · ${U(sol["i" + k], st["R" + k])} V</b></div>`).join("");
       q('[data-v="st"]').innerHTML = st.t === "série" ? "Série: a <b>mesma corrente</b> em todos; as tensões se somam e o maior resistor fica com a maior fatia." : st.t === "paralelo" ? "Paralelo: a <b>mesma tensão</b> em todos; as correntes se somam nos nós (veja as bolinhas acelerando e desacelerando nos trechos de fio). O menor resistor leva a maior corrente." : "Misto: R₂ e R₃ em paralelo (mesma tensão), e o par em série com R₁ (mesma corrente total).";
     }
@@ -214,7 +214,7 @@
       if (st.m === "aok") g += med(320, Y0, 360, Y0, "A");
       if (st.m === "apar") g += D.fio([[X1, 100], [535, 100], [535, 210], [X1, 210]]) + med(535, 140, 535, 170, "A") + D.no(X1, 100) + D.no(X1, 210);
       if (st.m === "abat") g += D.fio([[X0, 110], [20, 110], [20, 200], [X0, 200]]) + med(20, 140, 20, 170, "A") + D.no(X0, 110) + D.no(X0, 200);
-      if (s.queimou) g += `<text x="280" y="160" text-anchor="middle" style="font:700 18px Inter;fill:var(--bad)">💥 fusível do multímetro queimou</text>`;
+      if (s.queimou) g += `<text x="280" y="160" text-anchor="middle" style="font:700 18px Inter;fill:var(--bad)">Fusível do multímetro queimou!</text>`;
       q(".g").innerHTML = g;
       q('[data-o="rv"]').textContent = fmtSI(F, st.rv, "Ω"); q('[data-o="ra"]').textContent = fmtSI(F, st.ra, "Ω");
       q('[data-v="l"]').innerHTML = `<div class="vis"><small>visor do multímetro</small><b>${s.queimou ? "0 (fusível)" : s.unid === "V" ? F.t(s.leitura, 3) + " V" : F.t(s.leitura * 1000, 2) + " mA"}</b></div><div class="vis"><small>corrente na bateria</small><b>${F.t(s.iTot * 1000, 2)} mA</b></div>`;

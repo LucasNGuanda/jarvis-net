@@ -128,6 +128,19 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - **Testes** (Playwright, 1280 px): 125 páginas (0 katex-error, 0 erro de JS, 870 links sem nenhum quebrado); estresse dos 83 laboratórios (0 problemas); 36 testes de funcionamento (dicas, respostas, marcações, chefão, feito, recarregar, exportar/importar, topo, busca, menu, sumário, abas, tema claro); 118 conferências de física em casos limite contra fórmulas independentes.
   - Celular: só um rascunho (gaveta + CSS ≤ 860 px), não testado. Fica para o fim.
 
+- **β 2.1** — Estética (os 8 pontos do relatório da β 2.0, aprovados pelo Lucas).
+  1. Menu: os temas "em breve" e os módulos vazios ficam escondidos; botão "Mostrar temas em breve" no topo do menu (a escolha fica salva). A busca sempre acha tudo.
+  2. Laboratórios: mostradores num padrão só (rótulos sem maiúsculas forçadas, mesmo tamanho); 3 algarismos significativos na bancada do fio (C07) e na associação (C08); unidades nos controles da O05, C06 e EP04. Os números longos do Cálculo ficaram de propósito (mostram o erro caindo).
+  3. Exercícios e chefão: Dica 1, Dica 2 e Resposta viraram botões lado a lado; cada um abre o seu painel embaixo (clicar de novo fecha). Metade da altura de antes.
+  4. Teoria: seções numeradas e separadas por uma linha; **Folha de fórmulas** automática no fim de cada tema (junta as fórmulas em destaque; não aparece nos temas que já têm "Resumo" escrito).
+  5. Cores novas, com ~35° de matiz entre vizinhos dentro de cada área: Mecânica azul-anil, Termodinâmica vermelha, Óptica amarela, Simulados laranja, Navier–Stokes ciano, Universitária verde; Cálculo 1 âmbar, Funções especiais ciano-esverdeado.
+  6. Emojis trocados por ícones desenhados (caixas, chefão, cadeado, chute, dado, exportar/importar, legenda) e tirados dos botões dos laboratórios.
+  7. Início: cartão "Continuar de onde parei", com o último tema aberto em cada aba e a seção em que você estava.
+  8. "em breve" com mais contraste.
+  - Também: "(" solto no exercício C02.02.
+  - Testes: 125 páginas (0 katex-error, 0 erro de JS, 912 links), estresse dos 83 laboratórios, 118 conferências de física, 44 testes de funcionamento: tudo ok.
+  - **Não feito ainda** (precisa de trabalho tema a tema): figuras novas e resumos curtos escritos no fim de cada seção da teoria; refazer os desenhos dos laboratórios numa escala só (hoje a letra parece maior ou menor conforme o tamanho de cada desenho).
+
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.

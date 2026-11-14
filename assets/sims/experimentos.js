@@ -129,10 +129,10 @@
   SIM.jogoLorentz = (el, F) => {
     const W = 760, H = 420; const [cv, cx] = canvas(el, W, H);
     el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls">
-      <div class="ctrl"><label>B (saindo + / entrando −)</label><input type="range" min="-3" max="3" step="0.05" value="1" data-c="B"><output data-o="B"></output></div>
-      <div class="ctrl"><label>velocidade v</label><input type="range" min="60" max="400" step="5" value="200" data-c="v"><output data-o="v"></output></div>
-      <div class="ctrl" data-s="E"><label>campo E (para baixo)</label><input type="range" min="0" max="600" step="5" value="0" data-c="E"><output data-o="E"></output></div>
-      <div class="bts"><button class="bt peq" data-a="q" aria-pressed="false">Carga negativa</button><button class="bt peq pri" data-a="fogo">🚀 Disparar</button><button class="bt peq" data-a="prev" aria-pressed="false">Mostrar a trajetória prevista (cola)</button></div></div>
+      <div class="ctrl"><label>B (unidades do jogo; + saindo, − entrando)</label><input type="range" min="-3" max="3" step="0.05" value="1" data-c="B"><output data-o="B"></output></div>
+      <div class="ctrl"><label>velocidade v (px/s na tela)</label><input type="range" min="60" max="400" step="5" value="200" data-c="v"><output data-o="v"></output></div>
+      <div class="ctrl" data-s="E"><label>campo E (unidades do jogo; para baixo)</label><input type="range" min="0" max="600" step="5" value="0" data-c="E"><output data-o="E"></output></div>
+      <div class="bts"><button class="bt peq" data-a="q" aria-pressed="false">Carga negativa</button><button class="bt peq pri" data-a="fogo">Disparar</button><button class="bt peq" data-a="prev" aria-pressed="false">Mostrar a trajetória prevista (cola)</button></div></div>
       <div class="status" data-v="st"></div>`);
     const NIVEIS = [
       { nome: "Nível 1 · A curva", txt: "Acerte o alvo em cima. Só B. Lembre: r = mv/(qB).", alvos: [[430, 110]], paredes: [], E: false, campo: [140, 0, 620, 420] },
@@ -169,7 +169,7 @@
     function loop(t) {
       if (!vivo) return; const dt = Math.min(0.03, (t - t0) / 1000); t0 = t;
       if (bala) { const n = 8, h = dt / n; for (let k = 0; k < n && bala; k++) { const [ax, ay] = acel(bala.x, bala.y, bala.vx, bala.vy); bala.vx += ax * h; bala.vy += ay * h; bala.x += bala.vx * h; bala.y += bala.vy * h; bala.tr.push([bala.x, bala.y]); lv().alvos.forEach(([x, y], i) => { if (Math.hypot(bala.x - x, bala.y - y) < 14) acertos.add(i); }); bala.t += h;
-          if (bate(bala.x, bala.y) || bala.t > 10) { const todos = acertos.size === lv().alvos.length; msg = todos ? "🎯 Acertou!" : "Errou. Ajuste e tente de novo."; if (todos && nv < NIVEIS.length - 1) setTimeout(() => { nv++; acertos = new Set(); bala = null; msg = "Próximo nível!"; }, 900); else if (todos) msg = "🏆 Zerou o jogo! Agora tente de cabeça, sem a cola."; bala = null; } } }
+          if (bate(bala.x, bala.y) || bala.t > 10) { const todos = acertos.size === lv().alvos.length; msg = todos ? "Acertou!" : "Errou. Ajuste e tente de novo."; if (todos && nv < NIVEIS.length - 1) setTimeout(() => { nv++; acertos = new Set(); bala = null; msg = "Próximo nível!"; }, 900); else if (todos) msg = "Zerou o jogo! Agora tente de cabeça, sem a cola."; bala = null; } } }
       desenha(); requestAnimationFrame(loop);
     }
     el.querySelectorAll("[data-c]").forEach((r) => r.addEventListener("input", () => { const k = r.dataset.c, val = +r.value; if (k === "B") B = val; if (k === "v") v = val; if (k === "E") E = val; }));

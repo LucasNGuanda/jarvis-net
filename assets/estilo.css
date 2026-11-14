@@ -22,9 +22,10 @@
   --acc:#7aa7ff;                   /* destaque neutro (links, foco) */
   --ok:#4cc38a; --warn:#e8b04b; --bad:#ef6b6b;
   /* uma cor por módulo */
-  --mF:#9aa7bd; --mA:#5b9cf5; --mT:#f0603c; --mO:#e9c93f; --mC:#c58af0;
-  --mM:#e56b8f; --mU:#43b8a6; --mN:#4fb0d9;
-  --mX:#9cc95a; --mS:#ef7b6b; --mK1:#7f9dff; --mK2:#d08cff; --mK3:#5fc9c0;
+  /* uma cor por módulo, ~35° de matiz entre vizinhos dentro de cada área */
+  --mF:#9aa7bd; --mA:#6f8dff; --mT:#ef5350; --mO:#ecd04a; --mC:#b48cf5;
+  --mM:#ec6fa6; --mU:#3fbf8a; --mN:#38c4dc;
+  --mX:#a5cf4e; --mS:#f39c3c; --mK1:#f5b942; --mK2:#d58cff; --mK3:#4fc3c9;
   --mod:var(--acc);                /* cor do módulo atual (trocada pelo JS) */
   --shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.25);
   --topo:56px; --menu:280px;
@@ -36,9 +37,9 @@
   --bg:#f5f6f9; --bg2:#eceff4; --card:#ffffff; --card2:#f7f8fb;
   --ink:#151a24; --ink2:#4c5568; --ink3:#7d8699; --line:#dde2ea; --line2:#c9d0dc;
   --acc:#2f63d6; --ok:#1f8f5c; --warn:#a86d09; --bad:#c43c3c;
-  --mF:#5d6b82; --mA:#2f6fd6; --mT:#c8401c; --mO:#9c7a00; --mC:#8b4fc4;
-  --mM:#c13f66; --mU:#1d8a79; --mN:#1f7fab;
-  --mX:#5c8a1e; --mS:#c4473a; --mK1:#3d5fd6; --mK2:#9447c9; --mK3:#1d8a80;
+  --mF:#5d6b82; --mA:#3f5fd6; --mT:#c62828; --mO:#9c7a00; --mC:#7c4fc4;
+  --mM:#c23c78; --mU:#1a8a5e; --mN:#0f8aa0;
+  --mX:#5c8a1e; --mS:#b86010; --mK1:#a87400; --mK2:#9447c9; --mK3:#14848a;
   --shadow:0 1px 2px rgba(20,30,50,.06), 0 6px 18px rgba(20,30,50,.06);
   color-scheme:light;
 }
@@ -366,3 +367,68 @@ table.tb th{color:var(--ink2);font-weight:600;font-size:13.5px}
 .selo.ret.breve{color:var(--ink3);border-style:dashed;border-color:var(--line2)}
 .hero2 .anim{height:auto}
 .hero2 .anim svg{height:280px}
+
+/* ---------- β 2.1: estética ---------- */
+.ic{width:1.15em;height:1.15em;flex:none;vertical-align:-.2em}
+.caixa .cab .ic{width:18px;height:18px}
+.chute .q .ic{color:var(--mod)}
+.bt .ic{margin-right:2px}
+.menu .rodape button{display:flex;align-items:center;gap:8px}
+.chefao .cab .cv{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+.chefao .cab .cv .ic{width:28px;height:28px}
+.chefao .tranca p{display:flex;gap:8px;align-items:center}
+.chefao .tranca .ic{color:var(--warn)}
+
+/* dicas e resposta em linha */
+.revela{margin-top:12px;display:block}
+.rev-bts{display:flex;flex-wrap:wrap;gap:8px}
+.rev-bt{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;border:1px solid var(--line2);background:var(--bg2);color:var(--ink2);font:600 13.5px var(--f-text);cursor:pointer}
+.rev-bt::before{content:"";width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);transition:transform .15s;margin-right:2px}
+.rev-bt[aria-expanded="true"]::before{transform:rotate(45deg) translate(-1px,-1px)}
+.rev-bt:hover{color:var(--ink);border-color:var(--ink3)}
+.rev-bt[aria-expanded="true"]{color:var(--ink);background:var(--card2);border-color:var(--mod)}
+.rev-bt.resp{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,var(--line2))}
+.rev-bt.resp[aria-expanded="true"]{background:color-mix(in srgb,var(--warn) 12%,var(--card2));border-color:var(--warn)}
+.rev-painel{margin-top:10px;border:1px solid var(--line);border-left:3px solid var(--mod);border-radius:8px;background:var(--bg2);padding:10px 14px 4px}
+.rev-painel.resp{border-left-color:var(--warn)}
+.rev-tit{font:700 11.5px var(--f-text);letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin-bottom:4px}
+
+/* mostradores dos laboratórios: um padrão só */
+.leitor .vis small{text-transform:none!important;letter-spacing:0;font-size:12.5px;color:var(--ink2);line-height:1.35;margin-bottom:2px}
+.leitor .vis b{font-size:17px;font-weight:650}
+.lab .ctrl label{color:var(--ink2)}
+.lab .ctrl output{font-variant-numeric:tabular-nums}
+
+/* menu: temas em breve ficam escondidos até pedir; contraste melhor da etiqueta */
+.breve-tag{color:var(--ink2);border:1px solid var(--line2);background:var(--card)}
+.mod li a.breve{color:var(--ink2)}
+.mod li a.breve .nome{opacity:.85}
+.filtro-breve{width:100%;margin:-4px 0 12px;padding:6px 10px;border-radius:8px;border:1px dashed var(--line2);background:none;color:var(--ink2);font:600 12.5px var(--f-text);cursor:pointer;text-align:left}
+.filtro-breve:hover{color:var(--ink);border-color:var(--ink3)}
+body:not(.mostra-breve) #menu-mods:not(.buscando) .mod.vazio{display:none}
+body:not(.mostra-breve) #menu-mods:not(.buscando) li:has(>a.breve){display:none}
+
+/* início: continuar de onde parei */
+.hero2 h1{margin-bottom:18px}
+.continuar{display:inline-flex;align-items:center;gap:12px;padding:10px 14px 10px 10px;border-radius:12px;border:1px solid color-mix(in srgb,var(--c) 45%,var(--line));background:color-mix(in srgb,var(--c) 9%,var(--card));color:var(--ink);max-width:100%}
+.continuar:hover{text-decoration:none;border-color:var(--c)}
+.continuar .letra{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:color-mix(in srgb,var(--c) 24%,transparent);color:var(--c)}
+.continuar small{display:block;color:var(--ink2);font-size:12.5px}
+.continuar b{font-weight:650}
+.continuar .ic{color:var(--c);margin-left:6px}
+
+/* ritmo da teoria: seções numeradas e separadas */
+.pagina{counter-reset:sec}
+.secao{position:relative}
+.secao+.secao{border-top:1px solid var(--line);padding-top:40px}
+.secao:not(#abertura):not(.folha)>h2::before{counter-increment:sec;content:counter(sec);flex:none;font-size:13px;font-weight:700;color:var(--mod);border:1.5px solid color-mix(in srgb,var(--mod) 70%,transparent);border-radius:7px;padding:1px 8px;transform:translateY(-3px)}
+.secao>h2:has(.n)::before{display:none!important}
+.secao>p:first-of-type{font-size:16.5px}
+/* folha de fórmulas */
+.folha-sub{color:var(--ink2);margin-bottom:12px}
+.folha-grade{display:grid;grid-template-columns:1fr;gap:8px}
+.folha-grade .formula{margin:0;display:flex;flex-direction:column;justify-content:center}
+.folha-grade .formula .katex-display{margin:.4em 0}
+.caixa-mini{display:flex;gap:8px;align-items:flex-start}
+.caixa-mini .ic{width:16px;height:16px;margin-top:3px}
+.caixa-mini.fisico .ic{color:#5fb3e8}.caixa-mini.pegadinha .ic{color:var(--bad)}.caixa-mini.olimpiada .ic{color:var(--warn)}.caixa-mini.ponte .ic{color:#a68cf0}.caixa-mini.ideia .ic{color:var(--ok)}

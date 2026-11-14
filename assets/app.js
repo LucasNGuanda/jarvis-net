@@ -97,11 +97,30 @@
   /* glifo do gam fresco dentro de SVG: canto superior esquerdo em (x, y), altura h */
   F.gfSvg = (x, y, h, cor = "currentColor") => `<g transform="translate(${x},${y}) scale(${h / 60})" style="fill:none;stroke:${cor};stroke-width:3.8;stroke-linecap:round;stroke-linejoin:round"><path d="M5 17 C9 14 13 16 16.5 22"/><path d="M16.5 22 L32 8"/><path d="M28.5 4.5 L35 11"/><path d="M16.5 22 C16.5 32 14.5 40 14.5 47 C14.5 55 20 57 24 51"/></g>`;
 
+  /* ---------- ícones (traço, cor do texto; no lugar dos emojis, que mudam de cara em cada sistema) ---------- */
+  const ICONES = {
+    fisico: '<circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(120 12 12)"/>',
+    pegadinha: '<path d="M12 3.5 21.5 20h-19z"/><path d="M12 10v4.5"/><circle cx="12" cy="17.3" r=".6" fill="currentColor"/>',
+    olimpiada: '<path d="M8 2.5h8l-2.2 6.2h-3.6z"/><circle cx="12" cy="15" r="6"/><path d="m12 12 1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2-1.6-1.5 2.2-.3z"/>',
+    ponte: '<path d="M2 17h20M4 17v-4M20 17v-4M2 13h20"/><path d="M4 13c2-5 14-5 16 0"/><path d="M8 13V10.3M12 13V9.4M16 13v-2.7"/>',
+    ideia: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.4 1.1 2.2h5c0-.8.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/>',
+    caveira: '<path d="M12 2.8c-4.6 0-7.8 3.2-7.8 7.6 0 2.6 1.2 4.4 3 5.4V19h9.6v-3.2c1.8-1 3-2.8 3-5.4 0-4.4-3.2-7.6-7.8-7.6z"/><circle cx="9" cy="11" r="1.8" fill="currentColor"/><circle cx="15" cy="11" r="1.8" fill="currentColor"/><path d="M12 13.6 11 15.6h2zM9.8 19v2.2M12 19v2.2M14.2 19v2.2"/>',
+    cadeado: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.2" fill="currentColor"/>',
+    alvo: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/>',
+    dado: '<rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>',
+    baixar: '<path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/>',
+    subir: '<path d="M12 20V9M7 13.5l5-5 5 5M5 4h14"/>',
+    seta: '<path d="M5 12h13M13 7l5 5-5 5"/>',
+    livro: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/>',
+  };
+  F.ic = (nome, cls = "") => `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONES[nome] || ""}</svg>`;
+
   /* ---------- blocos de HTML ---------- */
   F.secao = (id, titulo, html, n) => `<section class="secao" id="${id}"><h2>${n ? `<span class="n">${n}</span>` : ""}${titulo}</h2>${html}</section>`;
   F.formula = (tex, rot) => `<div class="formula">${rot ? `<div class="rot">${rot}</div>` : ""}$$${tex}$$</div>`;
-  const CX = { fisico: "🧠 Pense como físico", pegadinha: "⚠️ Pegadinha", olimpiada: "🏅 Nível olimpíada", ponte: "🌉 Ponte para a universidade", ideia: "💡 Ideia", demo: "" };
-  F.caixa = (tipo, html, titulo) => `<div class="caixa ${tipo}"><div class="cab">${titulo || CX[tipo]}</div>${html}</div>`;
+  const CX = { fisico: "Pense como físico", pegadinha: "Pegadinha", olimpiada: "Nível olimpíada", ponte: "Ponte para a universidade", ideia: "Ideia", demo: "" };
+  F.CX = CX;
+  F.caixa = (tipo, html, titulo) => `<div class="caixa ${tipo}"><div class="cab">${ICONES[tipo] ? F.ic(tipo) : ""}${titulo || CX[tipo]}</div>${html}</div>`;
   F.demo = (titulo, html) => `<div class="caixa demo"><div class="cab">${titulo ? "&nbsp;· " + titulo : ""}</div>${html}<span class="qed">∎</span><div style="clear:both"></div></div>`;
   F.fig = (svg, leg) => `<figure class="fig" style="margin:14px 0">${svg}${leg ? `<figcaption>${leg}</figcaption>` : ""}</figure>`;
   F.ret = (cod) => { const t = F.achar(cod), ok = t && t.pronto; return `<a class="selo ret${ok ? "" : " breve"}" href="#/${cod}" title="retoma ${t ? t.nome : cod}${ok ? "" : " (em breve: ainda não escrito)"}">[${cod}]←</a>`; };
@@ -121,7 +140,7 @@
         if (cfg.aoResponder) cfg.aoResponder(+b.dataset.i);
       }));
     });
-    return `<div class="chute" id="${id}"><div class="q">🎯 Chuta antes de ver: ${cfg.q}</div><div class="ops">${cfg.ops.map((o, i) => `<button class="bt op" data-i="${i}">${String.fromCharCode(65 + i)}) ${o}</button>`).join("")}</div><div class="exp">${cfg.exp}</div></div>`;
+    return `<div class="chute" id="${id}"><div class="q">${F.ic("alvo")} Chuta antes de ver: ${cfg.q}</div><div class="ops">${cfg.ops.map((o, i) => `<button class="bt op" data-i="${i}">${String.fromCharCode(65 + i)}) ${o}</button>`).join("")}</div><div class="exp">${cfg.exp}</div></div>`;
   };
 
   /* exemplo passo a passo: casos = [{nome, gerar(): {enun, fig, passos:[html]}}] */
@@ -170,9 +189,20 @@
       <div class="tit"><span class="tag">Exemplário</span>${cfg.titulo || "Exemplos passo a passo"}</div>
       <div class="bts escolha">${cfg.casos.map((c, i) => `<button class="bt peq" data-i="${i}" aria-pressed="${i === 0}">${c.nome}</button>`).join("")}</div>
       <div class="enun"></div><div class="efig fig"></div><div class="passos"></div>
-      <div class="bts" style="margin-top:12px"><button class="bt pri" data-a="prox">Começar</button><button class="bt" data-a="tudo">Mostrar tudo</button><button class="bt" data-a="par">🎲 Me dá um parecido</button></div>
+      <div class="bts" style="margin-top:12px"><button class="bt pri" data-a="prox">Começar</button><button class="bt" data-a="tudo">Mostrar tudo</button><button class="bt" data-a="par">${F.ic("dado")} Me dá um parecido</button></div>
     </div>`;
   };
+
+  /* dicas e resposta: uma linha de botões; cada um abre o seu painel embaixo (independentes, todos fechados no começo) */
+  F.revela = (itens) => {
+    const id = F.id("rev");
+    return `<div class="revela" id="${id}"><div class="rev-bts">${itens.map((it, i) => `<button class="rev-bt${it.resp ? " resp" : ""}" type="button" aria-expanded="false" aria-controls="${id}-${i}">${it.rot}</button>`).join("")}</div>${itens.map((it, i) => `<div class="rev-painel${it.resp ? " resp" : ""}" id="${id}-${i}" hidden><div class="rev-tit">${it.rot}</div>${it.html}</div>`).join("")}</div>`;
+  };
+  document.addEventListener("click", (ev) => {
+    const b = ev.target.closest(".rev-bt"); if (!b) return;
+    const painel = document.getElementById(b.getAttribute("aria-controls")); if (!painel) return;
+    const abre = painel.hidden; painel.hidden = !abre; b.setAttribute("aria-expanded", abre);
+  });
 
   /* exercício estático: {n, nivel, marcas, enun, fig, alts?, dicas:[..], resp, sol} */
   let temaAtual = null, exercicios = [];
@@ -188,12 +218,12 @@
       pinta();
     });
     const alts = e.alts ? `<ol class="alts">${e.alts.map((a, i) => `<li><b>${String.fromCharCode(65 + i)})</b>${a}</li>`).join("")}</ol>` : "";
-    const dicas = (e.dicas || []).map((d, i) => `<details><summary>Dica ${i + 1}</summary><div class="corpo">${d}</div></details>`).join("");
+    const rev = F.revela([...(e.dicas || []).map((d, i) => ({ rot: `Dica ${i + 1}`, html: d })), { rot: "Resposta e resolução", html: `<p><b>Resposta:</b> ${e.resp}</p>${e.sol}`, resp: true }]);
     return `<div class="ex" id="${id}">
       <div class="ex-cab"><span class="num">${temaAtual}.${String(e.n).padStart(2, "0")}</span><span class="marcas">${F.selos(e.marcas)}</span>
         <span class="certeza" title="● certeza · X dúvida · / chutei">sua marcação <button data-m="●">●</button><button data-m="X">X</button><button data-m="/">/</button></span></div>
       <div>${e.enun}</div>${e.fig ? F.fig(e.fig) : ""}${alts}
-      <div class="revela">${dicas}<details class="resp"><summary>Mostrar resposta e resolução</summary><div class="corpo"><p><b>Resposta:</b> ${e.resp}</p>${e.sol}</div></details></div>
+      ${rev}
     </div>`;
   };
 
@@ -214,12 +244,11 @@
       confere();
     });
     return `<div class="chefao trancado" id="${id}">
-      <div class="cab"><span class="cv">💀</span><div><small>Chefão · Impossível 99</small><h3>${c.titulo}</h3></div></div>
-      <div class="tranca"><p>🔒 Trancado. Ele destrava quando você marcar ● X ou / em todos os exercícios do tema (<span class="falta"></span>).</p>
+      <div class="cab"><span class="cv">${F.ic("caveira")}</span><div><small>Chefão · Impossível 99</small><h3>${c.titulo}</h3></div></div>
+      <div class="tranca"><p>${F.ic("cadeado")} Trancado. Ele destrava quando você marcar ● X ou / em todos os exercícios do tema (<span class="falta"></span>).</p>
         <button class="bt peq" data-a="forca">Já fiz os exercícios no caderno: destravar</button></div>
       <div class="conteudo">${c.enun}${c.fig ? F.fig(c.fig) : ""}
-        <div class="revela">${c.dicas.map((d, i) => `<details><summary>Dica ${i + 1}</summary><div class="corpo">${d}</div></details>`).join("")}
-        <details class="resp"><summary>Mostrar solução completa (tem certeza?)</summary><div class="corpo">${c.sol}</div></details></div>
+        ${F.revela([...c.dicas.map((d, i) => ({ rot: `Dica ${i + 1}`, html: d })), { rot: "Solução completa (tem certeza?)", html: c.sol, resp: true }])}
       </div></div>`;
   };
 
@@ -242,15 +271,19 @@
   function montaMenu() {
     const menu = $("#menu-mods");
     const abertos = F.store.get("menuAbertos", ["C"]);
-    menu.innerHTML = CATALOGO.map((m) => `<div class="mod ${abertos.includes(m.id) ? "aberto" : ""}" data-mod="${m.id}" data-area="${areaDe(m)}" style="--c:var(${m.cor})">
+    menu.innerHTML = CATALOGO.map((m) => `<div class="mod ${abertos.includes(m.id) ? "aberto" : ""} ${m.temas.some((t) => t[3]) ? "" : "vazio"}" data-mod="${m.id}" data-area="${areaDe(m)}" style="--c:var(${m.cor})">
       <button aria-expanded="${abertos.includes(m.id)}" class="${m.temas.some((t) => t[3]) ? "" : "vazio"}"><span class="letra">${m.letra}</span><span class="nome">${m.nome}</span>${(() => { const k = m.temas.filter((t) => t[3]).length; return `<span class="conta" title="${k} de ${m.temas.length} temas escritos${k ? "" : " (em breve)"}">${k}/${m.temas.length}</span>`; })()}<span class="seta">›</span></button>
       <ul>${m.temas.map((t) => `<li><a href="#/${t[0]}" data-cod="${t[0]}" class="${t[3] ? "" : "breve"}" ${t[3] ? "" : 'title="Ainda não escrito" aria-disabled="true"'}><span class="cod">${t[0]}</span><span class="nome">${t[1]}</span>${t[3] ? '<span class="bola"></span>' : '<span class="breve-tag">em breve</span>'}</a></li>`).join("")}</ul></div>`).join("");
         $$(".mod>button", menu).forEach((b) => b.addEventListener("click", () => {
       const m = b.parentElement; m.classList.toggle("aberto"); b.setAttribute("aria-expanded", m.classList.contains("aberto"));
       F.store.set("menuAbertos", $$(".mod.aberto", menu).map((x) => x.dataset.mod));
     }));
+    const filtro = $("#bt-breve"), pintaFiltro = () => { const v = F.store.get("mostrarBreve", false); document.body.classList.toggle("mostra-breve", v); filtro.setAttribute("aria-pressed", v); filtro.textContent = v ? "Esconder temas em breve" : "Mostrar temas em breve"; };
+    filtro.addEventListener("click", () => { F.store.set("mostrarBreve", !F.store.get("mostrarBreve", false)); pintaFiltro(); });
+    pintaFiltro();
     $("#busca").addEventListener("input", (ev) => {
       const q = ev.target.value.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+      menu.classList.toggle("buscando", !!q); /* buscando: mostra também os temas em breve */
       $$(".mod", menu).forEach((m) => {
         let algum = false;
         $$("li", m).forEach((li) => { const s = li.textContent.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); const ok = !q || s.includes(q); li.style.display = ok ? "" : "none"; algum = algum || ok; });
@@ -279,7 +312,9 @@
     let total = 0, prontos = 0, nfeitos = 0;
     mods.forEach((m) => m.temas.forEach((t) => { total++; if (t[3]) prontos++; if (f[t[0]]) nfeitos++; }));
     const anim = F.id("anim");
-    el.innerHTML = `<div class="hero2"><h1>${ar.titulo}</h1><div class="anim" id="${anim}"></div></div>
+    const ult = F.store.get("ultimo:" + areaId, null), ui = ult && F.achar(ult.cod);
+    const continuar = ui && ui.pronto ? `<a class="continuar" href="#/${ui.cod}${ult.secao ? "/" + ult.secao : ""}" style="--c:var(${ui.mod.cor})"><span class="letra">${ui.mod.letra}</span><span><small>Continuar de onde parei</small><b>${ui.cod} · ${ui.nome}</b></span>${F.ic("seta")}</a>` : "";
+    el.innerHTML = `<div class="hero2"><div><h1>${ar.titulo}</h1>${continuar}</div><div class="anim" id="${anim}"></div></div>
       <div class="cartao"><div class="tit"><span class="tag">Progresso</span>${nfeitos} de ${total} temas feitos · ${prontos} já escritos</div>
         <div class="barra" style="--c:var(--ok)"><i style="width:${total ? (100 * nfeitos) / total : 0}%"></i></div></div>
       <h2 style="margin-top:32px">Módulos</h2>
@@ -413,7 +448,9 @@
     bf.addEventListener("click", () => { const f = feitos(); if (f[info.cod]) delete f[info.cod]; else f[info.cod] = Date.now(); F.store.set("feitos", f); pinta(); pintaMenu(); });
     pinta();
     F.math(el);
+    folhaDeFormulas(el, info.cod);
     const q = fila; fila = []; q.forEach((fn) => fn());
+    lembraUltimo(info);
     if (def.montar) def.montar(F, el);
     if (ancora) { const a = achaAncora(ancora); if (a) setTimeout(() => a.scrollIntoView(), 30); }
   }
@@ -426,6 +463,31 @@
     if (anc === "exercicios") a = document.getElementById("desafios") || ($(".ex") && $(".ex").closest(".secao"));
     else if (anc === "teoria") a = secs.find((s) => !["abertura", "pergunta"].includes(s.id)) || secs[0];
     return a || null;
+  }
+
+  /* último tema aberto em cada área (para o "continuar de onde parei" do início), com a seção que estava na tela */
+  let vigia = null;
+  function lembraUltimo(info) {
+    const area = areaDe(info.mod), salva = (secao) => F.store.set("ultimo:" + area, { cod: info.cod, secao, t: Date.now() });
+    salva(null);
+    if (vigia) window.removeEventListener("scroll", vigia);
+    let pend = null;
+    vigia = () => { clearTimeout(pend); pend = setTimeout(() => { if (temaAtual !== info.cod) return; const s = $$("#pagina .secao").filter((x) => x.getBoundingClientRect().top < 200).pop(); salva(s && s.id !== "abertura" ? s.id : null); }, 400); };
+    window.addEventListener("scroll", vigia, { passive: true });
+  }
+
+  /* folha de fórmulas: junta, no fim do tema, todas as fórmulas em destaque da página (resumo para revisar) */
+  function folhaDeFormulas(el, cod) {
+    const fs = $$(".formula", el).filter((f) => !f.closest(".lab, .exemplo, .ex, .chefao, .rev-painel"));
+    if (fs.length < 2 || el.querySelector("#resumo")) return; /* temas que já têm "Resumo" escrito à mão não precisam */
+    const sec = document.createElement("section");
+    sec.className = "secao folha"; sec.id = "formulas";
+    sec.innerHTML = `<h2>Folha de fórmulas</h2><p class="folha-sub">As fórmulas em destaque deste tema, juntas, para revisar antes dos exercícios.</p><div class="folha-grade"></div>`;
+    const grade = sec.querySelector(".folha-grade");
+    fs.forEach((f) => { const c = f.cloneNode(true); c.removeAttribute("id"); grade.appendChild(c); });
+    const alvo = el.querySelector("#desafios, #exercicios") || el.querySelector(".fim");
+    alvo.parentNode.insertBefore(sec, alvo);
+    const ind = $("#indice"); if (ind) { const a = document.createElement("a"); a.href = `#/${cod}/formulas`; a.textContent = "Folha de fórmulas"; const ref = ind.querySelector(`a[href$="/desafios"], a[href$="/exercicios"]`); ind.insertBefore(a, ref); }
   }
 
   /* ---------- rotas ---------- */

@@ -50,7 +50,7 @@
         </div>
       </div>
       <div class="status" data-v="status"></div>
-      <div style="padding:0 18px 16px;display:none" data-v="troca"><button class="bt pri">🔧 Trocar o LED queimado</button></div>`);
+      <div style="padding:0 18px 16px;display:none" data-v="troca"><button class="bt pri">Trocar o LED queimado</button></div>`);
 
     const q = (s) => el.querySelector(s);
     const st = { E: 5, R: 330, led: "vermelho", real: false, eletrons: false, pausa: false, queimado: false };

@@ -11,7 +11,7 @@
     nicromo: { n: "Nicromo", rho: 1.10e-6, a: 4e-4, cor: "#a3a08f" },
   };
   SIM.MATERIAIS = MAT;
-  const fmtR = (F, R) => R >= 1e3 ? F.t(R / 1e3, 2) + " kΩ" : R >= 1 ? F.t(R, R < 10 ? 3 : 1) + " Ω" : F.t(R * 1e3, 2) + " mΩ";
+  const fmtR = (F, R) => { const [v, u] = R >= 1e3 ? [R / 1e3, " kΩ"] : R >= 1 ? [R, " Ω"] : [R * 1e3, " mΩ"]; return F.t(v, Math.max(0, 2 - Math.floor(Math.log10(Math.abs(v) || 1)))) + u; }; /* 3 algarismos significativos */
   SIM.fio = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 640 190" width="640" aria-label="fio"><g class="g"></g></svg></div>
       <div class="leitor"><div class="vis"><small>ρ (a θ)</small><b data-v="rho"></b></div><div class="vis"><small>Área A</small><b data-v="A"></b></div><div class="vis"><small>Resistência R</small><b data-v="R"></b></div><div class="vis"><small>i com 1,5 V</small><b data-v="i"></b></div></div>
@@ -37,12 +37,12 @@
       q('[data-o="L"]').textContent = F.t(st.L, 1) + " m";
       q('[data-o="d"]').textContent = F.t(st.d, 2) + " mm";
       q('[data-o="T"]').textContent = st.T + " °C";
-      q('[data-v="rho"]').textContent = F.t(rho * 1e8, rho < 1e-7 ? 2 : 1) + "×10⁻⁸ Ω·m";
+      q('[data-v="rho"]').textContent = F.t(rho * 1e8, rho * 1e8 >= 100 ? 0 : rho * 1e8 >= 10 ? 1 : 2) + " × 10⁻⁸ Ω·m"; /* 3 algarismos */
       q('[data-v="A"]').textContent = F.t(A * 1e6, 3) + " mm²";
       q('[data-v="R"]').textContent = fmtR(F, R);
       const i = 1.5 / R;
-      q('[data-v="i"]').textContent = i >= 1 ? F.t(i, 1) + " A" : F.t(i * 1000, 1) + " mA";
-      q('[data-v="st"]').innerHTML = `${M.n}: ρ₂₀ = ${F.t(M.rho * 1e8, 2)}×10⁻⁸ Ω·m, α = ${F.t(M.a * 1e3, 3)}×10⁻³ /°C. ` +
+      q('[data-v="i"]').textContent = i >= 1 ? F.t(i, i >= 10 ? 1 : 2) + " A" : F.t(i * 1000, i * 1000 >= 100 ? 0 : 1) + " mA"; /* 3 algarismos */
+      q('[data-v="st"]').innerHTML = `${M.n}: ρ₂₀ = ${F.t(M.rho * 1e8, M.rho * 1e8 >= 100 ? 0 : M.rho * 1e8 >= 10 ? 1 : 2)} × 10⁻⁸ Ω·m, α = ${F.cient(M.a, 1)} /°C. ` +
         (i > 10 ? `<b class="warn">Com uma pilha real de 1,5 V a corrente não chegaria a ${F.t(i, 0)} A:</b> a resistência interna da pilha (C10) mandaria antes.` : "Dobre L: R dobra. Dobre d: A fica 4 vezes maior e R cai para 1/4.") +
         (st.T > 20 && st.m !== "constantan" ? " O modelo linear em θ é aproximado: vale bem para variações de algumas centenas de graus." : "");
     }

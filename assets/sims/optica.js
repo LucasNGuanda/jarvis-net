@@ -185,9 +185,9 @@
   SIM.sombra = (el, F) => {
     const W = 700, H = 320, xs = 70, xo = 330, xsc = 650, c = 160;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
-      <div class="ctrls"><div class="ctrl"><label>tamanho da fonte de luz</label><input type="range" min="0" max="120" step="1" value="40" data-c="s"><output data-o="s"></output></div>
-      <div class="ctrl"><label>tamanho do obstáculo</label><input type="range" min="10" max="120" step="1" value="60" data-c="h"><output data-o="h"></output></div>
-      <div class="ctrl"><label>posição do obstáculo</label><input type="range" min="130" max="600" step="1" value="330" data-c="x"><output data-o="x"></output></div></div>
+      <div class="ctrls"><div class="ctrl"><label>tamanho da fonte de luz (px na tela)</label><input type="range" min="0" max="120" step="1" value="40" data-c="s"><output data-o="s"></output></div>
+      <div class="ctrl"><label>tamanho do obstáculo (px na tela)</label><input type="range" min="10" max="120" step="1" value="60" data-c="h"><output data-o="h"></output></div>
+      <div class="ctrl"><label>posição do obstáculo (px até a fonte)</label><input type="range" min="130" max="600" step="1" value="330" data-c="x"><output data-o="x"></output></div></div>
       <div class="status">A luz anda em linha reta. Com uma fonte <b>pontual</b> (tamanho 0), a sombra tem borda nítida. Com uma fonte <b>extensa</b>, aparece a <b>penumbra</b>: regiões que veem só parte da fonte. Leve o obstáculo para perto da tela ou da fonte, ou diminua o obstáculo até a sombra própria (umbra) sumir: é a diferença entre eclipse total e anular.</div>`);
     const q = (s) => el.querySelector(s);
     function desenha() {
