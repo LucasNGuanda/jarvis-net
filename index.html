@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Site Física β 1.9</title>
+<title>Site Física β 2.0</title>
 <link rel="stylesheet" href="assets/katex/katex.min.css">
 <link rel="stylesheet" href="assets/estilo.css">
 <script defer src="assets/katex/katex.min.js"></script>
@@ -27,6 +27,7 @@
 </head>
 <body>
 <header class="topo">
+  <button class="btn-ic so-cel" id="bt-menu" aria-label="Abrir o menu de temas" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <nav class="abas" aria-label="Áreas">
     <a class="aba" data-area="fisica" href="#/inicio" aria-label="Física">
     <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
@@ -34,20 +35,20 @@
       <ellipse cx="16" cy="16" rx="13" ry="5" transform="rotate(60 16 16)" style="stroke:var(--mA)"/>
       <ellipse cx="16" cy="16" rx="13" ry="5" transform="rotate(120 16 16)" style="stroke:var(--mU)"/>
       <circle cx="16" cy="16" r="2.4" fill="currentColor" stroke="none"/>
-    </svg>Física</a>
+    </svg><span class="aba-txt">Física</span></a>
     <a class="aba" data-area="calculo" href="#/calculo" aria-label="Cálculo">
     <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
       <path d="M9.5 4.5c-1.8 0-2.3 1.6-2.6 3.6L5.2 23.9c-.3 2-.8 3.6-2.6 3.6" style="stroke:var(--mK1)" stroke-width="2.1" stroke-linecap="round"/>
       <path d="M29.3 4.5c-1.8 0-2.3 1.6-2.6 3.6L25 23.9c-.3 2-.8 3.6-2.6 3.6" style="stroke:var(--mK2)" stroke-width="2.1" stroke-linecap="round"/>
       <circle cx="16" cy="16" r="2.6" fill="currentColor"/>
-    </svg>Cálculo</a>
+    </svg><span class="aba-txt">Cálculo</span></a>
     <a class="aba" data-area="exp" href="#/experimentos" aria-label="Experimentos">
-    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><line x1="6" y1="4" x2="26" y2="4" style="stroke:var(--ink3)" stroke-width="2"/><line x1="16" y1="4" x2="10" y2="16" style="stroke:currentColor" stroke-width="1.8"/><line x1="10" y1="16" x2="19" y2="25" style="stroke:currentColor" stroke-width="1.8"/><circle cx="10" cy="16" r="3" style="fill:var(--mA)"/><circle cx="19" cy="25" r="3.4" style="fill:var(--mU)"/></svg>Experimentos</a>
+    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><line x1="6" y1="4" x2="26" y2="4" style="stroke:var(--ink3)" stroke-width="2"/><line x1="16" y1="4" x2="10" y2="16" style="stroke:currentColor" stroke-width="1.8"/><line x1="10" y1="16" x2="19" y2="25" style="stroke:currentColor" stroke-width="1.8"/><circle cx="10" cy="16" r="3" style="fill:var(--mA)"/><circle cx="19" cy="25" r="3.4" style="fill:var(--mU)"/></svg><span class="aba-txt">Experimentos</span></a>
   </nav>
   <span class="versao" id="versao"></span>
   <span class="esp"></span>
-  <nav><a href="#/inicio">Início</a><a href="#/sumario">Sumário</a><a href="#/legenda">Legenda</a></nav>
-  <div class="detalhes" id="detalhes"><button class="bt peq" aria-haspopup="true">Detalhes ▾</button><div class="painel" id="detalhes-painel"></div></div>
+  <nav class="links"><a class="so-pc" href="#/inicio">Início</a><a href="#/sumario">Sumário</a></nav>
+  <div class="detalhes" id="detalhes"><button class="bt peq" aria-haspopup="true" aria-label="Legenda, símbolos e alfabeto grego"><span class="so-pc">Legenda e símbolos ▾</span><span class="so-cel">Σα</span></button><div class="painel" id="detalhes-painel"></div></div>
   <div class="config" id="config">
     <button class="btn-ic" id="bt-config" title="Configurações" aria-label="Configurações" aria-haspopup="true" aria-expanded="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M10.3 2.6h3.4l.5 2.6a7.4 7.4 0 0 1 1.9 1.1l2.5-.9 1.7 2.9-2 1.7a7.6 7.6 0 0 1 0 2.2l2 1.7-1.7 2.9-2.5-.9a7.4 7.4 0 0 1-1.9 1.1l-.5 2.6h-3.4l-.5-2.6a7.4 7.4 0 0 1-1.9-1.1l-2.5.9-1.7-2.9 2-1.7a7.6 7.6 0 0 1 0-2.2l-2-1.7 1.7-2.9 2.5.9a7.4 7.4 0 0 1 1.9-1.1z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -63,7 +64,8 @@
   </div>
 </header>
 
-<aside class="menu">
+<div class="veu" id="veu" hidden></div>
+<aside class="menu" id="menu">
   <input class="busca" id="busca" type="search" placeholder="Buscar tema…" aria-label="Buscar tema">
   <div id="menu-mods"></div>
   <div class="rodape">

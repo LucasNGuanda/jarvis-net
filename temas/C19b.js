@@ -78,5 +78,5 @@ F.registrar("C19b", {
       ].join("") + chefao),
     ].join("");
   },
-  montar(F) { const e = document.getElementById("lab-cad"); e.outerHTML = F.lab("Reação em cadeia: o fator k", "lab-cad"); SIM.cadeia(document.getElementById("lab-cad"), F); },
+  montar(F) { const e = document.getElementById("lab-cad"); e.outerHTML = F.lab("Reação em cadeia: o fator k", "lab-cad"); SIM.reacaoCadeia(document.getElementById("lab-cad"), F); },
 });

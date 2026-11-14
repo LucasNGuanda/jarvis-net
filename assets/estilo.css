@@ -22,7 +22,7 @@
   --acc:#7aa7ff;                   /* destaque neutro (links, foco) */
   --ok:#4cc38a; --warn:#e8b04b; --bad:#ef6b6b;
   /* uma cor por módulo */
-  --mF:#9aa7bd; --mA:#5b9cf5; --mB:#e5884a; --mBo:#d9a43c; --mC:#c58af0;
+  --mF:#9aa7bd; --mA:#5b9cf5; --mT:#f0603c; --mO:#e9c93f; --mC:#c58af0;
   --mM:#e56b8f; --mU:#43b8a6; --mN:#4fb0d9;
   --mX:#9cc95a; --mS:#ef7b6b; --mK1:#7f9dff; --mK2:#d08cff; --mK3:#5fc9c0;
   --mod:var(--acc);                /* cor do módulo atual (trocada pelo JS) */
@@ -36,7 +36,7 @@
   --bg:#f5f6f9; --bg2:#eceff4; --card:#ffffff; --card2:#f7f8fb;
   --ink:#151a24; --ink2:#4c5568; --ink3:#7d8699; --line:#dde2ea; --line2:#c9d0dc;
   --acc:#2f63d6; --ok:#1f8f5c; --warn:#a86d09; --bad:#c43c3c;
-  --mF:#5d6b82; --mA:#2f6fd6; --mB:#c4621f; --mBo:#a8780f; --mC:#8b4fc4;
+  --mF:#5d6b82; --mA:#2f6fd6; --mT:#c8401c; --mO:#9c7a00; --mC:#8b4fc4;
   --mM:#c13f66; --mU:#1d8a79; --mN:#1f7fab;
   --mX:#5c8a1e; --mS:#c4473a; --mK1:#3d5fd6; --mK2:#9447c9; --mK3:#1d8a80;
   --shadow:0 1px 2px rgba(20,30,50,.06), 0 6px 18px rgba(20,30,50,.06);
@@ -315,3 +315,54 @@ table.tb th{color:var(--ink2);font-weight:600;font-size:13.5px}
 .cfg-rot{font-size:12.5px;font-weight:600;color:var(--ink2);margin-bottom:6px}
 .cfg-ops{display:flex;gap:6px;flex-wrap:wrap}
 .cfg-nota{font-size:13px;line-height:1.5;color:var(--ink2);margin:10px 0 0;padding:8px 10px;border-radius:8px;background:color-mix(in srgb,var(--mod) 8%,transparent)}
+
+/* ---------- β 2.0: "em breve", gaveta do celular, legenda única ---------- */
+.so-cel{display:none!important}
+.breve-tag{flex:none;margin-left:auto;font:600 10.5px var(--f-text);letter-spacing:.02em;color:var(--ink3);border:1px dashed var(--line2);border-radius:999px;padding:0 7px;white-space:nowrap}
+.mod li a.breve{opacity:1;color:var(--ink3)}
+.mod li a.breve .cod{color:color-mix(in srgb,var(--c) 45%,var(--ink3))}
+.mod li a.breve .nome{opacity:.7}
+.mod .conta{margin-left:auto;font:600 11px var(--f-text);color:var(--ink3);font-variant-numeric:tabular-nums}
+.mod .conta+.seta,.mod .breve-tag+.seta{margin-left:8px}
+.mod>button .nome{min-width:0}
+.mod>button.vazio .letra{opacity:.5}
+.mod>button.vazio .nome{color:var(--ink2)}
+.modc.breve{opacity:.6}
+.modc.breve:hover{opacity:.85}
+.leg-caixas{display:grid;gap:4px;font-size:13.5px;color:var(--ink2);margin:0 0 10px}
+.leg-caixas b{color:var(--ink)}
+.lab .palco canvas{height:auto!important}
+.lab .palco svg{height:auto}
+.veu{position:fixed;inset:0;z-index:35;background:rgba(0,0,0,.5)}
+@media (max-width:860px){
+  .so-cel{display:inline-flex!important}
+  .so-pc{display:none!important}
+  .topo{gap:6px;padding:0 10px}
+  .topo #bt-menu{display:grid!important}
+  .abas{margin-left:0;gap:2px}
+  .aba{padding:6px 7px}
+  .aba-txt,.versao{display:none}
+  .topo nav a{padding:6px 7px;font-size:13.5px}
+  .detalhes>.bt{min-width:36px;height:36px;justify-content:center}
+  .detalhes .painel{position:fixed;left:8px;right:8px;width:auto;top:calc(var(--topo) + 6px);max-height:calc(100vh - var(--topo) - 20px)}
+  .detalhes:hover .painel{display:none}
+  .detalhes.aberto .painel{display:block}
+  .config .painel-config{position:fixed;right:8px;top:calc(var(--topo) + 6px);width:min(300px,calc(100vw - 16px))}
+  .menu{z-index:40;width:min(86vw,320px);padding-top:16px;transform:translateX(-102%);transition:transform .25s ease;box-shadow:8px 0 30px rgba(0,0,0,.35)}
+  body.menu-aberto .menu{transform:none}
+  body.menu-aberto{overflow:hidden}
+  .principal{margin-left:0;padding:calc(var(--topo) + 20px) 16px 80px}
+  .hero2{grid-template-columns:1fr;gap:8px}
+  .hero2 h1{font-size:34px}
+  .hero2 .anim{width:100%;max-width:340px;height:auto;aspect-ratio:340/300;margin:0 auto}
+  .cab-tema h1{font-size:26px}
+  table.tb{display:block;overflow-x:auto}
+  .lab .palco{padding:8px 8px 0}
+  .lab .ctrls{padding:12px}
+  .lab .lab-cab{padding:10px 12px}
+  .fim{flex-wrap:wrap}
+}
+@media (prefers-reduced-motion:reduce){.menu{transition:none}}
+.selo.ret.breve{color:var(--ink3);border-style:dashed;border-color:var(--line2)}
+.hero2 .anim{height:auto}
+.hero2 .anim svg{height:280px}

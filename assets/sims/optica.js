@@ -1,4 +1,4 @@
-/* Simulações de Óptica (B12 refração, B13 lentes, B14b óptica ondulatória).
+/* Simulações de Óptica (O08 refração, O09 lentes, O10b óptica ondulatória).
    Refração: Snell + fórmulas de Fresnel para Rs e Rp (conferidas: R normal vidro = 4%, Brewster 56,3°, crítico 41,8°).
    Lentes: 1/f = 1/p + 1/p′ e A = −p′/p (conferido em Python). Fendas: I = (sen β/β)²·(sen Nα/(N sen α))². Filme: R ∝ sen²(2πnt/λ). */
 (function () {
@@ -24,7 +24,7 @@
     return { rs: ((n1 * ci - n2 * ct) / (n1 * ci + n2 * ct)) ** 2, rp: ((n1 * ct - n2 * ci) / (n1 * ct + n2 * ci)) ** 2, tt };
   }
 
-  /* ---------- B12 · refração, reflexão total, Brewster ---------- */
+  /* ---------- O08 · refração, reflexão total, Brewster ---------- */
   SIM.refracao = (el, F) => {
     const MEIOS = { ar: ["ar", 1.0], agua: ["água", 1.33], vidro: ["vidro", 1.5], diam: ["diamante", 2.42] };
     let m1 = "ar", m2 = "vidro";
@@ -67,7 +67,7 @@
     desenha();
   };
 
-  /* ---------- B13 · lentes delgadas e os raios principais ---------- */
+  /* ---------- O09 · lentes delgadas e os raios principais ---------- */
   SIM.lente = (el, F) => {
     const W = 760, H = 380, ox = 380, oy = 190, esc = 6.5, yo = 5;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -114,7 +114,7 @@
     desenha();
   };
 
-  /* ---------- B14b · fendas: Young, fenda simples e rede ---------- */
+  /* ---------- O10b · fendas: Young, fenda simples e rede ---------- */
   SIM.fendas = (el, F) => {
     const W = 640, Dm = 1, Ymax = 50e-3;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} 320" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -152,7 +152,7 @@
     desenha();
   };
 
-  /* ---------- B14b · cores de filme fino (bolha de sabão) ---------- */
+  /* ---------- O10b · cores de filme fino (bolha de sabão) ---------- */
   SIM.filme = (el, F) => {
     const W = 640;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} 330" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -180,8 +180,8 @@
     el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha));
     desenha();
   };
-  /* ================= Óptica, parte 2 (B09, B10, B11, B14) ================= */
-  /* ---------- B09 · sombra e penumbra ---------- */
+  /* ================= Óptica, parte 2 (O05, O06, O07, O10) ================= */
+  /* ---------- O05 · sombra e penumbra ---------- */
   SIM.sombra = (el, F) => {
     const W = 700, H = 320, xs = 70, xo = 330, xsc = 650, c = 160;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -208,7 +208,7 @@
     el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha)); desenha();
   };
 
-  /* ---------- B10 · dois espelhos planos em ângulo (caleidoscópio) ---------- */
+  /* ---------- O06 · dois espelhos planos em ângulo (caleidoscópio) ---------- */
   SIM.caleidoscopio = (el, F) => {
     const W = 520, H = 420, ox = 260, oy = 210, R0 = 150;
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg><div class="leitor" data-v="lt" style="flex-direction:column;align-items:stretch"></div></div>
@@ -250,7 +250,7 @@
     desenha();
   };
 
-  /* ---------- B11 · espelho esférico ---------- */
+  /* ---------- O07 · espelho esférico ---------- */
   SIM.espelhoEsf = (el, F) => {
     const W = 760, H = 380, ox = 600, oy = 190, esc = 7, yo = 5;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -294,7 +294,7 @@
     desenha();
   };
 
-  /* ---------- B14 · microscópio e luneta ---------- */
+  /* ---------- O10 · microscópio e luneta ---------- */
   SIM.instrumento = (el, F) => {
     const W = 760, H = 320, oy = 160;
     let modo = "micro";

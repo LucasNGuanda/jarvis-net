@@ -1,24 +1,26 @@
 # PROGRESSO — Site de Física do Lucas
 
 ## Estado atual (14/11/2026, depois da β 1.9)
-- **Física**: 47 de 96 temas escritos.
-  - Prontos: Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Óptica (7 de 11: falta a parte de ondas); Bônus (X01); Simulados (S00–S04, só as páginas de entrada).
+- **Física**: 47 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
+  - Prontos: Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica (7 de 11: O05–O10b; faltam O01–O04, as ondas); Bônus (X01); Simulados (S00–S04, só as páginas de entrada).
   - Vazios: Fundamentos (6), Mecânica (21), Termodinâmica (11), Navier–Stokes (7), Ondas (4).
 - **Cálculo**: 20 de 20 (Cálculo 1, Cálculo 2, Funções especiais).
 - **Experimentos**: 9 de 9.
 - Exercícios: 7 por tema (a meta do briefing era 15–20).
 - Versão em inglês: só pelo tradutor do navegador.
 
-## Revisão geral (pedido de 14/11/2026), em andamento → β 2.0
-1. [ ] Módulos com letras novas: Termodinâmica = **T**, Ondas e Óptica = **O**, com cores bem diferentes. Códigos trocados (B01 → T01…, B16 → O01…) em links, [n]←, busca, sumário e simulados; progresso salvo migrado.
-2. [ ] Conferir a soma de Riemann da animação do Cálculo (n = 4, 16, 100).
-3. [ ] Temas não escritos aparecem apagados com "em breve".
-4. [ ] Numeração dos Experimentos (pula de EP02 para EP08).
-5. [ ] "Legenda" num lugar só (junto com símbolos e alfabeto grego).
-6. [ ] GitHub Pages ligado.
-7. [ ] Teste geral com Playwright: PC (1280 px) e celular (375 px), três abas, todos os links, botões, controles, console, KaTeX, exercícios, progresso salvo, exportar/importar, física das simulações nos casos limite.
-8. [ ] Relatório honesto do que estava quebrado, do que foi corrigido e do que falta.
-9. [ ] Relatório de estética.
+## Revisão geral (pedido de 14/11/2026) → β 2.0
+1. [x] Módulos com letras novas: Termodinâmica = **T**, Ondas e Óptica = **O**, com cores bem diferentes. Códigos trocados (B01 → T01…, B16 → O01…) em links, [n]←, busca, sumário e simulados; progresso salvo migrado.
+2. [x] Conferir a soma de Riemann da animação do Cálculo (n = 4, 16, 100).
+3. [x] Temas não escritos aparecem apagados com "em breve".
+4. [x] Numeração dos Experimentos (pula de EP02 para EP08).
+5. [x] "Legenda" num lugar só (junto com símbolos e alfabeto grego).
+6. [ ] GitHub Pages ligado. **Bloqueado aqui**: o proxy desta sessão não deixa mexer nas configurações do repositório, e o repositório é privado (Pages em repositório privado exige GitHub Pro). O Lucas liga à mão: Settings → Pages → Deploy from a branch → main / (root). O arquivo `.nojekyll` já está no repositório.
+7. [x] Teste geral com Playwright **só em PC (1280 px)**: três abas, todos os links, botões, controles, console, KaTeX, exercícios, progresso salvo, exportar/importar, física das simulações nos casos limite.
+- **Versão de celular: pendente, fazer no fim** (pedido do Lucas em 14/11). Já existe um rascunho não testado: menu em gaveta com botão ☰ e CSS para telas ≤ 860 px (bloco "β 2.0" no fim do `estilo.css`). Não aparece no PC.
+- **Sem sistema de XP** (confirmado de novo em 14/11). Não há nenhuma menção a XP ou a "grau de feiticeiro" no site.
+8. [x] Relatório honesto do que estava quebrado, do que foi corrigido e do que falta.
+9. [x] Relatório de estética (na conversa de 14/11).
 
 ## Versões
 Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
@@ -110,16 +112,40 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
     U05 Maxwell diferencial (FDTD de Yee, r = −0,200 conferido), U06 Schrödinger (poço infinito e superposição; oscilador gaussiano).
   - Todos os números conferidos em Python; t6, tstress e texemp limpos em todas as páginas novas.
 
+- **β 2.0** — Revisão geral.
+  - **Códigos novos**: Termodinâmica virou **T** (vermelho-alaranjado) e Ondas e Óptica virou **O** (amarelo). MHS (B15, que já ficava na Mecânica) virou **A20**. Experimentos renumerados na ordem do menu. Tabela completa em "Códigos antigos → novos", abaixo.
+    - O progresso salvo no navegador é convertido sozinho, uma única vez (chave `fisica:codigos` = 2). Um backup .json antigo também é convertido ao importar. Links antigos (ex.: `#/B12`) redirecionam.
+  - Menu: temas não escritos apagados com a etiqueta "em breve"; cada módulo mostra "escritos/total"; [n]← para tema não escrito fica tracejado. "em breve" também no sumário e nos cartões do início.
+  - Legenda num lugar só: o painel "Legenda e símbolos" do topo (legenda, caixas, símbolos matemáticos, alfabeto grego). O link "Legenda" saiu; `#/legenda` abre o painel.
+  - Animação do início do Cálculo: troquei a soma pelo ponto médio (que converge rápido e parecia "bater" com a integral já com n = 16) pela soma pela esquerda, e agora mostra o erro. n = 4: 7,0210; n = 16: 7,1815; n = 100: 7,2241 (o site anima 2 a 128); integral 7,2321.
+  - **Bugs corrigidos**:
+    - CI04 mostrava o laboratório do reator nuclear: `SIM.cadeia` existia em calculo.js e em moderna.js (renomeado para `SIM.reacaoCadeia`).
+    - Sumário: os links "teoria" e "[exercícios]" não rolavam até a seção em ~50 temas, cujas seções tinham outro nome. Agora sempre acham a seção.
+    - Notação científica: "10,0 × 10⁶" em vez de "1,00 × 10⁷" (F.sigM); "6,42e+7" na C16 e em mais 4 lugares (novo F.cient, que dá "6,42 × 10⁷").
+    - CE01: o controle começava abaixo de −1/e e mostrava "—".
+    - Importar progresso apagava os temas feitos que não estavam no arquivo; agora soma.
+    - Rótulo "3000" cortado na C16; "1 escritos"; legenda da animação do Cálculo encostando no cartão.
+  - **Testes** (Playwright, 1280 px): 125 páginas (0 katex-error, 0 erro de JS, 870 links sem nenhum quebrado); estresse dos 83 laboratórios (0 problemas); 36 testes de funcionamento (dicas, respostas, marcações, chefão, feito, recarregar, exportar/importar, topo, busca, menu, sumário, abas, tema claro); 118 conferências de física em casos limite contra fórmulas independentes.
+  - Celular: só um rascunho (gaveta + CSS ≤ 860 px), não testado. Fica para o fim.
+
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.
 
+## Códigos antigos → novos (β 2.0)
+O histórico acima usa os códigos antigos.
+- Termodinâmica: B01–B08b → T01–T08b (mesmo número: B04b → T04b, B05b → T05b, B08b → T08b).
+- Ondas e Óptica, na ordem do menu: B16 → O01, B17 → O02, B18 → O03, B19 → O04, B09 → O05, B10 → O06, B11 → O07, B12 → O08, B13 → O09, B14 → O10, B14b → O10b.
+- MHS: B15 → A20 (já ficava no módulo Mecânica).
+- Experimentos: EP08 (pêndulo triplo) → EP03, EP03 (Lorentz) → EP04, EP09 (duas massas) → EP08, EP04 (bloco com pêndulo) → EP09. EP01, EP02, EP05, EP06 e EP07 não mudaram.
+  - Por que pulava: os números foram dados na ordem em que os experimentos foram escritos (β 0.8–1.0), e depois eles foram agrupados por assunto no menu.
+
 ## Decisões (com o Lucas)
-- Só PC. Tema escuro padrão, botão para clarear.
+- Foco no PC (1280 px); versão de celular só no fim do projeto. Tema escuro padrão, engrenagem com escuro/claro/sistema.
 - Interativo = simulações. Sem XP, sem revisão espaçada, sem mapa de erros automático.
 - Exercícios estáticos: dica 1, dica 2, resposta escondidas (abrem com clique) + marcação ● X / salva.
 - Chefão destrava quando todos os exercícios do tema têm marcação (ou botão "já fiz no caderno").
-- Códigos com 13 normal (A13, B13, C13). A17 = Hidrostática (assumido).
+- Códigos com 13 normal (A13, T13, C13). A17 = Hidrostática (assumido). Letras: F, A, T, O, C, M, U, N, X, S (desde a β 2.0).
 - Exercícios de provas reais (ITA, IME, olimpíadas russas…) sempre com a fonte e o ano, ex. [ITA 2010].
 - Cálculo 2: lista provisória (técnicas de integração, impróprias, séries, Taylor, várias variáveis, gradiente/Lagrange, integrais múltiplas, EDOs) até chegarem os materiais.
 - Parte universitária: U01–U06 do briefing, até o Lucas mandar os livros (4 PDFs, depois).

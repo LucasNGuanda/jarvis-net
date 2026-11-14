@@ -1,34 +1,33 @@
-/* EP09 · Duas massas e três molas. Equações e solução exata conferidas com sympy (scratchpad exp3.py). */
+/* EP09 · Pêndulo pendurado num bloco com mola (do TikTok: canal VIBRATIONS, "Pendulum Attached to a Mass").
+   Equações deduzidas com sympy e iguais às da imagem (scratchpad exp2.py). */
 F.registrar("EP09", {
-  retoma: ["B15", "EP02"],
+  retoma: ["EP01", "A20"],
   html(F) {
     const R = String.raw;
-    const fig = D.svg(560, 130, `<rect x="20" y="30" width="10" height="70" style="fill:var(--ink3)"/><rect x="530" y="30" width="10" height="70" style="fill:var(--ink3)"/>` + D.comp("resistor", 30, 65, 170, 65, { rot: "k", L: 90 }) + `<rect x="170" y="43" width="44" height="44" style="fill:var(--mU)"/>${D.txt(192, 70, "m", "tx", "middle", 'style="fill:#fff;font-weight:700"')}` + D.comp("resistor", 214, 65, 346, 65, { rot: "k_c", L: 90 }) + `<rect x="346" y="43" width="44" height="44" style="fill:var(--mA)"/>${D.txt(368, 70, "m", "tx", "middle", 'style="fill:#fff;font-weight:700"')}` + D.comp("resistor", 390, 65, 530, 65, { rot: "k", L: 90 }) + `${D.seta(192, 110, 232, 110, "var(--ink2)", 1.4)}${D.txt(212, 126, "x₁", "txm")}${D.seta(368, 110, 408, 110, "var(--ink2)", 1.4)}${D.txt(388, 126, "x₂", "txm")}`, "duas massas e três molas");
-    const ex = F.exercicio({ n: 1, enun: R`<p><b>Exercício.</b> Duas massas iguais $m = 1{,}0$ kg, molas das pontas $k = 10$ N/m e mola do meio $k_c = 1{,}5$ N/m. A massa 1 é deslocada $30$ cm e as duas são soltas do repouso. (a) Escreva $x_1(t)$ e $x_2(t)$. (b) Depois de quanto tempo a massa 1 fica (quase) parada e a 2 oscila com a amplitude máxima?</p>`, fig: fig,
-      dicas: [R`<p>(a) Use a solução geral com $A = 0{,}30$ m e $B = 0$.</p>`, R`<p>(b) $x_1 = 0{,}30\cos\left(\frac{\omega_2-\omega_1}{2}t\right)\cos\left(\frac{\omega_1+\omega_2}{2}t\right)$: a envoltória zera quando $\frac{\omega_2-\omega_1}{2}t = \frac\pi2$.</p>`],
-      resp: R`(a) $x_{1,2} = 0{,}15\cos(3{,}162t) \pm 0{,}15\cos(3{,}606t)$; (b) $t \approx 7{,}1$ s.`,
-      sol: R`<p>$\omega_1 = \sqrt{10} = 3{,}162$ rad/s, $\omega_2 = \sqrt{13} = 3{,}606$ rad/s. (b) $t = \frac{\pi}{\omega_2 - \omega_1} = \frac{\pi}{0{,}4434} \approx 7{,}09$ s. Toda a energia passou para a massa 2; em mais 7,1 s, volta para a 1. Confira no experimento (botão "Batimento").</p>` });
+    const fig = D.svg(300, 300, `<rect x="90" y="20" width="120" height="270" style="fill:none;stroke:var(--ink3);stroke-width:2"/><path d="M150 20 l-10 8 20 8 -20 8 20 8 -20 8 20 8 -10 6" class="ln"/><rect x="120" y="86" width="60" height="40" style="fill:var(--card2);stroke:var(--ink);stroke-width:2"/>${D.txt(200, 110, "M", "txm", "start")}${D.txt(166, 50, "k", "txm", "start")}<line x1="150" y1="106" x2="200" y2="220" class="ln"/><circle cx="200" cy="220" r="12" style="fill:var(--mod)"/>${D.txt(214, 226, "m", "txm", "start")}${D.txt(184, 160, "ℓ", "txm", "start")}<line x1="150" y1="106" x2="150" y2="230" class="ln2" style="stroke-dasharray:3 4"/>${D.txt(160, 150, "φ", "txm", "start")}${D.seta(260, 70, 260, 140, "var(--ink2)", 1.4)}${D.txt(268, 110, "x", "txm", "start")}`, "bloco e pêndulo");
     return [
-      F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Mola · exercício</div><div class="q">Você puxa só uma das massas e solta. Por que, depois de alguns segundos, ela para e a <b>outra</b> é que está balançando?</div></div>`),
-      F.secao("experimento", "Experimento", R`<p>Teste os dois modos normais e depois o batimento. Deixe $k_c$ pequeno (acoplamento fraco) para ver a energia passando de uma massa para a outra.</p><div id="lab-mol"></div>`),
-      F.secao("lagrange", "A dedução pela lagrangiana", R`${F.fig(fig, "x₁ e x₂: deslocamentos a partir do equilíbrio (com as molas relaxadas).")}
-        ${F.demo("energias e equações", R`
-          <p>(i) <b>Coordenadas:</b> $x_1$ e $x_2$. (ii) $T = \frac12m\dot x_1^2 + \frac12m\dot x_2^2$.</p>
-          <p>(iii) <b>Potencial elástico</b> das três molas: a da esquerda estica $x_1$, a do meio estica $x_2 - x_1$, a da direita comprime $x_2$:</p>
-          ${F.formula(R`V = \tfrac12kx_1^2 + \tfrac12k_c(x_2 - x_1)^2 + \tfrac12kx_2^2`)}
-          <p>(iv) Euler–Lagrange: $\frac{d}{dt}(m\dot x_1) - \left[-kx_1 + k_c(x_2 - x_1)\right] = 0$, e o mesmo para $x_2$:</p>
-          ${F.formula(R`m\ddot x_1 = -kx_1 - k_c(x_1 - x_2),\qquad m\ddot x_2 = -kx_2 - k_c(x_2 - x_1)`)}`)}
-        ${F.demo("modos normais e equação de posição", R`
-          <p>(v) Some e subtraia as equações. Com $S = x_1 + x_2$ e $D = x_1 - x_2$:</p>
-          ${F.formula(R`m\ddot S = -kS,\qquad m\ddot D = -(k + 2k_c)D`)}
-          <p>Dois MHS independentes ${F.ret("B15")}: $\omega_1 = \sqrt{k/m}$ (as massas juntas; a mola do meio nem estica) e $\omega_2 = \sqrt{(k + 2k_c)/m}$ (opostas).</p>
-          <p>(vi) Soltas do repouso em $x_1(0) = A$, $x_2(0) = B$: $S = (A + B)\cos\omega_1t$, $D = (A - B)\cos\omega_2t$. Voltando para $x_1 = \frac{S+D}{2}$, $x_2 = \frac{S-D}{2}$:</p>
-          ${F.formula(R`x_1(t) = \frac{A+B}{2}\cos\omega_1t + \frac{A-B}{2}\cos\omega_2t,\qquad x_2(t) = \frac{A+B}{2}\cos\omega_1t - \frac{A-B}{2}\cos\omega_2t`, "Equações de posição")}
-          <p>(Conferido com sympy: satisfaz as duas equações e as condições iniciais.)</p>`)}
-        <h3>Batimento</h3>
-        <p>Com $B = 0$ e soma de cossenos em produto: $x_1 = A\cos\left(\frac{\omega_2-\omega_1}{2}t\right)\cos\left(\frac{\omega_1+\omega_2}{2}t\right)$ e $x_2 = A\sin\left(\frac{\omega_2-\omega_1}{2}t\right)\sin\left(\frac{\omega_1+\omega_2}{2}t\right)$. Uma oscilação rápida dentro de uma envoltória lenta: a energia vai e volta entre as massas com período $\frac{2\pi}{\omega_2 - \omega_1}$. É o mesmo batimento de duas notas quase iguais no violão ${F.ret("B18")} e o mesmo que liga os dois modos do pêndulo duplo ${F.ret("EP02")}.</p>`),
-      F.secao("exercicio", "Exercício", ex),
+      F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Experimento 4 · do TikTok</div><div class="q">Um bloco quica numa mola e um pêndulo pende dele. Se você só puxar o bloco, sem balançar o pêndulo, ele começa a balançar sozinho?</div><p class="det">Figura e equações de referência: canal VIBRATIONS (Стивен), publicação 79, "Pendulum Attached to a Mass". Aqui a dedução completa.</p></div>`),
+      F.secao("experimento", "Experimento", R`<p>Comece pela <b>ressonância 2 : 1</b>: o pêndulo começa quase parado, e a energia vai migrando da mola para ele.</p><div id="lab-p4"></div>`),
+      F.secao("lagrange", "A dedução pela lagrangiana", R`${F.fig(fig)}
+        ${F.demo("posições, velocidades e energias", R`
+          <p>(i) <b>Coordenadas:</b> $x$ (deslocamento do bloco para <b>baixo</b>, a partir do comprimento natural da mola) e $\varphi$ (ângulo do pêndulo com a vertical). O bloco só anda na vertical (trilho sem atrito, $\mu = 0$).</p>
+          <p>(ii) <b>Posições</b> (eixo $Y$ para baixo): bloco $(0,\ x)$; peso $(\ell\sin\varphi,\ x + \ell\cos\varphi)$.</p>
+          <p>(iii) <b>Velocidade do peso:</b> $(\ell\cos\varphi\,\dot\varphi,\ \dot x - \ell\sin\varphi\,\dot\varphi)$, então $v_m^2 = \dot x^2 + \ell^2\dot\varphi^2 - 2\ell\dot x\dot\varphi\sin\varphi$.</p>
+          <p>(iv) $T = \frac12M\dot x^2 + \frac12m\left(\dot x^2 + \ell^2\dot\varphi^2 - 2\ell\dot x\dot\varphi\sin\varphi\right)$.</p>
+          <p>(v) $V = \frac12kx^2 - Mgx - mg(x + \ell\cos\varphi)$ (com $Y$ para baixo, a energia gravitacional é $-mgY$).</p>
+          <p>(vi) $\mathcal L = T - V$.</p>`)}
+        ${F.demo("Euler–Lagrange", R`
+          <p>(vii) Para $x$: $\frac{\partial\mathcal L}{\partial\dot x} = (M+m)\dot x - m\ell\dot\varphi\sin\varphi$; derivando: $(M+m)\ddot x - m\ell\ddot\varphi\sin\varphi - m\ell\dot\varphi^2\cos\varphi$. E $\frac{\partial\mathcal L}{\partial x} = -kx + (M+m)g$.</p>
+          ${F.formula(R`(M+m)\ddot x - m\ell\ddot\varphi\sin\varphi - m\ell\dot\varphi^2\cos\varphi + kx = (M+m)g`)}
+          <p>(viii) Para $\varphi$: $\frac{\partial\mathcal L}{\partial\dot\varphi} = m\ell^2\dot\varphi - m\ell\dot x\sin\varphi$; derivando: $m\ell^2\ddot\varphi - m\ell\ddot x\sin\varphi - m\ell\dot x\dot\varphi\cos\varphi$. E $\frac{\partial\mathcal L}{\partial\varphi} = -m\ell\dot x\dot\varphi\cos\varphi - mg\ell\sin\varphi$. Os termos $\dot x\dot\varphi\cos\varphi$ se cancelam:</p>
+          ${F.formula(R`m\ell^2\ddot\varphi - m\ell\ddot x\sin\varphi + mg\ell\sin\varphi = 0`)}
+          <p>São exatamente as duas equações da imagem do TikTok (conferi com álgebra simbólica).</p>`)}`),
+      F.secao("resultados", "Os resultados", R`
+        <p><b>Equilíbrio:</b> $x_0 = (M+m)g/k$, $\varphi = 0$. <b>Pequenas oscilações:</b> em primeira ordem, os termos de acoplamento ($\ddot\varphi\sin\varphi$, $\dot\varphi^2$, $\ddot x\sin\varphi$) são de segunda ordem e somem: o bloco oscila com $\omega_m = \sqrt{k/(M+m)}$ e o pêndulo com $\omega_p = \sqrt{g/\ell}$, independentes.</p>
+        <p><b>Mas o acoplamento não linear importa.</b> Divida a 2ª equação por $m\ell^2$: $\ddot\varphi + \frac{g - \ddot x}{\ell}\sin\varphi = 0$. É um pêndulo num "elevador" cuja gravidade efetiva $g - \ddot x$ oscila com a frequência da mola. Para ângulos pequenos, é a <b>equação de Mathieu</b>, e ela é instável quando a gravidade efetiva oscila no <b>dobro</b> da frequência natural do pêndulo:</p>
+        ${F.formula(R`\omega_m = 2\,\omega_p\quad\Longleftrightarrow\quad k = \frac{4(M+m)g}{\ell}`, "Ressonância paramétrica")}
+        <p>É o mesmo mecanismo de quem se balança num balanço subindo e agachando (duas vezes por ciclo), e do "pêndulo-mola" que troca energia entre modos. Fora da razão 2 : 1, o pêndulo quase não é afetado.</p>`),
     ].join("");
   },
-  montar(F) { const e = document.getElementById("lab-mol"); e.outerHTML = F.lab("Duas massas e três molas", "lab-mol"); SIM.duasMolas(document.getElementById("lab-mol"), F); },
+  montar(F) { const e = document.getElementById("lab-p4"); e.outerHTML = F.lab("Bloco na mola com pêndulo", "lab-p4"); SIM.massaPendulo(document.getElementById("lab-p4"), F); },
 });

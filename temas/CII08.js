@@ -83,7 +83,7 @@ F.registrar("CII08", {
           <p>(iii) $\gamma < \omega_0$ (sub): $x = Ae^{-\gamma t}\cos(\omega_dt + \varphi)$, com $\omega_d = \sqrt{\omega_0^2 - \gamma^2}$, um pouco mais lento que sem atrito.</p>
           <p>(iv) $\gamma = \omega_0$ (crítico): $(A + Bt)e^{-\omega_0t}$, o retorno mais rápido sem oscilar. $\gamma > \omega_0$ (super): duas exponenciais, retorno lento.</p>
           <p>(v) No circuito RLC, é a mesma equação com $L \leftrightarrow m$, $R \leftrightarrow b$, $\frac1C \leftrightarrow k$ ${F.ret("C15b")}.</p>`)}
-        <p><b>Forçado e ressonância</b>: com uma força $F_0\cos\Omega t$, a resposta permanente tem amplitude $\frac{F_0/m}{\sqrt{(\omega_0^2 - \Omega^2)^2 + 4\gamma^2\Omega^2}}$, que dispara quando $\Omega \approx \omega_0$ e $\gamma$ é pequeno (balanço empurrado no ritmo certo, rádio sintonizando uma estação). A ressonância paramétrica do experimento da mola com pêndulo é um primo disso ${F.ret("EP04")}.</p>
+        <p><b>Forçado e ressonância</b>: com uma força $F_0\cos\Omega t$, a resposta permanente tem amplitude $\frac{F_0/m}{\sqrt{(\omega_0^2 - \Omega^2)^2 + 4\gamma^2\Omega^2}}$, que dispara quando $\Omega \approx \omega_0$ e $\gamma$ é pequeno (balanço empurrado no ritmo certo, rádio sintonizando uma estação). A ressonância paramétrica do experimento da mola com pêndulo é um primo disso ${F.ret("EP09")}.</p>
         ${exemplario}`),
 
       F.secao("desafios", "Desafios", [

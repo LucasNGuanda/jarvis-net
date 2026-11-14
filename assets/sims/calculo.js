@@ -67,7 +67,7 @@
     const o = { W: 470, H: 470, l: 40, r: 14, t: 12, b: 30, x0: -4.2, x1: 4.2, y0: -4.2, y1: 4.2 }, P = quadro(o);
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:start"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg>
       <div><div class="leitor" data-v="lt" style="flex-direction:column;align-items:stretch"></div><div data-v="nw" style="font-size:14px;margin-top:10px"></div></div></div>
-      <div class="ctrls"><div class="ctrl"><label>a (resolver w·eʷ = a)</label><input type="range" min="-0.3679" max="4" step="0.0001" value="1" data-c="a"><output data-o="a"></output></div>
+      <div class="ctrls"><div class="ctrl"><label>a (resolver w·eʷ = a)</label><input type="range" min="-0.36787" max="4" step="0.00001" value="1" data-c="a"><output data-o="a"></output></div>
       <div class="bts"><button class="bt peq" data-p="${-E1}">−1/e</button><button class="bt peq" data-p="${-Math.log(2) / 2}">−ln2/2</button><button class="bt peq" data-p="0">0</button><button class="bt peq" data-p="${Math.E}">e</button><button class="bt peq" data-p="3.9">3,9</button>
       <button class="bt peq" data-a="esp" aria-pressed="true">Mostrar o espelho</button></div></div>
       <div class="status">A curva fina é <b>y = x·eˣ</b>. A grossa é a <b>W</b>: o espelho dela na reta y = x (trocar x com y é inverter a função). Para a entre −1/e e 0, a reta vertical corta a W <b>duas vezes</b>: são os dois ramos, W₀ (verde) e W₋₁ (laranja).</div>`);
@@ -631,7 +631,7 @@
     function desenha() {
       const p = +q("[data-c=p]").value, s = +q("[data-c=b]").value; q("[data-o=p]").textContent = F.t(p, 2);
       const lim = modo === "cauda" ? Math.pow(10, 4 * s) : Math.pow(10, -4 * s);
-      q("[data-v=rot]").textContent = modo === "cauda" ? "até onde (b)" : "começa em (ε)"; q("[data-o=b]").textContent = modo === "cauda" ? F.t(lim, lim < 10 ? 2 : 0) : lim.toExponential(1).replace(".", ",");
+      q("[data-v=rot]").textContent = modo === "cauda" ? "até onde (b)" : "começa em (ε)"; q("[data-o=b]").textContent = modo === "cauda" ? F.t(lim, lim < 10 ? 2 : 0) : F.cient(lim, 1);
       const oo = modo === "cauda" ? { ...o, x0: 0, x1: 10, y0: 0, y1: 1.6 } : { ...o, x0: 0, x1: 1.2, y0: 0, y1: 10 }, P = quadro(oo), f = (x) => Math.pow(x, -p);
       let g = clip("cli", oo) + grade(oo, P, ticks(oo.x0, oo.x1, 6), ticks(oo.y0, oo.y1, 4), "x", "") + `<g clip-path="url(#cli)">`;
       const a = modo === "cauda" ? 1 : lim, bb = modo === "cauda" ? Math.min(lim, 10.2) : 1;
@@ -720,7 +720,7 @@
       if (isFinite(fx)) g += ponto(P.sx(x), P.sy(fx), "var(--ink)", 4.5);
       g += ponto(P.sx(x), P.sy(Math.max(oo.y0 - 1, Math.min(oo.y1 + 1, px))), "var(--warn)", 5) + "</g>";
       q("[data-v=sv]").innerHTML = g;
-      q("[data-v=lt]").innerHTML = visT("f(x)", isFinite(fx) ? F.t(fx, 6) : "não definida") + visT(`P${n}(x)`, Math.abs(px) > 1e6 ? px.toExponential(2).replace(".", ",") : F.t(px, 6)) + visT("erro", isFinite(fx) ? (Math.abs(px - fx) > 1e6 ? "enorme" : F.t(px - fx, 6)) : "—") + visT("raio de convergência", isFinite(C.raio) ? C.raio : "∞");
+      q("[data-v=lt]").innerHTML = visT("f(x)", isFinite(fx) ? F.t(fx, 6) : "não definida") + visT(`P${n}(x)`, Math.abs(px) > 1e6 ? F.cient(px, 2) : F.t(px, 6)) + visT("erro", isFinite(fx) ? (Math.abs(px - fx) > 1e6 ? "enorme" : F.t(px - fx, 6)) : "—") + visT("raio de convergência", isFinite(C.raio) ? C.raio : "∞");
     }
     el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha));
     liga(el, "k", (v) => { k = v; desenha(); });

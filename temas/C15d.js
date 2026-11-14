@@ -1,7 +1,7 @@
 /* C15d · Equações de Maxwell e Ondas Eletromagnéticas
    Escrito do zero, com o material "Equações Fundamentais da Física" (parte 3) como referência. Contas conferidas em Python (c06.py). */
 F.registrar("C15d", {
-  retoma: ["C03b", "C14", "C15", "B16"],
+  retoma: ["C03b", "C14", "C15", "O01"],
   html(F) {
     const R = String.raw;
     const figDesl = D.svg(460, 220, `<line x1="20" y1="110" x2="170" y2="110" style="stroke:#c98a4a;stroke-width:4"/><line x1="290" y1="110" x2="440" y2="110" style="stroke:#c98a4a;stroke-width:4"/><rect x="170" y="40" width="10" height="140" style="fill:#ef5b5b"/><rect x="280" y="40" width="10" height="140" style="fill:#4f8dff"/>${[60, 90, 130, 160].map((y) => D.seta(184, y, 276, y, "var(--ink2)", 1.3)).join("")}${D.seta(60, 100, 120, 100, "var(--ink)", 2)}${D.txt(90, 92, "i", "txm")}<ellipse cx="90" cy="110" rx="12" ry="40" style="fill:none;stroke:var(--mod);stroke-width:2;stroke-dasharray:5 4"/><ellipse cx="230" cy="110" rx="12" ry="40" style="fill:none;stroke:var(--warn);stroke-width:2;stroke-dasharray:5 4"/>${D.txt(230, 204, "aqui não passa carga, mas E varia", "tx2")}${D.txt(90, 168, "B em volta do fio", "tx2")}`, "corrente de deslocamento");
@@ -44,7 +44,7 @@ F.registrar("C15d", {
     return [
       F.secao("abertura", "Pergunta de abertura", R`<div class="abertura"><div class="det">Antes de tudo</div><div class="q">O que é a luz? E como uma antena "joga" energia no espaço vazio?</div></div>`),
       F.secao("laboratorio", "Laboratório: a onda eletromagnética", R`<p>Campos E e B oscilando juntos, cada um "gerando" o outro. Troque para polarização circular.</p>
-        ${F.chute({ q: "se a amplitude de E dobra, a intensidade da onda:", ops: ["dobra", "quadruplica", "não muda", "cai pela metade"], certa: 1, exp: R`<p>$I \propto E_0^2$: <b>quadruplica</b>. Energia de onda sempre vai com o quadrado da amplitude ${F.ret("B16")}.</p>` })}
+        ${F.chute({ q: "se a amplitude de E dobra, a intensidade da onda:", ops: ["dobra", "quadruplica", "não muda", "cai pela metade"], certa: 1, exp: R`<p>$I \propto E_0^2$: <b>quadruplica</b>. Energia de onda sempre vai com o quadrado da amplitude ${F.ret("O01")}.</p>` })}
         <div id="lab-onda"></div>`),
       F.secao("ideia", "A ideia física", R`<p>Juntando tudo: cargas criam $\vec E$ (Gauss); não há cargas magnéticas; $\vec B$ variando cria $\vec E$ circulando (Faraday); correntes criam $\vec B$ circulando (Ampère). Maxwell percebeu que faltava uma simetria: $\vec E$ <b>variando</b> também cria $\vec B$. Com essa peça, as equações têm soluções que se sustentam sozinhas no vácuo: $\vec E$ variando gera $\vec B$, que variando gera $\vec E$... uma <b>onda</b>, com velocidade $1/\sqrt{\mu_0\varepsilon_0}$. Era a velocidade da luz medida por Fizeau. A luz é uma onda eletromagnética.</p>
         ${F.fig(figEspectro)}`),
@@ -65,7 +65,7 @@ F.registrar("C15d", {
         ${F.demo("ondas no vácuo", R`<p>(i) No vácuo ($\rho = 0$, $\vec J = 0$), tome o rotacional de Faraday: $\nabla\times(\nabla\times\vec E) = -\frac{\partial}{\partial t}(\nabla\times\vec B) = -\mu_0\varepsilon_0\frac{\partial^2\vec E}{\partial t^2}$.</p>
           <p>(ii) Identidade vetorial: $\nabla\times(\nabla\times\vec E) = \nabla(\nabla\cdot\vec E) - \nabla^2\vec E = -\nabla^2\vec E$ (Gauss no vácuo) ${F.ret("U01")}.</p>
           ${F.formula(R`\nabla^2\vec E = \mu_0\varepsilon_0\frac{\partial^2\vec E}{\partial t^2}\qquad\Rightarrow\qquad c = \frac{1}{\sqrt{\mu_0\varepsilon_0}} = 2{,}998\times10^8\ \text{m/s}`)}
-          <p>(iii) É a equação de onda ${F.ret("B16")}, com velocidade $c$. O mesmo vale para $\vec B$.</p>`)}
+          <p>(iii) É a equação de onda ${F.ret("O01")}, com velocidade $c$. O mesmo vale para $\vec B$.</p>`)}
         <h3>4. A onda plana</h3>
         ${F.formula(R`\vec E = E_0\sin(kx - \omega t)\,\hat y,\qquad \vec B = B_0\sin(kx - \omega t)\,\hat z,\qquad E_0 = cB_0,\qquad \omega = ck`)}
         <p>Transversal: $\vec E\perp\vec B\perp$ direção de propagação. Em fase. A direção do campo elétrico define a <b>polarização</b>.</p>

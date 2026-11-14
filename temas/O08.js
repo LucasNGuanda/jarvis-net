@@ -1,7 +1,7 @@
-/* B12 · Refração (base: Halliday vol. 4, cap. 33, escrito com as minhas palavras). Conferido em Python (scratchpad opt.py e opt2.py):
+/* O08 · Refração (base: Halliday vol. 4, cap. 33, escrito com as minhas palavras). Conferido em Python (scratchpad opt.py e opt2.py):
    crítico água 48,8°, vidro 41,8°, diamante 24,4°; Brewster vidro 56,3°; 30° ar→vidro dá 19,5°; profundidade aparente de 2 m de água = 1,50 m;
    prisma 60° n = 1,5: desvio mínimo 37,2°; fibra 1,50/1,48: aceitação 14,1°; arco-íris 42,1°; lâmina 5 cm a 45°: deslocamento 1,65 cm; Malus 0°/45°/90° = 1/8. */
-F.registrar("B12", {
+F.registrar("O08", {
   retoma: ["C15d", "CI05"],
   html(F) {
     const R = String.raw;

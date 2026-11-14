@@ -75,7 +75,7 @@ F.registrar("C10b", {
         ${F.formula(R`q(t) = q_0e^{-t/RC},\qquad i(t) = -\frac{q_0}{RC}e^{-t/RC}`)}
         <h3>6. Energia no RC</h3>
         <p>Na carga, a bateria fornece $QE = CE^2$; o capacitor guarda $\frac12CE^2$; o resistor dissipa a outra metade, <b>independentemente de R</b> (exercícios 4 e 9).</p>
-        ${F.caixa("ponte", R`<p>A equação $\dot q = -q/\tau$ é a mesma do decaimento radioativo ${F.ret("C19")}, do resfriamento de Newton ${F.ret("B02")} e da velocidade com arrasto linear ${F.ret("A09")}. Com indutores entra a 2ª derivada e aparecem oscilações (RLC) ${F.ret("C15b")}.</p>`)}
+        ${F.caixa("ponte", R`<p>A equação $\dot q = -q/\tau$ é a mesma do decaimento radioativo ${F.ret("C19")}, do resfriamento de Newton ${F.ret("T02")} e da velocidade com arrasto linear ${F.ret("A09")}. Com indutores entra a 2ª derivada e aparecem oscilações (RLC) ${F.ret("C15b")}.</p>`)}
         ${F.caixa("olimpiada", R`<p>Circuitos com vários capacitores dão sistemas de EDOs lineares: as constantes de tempo são os autovalores de uma matriz (chefão). Truque prático: os valores <b>inicial</b> (capacitores como fios, se descarregados) e <b>final</b> (capacitores como abertos) se acham sem resolver nada.</p>`)}`),
       F.secao("exemplos", "Exemplos passo a passo", exemplario),
       F.secao("resumo", "Resumo", R`<div class="resumo"><div class="r"><b>Nós</b>$\sum i_\text{entram} = \sum i_\text{saem}$</div><div class="r"><b>Malhas</b>$\sum\Delta V = 0$</div><div class="r"><b>RC carga</b>$q = CE(1 - e^{-t/\tau})$, $\tau = RC$</div><div class="r"><b>RC descarga</b>$q = q_0e^{-t/\tau}$</div><div class="r"><b>Extremos</b>C vazio = fio; C cheio = aberto</div><div class="r"><b>Energia</b>metade vira calor</div></div>`),

@@ -22,7 +22,7 @@ F.registrar("EP01", {
         ${F.caixa("fisico", R`<p>A tração no fio <b>nunca</b> apareceu: ela não faz trabalho (é perpendicular ao movimento), e o método de Lagrange a elimina sozinho ao usar só $\theta$. Pela 2ª lei de Newton você teria de decompor tração e peso; aqui, só energias.</p>`)}`),
       F.secao("resultados", "Os resultados", R`
         <h3>1. Pequenos ângulos</h3>
-        <p>Para $\theta \ll 1$ rad, $\sin\theta \approx \theta$ ${F.ret("F05")}: $\ddot\theta = -\frac g\ell\theta$, um MHS ${F.ret("B15")}:</p>
+        <p>Para $\theta \ll 1$ rad, $\sin\theta \approx \theta$ ${F.ret("F05")}: $\ddot\theta = -\frac g\ell\theta$, um MHS ${F.ret("A20")}:</p>
         ${F.formula(R`\theta(t) = \theta_0\cos(\omega_0t),\qquad \omega_0 = \sqrt{\frac g\ell},\qquad T_0 = 2\pi\sqrt{\frac\ell g}`)}
         <h3>2. Período exato</h3>
         ${F.demo("período para qualquer amplitude", R`<p>(i) Conservação da energia: $\frac12m\ell^2\dot\theta^2 - mg\ell\cos\theta = -mg\ell\cos\theta_0 \Rightarrow \dot\theta = \sqrt{\frac{2g}{\ell}(\cos\theta - \cos\theta_0)}$.</p>

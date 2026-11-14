@@ -49,7 +49,7 @@ F.registrar("C17b", {
           <li>Só são permitidas órbitas com momento angular $L = n\hbar$, $n = 1, 2, 3, \dots$</li>
           <li>Ao saltar de um nível para outro, emite ou absorve um fóton com $hf = E_i - E_f$.</li></ol>
         ${F.formula(R`E_n = -\frac{13{,}6\text{ eV}}{n^2},\qquad r_n = n^2a_0,\ \ a_0 = 0{,}0529\text{ nm}`, "Níveis e raios do hidrogênio")}
-        <p>Energia negativa quer dizer "preso": são precisos 13,6 eV para arrancar o elétron do estado fundamental (energia de ionização). A regra 2 parece arbitrária, mas ganha sentido com de Broglie ${F.ret("C17")}: a órbita precisa conter um número inteiro de comprimentos de onda do elétron, como uma corda vibrando com nós ${F.ret("B18")}.</p>
+        <p>Energia negativa quer dizer "preso": são precisos 13,6 eV para arrancar o elétron do estado fundamental (energia de ionização). A regra 2 parece arbitrária, mas ganha sentido com de Broglie ${F.ret("C17")}: a órbita precisa conter um número inteiro de comprimentos de onda do elétron, como uma corda vibrando com nós ${F.ret("O03")}.</p>
         <div id="lab-bohr"></div>`),
 
       F.secao("espectro", "O espectro do hidrogênio", R`
@@ -69,7 +69,7 @@ F.registrar("C17b", {
           <tr><td>$m_s$ (spin)</td><td>±½</td><td>o momento angular intrínseco do elétron</td></tr></table>
         <p>No estado fundamental, $\ell = 0$: o momento angular orbital é <b>zero</b> (Bohr dizia $\hbar$). O <b>princípio de exclusão de Pauli</b> (dois elétrons não podem ter os quatro números iguais) monta a tabela periódica camada por camada: é por isso que a química existe.</p>
         <p><b>Stern–Gerlach</b> (1922): átomos de prata atravessando um campo magnético não uniforme se separam em exatamente <b>dois</b> feixes, não num borrão contínuo. O momento magnético de spin só pode apontar "para cima" ou "para baixo": a quantização é real e mensurável (no exemplo do Halliday, cada feixe desvia 0,08 mm).</p>
-        <p><b>Laser</b>: um fóton que passa por um átomo excitado pode estimular a emissão de um fóton gêmeo (mesma frequência, fase e direção). Com mais átomos excitados que no estado de baixo (inversão de população) e dois espelhos, a luz se amplifica em cascata: luz coerente e monocromática ${F.ret("B14b")}.</p>
+        <p><b>Laser</b>: um fóton que passa por um átomo excitado pode estimular a emissão de um fóton gêmeo (mesma frequência, fase e direção). Com mais átomos excitados que no estado de baixo (inversão de população) e dois espelhos, a luz se amplifica em cascata: luz coerente e monocromática ${F.ret("O10b")}.</p>
         ${exemplario}`),
 
       F.secao("desafios", "Desafios", [

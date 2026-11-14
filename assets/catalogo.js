@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 1.9";
+window.VERSAO = "β 2.0";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -37,33 +37,33 @@ window.CATALOGO = [
     ["A16","Gravitação",["★"]],
     ["A17","Hidrostática"],
     ["A18","Hidrodinâmica"],
-    ["B15","Movimento Harmônico Simples e oscilações",["!","∫","ITA"]],
+    ["A20","Movimento Harmônico Simples e oscilações",["!","∫","ITA"]],
   ]},
-  { id:"B", letra:"B", cor:"--mB", nome:"Termodinâmica", desc:"Temperatura, calor, gases, as leis da termodinâmica e entropia.", temas:[
-    ["B01","Temperatura"],
-    ["B02","Propagação do Calor"],
-    ["B03","Dilatometria"],
-    ["B04","Calorimetria"],
-    ["B04b","Calorimetria (Aprofundamento)"],
-    ["B05","Gases"],
-    ["B05b","Teoria Cinética dos Gases",["∫"]],
-    ["B06","Lei Zero da Termodinâmica"],
-    ["B07","1ª Lei da Termodinâmica",["★"]],
-    ["B08","2ª Lei da Termodinâmica",["★"]],
-    ["B08b","Entropia",["!","∫"]],
+  { id:"T", letra:"T", cor:"--mT", nome:"Termodinâmica", desc:"Temperatura, calor, gases, as leis da termodinâmica e entropia.", temas:[
+    ["T01","Temperatura"],
+    ["T02","Propagação do Calor"],
+    ["T03","Dilatometria"],
+    ["T04","Calorimetria"],
+    ["T04b","Calorimetria (Aprofundamento)"],
+    ["T05","Gases"],
+    ["T05b","Teoria Cinética dos Gases",["∫"]],
+    ["T06","Lei Zero da Termodinâmica"],
+    ["T07","1ª Lei da Termodinâmica",["★"]],
+    ["T08","2ª Lei da Termodinâmica",["★"]],
+    ["T08b","Entropia",["!","∫"]],
   ]},
-  { id:"O", letra:"B", cor:"--mBo", nome:"Ondas e Óptica", desc:"Ondulatória, acústica, óptica geométrica e ondulatória.", temas:[
-    ["B16","Introdução à Ondulatória"],
-    ["B17","Fenômenos Ondulatórios"],
-    ["B18","Ondas Estacionárias"],
-    ["B19","Acústica e efeito Doppler"],
-    ["B09","Fundamentos da Óptica Geométrica",[],true],
-    ["B10","Espelhos Planos",[],true],
-    ["B11","Espelhos Esféricos",[],true],
-    ["B12","Refração",["★"],true],
-    ["B13","Lentes",["★"],true],
-    ["B14","Instrumentos Ópticos e Olho Humano",[],true],
-    ["B14b","Óptica Ondulatória",["!"],true],
+  { id:"O", letra:"O", cor:"--mO", nome:"Ondas e Óptica", desc:"Ondulatória, acústica, óptica geométrica e ondulatória.", temas:[
+    ["O01","Introdução à Ondulatória"],
+    ["O02","Fenômenos Ondulatórios"],
+    ["O03","Ondas Estacionárias"],
+    ["O04","Acústica e efeito Doppler"],
+    ["O05","Fundamentos da Óptica Geométrica",[],true],
+    ["O06","Espelhos Planos",[],true],
+    ["O07","Espelhos Esféricos",[],true],
+    ["O08","Refração",["★"],true],
+    ["O09","Lentes",["★"],true],
+    ["O10","Instrumentos Ópticos e Olho Humano",[],true],
+    ["O10b","Óptica Ondulatória",["!"],true],
   ]},
   { id:"C", letra:"C", cor:"--mC", nome:"Eletricidade e Magnetismo", desc:"Eletrostática, circuitos, magnetismo, indução e Maxwell.", temas:[
     ["C01","Carga Elétrica e Eletrização",[],true],
@@ -157,10 +157,10 @@ window.CATALOGO = [
   { id:"EPd", area:"exp", letra:"P", cor:"--mA", nome:"Pêndulos", desc:"Simples, duplo e triplo, todos pela lagrangiana.", temas:[
     ["EP01","Pêndulo simples pela lagrangiana",["∫","★"],true],
     ["EP02","Pêndulo duplo e caos",["∫","!!"],true],
-    ["EP08","Pêndulo triplo",["∫","!!"],true],
+    ["EP03","Pêndulo triplo",["∫","!!"],true],
   ]},
   { id:"EEm", area:"exp", letra:"⚡", cor:"--mC", nome:"Eletromagnetismo", desc:"A parte mais abstrata, para ver acontecer.", temas:[
-    ["EP03","O jogo da força de Lorentz",["!"],true],
+    ["EP04","O jogo da força de Lorentz",["!"],true],
     ["EP05","Radiação de uma carga acelerada",["!!"],true],
     ["EP06","Ímã caindo num tubo condutor",["!"],true],
   ]},
@@ -168,9 +168,9 @@ window.CATALOGO = [
     ["EP07","A bolinha elétrica no fio",["★","ITA"],true],
   ]},
   { id:"EMo", area:"exp", letra:"M", cor:"--mU", nome:"Mola", desc:"Osciladores com molas: modos normais e batimento.", temas:[
-    ["EP09","Duas massas e três molas",["∫","★"],true],
+    ["EP08","Duas massas e três molas",["∫","★"],true],
   ]},
-  { id:"EMi", area:"exp", letra:"∞", cor:"--mB", nome:"Mistos", desc:"Sistemas que juntam molas, pêndulos e o que mais vier.", temas:[
-    ["EP04","Pêndulo pendurado num bloco com mola",["∫","!"],true],
+  { id:"EMi", area:"exp", letra:"∞", cor:"--mT", nome:"Mistos", desc:"Sistemas que juntam molas, pêndulos e o que mais vier.", temas:[
+    ["EP09","Pêndulo pendurado num bloco com mola",["∫","!"],true],
   ]},
 ];

@@ -1,33 +1,28 @@
-/* EP04 · Pêndulo pendurado num bloco com mola (do TikTok: canal VIBRATIONS, "Pendulum Attached to a Mass").
-   Equações deduzidas com sympy e iguais às da imagem (scratchpad exp2.py). */
+/* EP04 · O jogo da força de Lorentz. Níveis conferidos por busca numérica (scratchpad niveis.py): todos têm solução. */
 F.registrar("EP04", {
-  retoma: ["EP01", "B15"],
+  retoma: ["C12", "C13"],
   html(F) {
     const R = String.raw;
-    const fig = D.svg(300, 300, `<rect x="90" y="20" width="120" height="270" style="fill:none;stroke:var(--ink3);stroke-width:2"/><path d="M150 20 l-10 8 20 8 -20 8 20 8 -20 8 20 8 -10 6" class="ln"/><rect x="120" y="86" width="60" height="40" style="fill:var(--card2);stroke:var(--ink);stroke-width:2"/>${D.txt(200, 110, "M", "txm", "start")}${D.txt(166, 50, "k", "txm", "start")}<line x1="150" y1="106" x2="200" y2="220" class="ln"/><circle cx="200" cy="220" r="12" style="fill:var(--mod)"/>${D.txt(214, 226, "m", "txm", "start")}${D.txt(184, 160, "ℓ", "txm", "start")}<line x1="150" y1="106" x2="150" y2="230" class="ln2" style="stroke-dasharray:3 4"/>${D.txt(160, 150, "φ", "txm", "start")}${D.seta(260, 70, 260, 140, "var(--ink2)", 1.4)}${D.txt(268, 110, "x", "txm", "start")}`, "bloco e pêndulo");
     return [
-      F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Experimento 4 · do TikTok</div><div class="q">Um bloco quica numa mola e um pêndulo pende dele. Se você só puxar o bloco, sem balançar o pêndulo, ele começa a balançar sozinho?</div><p class="det">Figura e equações de referência: canal VIBRATIONS (Стивен), publicação 79, "Pendulum Attached to a Mass". Aqui a dedução completa.</p></div>`),
-      F.secao("experimento", "Experimento", R`<p>Comece pela <b>ressonância 2 : 1</b>: o pêndulo começa quase parado, e a energia vai migrando da mola para ele.</p><div id="lab-p4"></div>`),
-      F.secao("lagrange", "A dedução pela lagrangiana", R`${F.fig(fig)}
-        ${F.demo("posições, velocidades e energias", R`
-          <p>(i) <b>Coordenadas:</b> $x$ (deslocamento do bloco para <b>baixo</b>, a partir do comprimento natural da mola) e $\varphi$ (ângulo do pêndulo com a vertical). O bloco só anda na vertical (trilho sem atrito, $\mu = 0$).</p>
-          <p>(ii) <b>Posições</b> (eixo $Y$ para baixo): bloco $(0,\ x)$; peso $(\ell\sin\varphi,\ x + \ell\cos\varphi)$.</p>
-          <p>(iii) <b>Velocidade do peso:</b> $(\ell\cos\varphi\,\dot\varphi,\ \dot x - \ell\sin\varphi\,\dot\varphi)$, então $v_m^2 = \dot x^2 + \ell^2\dot\varphi^2 - 2\ell\dot x\dot\varphi\sin\varphi$.</p>
-          <p>(iv) $T = \frac12M\dot x^2 + \frac12m\left(\dot x^2 + \ell^2\dot\varphi^2 - 2\ell\dot x\dot\varphi\sin\varphi\right)$.</p>
-          <p>(v) $V = \frac12kx^2 - Mgx - mg(x + \ell\cos\varphi)$ (com $Y$ para baixo, a energia gravitacional é $-mgY$).</p>
-          <p>(vi) $\mathcal L = T - V$.</p>`)}
-        ${F.demo("Euler–Lagrange", R`
-          <p>(vii) Para $x$: $\frac{\partial\mathcal L}{\partial\dot x} = (M+m)\dot x - m\ell\dot\varphi\sin\varphi$; derivando: $(M+m)\ddot x - m\ell\ddot\varphi\sin\varphi - m\ell\dot\varphi^2\cos\varphi$. E $\frac{\partial\mathcal L}{\partial x} = -kx + (M+m)g$.</p>
-          ${F.formula(R`(M+m)\ddot x - m\ell\ddot\varphi\sin\varphi - m\ell\dot\varphi^2\cos\varphi + kx = (M+m)g`)}
-          <p>(viii) Para $\varphi$: $\frac{\partial\mathcal L}{\partial\dot\varphi} = m\ell^2\dot\varphi - m\ell\dot x\sin\varphi$; derivando: $m\ell^2\ddot\varphi - m\ell\ddot x\sin\varphi - m\ell\dot x\dot\varphi\cos\varphi$. E $\frac{\partial\mathcal L}{\partial\varphi} = -m\ell\dot x\dot\varphi\cos\varphi - mg\ell\sin\varphi$. Os termos $\dot x\dot\varphi\cos\varphi$ se cancelam:</p>
-          ${F.formula(R`m\ell^2\ddot\varphi - m\ell\ddot x\sin\varphi + mg\ell\sin\varphi = 0`)}
-          <p>São exatamente as duas equações da imagem do TikTok (conferi com álgebra simbólica).</p>`)}`),
-      F.secao("resultados", "Os resultados", R`
-        <p><b>Equilíbrio:</b> $x_0 = (M+m)g/k$, $\varphi = 0$. <b>Pequenas oscilações:</b> em primeira ordem, os termos de acoplamento ($\ddot\varphi\sin\varphi$, $\dot\varphi^2$, $\ddot x\sin\varphi$) são de segunda ordem e somem: o bloco oscila com $\omega_m = \sqrt{k/(M+m)}$ e o pêndulo com $\omega_p = \sqrt{g/\ell}$, independentes.</p>
-        <p><b>Mas o acoplamento não linear importa.</b> Divida a 2ª equação por $m\ell^2$: $\ddot\varphi + \frac{g - \ddot x}{\ell}\sin\varphi = 0$. É um pêndulo num "elevador" cuja gravidade efetiva $g - \ddot x$ oscila com a frequência da mola. Para ângulos pequenos, é a <b>equação de Mathieu</b>, e ela é instável quando a gravidade efetiva oscila no <b>dobro</b> da frequência natural do pêndulo:</p>
-        ${F.formula(R`\omega_m = 2\,\omega_p\quad\Longleftrightarrow\quad k = \frac{4(M+m)g}{\ell}`, "Ressonância paramétrica")}
-        <p>É o mesmo mecanismo de quem se balança num balanço subindo e agachando (duas vezes por ciclo), e do "pêndulo-mola" que troca energia entre modos. Fora da razão 2 : 1, o pêndulo quase não é afetado.</p>`),
+      F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Experimento 3 · jogo</div><div class="q">Uma força que nunca acelera nem freia, só entorta. Dá para mirar com ela?</div></div>`),
+      F.secao("experimento", "O jogo", R`<p>Ajuste B (e, no nível 3, E), a velocidade e o sinal da carga, e dispare. São 5 níveis. Tente <b>sem a cola</b>: calcule o raio antes de atirar.</p><div id="lab-jogo"></div>`),
+      F.secao("teoria", "A física por trás", R`
+        <h3>1. A força de Lorentz</h3>
+        ${F.formula(R`\vec F = q\left(\vec E + \vec v\times\vec B\right)`, "Força de Lorentz")}
+        <p>Com só $\vec B$ uniforme e $\vec v\perp\vec B$: círculo de raio $r = \frac{mv}{|q|B}$ ${F.ret("C13")}. Inverter o sinal da carga <b>ou</b> do campo inverte o sentido da curva. Com $\vec E\perp\vec B$, a partícula segue reto se $v = E/B$ ${F.ret("C12")}.</p>
+        <h3>2. A mesma física pela lagrangiana</h3>
+        <p>Dá para tratar carga em campo com Lagrange também, usando os potenciais: $\phi$ (escalar) e $\vec A$ (vetor), com $\vec E = -\nabla\phi - \partial_t\vec A$ e $\vec B = \nabla\times\vec A$ ${F.ret("U05")}.</p>
+        ${F.formula(R`\mathcal L = \frac12mv^2 - q\phi + q\,\vec v\cdot\vec A`, "Lagrangiana de uma carga")}
+        ${F.demo("B uniforme saindo da tela", R`
+          <p>(i) Um potencial vetor que dá $\vec B = B\hat z$: $\vec A = \frac B2(-y,\ x,\ 0)$ (confira: $\nabla\times\vec A = B\hat z$).</p>
+          <p>(ii) No plano: $\mathcal L = \frac12m(\dot x^2 + \dot y^2) + \frac{qB}{2}(x\dot y - y\dot x) - q\phi$.</p>
+          <p>(iii) Para $x$: $\frac{\partial\mathcal L}{\partial\dot x} = m\dot x - \frac{qB}{2}y$, cuja derivada é $m\ddot x - \frac{qB}{2}\dot y$; e $\frac{\partial\mathcal L}{\partial x} = \frac{qB}{2}\dot y + qE_x$. Então $m\ddot x = qB\dot y + qE_x$.</p>
+          <p>(iv) Para $y$, do mesmo jeito: $m\ddot y = -qB\dot x + qE_y$.</p>
+          <p>(v) É exatamente $m\vec a = q(\vec E + \vec v\times\vec B)$, com $\vec v\times B\hat z = (B\dot y,\ -B\dot x)$ ✓.</p>`)}
+        ${F.caixa("fisico", R`<p>Repare no momento canônico $p_x = m\dot x - \frac{qB}{2}y$: ele não é o "$mv$" de sempre. Na mecânica quântica, é $\vec p - q\vec A$ que aparece na equação de Schrödinger, e é por isso que o potencial vetor pode ter efeito mesmo onde $\vec B = 0$ (efeito Aharonov–Bohm, SOIF 2019 problema 20).</p>`)}
+        <h3>3. Como resolver cada nível</h3>
+        <p>Desenhe o círculo que passa pela saída do canhão (tangente horizontal ali) e pelo alvo; ache o raio; escolha $B$ e $v$ com $r = v/(0{,}72B)$ (unidades da tela, mostradas no visor). Quando o campo só cobre uma faixa, a partícula sai pela tangente e segue reta.</p>`),
     ].join("");
   },
-  montar(F) { const e = document.getElementById("lab-p4"); e.outerHTML = F.lab("Bloco na mola com pêndulo", "lab-p4"); SIM.massaPendulo(document.getElementById("lab-p4"), F); },
+  montar(F) { const e = document.getElementById("lab-jogo"); e.outerHTML = F.lab("Acerte o alvo com a força de Lorentz", "lab-jogo"); SIM.jogoLorentz(document.getElementById("lab-jogo"), F); },
 });

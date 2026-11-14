@@ -2,7 +2,7 @@
    queda com T = 2 s (m = 1 kg): S = −g²/3 ≈ −32,08 J·s; movimento uniforme 10 m em 2 s: S = 25 J·s, parado metade + dobro da velocidade: 50 J·s;
    oscilador m = 1, k = 4, E = 2 J: x_máx = 1 m, p_máx = 2 kg·m/s, área = 2π = 2πE/ω; ação num período do oscilador: 0. */
 F.registrar("U04", {
-  retoma: ["U03", "B12", "C17b"],
+  retoma: ["U03", "O08", "C17b"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -41,7 +41,7 @@ F.registrar("U04", {
     return [
       F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Universitária · Hamilton e ação</div>
         <div class="q">Como a bola "sabe" que caminho fazer?</div>
-        <p>Newton diz: a cada instante, a força muda a velocidade, e o caminho vai se construindo passo a passo. Mas existe outro jeito, que parece mágico: entre todos os caminhos possíveis com o mesmo começo e o mesmo fim, a natureza escolhe aquele que torna uma certa quantidade, a <b>ação</b>, estacionária. É o mesmo espírito do princípio de Fermat para a luz ${F.ret("B12")}, e é a forma como toda a física fundamental é escrita hoje.</p></div>`),
+        <p>Newton diz: a cada instante, a força muda a velocidade, e o caminho vai se construindo passo a passo. Mas existe outro jeito, que parece mágico: entre todos os caminhos possíveis com o mesmo começo e o mesmo fim, a natureza escolhe aquele que torna uma certa quantidade, a <b>ação</b>, estacionária. É o mesmo espírito do princípio de Fermat para a luz ${F.ret("O08")}, e é a forma como toda a física fundamental é escrita hoje.</p></div>`),
 
       F.secao("acao", "Princípio da mínima ação", R`
         ${F.formula(R`S[x(t)] = \int_{t_1}^{t_2}L(x, \dot x, t)\,dt\qquad\qquad \delta S = 0\ \Longleftrightarrow\ \frac{d}{dt}\frac{\partial L}{\partial\dot x} = \frac{\partial L}{\partial x}`, "Princípio de Hamilton")}

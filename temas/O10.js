@@ -1,8 +1,8 @@
-/* B14 · Instrumentos ópticos e olho humano (base: Halliday vol. 4, cap. 34, com as minhas palavras). Conferido em Python:
+/* O10 · Instrumentos ópticos e olho humano (base: Halliday vol. 4, cap. 34, com as minhas palavras). Conferido em Python:
    lupa f = 5 cm: 5× (imagem no infinito) ou 6× (imagem a 25 cm); microscópio L = 16 cm, f_ob = 0,4 cm, f_oc = 2,5 cm: −400×; luneta 1000 mm / 25 mm: 40×, tubo de 1025 mm;
    olho (1,7 cm até a retina): ~59 di relaxado, ~63 di acomodado a 25 cm; câmera 50 mm com objeto a 2 m: sensor a 51,3 mm; telescópio de 20 cm: 3,4 × 10⁻⁶ rad = 0,69″. */
-F.registrar("B14", {
-  retoma: ["B13", "B14b"],
+F.registrar("O10", {
+  retoma: ["O09", "O10b"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -14,7 +14,7 @@ F.registrar("B14", {
             passos: [
               R`<p>Objetiva: o objeto fica logo além do foco, e a imagem real se forma a ~16 cm além do foco dela. Aumento linear: $A_\text{ob} \approx -\frac{L}{f_\text{ob}} = -\frac{16}{${F.n(fob)}} = ${F.n(-L / fob, 1)}$.</p>`,
               R`<p>Ocular (lupa sobre a imagem da objetiva, com o olho relaxado): $A_\text{oc} = \frac{25\text{ cm}}{f_\text{oc}} = ${F.n(25 / foc, 1)}$.</p>`,
-              R`<p>Total: $A = A_\text{ob}\,A_\text{oc} \approx ${F.n(A, 0)}\times$ (negativo: imagem invertida). Com luz visível, a difração limita a resolução a ~0,2 μm ${F.ret("B14b")}: aumentar mais que ~1000× não mostra detalhe novo ("aumento vazio").</p>`,
+              R`<p>Total: $A = A_\text{ob}\,A_\text{oc} \approx ${F.n(A, 0)}\times$ (negativo: imagem invertida). Com luz visível, a difração limita a resolução a ~0,2 μm ${F.ret("O10b")}: aumentar mais que ~1000× não mostra detalhe novo ("aumento vazio").</p>`,
             ] };
         } },
         { nome: "Luneta", gerar: (p) => {
@@ -41,7 +41,7 @@ F.registrar("B14", {
     return [
       F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Óptica · instrumentos</div>
         <div class="q">Um telescópio "aumenta" a estrela?</div>
-        <p>Não: estrelas são pontos, e continuam pontos. O telescópio aumenta <b>ângulos</b> (dois pontos próximos no céu ficam mais separados) e, principalmente, <b>coleta luz</b>. Todo instrumento óptico é uma combinação de lentes ou espelhos ${F.ret("B13")} ${F.ret("B11")} para enganar o olho. Começamos pelo próprio olho.</p></div>`),
+        <p>Não: estrelas são pontos, e continuam pontos. O telescópio aumenta <b>ângulos</b> (dois pontos próximos no céu ficam mais separados) e, principalmente, <b>coleta luz</b>. Todo instrumento óptico é uma combinação de lentes ou espelhos ${F.ret("O09")} ${F.ret("O07")} para enganar o olho. Começamos pelo próprio olho.</p></div>`),
 
       F.secao("olho", "O olho humano", R`
         <p>A córnea e o cristalino formam uma lente convergente que projeta na retina uma imagem real e invertida (o cérebro desinverte). A distância lente–retina é fixa (~1,7 cm); para focar a várias distâncias, os músculos ciliares mudam a curvatura do cristalino: é a <b>acomodação</b>.</p>
@@ -52,7 +52,7 @@ F.registrar("B14", {
           <tr><td>hipermetropia</td><td>olho "curto": foca depois da retina; ponto próximo longe</td><td>lente convergente</td></tr>
           <tr><td>presbiopia</td><td>cristalino endurece com a idade; perde acomodação</td><td>óculos de leitura (convergente)</td></tr>
           <tr><td>astigmatismo</td><td>córnea com curvaturas diferentes em direções diferentes</td><td>lente cilíndrica</td></tr></table>
-        <p>As contas de óculos estão na B13 ${F.ret("B13")}.</p>`),
+        <p>As contas de óculos estão na O09 ${F.ret("O09")}.</p>`),
 
       F.secao("lupa", "Lupa, câmera, microscópio e luneta", R`
         <p><b>Lupa</b>: lente convergente com o objeto um pouco dentro do foco. O que importa é o <b>aumento angular</b>, comparado com o objeto visto a olho nu no ponto próximo (25 cm): $G = \frac{25\text{ cm}}{f}$ (imagem no infinito, olho relaxado) ou $\frac{25}{f} + 1$ (imagem a 25 cm). Uma lupa de $f = 5$ cm aumenta 5 ou 6 vezes.</p>
@@ -61,7 +61,7 @@ F.registrar("B14", {
         ${F.formula(R`A_\text{microscópio} \approx -\frac{L}{f_\text{ob}}\cdot\frac{25\text{ cm}}{f_\text{oc}}\qquad\qquad G_\text{luneta} = \frac{f_\text{ob}}{f_\text{oc}}`, "Aumentos")}
         <p><b>Microscópio</b>: duas lentes convergentes de focos curtos. A objetiva forma uma imagem real ampliada; a ocular é uma lupa sobre ela. Com $L = 16$ cm, $f_\text{ob} = 0{,}4$ cm e $f_\text{oc} = 2{,}5$ cm: $400\times$.</p>
         <p><b>Luneta</b> (telescópio refrator): objetiva de foco longo, ocular de foco curto, com focos coincidentes. A imagem final é invertida (para astronomia, tanto faz). <b>Telescópio refletor</b> (Newton, 1668): troca a objetiva por um espelho côncavo (sem aberração cromática e muito mais fácil de fazer grande). O James Webb tem um espelho de 6,5 m.</p>
-        ${F.caixa("fisico", R`<p><b>O que limita um telescópio</b>: (1) a luz coletada, $\propto D^2$ (vê objetos mais fracos); (2) a difração, $\theta \approx 1{,}22\lambda/D$ ${F.ret("B14b")} (um de 20 cm separa ~0,7″); (3) a turbulência do ar, que borra tudo a ~1″. Por isso os grandes observatórios ficam em montanhas secas (Chile) ou no espaço, e usam óptica adaptativa (espelhos que se deformam mil vezes por segundo).</p>`)}
+        ${F.caixa("fisico", R`<p><b>O que limita um telescópio</b>: (1) a luz coletada, $\propto D^2$ (vê objetos mais fracos); (2) a difração, $\theta \approx 1{,}22\lambda/D$ ${F.ret("O10b")} (um de 20 cm separa ~0,7″); (3) a turbulência do ar, que borra tudo a ~1″. Por isso os grandes observatórios ficam em montanhas secas (Chile) ou no espaço, e usam óptica adaptativa (espelhos que se deformam mil vezes por segundo).</p>`)}
         ${exemplario}`),
 
       F.secao("desafios", "Desafios", [

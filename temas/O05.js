@@ -1,7 +1,7 @@
-/* B09 · Fundamentos da óptica geométrica (base: Halliday vol. 4, cap. 33, e conteúdo de ensino médio, com as minhas palavras). Conferido em Python:
+/* O05 · Fundamentos da óptica geométrica (base: Halliday vol. 4, cap. 33, e conteúdo de ensino médio, com as minhas palavras). Conferido em Python:
    câmara escura (árvore de 10 m a 20 m, caixa de 30 cm) → 15 cm; prédio pela sombra (15 m; haste 1 m faz 0,8 m) → 18,75 m; Sol 0,53° e Lua 0,52°;
    luz do Sol leva 8,3 min; ano-luz 9,46 × 10¹⁵ m; Eratóstenes: 7,2° e 800 km → 40 000 km. */
-F.registrar("B09", {
+F.registrar("O05", {
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -39,7 +39,7 @@ F.registrar("B09", {
     return [
       F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Óptica · fundamentos</div>
         <div class="q">Como alguém mediu o tamanho da Terra 2200 anos atrás, sem sair do Egito?</div>
-        <p>Com uma vareta, uma sombra e uma ideia: a luz anda em linha reta. Essa ideia, mais duas outras, é a base de toda a óptica geométrica (espelhos, lentes, instrumentos). Ela vale sempre que os objetos são muito maiores que o comprimento de onda da luz; quando não são, entra a óptica ondulatória ${F.ret("B14b")}.</p></div>`),
+        <p>Com uma vareta, uma sombra e uma ideia: a luz anda em linha reta. Essa ideia, mais duas outras, é a base de toda a óptica geométrica (espelhos, lentes, instrumentos). Ela vale sempre que os objetos são muito maiores que o comprimento de onda da luz; quando não são, entra a óptica ondulatória ${F.ret("O10b")}.</p></div>`),
 
       F.secao("principios", "Os três princípios", R`
         <ol><li><b>Propagação retilínea</b>: num meio homogêneo, a luz anda em linha reta (por isso sombras têm o formato do objeto).</li>
@@ -56,7 +56,7 @@ F.registrar("B09", {
           <li><b>Eclipse lunar</b>: a Terra passa entre o Sol e a Lua. A Lua fica avermelhada porque a atmosfera da Terra desvia para dentro da sombra a luz vermelha dos pores do sol do planeta inteiro (o azul é espalhado antes).</li></ul>
         ${F.caixa("fisico", R`<p><b>Coincidência cósmica</b>: o Sol é ~400 vezes maior que a Lua e está ~400 vezes mais longe. Por isso os dois têm quase o mesmo tamanho angular no céu (~0,5°), e eclipses totais são possíveis e curtos. A Lua se afasta ~3,8 cm por ano: daqui a centenas de milhões de anos, só haverá eclipses anulares.</p>`)}
         <h3>Câmara escura</h3>
-        <p>Uma caixa com um furinho forma, na parede oposta, uma imagem <b>invertida</b> do que está fora: $\frac{h_\text{imagem}}{H_\text{objeto}} = \frac{L_\text{caixa}}{d_\text{objeto}}$. É o princípio de toda câmera (a lente só permite usar um "furo" grande sem borrar ${F.ret("B13")}) e do olho ${F.ret("B14")}.</p>
+        <p>Uma caixa com um furinho forma, na parede oposta, uma imagem <b>invertida</b> do que está fora: $\frac{h_\text{imagem}}{H_\text{objeto}} = \frac{L_\text{caixa}}{d_\text{objeto}}$. É o princípio de toda câmera (a lente só permite usar um "furo" grande sem borrar ${F.ret("O09")}) e do olho ${F.ret("O10")}.</p>
         ${exemplario}`),
 
       F.secao("desafios", "Desafios", [
@@ -65,7 +65,7 @@ F.registrar("B09", {
         F.exercicio({ n: 3, enun: R`<p>O Sol tem diâmetro de $1{,}39\times10^9$ m e está a $1{,}50\times10^{11}$ m. A Lua tem diâmetro de $3{,}47\times10^6$ m e está a $3{,}84\times10^8$ m. Calcule os diâmetros angulares dos dois.</p>`, fig: "", dicas: [R`<p>Ângulo pequeno: $\theta \approx \frac{D}{d}$ (em radianos).</p>`, R`<p>Converta para graus.</p>`], resp: R`Sol $\approx 0{,}53°$; Lua $\approx 0{,}52°$.`, sol: R`<p>Quase iguais: é a "coincidência cósmica" que permite eclipses totais. Como a órbita da Lua é elíptica, às vezes ela é um pouco menor que o Sol no céu (eclipse anular).</p>` }),
         F.exercicio({ n: 4, enun: R`<p>Uma lâmpada pequena está a 1 m de uma bola de 10 cm de diâmetro, e a parede está a 3 m da lâmpada. Qual o diâmetro da sombra na parede?</p>`, fig: "", dicas: [R`<p>Fonte pontual: semelhança de triângulos a partir da lâmpada.</p>`, R`<p>$\frac{D}{3} = \frac{0{,}1}{1}$.</p>`], resp: R`$30$ cm.`, sol: R`<p>A sombra cresce proporcionalmente à distância da fonte. Com fonte extensa, apareceria uma penumbra em volta (teste no laboratório).</p>` }),
         F.exercicio({ n: 5, enun: R`<p>Quanto tempo a luz leva da Lua até a Terra? E quanto tempo um sinal de rádio leva até Marte, quando ele está a $2{,}25\times10^{11}$ m?</p>`, fig: "", dicas: [R`<p>$t = d/c$.</p>`, R`<p>Lua: $3{,}84\times10^8$ m.</p>`], resp: R`Lua $\approx 1{,}3$ s; Marte $\approx 12{,}5$ min.`, sol: R`<p>Por isso não dá para pilotar um robô em Marte "ao vivo": cada comando leva minutos para chegar, e a resposta leva outros tantos.</p>` }),
-        F.exercicio({ n: 6, marcas: ["!"], enun: R`<p>Por que durante um eclipse lunar total a Lua fica vermelha, e não preta?</p>`, fig: "", dicas: [R`<p>A Terra tem atmosfera.</p>`, R`<p>Pense no pôr do sol: a luz que atravessa muito ar fica vermelha. E a atmosfera refrata (entorta) a luz ${F.ret("B12")}.</p>`], resp: R`A atmosfera da Terra desvia luz para dentro da sombra; o azul é espalhado no caminho e sobra o vermelho.`, sol: R`<p>Da Lua, você veria a Terra escura com um anel vermelho em volta: todos os nasceres e pores do sol do planeta ao mesmo tempo.</p>` }),
+        F.exercicio({ n: 6, marcas: ["!"], enun: R`<p>Por que durante um eclipse lunar total a Lua fica vermelha, e não preta?</p>`, fig: "", dicas: [R`<p>A Terra tem atmosfera.</p>`, R`<p>Pense no pôr do sol: a luz que atravessa muito ar fica vermelha. E a atmosfera refrata (entorta) a luz ${F.ret("O08")}.</p>`], resp: R`A atmosfera da Terra desvia luz para dentro da sombra; o azul é espalhado no caminho e sobra o vermelho.`, sol: R`<p>Da Lua, você veria a Terra escura com um anel vermelho em volta: todos os nasceres e pores do sol do planeta ao mesmo tempo.</p>` }),
         F.exercicio({ n: 7, marcas: ["!"], enun: R`<p>Uma placa opaca com um furo triangular é posta ao sol, a 2 m do chão. A mancha de luz no chão é triangular ou redonda? E se o furo for de 1 mm? E de 30 cm?</p>`, fig: "", dicas: [R`<p>Um furo pequeno é uma câmara escura: forma a imagem da fonte.</p>`, R`<p>A imagem do Sol a 2 m tem diâmetro $\approx 2\text{ m}\times0{,}0093$ rad.</p>`], resp: R`Furo de 1 mm: redonda (imagem do Sol, ~1,9 cm). Furo de 30 cm: triangular (a sombra do furo, com bordas de penumbra de ~1,9 cm).`, sol: R`<p>Cada ponto do furo projeta uma imagem do Sol de ~1,9 cm. Furo muito menor que isso: o que se vê é o Sol (redondo). Furo muito maior: a soma das imagens tem o formato do furo, com a borda borrada.</p>` }),
       ].join("") + chefao),
     ].join("");

@@ -1,8 +1,8 @@
-/* B10 · Espelhos planos (base: Halliday vol. 4, cap. 34, e conteúdo de ensino médio, com as minhas palavras). Conferido em Python:
+/* O06 · Espelhos planos (base: Halliday vol. 4, cap. 34, e conteúdo de ensino médio, com as minhas palavras). Conferido em Python:
    número de imagens 360°/α − 1: 90° → 3, 72° → 4, 60° → 5, 45° → 7, 120° → 2; espelho de corpo inteiro para 1,80 m: 0,90 m (olhos a 1,70 m: borda de baixo a 0,85 m);
    girar o espelho de θ gira o raio refletido de 2θ. */
-F.registrar("B10", {
-  retoma: ["B09"],
+F.registrar("O06", {
+  retoma: ["O05"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -44,7 +44,7 @@ F.registrar("B10", {
 
       F.secao("lei", "Leis da reflexão e a imagem", R`
         ${F.formula(R`\theta_\text{incidência} = \theta_\text{reflexão}\qquad\text{(medidos a partir da normal, no mesmo plano)}`, "Leis da reflexão")}
-        <p>Ela sai do princípio de Fermat (o caminho mais rápido entre dois pontos passando pelo espelho) ou da construção de Huygens ${F.ret("B12")}. Num espelho plano, todos os raios que saem de um ponto P e refletem parecem vir de um ponto P′ atrás do espelho:</p>
+        <p>Ela sai do princípio de Fermat (o caminho mais rápido entre dois pontos passando pelo espelho) ou da construção de Huygens ${F.ret("O08")}. Num espelho plano, todos os raios que saem de um ponto P e refletem parecem vir de um ponto P′ atrás do espelho:</p>
         <ul><li>P′ é o <b>simétrico</b> de P em relação ao plano do espelho: mesma distância, do outro lado.</li>
           <li>A imagem é <b>virtual</b> (os raios não passam por lá de verdade), <b>direita</b> e do <b>mesmo tamanho</b>.</li>
           <li>É <b>enantiomorfa</b>: uma mão direita vira uma mão esquerda. A troca é na direção perpendicular ao espelho, por isso texto aparece "ao contrário" (AMBULÂNCIA escrita espelhada na frente da ambulância, para ser lida no retrovisor).</li></ul>

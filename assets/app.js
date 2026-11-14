@@ -17,6 +17,37 @@
     tudo() { const o = {}; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith(PFX)) o[k] = localStorage.getItem(k); } } catch (e) {} return o; },
   };
 
+  /* ---------- códigos renomeados na β 2.0 (Termodinâmica B → T, Ondas e Óptica B → O, MHS B15 → A20, Experimentos na ordem do menu) ---------- */
+  const RENOMEADOS = {
+    B01: "T01", B02: "T02", B03: "T03", B04: "T04", B04b: "T04b", B05: "T05", B05b: "T05b", B06: "T06", B07: "T07", B08: "T08", B08b: "T08b",
+    B16: "O01", B17: "O02", B18: "O03", B19: "O04", B09: "O05", B10: "O06", B11: "O07", B12: "O08", B13: "O09", B14: "O10", B14b: "O10b",
+    B15: "A20", EP08: "EP03", EP03: "EP04", EP09: "EP08", EP04: "EP09",
+  };
+  const MODS_RENOMEADOS = { B: "T" };
+  F.RENOMEADOS = RENOMEADOS;
+  const VERSAO_CODIGOS = 2;
+  /* recebe {chave completa: texto guardado} no formato antigo e devolve no formato novo (chamar UMA vez por conjunto de dados) */
+  F.migraDados = (o) => {
+    const novo = {}, cod = (c) => RENOMEADOS[c] || c;
+    for (const [k, v] of Object.entries(o)) {
+      let k2 = k, v2 = v;
+      let m = k.match(/^(fisica:(?:marca|chefao):)([A-Z]+[0-9]+[a-z]?)(-\d+)?$/);
+      if (m) k2 = m[1] + cod(m[2]) + (m[3] || "");
+      else if (k === PFX + "feitos") { try { const f = JSON.parse(v), g = {}; for (const [c, t] of Object.entries(f)) g[cod(c)] = t; v2 = JSON.stringify(g); } catch (e) {} }
+      else if (k === PFX + "menuAbertos") { try { v2 = JSON.stringify(JSON.parse(v).map((x) => MODS_RENOMEADOS[x] || x)); } catch (e) {} }
+      novo[k2] = v2;
+    }
+    novo[PFX + "codigos"] = String(VERSAO_CODIGOS);
+    return novo;
+  };
+  try {
+    if (+(localStorage.getItem(PFX + "codigos") || 1) < VERSAO_CODIGOS) {
+      const velho = F.store.tudo(), novo = F.migraDados(velho);
+      Object.keys(velho).forEach((k) => localStorage.removeItem(k));
+      Object.entries(novo).forEach(([k, v]) => localStorage.setItem(k, v));
+    }
+  } catch (e) {}
+
   /* ---------- números em português ---------- */
   // F.t(9.1234, 2) -> "9,12" (texto)   F.m(...) -> "9{,}12" (dentro de $...$)
   F.t = (v, d = 2) => { if (!isFinite(v)) return "—"; let s = (+v).toFixed(d); if (/^-0[.,]?0*$/.test(s)) s = s.slice(1); return s.replace("-", "−").replace(".", ","); };
@@ -28,10 +59,21 @@
   // algarismos significativos, com notação científica quando precisa: F.sig(0.000123,2) -> "1,2 × 10⁻⁴" (texto)
   F.sigM = (v, n = 3) => {
     if (v === 0) return "0";
-    const e = Math.floor(Math.log10(Math.abs(v)));
+    let e = Math.floor(Math.log10(Math.abs(v)));
+    if (Math.abs(+(v / Math.pow(10, e)).toFixed(n - 1)) >= 10) e++; /* 9,996 × 10⁶ arredonda para 1,00 × 10⁷, não para 10,0 × 10⁶ */
     if (e >= -2 && e <= 4) return F.m(v, Math.max(0, n - 1 - e));
     const mant = v / Math.pow(10, e);
     return F.m(mant, n - 1) + "\\times 10^{" + e + "}";
+  };
+  /* notação científica para texto (fora do KaTeX): F.cient(64168764, 2) -> "6,42 × 10⁷" */
+  F.cient = (v, d = 2) => {
+    if (!isFinite(v)) return "—";
+    if (v === 0) return "0";
+    let e = Math.floor(Math.log10(Math.abs(v))), mant = +(v / Math.pow(10, e)).toFixed(d);
+    if (Math.abs(mant) >= 10) { mant /= 10; e++; }
+    if (e >= -2 && e <= 3) return F.t(v, Math.max(0, d - e));
+    const sup = String(e).replace("-", "⁻").replace(/[0-9]/g, (c) => "⁰¹²³⁴⁵⁶⁷⁸⁹"[c]);
+    return F.t(mant, d) + " × 10" + sup;
   };
   F.sorteio = (a, b, passo = 1) => { const n = Math.round((b - a) / passo); return +(a + passo * Math.floor(Math.random() * (n + 1))).toFixed(6); };
   F.escolha = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -62,7 +104,7 @@
   F.caixa = (tipo, html, titulo) => `<div class="caixa ${tipo}"><div class="cab">${titulo || CX[tipo]}</div>${html}</div>`;
   F.demo = (titulo, html) => `<div class="caixa demo"><div class="cab">${titulo ? "&nbsp;· " + titulo : ""}</div>${html}<span class="qed">∎</span><div style="clear:both"></div></div>`;
   F.fig = (svg, leg) => `<figure class="fig" style="margin:14px 0">${svg}${leg ? `<figcaption>${leg}</figcaption>` : ""}</figure>`;
-  F.ret = (cod) => { const t = F.achar(cod); return `<a class="selo ret" href="#/${cod}" title="retoma ${t ? t.nome : cod}">[${cod}]←</a>`; };
+  F.ret = (cod) => { const t = F.achar(cod), ok = t && t.pronto; return `<a class="selo ret${ok ? "" : " breve"}" href="#/${cod}" title="retoma ${t ? t.nome : cod}${ok ? "" : " (em breve: ainda não escrito)"}">[${cod}]←</a>`; };
   F.selos = (arr = []) => arr.map((m) => `<span class="selo" title="${LEG[m] || ""}">${m}</span>`).join("");
   const LEG = { "★": "cai muito em OBF/ITA", "!": "difícil", "!!": "muito difícil", "?": "confuso, não bobear", "∫": "exige cálculo", ITA: "cobrado no ITA", RU: "aparece em olimpíada russa" };
   F.LEG = LEG;
@@ -201,10 +243,10 @@
     const menu = $("#menu-mods");
     const abertos = F.store.get("menuAbertos", ["C"]);
     menu.innerHTML = CATALOGO.map((m) => `<div class="mod ${abertos.includes(m.id) ? "aberto" : ""}" data-mod="${m.id}" data-area="${areaDe(m)}" style="--c:var(${m.cor})">
-      <button><span class="letra">${m.letra}</span><span>${m.nome}</span><span class="seta">›</span></button>
-      <ul>${m.temas.map((t) => `<li><a href="#/${t[0]}" data-cod="${t[0]}" class="${t[3] ? "" : "breve"}" title="${t[3] ? "" : "ainda não feito"}"><span class="cod">${t[0]}</span><span>${t[1]}</span><span class="bola"></span></a></li>`).join("")}</ul></div>`).join("");
-    $$(".mod>button", menu).forEach((b) => b.addEventListener("click", () => {
-      const m = b.parentElement; m.classList.toggle("aberto");
+      <button aria-expanded="${abertos.includes(m.id)}" class="${m.temas.some((t) => t[3]) ? "" : "vazio"}"><span class="letra">${m.letra}</span><span class="nome">${m.nome}</span>${(() => { const k = m.temas.filter((t) => t[3]).length; return `<span class="conta" title="${k} de ${m.temas.length} temas escritos${k ? "" : " (em breve)"}">${k}/${m.temas.length}</span>`; })()}<span class="seta">›</span></button>
+      <ul>${m.temas.map((t) => `<li><a href="#/${t[0]}" data-cod="${t[0]}" class="${t[3] ? "" : "breve"}" ${t[3] ? "" : 'title="Ainda não escrito" aria-disabled="true"'}><span class="cod">${t[0]}</span><span class="nome">${t[1]}</span>${t[3] ? '<span class="bola"></span>' : '<span class="breve-tag">em breve</span>'}</a></li>`).join("")}</ul></div>`).join("");
+        $$(".mod>button", menu).forEach((b) => b.addEventListener("click", () => {
+      const m = b.parentElement; m.classList.toggle("aberto"); b.setAttribute("aria-expanded", m.classList.contains("aberto"));
       F.store.set("menuAbertos", $$(".mod.aberto", menu).map((x) => x.dataset.mod));
     }));
     $("#busca").addEventListener("input", (ev) => {
@@ -223,9 +265,9 @@
     $$("#menu-mods .mod").forEach((m) => m.classList.toggle("outra-area", m.dataset.area !== F.area));
     $$(".topo .aba").forEach((a) => a.classList.toggle("atual", a.dataset.area === F.area));
     const ar = AREA(F.area);
-    $(".topo nav:not(.abas) a").setAttribute("href", "#/" + ar.inicio);
+    $(".topo nav.links a").setAttribute("href", "#/" + ar.inicio);
     $$("#menu-mods a[data-cod]").forEach((a) => {
-      a.querySelector(".bola").classList.toggle("feito", !!f[a.dataset.cod]);
+      const bola = a.querySelector(".bola"); if (bola) bola.classList.toggle("feito", !!f[a.dataset.cod]);
       a.classList.toggle("atual", a.dataset.cod === temaAtual);
     });
   }
@@ -242,7 +284,8 @@
         <div class="barra" style="--c:var(--ok)"><i style="width:${total ? (100 * nfeitos) / total : 0}%"></i></div></div>
       <h2 style="margin-top:32px">Módulos</h2>
       <div class="mods">${mods.map((m) => { const n = m.temas.length, k = m.temas.filter((t) => f[t[0]]).length; const prim = m.temas.find((t) => t[3]) || m.temas[0];
-        return `<a class="modc" href="#/${prim[0]}" style="--c:var(${m.cor})"><div class="letra">${m.letra}</div><h3>${m.nome}</h3><p>${m.desc}</p><div class="barra"><i style="width:${(100 * k) / n}%"></i></div><p style="margin-top:6px">${k}/${n} temas</p></a>`; }).join("")}</div>
+        const esc = m.temas.filter((t) => t[3]).length;
+        return `<a class="modc ${esc ? "" : "breve"}" href="#/${prim[0]}" style="--c:var(${m.cor})"><div class="letra">${m.letra}</div><h3>${m.nome}</h3><p>${m.desc}</p><div class="barra"><i style="width:${(100 * k) / n}%"></i></div><p style="margin-top:6px">${esc ? `${k}/${n} feitos · ${esc} ${esc === 1 ? "escrito" : "escritos"}` : "em breve"}</p></a>`; }).join("")}</div>
       <h2 style="margin-top:36px">Como usar</h2>
       <div class="grade2" style="margin-top:12px">
         <div class="cartao"><b>Ordem de um tema</b><ol style="margin:8px 0 0;padding-left:1.2em;color:var(--ink2)"><li>Pergunta de abertura</li><li>Laboratório (chute antes de mexer)</li><li>A ideia, com números</li><li>Teoria completa e demonstrações</li><li>Exemplos passo a passo</li><li>Resumo, exercícios e chefão</li></ol></div>
@@ -299,7 +342,7 @@
     requestAnimationFrame(q); F.aoSair(() => (vivo = false));
   }
 
-  /* cálculo: somas de Riemann convergindo para a integral + reta tangente passeando pela curva */
+  /* cálculo: somas de Riemann (pela esquerda) convergindo para a integral, com o erro + reta tangente passeando pela curva */
   function animCalculo(el) {
     el.innerHTML = `<svg viewBox="0 0 340 280" aria-label="somas de Riemann e reta tangente"><g class="g"></g></svg><div class="calc-leg"></div>`;
     const f = (x) => 1.1 + 0.8 * Math.sin(1.25 * x) + 0.22 * x, df = (x) => 1.0 * Math.cos(1.25 * x) + 0.22;
@@ -308,7 +351,7 @@
     for (let k = 0; k < NN; k++) { const x = a + ((k + 0.5) * (b - a)) / NN; I += f(x) * ((b - a) / NN); }
     let curva = "";
     for (let k = 0; k <= 160; k++) { const x = (4.8 * k) / 160; curva += (k ? "L" : "M") + sx(x).toFixed(1) + " " + sy(f(x)).toFixed(1); }
-    const ns = [2, 4, 8, 16, 32, 64];
+    const ns = [2, 4, 8, 16, 32, 64, 128];
     const g = el.querySelector(".g"), leg = el.querySelector(".calc-leg");
     let vivo = true;
     const t0 = performance.now();
@@ -320,7 +363,7 @@
       const h = (b - a) / n;
       let soma = 0, ret = "";
       for (let k = 0; k < n; k++) {
-        const xl = a + k * h, y = f(xl + h / 2); soma += y * h;
+        const xl = a + k * h, y = f(xl); soma += y * h; /* soma pela esquerda: a altura é f no canto esquerdo */
         ret += `<rect x="${sx(xl).toFixed(1)}" y="${sy(y).toFixed(1)}" width="${(sx(xl + h) - sx(xl)).toFixed(2)}" height="${(y0 - sy(y)).toFixed(1)}" style="fill:color-mix(in srgb,var(--mK1) 28%,transparent);stroke:var(--mK1);stroke-width:${n > 32 ? 0.4 : 1}"/>`;
       }
       const xt = a + (b - a) * (0.5 + 0.5 * Math.sin(s * 0.7)), yt = f(xt), m = df(xt), dx = 0.75;
@@ -329,31 +372,18 @@
         <line x1="${sx(xt - dx)}" y1="${sy(yt - m * dx)}" x2="${sx(xt + dx)}" y2="${sy(yt + m * dx)}" clip-path="url(#clipcalc)" style="stroke:var(--mK2);stroke-width:2.6;stroke-linecap:round"/>
         <circle cx="${sx(xt)}" cy="${sy(yt)}" r="5.5" style="fill:var(--mK2);stroke:var(--bg);stroke-width:2"/>
         <text x="${x0 + 8}" y="30" class="tx2">n = ${n} retângulos</text>`;
-      leg.innerHTML = `soma = ${F.t(soma, 3)} → ∫ = ${F.t(I, 3)} &nbsp;·&nbsp; inclinação f′ = ${F.t(m, 2)}`;
+      leg.innerHTML = `soma = ${F.t(soma, 4)} &nbsp;·&nbsp; ∫ = ${F.t(I, 4)} &nbsp;·&nbsp; erro = ${F.t(soma - I, 4)}<br>inclinação da tangente f′ = ${F.t(m, 2)}`;
       if (!reduz) requestAnimationFrame(q);
     }
     requestAnimationFrame(q);
     F.aoSair(() => (vivo = false));
   }
 
-  function pgLegenda(el) {
-    el.innerHTML = `<div class="cab-tema"><div class="sobre">Referência</div><h1>Legenda das marcações</h1></div>
-      <table class="tb"><tr><th>Marca</th><th>Significado</th></tr>
-      <tr><td><span class="selo ret">[n]←</span></td><td>retoma o tema n (clique para ir até ele)</td></tr>
-      ${Object.entries(LEG).map(([k, v]) => `<tr><td><span class="selo">${k}</span></td><td>${v}</td></tr>`).join("")}
-      <tr><td><b>●</b> · <b>X</b> · <b>/</b></td><td>sua marcação nos exercícios: certeza · dúvida · chutei</td></tr>
-      <tr><td>💀</td><td>Chefão Impossível 99: nível máximo, destrava depois dos exercícios</td></tr></table>
-      <h3 style="margin-top:28px">Caixas</h3>
-      ${F.caixa("fisico", "<p>Aproximações, análise dimensional, casos limite.</p>")}
-      ${F.caixa("pegadinha", "<p>Erros clássicos de prova.</p>")}
-      ${F.caixa("olimpiada", "<p>Truques de OBF, ITA e olimpíadas russas.</p>")}
-      ${F.caixa("ponte", "<p>Onde aquilo reaparece na universidade.</p>")}`;
-  }
   function pgSumario(el) {
     el.innerHTML = `<div class="cab-tema"><div class="sobre">Mapa</div><h1>Sumário em árvore</h1><p style="color:var(--ink2)">Temas já escritos têm link para a teoria e para os exercícios.</p></div>` +
       CATALOGO.filter((m) => areaDe(m) === F.area).map((m) => `<h3 style="margin:24px 0 8px;color:var(${m.cor})">${m.letra} · ${m.nome}</h3><pre style="font:14px/1.7 var(--f-text);margin:0;white-space:pre-wrap">${m.temas.map((t) => t[3]
         ? `● <a href="#/${t[0]}">${t[0]} ${t[1]}</a>\n |___> <a href="#/${t[0]}/teoria">teoria</a>  <a href="#/${t[0]}/exercicios">[exercícios]</a>`
-        : `<span style="color:var(--ink3)">○ ${t[0]} ${t[1]}</span>`).join("\n")}</pre>`).join("");
+        : `<span style="color:var(--ink3)">○ ${t[0]} ${t[1]}</span> <span class="breve-tag" style="margin-left:4px">em breve</span>`).join("\n")}</pre>`).join("");
   }
 
   /* ---------- tema ---------- */
@@ -385,7 +415,17 @@
     F.math(el);
     const q = fila; fila = []; q.forEach((fn) => fn());
     if (def.montar) def.montar(F, el);
-    if (ancora) { const a = document.getElementById(ancora); if (a) setTimeout(() => a.scrollIntoView(), 30); }
+    if (ancora) { const a = achaAncora(ancora); if (a) setTimeout(() => a.scrollIntoView(), 30); }
+  }
+
+  /* âncoras genéricas usadas no sumário: #/COD/teoria e #/COD/exercicios valem em todo tema, mesmo que a seção tenha outro nome */
+  function achaAncora(anc) {
+    let a = document.getElementById(anc);
+    if (a) return a;
+    const secs = $$("#pagina .secao");
+    if (anc === "exercicios") a = document.getElementById("desafios") || ($(".ex") && $(".ex").closest(".secao"));
+    else if (anc === "teoria") a = secs.find((s) => !["abertura", "pergunta"].includes(s.id)) || secs[0];
+    return a || null;
   }
 
   /* ---------- rotas ---------- */
@@ -394,9 +434,10 @@
   function rota() {
     {
       const h0 = (location.hash || "#/inicio").slice(2).split("/");
-      if (h0[0] === renderizado && h0[1] && document.getElementById(h0[1])) { document.getElementById(h0[1]).scrollIntoView(); return; }
+      if (h0[0] === renderizado && h0[1] && achaAncora(h0[1])) { achaAncora(h0[1]).scrollIntoView(); return; }
     }
     paradas.forEach((fn) => { try { fn(); } catch (e) {} }); paradas = [];
+    gaveta(false);
     const h = (location.hash || "#/inicio").slice(2).split("/");
     const pag = $("#pagina");
     const cod = h[0] || "inicio", anc = h[1];
@@ -404,10 +445,11 @@
     temaAtual = null;
     document.documentElement.style.removeProperty("--mod");
     if (cod === "inicio" || cod === "calculo" || cod === "experimentos") { F.area = cod === "calculo" ? "calculo" : cod === "experimentos" ? "exp" : "fisica"; pgInicio(pag, F.area); }
-    else if (cod === "legenda") pgLegenda(pag);
+    else if (cod === "legenda") { location.replace("#/" + AREA(F.area).inicio); setTimeout(() => { const d = $("#detalhes"); if (d) d.classList.add("aberto"); }, 50); return; } /* a legenda agora fica só no painel do topo */
     else if (cod === "sumario") pgSumario(pag);
     else {
       const info = F.achar(cod);
+      if (!info && RENOMEADOS[cod]) { location.replace("#/" + RENOMEADOS[cod] + (anc ? "/" + anc : "")); return; } /* link antigo (ex.: #/B12) */
       if (!info) pag.innerHTML = `<p>Tema ${cod} não existe.</p>`;
       else if (!info.pronto) pag.innerHTML = `<div class="cab-tema"><div class="sobre" style="color:var(${info.mod.cor})">${info.mod.letra} · ${info.mod.nome}</div><h1>${info.cod} · ${info.nome}</h1></div><p style="color:var(--ink2)">Este tema ainda não foi escrito.</p>`;
       else if (carregaTema(cod)) { pgTema(pag, info, anc); renderizado = cod; }
@@ -416,6 +458,20 @@
     }
     pintaMenu();
     if (!anc) window.scrollTo(0, 0);
+  }
+
+  /* ---------- menu em gaveta (celular) ---------- */
+  function gaveta(abre) {
+    const b = $("#bt-menu"), v = $("#veu"); if (!b) return;
+    document.body.classList.toggle("menu-aberto", abre);
+    b.setAttribute("aria-expanded", abre); v.hidden = !abre;
+    if (abre) { const a = $("#menu a.atual") || $("#busca"); if (a && a.scrollIntoView) a.scrollIntoView({ block: "center" }); }
+  }
+  function montaGaveta() {
+    $("#bt-menu").addEventListener("click", () => gaveta(!document.body.classList.contains("menu-aberto")));
+    $("#veu").addEventListener("click", () => gaveta(false));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") gaveta(false); });
+    $("#menu-mods").addEventListener("click", (e) => { if (e.target.closest("a")) gaveta(false); });
   }
 
   /* ---------- topo que some ---------- */
@@ -468,10 +524,21 @@
     $("#bt-imp").addEventListener("click", () => $("#arq-imp").click());
     $("#arq-imp").addEventListener("change", async (ev) => {
       const f = ev.target.files[0]; if (!f) return;
-      try { const o = JSON.parse(await f.text()); Object.entries(o).forEach(([k, v]) => { if (k.startsWith(PFX)) localStorage.setItem(k, v); }); alert("Progresso importado."); location.reload(); }
+      try {
+        let o = JSON.parse(await f.text());
+        if (!o || typeof o !== "object" || !Object.keys(o).some((k) => k.startsWith(PFX))) throw new Error("formato");
+        if (+(o[PFX + "codigos"] || 1) < VERSAO_CODIGOS) o = F.migraDados(o); /* backup feito antes da troca de códigos */
+        Object.entries(o).forEach(([k, v]) => {
+          if (!k.startsWith(PFX)) return;
+          v = typeof v === "string" ? v : JSON.stringify(v);
+          if (k === PFX + "feitos") { try { v = JSON.stringify(Object.assign(JSON.parse(localStorage.getItem(k) || "{}"), JSON.parse(v))); } catch (e) {} } /* soma, não apaga o que já estava feito */
+          localStorage.setItem(k, v);
+        });
+        alert("Progresso importado."); location.reload();
+      }
       catch (e) { alert("Não consegui ler esse arquivo. Ele precisa ser o .json exportado por este site."); }
     });
   }
 
-  document.addEventListener("DOMContentLoaded", () => { const v = document.getElementById("versao"); if (v) v.textContent = "Site Física " + VERSAO; tema(); montaMenu(); topo(); backup(); if (window.montaDetalhes) montaDetalhes(F); window.addEventListener("hashchange", rota); rota(); });
+  document.addEventListener("DOMContentLoaded", () => { const v = document.getElementById("versao"); if (v) v.textContent = "Site Física " + VERSAO; tema(); montaMenu(); montaGaveta(); topo(); backup(); if (window.montaDetalhes) montaDetalhes(F); window.addEventListener("hashchange", rota); rota(); });
 })();

@@ -2,7 +2,7 @@
    c = 1/√(μ₀ε₀) = 2,998 × 10⁸ m/s; reflexão normal R = ((n−1)/(n+1))²: água 2,0%, vidro 4,0% (amplitude −0,2), diamante 17%;
    luz do Sol 1361 W/m²: E₀ ≈ 1013 V/m, B₀ ≈ 3,38 μT; capacitor de placas circulares (R = 5 cm, I = 2 A): B na borda = 8 μT. */
 F.registrar("U05", {
-  retoma: ["U02", "C15d", "B12"],
+  retoma: ["U02", "C15d", "O08"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -62,10 +62,10 @@ F.registrar("U05", {
         ${F.caixa("pegadinha", R`<p><b>"$B = E/c$ é pequeno, então o magnético não importa"</b>: falso. As densidades de energia são iguais: $\frac12\varepsilon_0E^2 = \frac{B^2}{2\mu_0}$ quando $B = E/c$. O número é pequeno só porque o tesla é uma unidade enorme.</p>`)}`),
 
       F.secao("meios", "Num meio e na fronteira", R`
-        <p>Num dielétrico, $\varepsilon_0 \to \varepsilon = \varepsilon_r\varepsilon_0$, e a velocidade cai para $v = c/n$ com $n = \sqrt{\varepsilon_r}$ (para materiais não magnéticos). As <b>condições de contorno</b> (componentes tangenciais de $\vec E$ e $\vec B$ contínuas) dizem quanto reflete: na incidência normal, a amplitude refletida é $r = \frac{n_1 - n_2}{n_1 + n_2}$ e a transmitida, $t = \frac{2n_1}{n_1 + n_2}$. Do ar para o vidro: $r = -0{,}2$, $R = 4\%$ ${F.ret("B12")}.</p>
+        <p>Num dielétrico, $\varepsilon_0 \to \varepsilon = \varepsilon_r\varepsilon_0$, e a velocidade cai para $v = c/n$ com $n = \sqrt{\varepsilon_r}$ (para materiais não magnéticos). As <b>condições de contorno</b> (componentes tangenciais de $\vec E$ e $\vec B$ contínuas) dizem quanto reflete: na incidência normal, a amplitude refletida é $r = \frac{n_1 - n_2}{n_1 + n_2}$ e a transmitida, $t = \frac{2n_1}{n_1 + n_2}$. Do ar para o vidro: $r = -0{,}2$, $R = 4\%$ ${F.ret("O08")}.</p>
         <div id="lab-fdtd"></div>
         <p>A simulação resolve as equações de Maxwell de verdade, passo a passo, numa grade: é o método FDTD (Yee, 1966), usado hoje para projetar antenas, celulares e chips fotônicos. Veja o pulso encolher ao entrar no meio (mesma frequência, velocidade menor, comprimento de onda menor) e a parte refletida voltar invertida. Com a parede de metal ($E = 0$), reflete tudo.</p>
-        ${F.caixa("olimpiada", R`<p><b>Antirreflexo</b>: uma camada fina de índice $\sqrt{n_\text{vidro}}$ e espessura $\lambda/(4n)$ faz as duas reflexões (ar–camada e camada–vidro) terem a mesma amplitude e saírem defasadas de meio comprimento de onda: elas se cancelam ${F.ret("B14b")}. É por isso que lentes de óculos têm aquele reflexo esverdeado: o cancelamento é perfeito só no meio do espectro.</p>`)}
+        ${F.caixa("olimpiada", R`<p><b>Antirreflexo</b>: uma camada fina de índice $\sqrt{n_\text{vidro}}$ e espessura $\lambda/(4n)$ faz as duas reflexões (ar–camada e camada–vidro) terem a mesma amplitude e saírem defasadas de meio comprimento de onda: elas se cancelam ${F.ret("O10b")}. É por isso que lentes de óculos têm aquele reflexo esverdeado: o cancelamento é perfeito só no meio do espectro.</p>`)}
         ${exemplario}`),
 
       F.secao("desafios", "Desafios", [

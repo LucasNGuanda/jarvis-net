@@ -1,5 +1,5 @@
-/* Painel "Detalhes" (canto superior direito): legendas, símbolos matemáticos e alfabeto grego.
-   Abre ao passar o mouse (ou ao clicar). */
+/* Painel "Legenda e símbolos" (canto superior direito): o ÚNICO lugar da legenda, junto com os símbolos matemáticos e o alfabeto grego.
+   Abre ao passar o mouse (ou ao clicar/tocar). */
 (function () {
   const SIMB = [
     ["\\sum_{k=1}^{n} a_k", "Somatório", "soma todos os termos $a_k$, com $k$ indo de 1 até $n$"],
@@ -54,7 +54,8 @@
     const host = document.getElementById("detalhes-painel"); if (!host) return;
     const leg = Object.entries(F.LEG).map(([k, v]) => `<tr><td><span class="selo">${k}</span></td><td>${v}</td></tr>`).join("");
     host.innerHTML = `
-      <details open><summary>Legendas</summary><table class="tb"><tr><td><span class="selo ret">[n]←</span></td><td>retoma o tema n</td></tr>${leg}<tr><td><b>● X /</b></td><td>certeza · dúvida · chutei</td></tr><tr><td>💀</td><td>chefão Impossível 99</td></tr></table></details>
+      <details open><summary>Legenda das marcações</summary><table class="tb"><tr><td><span class="selo ret">[n]←</span></td><td>retoma o tema n</td></tr>${leg}<tr><td><b>● X /</b></td><td>certeza · dúvida · chutei</td></tr><tr><td>💀</td><td>chefão Impossível 99 (destrava depois dos exercícios)</td></tr><tr><td><span class="breve-tag">em breve</span></td><td>tema ainda não escrito</td></tr></table>
+        <div class="leg-caixas"><div><b>🧠 Pense como físico</b>: aproximações, análise dimensional, casos limite.</div><div><b>⚠️ Pegadinha</b>: erros clássicos de prova.</div><div><b>🏅 Nível olimpíada</b>: truques de OBF, ITA e olimpíadas russas.</div><div><b>🌉 Ponte para a universidade</b>: onde aquilo reaparece na faculdade.</div><div><b>💡 Ideia</b>: a intuição por trás da conta.</div></div></details>
       <details><summary>Símbolos matemáticos</summary><table class="tb">${SIMB.map(([s, n, d]) => `<tr><td style="white-space:nowrap">$${s}$</td><td><b>${n}</b><br><span style="color:var(--ink2)">${d}</span></td></tr>`).join("")}</table></details>
       <details><summary>Alfabeto grego</summary><table class="tb">${GREGO.map(([l, n, u]) => `<tr><td style="font-size:18px;white-space:nowrap">${l}</td><td><b>${n}</b><br><span style="color:var(--ink2)">${u}</span></td></tr>`).join("")}</table></details>`;
     F.math(host);

@@ -1,9 +1,9 @@
-/* B14b · Óptica ondulatória: interferência e difração (base: Halliday vol. 4, caps. 35 e 36, com as minhas palavras).
+/* O10b · Óptica ondulatória: interferência e difração (base: Halliday vol. 4, caps. 35 e 36, com as minhas palavras).
    Conferido em Python (scratchpad opt.py): Young 600 nm, d = 0,25 mm, D = 2 m → 4,8 mm; fenda de 0,1 mm → 1º mínimo 0,344°, máximo central 24 mm a 2 m;
    rede 600 linhas/mm com 500 nm → 17,5°, 3 ordens; antirreflexo n = 1,38 para 550 nm → 99,6 nm; Rayleigh olho (4 mm) → 0,58′; Hubble (2,4 m) → 2,8 × 10⁻⁷ rad;
    sabão n = 1,33 com 624 nm: espessuras construtivas 117 e 352 nm; CD (1,6 μm) com 780 nm → 29,2°. */
-F.registrar("B14b", {
-  retoma: ["B12", "C15d"],
+F.registrar("O10b", {
+  retoma: ["O08", "C15d"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({

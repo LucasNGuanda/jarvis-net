@@ -167,7 +167,7 @@
   /* ---------- C16 · corpo negro: Planck × Rayleigh–Jeans ---------- */
   SIM.corponegro = (el, F) => {
     const h = 6.626e-34, c = 2.998e8, k = 1.381e-23, b = 2.898e-3;
-    const o = { W: 640, H: 340, l: 50, r: 14, t: 12, b: 32, x0: 0, x1: 3000 };
+    const o = { W: 640, H: 340, l: 50, r: 26, t: 12, b: 32, x0: 0, x1: 3000 };
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
       <div class="ctrls"><div class="ctrl"><label>temperatura T (K)</label><input type="range" min="1500" max="12000" step="10" value="5772" data-c="T"><output data-o="T"></output></div>
       <div class="bts"><button class="bt peq" data-p="3000">lâmpada (3000 K)</button><button class="bt peq" data-p="5772">Sol (5772 K)</button><button class="bt peq" data-p="10000">estrela azul (10 000 K)</button><button class="bt peq" data-a="rj" aria-pressed="true">Mostrar Rayleigh–Jeans</button></div></div>
@@ -188,7 +188,7 @@
       s += `<line x1="${P.X((b / T) * 1e9)}" x2="${P.X((b / T) * 1e9)}" y1="${P.Y(pico)}" y2="${oo.H - oo.b}" style="stroke:var(--ink);stroke-dasharray:3 3"/></g>`;
       q("[data-v=sv]").innerHTML = s;
       const sig = 5.670e-8;
-      q("[data-v=lt]").innerHTML = vis("pico (Wien) λ = b/T", numPt((b / T) * 1e9, 0) + " nm") + vis("potência por m² (σT⁴)", (sig * T ** 4).toExponential(2).replace(".", ",") + " W/m²") + vis("comparado com o Sol", numPt((T / 5772) ** 4, 2) + "×");
+      q("[data-v=lt]").innerHTML = vis("pico (Wien) λ = b/T", numPt((b / T) * 1e9, 0) + " nm") + vis("potência por m² (σT⁴)", F.cient(sig * T ** 4, 2) + " W/m²") + vis("comparado com o Sol", numPt((T / 5772) ** 4, 2) + "×");
     }
     q("[data-c=T]").addEventListener("input", desenha);
     el.querySelectorAll("[data-p]").forEach((x) => x.addEventListener("click", () => { q("[data-c=T]").value = x.dataset.p; desenha(); }));
@@ -260,7 +260,7 @@
   };
 
   /* ---------- C19b · reação em cadeia ---------- */
-  SIM.cadeia = (el, F) => {
+  SIM.reacaoCadeia = (el, F) => {
     const o = { W: 640, H: 300, l: 54, r: 14, t: 12, b: 32, x0: 0, x1: 60 };
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
       <div class="ctrls"><div class="ctrl"><label>fator de multiplicação k</label><input type="range" min="0.8" max="1.25" step="0.005" value="1" data-c="k"><output data-o="k"></output></div>
@@ -275,7 +275,7 @@
       s += `<path d="${d}" style="fill:none;stroke:var(--mod);stroke-width:2.6"/>`;
       q("[data-v=sv]").innerHTML = s;
       const tipo = Math.abs(k - 1) < 0.0026 ? "crítico: constante" : k < 1 ? "subcrítico: a reação morre" : "supercrítico: cresce exponencialmente";
-      q("[data-v=lt]").innerHTML = vis("regime", tipo) + vis("depois de 60 gerações", (1000 * Math.pow(k, 60)).toExponential(2).replace(".", ",")) + vis("tempo de 60 gerações (~1 ms cada, com moderador)", "≈ 60 ms");
+      q("[data-v=lt]").innerHTML = vis("regime", tipo) + vis("depois de 60 gerações", F.cient(1000 * Math.pow(k, 60), 2)) + vis("tempo de 60 gerações (~1 ms cada, com moderador)", "≈ 60 ms");
     }
     q("[data-c=k]").addEventListener("input", desenha);
     el.querySelectorAll("[data-p]").forEach((x) => x.addEventListener("click", () => { q("[data-c=k]").value = x.dataset.p; desenha(); }));
@@ -311,7 +311,7 @@
       }
       q("[data-v=sv]").innerHTML = s;
       const cond = Eg === 0 ? "ótima (sempre)" : Eg > 3 ? "praticamente nenhuma" : dop !== "nenhuma" ? "boa (dopagem domina)" : nexc > 0 ? "pequena, cresce rápido com T" : "quase nenhuma";
-      const fat = Eg === 0 ? "—" : (Math.exp(-Eg / (2 * kT))).toExponential(1).replace(".", ",");
+      const fat = Eg === 0 ? "—" : F.cient(Math.exp(-Eg / (2 * kT)), 1);
       q("[data-v=lt]").innerHTML = vis("kT", numPt(kT * 1000, 1) + " meV") + vis("fator e^(−Eg/2kT)", fat) + vis("condução", cond) + (Eg > 0 ? vis("λ da luz que cruza o gap", numPt(1240 / Eg, 0) + " nm") : "");
     }
     q("[data-c=T]").addEventListener("input", desenha);

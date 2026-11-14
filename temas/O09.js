@@ -1,8 +1,8 @@
-/* B13 · Lentes (base: Halliday vol. 4, cap. 34, com as minhas palavras; convenção de sinais da escola: real positivo).
+/* O09 · Lentes (base: Halliday vol. 4, cap. 34, com as minhas palavras; convenção de sinais da escola: real positivo).
    Conferido em Python (scratchpad opt.py): f = 10 cm, p = 30 → p′ = 15, A = −0,5; p = 15 → 30, A = −2; p = 5 → −10, A = +2; divergente f = −10, p = 20 → −6,67, A = +1/3;
    biconvexa R = 20 cm, n = 1,5 → f = 20 cm; lentes 10 + 20 cm juntas → 6,67 cm; hipermetrope (ponto próximo 50 cm) → +2 di; míope (ponto remoto 2 m) → −0,5 di; distância mínima objeto–imagem = 4f. */
-F.registrar("B13", {
-  retoma: ["B12"],
+F.registrar("O09", {
+  retoma: ["O08"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -55,7 +55,7 @@ F.registrar("B13", {
 
       F.secao("gauss", "Equação de Gauss e aumento", R`
         ${F.formula(R`\frac1f = \frac1p + \frac1{p'}\qquad\qquad A = \frac{y'}{y} = -\frac{p'}{p}`, "Equação de Gauss e aumento linear")}
-        <p>Convenção: $p$ é a distância do objeto (positiva para objeto real); $p' > 0$, imagem real (do outro lado); $p' < 0$, virtual; $A < 0$, invertida. O Halliday chama $p'$ de $i$. Os espelhos esféricos usam exatamente a mesma equação, com $f = R/2$ ${F.ret("B11")}.</p>
+        <p>Convenção: $p$ é a distância do objeto (positiva para objeto real); $p' > 0$, imagem real (do outro lado); $p' < 0$, virtual; $A < 0$, invertida. O Halliday chama $p'$ de $i$. Os espelhos esféricos usam exatamente a mesma equação, com $f = R/2$ ${F.ret("O07")}.</p>
         ${F.demo("Gauss por semelhança de triângulos", R`<p>(i) O raio 2 (pelo centro) forma triângulos semelhantes com o objeto e a imagem: $\frac{y'}{y} = -\frac{p'}{p}$ (o sinal marca a inversão).</p>
           <p>(ii) O raio 1 (paralelo, depois pelo foco) forma, do lado da imagem, dois triângulos semelhantes com vértice em $F'$: um com catetos $f$ e $y$ (dentro da lente), outro com catetos $p' - f$ e $|y'|$. Então $\frac{|y'|}{y} = \frac{p' - f}{f}$.</p>
           <p>(iii) Igualando: $\frac{p'}{p} = \frac{p' - f}{f} = \frac{p'}{f} - 1$. Divida tudo por $p'$: $\frac1p = \frac1f - \frac1{p'}$ ∎.</p>`)}

@@ -2,7 +2,7 @@
    corte césio 590 nm, sódio 539 nm, zinco 288 nm (funções trabalho aproximadas); sódio com 400 nm: K = 0,80 eV, v = 5,3 × 10⁵ m/s; fóton de 550 nm = 2,25 eV; laser de 1 mW: 2,8 × 10¹⁵ fótons/s;
    λ Compton = 2,43 pm; elétron de 100 V: λ = 0,123 nm; bola de 0,15 kg a 40 m/s: 1,1 × 10⁻³⁴ m; elétron confinado em 0,1 nm: Δv ≳ 5,8 × 10⁵ m/s; túnel (U − E = 1,7 eV, L = 750 pm): T ≈ 4,5 × 10⁻⁵. */
 F.registrar("C17", {
-  retoma: ["B14b", "C18"],
+  retoma: ["O10b", "C18"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -61,7 +61,7 @@ F.registrar("C17", {
 
       F.secao("dual", "Ondas de matéria", R`
         ${F.formula(R`\lambda = \frac{h}{p}`, "Comprimento de onda de de Broglie")}
-        <p>Elétrons, nêutrons, átomos e até moléculas grandes (fulerenos de 60 átomos) mostram interferência e difração. Um elétron de 100 eV tem $\lambda \approx 0{,}12$ nm, do tamanho de um átomo. Uma bola de beisebol tem $\lambda \sim 10^{-34}$ m: pequena demais para qualquer efeito. Na experiência de fenda dupla ${F.ret("B14b")} com elétrons um de cada vez, cada um chega à tela como um ponto (partícula), mas, depois de milhares, os pontos desenham franjas (onda). Tentar ver por qual fenda cada um passou destrói as franjas.</p>
+        <p>Elétrons, nêutrons, átomos e até moléculas grandes (fulerenos de 60 átomos) mostram interferência e difração. Um elétron de 100 eV tem $\lambda \approx 0{,}12$ nm, do tamanho de um átomo. Uma bola de beisebol tem $\lambda \sim 10^{-34}$ m: pequena demais para qualquer efeito. Na experiência de fenda dupla ${F.ret("O10b")} com elétrons um de cada vez, cada um chega à tela como um ponto (partícula), mas, depois de milhares, os pontos desenham franjas (onda). Tentar ver por qual fenda cada um passou destrói as franjas.</p>
         <h3>A interpretação</h3>
         <p>A onda associada à partícula ($\psi$, a "função de onda") não é feita de nada material: $|\psi|^2$ dá a <b>probabilidade</b> de achar a partícula em cada lugar (Born, 1926). A equação que a governa é a de Schrödinger ${F.ret("U06")}.</p>
         ${F.formula(R`\Delta x\,\Delta p \geq \frac{\hbar}{2},\qquad \hbar = \frac{h}{2\pi}`, "Princípio da incerteza (Heisenberg)")}

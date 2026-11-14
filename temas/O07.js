@@ -1,8 +1,8 @@
-/* B11 · Espelhos esféricos (base: Halliday vol. 4, cap. 34, com as minhas palavras; convenção real positivo). Conferido em Python:
+/* O07 · Espelhos esféricos (base: Halliday vol. 4, cap. 34, com as minhas palavras; convenção real positivo). Conferido em Python:
    côncavo f = 10 cm: p = 30 → 15 (A = −0,5); 20 → 20 (−1); 15 → 30 (−2); 5 → −10 (+2); convexo f = −10, p = 20 → −6,67 (A = +1/3);
    espelho de maquiagem f = 40 cm, rosto a 20 cm → p′ = −40, A = 2; retrovisor convexo R = 2 m, carro a 10 m → p′ = −0,91 m, A = 0,09. */
-F.registrar("B11", {
-  retoma: ["B10", "B13"],
+F.registrar("O07", {
+  retoma: ["O06", "O09"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -42,7 +42,7 @@ F.registrar("B11", {
     return [
       F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Óptica · espelhos esféricos</div>
         <div class="q">Por que no lado de dentro de uma colher você aparece de cabeça para baixo, e no lado de fora, de pé e pequenininho?</div>
-        <p>O lado de dentro é um espelho <b>côncavo</b>; o de fora, <b>convexo</b>. Os dois seguem a mesma equação das lentes ${F.ret("B13")}, com o foco a meio caminho entre o espelho e o centro da curvatura.</p></div>`),
+        <p>O lado de dentro é um espelho <b>côncavo</b>; o de fora, <b>convexo</b>. Os dois seguem a mesma equação das lentes ${F.ret("O09")}, com o foco a meio caminho entre o espelho e o centro da curvatura.</p></div>`),
 
       F.secao("elementos", "Elementos e raios notáveis", R`
         <p>Um espelho esférico é uma calota de uma esfera de raio $R$ (centro de curvatura C). O eixo principal passa por C e pelo vértice V. O <b>foco</b> F fica no meio de C e V:</p>
@@ -66,7 +66,7 @@ F.registrar("B11", {
         ${exemplario}`),
 
       F.secao("desafios", "Desafios", [
-        F.exercicio({ n: 1, enun: R`<p>Um espelho côncavo tem $R = 20$ cm. Ache a imagem de objetos a 30 cm, 15 cm e 5 cm.</p>`, fig: "", dicas: [R`<p>$f = 10$ cm.</p>`, R`<p>Mesma conta da lente convergente de 10 cm ${F.ret("B13")}.</p>`], resp: R`30 cm: $p' = 15$, $A = -0{,}5$. 15 cm: $p' = 30$, $A = -2$. 5 cm: $p' = -10$, $A = +2$ (virtual).`, sol: R`<p>Os mesmos números da lente; a diferença é só o lado onde a imagem real se forma.</p>` }),
+        F.exercicio({ n: 1, enun: R`<p>Um espelho côncavo tem $R = 20$ cm. Ache a imagem de objetos a 30 cm, 15 cm e 5 cm.</p>`, fig: "", dicas: [R`<p>$f = 10$ cm.</p>`, R`<p>Mesma conta da lente convergente de 10 cm ${F.ret("O09")}.</p>`], resp: R`30 cm: $p' = 15$, $A = -0{,}5$. 15 cm: $p' = 30$, $A = -2$. 5 cm: $p' = -10$, $A = +2$ (virtual).`, sol: R`<p>Os mesmos números da lente; a diferença é só o lado onde a imagem real se forma.</p>` }),
         F.exercicio({ n: 2, enun: R`<p>Um espelho de maquiagem côncavo tem $f = 40$ cm. Com o rosto a 20 cm, qual o aumento?</p>`, fig: "", dicas: [R`<p>Rosto dentro do foco: imagem virtual.</p>`, R`<p>$\frac1{p'} = \frac1{40} - \frac1{20}$.</p>`], resp: R`$p' = -40$ cm, $A = 2$ (direita, o dobro do tamanho).`, sol: R`<p>Se você se afastar para além de 40 cm, a imagem vira de cabeça para baixo (real). Teste com uma colher.</p>` }),
         F.exercicio({ n: 3, enun: R`<p>Um retrovisor convexo tem $R = 2$ m. Um carro está a 10 m. Onde fica a imagem e qual o aumento?</p>`, fig: "", dicas: [R`<p>$f = -1$ m.</p>`, R`<p>$\frac{1}{p'} = -1 - 0{,}1$.</p>`], resp: R`$p' \approx -0{,}91$ m; $A \approx 0{,}091$.`, sol: R`<p>A imagem fica a menos de 1 m atrás do espelho e tem 9% do tamanho: o cérebro interpreta como mais longe.</p>` }),
         F.exercicio({ n: 4, enun: R`<p>Um espelho côncavo forma, numa tela a 2 m dele, a imagem de uma vela que está a 50 cm. Qual o raio de curvatura? A imagem é maior ou menor que a vela?</p>`, fig: "", dicas: [R`<p>Imagem na tela: real, $p' = 200$ cm.</p>`, R`<p>$\frac1f = \frac1{50} + \frac1{200}$.</p>`], resp: R`$f = 40$ cm, $R = 80$ cm; imagem 4 vezes maior e invertida.`, sol: R`<p>$A = -\frac{200}{50} = -4$.</p>` }),

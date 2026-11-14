@@ -189,7 +189,7 @@
   const linha = (cx, pts, cor, w = 1.6) => { cx.strokeStyle = cor; cx.lineWidth = w; cx.beginPath(); pts.forEach(([x, y], i) => (i ? cx.lineTo(x, y) : cx.moveTo(x, y))); cx.stroke(); };
   const resolve = (A, b) => { const n = b.length, M = A.map((r, i) => [...r, b[i]]); for (let c = 0; c < n; c++) { let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r; [M[c], M[p]] = [M[p], M[c]]; for (let r = 0; r < n; r++) if (r !== c) { const f = M[r][c] / M[c][c]; for (let k = c; k <= n; k++) M[r][k] -= f * M[c][k]; } } return M.map((r, i) => r[n] / r[i]); };
 
-  /* ---------- EP04: pêndulo pendurado num bloco com mola (vertical) ----------
+  /* ---------- EP09: pêndulo pendurado num bloco com mola (vertical) ----------
      (M+m)ẍ − mℓφ̈ sen φ − mℓφ̇² cos φ + kx = (M+m)g ;  mℓ²φ̈ − mℓẍ sen φ + mgℓ sen φ = 0   (x para baixo) */
   SIM.massaPendulo = (el, F) => {
     const W = 760, H = 420; const [cv, cx] = canvas(el, W, H);
@@ -364,7 +364,7 @@
     reset(); requestAnimationFrame(loop); F.aoSair(() => (vivo = false));
   };
 
-  /* ---------- EP08: pêndulo triplo (forma matricial geral do pêndulo de n elos) ----------
+  /* ---------- EP03: pêndulo triplo (forma matricial geral do pêndulo de n elos) ----------
      Σ_j M_ij cos(θi−θj) ℓiℓj θ̈j = −Σ_j M_ij ℓiℓj sen(θi−θj) θ̇j² − g ℓi sen θi Σ_{k≥i} m_k,  M_ij = Σ_{k≥max(i,j)} m_k */
   SIM.penduloTriplo = (el, F) => {
     const W = 760, H = 560; const [cv, cx] = canvas(el, W, H);
@@ -407,7 +407,7 @@
   };
 })();
 
-/* ---------- EP09: duas massas e três molas (parede–k–m–k_c–m–k–parede) ----------
+/* ---------- EP08: duas massas e três molas (parede–k–m–k_c–m–k–parede) ----------
    m ẍ1 = −k x1 − k_c (x1 − x2) ;  m ẍ2 = −k x2 − k_c (x2 − x1).  Solução exata (soltas do repouso):
    x1 = ½(A+B) cos ω1 t + ½(A−B) cos ω2 t ;  x2 = ½(A+B) cos ω1 t − ½(A−B) cos ω2 t ;  ω1 = √(k/m), ω2 = √((k+2k_c)/m) */
 (function () {

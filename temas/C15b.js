@@ -1,7 +1,7 @@
 /* C15b · Indutância, circuitos RL, LC e RLC
    Base: Halliday vol. 3, cap. 30 (30-7 a 30-12) e início do 31, reescrito. Contas conferidas em Python (c06.py). */
 F.registrar("C15b", {
-  retoma: ["C15", "C10b", "B15"],
+  retoma: ["C15", "C10b", "A20"],
   html(F) {
     const R = String.raw;
     const ind = (x1, y, x2, rot) => { let d = `M${x1} ${y}`; const n = 5, w = (x2 - x1) / n; for (let k = 0; k < n; k++) d += ` a${w / 2} ${w / 2} 0 0 1 ${w} 0`; return `<rect x="${x1}" y="${y - 18}" width="${x2 - x1}" height="24" style="fill:var(--card)"/><path d="${d}" class="ln"/>${D.txt((x1 + x2) / 2, y - 22, rot, "tx")}`; };
@@ -32,7 +32,7 @@ F.registrar("C15b", {
     ];
     const exsM = [
       X({ n: 7, marcas: ["!"], enun: R`<p>Uma bobina de 50 espiras e $2{,}0$ cm² fica dentro de um solenoide longo de $1000$ espiras/m. Indutância mútua?</p>`, fig: "", dicas: [R`<p>Corrente $i_1$ no solenoide: $B = \mu_0n_1i_1$; fluxo total na bobina $N_2BA$.</p>`, R`<p>$M = \mu_0n_1N_2A$.</p>`], resp: R`$\approx 1{,}3\times10^{-5}$ H.`, sol: R`<p>$M = 4\pi\times10^{-7}\times1000\times50\times2\times10^{-4} \approx 1{,}26\times10^{-5}$ H. Pela reciprocidade, $M_{12} = M_{21}$ (bem menos óbvio calculando ao contrário).</p>` }),
-      X({ n: 8, marcas: ["★", "ITA"], enun: R`<p>RLC série com $L = 10$ mH e $C = 1{,}0$ µF. Para que $R$ o amortecimento é crítico? E com $R = 20\ \Omega$, quantas oscilações até a amplitude cair para $1/e$?</p>`, fig: figLC, dicas: [R`<p>$L\ddot q + R\dot q + q/C = 0$: crítico quando $\left(\frac{R}{2L}\right)^2 = \frac{1}{LC}$.</p>`, R`<p>Amplitude $\propto e^{-Rt/2L}$; tempo para $1/e$: $2L/R$.</p>`], resp: R`$R_c = 200\ \Omega$; $\approx 1{,}6$ oscilações.`, sol: R`<p>$R_c = 2\sqrt{L/C} = 200\ \Omega$. Com 20 Ω: $2L/R = 1$ ms, período $\approx 0{,}63$ ms: ~1,6 oscilação. É idêntico ao oscilador massa–mola amortecido ${F.ret("B15")}: $L \leftrightarrow m$, $R \leftrightarrow b$, $1/C \leftrightarrow k$.</p>` }),
+      X({ n: 8, marcas: ["★", "ITA"], enun: R`<p>RLC série com $L = 10$ mH e $C = 1{,}0$ µF. Para que $R$ o amortecimento é crítico? E com $R = 20\ \Omega$, quantas oscilações até a amplitude cair para $1/e$?</p>`, fig: figLC, dicas: [R`<p>$L\ddot q + R\dot q + q/C = 0$: crítico quando $\left(\frac{R}{2L}\right)^2 = \frac{1}{LC}$.</p>`, R`<p>Amplitude $\propto e^{-Rt/2L}$; tempo para $1/e$: $2L/R$.</p>`], resp: R`$R_c = 200\ \Omega$; $\approx 1{,}6$ oscilações.`, sol: R`<p>$R_c = 2\sqrt{L/C} = 200\ \Omega$. Com 20 Ω: $2L/R = 1$ ms, período $\approx 0{,}63$ ms: ~1,6 oscilação. É idêntico ao oscilador massa–mola amortecido ${F.ret("A20")}: $L \leftrightarrow m$, $R \leftrightarrow b$, $1/C \leftrightarrow k$.</p>` }),
       X({ n: 9, marcas: ["!"], enun: R`<p>LC com $C = 1{,}0$ µF carregado com $10$ µC e $L = 10$ mH. Corrente máxima? Em que instante a energia está metade no capacitor, metade no indutor?</p>`, fig: figLC, dicas: [R`<p>$q = q_0\cos\omega t$, $i = -q_0\omega\sin\omega t$.</p>`, R`<p>Metade: $\cos^2\omega t = \frac12$.</p>`], resp: R`$i_\text{max} = 0{,}10$ A; $t = T/8$.`, sol: R`<p>$i_\text{max} = q_0\omega = 10^{-5}\times10^4 = 0{,}1$ A. $\omega t = \pi/4$: $t = T/8 \approx 79$ µs.</p>` }),
     ];
 
@@ -67,7 +67,7 @@ F.registrar("C15b", {
         <p>Base do transformador ${F.ret("C15c")} e do carregador sem fio do celular.</p>
         <h3>5. Oscilações LC</h3>
         ${F.fig(figLC)}
-        ${F.demo("LC", R`<p>(i) $L\frac{di}{dt} + \frac qC = 0$ com $i = \frac{dq}{dt}$: $\ddot q = -\frac{1}{LC}q$.</p><p>(ii) MHS ${F.ret("B15")}:</p>${F.formula(R`q = q_0\cos(\omega t + \phi),\qquad \omega = \frac{1}{\sqrt{LC}}`)}<p>(iii) Energia total $\frac{q^2}{2C} + \frac12Li^2 = \frac{q_0^2}{2C}$ constante.</p>`)}
+        ${F.demo("LC", R`<p>(i) $L\frac{di}{dt} + \frac qC = 0$ com $i = \frac{dq}{dt}$: $\ddot q = -\frac{1}{LC}q$.</p><p>(ii) MHS ${F.ret("A20")}:</p>${F.formula(R`q = q_0\cos(\omega t + \phi),\qquad \omega = \frac{1}{\sqrt{LC}}`)}<p>(iii) Energia total $\frac{q^2}{2C} + \frac12Li^2 = \frac{q_0^2}{2C}$ constante.</p>`)}
         <table class="tb"><tr><th>Mola</th><th>Circuito</th></tr><tr><td>$x$</td><td>$q$</td></tr><tr><td>$m$</td><td>$L$</td></tr><tr><td>$k$</td><td>$1/C$</td></tr><tr><td>$b$ (atrito)</td><td>$R$</td></tr><tr><td>$\frac12mv^2$</td><td>$\frac12Li^2$</td></tr><tr><td>$\frac12kx^2$</td><td>$\frac{q^2}{2C}$</td></tr></table>
         <h3>6. RLC amortecido</h3>
         ${F.formula(R`L\ddot q + R\dot q + \frac qC = 0\;\Rightarrow\;q = q_0e^{-Rt/2L}\cos(\omega' t),\qquad \omega' = \sqrt{\frac{1}{LC} - \left(\frac{R}{2L}\right)^2}`)}
