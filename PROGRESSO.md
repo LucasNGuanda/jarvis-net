@@ -1,6 +1,6 @@
 # PROGRESSO — Site de Física do Lucas
 
-## Estado atual (14/11/2026, depois da β 2.7)
+## Estado atual (14/11/2026, depois da β 2.8)
 - **Física**: 64 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
   - Prontos: Fundamentos inteiro (6); Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes inteiro (7); Bônus (X01); Simulados (S00–S04; S02 já tem o IME 2026/27, os outros só a página de entrada).
   - Vazios: Mecânica (21), Termodinâmica (11).
@@ -227,6 +227,13 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
     - O que não tem no site: QR Code (a tecla avisa).
   - As contas usam o mesmo motor da calculadora 1 (o `calc.js` agora expõe o motor e aceita outro estado), com funções novas: MDC, MMC, Int, Intg, ÷R, f( e g(.
   - Conferências: 41 testes tecla por tecla na calculadora 2 (contas exatas, FORMAT, Simp, variáveis, funções, Estatística, Tabela, Caixa, OFF/ON, uma calculadora por vez), calculadora 1 103/103, regressão do site: 144 páginas, 0 katex-error, 0 erro de JS.
+
+- **β 2.8** — Calculadoras cabendo na tela.
+  - Problema relatado pelo Lucas: a calculadora 2 ficou grande demais e não dava para fechar. Ela tinha 751 px de altura; em tela de notebook (720 px ou menos de área útil), a aba de fechar ficava acima do topo da tela.
+  - Calculadora 2 mais compacta (751 → 663 px): visor, teclas e espaçamentos menores.
+  - As duas calculadoras agora encolhem sozinhas para caber na altura da janela (e reajustam quando a janela muda de tamanho), então a aba fica sempre visível.
+  - Botão ✕ de fechar dentro das duas calculadoras, além da aba.
+  - Testado em 1280×950, 1366×768, 1366×657, 1280×600 e 1280×520: aba visível, ✕ fecha, aba abre e fecha. Calculadora 2: 41/41; calculadora 1: 103/103.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.

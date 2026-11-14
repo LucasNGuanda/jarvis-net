@@ -1112,6 +1112,7 @@
     const lin1 = LINHAS[0].map((k) => (k[0] === "DPAD" ? `<div class="k-vazio"></div>` : botao(k))).join("");
     el.innerHTML = `<button type="button" class="calc-aba" aria-expanded="false" aria-controls="calc-corpo"><span class="calc-mini"></span><span>Calculadora</span><span class="calc-seta">▲</span></button>
       <div class="calc-corpo" id="calc-corpo" tabindex="-1">
+        <button type="button" class="calc-fechar c1" data-fechar aria-label="Fechar a calculadora" title="Fechar">✕</button>
         <div class="lcd" aria-live="polite"></div>
         <div class="k-blocoA">${topo}<div class="k-linha k-linha1">${lin1}</div></div>
         <div class="k-blocoB">${LINHAS.slice(1, 4).map((l) => `<div class="k-linha k6">${l.map(botao).join("")}</div>`).join("")}</div>
@@ -1119,7 +1120,7 @@
       </div>`;
     document.body.appendChild(el);
     el.querySelector(".calc-aba").addEventListener("click", () => abre(!el.classList.contains("aberta")));
-    el.querySelector(".calc-corpo").addEventListener("click", (ev) => { const b = ev.target.closest("[data-k]"); if (!b) return; aperta(b.dataset.k); el.querySelector(".calc-corpo").focus({ preventScroll: true }); });
+    el.querySelector(".calc-corpo").addEventListener("click", (ev) => { if (ev.target.closest("[data-fechar]")) { abre(false); return; } const b = ev.target.closest("[data-k]"); if (!b) return; aperta(b.dataset.k); el.querySelector(".calc-corpo").focus({ preventScroll: true }); });
     el.querySelector(".calc-corpo").addEventListener("keydown", teclado);
     desenha();
   }
@@ -1137,14 +1138,18 @@
     const k = ev.key, mapa = { "0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8", "9": "9", ".": "pt", ",": "pt", "+": "add", "-": "sub", "*": "mul", "/": "div", "(": "lp", ")": "rp", "^": "pow", Enter: "igual", "=": "igual", Backspace: "del", Delete: "del", Escape: "ac", ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right" };
     if (mapa[k]) { ev.preventDefault(); aperta(mapa[k]); }
   }
-  function abre(on) { if (!el) return; el.classList.toggle("aberta", on); el.querySelector(".calc-aba").setAttribute("aria-expanded", on); if (on) setTimeout(() => el.querySelector(".calc-corpo").focus({ preventScroll: true }), 300); }
+  /* encolhe para caber na altura da janela (senão a aba de fechar some para cima da tela) */
+  function ajusta() { if (!el) return; el.style.zoom = ""; const h = el.offsetHeight, z = Math.min(1, (window.innerHeight - 8) / h); el.style.zoom = z < 1 ? z.toFixed(3) : ""; }
+  CALC.ajusta = ajusta;
+  window.addEventListener("resize", ajusta);
+  function abre(on) { if (!el) return; ajusta(); el.classList.toggle("aberta", on); el.querySelector(".calc-aba").setAttribute("aria-expanded", on); if (on) setTimeout(() => el.querySelector(".calc-corpo").focus({ preventScroll: true }), 300); }
   function fecha() { abre(false); }
   CALC.abre = abre;
   /* liga e desliga (interruptor nas configurações) */
   function liga(on) {
     if (on && !el) monta();
     if (!el) return;
-    if (on) { el.classList.remove("saindo"); el.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("visivel"))); }
+    if (on) { el.classList.remove("saindo"); el.hidden = false; ajusta(); requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("visivel"))); }
     else { el.classList.remove("visivel", "aberta"); setTimeout(() => { if (!el.classList.contains("visivel")) el.hidden = true; }, 450); }
   }
   CALC.liga = liga;

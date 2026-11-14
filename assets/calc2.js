@@ -463,7 +463,7 @@
       [K("0", "0", "<i>x</i>", "n"), K("pt", ",", "<i>y</i>", "n", "vírgula"), K("e10", "×10<sup>▪</sup>", "<i>z</i>", "n", "vezes 10 elevado a"), K("format", "<span class='c2-format'>FORMAT</span>", "", "n", "FORMAT"), K("exe", "EXE", "≈", "n")]];
     el.innerHTML = `<button type="button" class="calc-aba" aria-expanded="false" aria-controls="calc2-corpo"><span class="calc-mini c2-mini"></span><span>Calculadora 2 · fx-82LA CW</span><span class="calc-seta">▲</span></button>
       <div class="calc-corpo c2" id="calc2-corpo" tabindex="-1">
-        <div class="c2-marca"><b>CASIO</b> <span>fx-82LA CW</span> <em>estilo ClassWiz</em></div>
+        <div class="c2-marca"><b>CASIO</b> <span>fx-82LA CW</span> <em>estilo ClassWiz</em><button type="button" class="calc-fechar" data-fechar aria-label="Fechar a calculadora" title="Fechar">✕</button></div>
         <div class="c2-lcd" aria-live="polite"></div>
         <div class="c2-cw">CLASSWIZ</div>
         ${topo}
@@ -473,7 +473,7 @@
     document.body.appendChild(el);
     el.querySelector(".calc-aba").addEventListener("click", () => abre(!el.classList.contains("aberta")));
     const corpo = el.querySelector(".calc-corpo");
-    corpo.addEventListener("click", (ev) => { const b = ev.target.closest("[data-k]"); if (!b) return; aperta(b.dataset.k); corpo.focus({ preventScroll: true }); });
+    corpo.addEventListener("click", (ev) => { if (ev.target.closest("[data-fechar]")) { abre(false); return; } const b = ev.target.closest("[data-k]"); if (!b) return; aperta(b.dataset.k); corpo.focus({ preventScroll: true }); });
     corpo.addEventListener("keydown", teclado);
     desenha();
   }
@@ -485,12 +485,16 @@
     const mapa = { "0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8", "9": "9", ".": "pt", ",": "pt", "+": "add", "-": "sub", "*": "mul", "/": "div", "(": "lp", ")": "rp", "^": "pow", x: "x", Enter: "exe", "=": "exe", Backspace: "del", Delete: "del", Escape: "ac", ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right", PageUp: "pgup", PageDown: "pgdn", Home: "home" };
     if (mapa[ev.key]) { ev.preventDefault(); aperta(mapa[ev.key]); }
   }
-  function abre(on) { if (!el) return; el.classList.toggle("aberta", on); el.querySelector(".calc-aba").setAttribute("aria-expanded", on); if (on) setTimeout(() => el.querySelector(".calc-corpo").focus({ preventScroll: true }), 300); }
+  /* encolhe para caber na altura da janela (senão a aba de fechar some para cima da tela) */
+  function ajusta() { if (!el) return; el.style.zoom = ""; const h = el.offsetHeight, z = Math.min(1, (window.innerHeight - 8) / h); el.style.zoom = z < 1 ? z.toFixed(3) : ""; }
+  CALC2.ajusta = ajusta;
+  window.addEventListener("resize", ajusta);
+  function abre(on) { if (!el) return; ajusta(); el.classList.toggle("aberta", on); el.querySelector(".calc-aba").setAttribute("aria-expanded", on); if (on) setTimeout(() => el.querySelector(".calc-corpo").focus({ preventScroll: true }), 300); }
   CALC2.abre = abre;
   function liga(on) {
     if (on && !el) monta();
     if (!el) return;
-    if (on) { el.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("visivel"))); }
+    if (on) { el.hidden = false; ajusta(); requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("visivel"))); }
     else { el.classList.remove("visivel", "aberta"); setTimeout(() => { if (!el.classList.contains("visivel")) el.hidden = true; }, 450); }
   }
   CALC2.liga = liga;
