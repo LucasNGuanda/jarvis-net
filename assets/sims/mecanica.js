@@ -1,4 +1,4 @@
-/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento, A14 gangorra, A15 órbita de Kepler, A16 canhão de Newton, A17 empuxo,
+/* Simulações da Mecânica (módulo A): A01 vai e volta (deslocamento × distância), A02 encontro de dois carros (MRU), A05 barco no rio, A06 lançamento oblíquo, A07 MCU e engrenagens, A08 Atwood e elevador, A09 plano com atrito, A10 curva, A11 pista de skate, A12 impulso (F × t), A12b barco e centro de massa, A13 colisão 1D, A14a corrida de rolamento, A14 gangorra, A15 órbita de Kepler, A16 canhão de Newton, A17 empuxo, A18 jato de Torricelli,
    A03 MUV com gráficos e freada, A04 do gráfico v × t para x × t e a × t (área e inclinação). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
@@ -648,6 +648,41 @@
       sv += D.txt(bx + lado / 2, topo + 22, n2(Math.max(0, c.T), 1) + " N", "tx2");
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("peso P = ρ_bloco·V·g", n2(c.P, 1) + " N") + vis("empuxo E = ρ_líq·V_merg·g", n2(c.E, 1) + " N") + vis("dinamômetro (P − E)", c.T >= 0 ? n2(c.T, 2) + " N" : "fio frouxo") + vis(c.frac < 1 ? "solto, flutuaria com" : "solto, ele", c.frac < 1 ? n2(c.frac * 100, 0) + "% mergulhado" : "afunda");
+    });
+  };
+
+  /* ---------- A18 · Torricelli: o jato que sai de um furo na caixa d'água ---------- */
+  SIM.torricelli = (el, F) => {
+    const W = 680, H = 330, g = 10;
+    let t = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("altura da água no tanque H (m)", "H", 0.5, 2.5, 0.05, 2)}${sl("altura do furo y (m)", "y", 0, 2.5, 0.05, 0.5)}
+      <div class="bts"><button class="bt pri" data-a="meio">Furo no meio</button></div></div>
+      <div class="status">Pela equação de Bernoulli, a água sai do furo com a velocidade de quem caísse da superfície até ali: v = √(2g(H − y)) (Torricelli). Depois, o jato é um lançamento horizontal. Furo baixo: sai rápido mas cai logo; furo alto: tem tempo de queda mas sai devagar. O alcance máximo, igual a H, é com o furo exatamente no meio. Furos à mesma distância do meio, acima e abaixo, dão o mesmo alcance.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.torricelli._conta = (Hh, y) => { const v = Math.sqrt(Math.max(0, 2 * g * (Hh - y))), tq = Math.sqrt((2 * y) / g); return { v, tq, x: v * tq, xmax: Hh }; };
+    q("[data-a=meio]").addEventListener("click", () => { q("[data-c=y]").value = val(el, "H") / 2; });
+    anima(el, F, (dt) => {
+      let Hh = val(el, "H"), y = val(el, "y");
+      if (y > Hh) { y = Hh; q("[data-c=y]").value = y; }
+      mostra(el, ["H", "y"], 2);
+      const c = SIM.torricelli._conta(Hh, y);
+      t = (t + dt) % 10;
+      const esc = 110, x0 = 150, y0 = 300, X = (xx) => x0 + xx * esc, Y = (yy) => y0 - yy * esc;
+      let sv = `<line x1="20" x2="${W - 10}" y1="${y0}" y2="${y0}" style="stroke:var(--ink2);stroke-width:2"/>`;
+      sv += `<rect x="${X(-1)}" y="${Y(Hh)}" width="${esc}" height="${Hh * esc}" style="fill:color-mix(in srgb,var(--mA) 28%,transparent)"/><path d="M${X(-1)} ${Y(2.7)} L${X(-1)} ${y0} L${X(0)} ${y0} L${X(0)} ${Y(2.7)}" style="fill:none;stroke:var(--ink2);stroke-width:2"/>`;
+      if (c.v > 0) {
+        let d = ""; for (let k = 0; k <= 40; k++) { const s = (c.tq * k) / 40; d += (k ? "L" : "M") + X(c.v * s).toFixed(1) + " " + Y(y - 5 * s * s).toFixed(1); }
+        sv += `<path d="${d}" style="fill:none;stroke:var(--mA);stroke-width:3"/>`;
+        for (let k = 0; k < 6; k++) { const s = ((t * 0.6 + k / 6) % 1) * c.tq; sv += `<circle cx="${X(c.v * s)}" cy="${Y(y - 5 * s * s)}" r="3" style="fill:var(--mA)"/>`; }
+        /* referência: jato do furo no meio */
+        const vm = Math.sqrt(g * Hh), tm = Math.sqrt(Hh / g); let dm = ""; for (let k = 0; k <= 40; k++) { const s = (tm * k) / 40; dm += (k ? "L" : "M") + X(vm * s).toFixed(1) + " " + Y(Hh / 2 - 5 * s * s).toFixed(1); }
+        sv += `<path d="${dm}" style="fill:none;stroke:var(--ink3);stroke-dasharray:5 4"/>`;
+      }
+      sv += `<circle cx="${X(0)}" cy="${Y(y)}" r="4" style="fill:var(--warn)"/>` + D.seta(X(-1) - 14, Y(0), X(-1) - 14, Y(Hh), "var(--ink3)", 1.2) + D.txt(X(-1) - 20, Y(Hh / 2), "H", "txm", "end");
+      sv += `<line x1="${X(c.x)}" x2="${X(c.x)}" y1="${y0}" y2="${y0 + 8}" style="stroke:var(--warn);stroke-width:2"/>` + D.txt(X(c.x), y0 + 22, "alcance", "tx2");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("velocidade de saída √(2g(H − y))", n2(c.v, 2) + " m/s") + vis("tempo de queda √(2y/g)", n2(c.tq, 2) + " s") + vis("alcance 2√(y(H − y))", n2(c.x, 2) + " m") + vis("alcance máximo (furo em H/2)", n2(c.xmax, 2) + " m");
     });
   };
 })();
