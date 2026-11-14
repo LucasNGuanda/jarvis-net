@@ -23,7 +23,7 @@ window.CATALOGO = [
     ["A03","Movimento Retilíneo Uniformemente Variado",[],true],
     ["A04","Análise Gráfica",["★"],true],
     ["A05","Cinemática Vetorial",[],true],
-    ["A06","Lançamentos",["★"]],
+    ["A06","Lançamentos",["★"],true],
     ["A07","Movimento Circular"],
     ["A08","Leis de Newton",["★","ITA"]],
     ["A09","Atrito e Resistência do Ar"],
