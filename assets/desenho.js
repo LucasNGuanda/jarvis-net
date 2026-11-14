@@ -103,6 +103,20 @@
     s += (o.xlab ? D.txt(o.x0 + o.w + 14, y0 + 17, o.xlab, "txm", "end") : "") + (o.ylab ? D.txt(o.x0 + 8, o.y0 - o.h - 6, o.ylab, "txm", "start") : "");
     return s;
   };
+  /* ---- peças da Termodinâmica (β 3.3) ---- */
+  /* bloco/caixa com rótulo no meio */
+  D.bloco = (x, y, w, h, cor = "var(--mT)", rot = "") => `<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" rx="3" style="fill:color-mix(in srgb,${cor} 28%,transparent);stroke:${cor};stroke-width:2"/>` + (rot ? D.txt(x + w / 2, y + h / 2 + 5, rot, "tx2") : "");
+  /* termômetro vertical: bulbo embaixo em (x, y), altura h, fração de líquido fr (0–1), rótulo ao lado */
+  D.termo = (x, y, h, fr, rot = "", cor = "var(--bad)") => `<rect x="${f(x - 6)}" y="${f(y - h)}" width="12" height="${f(h)}" rx="6" style="fill:var(--bg);stroke:var(--ink3);stroke-width:1.5"/><rect x="${f(x - 2.5)}" y="${f(y - 6 - (h - 10) * fr)}" width="5" height="${f((h - 10) * fr + 6)}" style="fill:${cor}"/><circle cx="${f(x)}" cy="${f(y + 4)}" r="9" style="fill:${cor};stroke:var(--ink3);stroke-width:1.5"/>` + (rot ? D.txt(x + 14, y - h + 12, rot, "tx2", "start") : "");
+  /* chama pequena com a base em (x, y) */
+  D.chama = (x, y, s = 1) => `<path d="M${f(x)} ${f(y)} c${-9 * s} ${-6 * s} ${-8 * s} ${-16 * s} 0 ${-28 * s} c${2 * s} ${8 * s} ${10 * s} ${10 * s} ${8 * s} ${18 * s} c${-1 * s} ${6 * s} ${-4 * s} ${9 * s} ${-8 * s} ${10 * s} Z" style="fill:var(--warn);opacity:.9"/>`;
+  /* cilindro com gás e pistão: canto superior esquerdo (x, y), largura w, altura total h, fração ocupada pelo gás fr; rótulo do gás */
+  D.pistao = (x, y, w, h, fr, rot = "gás", cor = "var(--mT)") => {
+    const yp = y + h - h * fr;
+    return `<path d="M${f(x)} ${f(y)} L${f(x)} ${f(y + h)} L${f(x + w)} ${f(y + h)} L${f(x + w)} ${f(y)}" style="fill:none;stroke:var(--ink2);stroke-width:2.5"/><rect x="${f(x + 2)}" y="${f(yp)}" width="${f(w - 4)}" height="${f(y + h - yp - 1)}" style="fill:color-mix(in srgb,${cor} 22%,transparent)"/><rect x="${f(x + 2)}" y="${f(yp - 10)}" width="${f(w - 4)}" height="10" style="fill:var(--ink3)"/><line x1="${f(x + w / 2)}" y1="${f(yp - 10)}" x2="${f(x + w / 2)}" y2="${f(yp - 34)}" style="stroke:var(--ink3);stroke-width:4"/>` + (rot ? D.txt(x + w / 2, y + h - (h * fr) / 2 + 5, rot, "tx2") : "");
+  };
+  /* recipiente aberto com líquido até a fração fr */
+  D.copo = (x, y, w, h, fr, cor = "var(--mA)") => `<rect x="${f(x)}" y="${f(y + h - h * fr)}" width="${f(w)}" height="${f(h * fr)}" style="fill:color-mix(in srgb,${cor} 25%,transparent)"/><path d="M${f(x)} ${f(y)} L${f(x)} ${f(y + h)} L${f(x + w)} ${f(y + h)} L${f(x + w)} ${f(y)}" style="fill:none;stroke:var(--ink2);stroke-width:2"/>`;
   /* função amostrada para D.graf: pts de f no intervalo [a, b] */
   D.amostra = (fn, a, b, n = 60) => Array.from({ length: n + 1 }, (_, i) => { const x = a + ((b - a) * i) / n; return [x, fn(x)]; });
 })();

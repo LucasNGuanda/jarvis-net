@@ -41,7 +41,7 @@ window.CATALOGO = [
     ["A20","Movimento Harmônico Simples e oscilações",["!","∫","ITA"],true],
   ]},
   { id:"T", letra:"T", cor:"--mT", nome:"Termodinâmica", desc:"Temperatura, calor, gases, as leis da termodinâmica e entropia.", temas:[
-    ["T01","Temperatura"],
+    ["T01","Temperatura",[],true],
     ["T02","Propagação do Calor"],
     ["T03","Dilatometria"],
     ["T04","Calorimetria"],
