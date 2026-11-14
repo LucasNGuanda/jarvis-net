@@ -1,4 +1,4 @@
-/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; T05 gás ideal p × V; T05b gás de moléculas 2D; T06 dois corpos em contato; T07 os quatro processos; T08 ciclo de Carnot; */
+/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; T04b curva de aquecimento; T05 gás ideal p × V; T05b gás de moléculas 2D; T06 dois corpos em contato; T07 os quatro processos; T08 ciclo de Carnot; T08b microestados e entropia; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -351,6 +351,38 @@
       sv += D.txt(fx + 8, 92, "Q_q", "tx2", "start") + D.txt(fx + 8, 214, "Q_f", "tx2", "start") + D.txt(fx + 60, 140, "W", "tx2");
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("calor recebido Q_q = RT_q ln(V_B/V_A)", n2(c.Qq, 0) + " J") + vis("calor rejeitado Q_f", n2(c.Qf, 0) + " J") + vis("trabalho por ciclo W = Q_q − Q_f", n2(c.W, 0) + " J") + vis("rendimento η = 1 − T_f/T_q", n2(c.eta * 100, 1) + "%");
+    });
+  };
+
+  /* ---------- T08b · partículas espalhando numa caixa: microestados e entropia de Boltzmann ---------- */
+  SIM.boltzmann = (el, F) => {
+    const W = 680, H = 300;
+    let ps = [], parede = true, hist = [];
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("número de partículas N", "N", 4, 200, 2, 40)}
+      <div class="bts"><button class="bt pri" data-a="tira">Tirar a divisória</button><button class="bt" data-a="re">Recomeçar (todas à esquerda)</button></div></div>
+      <div class="status">As partículas começam todas na metade esquerda. Tirando a divisória, cada uma passeia ao acaso. O número de jeitos (microestados) de ter n partículas à esquerda é W = N!/(n!(N − n)!), e a entropia de Boltzmann é S = k·ln W. A metade-metade tem, de longe, mais microestados: é para lá que o sistema vai, e de lá não sai. Com 4 partículas, voltar todas para a esquerda acontece com frequência; com 200, nunca se vê.</div>`);
+    const q = (s) => el.querySelector(s);
+    const lnC = (n, k) => { let s = 0; for (let i = 1; i <= k; i++) s += Math.log((n - k + i) / i); return s; };
+    SIM.boltzmann._lnW = lnC;
+    const reinicia = () => { const N = val(el, "N"); ps = Array.from({ length: N }, () => { const a = Math.random() * 6.283; return { x: 20 + Math.random() * 230, y: 20 + Math.random() * 220, vx: 140 * Math.cos(a), vy: 140 * Math.sin(a) }; }); parede = true; hist = []; };
+    reinicia();
+    q("[data-a=re]").addEventListener("click", reinicia);
+    q("[data-a=tira]").addEventListener("click", () => (parede = false));
+    q("[data-c=N]").addEventListener("input", reinicia);
+    anima(el, F, (dt) => {
+      const N = ps.length; mostra(el, ["N"], 0);
+      const xmax = parede ? 254 : 504;
+      ps.forEach((p) => { if (Math.random() < 0.03) { const a = Math.random() * 6.283; p.vx = 140 * Math.cos(a); p.vy = 140 * Math.sin(a); } p.x += p.vx * dt; p.y += p.vy * dt; if (p.x < 16) { p.x = 32 - p.x; p.vx = -p.vx; } if (p.x > xmax) { p.x = 2 * xmax - p.x; p.vx = -p.vx; } if (p.y < 16) { p.y = 32 - p.y; p.vy = -p.vy; } if (p.y > 244) { p.y = 488 - p.y; p.vy = -p.vy; } });
+      const nE = ps.filter((p) => p.x < 260).length; hist.push(nE); if (hist.length > 300) hist.shift();
+      let sv = `<rect x="10" y="10" width="500" height="240" style="fill:none;stroke:var(--ink2);stroke-width:2"/>` + (parede ? `<line x1="260" x2="260" y1="10" y2="250" style="stroke:var(--ink2);stroke-width:4"/>` : `<line x1="260" x2="260" y1="10" y2="250" style="stroke:var(--ink3);stroke-dasharray:3 5"/>`);
+      ps.forEach((p) => (sv += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${N > 100 ? 2.5 : 4}" style="fill:var(--warn)"/>`));
+      /* gráfico de ln W(n) */
+      const gx = 530, gy = 250, gw = 130, gh = 200, lmax = lnC(N, Math.floor(N / 2)) || 1;
+      let d = ""; for (let n = 0; n <= N; n++) d += (n ? "L" : "M") + (gx + (n / N) * gw).toFixed(1) + " " + (gy - (lnC(N, n) / lmax) * gh).toFixed(1);
+      sv += `<path d="${d}" style="fill:none;stroke:var(--mT);stroke-width:2"/><circle cx="${gx + (nE / N) * gw}" cy="${gy - (lnC(N, nE) / lmax) * gh}" r="5" style="fill:var(--warn)"/>` + D.seta(gx, gy, gx + gw + 8, gy, "var(--ink2)", 1.2) + D.txt(gx + gw, gy + 16, "n à esquerda", "tx2", "end") + D.txt(gx, gy - gh - 8, "S/k = ln W", "tx2", "start");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("partículas à esquerda", nE + " de " + N) + vis("S/k = ln W agora", n2(lnC(N, nE), 2)) + vis("máximo possível (metade-metade)", n2(lmax, 2)) + vis("chance de todas na esquerda: 2^(−N)", N <= 16 ? n2(Math.pow(2, -N) * 100, 4) + "%" : "≈ 10^(−" + n2(N * Math.log10(2), 0) + ")");
     });
   };
 })();

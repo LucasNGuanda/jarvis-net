@@ -51,7 +51,7 @@ window.CATALOGO = [
     ["T06","Lei Zero da Termodinâmica",[],true],
     ["T07","1ª Lei da Termodinâmica",["★"],true],
     ["T08","2ª Lei da Termodinâmica",["★"],true],
-    ["T08b","Entropia",["!","∫"]],
+    ["T08b","Entropia",["!","∫"],true],
   ]},
   { id:"O", letra:"O", cor:"--mO", nome:"Ondas e Óptica", desc:"Ondulatória, acústica, óptica geométrica e ondulatória.", temas:[
     ["O01","Introdução à Ondulatória",[],true],
