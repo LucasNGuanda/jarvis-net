@@ -26,6 +26,11 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 - "Chuta antes de ver" (`F.chute`): só os 20 temas do módulo C usam. A Mecânica inteira ainda não tem.
 - Figuras: nem todo exercício da Mecânica tem figura (todos os exemplos têm).
 
+### Dívida técnica (pedido do Lucas em 14/11/2026: resolver depois da Termodinâmica)
+- [ ] **Mecânica** (A01–A20): subir de 12–14 para 15–20 exercícios por tema; pôr figura nos exercícios que não têm; acrescentar o `F.chute` ("chuta antes de ver") em todos os temas.
+- [ ] **Demais módulos** (F, O, C, M, U, N e Cálculo): subir de 7 para 15–20 exercícios por tema (o C já tem de 7 a 16).
+- Regra a partir de agora: tema novo já nasce no padrão completo (15–20 exercícios, figura em todo exercício, `F.chute`).
+
 ### O que ainda falta na Física (ordem de prioridade do Lucas)
 1. **Mecânica**: temas escritos (A01–A20). Falta completar até o padrão: 15 a 20 exercícios, `F.chute` e figura em todo exercício.
 2. **Termodinâmica**: o módulo T inteiro, do T01 ao T08b.
