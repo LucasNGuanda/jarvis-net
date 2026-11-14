@@ -1,5 +1,25 @@
 # PROGRESSO — Site de Física do Lucas
 
+## Estado atual (14/11/2026, depois da β 1.9)
+- **Física**: 47 de 96 temas escritos.
+  - Prontos: Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Óptica (7 de 11: falta a parte de ondas); Bônus (X01); Simulados (S00–S04, só as páginas de entrada).
+  - Vazios: Fundamentos (6), Mecânica (21), Termodinâmica (11), Navier–Stokes (7), Ondas (4).
+- **Cálculo**: 20 de 20 (Cálculo 1, Cálculo 2, Funções especiais).
+- **Experimentos**: 9 de 9.
+- Exercícios: 7 por tema (a meta do briefing era 15–20).
+- Versão em inglês: só pelo tradutor do navegador.
+
+## Revisão geral (pedido de 14/11/2026), em andamento → β 2.0
+1. [ ] Módulos com letras novas: Termodinâmica = **T**, Ondas e Óptica = **O**, com cores bem diferentes. Códigos trocados (B01 → T01…, B16 → O01…) em links, [n]←, busca, sumário e simulados; progresso salvo migrado.
+2. [ ] Conferir a soma de Riemann da animação do Cálculo (n = 4, 16, 100).
+3. [ ] Temas não escritos aparecem apagados com "em breve".
+4. [ ] Numeração dos Experimentos (pula de EP02 para EP08).
+5. [ ] "Legenda" num lugar só (junto com símbolos e alfabeto grego).
+6. [ ] GitHub Pages ligado.
+7. [ ] Teste geral com Playwright: PC (1280 px) e celular (375 px), três abas, todos os links, botões, controles, console, KaTeX, exercícios, progresso salvo, exportar/importar, física das simulações nos casos limite.
+8. [ ] Relatório honesto do que estava quebrado, do que foi corrigido e do que falta.
+9. [ ] Relatório de estética.
+
 ## Versões
 Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
 - **β 0.1** — esqueleto + C07 Lei de Ohm e Resistores.
