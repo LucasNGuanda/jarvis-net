@@ -1,15 +1,15 @@
 # PROGRESSO — Site de Física do Lucas
 
-## Estado atual (14/11/2026, depois da β 3.1)
-- **Física**: 71 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
-  - Prontos: Fundamentos inteiro (6); Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes inteiro (7); Bônus (X01); Simulados (S00–S04; S02 já tem o IME 2026/27, os outros só a página de entrada).
-  - Mecânica: 7 de 21 (A01–A07). Vazios: Mecânica (14: A08–A18 e A20), Termodinâmica (11).
+## Estado atual (14/11/2026, depois da β 3.2)
+- **Física**: 85 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
+  - Prontos: Fundamentos inteiro (6); Mecânica inteira (21); Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes inteiro (7); Bônus (X01); Simulados (S00–S04; S02 já tem o IME 2026/27, os outros só a página de entrada).
+  - Vazio: Termodinâmica (11).
 - **Cálculo**: 27 de 27 (Cálculo 1, Cálculo 2, Funções especiais, Teoremas, Simulados de Cálculo).
 - **Experimental**: 0 de 11 (módulos criados, temas a decidir).
 - **Experimentos**: 10 de 10.
 - Tela inicial do projeto (Jarvis) em #/home: Física pronta; Química, Matemática e Russo "em breve". Modelo de dados em docs/MODELO_DE_DADOS.md.
 - Calculadoras: 1 (estilo fx-991ES PLUS) e 2 (estilo fx-82LA CW), uma de cada vez.
-- Exercícios: 7 por tema (a meta do briefing era 15–20).
+- Exercícios: 7 por tema nos módulos antigos; 12 a 14 com correção automática na Mecânica (a meta do briefing era 15–20).
 - Versão em inglês: só pelo tradutor do navegador.
 
 ## Revisão geral (pedido de 14/11/2026) → β 2.0
@@ -270,6 +270,26 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Todos os números conferidos em Python (os chefões das formigas, do barco e do muro também por simulação ou busca numérica).
   - Corrigido antes de entregar: números sorteados aparecendo como "2{,}5" em texto comum (5 temas) e a correção lendo "1.333" como 1333 (agora um ponto sozinho é decimal; "1.000.000" e "1.234,5" são milhar).
   - Faltam na Mecânica: A08–A18 e A20 (14 temas).
+- **β 3.2** — **Mecânica completa** (A08–A20, os 14 temas que faltavam), feita sozinho enquanto o Lucas estava fora, no mesmo padrão da β 3.1: abertura, teoria com 3 teoremas demonstrados passo a passo, laboratório, exemplário com 3 casos sorteáveis (fácil, médio, olimpíada) com figura, as 4 caixas, folha de fórmulas, 12 ou 13 exercícios com correção automática e nível (Físico/Máximo) e chefão Impossível 99 com dicas em degraus e solução escondida.
+  - **Temas** (laboratório; chefão):
+    - A08 Leis de Newton (Atwood e elevador; cunha acelerada, A = g tg θ);
+    - A09 Atrito e Resistência do Ar (plano inclinado com atrito; caixa solta na carroceria do caminhão);
+    - A10 Dinâmica do Movimento Circular (carro na curva plana ou inclinada; conta no aro girando, cos θ = g/(ω²R));
+    - A11 Trabalho e Energia (pista de skate com as três barras de energia; bloco que escorrega do hemisfério, cos θ = 2/3);
+    - A12 Impulso e Quantidade de Movimento (gráfico F × t com tempo de contato; corrente caindo na balança marca 3λgx);
+    - A12b Centro de Massa (pessoa andando no barco; pilha de blocos com balanço harmônico, 31 blocos para 2L);
+    - A13 Colisões (colisão 1D com coeficiente de restituição; torre de bolas, 9h e 49h);
+    - A14a Rotação e Corpo Rígido (corrida de rolamento de esfera, disco, esfera oca e anel; bola de boliche que passa a rolar, 5v₀/7 e centro de percussão 2R/5);
+    - A14 Equilíbrio de Corpo Extenso (gangorra; até onde subir na escada, 3,70 m);
+    - A15 Leis de Kepler (órbita com setores de áreas iguais pela equação de Kepler; transferência de Hohmann para Marte, 259 dias e janela de 780 dias);
+    - A16 Gravitação (canhão de Newton: queda, órbita, escape; túnel pela Terra, 42 min);
+    - A17 Hidrostática (bloco num dinamômetro mergulhando; pedra jogada do barco e gelo derretendo);
+    - A18 Hidrodinâmica (jato de Torricelli com alcance máximo em H/2; tempo para esvaziar a caixa d'água e clepsidra, r ∝ H^(1/4));
+    - A20 MHS e oscilações (massa–mola com amortecimento e gráfico x × t; pêndulo de amplitude grande, período exato pela integral elíptica e correção θ₀²/16).
+  - **Laboratórios novos** em `assets/sims/mecanica.js`: Atwood e elevador, plano com atrito, curva, pista de skate, impulso, barco e CM, colisão 1D, rolamento, gangorra, órbita, canhão, empuxo, Torricelli e massa–mola (14).
+  - Todos os números conferidos em Python antes de escrever; os chefões também por simulação ou integração numérica (corrente na balança com 200 000 elos, bola de boliche, esvaziamento do tanque, período exato do pêndulo).
+  - Corrigido antes de entregar: resposta errada no ex. 10 do A12b (semidisco: estava 9,5 cm, o certo é 4R/(3π) ≈ 12,7 cm); a pista de skate do A11 travava no ponto de retorno e a energia sem atrito não fechava (agora 2789 J constantes); elipse do laboratório de Kepler estourava a altura; a energia do massa–mola variava 0,5% (troquei o integrador por Verlet); o tubo em U do A17 estava desenhado com a água abaixo da superfície de separação; rótulos sobrepostos (gangorra, rolamento, impulso); link para um tema que não existe (R01 → C18).
+  - Honesto: nos temas novos, nem todo exercício tem figura (2 a 7 figuras por tema, contando os exemplos); as contas estão todas conferidas, mas é bom o Lucas dar uma olhada no estilo dos chefões.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
