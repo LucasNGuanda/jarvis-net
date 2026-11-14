@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Site Física β 2.1</title>
+<title>Site Física β 2.2</title>
 <link rel="stylesheet" href="assets/katex/katex.min.css">
 <link rel="stylesheet" href="assets/estilo.css">
 <script defer src="assets/katex/katex.min.js"></script>
@@ -24,6 +24,7 @@
 <script defer src="assets/sims/univ.js"></script>
 <script defer src="assets/detalhes.js"></script>
 <script defer src="assets/app.js"></script>
+<script defer src="assets/calc.js"></script>
 </head>
 <body>
 <header class="topo">
@@ -60,6 +61,9 @@
       <div class="cfg-grupo"><div class="cfg-rot">Idioma</div>
         <div class="cfg-ops" data-cfg="idioma"><button class="bt peq" data-v="pt">Português</button><button class="bt peq" data-v="en">English</button></div>
         <p class="cfg-nota" id="nota-idioma" hidden>A versão em inglês escrita à mão fica para o final. Por enquanto, use o tradutor do navegador: <b>botão direito na página → "Traduzir para inglês"</b> (Chrome ou Edge). As fórmulas estão marcadas para o tradutor não mexer nelas.</p></div>
+      <div class="cfg-grupo"><div class="cfg-rot">Calculadora científica</div>
+        <div class="cfg-linha"><span>Mostrar no canto da tela</span><button class="interruptor" id="cfg-calc" type="button" role="switch" aria-checked="false" aria-label="Mostrar a calculadora científica"><span></span></button></div>
+        <p class="cfg-nota">Para os experimentos e para conferir contas. Nos exercícios, tente sem!</p></div>
     </div>
   </div>
 </header>

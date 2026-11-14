@@ -141,6 +141,16 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Testes: 125 páginas (0 katex-error, 0 erro de JS, 912 links), estresse dos 83 laboratórios, 118 conferências de física, 44 testes de funcionamento: tudo ok.
   - **Não feito ainda** (precisa de trabalho tema a tema): figuras novas e resumos curtos escritos no fim de cada seção da teoria; refazer os desenhos dos laboratórios numa escala só (hoje a letra parece maior ou menor conforme o tamanho de cada desenho).
 
+- **β 2.2** — **Calculadora científica** (`assets/calc.js`), pedida pelo Lucas para a parte de física experimental.
+  - Liga e desliga na engrenagem (Configurações → Calculadora científica, interruptor). Ligada, o topo dela aparece no canto inferior esquerdo subindo; clicar no topo sobe a calculadora inteira (e clicar de novo, ou SHIFT AC = OFF, abaixa). Fica salva ligada/desligada.
+  - Teclas na mesma ordem da calculadora do Lucas (fx-991ES PLUS), com as funções de SHIFT (dourado) e ALPHA (rosa) nos mesmos lugares; visual próprio do site. Também aceita o teclado do computador (números, + − * / ^ ( ), Enter, Backspace, Esc, setas).
+  - Modos (MODE): COMP, CMPLX, STAT (1-VAR, A+BX, _+CX², ln X, e^X, A·B^X, A·X^B, 1/X), BASE-N (32 bits), EQN (sistemas 2×2 e 3×3, 2º e 3º grau, com raízes complexas e o vértice da parábola), MATRIX (até 3×3: det, Trn, inversa, potências), TABLE e VECTOR (Dot, produto vetorial, módulo).
+  - SETUP: MthIO/LineIO, Deg/Rad/Gra, Fix/Sci/Norm, ab/c ou d/c, complexo a+bi ou r∠θ. CLR (Setup, Memory, All).
+  - CONST (40 constantes, valores CODATA 2018), CONV (40 conversões), CALC, SOLVE (Newton + bissecção), ∫ (Gauss–Kronrod adaptativo), d/dx (Richardson), Σ, Pol, Rec, nPr, nCr, x!, %, °′″, DRG▸, ENG, Rnd, Ran#, RanInt#, STO/RCL, variáveis A–F, X, Y, M, M+/M−, Ans, histórico (▲▼), INS.
+  - Resultado em forma exata quando dá (fração, a√b/c, (a + b√c)/d, kπ/n), como na MthIO; S⇔D troca para decimal.
+  - Testes: 88 contas digitadas tecla por tecla e conferidas com o valor certo (todos os modos), mais a regressão do site inteiro.
+  - **Diferenças da calculadora real** (honestas): a entrada é linear (com cursor, como a LineIO), só o resultado é "de livro"; sem gráfico (não precisava); STAT sem a coluna de frequência; TABLE só com f(X); sem ":" (várias contas numa linha). A ordem da lista CONST segue o manual de memória, e os valores são os do CODATA 2018 (calculadoras antigas usam valores um pouco diferentes na 5ª casa em diante).
+
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.
