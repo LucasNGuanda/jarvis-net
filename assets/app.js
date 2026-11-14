@@ -21,6 +21,10 @@
   // F.t(9.1234, 2) -> "9,12" (texto)   F.m(...) -> "9{,}12" (dentro de $...$)
   F.t = (v, d = 2) => { if (!isFinite(v)) return "—"; let s = (+v).toFixed(d); if (/^-0[.,]?0*$/.test(s)) s = s.slice(1); return s.replace("-", "−").replace(".", ","); };
   F.m = (v, d = 2) => F.t(v, d).replace(",", "{,}").replace("−", "-");
+  /* número "limpo" para LaTeX: tira zeros à direita (2,50 → 2,5; 3,00 → 3) */
+  F.n = (v, d = 4) => { const r = +(+v).toFixed(d); const casas = (String(r).split(".")[1] || "").length; return F.m(r, Math.min(d, casas)); };
+  /* coeficiente na frente de uma letra: 1 → "", −1 → "-", resto → número limpo */
+  F.c = (c, d = 4) => (c === 1 ? "" : c === -1 ? "-" : F.n(c, d));
   // algarismos significativos, com notação científica quando precisa: F.sig(0.000123,2) -> "1,2 × 10⁻⁴" (texto)
   F.sigM = (v, n = 3) => {
     if (v === 0) return "0";

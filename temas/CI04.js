@@ -9,21 +9,21 @@ F.registrar("CI04", {
       casos: [
         { nome: "Cadeia: (ax + b)ⁿ", gerar: (p) => {
           const a = p ? 3 : F.escolha([2, 3, 5]), b = p ? 1 : F.escolha([-1, 1, 4]), n = p ? 4 : F.escolha([3, 4, 5, 10]);
-          return { enun: R`<p>Derive $h(x) = (${a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)})^{${n}}$.</p>`, fig: "",
+          return { enun: R`<p>Derive $h(x) = (${F.c(a)}x ${b < 0 ? "-" : "+"} ${Math.abs(b)})^{${n}}$.</p>`, fig: "",
             passos: [
-              R`<p>É uma composição: <b>de fora</b> $f(u) = u^{${n}}$, <b>de dentro</b> $u = g(x) = ${a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)}$.</p>`,
+              R`<p>É uma composição: <b>de fora</b> $f(u) = u^{${n}}$, <b>de dentro</b> $u = g(x) = ${F.c(a)}x ${b < 0 ? "-" : "+"} ${Math.abs(b)}$.</p>`,
               R`<p>$f'(u) = ${n}u^{${n - 1}}$ e $g'(x) = ${a}$.</p>`,
-              R`<p>Regra da cadeia: derivada de fora (calculada no de dentro) vezes derivada de dentro:</p>$$h'(x) = ${n}(${a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)})^{${n - 1}}\cdot${a} = ${n * a}(${a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)})^{${n - 1}}$$<p>Expandir a potência ${n} primeiro daria o mesmo resultado, com muito mais trabalho.</p>`,
+              R`<p>Regra da cadeia: derivada de fora (calculada no de dentro) vezes derivada de dentro:</p>$$h'(x) = ${F.c(n)}(${F.c(a)}x ${b < 0 ? "-" : "+"} ${Math.abs(b)})^{${n - 1}}\cdot${a} = ${F.c(n * a)}(${F.c(a)}x ${b < 0 ? "-" : "+"} ${Math.abs(b)})^{${n - 1}}$$<p>Expandir a potência ${n} primeiro daria o mesmo resultado, com muito mais trabalho.</p>`,
             ] };
         } },
         { nome: "Produto: e^(ax)·sen(bx)", gerar: (p) => {
           const a = p ? -1 : F.escolha([-2, -1, 1, 2]), b = p ? 3 : F.escolha([1, 2, 3, 5]);
           return { enun: R`<p>Derive $y = e^{${a === -1 ? "-" : a === 1 ? "" : a}x}\operatorname{sen}(${b === 1 ? "" : b}x)$. ${a < 0 ? "(É uma oscilação amortecida: um MHS com atrito.)" : ""}</p>`, fig: "",
             passos: [
-              R`<p>Produto $u\cdot v$ com $u = e^{${a}x}$ e $v = \operatorname{sen}(${b}x)$. Regra: $(uv)' = u'v + uv'$.</p>`,
-              R`<p>Cada pedaço pela cadeia: $u' = ${a}e^{${a}x}$ e $v' = ${b}\cos(${b}x)$.</p>`,
-              R`$$y' = ${a}e^{${a}x}\operatorname{sen}(${b}x) + ${b}e^{${a}x}\cos(${b}x) = e^{${a}x}\left[${a}\operatorname{sen}(${b}x) + ${b}\cos(${b}x)\right]$$`,
-              R`<p>Em $x = 0$: $y'(0) = ${b}$. A exponencial nunca zera, então a velocidade zera quando $\operatorname{tg}(${b}x) = ${F.m(-b / a, 3)}$.</p>`,
+              R`<p>Produto $u\cdot v$ com $u = e^{${F.c(a)}x}$ e $v = \operatorname{sen}(${F.c(b)}x)$. Regra: $(uv)' = u'v + uv'$.</p>`,
+              R`<p>Cada pedaço pela cadeia: $u' = ${F.c(a)}e^{${F.c(a)}x}$ e $v' = ${F.c(b)}\cos(${F.c(b)}x)$.</p>`,
+              R`$$y' = ${F.c(a)}e^{${F.c(a)}x}\operatorname{sen}(${F.c(b)}x) + ${F.c(b)}e^{${F.c(a)}x}\cos(${F.c(b)}x) = e^{${F.c(a)}x}\left[${F.c(a)}\operatorname{sen}(${F.c(b)}x) + ${F.c(b)}\cos(${F.c(b)}x)\right]$$`,
+              R`<p>Em $x = 0$: $y'(0) = ${b}$. A exponencial nunca zera, então a velocidade zera quando $\operatorname{tg}(${F.c(b)}x) = ${F.n(-b / a, 3)}$.</p>`,
             ] };
         } },
         { nome: "Quociente: (ax + b)/(x² + c)", gerar: (p) => {
@@ -33,8 +33,8 @@ F.registrar("CI04", {
             passos: [
               R`<p>Quociente: $\left(\frac uv\right)' = \frac{u'v - uv'}{v^2}$ ("derivada de cima vezes a de baixo, menos a de cima vezes a derivada de baixo, sobre a de baixo ao quadrado").</p>`,
               R`<p>$u = ${num}$, $u' = ${a}$; $v = x^2 + ${c}$, $v' = 2x$.</p>`,
-              R`$$y' = \frac{${a}(x^2 + ${c}) - (${num})\cdot2x}{(x^2 + ${c})^2} = \frac{${-a}x^2 ${-2 * b < 0 ? "-" : "+"} ${Math.abs(2 * b)}x + ${a * c}}{(x^2 + ${c})^2}$$`.replace("+ 0x ", "").replace("- 0x ", ""),
-              R`<p>Os pontos de tangente horizontal saem do numerador: $${a}x^2 ${2 * b < 0 ? "-" : "+"} ${Math.abs(2 * b)}x - ${a * c} = 0$.</p>`.replace("+ 0x ", "").replace("- 0x ", ""),
+              R`$$y' = \frac{${F.c(a)}(x^2 + ${c}) - (${num})\cdot2x}{(x^2 + ${c})^2} = \frac{${F.c(-a)}x^2 ${-2 * b < 0 ? "-" : "+"} ${Math.abs(2 * b)}x + ${a * c}}{(x^2 + ${c})^2}$$`.replace("+ 0x ", "").replace("- 0x ", ""),
+              R`<p>Os pontos de tangente horizontal saem do numerador: $${F.c(a)}x^2 ${2 * b < 0 ? "-" : "+"} ${Math.abs(2 * b)}x - ${a * c} = 0$.</p>`.replace("+ 0x ", "").replace("- 0x ", ""),
             ] };
         } },
       ],

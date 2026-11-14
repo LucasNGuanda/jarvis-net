@@ -254,7 +254,7 @@ input[type=range]{accent-color:var(--mod);width:100%;min-width:0;cursor:pointer}
 /* tabelas */
 table.tb{border-collapse:collapse;width:100%;margin:12px 0;font-size:15px}
 table.tb th,table.tb td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
-table.tb th{color:var(--ink2);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+table.tb th{color:var(--ink2);font-weight:600;font-size:13.5px}
 
 /* início */
 .hero{padding:10px 0 24px}

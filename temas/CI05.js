@@ -14,28 +14,28 @@ F.registrar("CI05", {
           return { enun: R`<p>De uma folha de ${a} cm × ${b} cm, corte quadrados de lado $x$ nos cantos e dobre as abas para formar uma caixa sem tampa. Qual $x$ dá o maior volume?</p>`, fig: "",
             passos: [
               R`<p>A caixa tem base $(${a} - 2x)\times(${b} - 2x)$ e altura $x$:</p>$$V(x) = x(${a} - 2x)(${b} - 2x),\qquad 0 < x < ${a / 2}$$`,
-              R`<p>Expandindo: $V = 4x^3 - ${2 * s}x^2 + ${a * b}x$. Derivando: $V'(x) = 12x^2 - ${4 * s}x + ${a * b}$.</p>`,
-              R`<p>$V' = 0$ (Bhaskara): $x = \frac{${4 * s} \pm \sqrt{${16 * s * s} - ${48 * a * b}}}{24}$. A raiz maior dá $x \geq ${a / 2}$ (não sobra base para a caixa); fica $x \approx ${F.m(x, 3)}$ cm.</p>`,
-              R`<p>Conferindo que é máximo: $V(0) = V(${a / 2}) = 0$ e $V > 0$ no meio, então o único ponto crítico do intervalo é o máximo (Weierstrass). $V_\text{máx} \approx ${F.m(V, 1)}$ cm³.</p>`,
+              R`<p>Expandindo: $V = 4x^3 - ${2 * s}x^2 + ${F.c(a * b)}x$. Derivando: $V'(x) = 12x^2 - ${4 * s}x + ${a * b}$.</p>`,
+              R`<p>$V' = 0$ (Bhaskara): $x = \frac{${4 * s} \pm \sqrt{${16 * s * s} - ${48 * a * b}}}{24}$. A raiz maior dá $x \geq ${a / 2}$ (não sobra base para a caixa); fica $x \approx ${F.n(x, 3)}$ cm.</p>`,
+              R`<p>Conferindo que é máximo: $V(0) = V(${a / 2}) = 0$ e $V > 0$ no meio, então o único ponto crítico do intervalo é o máximo (Weierstrass). $V_\text{máx} \approx ${F.n(V, 1)}$ cm³.</p>`,
             ] };
         } },
         { nome: "Potência máxima numa bateria", gerar: (p) => {
           const E = p ? 12 : F.escolha([6, 9, 12, 24]), r = p ? 2 : F.escolha([0.5, 1, 2, 4]);
-          return { enun: R`<p>Uma bateria de fem $E = ${E}$ V e resistência interna $r = ${F.m(r, 1)}$ Ω alimenta um resistor $R$. Que $R$ recebe a maior potência? Quanto é essa potência?</p>`, fig: "",
+          return { enun: R`<p>Uma bateria de fem $E = ${E}$ V e resistência interna $r = ${F.n(r)}$ Ω alimenta um resistor $R$. Que $R$ recebe a maior potência? Quanto é essa potência?</p>`, fig: "",
             passos: [
-              R`<p>Corrente: $i = \frac{E}{R + r}$. Potência no resistor: $P(R) = Ri^2 = \frac{${E * E}R}{(R + ${F.m(r, 1)})^2}$.</p>`,
+              R`<p>Corrente: $i = \frac{E}{R + r}$. Potência no resistor: $P(R) = Ri^2 = \frac{${E * E}R}{(R + ${F.n(r)})^2}$.</p>`,
               R`<p>Quociente: $P'(R) = ${E * E}\cdot\frac{(R + r)^2 - R\cdot2(R + r)}{(R + r)^4} = ${E * E}\cdot\frac{r - R}{(R + r)^3}$.</p>`,
-              R`<p>$P' = 0 \iff R = r = ${F.m(r, 1)}$ Ω. Para $R < r$, $P' > 0$; para $R > r$, $P' < 0$: é máximo.</p>`,
-              R`<p>$P_\text{máx} = \frac{E^2}{4r} = \frac{${E * E}}{${F.m(4 * r, 0)}} = ${F.m((E * E) / (4 * r), 2)}$ W. É o "casamento de impedâncias" ${F.ret("C10")}: nesse ponto, metade da energia esquenta a própria bateria (rendimento de 50%).</p>`,
+              R`<p>$P' = 0 \iff R = r = ${F.n(r)}$ Ω. Para $R < r$, $P' > 0$; para $R > r$, $P' < 0$: é máximo.</p>`,
+              R`<p>$P_\text{máx} = \frac{E^2}{4r} = \frac{${E * E}}{${F.n(4 * r, 0)}} = ${F.n((E * E) / (4 * r), 2)}$ W. É o "casamento de impedâncias" ${F.ret("C10")}: nesse ponto, metade da energia esquenta a própria bateria (rendimento de 50%).</p>`,
             ] };
         } },
         { nome: "L'Hôpital", gerar: (p) => {
           const a = p ? 2 : F.escolha([1, 2, 3, 5]), b = p ? 3 : F.escolha([1, 2, 3, 4]);
           return { enun: R`<p>Calcule $\displaystyle\lim_{x\to0}\frac{e^{${a === 1 ? "" : a}x} - 1 - ${a === 1 ? "" : a}x}{${b === 1 ? "" : b}x^2}$.</p>`, fig: "",
             passos: [
-              R`<p>Substituindo: $\frac{1 - 1 - 0}{0} = \frac00$. L'Hôpital: derive em cima e embaixo <b>separadamente</b> (não é a regra do quociente!):</p>$$\lim_{x\to0}\frac{${a}e^{${a}x} - ${a}}{${2 * b}x}$$`,
-              R`<p>De novo $\frac00$. Aplique mais uma vez:</p>$$\lim_{x\to0}\frac{${a * a}e^{${a}x}}{${2 * b}} = \frac{${a * a}}{${2 * b}}${(a * a) % (2 * b) === 0 ? " = " + (a * a) / (2 * b) : " \\approx " + F.m((a * a) / (2 * b), 4)}$$`,
-              R`<p>Leitura: $e^{${a}x} \approx 1 + ${a}x + \frac{${a * a}x^2}{2}$ para $x$ pequeno. O L'Hôpital está "descobrindo" o termo de 2ª ordem da série de Taylor.</p>`,
+              R`<p>Substituindo: $\frac{1 - 1 - 0}{0} = \frac00$. L'Hôpital: derive em cima e embaixo <b>separadamente</b> (não é a regra do quociente!):</p>$$\lim_{x\to0}\frac{${F.c(a)}e^{${F.c(a)}x} - ${a}}{${2 * b}x}$$`,
+              R`<p>De novo $\frac00$. Aplique mais uma vez:</p>$$\lim_{x\to0}\frac{${F.c(a * a)}e^{${F.c(a)}x}}{${2 * b}} = \frac{${a * a}}{${2 * b}}${(a * a) % (2 * b) === 0 ? " = " + (a * a) / (2 * b) : " \\approx " + F.n((a * a) / (2 * b), 4)}$$`,
+              R`<p>Leitura: $e^{${F.c(a)}x} \approx 1 + ${F.c(a)}x + \frac{${F.c(a * a)}x^2}{2}$ para $x$ pequeno. O L'Hôpital está "descobrindo" o termo de 2ª ordem da série de Taylor.</p>`,
             ] };
         } },
       ],

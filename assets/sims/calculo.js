@@ -428,4 +428,302 @@
     q("[data-a=otimo]").addEventListener("click", () => { q("[data-c=p]").value = otimo(+q("[data-c=v1]").value, +q("[data-c=v2]").value); desenha(); });
     desenha();
   };
+  /* ================= CÁLCULO 1 (CI06–CI09) e CÁLCULO 2 (CII01–CII04) ================= */
+  const ticks = (lo, hi, n = 5) => { const passo = [0.1, 0.2, 0.25, 0.5, 1, 2, 2.5, 5, 10, 20, 25, 50, 100].find((p) => (hi - lo) / p <= n) || 100; const r = []; for (let v = Math.ceil(lo / passo - 1e-9) * passo; v <= hi + 1e-9; v += passo) r.push(+v.toFixed(3)); return r; };
+  const amostra = (f, a, b, n = 600) => { const r = []; let ant = null; for (let i = 0; i <= n; i++) { const x = a + ((b - a) * i) / n, y = f(x); if (ant !== null && isFinite(y) && isFinite(ant) && Math.abs(y - ant) > 50) r.push([x, NaN]); r.push([x, y]); ant = y; } return r; };
+
+  /* ---------- CI06 · somas de Riemann ---------- */
+  SIM.riemann = (el, F) => {
+    const FS = {
+      x2: { nome: "x² em [0, 2]", f: (x) => x * x, a: 0, b: 2, ex: 8 / 3, exTex: "8/3", y: [0, 4.4] },
+      sen: { nome: "sen x em [0, π]", f: Math.sin, a: 0, b: Math.PI, ex: 2, exTex: "2", y: [0, 1.15] },
+      exp: { nome: "eˣ em [0, 1]", f: Math.exp, a: 0, b: 1, ex: Math.E - 1, exTex: "e − 1", y: [0, 2.9] },
+      inv: { nome: "1/x em [1, 2]", f: (x) => 1 / x, a: 1, b: 2, ex: Math.LN2, exTex: "ln 2", y: [0, 1.1] },
+    };
+    const MS = [["esq", "esquerda"], ["dir", "direita"], ["meio", "ponto médio"], ["trap", "trapézios"], ["simp", "Simpson"]];
+    let k = "x2", m = "esq";
+    const o = { W: 600, H: 340, l: 44, r: 14, t: 12, b: 30 };
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="ctrl"><label>n (fatias)</label><input type="range" min="1" max="100" step="1" value="4" data-c="n"><output data-o="n"></output></div>
+      <div class="bts">${botoes(Object.entries(FS).map(([kk, c]) => [kk, c.nome]), "k", k)}</div><div class="bts">${botoes(MS, "m", m)}</div></div>
+      <div class="status">Aumente o n e veja o erro cair. Repare na velocidade: nas regras da esquerda e da direita, <b>erro × n</b> fica quase constante (erro ∝ 1/n); no ponto médio e nos trapézios, <b>erro × n²</b> fica constante (erro ∝ 1/n²); no Simpson, o erro cai como 1/n⁴.</div>`);
+    const q = (s) => el.querySelector(s);
+    function soma(C, n) {
+      const h = (C.b - C.a) / n, f = C.f; let s = 0;
+      if (m === "simp") { const N = n % 2 ? n + 1 : n, hh = (C.b - C.a) / N; s = f(C.a) + f(C.b); for (let i = 1; i < N; i++) s += (i % 2 ? 4 : 2) * f(C.a + i * hh); return [(s * hh) / 3, N]; }
+      for (let i = 0; i < n; i++) { const x0 = C.a + i * h; s += m === "esq" ? f(x0) : m === "dir" ? f(x0 + h) : m === "meio" ? f(x0 + h / 2) : (f(x0) + f(x0 + h)) / 2; }
+      return [s * h, n];
+    }
+    function desenha() {
+      const C = FS[k], n0 = +q("[data-c=n]").value; q("[data-o=n]").textContent = n0;
+      const [S, n] = soma(C, n0), h = (C.b - C.a) / n;
+      const oo = { ...o, x0: C.a - 0.05 * (C.b - C.a), x1: C.b + 0.05 * (C.b - C.a), y0: C.y[0], y1: C.y[1] }, P = quadro(oo);
+      let g = clip("clr", oo) + grade(oo, P, ticks(oo.x0, oo.x1, 6), ticks(C.y[0], C.y[1], 4), "x", "") + `<g clip-path="url(#clr)">`;
+      const est = "fill:color-mix(in srgb,var(--mod) 26%,transparent);stroke:var(--mod);stroke-width:1";
+      for (let i = 0; i < n; i++) {
+        const x0 = C.a + i * h, x1 = x0 + h;
+        if (m === "trap" || m === "simp") g += `<polygon points="${P.sx(x0)},${P.sy(0)} ${P.sx(x0)},${P.sy(C.f(x0))} ${P.sx(x1)},${P.sy(C.f(x1))} ${P.sx(x1)},${P.sy(0)}" style="${est}"/>`;
+        else { const y = m === "esq" ? C.f(x0) : m === "dir" ? C.f(x1) : C.f(x0 + h / 2); g += `<rect x="${P.sx(x0)}" y="${P.sy(y)}" width="${P.sx(x1) - P.sx(x0)}" height="${P.sy(0) - P.sy(y)}" style="${est}"/>`; }
+      }
+      g += curva(amostra(C.f, C.a - 0.05, C.b + 0.05), P, "stroke:var(--ink);stroke-width:2.4") + "</g>";
+      q("[data-v=sv]").innerHTML = g;
+      const err = S - C.ex;
+      q("[data-v=lt]").innerHTML = visT(m === "simp" ? `soma (Simpson, n = ${n})` : "soma", F.t(S, 7)) + visT(`exato (${C.exTex})`, F.t(C.ex, 7)) + visT("erro", F.t(err, 7)) + visT("erro × n", F.t(err * n, 4)) + visT("erro × n²", F.t(err * n * n, 4));
+    }
+    q("[data-c=n]").addEventListener("input", desenha);
+    liga(el, "k", (v) => { k = v; desenha(); });
+    liga(el, "m", (v) => { m = v; desenha(); });
+    desenha();
+  };
+
+  /* ---------- CI07 · a função área ---------- */
+  SIM.areaAcum = (el, F) => {
+    const FS = {
+      cos: { nome: "cos t", f: Math.cos, a: 0, v: [-0.2, 7], y: [-1.2, 1.2], ya: [-1.2, 1.2], Ftex: "sen x" },
+      lin: { nome: "t − 2", f: (t) => t - 2, a: 0, v: [-0.2, 5], y: [-2.3, 3.2], ya: [-2.3, 2.8], Ftex: "x²/2 − 2x" },
+      inv: { nome: "1/t", f: (t) => 1 / t, a: 1, v: [0.15, 6], y: [0, 4], ya: [-2, 2], Ftex: "ln x" },
+      gauss: { nome: "e^(−t²)", f: (t) => Math.exp(-t * t), a: 0, v: [-3, 3], y: [0, 1.15], ya: [-1, 1], Ftex: "(sem fórmula elementar)" },
+    };
+    let k = "cos";
+    const o1 = { W: 600, H: 250, l: 44, r: 14, t: 12, b: 28 }, o2 = { W: 600, H: 230, l: 44, r: 14, t: 12, b: 28 };
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o1.W} ${o1.H}" width="${o1.W}" data-v="s1"></svg><svg viewBox="0 0 ${o2.W} ${o2.H}" width="${o2.W}" data-v="s2"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="ctrl"><label>x (até onde acumula)</label><input type="range" min="0" max="1" step="0.001" value="0.35" data-c="x"><output data-o="x"></output></div>
+      <div class="bts">${botoes(Object.entries(FS).map(([kk, c]) => [kk, c.nome]), "k", k)}</div></div>
+      <div class="status">Em cima: f(t), com a área acumulada de a até x (<b style="color:var(--ok)">verde</b> conta positivo, <b style="color:var(--bad)">vermelho</b> conta negativo). Embaixo: o total acumulado A(x). A reta tangente de baixo tem inclinação igual à <b>altura</b> de cima: A′(x) = f(x). Esse é o Teorema Fundamental.</div>`);
+    const q = (s) => el.querySelector(s);
+    function desenha() {
+      const C = FS[k], x = C.v[0] + (C.v[1] - C.v[0]) * +q("[data-c=x]").value; q("[data-o=x]").textContent = F.t(x, 2);
+      const A = (z) => { const n = 400, h = (z - C.a) / n; let s = (C.f(C.a) + C.f(z)) / 2; for (let i = 1; i < n; i++) s += C.f(C.a + i * h); return s * h; };
+      const oo = { ...o1, x0: C.v[0], x1: C.v[1], y0: C.y[0], y1: C.y[1] }, P = quadro(oo);
+      let g = clip("cla1", oo) + grade(oo, P, ticks(C.v[0], C.v[1], 7), ticks(C.y[0], C.y[1], 4), "t", "f(t)") + `<g clip-path="url(#cla1)">`;
+      const lo = Math.min(C.a, x), hi = Math.max(C.a, x), N = 160;
+      for (let i = 0; i < N; i++) { const t0 = lo + ((hi - lo) * i) / N, t1 = lo + ((hi - lo) * (i + 1)) / N, y = C.f((t0 + t1) / 2), pos = (y >= 0) === (x >= C.a); g += `<rect x="${P.sx(t0)}" y="${P.sy(Math.max(y, 0))}" width="${P.sx(t1) - P.sx(t0) + 0.4}" height="${Math.abs(P.sy(0) - P.sy(y))}" style="fill:color-mix(in srgb,${pos ? "var(--ok)" : "var(--bad)"} 30%,transparent)"/>`; }
+      g += curva(amostra(C.f, C.v[0], C.v[1]), P, "stroke:var(--ink);stroke-width:2.4") + `<line x1="${P.sx(x)}" x2="${P.sx(x)}" y1="${P.sy(0)}" y2="${P.sy(C.f(x))}" style="stroke:var(--mod);stroke-width:2.5"/>` + ponto(P.sx(x), P.sy(C.f(x)), "var(--mod)", 5) + `</g>`;
+      q("[data-v=s1]").innerHTML = g;
+      const ob = { ...o2, x0: C.v[0], x1: C.v[1], y0: C.ya[0], y1: C.ya[1] }, Q = quadro(ob), Ax = A(x), fx = C.f(x);
+      const pa = []; for (let i = 0; i <= 300; i++) { const z = C.v[0] + ((C.v[1] - C.v[0]) * i) / 300; pa.push([z, A(z)]); }
+      let h2 = clip("cla2", ob) + grade(ob, Q, ticks(C.v[0], C.v[1], 7), ticks(C.ya[0], C.ya[1], 4), "x", "A(x)") + `<g clip-path="url(#cla2)">` + curva(pa, Q, "stroke:var(--mod);stroke-width:2.4");
+      h2 += `<line x1="${Q.sx(x - 1)}" y1="${Q.sy(Ax - fx)}" x2="${Q.sx(x + 1)}" y2="${Q.sy(Ax + fx)}" style="stroke:var(--warn);stroke-width:2;stroke-dasharray:6 4"/>` + ponto(Q.sx(x), Q.sy(Ax), "var(--warn)", 5) + `</g>`;
+      q("[data-v=s2]").innerHTML = h2;
+      const dA = (A(x + 1e-4) - A(x - 1e-4)) / 2e-4;
+      q("[data-v=lt]").innerHTML = visT(`A(x) = ∫ de ${C.a} a x`, F.t(Ax, 5)) + visT("f(x) (altura)", F.t(fx, 5)) + visT("inclinação de A medida", F.t(dA, 5)) + visT("primitiva", C.Ftex);
+    }
+    q("[data-c=x]").addEventListener("input", desenha);
+    liga(el, "k", (v) => { k = v; desenha(); });
+    desenha();
+  };
+
+  /* ---------- CI08 · a família de primitivas ---------- */
+  SIM.primitivas = (el, F) => {
+    const FS = {
+      x: { nome: "f(x) = 2x", f: (x) => 2 * x, P: (x) => x * x, v: [-3, 3], y: [-4, 8], Ptex: "x²" },
+      cos: { nome: "f(x) = cos x", f: Math.cos, P: Math.sin, v: [-6.3, 6.3], y: [-4, 4], Ptex: "sen x" },
+      inv: { nome: "f(x) = 1/x", f: (x) => 1 / x, P: Math.log, v: [0.08, 6], y: [-4, 4], Ptex: "ln x" },
+      exp: { nome: "f(x) = −e^(−x)", f: (x) => -Math.exp(-x), P: (x) => Math.exp(-x), v: [-1.5, 4], y: [-3, 5], Ptex: "e^(−x)" },
+    };
+    let k = "x";
+    const o = { W: 600, H: 380, l: 44, r: 14, t: 12, b: 30 };
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="ctrl"><label>ponto inicial x₀</label><input type="range" min="0" max="1" step="0.002" value="0.6" data-c="x0"><output data-o="x0"></output></div>
+      <div class="ctrl"><label>ponto inicial y₀</label><input type="range" min="0" max="1" step="0.002" value="0.55" data-c="y0"><output data-o="y0"></output></div>
+      <div class="bts">${botoes(Object.entries(FS).map(([kk, c]) => [kk, c.nome]), "k", k)}</div></div>
+      <div class="status">Os tracinhos têm inclinação f(x): é o "campo de direções". Toda curva que segue os tracinhos é uma primitiva, e elas são cópias umas das outras deslocadas na vertical (o + C). Escolher um ponto inicial (a "condição inicial", como a posição em t = 0) escolhe uma curva só.</div>`);
+    const q = (s) => el.querySelector(s);
+    function desenha() {
+      const Cc = FS[k], x0 = Cc.v[0] + (Cc.v[1] - Cc.v[0]) * +q("[data-c=x0]").value, y0 = Cc.y[0] + (Cc.y[1] - Cc.y[0]) * +q("[data-c=y0]").value;
+      q("[data-o=x0]").textContent = F.t(x0, 2); q("[data-o=y0]").textContent = F.t(y0, 2);
+      const oo = { ...o, x0: Cc.v[0], x1: Cc.v[1], y0: Cc.y[0], y1: Cc.y[1] }, P = quadro(oo);
+      let g = clip("clp", oo) + grade(oo, P, ticks(Cc.v[0], Cc.v[1], 7), ticks(Cc.y[0], Cc.y[1], 6), "x", "y") + `<g clip-path="url(#clp)">`;
+      const dx = (Cc.v[1] - Cc.v[0]) / 22, dy = (Cc.y[1] - Cc.y[0]) / 16, sx = (oo.W - oo.l - oo.r) / (Cc.v[1] - Cc.v[0]), sy = (oo.H - oo.t - oo.b) / (Cc.y[1] - Cc.y[0]);
+      for (let i = 0.5; i < 22; i++) for (let j = 0.5; j < 16; j++) {
+        const x = Cc.v[0] + i * dx, y = Cc.y[0] + j * dy, s = Cc.f(x), ux = sx, uy = s * sy, L = Math.hypot(ux, uy), c = 9 / L;
+        g += `<line x1="${P.sx(x) - ux * c}" y1="${P.sy(y) + uy * c}" x2="${P.sx(x) + ux * c}" y2="${P.sy(y) - uy * c}" style="stroke:var(--ink3);stroke-width:1.3"/>`;
+      }
+      const C = y0 - Cc.P(x0);
+      for (let c = -8; c <= 8; c++) g += curva(amostra((x) => Cc.P(x) + c, Cc.v[0], Cc.v[1], 300), P, "stroke:var(--ink3);stroke-width:1;opacity:.55");
+      g += curva(amostra((x) => Cc.P(x) + C, Cc.v[0], Cc.v[1]), P, "stroke:var(--mod);stroke-width:3") + ponto(P.sx(x0), P.sy(y0), "var(--warn)", 6) + `</g>`;
+      q("[data-v=sv]").innerHTML = g;
+      q("[data-v=lt]").innerHTML = visT("primitiva escolhida", `F(x) = ${Cc.Ptex} ${C < 0 ? "−" : "+"} ${F.t(Math.abs(C), 3)}`) + visT("C", F.t(C, 3)) + visT("inclinação no ponto = f(x₀)", F.t(Cc.f(x0), 3));
+    }
+    el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha));
+    liga(el, "k", (v) => { k = v; desenha(); });
+    desenha();
+  };
+
+  /* ---------- CI09 · sólidos de revolução por discos ---------- */
+  SIM.revolucao = (el, F) => {
+    const FS = {
+      cone: { nome: "cone: y = x/2, 0 a 4", f: (x) => x / 2, a: 0, b: 4, V: (Math.PI * 4 * 4) / 3, Vtex: "πr²h/3 = 16π/3" },
+      esfera: { nome: "esfera: y = √(4 − x²)", f: (x) => Math.sqrt(Math.max(0, 4 - x * x)), a: -2, b: 2, V: (4 * Math.PI * 8) / 3, Vtex: "4πR³/3 = 32π/3" },
+      parab: { nome: "paraboloide: y = √x, 0 a 4", f: Math.sqrt, a: 0, b: 4, V: 8 * Math.PI, Vtex: "πb²/2 = 8π" },
+      corneta: { nome: "corneta: y = 1/x, 1 a 6", f: (x) => 1 / x, a: 1, b: 6, V: Math.PI * (1 - 1 / 6), Vtex: "π(1 − 1/6)" },
+    };
+    let k = "cone";
+    const o = { W: 600, H: 330, l: 30, r: 14, t: 12, b: 26 };
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="ctrl"><label>n (discos)</label><input type="range" min="1" max="60" step="1" value="6" data-c="n"><output data-o="n"></output></div>
+      <div class="bts">${botoes(Object.entries(FS).map(([kk, c]) => [kk, c.nome]), "k", k)}</div></div>
+      <div class="status">Girando a curva em torno do eixo x, cada fatia vira um disco (uma moeda) de raio f(x) e espessura Δx, com volume πf(x)²Δx. Somando e fazendo n → ∞: V = π∫f(x)²dx.</div>`);
+    const q = (s) => el.querySelector(s);
+    function desenha() {
+      const C = FS[k], n = +q("[data-c=n]").value; q("[data-o=n]").textContent = n;
+      const R = Math.max(...amostra(C.f, C.a, C.b, 200).map((p) => p[1])) * 1.15;
+      const oo = { ...o, x0: C.a - 0.3, x1: C.b + 0.3, y0: -R, y1: R }, P = quadro(oo), h = (C.b - C.a) / n;
+      const esc = (oo.H - oo.t - oo.b) / (2 * R), kx = 0.22;
+      let g = `<line x1="${oo.l}" x2="${oo.W - oo.r}" y1="${P.sy(0)}" y2="${P.sy(0)}" style="stroke:var(--ink3);stroke-dasharray:6 4"/>`, V = 0;
+      for (let i = 0; i < n; i++) {
+        const xm = C.a + (i + 0.5) * h, r = C.f(xm), X0 = P.sx(C.a + i * h), X1 = P.sx(C.a + (i + 1) * h), ry = r * esc, rx = Math.max(2, ry * kx);
+        V += Math.PI * r * r * h;
+        g += `<path d="M${X0} ${P.sy(r)} L${X1} ${P.sy(r)} A${rx} ${ry} 0 0 1 ${X1} ${P.sy(-r)} L${X0} ${P.sy(-r)} Z" style="fill:color-mix(in srgb,var(--mod) 30%,transparent);stroke:var(--mod);stroke-width:1"/><ellipse cx="${X0}" cy="${P.sy(0)}" rx="${rx}" ry="${ry}" style="fill:color-mix(in srgb,var(--mod) 18%,var(--card));stroke:var(--mod);stroke-width:1"/>`;
+      }
+      g += curva(amostra(C.f, C.a, C.b, 300), P, "stroke:var(--ink);stroke-width:2.4") + curva(amostra((x) => -C.f(x), C.a, C.b, 300), P, "stroke:var(--ink);stroke-width:1.4;stroke-dasharray:4 3");
+      q("[data-v=sv]").innerHTML = g;
+      q("[data-v=lt]").innerHTML = visT(`soma de ${n} discos`, F.t(V, 5)) + visT(`exato: ${C.Vtex}`, F.t(C.V, 5)) + visT("erro", F.t(V - C.V, 5));
+    }
+    q("[data-c=n]").addEventListener("input", desenha);
+    liga(el, "k", (v) => { k = v; desenha(); });
+    desenha();
+  };
+
+  /* ---------- CII01 · integração por partes, em figura ---------- */
+  SIM.partes = (el, F) => {
+    const FS = {
+      ln: { nome: "v = ln u (de u = 1)", v: Math.log, inv: Math.exp, u1: 1, b: [1.2, 6], A: (b) => b * Math.log(b) - b + 1, Atex: "∫₁ᵇ ln u du", Btex: "∫ u dv = ∫₀^(ln b) eᵛ dv" },
+      quad: { nome: "v = u² (de u = 0)", v: (u) => u * u, inv: Math.sqrt, u1: 0, b: [0.3, 2.2], A: (b) => (b ** 3) / 3, Atex: "∫₀ᵇ u² du", Btex: "∫ u dv = ∫₀^(b²) √v dv" },
+    };
+    let k = "ln";
+    const o = { W: 470, H: 400, l: 40, r: 14, t: 12, b: 30 };
+    el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg><div class="leitor" data-v="lt" style="flex-direction:column;align-items:stretch"></div></div>
+      <div class="ctrls"><div class="ctrl"><label>b</label><input type="range" min="0" max="1" step="0.002" value="0.6" data-c="b"><output data-o="b"></output></div>
+      <div class="bts">${botoes(Object.entries(FS).map(([kk, c]) => [kk, c.nome]), "k", k)}</div></div>
+      <div class="status">A curva no plano (u, v). Área <b style="color:var(--mod)">A</b> = ∫v du (embaixo da curva). Área <b style="color:var(--warn)">B</b> = ∫u dv (à esquerda da curva). Juntas, formam o retângulo de lados b e v(b). Isso é a fórmula de integração por partes: ∫v du = [uv] − ∫u dv.</div>`);
+    const q = (s) => el.querySelector(s);
+    function desenha() {
+      const C = FS[k], b = C.b[0] + (C.b[1] - C.b[0]) * +q("[data-c=b]").value, vb = C.v(b); q("[data-o=b]").textContent = F.t(b, 3);
+      const oo = { ...o, x0: 0, x1: C.b[1] * 1.08, y0: 0, y1: C.v(C.b[1]) * 1.08 }, P = quadro(oo);
+      let g = grade(oo, P, ticks(0, oo.x1, 6), ticks(0, oo.y1, 5), "u", "v");
+      let pa = `${P.sx(C.u1)},${P.sy(0)} `; for (let i = 0; i <= 120; i++) { const u = C.u1 + ((b - C.u1) * i) / 120; pa += `${P.sx(u)},${P.sy(C.v(u))} `; } pa += `${P.sx(b)},${P.sy(0)}`;
+      let pb = `${P.sx(0)},${P.sy(C.v(C.u1))} `; for (let i = 0; i <= 120; i++) { const u = C.u1 + ((b - C.u1) * i) / 120; pb += `${P.sx(u)},${P.sy(C.v(u))} `; } pb += `${P.sx(0)},${P.sy(vb)}`;
+      g += `<polygon points="${pa}" style="fill:color-mix(in srgb,var(--mod) 32%,transparent)"/><polygon points="${pb}" style="fill:color-mix(in srgb,var(--warn) 32%,transparent)"/>`;
+      g += `<rect x="${P.sx(0)}" y="${P.sy(vb)}" width="${P.sx(b) - P.sx(0)}" height="${P.sy(0) - P.sy(vb)}" style="fill:none;stroke:var(--ink2);stroke-dasharray:5 4"/>`;
+      g += curva(amostra(C.v, Math.max(C.u1, 0.001), C.b[1] * 1.08, 300), P, "stroke:var(--ink);stroke-width:2.4") + ponto(P.sx(b), P.sy(vb), "var(--ink)", 4.5);
+      g += D.txt((P.sx(C.u1) + P.sx(b)) / 2 + 10, P.sy(vb * 0.22), "A", "txm") + D.txt(P.sx(Math.max(C.u1, b * 0.15)) * 0.5 + P.sx(0) * 0.5 + 8, P.sy(vb * 0.75), "B", "txm");
+      q("[data-v=sv]").innerHTML = g;
+      const A = C.A(b), Bv = b * vb - C.u1 * C.v(C.u1) - A;
+      q("[data-v=lt]").innerHTML = visT("A = " + C.Atex, F.t(A, 5)) + visT("B = " + C.Btex, F.t(Bv, 5)) + visT("A + B", F.t(A + Bv, 5)) + visT("retângulo b · v(b)", F.t(b * vb, 5));
+    }
+    q("[data-c=b]").addEventListener("input", desenha);
+    liga(el, "k", (v) => { k = v; desenha(); });
+    desenha();
+  };
+
+  /* ---------- CII02 · integrais impróprias ---------- */
+  SIM.impropria = (el, F) => {
+    let modo = "cauda";
+    const o = { W: 600, H: 280, l: 44, r: 14, t: 12, b: 30 }, o2 = { W: 600, H: 200, l: 44, r: 14, t: 12, b: 30 };
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="s1"></svg><svg viewBox="0 0 ${o2.W} ${o2.H}" width="${o2.W}" data-v="s2"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="ctrl"><label>expoente p em 1/xᵖ</label><input type="range" min="0.3" max="2.5" step="0.01" value="2" data-c="p"><output data-o="p"></output></div>
+      <div class="ctrl"><label data-v="rot">até onde (b)</label><input type="range" min="0" max="1" step="0.001" value="0.3" data-c="b"><output data-o="b"></output></div>
+      <div class="bts">${botoes([["cauda", "cauda: ∫ de 1 a b, b → ∞"], ["bico", "bico: ∫ de ε a 1, ε → 0"]], "m", modo)}</div></div>
+      <div class="status">Embaixo, o valor da integral conforme b cresce (ou ε diminui), em escala log no eixo horizontal. Se a curva de baixo achata numa altura, a integral imprópria <b>converge</b>; se continua subindo, <b>diverge</b>. Na cauda, a fronteira é p = 1; no bico, também, mas com os papéis trocados.</div>`);
+    const q = (s) => el.querySelector(s);
+    const I = (p, lo, hi) => (Math.abs(p - 1) < 1e-9 ? Math.log(hi / lo) : (Math.pow(hi, 1 - p) - Math.pow(lo, 1 - p)) / (1 - p));
+    function desenha() {
+      const p = +q("[data-c=p]").value, s = +q("[data-c=b]").value; q("[data-o=p]").textContent = F.t(p, 2);
+      const lim = modo === "cauda" ? Math.pow(10, 4 * s) : Math.pow(10, -4 * s);
+      q("[data-v=rot]").textContent = modo === "cauda" ? "até onde (b)" : "começa em (ε)"; q("[data-o=b]").textContent = modo === "cauda" ? F.t(lim, lim < 10 ? 2 : 0) : lim.toExponential(1).replace(".", ",");
+      const oo = modo === "cauda" ? { ...o, x0: 0, x1: 10, y0: 0, y1: 1.6 } : { ...o, x0: 0, x1: 1.2, y0: 0, y1: 10 }, P = quadro(oo), f = (x) => Math.pow(x, -p);
+      let g = clip("cli", oo) + grade(oo, P, ticks(oo.x0, oo.x1, 6), ticks(oo.y0, oo.y1, 4), "x", "") + `<g clip-path="url(#cli)">`;
+      const a = modo === "cauda" ? 1 : lim, bb = modo === "cauda" ? Math.min(lim, 10.2) : 1;
+      let pol = `${P.sx(a)},${P.sy(0)} `; for (let i = 0; i <= 200; i++) { const x = a + ((bb - a) * i) / 200; pol += `${P.sx(x)},${P.sy(Math.min(f(x), oo.y1 * 1.2))} `; } pol += `${P.sx(bb)},${P.sy(0)}`;
+      g += `<polygon points="${pol}" style="fill:color-mix(in srgb,var(--mod) 28%,transparent)"/>` + curva(amostra(f, modo === "cauda" ? 0.3 : 0.004, oo.x1, 800), P, "stroke:var(--ink);stroke-width:2.4") + "</g>";
+      q("[data-v=s1]").innerHTML = g;
+      const ob = { ...o2, x0: 0, x1: 4 }, val = (t) => (modo === "cauda" ? I(p, 1, Math.pow(10, t)) : I(p, Math.pow(10, -t), 1));
+      const vmax = Math.max(val(4), 1.5); ob.y0 = 0; ob.y1 = Math.min(vmax * 1.1, 60); const Q = quadro(ob);
+      const pts = []; for (let i = 0; i <= 200; i++) { const t = (4 * i) / 200; pts.push([t, val(t)]); }
+      let h = clip("cli2", ob) + grade(ob, Q, [0, 1, 2, 3, 4], ticks(0, ob.y1, 4), modo === "cauda" ? "log₁₀ b" : "−log₁₀ ε", "integral") + `<g clip-path="url(#cli2)">` + curva(pts, Q, "stroke:var(--mod);stroke-width:2.4");
+      const conv = modo === "cauda" ? p > 1 : p < 1, limite = modo === "cauda" ? 1 / (p - 1) : 1 / (1 - p);
+      if (conv) h += `<line x1="${ob.l}" x2="${ob.W - ob.r}" y1="${Q.sy(limite)}" y2="${Q.sy(limite)}" style="stroke:var(--ok);stroke-dasharray:6 4"/>`;
+      h += ponto(Q.sx(4 * s), Q.sy(val(4 * s)), "var(--warn)", 5) + `</g>`;
+      q("[data-v=s2]").innerHTML = h;
+      q("[data-v=lt]").innerHTML = visT("integral até aqui", F.t(val(4 * s), 4)) + visT("a imprópria", conv ? `converge para ${F.t(limite, 4)}` : "diverge (→ ∞)") + visT("fórmula", modo === "cauda" ? (conv ? "1/(p − 1)" : "p ≤ 1: infinito") : conv ? "1/(1 − p)" : "p ≥ 1: infinito");
+    }
+    el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha));
+    liga(el, "m", (v) => { modo = v; desenha(); });
+    desenha();
+  };
+
+  /* ---------- CII03 · somas parciais de séries ---------- */
+  SIM.series = (el, F) => {
+    const SS = {
+      geo: { nome: "Σ 1/2ⁿ (n ≥ 1)", a: (n) => Math.pow(0.5, n), lim: 1, limTex: "1" },
+      harm: { nome: "Σ 1/n (harmônica)", a: (n) => 1 / n, lim: null, limTex: "∞ (diverge devagar)" },
+      basel: { nome: "Σ 1/n²", a: (n) => 1 / (n * n), lim: (Math.PI * Math.PI) / 6, limTex: "π²/6" },
+      alt: { nome: "Σ (−1)ⁿ⁺¹/n", a: (n) => (n % 2 ? 1 : -1) / n, lim: Math.LN2, limTex: "ln 2" },
+      tel: { nome: "Σ 1/(n(n+1))", a: (n) => 1 / (n * (n + 1)), lim: 1, limTex: "1" },
+      grandi: { nome: "Σ (−1)ⁿ⁺¹ (Grandi)", a: (n) => (n % 2 ? 1 : -1), lim: null, limTex: "não existe (oscila)" },
+    };
+    let k = "geo";
+    const o = { W: 600, H: 320, l: 44, r: 14, t: 12, b: 30 };
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="ctrl"><label>N (termos somados)</label><input type="range" min="1" max="200" step="1" value="20" data-c="N"><output data-o="N"></output></div>
+      <div class="bts">${botoes(Object.entries(SS).map(([kk, c]) => [kk, c.nome]), "k", k)}</div></div>
+      <div class="status">Cada ponto é uma soma parcial Sₙ = a₁ + a₂ + … + aₙ. A série converge se esses pontos se aproximam de uma altura fixa (a linha verde). Compare 1/n com 1/n²: os termos das duas vão a zero, mas só uma converge.</div>`);
+    const q = (s) => el.querySelector(s);
+    function desenha() {
+      const C = SS[k], N = +q("[data-c=N]").value; q("[data-o=N]").textContent = N;
+      const S = []; let s = 0; for (let n = 1; n <= N; n++) { s += C.a(n); S.push(s); }
+      const ys = S.concat(C.lim !== null ? [C.lim] : []), lo = Math.min(0, ...ys), hi = Math.max(...ys) * 1.08 + 0.05;
+      const oo = { ...o, x0: 0, x1: N + 1, y0: lo, y1: hi }, P = quadro(oo);
+      let g = clip("cls3", oo) + grade(oo, P, ticks(0, N, 6), ticks(lo, hi, 5), "n", "Sₙ") + `<g clip-path="url(#cls3)">`;
+      if (C.lim !== null) g += `<line x1="${oo.l}" x2="${oo.W - oo.r}" y1="${P.sy(C.lim)}" y2="${P.sy(C.lim)}" style="stroke:var(--ok);stroke-width:1.6;stroke-dasharray:6 4"/>`;
+      g += `<polyline points="${S.map((v, i) => `${P.sx(i + 1)},${P.sy(v)}`).join(" ")}" style="fill:none;stroke:var(--mod);stroke-width:1;opacity:.5"/>`;
+      S.forEach((v, i) => (g += `<circle cx="${P.sx(i + 1)}" cy="${P.sy(v)}" r="${N > 80 ? 1.8 : 3}" style="fill:var(--mod)"/>`));
+      q("[data-v=sv]").innerHTML = g + "</g>";
+      q("[data-v=lt]").innerHTML = visT(`soma dos ${N} primeiros`, F.t(s, 6)) + visT("limite", C.limTex + (C.lim !== null ? ` ≈ ${F.t(C.lim, 6)}` : "")) + (C.lim !== null ? visT("falta", F.t(C.lim - s, 6)) : "");
+    }
+    q("[data-c=N]").addEventListener("input", desenha);
+    liga(el, "k", (v) => { k = v; desenha(); });
+    desenha();
+  };
+
+  /* ---------- CII04 · polinômios de Taylor ---------- */
+  SIM.taylor = (el, F) => {
+    const binom = (al, n) => { let c = 1; for (let i = 0; i < n; i++) c *= (al - i) / (i + 1); return c; };
+    let fat = [1]; for (let i = 1; i <= 40; i++) fat[i] = fat[i - 1] * i;
+    const FS = {
+      sen: { nome: "sen x", f: Math.sin, c: (n) => (n % 2 ? (((n - 1) / 2) % 2 ? -1 : 1) / fat[n] : 0), v: [-10, 10], y: [-2, 2], raio: Infinity },
+      cos: { nome: "cos x", f: Math.cos, c: (n) => (n % 2 ? 0 : ((n / 2) % 2 ? -1 : 1) / fat[n]), v: [-10, 10], y: [-2, 2], raio: Infinity },
+      exp: { nome: "eˣ", f: Math.exp, c: (n) => 1 / fat[n], v: [-5, 4], y: [-2, 30], raio: Infinity },
+      ln: { nome: "ln(1 + x)", f: Math.log1p, c: (n) => (n === 0 ? 0 : (n % 2 ? 1 : -1) / n), v: [-1.5, 3], y: [-3, 2], raio: 1 },
+      geo: { nome: "1/(1 − x)", f: (x) => 1 / (1 - x), c: () => 1, v: [-2.5, 2.5], y: [-3, 6], raio: 1 },
+      lor: { nome: "1/(1 + x²)", f: (x) => 1 / (1 + x * x), c: (n) => (n % 2 ? 0 : ((n / 2) % 2 ? -1 : 1)), v: [-2.5, 2.5], y: [-1, 2], raio: 1 },
+      raiz: { nome: "√(1 + x)", f: (x) => Math.sqrt(1 + x), c: (n) => binom(0.5, n), v: [-1.2, 3], y: [-0.5, 2.5], raio: 1 },
+    };
+    let k = "sen";
+    const o = { W: 600, H: 360, l: 44, r: 14, t: 12, b: 30 };
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="ctrl"><label>grau n</label><input type="range" min="0" max="30" step="1" value="3" data-c="n"><output data-o="n"></output></div>
+      <div class="ctrl"><label>x (para ler o erro)</label><input type="range" min="0" max="1" step="0.002" value="0.6" data-c="x"><output data-o="x"></output></div>
+      <div class="bts">${botoes(Object.entries(FS).map(([kk, c]) => [kk, c.nome]), "k", k)}</div></div>
+      <div class="status">Curva da cor do texto: a função. Curva colorida: o polinômio de Taylor de grau n em torno de 0. Aumente o n: em sen, cos e eˣ a aproximação "abraça" a curva cada vez mais longe. Nas outras, fora da faixa sombreada (|x| &lt; raio de convergência) o polinômio <b>se afasta</b> por mais termos que você ponha. Em 1/(1 + x²) não há nada de estranho no gráfico real: o problema está nos números complexos ±i.</div>`);
+    const q = (s) => el.querySelector(s);
+    function desenha() {
+      const C = FS[k], n = +q("[data-c=n]").value, x = C.v[0] + (C.v[1] - C.v[0]) * +q("[data-c=x]").value; q("[data-o=n]").textContent = n; q("[data-o=x]").textContent = F.t(x, 2);
+      const Pn = (z) => { let s = 0, zk = 1; for (let i = 0; i <= n; i++) { s += C.c(i) * zk; zk *= z; } return s; };
+      const oo = { ...o, x0: C.v[0], x1: C.v[1], y0: C.y[0], y1: C.y[1] }, P = quadro(oo);
+      let g = clip("clt", oo) + grade(oo, P, ticks(C.v[0], C.v[1], 8), ticks(C.y[0], C.y[1], 5), "x", "") + `<g clip-path="url(#clt)">`;
+      if (isFinite(C.raio)) g += `<rect x="${P.sx(-C.raio)}" y="${oo.t}" width="${P.sx(C.raio) - P.sx(-C.raio)}" height="${oo.H - oo.t - oo.b}" style="fill:color-mix(in srgb,var(--ok) 10%,transparent)"/>`;
+      const dom = k === "ln" ? [-0.999, C.v[1]] : k === "raiz" ? [-1, C.v[1]] : C.v;
+      g += curva(amostra(C.f, dom[0], dom[1], 800), P, "stroke:var(--ink);stroke-width:2.6") + curva(amostra((z) => Math.max(-1e3, Math.min(1e3, Pn(z))), C.v[0], C.v[1], 800), P, "stroke:var(--mod);stroke-width:2.4");
+      const fx = C.f(x), px = Pn(x);
+      if (isFinite(fx)) g += ponto(P.sx(x), P.sy(fx), "var(--ink)", 4.5);
+      g += ponto(P.sx(x), P.sy(Math.max(oo.y0 - 1, Math.min(oo.y1 + 1, px))), "var(--warn)", 5) + "</g>";
+      q("[data-v=sv]").innerHTML = g;
+      q("[data-v=lt]").innerHTML = visT("f(x)", isFinite(fx) ? F.t(fx, 6) : "não definida") + visT(`P${n}(x)`, Math.abs(px) > 1e6 ? px.toExponential(2).replace(".", ",") : F.t(px, 6)) + visT("erro", isFinite(fx) ? (Math.abs(px - fx) > 1e6 ? "enorme" : F.t(px - fx, 6)) : "—") + visT("raio de convergência", isFinite(C.raio) ? C.raio : "∞");
+    }
+    el.querySelectorAll("input").forEach((i) => i.addEventListener("input", desenha));
+    liga(el, "k", (v) => { k = v; desenha(); });
+    desenha();
+  };
 })();

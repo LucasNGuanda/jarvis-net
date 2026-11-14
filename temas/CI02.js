@@ -9,11 +9,11 @@ F.registrar("CI02", {
       casos: [
         { nome: "sen(ax)/(bx)", gerar: (p) => {
           const a = p ? 3 : F.escolha([2, 3, 4, 5, 7]), b = p ? 5 : F.escolha([1, 2, 3, 5]);
-          return { enun: R`<p>Calcule $\displaystyle\lim_{x\to0}\frac{\operatorname{sen}(${a}x)}{${b === 1 ? "" : b}x}$.</p>`, fig: "",
+          return { enun: R`<p>Calcule $\displaystyle\lim_{x\to0}\frac{\operatorname{sen}(${F.c(a)}x)}{${b === 1 ? "" : b}x}$.</p>`, fig: "",
             passos: [
-              R`<p>O limite fundamental pede o <b>mesmo</b> argumento em cima e embaixo: $\frac{\operatorname{sen}u}{u} \to 1$ com $u = ${a}x$. Falta um ${a} embaixo.</p>`,
-              R`<p>Multiplique e divida por ${a}:</p>$$\frac{\operatorname{sen}(${a}x)}{${b === 1 ? "" : b}x} = \frac{${a}}{${b}}\cdot\frac{\operatorname{sen}(${a}x)}{${a}x}$$`,
-              R`<p>Quando $x \to 0$, também $u = ${a}x \to 0$, e a fração da direita vai a 1. Resposta: $\frac{${a}}{${b}}${a % b === 0 ? ` = ${a / b}` : ` \\approx ${F.m(a / b, 4)}`}$.</p>`,
+              R`<p>O limite fundamental pede o <b>mesmo</b> argumento em cima e embaixo: $\frac{\operatorname{sen}u}{u} \to 1$ com $u = ${F.c(a)}x$. Falta um ${a} embaixo.</p>`,
+              R`<p>Multiplique e divida por ${a}:</p>$$\frac{\operatorname{sen}(${F.c(a)}x)}{${b === 1 ? "" : b}x} = \frac{${a}}{${b}}\cdot\frac{\operatorname{sen}(${F.c(a)}x)}{${F.c(a)}x}$$`,
+              R`<p>Quando $x \to 0$, também $u = ${F.c(a)}x \to 0$, e a fração da direita vai a 1. Resposta: $\frac{${a}}{${b}}${a % b === 0 ? ` = ${a / b}` : ` \\approx ${F.n(a / b, 4)}`}$.</p>`,
             ] };
         } },
         { nome: "(1 + a/x)^(bx)", gerar: (p) => {
@@ -21,17 +21,17 @@ F.registrar("CI02", {
           return { enun: R`<p>Calcule $\displaystyle\lim_{x\to\infty}\left(1 ${a > 0 ? "+" : "-"} \frac{${Math.abs(a)}}{x}\right)^{${b === 1 ? "" : b}x}$.</p>`, fig: "",
             passos: [
               R`<p>Forma $1^\infty$: a base vai a 1 e o expoente ao infinito. Isso <b>não</b> é 1 (é a briga entre os dois). Troque $n = \frac{x}{${a}}$, isto é, $x = ${a}n$:</p>`,
-              R`$$\left(1 + \frac1n\right)^{${b * a}n} = \left[\left(1 + \frac1n\right)^n\right]^{${b * a}}$$${a < 0 ? R`<p>(com $a < 0$, $n \to -\infty$; o limite fundamental vale também nesse caso.)</p>` : ""}`,
-              R`<p>O colchete vai a $e$. Resposta: $e^{${a * b}} \approx ${F.m(Math.exp(a * b), 4)}$. Regra geral: $\left(1 + \frac ax\right)^{bx} \to e^{ab}$.</p>`,
+              R`$$\left(1 + \frac1n\right)^{${F.c(b * a)}n} = \left[\left(1 + \frac1n\right)^n\right]${b * a === 1 ? "" : "^{" + (b * a) + "}"}$$${a < 0 ? R`<p>(com $a < 0$, $n \to -\infty$; o limite fundamental vale também nesse caso.)</p>` : ""}`,
+              R`<p>O colchete vai a $e$. Resposta: $${a * b === 1 ? "e" : `e^{${a * b}}`} \approx ${F.n(Math.exp(a * b), 4)}$. Regra geral: $\left(1 + \frac ax\right)^{bx} \to e^{ab}$.</p>`,
             ] };
         } },
         { nome: "(1 − cos ax)/x²", gerar: (p) => {
           const a = p ? 2 : F.escolha([1, 2, 3, 4]);
           return { enun: R`<p>Calcule $\displaystyle\lim_{x\to0}\frac{1 - \cos(${a === 1 ? "" : a}x)}{x^2}$.</p>`, fig: "",
             passos: [
-              R`<p>Multiplique em cima e embaixo por $1 + \cos(${a}x)$ (o "conjugado trigonométrico"): em cima aparece $1 - \cos^2 = \operatorname{sen}^2$.</p>$$\frac{\operatorname{sen}^2(${a}x)}{x^2\,(1 + \cos ${a}x)}$$`,
-              R`<p>Separe: $\left(\frac{\operatorname{sen}(${a}x)}{x}\right)^2\cdot\frac{1}{1 + \cos(${a}x)}$. O primeiro vai a $${a}^2 = ${a * a}$ (exemplo anterior); o segundo, a $\frac12$.</p>`,
-              R`<p>Resposta: $\frac{${a * a}}{2}${a * a % 2 === 0 ? ` = ${a * a / 2}` : ` = ${F.m(a * a / 2, 1)}`}$. É daí que sai a aproximação $\cos\theta \approx 1 - \frac{\theta^2}{2}$ (energia potencial do pêndulo perto do fundo).</p>`,
+              R`<p>Multiplique em cima e embaixo por $1 + \cos(${F.c(a)}x)$ (o "conjugado trigonométrico"): em cima aparece $1 - \cos^2 = \operatorname{sen}^2$.</p>$$\frac{\operatorname{sen}^2(${F.c(a)}x)}{x^2\,(1 + \cos ${F.c(a)}x)}$$`,
+              R`<p>Separe: $\left(\frac{\operatorname{sen}(${F.c(a)}x)}{x}\right)^2\cdot\frac{1}{1 + \cos(${F.c(a)}x)}$. O primeiro vai a $${a}^2 = ${a * a}$ (exemplo anterior); o segundo, a $\frac12$.</p>`,
+              R`<p>Resposta: $\frac{${a * a}}{2}${a * a % 2 === 0 ? ` = ${a * a / 2}` : ` = ${F.n(a * a / 2, 1)}`}$. É daí que sai a aproximação $\cos\theta \approx 1 - \frac{\theta^2}{2}$ (energia potencial do pêndulo perto do fundo).</p>`,
             ] };
         } },
       ],

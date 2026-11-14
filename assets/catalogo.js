@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 1.2";
+window.VERSAO = "β 1.3";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
@@ -129,16 +129,16 @@ window.CATALOGO = [
     ["CI03","Derivada: definição e significado",["★"],true],
     ["CI04","Regras de derivação e regra da cadeia",[],true],
     ["CI05","Aplicações da derivada: máximos, mínimos, L'Hôpital",["★"],true],
-    ["CI06","Integral definida e somas de Riemann"],
-    ["CI07","Teorema Fundamental do Cálculo",["★","!"]],
-    ["CI08","Integral indefinida e substituição"],
-    ["CI09","Aplicações da integral: áreas, volumes, trabalho"],
+    ["CI06","Integral definida e somas de Riemann",[],true],
+    ["CI07","Teorema Fundamental do Cálculo",["★","!"],true],
+    ["CI08","Integral indefinida e substituição",[],true],
+    ["CI09","Aplicações da integral: áreas, volumes, trabalho",[],true],
   ]},
   { id:"K2", area:"calculo", letra:"2", cor:"--mK2", nome:"Cálculo 2", desc:"Técnicas de integração, séries, várias variáveis e EDOs.", temas:[
-    ["CII01","Técnicas de integração: partes, frações parciais, trigonométricas",["!"]],
-    ["CII02","Integrais impróprias"],
-    ["CII03","Sequências e séries numéricas",["!"]],
-    ["CII04","Séries de potências e de Taylor",["★"]],
+    ["CII01","Técnicas de integração: partes, frações parciais, trigonométricas",["!"],true],
+    ["CII02","Integrais impróprias",[],true],
+    ["CII03","Sequências e séries numéricas",["!"],true],
+    ["CII04","Séries de potências e de Taylor",["★"],true],
     ["CII05","Funções de várias variáveis e derivadas parciais"],
     ["CII06","Gradiente, máximos e mínimos, multiplicadores de Lagrange",["!"]],
     ["CII07","Integrais duplas e triplas",["!"]],

@@ -10,24 +10,24 @@ F.registrar("CE03", {
       casos: [
         { nome: "Circulação de (ay, bx)", gerar: (p) => {
           const a = p ? -1 : F.escolha([-2, -1, 1, 3]), b = p ? 2 : F.escolha([-1, 1, 2, 4]), Rr = p ? 2 : F.escolha([1, 2, 3]), v = (b - a) * Math.PI * Rr * Rr;
-          return { enun: R`<p>Calcule $\oint_C \vec F\cdot d\vec r$ para $\vec F = (${a}y,\ ${b}x)$, sendo $C$ o círculo de raio ${Rr} centrado na origem, no sentido anti-horário.</p>`, fig: "",
+          return { enun: R`<p>Calcule $\oint_C \vec F\cdot d\vec r$ para $\vec F = (${F.c(a)}y,\ ${F.c(b)}x)$, sendo $C$ o círculo de raio ${Rr} centrado na origem, no sentido anti-horário.</p>`, fig: "",
             passos: [
-              R`<p><b>Pelo teorema de Green:</b> $P = ${a}y$ e $Q = ${b}x$, então $\dfrac{\partial Q}{\partial x} - \dfrac{\partial P}{\partial y} = ${b} - (${a}) = ${b - a}$ (constante).</p>`,
-              R`<p>Integral dupla de uma constante = constante × área: $\oint = ${b - a}\cdot\pi\cdot${Rr}^2 = ${F.m(v, 4)}$.</p>`,
-              R`<p><b>Conferindo direto:</b> $\vec r = (${Rr}\cos t, ${Rr}\sin t)$, $d\vec r = (-${Rr}\sin t, ${Rr}\cos t)\,dt$. Então $\vec F\cdot d\vec r = ${Rr * Rr}\left(${-a}\sin^2t + ${b}\cos^2t\right)dt$.</p>`,
-              R`<p>Como $\int_0^{2\pi}\sin^2t\,dt = \int_0^{2\pi}\cos^2t\,dt = \pi$: $\oint = ${Rr * Rr}\,(${-a} + ${b})\,\pi = ${F.m(v, 4)}$ ✓. Green transformou uma conta com seno ao quadrado numa multiplicação.</p>`,
+              R`<p><b>Pelo teorema de Green:</b> $P = ${F.c(a)}y$ e $Q = ${F.c(b)}x$, então $\dfrac{\partial Q}{\partial x} - \dfrac{\partial P}{\partial y} = ${b} - (${a}) = ${b - a}$ (constante).</p>`,
+              R`<p>Integral dupla de uma constante = constante × área: $\oint = ${b - a}\cdot\pi\cdot${Rr}^2 = ${F.n(v, 4)}$.</p>`,
+              R`<p><b>Conferindo direto:</b> $\vec r = (${Rr}\cos t, ${Rr}\sin t)$, $d\vec r = (-${Rr}\sin t, ${Rr}\cos t)\,dt$. Então $\vec F\cdot d\vec r = ${F.c(Rr * Rr)}\left(${F.c(-a)}\sin^2t ${b < 0 ? "-" : "+"} ${F.c(Math.abs(b))}\cos^2t\right)dt$.</p>`,
+              R`<p>Como $\int_0^{2\pi}\sin^2t\,dt = \int_0^{2\pi}\cos^2t\,dt = \pi$: $\oint = ${Rr * Rr}\,(${-a} ${b < 0 ? "-" : "+"} ${Math.abs(b)})\,\pi = ${F.n(v, 4)}$ ✓. Green transformou uma conta com seno ao quadrado numa multiplicação.</p>`,
             ] };
         } },
         { nome: "Área de um triângulo por ∮", gerar: (p) => {
           const pts = p ? [[0, 0], [4, 1], [1, 3]] : (() => { let q; do { q = [0, 1, 2].map(() => [F.sorteio(-3, 5), F.sorteio(-3, 5)]); } while (Math.abs((q[1][0] - q[0][0]) * (q[2][1] - q[0][1]) - (q[2][0] - q[0][0]) * (q[1][1] - q[0][1])) < 3); return q; })();
           let s = 0; const termos = [];
-          for (let i = 0; i < 3; i++) { const [x1, y1] = pts[i], [x2, y2] = pts[(i + 1) % 3]; s += x1 * y2 - x2 * y1; termos.push(`(${x1}\\cdot${y2} - ${x2}\\cdot${y1})`); }
+          for (let i = 0; i < 3; i++) { const [x1, y1] = pts[i], [x2, y2] = pts[(i + 1) % 3]; s += x1 * y2 - x2 * y1; const pp = (v) => (v < 0 ? `(${v})` : v); termos.push(`(${pp(x1)}\\cdot${pp(y2)} - ${pp(x2)}\\cdot${pp(y1)})`); }
           return { enun: R`<p>Ache a área do triângulo de vértices $A(${pts[0]})$, $B(${pts[1]})$, $C(${pts[2]})$ usando $\text{Área} = \frac12\oint(x\,dy - y\,dx)$.</p>`, fig: "",
             passos: [
               R`<p>Por Green, com $P = -y/2$ e $Q = x/2$: $\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y} = \frac12 + \frac12 = 1$. Então $\frac12\oint(x\,dy - y\,dx) = \iint 1\,dA$ = área.</p>`,
               R`<p>Num segmento reto de $(x_1, y_1)$ a $(x_2, y_2)$, a integral $\int(x\,dy - y\,dx)$ vale exatamente $x_1y_2 - x_2y_1$ (parametrize e confira!).</p>`,
               R`<p>Somando os três lados ($A\to B\to C\to A$): $\frac12\left[${termos.join(" + ")}\right] = \frac12\cdot(${s})$.</p>`,
-              R`<p>Área $= ${F.m(Math.abs(s) / 2, 1)}$. ${s < 0 ? "O sinal deu negativo porque os vértices estavam no sentido horário: a ∮ “lembra” o sentido. A área é o módulo." : "Sinal positivo: os vértices estavam no sentido anti-horário."} Essa é a famosa <b>fórmula do cadarço</b> (shoelace), que vale para qualquer polígono: é o teorema de Green disfarçado.</p>`,
+              R`<p>Área $= ${F.n(Math.abs(s) / 2, 1)}$. ${s < 0 ? "O sinal deu negativo porque os vértices estavam no sentido horário: a ∮ “lembra” o sentido. A área é o módulo." : "Sinal positivo: os vértices estavam no sentido anti-horário."} Essa é a famosa <b>fórmula do cadarço</b> (shoelace), que vale para qualquer polígono: é o teorema de Green disfarçado.</p>`,
             ] };
         } },
         { nome: "Fio com corrente (Ampère)", gerar: (p) => {
@@ -36,7 +36,7 @@ F.registrar("CE03", {
             passos: [
               R`<p>Lei de Ampère: $\oint\vec B\cdot d\vec\ell = \mu_0I_\text{dentro}$. Escolha a curva fechada mais esperta: um círculo de raio $r$ em volta do fio.</p>`,
               R`<p>Por simetria, $\vec B$ é tangente ao círculo e tem o mesmo módulo em todos os pontos. Então $\oint\vec B\cdot d\vec\ell = B\cdot2\pi r$: a integral virou uma multiplicação.</p>`,
-              R`$$B = \frac{\mu_0I}{2\pi r} = \frac{4\pi\times10^{-7}\cdot${I}}{2\pi\cdot${F.m(r / 100, 2)}} = ${F.sigM(B, 3)}\ \text{T}$$`,
+              R`$$B = \frac{\mu_0I}{2\pi r} = \frac{4\pi\times10^{-7}\cdot${I}}{2\pi\cdot${F.n(r / 100, 2)}} = ${F.sigM(B, 3)}\ \text{T}$$`,
               R`<p>Para comparar: o campo da Terra é $\sim5\times10^{-5}$ T. É o campo $(-y, x)/r^2$ do laboratório, vezes $\mu_0I/2\pi$.</p>`,
             ] };
         } },

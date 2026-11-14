@@ -11,12 +11,12 @@ F.registrar("CE02", {
       casos: [
         { nome: "∫ tⁿ e^(−at) dt", gerar: (p) => {
           const n = p ? 3 : F.escolha([2, 3, 4, 5, 6]), a = p ? 2 : F.escolha([0.5, 2, 3]), v = fat(n) / Math.pow(a, n + 1);
-          return { enun: R`<p>Calcule $\displaystyle\int_0^\infty t^{${n}}e^{-${F.m(a, 1)}t}\,dt$.</p>`, fig: "",
+          return { enun: R`<p>Calcule $\displaystyle\int_0^\infty t^{${n}}e^{-${F.n(a)}t}\,dt$.</p>`, fig: "",
             passos: [
-              R`<p>Para virar a gama, o expoente da exponencial precisa ser só "$-u$". Troque $u = ${F.m(a, 1)}t$: $t = u/${F.m(a, 1)}$ e $dt = du/${F.m(a, 1)}$. Os limites continuam 0 e ∞.</p>`,
-              R`$$\int_0^\infty \left(\frac{u}{${F.m(a, 1)}}\right)^{${n}}e^{-u}\,\frac{du}{${F.m(a, 1)}} = \frac{1}{${F.m(a, 1)}^{${n + 1}}}\int_0^\infty u^{${n}}e^{-u}\,du$$`,
+              R`<p>Para virar a gama, o expoente da exponencial precisa ser só "$-u$". Troque $u = ${F.n(a)}t$: $t = u/${F.n(a)}$ e $dt = du/${F.n(a)}$. Os limites continuam 0 e ∞.</p>`,
+              R`$$\int_0^\infty \left(\frac{u}{${F.n(a)}}\right)^{${n}}e^{-u}\,\frac{du}{${F.n(a)}} = \frac{1}{${F.n(a)}^{${n + 1}}}\int_0^\infty u^{${n}}e^{-u}\,du$$`,
               R`<p>A integral que sobrou é a definição de $\Gamma(${n + 1}) = ${n}! = ${fat(n)}$.</p>`,
-              R`$$\frac{${fat(n)}}{${F.m(a, 1)}^{${n + 1}}} = ${F.m(v, 5)}$$<p>Regra geral para guardar: $\int_0^\infty t^ne^{-at}\,dt = \dfrac{n!}{a^{n+1}}$.</p>`,
+              R`$$\frac{${fat(n)}}{${F.n(a)}^{${n + 1}}} = ${F.n(v, 5)}$$<p>Regra geral para guardar: $\int_0^\infty t^ne^{-at}\,dt = \dfrac{n!}{a^{n+1}}$.</p>`,
             ] };
         } },
         { nome: "Γ(k + ½)", gerar: (p) => {
@@ -28,16 +28,16 @@ F.registrar("CE02", {
             passos: [
               R`<p>Use $\Gamma(x + 1) = x\,\Gamma(x)$ descendo de meio em meio: $\Gamma\left(\frac{${2 * k + 1}}{2}\right) = \frac{${2 * k - 1}}{2}\,\Gamma\left(\frac{${2 * k - 1}}{2}\right) = \dots$</p>`,
               R`$$\Gamma\!\left(\tfrac{${2 * k + 1}}{2}\right) = ${fs.join("\\cdot")}\cdot\Gamma\!\left(\tfrac12\right)$$`,
-              R`<p>Com $\Gamma(\frac12) = \sqrt\pi$:</p>$$\Gamma\!\left(\tfrac{${2 * k + 1}}{2}\right) = \frac{${num}}{${Math.pow(2, k)}}\sqrt\pi \approx ${F.m(v, 5)}$$<p>Faz sentido: fica entre $${k - 1}! = ${fat(k - 1)}$ e $${k}! = ${fat(k)}$ (são $\Gamma(${k})$ e $\Gamma(${k + 1})$).</p>`,
+              R`<p>Com $\Gamma(\frac12) = \sqrt\pi$:</p>$$\Gamma\!\left(\tfrac{${2 * k + 1}}{2}\right) = \frac{${num}}{${Math.pow(2, k)}}\sqrt\pi \approx ${F.n(v, 5)}$$<p>Faz sentido: fica entre $${k - 1}! = ${fat(k - 1)}$ e $${k}! = ${fat(k)}$ (são $\Gamma(${k})$ e $\Gamma(${k + 1})$).</p>`,
             ] };
         } },
         { nome: "∫ xᵐ e^(−x²) dx", gerar: (p) => {
           const m = p ? 2 : F.escolha([0, 1, 2, 3, 4, 5]), s = (m + 1) / 2, G = MAT.gama(s), v = G / 2;
-          return { enun: R`<p>Calcule $\displaystyle\int_0^\infty x^{${m}}e^{-x^2}\,dx$.</p>`, fig: "",
+          return { enun: R`<p>Calcule $\displaystyle\int_0^\infty ${m === 0 ? "" : m === 1 ? "x\\," : "x^{" + m + "}"}e^{-x^2}\,dx$.</p>`, fig: "",
             passos: [
               R`<p>Troque $t = x^2$: $x = t^{1/2}$ e $dx = \tfrac12t^{-1/2}\,dt$.</p>`,
-              R`$$\int_0^\infty t^{${m}/2}e^{-t}\,\tfrac12t^{-1/2}\,dt = \frac12\int_0^\infty t^{${F.m(s - 1, 1)}}e^{-t}\,dt = \frac12\,\Gamma\!\left(${F.m(s, 1)}\right)$$`,
-              R`<p>$\Gamma(${F.m(s, 1)}) ${Number.isInteger(s) ? `= ${s - 1}! = ${fat(s - 1)}` : `\\approx ${F.m(G, 5)}\\ \\text{(meio-inteiro: múltiplo de } \\sqrt\\pi)`}$, então a integral vale $\approx ${F.m(v, 5)}$.</p>
+              R`$$\int_0^\infty t^{${m}/2}e^{-t}\,\tfrac12t^{-1/2}\,dt = \frac12\int_0^\infty ${s - 1 === 0 ? "" : s - 1 === 1 ? "t\\," : "t^{" + F.n(s - 1, 1) + "}"}e^{-t}\,dt = \frac12\,\Gamma\!\left(${F.n(s, 1)}\right)$$`,
+              R`<p>$\Gamma(${F.n(s, 1)}) ${Number.isInteger(s) ? `= ${s - 1}! = ${fat(s - 1)}` : `\\approx ${F.n(G, 5)}\\ \\text{(meio-inteiro: múltiplo de } \\sqrt\\pi)`}$, então a integral vale $\approx ${F.n(v, 5)}$.</p>
                 <p>Este tipo aparece em toda a teoria cinética dos gases (distribuição de Maxwell–Boltzmann).</p>`,
             ] };
         } },

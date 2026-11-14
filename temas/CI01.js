@@ -23,15 +23,15 @@ F.registrar("CI01", {
             passos: [
               R`<p>Substituindo: $\frac{\sqrt{${c * c}} - ${c}}{0} = \frac00$. Com raiz, o truque é multiplicar em cima e embaixo pelo <b>conjugado</b> $\sqrt{x + ${c * c}} + ${c}$.</p>`,
               R`<p>Em cima aparece $(a - b)(a + b) = a^2 - b^2$:</p>$$\frac{(x + ${c * c}) - ${c * c}}{x\left(\sqrt{x + ${c * c}} + ${c}\right)} = \frac{x}{x\left(\sqrt{x + ${c * c}} + ${c}\right)} = \frac{1}{\sqrt{x + ${c * c}} + ${c}}$$`,
-              R`<p>Agora substitui sem problema: $\frac{1}{${c} + ${c}} = \frac{1}{${2 * c}} \approx ${F.m(1 / (2 * c), 4)}$.</p><p>Spoiler de CI03: isso é a derivada de $\sqrt x$ em $x = ${c * c}$.</p>`,
+              R`<p>Agora substitui sem problema: $\frac{1}{${c} + ${c}} = \frac{1}{${2 * c}} \approx ${F.n(1 / (2 * c), 4)}$.</p><p>Spoiler de CI03: isso é a derivada de $\sqrt x$ em $x = ${c * c}$.</p>`,
             ] };
         } },
         { nome: "No infinito", gerar: (p) => {
           const a = p ? 3 : F.escolha([1, 2, 3, 5]), b = p ? 7 : F.escolha([1, 4, 7, 9]), c = p ? 2 : F.escolha([2, 4, 5]), d = p ? 1 : F.escolha([1, 3, 6]);
-          return { enun: R`<p>Calcule $\displaystyle\lim_{x\to\infty}\frac{${a}x^2 + ${b}}{${c}x^2 + ${d}x}$.</p>`, fig: "",
+          return { enun: R`<p>Calcule $\displaystyle\lim_{x\to\infty}\frac{${F.c(a)}x^2 + ${b}}{${F.c(c)}x^2 + ${F.c(d)}x}$.</p>`, fig: "",
             passos: [
               R`<p>Substituir dá $\frac\infty\infty$. Divida tudo pela maior potência que aparece embaixo, $x^2$:</p>$$\frac{${a} + \frac{${b}}{x^2}}{${c} + \frac{${d}}{x}}$$`,
-              R`<p>Quando $x \to \infty$, $\frac{${b}}{x^2} \to 0$ e $\frac{${d}}{x} \to 0$. Sobra $\frac{${a}}{${c}} \approx ${F.m(a / c, 4)}$.</p><p>Regra de bolso: com o mesmo grau em cima e embaixo, o limite é a razão dos coeficientes do termo dominante. É a reta horizontal $y = ${F.m(a / c, 3)}$ (assíntota).</p>`,
+              R`<p>Quando $x \to \infty$, $\frac{${b}}{x^2} \to 0$ e $\frac{${d}}{x} \to 0$. Sobra $\frac{${a}}{${c}} \approx ${F.n(a / c, 4)}$.</p><p>Regra de bolso: com o mesmo grau em cima e embaixo, o limite é a razão dos coeficientes do termo dominante. É a reta horizontal $y = ${F.n(a / c, 3)}$ (assíntota).</p>`,
             ] };
         } },
       ],

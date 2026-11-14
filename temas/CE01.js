@@ -11,12 +11,12 @@ F.registrar("CE01", {
         { nome: "a·x·e^(bx) = c", gerar: (p) => {
           const a = p ? 2 : F.escolha([1, 2, 3]), b = p ? 1 : F.escolha([0.5, 1, 2]), c = p ? 6 : F.escolha([1, 3, 5, 6, 10]);
           const z = (b * c) / a, w = W(z), x = w / b;
-          return { enun: R`<p>Resolva $${a === 1 ? "" : a}\,x\,e^{${b === 1 ? "" : F.m(b, 1)}x} = ${c}$.</p>`, fig: "",
+          return { enun: R`<p>Resolva $${a === 1 ? "" : a}\,x\,e^{${F.c(b)}x} = ${c}$.</p>`, fig: "",
             passos: [
-              R`<p>A meta é deixar a equação na forma $(\text{coisa})\,e^{\text{coisa}} = \text{número}$. O expoente é $${F.m(b, 1)}x$, então a "coisa" precisa ser $${F.m(b, 1)}x$ também.</p>`,
-              R`<p>Multiplique os dois lados por $\frac{${F.m(b, 1)}}{${a}}$:</p>$$(${F.m(b, 1)}x)\,e^{${F.m(b, 1)}x} = \frac{${F.m(b, 1)}\cdot${c}}{${a}} = ${F.m(z, 4)}$$`,
-              R`<p>Agora é a definição de $W$: se $u\,e^u = z$, então $u = W(z)$. Como $z > 0$, só existe o ramo $W_0$:</p>$$${F.m(b, 1)}x = W(${F.m(z, 4)}) = ${F.m(w, 6)}$$`,
-              R`<p>$x = ${F.m(w, 6)}/${F.m(b, 1)} = ${F.m(x, 6)}$. Conferindo: $${a}\cdot${F.m(x, 4)}\cdot e^{${F.m(b * x, 4)}} = ${F.m(a * x * Math.exp(b * x), 4)}$ ✓</p>`,
+              R`<p>A meta é deixar a equação na forma $(\text{coisa})\,e^{\text{coisa}} = \text{número}$. O expoente é $${F.c(b)}x$, então a "coisa" precisa ser $${F.c(b)}x$ também.</p>`,
+              R`<p>Multiplique os dois lados por $\frac{${F.n(b)}}{${a}}$:</p>$$(${F.c(b)}x)\,e^{${F.c(b)}x} = \frac{${F.n(b)}\cdot${c}}{${a}} = ${F.n(z, 4)}$$`,
+              R`<p>Agora é a definição de $W$: se $u\,e^u = z$, então $u = W(z)$. Como $z > 0$, só existe o ramo $W_0$:</p>$$${F.c(b)}x = W(${F.n(z, 4)}) = ${F.n(w, 6)}$$`,
+              R`<p>$x = ${F.n(w, 6)}/${F.n(b)} = ${F.n(x, 6)}$. Conferindo: $${a}\cdot${F.n(x, 4)}\cdot e^{${F.n(b * x, 4)}} = ${F.n(a * x * Math.exp(b * x), 4)}$ ✓</p>`,
             ] };
         } },
         { nome: "eˣ = k·x (dois ramos)", gerar: (p) => {
@@ -24,19 +24,19 @@ F.registrar("CE01", {
           return { enun: R`<p>Resolva $e^x = ${k}x$.</p>`, fig: "",
             passos: [
               R`<p>Passe tudo para um lado com o $x$ junto do exponencial: divida por $${k}e^x$:</p>$$x\,e^{-x} = \frac1{${k}}$$`,
-              R`<p>A "coisa" do expoente é $-x$. Multiplique por $-1$:</p>$$(-x)\,e^{-x} = -\frac1{${k}} = ${F.m(-1 / k, 4)}$$`,
-              R`<p>O número é negativo e maior que $-1/e \approx -0{,}3679$: <b>dois</b> ramos, duas respostas:</p>$$-x = W_0(${F.m(-1 / k, 4)}) = ${F.m(-x1, 6)}\quad\text{ou}\quad -x = W_{-1}(${F.m(-1 / k, 4)}) = ${F.m(-x2, 6)}$$`,
-              R`<p>$x_1 = ${F.m(x1, 4)}$ e $x_2 = ${F.m(x2, 4)}$. Conferindo: $e^{${F.m(x1, 4)}} = ${F.m(Math.exp(x1), 4)}$ e $${k}\cdot${F.m(x1, 4)} = ${F.m(k * x1, 4)}$ ✓. (A reta $y = ${k}x$ corta a exponencial em dois pontos.)</p>`,
+              R`<p>A "coisa" do expoente é $-x$. Multiplique por $-1$:</p>$$(-x)\,e^{-x} = -\frac1{${k}} = ${F.n(-1 / k, 4)}$$`,
+              R`<p>O número é negativo e maior que $-1/e \approx -0{,}3679$: <b>dois</b> ramos, duas respostas:</p>$$-x = W_0(${F.n(-1 / k, 4)}) = ${F.n(-x1, 6)}\quad\text{ou}\quad -x = W_{-1}(${F.n(-1 / k, 4)}) = ${F.n(-x2, 6)}$$`,
+              R`<p>$x_1 = ${F.n(x1, 4)}$ e $x_2 = ${F.n(x2, 4)}$. Conferindo: $e^{${F.n(x1, 4)}} = ${F.n(Math.exp(x1), 4)}$ e $${k}\cdot${F.n(x1, 4)} = ${F.n(k * x1, 4)}$ ✓. (A reta $y = ${k}x$ corta a exponencial em dois pontos.)</p>`,
             ] };
         } },
         { nome: "xˣ = N", gerar: (p) => {
           const N = p ? 100 : F.escolha([5, 10, 50, 100, 1000]), L = Math.log(N), w = W(L), x = Math.exp(w);
           return { enun: R`<p>Resolva $x^x = ${N}$.</p>`, fig: "",
             passos: [
-              R`<p>Tire o $\ln$: $x\ln x = \ln ${N} = ${F.m(L, 5)}$.</p>`,
-              R`<p>Truque: $x = e^{\ln x}$. Então $x\ln x = (\ln x)\,e^{\ln x}$, e a "coisa" é $\ln x$:</p>$$(\ln x)\,e^{\ln x} = ${F.m(L, 5)}$$`,
-              R`<p>Definição de $W$: $\ln x = W(${F.m(L, 5)}) = ${F.m(w, 6)}$.</p>`,
-              R`<p>$x = e^{${F.m(w, 6)}} = ${F.m(x, 6)}$. Conferindo: $${F.m(x, 4)}^{${F.m(x, 4)}} = ${F.m(Math.pow(x, x), 4)}$ ✓. Atalho: como $W e^W = L$, também vale $x = \dfrac{\ln N}{W(\ln N)}$.</p>`,
+              R`<p>Tire o $\ln$: $x\ln x = \ln ${N} = ${F.n(L, 5)}$.</p>`,
+              R`<p>Truque: $x = e^{\ln x}$. Então $x\ln x = (\ln x)\,e^{\ln x}$, e a "coisa" é $\ln x$:</p>$$(\ln x)\,e^{\ln x} = ${F.n(L, 5)}$$`,
+              R`<p>Definição de $W$: $\ln x = W(${F.n(L, 5)}) = ${F.n(w, 6)}$.</p>`,
+              R`<p>$x = e^{${F.n(w, 6)}} = ${F.n(x, 6)}$. Conferindo: $${F.n(x, 4)}^{${F.n(x, 4)}} = ${F.n(Math.pow(x, x), 4)}$ ✓. Atalho: como $W e^W = L$, também vale $x = \dfrac{\ln N}{W(\ln N)}$.</p>`,
             ] };
         } },
       ],

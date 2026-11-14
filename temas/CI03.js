@@ -9,22 +9,22 @@ F.registrar("CI03", {
         { nome: "ax² + bx + c", gerar: (p) => {
           const a = p ? 3 : F.escolha([1, 2, 3, -1, 5]), b = p ? -2 : F.escolha([-4, -2, 1, 3]), c = p ? 1 : F.escolha([0, 1, 5]), x0 = p ? 2 : F.escolha([-1, 1, 2, 3]);
           const fx = (x) => a * x * x + b * x + c, d = 2 * a * x0 + b, sg = (v) => (v < 0 ? "-" : "+");
-          const pol = `${a === 1 ? "" : a === -1 ? "-" : a}x^2 ${b < 0 ? "-" : "+"} ${Math.abs(b)}x${c ? " + " + c : ""}`;
+          const pol = `${a === 1 ? "" : a === -1 ? "-" : a}x^2 ${b < 0 ? "-" : "+"} ${F.c(Math.abs(b))}x${c ? " + " + c : ""}`;
           return { enun: R`<p>Use a definição para calcular $f'(${x0})$, com $f(x) = ${pol}$.</p>`, fig: "",
             passos: [
               R`$$f'(${x0}) = \lim_{h\to0}\frac{f(${x0} + h) - f(${x0})}{h}$$<p>Calcule $f(${x0}) = ${fx(x0)}$.</p>`,
-              R`<p>Expanda $f(${x0} + h) = ${a}(${x0} + h)^2 ${b < 0 ? "-" : "+"} ${Math.abs(b)}(${x0} + h)${c ? " + " + c : ""} = ${fx(x0)} ${sg(d)} ${Math.abs(d)}h ${sg(a)} ${Math.abs(a)}h^2$ (confira!).</p>`,
-              R`<p>Subtraia $f(${x0})$ e divida por $h$: $\frac{${d}h ${sg(a)} ${Math.abs(a)}h^2}{h} = ${d} ${sg(a)} ${Math.abs(a)}h$. O $h$ de baixo sumiu: acabou a indeterminação.</p>`,
-              R`<p>$h \to 0$: $f'(${x0}) = ${d}$. Atalho (próximo tema): $f'(x) = ${2 * a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)}$, e em $x = ${x0}$ dá ${d} ✓. A reta tangente é $y = ${fx(x0)} ${d < 0 ? "-" : "+"} ${Math.abs(d)}(x ${x0 < 0 ? "+" : "-"} ${Math.abs(x0)})$.</p>`,
+              R`<p>Expanda $f(${x0} + h) = ${F.c(a)}(${x0} + h)^2 ${b < 0 ? "-" : "+"} ${F.c(Math.abs(b))}(${x0} + h)${c ? " + " + c : ""} = ${fx(x0)} ${sg(d)} ${F.c(Math.abs(d))}h ${sg(a)} ${F.c(Math.abs(a))}h^2$ (confira!).</p>`,
+              R`<p>Subtraia $f(${x0})$ e divida por $h$: $\frac{${F.c(d)}h ${sg(a)} ${F.c(Math.abs(a))}h^2}{h} = ${d} ${sg(a)} ${F.c(Math.abs(a))}h$. O $h$ de baixo sumiu: acabou a indeterminação.</p>`,
+              R`<p>$h \to 0$: $f'(${x0}) = ${d}$. Atalho (próximo tema): $f'(x) = ${2 * a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)}$, e em $x = ${x0}$ dá ${d} ✓. A reta tangente é $y = ${fx(x0)} ${d < 0 ? "-" : "+"} ${F.c(Math.abs(d))}(x ${x0 < 0 ? "+" : "-"} ${Math.abs(x0)})$.</p>`,
             ] };
         } },
         { nome: "Aproximação linear de √", gerar: (p) => {
           const n = p ? 4 : F.escolha([4, 9, 16, 25, 36, 49]), dx = p ? 0.1 : F.escolha([0.1, 0.2, 0.5, -0.3]), r = Math.sqrt(n), ap = r + dx / (2 * r), ex = Math.sqrt(n + dx);
-          return { enun: R`<p>Estime $\sqrt{${F.m(n + dx, 1)}}$ sem calculadora.</p>`, fig: "",
+          return { enun: R`<p>Estime $\sqrt{${F.n(n + dx, 1)}}$ sem calculadora.</p>`, fig: "",
             passos: [
-              R`<p>Perto de um ponto, uma função derivável é quase a sua reta tangente: $f(a + h) \approx f(a) + f'(a)\,h$. Use $f(x) = \sqrt x$, $a = ${n}$ (raiz exata) e $h = ${F.m(dx, 1)}$.</p>`,
+              R`<p>Perto de um ponto, uma função derivável é quase a sua reta tangente: $f(a + h) \approx f(a) + f'(a)\,h$. Use $f(x) = \sqrt x$, $a = ${n}$ (raiz exata) e $h = ${F.n(dx, 1)}$.</p>`,
               R`<p>$f'(x) = \frac{1}{2\sqrt x}$ (pela definição, com o conjugado, como no exemplário de CI01). Então $f'(${n}) = \frac{1}{${2 * r}}$.</p>`,
-              R`$$\sqrt{${F.m(n + dx, 1)}} \approx ${r} + \frac{${F.m(dx, 1)}}{${2 * r}} = ${F.m(ap, 5)}$$<p>Valor verdadeiro: $${F.m(ex, 5)}$. Erro: $${F.m(Math.abs(ap - ex), 5)}$, que cresce como $h^2$ (a curvatura que a reta ignora).</p>`,
+              R`$$\sqrt{${F.n(n + dx, 1)}} \approx ${r} + \frac{${F.n(dx, 1)}}{${2 * r}} = ${F.n(ap, 5)}$$<p>Valor verdadeiro: $${F.n(ex, 5)}$. Erro: $${F.n(Math.abs(ap - ex), 5)}$, que cresce como $h^2$ (a curvatura que a reta ignora).</p>`,
             ] };
         } },
       ],
