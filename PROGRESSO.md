@@ -1,16 +1,50 @@
-# PROGRESSO — Site de Física do Lucas
+# PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
 ## Estado atual (14/11/2026, depois da β 3.2)
-- **Física**: 85 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
-  - Prontos: Fundamentos inteiro (6); Mecânica inteira (21); Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica inteiro (11); Navier–Stokes inteiro (7); Bônus (X01); Simulados (S00–S04; S02 já tem o IME 2026/27, os outros só a página de entrada).
-  - Vazio: Termodinâmica (11).
-- **Cálculo**: 27 de 27 (Cálculo 1, Cálculo 2, Funções especiais, Teoremas, Simulados de Cálculo).
-- **Experimental**: 0 de 11 (módulos criados, temas a decidir).
-- **Experimentos**: 10 de 10.
-- Tela inicial do projeto (Jarvis) em #/home: Física pronta; Química, Matemática e Russo "em breve". Modelo de dados em docs/MODELO_DE_DADOS.md.
-- Calculadoras: 1 (estilo fx-991ES PLUS) e 2 (estilo fx-82LA CW), uma de cada vez.
-- Exercícios: 7 por tema nos módulos antigos; 12 a 14 com correção automática na Mecânica (a meta do briefing era 15–20).
-- Versão em inglês: só pelo tradutor do navegador.
+As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
+
+### Física — 85 de 96 temas escritos
+Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto" = com correção automática; todos têm chefão, salvo indicação):
+- **F Fundamentos** (6/6): F01–F05 e A19, 7 exercícios cada, sem correção automática.
+- **A Mecânica** (21/21): A01 12, A02 13, A03 14, A04 12, A05 12, A06 13, A07 13, A08 14, A09 12, A10 12, A11 12, A12 13, A12b 12, A13 13, A14a 13, A14 12, A15 12, A16 13, A17 13, A18 12, A20 12 (todos com correção automática e nível Físico/Máximo).
+- **T Termodinâmica** (0/11): T01–T08b, nenhum escrito.
+- **O Ondas e Óptica** (11/11): 7 exercícios cada.
+- **C Eletricidade e Magnetismo** (20/20): de 7 a 16 por tema (C07 16; C04 11; C01, C02, C03, C03b, C11, C14 10; os outros 7 a 9).
+- **M Física Moderna** (8/8), **U Universitária** (6/6), **N Navier–Stokes** (7/7): 7 exercícios cada.
+- **X Bônus**: X01 (3 exercícios, sem chefão). **S Simulados**: S02 com 15 questões do IME; S00, S01, S03 e S04 só com a página de entrada.
+
+### Outras abas
+- **Cálculo** (vai para Matemática): 27/27 temas, 7 exercícios cada; Simulados de Cálculo SC01 e SC02 com 20 questões cada.
+- **Experimentos**: 10 experimentos (EP01–EP10) em 5 módulos.
+- **Experimental**: 0 de 11 (módulos FE criados, sem conteúdo).
+- Tela inicial (Jarvis) em `#/home`: Física pronta; Química, Matemática e Russo "em breve".
+- Calculadoras 1 (estilo fx-991ES PLUS) e 2 (estilo fx-82LA CW), uma de cada vez.
+- Testes automáticos agora no repositório, em `tests/` (antes ficavam só na pasta temporária da sessão); capturas em `tests/capturas/` (fora do git).
+
+### Diferenças em relação ao padrão do CLAUDE.md (honesto)
+- Exercícios: o padrão pede 15 a 20. A Mecânica tem 12 a 14; os módulos antigos, 7 (o C, de 7 a 16).
+- "Chuta antes de ver" (`F.chute`): só os 20 temas do módulo C usam. A Mecânica inteira ainda não tem.
+- Figuras: nem todo exercício da Mecânica tem figura (todos os exemplos têm).
+
+### O que ainda falta na Física (ordem de prioridade do Lucas)
+1. **Mecânica**: temas escritos (A01–A20). Falta completar até o padrão: 15 a 20 exercícios, `F.chute` e figura em todo exercício.
+2. **Termodinâmica**: o módulo T inteiro, do T01 ao T08b.
+3. **Aba Experimental**: o capítulo de teoria da física experimental inteiro: medida e erro, algarismos significativos, precisão × acurácia, erro estatístico × sistemático, desvio padrão e desvio da média, propagação de incerteza pela derivada logarítmica (o método do professor do Lucas), ajuste de reta e mínimos quadrados, linearização de gráficos, como escrever um relatório e como comparar um resultado com o valor de referência.
+4. **Experimentos físicos**: faltam **8 experimentos** para fechar a aba (o Lucas corrigiu de 5 para 8 em 14/11).
+
+### Pendências combinadas (fora da Física)
+- Documento do modelo de dados de várias matérias (prefixos `fis:`, `mat:`, `qui:`; migração; registro de acerto e erro além de ● X /): mostrar ao Lucas para aprovar antes de implementar. Rascunho em `docs/MODELO_DE_DADOS.md`.
+- Mover o Cálculo da Física para a Matemática numa branch de teste, com o progresso exportado antes.
+- Ativar o GitHub Pages (bloqueado nesta sessão; o Lucas liga à mão em Settings → Pages).
+- Versão de celular: só no fim.
+
+### Decisões de hoje (14/11/2026), todas registradas no CLAUDE.md
+- Criado o `CLAUDE.md` com perfil, jeito de falar, projeto, padrão de tema, estilo, qualidade, o que não fazer, pendências e a regra de manter CLAUDE.md e PROGRESSO.md sempre atualizados.
+- Estrutura das matérias: Física (Física, Cálculo → sai, Experimentos, Experimental); Matemática (Matemática, Cálculo, Olimpíada e demonstrações); Química (Química, Experimentos); Russo (Gramática, Leitura e tradução; vocabulário no Anki, o site exporta baralho).
+- Depois de tudo: portal com progresso geral, mapa de erros e busca única; mais tarde, programa à parte com a API.
+- No mapa de erros, separar erro de conteúdo, conta na pressa e interpretação/pegadinha.
+- Não implementar: XP/grau de feiticeiro, repetição espaçada de russo no site. Celular só no fim.
+- Faltam 8 experimentos (não 5).
 
 ## Revisão geral (pedido de 14/11/2026) → β 2.0
 1. [x] Módulos com letras novas: Termodinâmica = **T**, Ondas e Óptica = **O**, com cores bem diferentes. Códigos trocados (B01 → T01…, B16 → O01…) em links, [n]←, busca, sumário e simulados; progresso salvo migrado.

@@ -1,0 +1,32 @@
+const RAIZ = 'file://' + require('path').resolve(__dirname, '..', 'index.html'); /* site na pasta acima de tests/ */
+const { chromium } = require('playwright');
+const res = []; const ok = (c, m) => res.push([c, m]);
+const perto = (a, b, t = 1e-6) => Math.abs(a - b) <= t * Math.max(1, Math.abs(b));
+(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
+  const errs = []; p.on('pageerror', e => errs.push(e.message));
+  const vai = async (c) => { await p.goto(RAIZ + '#/' + c); await p.waitForTimeout(1300); };
+  await vai('A01'); let r = await p.evaluate(() => SIM.vaiVolta._conta(8, 5, -4, 5));
+  ok(r.ds === 20 && r.d === 60 && r.vm === 2 && r.vmEsc === 6, 'A01 8 m/s por 5 s e −4 m/s por 5 s: Δs = 20, d = 60, v̄ = 2, rapidez 6 → ' + JSON.stringify(r));
+  await vai('A02'); r = await p.evaluate(() => [SIM.encontro._conta(0, 15, 150, -10), SIM.encontro._conta(0, 10, 50, 10)]);
+  ok(perto(r[0].te, 6) && perto(r[0].se, 90) && r[1] === null, 'A02 encontro em 6 s e 90 m; velocidades iguais: não se encontram → ' + JSON.stringify(r));
+  await vai('A03'); r = await p.evaluate(() => SIM.muv._freada(20, -5, 0.8));
+  ok(perto(r.dr, 16) && perto(r.df, 40) && perto(r.tpara, 4.8), 'A03 freada a 20 m/s, 5 m/s², reação 0,8 s: 16 + 40 m, para em 4,8 s → ' + JSON.stringify(r));
+  await vai('A04'); r = await p.evaluate(() => [SIM.graficos._conta([0, 6, 6, 2, -4, -4], 10), SIM.graficos._conta([0, 6, 6, 2, -4, -4], 3)]);
+  ok(perto(r[0].s, 6 + 12 + 8 + -2 + -8, 1e-9) && perto(r[1].v, 6) && perto(r[1].a, 0), 'A04 áreas: s(10) = 6 + 12 + 8 − 2 − 8 = 16 m; em t = 3 s: v = 6, a = 0 → ' + JSON.stringify(r.map(x => [x.s, x.v, x.a])));
+  ok(perto(r[0].dist, 6 + 12 + 8 + 10 / 3 + 8, 1e-3), 'A04 distância percorrida (área de |v|) = 37,33 m (v cruza o zero em t = 6,67 s) → ' + r[0].dist.toFixed(4));
+  await vai('A05'); r = await p.evaluate(() => [SIM.barcoRio._conta(4, 3, 0), SIM.barcoRio._conta(4, 3, Math.asin(0.75) * 180 / Math.PI)]);
+  ok(perto(r[0].t, 25) && perto(r[0].deriva, 75) && perto(r[1].deriva, 0, 1e-9) && perto(r[1].t, 100 / Math.sqrt(7)), 'A05 proa reta: 25 s e 75 m; proa a 48,6°: chega em frente em 37,8 s → ' + JSON.stringify(r.map(x => [x.t, x.deriva])));
+  await vai('A06'); r = await p.evaluate(() => [SIM.lancamento._conta(20, 30, 0), SIM.lancamento._conta(20, 30, 25), SIM.lancamento._conta(20, 45, 0)]);
+  ok(perto(r[0].H, 5) && perto(r[0].alc, 20 * Math.sqrt(3)) && perto(r[0].tv, 2), 'A06 20 m/s a 30°: H = 5, R = 34,64, T = 2 → ' + JSON.stringify(r[0]));
+  ok(perto(r[1].tv, 1 + Math.sqrt(6)) && perto(r[1].alc, 10 * Math.sqrt(3) * (1 + Math.sqrt(6))) && perto(r[2].alc, 40), 'A06 do alto de 25 m: 3,449 s e 59,75 m; 45°: 40 m → ' + [r[1].tv, r[1].alc, r[2].alc].map(x => x.toFixed(3)));
+  await vai('A07'); r = await p.evaluate(() => SIM.circular._conta(2, 0.3));
+  ok(perto(r.w, 4 * Math.PI) && perto(r.v, 1.2 * Math.PI) && perto(r.T, 0.5) && perto(r.ac, 16 * Math.PI * Math.PI * 0.3), 'A07 f = 2 Hz, R = 0,3 m: ω = 4π, v = 1,2π, T = 0,5 s, a = ω²R → ' + JSON.stringify(r));
+  /* correção automática: resposta certa, errada, com vírgula e com ponto */
+  await vai('A03');
+  const cor = await p.evaluate(() => { const ex = document.querySelectorAll('.ex')[10]; const inp = ex.querySelector('.ex-num input'), bt = ex.querySelector('.ex-num button'), fb = ex.querySelector('.ex-fb'); const out = []; for (const v of ['1,33', '1.333', '4/3', '2', '1.000.000', '1.234,5']) { inp.value = v; bt.click(); out.push(v + '→' + fb.textContent.slice(0, 6)); } return out; });
+  ok(/1,33→Certo/.test(cor[0]) && /1.333→Certo/.test(cor[1]) && /Escrev/.test(cor[2]) && /Ainda/.test(cor[3]) && (await p.evaluate(() => [F.lerNumero('1.000.000'), F.lerNumero('1.234,5'), F.lerNumero('3,2e5'), F.lerNumero('−2,5')])).join() === '1000000,1234.5,320000,-2.5', 'correção numérica: 1,33 e 1.333 certos (2%); "4/3" pede número; 2 errado → ' + cor.join(' | '));
+  const reg = await p.evaluate(() => JSON.parse(localStorage.getItem('fisica:resultado:A03-11')));
+  ok(reg && reg.r === 'certo' && reg.dada === '1,33', 'primeira tentativa guardada em resultado:A03-11 → ' + JSON.stringify(reg));
+  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok'); res.forEach(r => console.log((r[0] ? 'ok     ' : 'FALHA  ') + r[1]));
+  console.log(errs.length ? 'ERROS: ' + errs.join(' | ') : 'sem erros JS');
+  await b.close(); })();
