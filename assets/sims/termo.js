@@ -1,4 +1,4 @@
-/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; */
+/* Simulações da Termodinâmica (módulo T). T01 quatro termômetros; T02 parede de duas camadas; T03 chapa com furo e bimetálica; T04 calorímetro; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -87,6 +87,37 @@
       sv += D.txt(x0 + 100, 284, "aço (cinza) + alumínio (laranja)", "tx2");
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("α do material", n2(a * 1e6, 1) + " × 10⁻⁶ /°C") + vis("ΔL do lado (αL₀ΔT)", n2(c.dL * 10, 3) + " mm") + vis("ΔA da chapa (2αA₀ΔT)", n2(c.dA, 2) + " cm²") + vis("diâmetro do furo multiplicado por", n2(c.fator, 5));
+    });
+  };
+
+  /* ---------- T04 · calorímetro: água quente + gelo a 0 °C ---------- */
+  SIM.calorimetro = (el, F) => {
+    const W = 680, H = 300;
+    let t = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("massa de água (g)", "ma", 50, 500, 10, 200)}${sl("temperatura da água (°C)", "Ta", 1, 100, 1, 30)}${sl("massa de gelo a 0 °C (g)", "mg", 0, 300, 5, 100)}
+      <div class="bts"><button class="bt pri" data-a="re">Misturar de novo</button></div></div>
+      <div class="status">Num calorímetro ideal (nada de calor entra ou sai), a água esfria e o gelo recebe esse calor: primeiro para derreter (80 cal por grama, sem mudar de temperatura), depois para esquentar. O primeiro passo é sempre testar: o calor que a água libera até chegar a 0 °C basta para derreter todo o gelo? Se não bastar, sobra gelo e a mistura fica a 0 °C.</div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.calorimetro._conta = (ma, Ta, mg) => { const disp = ma * Ta, prec = 80 * mg; if (disp <= prec) return { T: 0, derretido: disp / 80, sobra: mg - disp / 80, disp, prec }; return { T: (disp - prec) / (ma + mg), derretido: mg, sobra: 0, disp, prec }; };
+    q("[data-a=re]").addEventListener("click", () => (t = 0));
+    ["ma", "Ta", "mg"].forEach((k) => q(`[data-c=${k}]`).addEventListener("input", () => (t = 0)));
+    anima(el, F, (dt) => {
+      const ma = val(el, "ma"), Ta = val(el, "Ta"), mg = val(el, "mg"), c = SIM.calorimetro._conta(ma, Ta, mg);
+      mostra(el, ["ma", "mg"], 0); q("[data-o=Ta]").textContent = n2(Ta, 0) + " °C";
+      t = Math.min(1, t + dt / 3); const s = 1 - Math.pow(1 - t, 2);
+      const Tnow = Ta + (c.T - Ta) * s, geloNow = mg - (mg - c.sobra) * s;
+      const x0 = 150, y0 = 40, w = 220, h = 220, nivel = Math.min(0.9, (ma + mg) / 900 + 0.2);
+      let sv = D.copo(x0, y0, w, h, nivel, Tnow > 40 ? "var(--bad)" : "var(--mA)");
+      const nCub = Math.round(geloNow / 20);
+      for (let i = 0; i < nCub; i++) { const cx = x0 + 20 + (i % 6) * 32, cy = y0 + h - h * nivel + 4 + Math.floor(i / 6) * 26; sv += `<rect x="${cx}" y="${cy}" width="24" height="20" rx="3" style="fill:color-mix(in srgb,var(--ink) 55%,transparent);stroke:var(--ink2)"/>`; }
+      sv += D.termo(430, 250, 200, Math.max(0, Math.min(1, Tnow / 100)), n2(Tnow, 1) + " °C");
+      /* barras de energia */
+      const bx = 520, esc = 180 / Math.max(c.disp, c.prec, 1);
+      sv += `<rect x="${bx}" y="${250 - c.disp * esc}" width="34" height="${c.disp * esc}" style="fill:color-mix(in srgb,var(--bad) 50%,transparent)"/><rect x="${bx + 50}" y="${250 - c.prec * esc}" width="34" height="${c.prec * esc}" style="fill:color-mix(in srgb,var(--mA) 50%,transparent)"/>`;
+      sv += D.txt(bx + 17, 268, "água até 0 °C", "tx2") + D.txt(bx + 67, 284, "derreter tudo", "tx2");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("calor da água até 0 °C (m·c·ΔT)", n2(c.disp, 0) + " cal") + vis("calor para derreter todo o gelo (m·L)", n2(c.prec, 0) + " cal") + vis("temperatura final", n2(c.T, 2) + " °C") + vis("gelo que sobra", n2(c.sobra, 1) + " g");
     });
   };
 })();
