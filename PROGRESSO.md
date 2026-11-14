@@ -4,7 +4,8 @@
 - **Física**: 47 de 96 temas escritos (códigos novos desde a β 2.0: Termodinâmica T, Ondas e Óptica O).
   - Prontos: Eletricidade e Magnetismo inteiro (20); Moderna inteira (8); Universitária inteira (6); Ondas e Óptica (7 de 11: O05–O10b; faltam O01–O04, as ondas); Bônus (X01); Simulados (S00–S04, só as páginas de entrada).
   - Vazios: Fundamentos (6), Mecânica (21), Termodinâmica (11), Navier–Stokes (7), Ondas (4).
-- **Cálculo**: 20 de 20 (Cálculo 1, Cálculo 2, Funções especiais).
+- **Cálculo**: 25 de 25 (Cálculo 1, Cálculo 2, Funções especiais, Teoremas).
+- **Experimental**: 0 de 11 (módulos criados, temas a decidir).
 - **Experimentos**: 9 de 9.
 - Exercícios: 7 por tema (a meta do briefing era 15–20).
 - Versão em inglês: só pelo tradutor do navegador.
@@ -150,6 +151,18 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Resultado em forma exata quando dá (fração, a√b/c, (a + b√c)/d, kπ/n), como na MthIO; S⇔D troca para decimal.
   - Testes: 88 contas digitadas tecla por tecla e conferidas com o valor certo (todos os modos), mais a regressão do site inteiro.
   - **Diferenças da calculadora real** (honestas): a entrada é linear (com cursor, como a LineIO), só o resultado é "de livro"; sem gráfico (não precisava); STAT sem a coluna de frequência; TABLE só com f(X); sem ":" (várias contas numa linha). A ordem da lista CONST segue o manual de memória, e os valores são os do CODATA 2018 (calculadoras antigas usam valores um pouco diferentes na 5ª casa em diante).
+
+- **β 2.3** — Aba **Experimental** e módulo **Teoremas** (Cálculo).
+  - Nova aba "± Experimental" no topo, à direita de Experimentos. Página inicial com uma calculadorazinha animada: as teclas acendem uma a uma e o resultado aparece no visor (g = 4π²ℓ/T² com o pêndulo do Lucas: 9,387178522; e √(0,02² + 0,03²) = 0,036055512).
+  - Módulos criados, ainda **sem conteúdo** (temas a decidir com o Lucas): Medidas e incertezas (FE01–FE05), Gráficos e ajustes (FE06–FE09, com log-log), Relatório e erros (FE10–FE11).
+  - **Teoremas** (Cálculo, letra ∴), completos, cada um com laboratório novo (`assets/sims/teoremas.js`), exemplário, 7 exercícios e chefão:
+    - **TE01 Hamilton e Euler–Lagrange**: cálculo das variações com a dedução, lema fundamental, Beltrami, Fermat → Snell, catenária. Laboratório: corrida de 4 curvas (reta, parábola, arco, cicloide). Chefão: a braquistócrona de Bernoulli.
+    - **TE02 Divergência**: enunciado, Gauss, continuidade, empuxo de Arquimedes, volume pela casca. Laboratório: as caixinhas cujos fluxos internos se cancelam. Chefão: a demonstração para uma região simples.
+    - **TE03 Pappus–Guldin**: os dois teoremas demonstrados, toro, cone, centroides ao contrário. Laboratório: volume por Pappus × somando fatias. Chefão: anel de seção triangular.
+    - **TE04 Stokes**: enunciado, ideia da prova, Faraday, Ampère, campos conservativos, o campo com furo. Laboratório: o mesmo fluxo do rotacional por qualquer "chapéu". Chefão: por que a superfície não importa.
+    - **TE05 Noether**: enunciado e demonstração, tabela simetria → conservada, momento canônico com campo magnético, hélice. Laboratório: E, L e pₓ em 4 potenciais. Chefão: a prova e a energia de um oscilador com k(t).
+  - Conferências: números em Python; laboratórios contra fórmulas independentes (cicloide 1,0030 s × reta 1,1890 s; arco de circunferência conferido com scipy; Pappus = fatias; circulação = fluxo para qualquer h; Noether: o que se conserva em cada potencial). Corrigido durante o teste: o arco de circunferência ia pela metade de cima do círculo (tempo absurdo) e a integral de superfície da TE04 tinha erro na 4ª casa.
+  - Regressão: 141 páginas, 0 katex-error, 0 erro de JS, 981 links; 47 testes de funcionamento; calculadora 88 de 88.
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.

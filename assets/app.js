@@ -326,7 +326,7 @@
         <div class="cartao"><b>Ordem de um tema</b><ol style="margin:8px 0 0;padding-left:1.2em;color:var(--ink2)"><li>Pergunta de abertura</li><li>Laboratório (chute antes de mexer)</li><li>A ideia, com números</li><li>Teoria completa e demonstrações</li><li>Exemplos passo a passo</li><li>Resumo, exercícios e chefão</li></ol></div>
         <div class="cartao"><b>Marcação de certeza</b><p style="color:var(--ink2);margin:8px 0 0">Em cada exercício marque <b>●</b> certeza, <b>X</b> dúvida ou <b>/</b> chutei. Fica salvo neste navegador. O chefão destrava quando todos estiverem marcados. Dicas e respostas só abrem se você clicar.</p></div>
       </div>`;
-    (areaId === "calculo" ? animCalculo : areaId === "exp" ? animPendulo : animAtomo)(document.getElementById(anim));
+    ({ calculo: animCalculo, exp: animPendulo, lab: animCalculadora }[areaId] || animAtomo)(document.getElementById(anim));
   }
 
   /* átomo girando: 3 órbitas com elétrons (com rastro); o conjunto precessa devagar */
@@ -357,6 +357,43 @@
     }
     requestAnimationFrame(q);
     F.aoSair(() => (vivo = false));
+  }
+
+  /* física experimental: uma calculadorazinha com as teclas sendo apertadas e o resultado saindo no visor */
+  function animCalculadora(el) {
+    const TECLAS = [["√", "x²", "π", "AC"], ["7", "8", "9", "÷"], ["4", "5", "6", "×"], ["1", "2", "3", "−"], ["0", ".", "=", "+"]];
+    const CONTAS = [
+      { leg: "g = 4π²ℓ/T² (pêndulo: ℓ = 0,750 m, T = 1,776 s)", seq: ["4", "π", "x²", "×", "0", ".", "7", "5", "÷", "1", ".", "7", "7", "6", "x²", "="], res: "9.387178522" },
+      { leg: "incerteza combinada: √(0,02² + 0,03²)", seq: ["√", "0", ".", "0", "2", "x²", "+", "0", ".", "0", "3", "x²", "="], res: "0.036055512" },
+    ];
+    const W = 220, H = 300, x0 = 60, kw = 44, kh = 28, gx = 8, gy = 7, ky0 = 106;
+    let svg = `<svg viewBox="0 0 340 300" aria-label="calculadora fazendo uma conta"><rect x="${x0 - 14}" y="6" width="${W + 28 - 20}" height="${H - 12}" rx="18" style="fill:#1b212c;stroke:#39424f"/>
+      <rect x="${x0}" y="22" width="${W - 20}" height="70" rx="6" style="fill:#c9d3c3;stroke:#10141b;stroke-width:3"/>
+      <text class="c-exp" x="${x0 + 8}" y="46" style="font:600 13px var(--f-text);fill:#1d241b"></text>
+      <text class="c-res" x="${x0 + W - 28}" y="80" text-anchor="end" style="font:700 19px var(--f-text);fill:#1d241b"></text>`;
+    TECLAS.forEach((linha, i) => linha.forEach((t, j) => {
+      const x = x0 + j * (kw + gx), y = ky0 + i * (kh + gy), num = /[0-9.]/.test(t);
+      svg += `<g class="c-k" data-t="${t}"><rect x="${x}" y="${y}" width="${kw}" height="${kh}" rx="6" style="fill:${num ? "#3b4455" : t === "=" ? "#4c5a72" : t === "AC" ? "#3d6fd6" : "#2e3644"}"/><text x="${x + kw / 2}" y="${y + kh / 2 + 5}" text-anchor="middle" style="font:600 14px var(--f-text);fill:#e8ecf3;pointer-events:none">${t}</text></g>`;
+    }));
+    svg += `</svg><div class="calc-leg"></div>`;
+    el.innerHTML = svg;
+    const exp = el.querySelector(".c-exp"), res = el.querySelector(".c-res"), leg = el.querySelector(".calc-leg");
+    const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let vivo = true, timers = [];
+    const depois = (ms, fn) => timers.push(setTimeout(() => vivo && fn(), ms));
+    const mostra = (s) => { exp.textContent = s.length > 21 ? "…" + s.slice(-20) : s; };
+    function roda(k) {
+      const c = CONTAS[k % CONTAS.length]; let texto = "";
+      leg.textContent = c.leg; res.textContent = ""; mostra("");
+      if (reduz) { mostra(c.seq.slice(0, -1).map((t) => (t === "√" ? "√(" : t === "x²" ? "²" : t)).join("")); res.textContent = c.res; return; }
+      c.seq.forEach((t, i) => depois(400 + i * 330, () => {
+        const g = el.querySelector(`.c-k[data-t="${t}"] rect`); if (g) { const cor = g.style.fill; g.style.fill = "#e3b04a"; depois(170, () => (g.style.fill = cor)); }
+        if (t === "=") res.textContent = c.res; else { texto += t === "√" ? "√(" : t === "x²" ? "²" : t; mostra(texto); }
+      }));
+      depois(400 + c.seq.length * 330 + 2600, () => { const ac = el.querySelector('.c-k[data-t="AC"] rect'); if (ac) { ac.style.fill = "#e3b04a"; depois(170, () => (ac.style.fill = "#3d6fd6")); } depois(350, () => roda(k + 1)); });
+    }
+    roda(0);
+    F.aoSair(() => { vivo = false; timers.forEach(clearTimeout); });
   }
 
   /* experimentos: pêndulo duplo (pequeno, só enfeite) com rastro */
@@ -506,7 +543,7 @@
     renderizado = null;
     temaAtual = null;
     document.documentElement.style.removeProperty("--mod");
-    if (cod === "inicio" || cod === "calculo" || cod === "experimentos") { F.area = cod === "calculo" ? "calculo" : cod === "experimentos" ? "exp" : "fisica"; pgInicio(pag, F.area); }
+    if (cod === "inicio" || cod === "calculo" || cod === "experimentos" || cod === "experimental") { F.area = { calculo: "calculo", experimentos: "exp", experimental: "lab" }[cod] || "fisica"; pgInicio(pag, F.area); }
     else if (cod === "legenda") { location.replace("#/" + AREA(F.area).inicio); setTimeout(() => { const d = $("#detalhes"); if (d) d.classList.add("aberto"); }, 50); return; } /* a legenda agora fica só no painel do topo */
     else if (cod === "sumario") pgSumario(pag);
     else {

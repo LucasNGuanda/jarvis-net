@@ -1,11 +1,12 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 2.2";
+window.VERSAO = "β 2.3";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
   { id:"exp", nome:"Experimentos", inicio:"experimentos", titulo:"Experimentos físicos" },
+  { id:"lab", nome:"Experimental", inicio:"experimental", titulo:"Física experimental" },
 ];
 window.CATALOGO = [
   { id:"F", letra:"F", cor:"--mF", nome:"Fundamentos e a matemática do físico", desc:"Vetores, trigonometria, cálculo, aproximações e análise dimensional.", temas:[
@@ -151,6 +152,32 @@ window.CATALOGO = [
     ["CE01","Função W de Lambert",["!"],true],
     ["CE02","Função Gama de Euler",["∫","!"],true],
     ["CE03","Integrais fechadas ∮ (curvas e superfícies)",["∫","!!"],true],
+  ]},
+  { id:"K4", area:"calculo", letra:"∴", cor:"--mK4", nome:"Teoremas", desc:"Os grandes teoremas do cálculo que a física usa: Euler–Lagrange, Gauss, Pappus, Stokes e Noether.", temas:[
+    ["TE01","Princípio de Hamilton e equações de Euler–Lagrange",["∫","!!"],true],
+    ["TE02","Teorema da Divergência (Gauss–Ostrogradsky)",["∫","!"],true],
+    ["TE03","Teoremas de Pappus–Guldin",["∫"],true],
+    ["TE04","Teorema de Stokes",["∫","!!"],true],
+    ["TE05","Teorema de Noether",["!!"],true],
+  ]},
+
+  /* ===================== ÁREA EXPERIMENTAL (medidas, incertezas, gráficos) — temas a definir com o Lucas ===================== */
+  { id:"FEm", area:"lab", letra:"±", cor:"--mN", nome:"Medidas e incertezas", desc:"O que é medir, o que é incerteza e como ela se propaga nas contas.", temas:[
+    ["FE01","O que é medir: unidades e algarismos significativos"],
+    ["FE02","O que é incerteza (tipo A e tipo B)"],
+    ["FE03","Média, desvio padrão e incerteza da média"],
+    ["FE04","Propagação de incertezas",["∫","★"]],
+    ["FE05","Comparando resultados: discrepância e compatibilidade"],
+  ]},
+  { id:"FEg", area:"lab", letra:"G", cor:"--mO", nome:"Gráficos e ajustes", desc:"Gráficos com barras de erro, linearização, log-log e mínimos quadrados.", temas:[
+    ["FE06","Gráficos com barras de erro"],
+    ["FE07","Linearização: transformando curvas em retas"],
+    ["FE08","Gráficos log-log e mono-log",["★"]],
+    ["FE09","Mínimos quadrados (regressão linear)",["∫"]],
+  ]},
+  { id:"FEr", area:"lab", letra:"R", cor:"--mM", nome:"Relatório e erros", desc:"Erros sistemáticos, como corrigir e como escrever um relatório.", temas:[
+    ["FE10","Erros sistemáticos e como corrigi-los"],
+    ["FE11","Como escrever um relatório"],
   ]},
 
   /* ===================== ÁREA EXPERIMENTOS ===================== */
