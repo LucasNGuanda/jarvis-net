@@ -1,6 +1,6 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado atual (15/11/2026, depois da β 3.9)
+## Estado atual (15/11/2026, depois da β 4.0)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
 
 ### Física — 96 de 96 temas escritos
@@ -14,7 +14,8 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 - **X Bônus**: X01 (3 exercícios, sem chefão). **S Simulados**: S02 com 15 questões do IME; S00, S01, S03 e S04 só com a página de entrada.
 
 ### Outras abas
-- **Cálculo** (vai para Matemática): 27/27 temas, 7 exercícios cada; Simulados de Cálculo SC01 e SC02 com 20 questões cada.
+- **Física agora tem 3 abas** (β 4.0): Física, Experimentos e Experimental.
+- **Cálculo** (na Matemática desde a β 4.0): 27/27 temas, 7 exercícios cada; Simulados de Cálculo SC01 e SC02 com 20 questões cada. Rota `#/matematica/<COD>`.
 - **Experimentos**: 18 experimentos (EP01–EP18) em 9 módulos (novos na β 3.4: Termodinâmica, Ondas e quântica, Nuclear, Fluidos).
 - **Experimental**: 11 de 11 (FE01–FE11), todos no padrão completo: 16 exercícios com figura, correção automática e nível; `F.chute`, laboratório, 3 demonstrações, 3 exemplos, as 4 caixas, folha de fórmulas e chefão (β 3.5).
 - Tela inicial (Jarvis) em `#/home`: Física pronta; Matemática, Química e Russo com a casca pronta e os temas cadastrados "em breve" (β 3.8). Painel da engrenagem: figura central (planeta, galáxia ou buraco negro, com cor e velocidade; β 3.9) e 28 adesivos em 6 categorias.
@@ -36,7 +37,7 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 
 ### Dívida técnica (pedido do Lucas em 14/11/2026: resolver depois da Termodinâmica)
 - [ ] **Mecânica** (A01–A20): subir de 12–14 para 15–20 exercícios por tema; pôr figura nos exercícios que não têm; acrescentar o `F.chute` ("chuta antes de ver") em todos os temas.
-- [ ] **Demais módulos** (F, O, C, M, U, N e Cálculo): subir de 7 para 15–20 exercícios por tema (o C já tem de 7 a 16).
+- [ ] **Demais módulos** (F, O, C, M, U, N e o Cálculo, agora na Matemática): subir de 7 para 15–20 exercícios por tema (o C já tem de 7 a 16).
 - Regra a partir de agora: tema novo já nasce no padrão completo (15–20 exercícios, figura em todo exercício, `F.chute`).
 
 ### O que ainda falta na Física (ordem de prioridade do Lucas)
@@ -48,7 +49,6 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 
 ### Pendências combinadas (fora da Física)
 - Documento do modelo de dados de várias matérias (prefixos `fis:`, `mat:`, `qui:`; migração; registro de acerto e erro além de ● X /): mostrar ao Lucas para aprovar antes de implementar. Rascunho em `docs/MODELO_DE_DADOS.md`.
-- Mover o Cálculo da Física para a Matemática numa branch de teste, com o progresso exportado antes.
 - Ativar o GitHub Pages (bloqueado nesta sessão; o Lucas liga à mão em Settings → Pages).
 - Versão de celular: só no fim.
 
@@ -419,6 +419,13 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Figura central: o painel virou "Personalizar", com a seção "Figura central" (3 miniaturas, "acompanhar a cor do tema" ou cor própria no mesmo arco-íris do título, velocidade de 0 = parado a 2×) e a seção Adesivos (o "Limpar tudo" foi para junto dela, para não parecer que apaga a figura). Cadastro em `assets/figuras.js`: planeta com anel (o desenho de antes, ainda a padrão), galáxia espiral (dois braços em espiral logarítmica r = a·e^(bφ) girando como corpo rígido, estrelas fixas por sorteio com semente, núcleo brilhante; disco inclinado) e buraco negro (anéis do disco tracejados girando com Ω ∝ r^(-3/2), os de dentro mais rápidos, como Kepler; centro escuro, anel de luz fino, arco de luz curvado por cima e outro por baixo; a parte do disco atrás do centro fica escondida por uma máscara). Tudo em arame luminoso e leve: a galáxia muda um único atributo por quadro, o buraco negro 5. Com velocidade 0 o laço de animação desliga de verdade.
   - Cor: as figuras usam `--fg1..3`, que por padrão são as cores do título (`--jv1..3`); a cor própria muda só a figura. Salvo em `jarvis:figura` = { id, hue, vel }; entra no exportar/importar (prefixo `jarvis:`).
   - Testes: `tests/tfiguras.js` novo (15 conferências); `tests/tadesivos.js` atualizado (28 adesivos, 6 categorias). Capturas: `tests/capturas/figuras-e-cientistas.png`, `fig-painel.png`.
+- **β 4.0** — **O Cálculo saiu da física e foi para a matemática** (pedido de 15/11/2026; feito na branch `muda-calculo`, testado pelo Lucas e aprovado antes de ir para o `main`).
+  - Os 27 temas (Cálculo 1 CI01–CI09, Cálculo 2 CII01–CII08, Funções especiais CE01–CE03, Teoremas TE01–TE05, Simulados SC01–SC02) foram para a aba Cálculo da matemática, com os mesmos módulos (K1–K5), ordem e códigos; arquivos em `temas/matematica/` e simulações em `assets/sims/matematica/`. A aba Cálculo da matemática ficou: Cálculo 1, Cálculo 2, Cálculo 3 ("em breve"), Cálculo 4 ("em breve"), Funções especiais e integrais, Teoremas, Simulados de Cálculo. A física ficou com 3 abas.
+  - Progresso: migração única e não destrutiva (`F.migraCalculo`) que copia de `fisica:` para `mat:` os temas feitos, as marcações ● X /, os acertos e erros, os chefões destravados e o "continuar de onde parei" do Cálculo. Nada foi apagado de `fisica:`. Antes de copiar, guarda uma cópia de tudo em `jarvis:backup:antes-calculo` (entra no "Exportar progresso"). Importar um backup antigo também copia o progresso do Cálculo. Eu não consegui exportar o .json do Lucas (fica no navegador dele); pedi para ele exportar antes de testar.
+  - Links: os 106 links cruzados foram acertados (48 da física para o Cálculo, como [CI07]← no A04, e 58 do Cálculo para a física); `F.ret` mostra só o código mesmo com a matéria na frente. Links e favoritos antigos `#/CI07…` e `#/calculo` redirecionam para a matemática.
+  - Defeito antigo corrigido: o laboratório de Taylor do CII04 tinha o mesmo nome (`SIM.taylor`) do laboratório do F05, e o da física sobrescrevia o do Cálculo; agora o do Cálculo é `SIM.taylorK`. O F05 não mudou.
+  - Testes: `tests/tmudacalculo.js` novo (30 conferências: migração, links antigos e cruzados, abas, contadores, sumário, busca, legenda, "continuar", laboratórios); `tfunc` agora devolve erro quando falha e entende as rotas com a matéria na frente; `tfis`, `tfisTE`, `tfisN2`, `thome`, `tmaterias` ajustados às rotas novas. Regressão completa ok; tgeral: 389 páginas, 152 escritas, 1970 links, 0 KaTeX, nenhum tema vazio, nenhum link quebrado, nenhum erro no console.
+  - Defeitos antigos encontrados e não corrigidos (já existiam antes da mudança): números com `{,}` vazando no texto comum em CI02, CII03, TE01 e TE04 (aparecem no `tchaves`).
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.

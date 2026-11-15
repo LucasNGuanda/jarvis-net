@@ -19,8 +19,8 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 
 ## O projeto (Jarvis)
 - Este repositório é o meu sistema de estudo pessoal. Tela inicial (`#/home`) com um botão por matéria; cada matéria tem suas abas.
-- **Física**: abas Física, Cálculo (vai sair daqui), Experimentos e Experimental. Módulos F, A, T, O, C, M, U, N.
-- **Matemática**: abas Matemática (MB, AR, GE, AL), Cálculo (Cálculo 3 e 4 "em breve"; o 1 e o 2 vêm da física depois) e Olimpíada e demonstrações (DM, TNO, DES, CBO, GEO, FUN, PRI). 114 temas cadastrados "em breve" (β 3.8).
+- **Física**: 3 abas, Física, Experimentos e Experimental (o Cálculo foi para a matemática na β 4.0). Módulos F, A, T, O, C, M, U, N.
+- **Matemática**: abas Matemática (MB, AR, GE, AL), Cálculo (Cálculo 1 e 2, Cálculo 3 e 4 "em breve", Funções especiais e integrais, Teoremas, Simulados de Cálculo: os 27 temas escritos vieram da física na β 4.0, com os mesmos módulos K1–K5, ordem e códigos) e Olimpíada e demonstrações (DM, TNO, DES, CBO, GEO, FUN, PRI). 141 temas (27 escritos; os outros 114 "em breve").
 - **Química**: abas Química (módulos A–J: introdução, atomística, ligações, reações e estequiometria, físico-química I e II, eletroquímica, orgânica, bioquímica e ambiental, analítica; 79 temas) e Experimentos (módulos QG, QR, QE, QN, QT; EQ01–EQ18, simulações no padrão dos de física). Todos "em breve" (β 3.8).
 - **Russo**: abas Gramática (RG01–RG18) e Leitura e tradução (RL01–RL08), todos "em breve" (β 3.8). Vocabulário solto fica no Anki, não no site; o botão "Exportar para o Anki" está previsto e desativado na aba Leitura (implementar depois). Cor: `--mR` (azul-céu, escolhida em Python como a mais distante da paleta).
 - Depois de tudo: portal com progresso geral, mapa de erros e busca única. Bem mais tarde: um programa à parte usando a API.
@@ -33,11 +33,11 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 
 ## Estilo e técnica
 - Tema escuro, uma cor por módulo, faixa do topo que some ao descer, menu lateral, `index.html` único com rotas por hash.
-- Conteúdo separado do código: temas em `temas/<COD>.js` (`F.registrar`), simulações em `assets/sims/*.js` (`window.SIM`), motor em `assets/app.js`, catálogos por matéria (`assets/catalogo.js` Física, `assets/catalogo-matematica.js`, `assets/catalogo-quimica.js`), matérias da tela inicial em `assets/materias.js`.
+- Conteúdo separado do código: temas da física em `temas/<COD>.js` e das outras matérias em `temas/<matéria>/<COD>.js` (`F.registrar`), simulações em `assets/sims/*.js` (`window.SIM`), motor em `assets/app.js`, catálogos por matéria (`assets/catalogo.js` Física, `assets/catalogo-matematica.js`, `assets/catalogo-quimica.js`), matérias da tela inicial em `assets/materias.js`.
 - Base comum (β 3.7): as três matérias usam o mesmo motor, CSS e componentes. Cada aba é uma área em `AREAS` (campos `materia`, `inicio`, `titulo`, `anim`, `icone`); o topo mostra só as abas da matéria atual; a única diferença visual entre matérias é a cor (`--materia`). Ids de módulo nunca se repetem no projeto (Química usa QA–QJ para os módulos A–J e EQg, EQr, EQe, EQn, EQt para os de Experimentos). Códigos de tema são únicos dentro de cada matéria: a física fica nas rotas antigas (`#/A01`), as outras levam a matéria na frente (`#/quimica/A01`); arquivos em `temas/<matéria>/<COD>.js` com `F.registrar("<matéria>/<COD>", …)`. Links sempre com `F.href(cod, módulo ou matéria, âncora)`.
 - Componentes reutilizáveis: `F.secao`, `F.formula`, `F.caixa`, `F.demo`, `F.exemplo`, `F.exercicio`, `F.chefao`, `F.lab`, `F.revela`, `F.chute`, `F.ret`. **Nunca criar componente novo sem necessidade**: estender o que existe com campos opcionais (ex.: `F.exercicio` aceita `certa`, `num: {v, tol, un}`, `nivel`).
 - KaTeX só dentro de `$…$`; número em texto comum com `F.nt`, dentro de fórmula com `F.n`. Química com `\ce{}` (mhchem carregado).
-- Progresso no `localStorage` com prefixo por matéria (β 3.8): física `fisica:` (mantido, para não mexer no que já está salvo), matemática `mat:`, química `qui:`, russo `rus:`; tela inicial `jarvis:`. Configurações do site inteiro (tema, idioma, menu, filtro "em breve", calculadoras) ficam em `fisica:`. O exportar/importar leva todos os prefixos.
+- Progresso no `localStorage` com prefixo por matéria (β 3.8): física `fisica:` (mantido, para não mexer no que já está salvo), matemática `mat:`, química `qui:`, russo `rus:`; tela inicial `jarvis:`. Configurações do site inteiro (tema, idioma, menu, filtro "em breve", calculadoras) ficam em `fisica:`. O exportar/importar leva todos os prefixos. O progresso do Cálculo foi copiado de `fisica:` para `mat:` na β 4.0 (migração única e não destrutiva; cópia de segurança em `jarvis:backup:antes-calculo`); links antigos `#/CI07` e `#/calculo` redirecionam para a matemática.
 - Cada matéria se registra num arquivo de configuração: acrescentar matéria, aba, módulo ou tema é só editar esse arquivo.
 - Cada matéria e cada aba tem o seu desenho animado na página inicial, leve, em SVG ou CSS.
 
@@ -45,7 +45,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Toda conta de exemplo, exercício e solução conferida rodando em Python (anotar os números no comentário do topo do tema).
 - A física de cada simulação conferida, inclusive casos limite.
 - Nenhuma fórmula quebrada (procurar `katex-error`). Nenhum tema escrito pode abrir vazio.
-- Rodar os testes de `tests/` antes de cada commit (`node tests/tgeral.js`, `tests/tmec.js <códigos>`, `tests/tchaves.js <códigos>`, `tests/tadesivos.js` para a tela inicial, `tests/tmaterias.js` para a base das matérias, `tests/tsegredo.js` e `tests/tsegredo2.js` para as surpresas, `tests/tfiguras.js` para a figura central etc.); não commitar com teste quebrado. Conferir também as linhas FALHA, não só o código de saída. Capturas de teste ficam fora do git.
+- Rodar os testes de `tests/` antes de cada commit (`node tests/tgeral.js`, `tests/tmec.js <códigos>`, `tests/tchaves.js <códigos>`, `tests/tadesivos.js` para a tela inicial, `tests/tmaterias.js` para a base das matérias, `tests/tsegredo.js` e `tests/tsegredo2.js` para as surpresas, `tests/tfiguras.js` para a figura central, `tests/tmudacalculo.js` para a mudança do Cálculo etc.); não commitar com teste quebrado. Conferir também as linhas FALHA, não só o código de saída. Capturas de teste ficam fora do git.
 - Testar o site de verdade com Playwright e olhar as capturas (`node tests/shotmec.js <COD> "<seletor>@0"` → `tests/capturas/`).
 
 ## Decisões de projeto já tomadas
@@ -64,7 +64,6 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 
 ## Pendências combinadas
 - Modelo de dados (`docs/MODELO_DE_DADOS.md`): prefixos por matéria e rotas por matéria implementados na β 3.8. Falta decidir: renomear a física de `fisica:` para `fis:` (exige migrar o progresso salvo; hoje não foi feito) e o mapa de erros (registro de acerto e erro).
-- Mover o Cálculo da física para matemática, numa branch de teste, com o meu progresso exportado antes.
 - Ativar o GitHub Pages.
 
 ## Regra fixa
