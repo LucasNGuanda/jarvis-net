@@ -1,4 +1,4 @@
-/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; */
+/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -34,6 +34,38 @@
       q("[data-v=sv]").innerHTML = sv;
       const casas = div === 0.1 ? 2 : 1;
       q("[data-v=lt]").innerHTML = vis("menor divisão da régua", n2(div * 10, 0) + " mm") + vis("incerteza de leitura (meia divisão)", "± " + n2(div * 5, 1) + " mm") + vis("casas decimais esperadas (em cm)", String(casas)) ; q("[data-v=fb]").textContent = resp || "Digite a sua leitura e clique em Conferir.";
+    });
+  };
+
+  /* ---------- FE02 · cronômetro manual: atraso (sistemático), espalhamento (tipo A) e resolução (tipo B) ---------- */
+  SIM.reflexo = (el, F) => {
+    const W = 680, H = 220;
+    let estado = "pronto", t = 0, tAlvo = 0, medidas = [], msg = "Clique em Começar. Quando a bolinha cruzar a linha, aperte Agora! (ou a tecla espaço).";
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div><div class="status" data-v="fb" style="font-weight:600"></div>
+      <div class="ctrls"><div class="bts"><button class="bt pri" data-a="go">Começar</button><button class="bt pri" data-a="ja">Agora!</button><button class="bt" data-a="zera">Apagar as medidas</button></div></div>
+      <div class="status">A bolinha anda a velocidade constante e cruza a linha num instante que o programa conhece. Você para o cronômetro (de centésimos de segundo) quando vê ela cruzar. Repita várias vezes. O atraso médio é um erro sistemático (FE10); o espalhamento das suas medidas é a incerteza tipo A; a resolução do cronômetro (0,01 s) é a incerteza tipo B. Repare qual das duas manda.</div>`);
+    const q = (s) => el.querySelector(s);
+    const media = (a) => a.reduce((s, x) => s + x, 0) / a.length, dp = (a) => { const m = media(a); return Math.sqrt(a.reduce((s, x) => s + (x - m) ** 2, 0) / (a.length - 1)); };
+    SIM.reflexo._dp = dp;
+    const comeca = () => { estado = "correndo"; t = 0; tAlvo = 1.5 + Math.random() * 2; msg = "Atenção..."; };
+    const para = () => { if (estado !== "correndo") return; const erro = Math.round(t * 100) / 100 - tAlvo; medidas.push(erro); if (medidas.length > 30) medidas.shift(); estado = "pronto"; msg = `Você parou com ${erro >= 0 ? "atraso" : "adiantamento"} de ${n2(Math.abs(erro), 2)} s. Clique em Começar de novo.`; };
+    q("[data-a=go]").addEventListener("click", comeca); q("[data-a=ja]").addEventListener("click", para);
+    q("[data-a=zera]").addEventListener("click", () => { medidas = []; msg = "Medidas apagadas."; });
+    el.tabIndex = 0; el.addEventListener("keydown", (e) => { if (e.code === "Space") { e.preventDefault(); estado === "correndo" ? para() : comeca(); } });
+    anima(el, F, (dt) => {
+      if (estado === "correndo") { t += dt; if (t > tAlvo + 1.5) { estado = "pronto"; msg = "A bolinha passou e você não apertou. Clique em Começar."; } }
+      const xL = 470, v = (xL - 60) / Math.max(tAlvo, 0.1), xb = estado === "correndo" ? 60 + v * t : 60;
+      let sv = `<line x1="40" x2="640" y1="90" y2="90" style="stroke:var(--ink3);stroke-width:2"/><line x1="${xL}" x2="${xL}" y1="50" y2="120" style="stroke:var(--warn);stroke-width:3"/><circle cx="${Math.min(xb, 660)}" cy="80" r="10" style="fill:var(--mA)"/>` + D.txt(xL, 42, "linha", "tx2");
+      sv += `<rect x="40" y="140" width="150" height="50" rx="8" style="fill:var(--bg);stroke:var(--ink3)"/><text x="180" y="176" text-anchor="end" style="font:700 26px ui-monospace,monospace;fill:var(--ok)">${(Math.floor(t * 100) / 100).toFixed(2).replace(".", ",")} s</text>`;
+      /* pontinhos das medidas (erro de cada uma) num eixo de −0,3 a +0,5 s */
+      const ex0 = 260, ew = 380, X = (e) => ex0 + ((e + 0.3) / 0.8) * ew;
+      sv += `<line x1="${ex0}" x2="${ex0 + ew}" y1="170" y2="170" style="stroke:var(--ink3)"/><line x1="${X(0)}" x2="${X(0)}" y1="150" y2="190" style="stroke:var(--ok);stroke-width:2"/>` + D.txt(X(0), 206, "0 (exato)", "tx2") + D.txt(ex0, 206, "−0,3 s", "tx2") + D.txt(ex0 + ew, 206, "+0,5 s", "tx2") + D.txt(ex0 + ew / 2, 146, "erro de cada medida", "tx2");
+      medidas.forEach((e, i) => (sv += `<circle cx="${X(Math.max(-0.3, Math.min(0.5, e)))}" cy="${170 - ((i % 5) - 2) * 5}" r="4" style="fill:var(--warn)"/>`));
+      if (medidas.length >= 2) { const m = media(medidas), s = dp(medidas); sv += `<rect x="${X(m - s)}" y="160" width="${X(m + s) - X(m - s)}" height="20" style="fill:color-mix(in srgb,var(--warn) 20%,transparent);stroke:var(--warn);stroke-dasharray:3 3"/>`; }
+      q("[data-v=sv]").innerHTML = sv;
+      const m = medidas.length ? media(medidas) : NaN, s = medidas.length >= 2 ? dp(medidas) : NaN;
+      q("[data-v=lt]").innerHTML = vis("medidas feitas", String(medidas.length)) + vis("atraso médio (sistemático)", medidas.length ? n2(m, 3) + " s" : "—") + vis("espalhamento: desvio padrão (tipo A)", medidas.length >= 2 ? n2(s, 3) + " s" : "—") + vis("resolução do cronômetro (tipo B)", "0,01 s");
+      q("[data-v=fb]").textContent = msg;
     });
   };
 })();
