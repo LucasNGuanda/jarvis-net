@@ -9,7 +9,7 @@
    chefão (coroa de 1000 g e 62,7 cm³; ouro 19,3 e prata 10,5 g/cm³, volumes aditivos): densidade 15,95 g/cm³; ouro = (62,7 − 1000/10,5)/(1/19,3 − 1/10,5) = 749 g (18 quilates);
      átomos: 749/196,97 = 3,80 mol de Au e 251/107,87 = 2,32 mol de Ag: 62% dos átomos são de ouro. */
 F.registrar("quimica/C03", {
-  retoma: ["B07", "C01", "A03"],
+  retoma: ["B07", "C01", "A04"],
   html(F) {
     const R = String.raw, NA = 6.022e23;
     const fig = (conteudo, h = 170) => D.svg(560, h, conteudo, "figura");
@@ -142,7 +142,7 @@ F.registrar("quimica/C03", {
           <p>(iv) Fração ocupada: $\frac{\frac{16}{3}\pi r^3}{16\sqrt2\,r^3} = \frac{\pi}{3\sqrt2} = 0{,}74$. Nenhum empilhamento de esferas iguais passa disso.</p>`)}`),
 
       F.secao("ligas", "Ligas metálicas", R`
-        <p><b>Liga</b> é uma mistura com propriedades metálicas, de um metal com outros elementos (metais ou não). Quase nenhum metal é usado puro: as ligas são mais duras, mais resistentes ou fundem em outra temperatura. São misturas, em geral homogêneas (soluções sólidas ${F.ret("A03")}): a composição pode variar, e por isso se dá em porcentagem.</p>
+        <p><b>Liga</b> é uma mistura com propriedades metálicas, de um metal com outros elementos (metais ou não). Quase nenhum metal é usado puro: as ligas são mais duras, mais resistentes ou fundem em outra temperatura. São misturas, em geral homogêneas (soluções sólidas ${F.ret("A04")}): a composição pode variar, e por isso se dá em porcentagem.</p>
         ${F.fig(fig(liga(90, 22, "sub") + D.txt(155, 160, "substitucional (latão, bronze, ouro 18 k)", "tx2") + liga(340, 22, "int") + D.txt(405, 160, "intersticial (aço)", "tx2"), 170), "Dois tipos de liga: átomos de tamanho parecido trocam de lugar na rede; átomos pequenos entram nos espaços vazios.")}
         <table class="tb"><tr><th>Liga</th><th>Composição principal</th><th>Para que serve</th></tr>
           <tr><td>aço</td><td>ferro + carbono (até cerca de 2%)</td><td>estruturas, ferramentas</td></tr>
