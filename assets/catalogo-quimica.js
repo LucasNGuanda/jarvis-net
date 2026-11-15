@@ -14,7 +14,7 @@ window.CATALOGO.push(
     ["A04","Substâncias puras e misturas; alotropia",[],true],
     ["A05","Separação de misturas e grau de pureza",[],true],
     ["A06","Fenômenos físicos e químicos",[],true],
-    ["A07","Densidade, fusão, ebulição e solubilidade",[]],
+    ["A07","Densidade, fusão, ebulição e solubilidade",[],true],
     ["A08","Laboratório: segurança, vidrarias e técnicas",[]],
     ["A09","Algarismos significativos e erros de medida",[]],
   ] },
