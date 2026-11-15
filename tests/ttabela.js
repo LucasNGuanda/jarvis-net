@@ -101,6 +101,8 @@ const res = []; const ok = (c, m) => res.push([!!c, m]);
   await p.click('[data-modo=est]'); const es = await p.evaluate(() => [...document.querySelectorAll('.tp-c:not(.apag)')].map(c => c.querySelector('.tp-m').textContent).join(''));
   ok(es.length >= 10 && /^★+$/.test(es), '(11) estrelas nos elementos mais cobrados → ' + es.length);
   ok(await p.evaluate(() => document.querySelectorAll('[data-modo]').length === 10 && !!document.querySelector('.tp-topo input[type=search]')), 'botões dos recursos acima da tabela (10 modos + busca)');
+  const nota = await p.evaluate(() => { const r = document.querySelector('.tp-rod'), g = document.querySelector('.tp-gaveta').getBoundingClientRect(), b = r.getBoundingClientRect(); return { t: r.textContent, dentro: b.top >= g.top && b.bottom <= innerHeight - 30 && b.height > 10 }; });
+  ok(/critério do Jarvis/.test(nota.t) && /não uma estatística de provas/.test(nota.t) && /van der Waals/.test(nota.t) && /não existe medido ou em que as fontes discordam/.test(nota.t) && nota.dentro, 'notinha fixa na tabela: ★ é critério do Jarvis; raio de van der Waals; o que significa "sem dado" → visível: ' + nota.dentro);
   await p.keyboard.press('Escape'); await p.waitForTimeout(400);
 
   // ----- vale em qualquer matéria; persiste -----
