@@ -19,7 +19,7 @@ window.CATALOGO.push(
     ["A09","Algarismos significativos e erros de medida",[],true],
   ] },
   { id:"QB", area:"qui", letra:"B", cor:"--mA", nome:"Atomística", desc:"Modelos atômicos, distribuição eletrônica e tabela periódica.", temas:[
-    ["B01","Partículas fundamentais e íons",[]],
+    ["B01","Partículas fundamentais e íons",[],true],
     ["B02","Isótopos, isóbaros e isótonos",[]],
     ["B03","Modelos atômicos clássicos",[]],
     ["B04","Modelo quântico e distribuição eletrônica",[]],
