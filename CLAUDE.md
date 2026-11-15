@@ -104,3 +104,50 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Sempre que eu decidir algo novo, atualize o CLAUDE.md na mesma hora. Sempre que terminar um tema ou tarefa, atualize o PROGRESSO.md. Nunca termine uma sessão sem os dois atualizados.
 - Entregas grandes (pedido de 15/11/2026, como na mudança do Cálculo e no acesso/Jarvis): trabalhar numa branch, mandar o ZIP com a lista do que testar e só juntar ao `main` depois que o Lucas aprovar.
 - Versão: cada entrega soma 0,1 (`VERSAO` em `assets/catalogo.js`, título do `index.html`, `README.md`). Commit e push no `main` de LucasNGuanda/site-fisica.
+
+## Para quem continuar daqui
+*(Passagem de bastão escrita no fim do chat de 15/11/2026, β 4.7. Tudo o que foi aprendido nesse chat está aqui ou no PROGRESSO.md.)*
+
+### Comece por aqui
+- O projeto é o **Jarvis**, no `main` de **LucasNGuanda/site-fisica**. Leia primeiro este CLAUDE.md inteiro e depois o **"Estado final"** no topo do PROGRESSO.md (números reais, segredinhos, códigos e dívida técnica tema por tema).
+- Só a **Física** (96 temas na aba Física, 18 experimentos, 11 temas na aba Experimental) e o **Cálculo** (27 temas, na Matemática) têm conteúdo escrito. Química, Matemática (fora o Cálculo) e os três idiomas (Russo, Alemão e Sânscrito) estão só cadastrados, como "em breve".
+- **Próximo passo sugerido:** a dívida técnica, começando pela **Mecânica** (A01–A20: subir de 12–14 para 15–20 exercícios, pôr figura nos 178 exercícios sem figura e o `F.chute` em todos). Depois os módulos com 7 exercícios (F, O, M, U, N e o Cálculo). Esperar o Lucas escolher.
+- Não há pendência antiga em aberto: o N02 e os `{,}` foram corrigidos na β 4.7.
+
+### Como entregar
+- **Entrega grande se faz numa branch**: mandar o **ZIP** para o Lucas testar (`git archive --format=zip --prefix=jarvis-beta-X.Y/ -o <scratchpad>/jarvis-beta-X.Y.zip HEAD`) com uma lista curta do que testar, e **só juntar no `main` depois do ok dele** (`git merge --no-ff`). Coisa pequena e pedida vai direto, mas sempre depois da regressão.
+- Cada entrega soma 0,1 na versão, em três lugares: `VERSAO` em `assets/catalogo.js`, o `<title>` do `index.html` e o título do `README.md`.
+- Commits terminam com as duas linhas de atribuição pedidas pelo ambiente (Co-Authored-By e Claude-Session).
+- O `git fetch` deste ambiente só traz o `main`. Para uma branch nova: `git config --add remote.origin.fetch +refs/heads/<branch>:refs/remotes/origin/<branch>` antes do `git push -u`.
+- **O proxy do ambiente na nuvem não deixa apagar branches no GitHub** (nem por `git push --delete` nem pela API). No fim do chat ficaram no GitHub, já juntadas ao `main` (podem ser apagadas sem perder nada): acesso-codigos, adm-buraco-negro, base-materias, figuras-cientistas, materias-temas, muda-calculo, pendencias-finais. O Lucas apaga pela página Branches do GitHub ou com `git push origin --delete <nomes>` no computador dele.
+
+### Testes (rodar antes de todo commit, olhando as linhas FALHA e não só o código de saída)
+- O site começa **trancado** (acesso por código). Os testes rodam como ADM pelo `tests/adm.js` (`await require('./adm')(p)` logo depois de abrir a página); **todo teste novo precisa dele**, menos os de acesso.
+- O `tests/adm.js` grava o acesso só quando o documento fica "interactive". Gravar no localStorage no instante em que o documento nasce (direto no `addInitScript`) faz o Chromium perder, às vezes, o que o teste gravou antes de recarregar.
+- **Rodar a regressão sozinha na máquina.** Rodar capturas ou outro teste ao mesmo tempo gera falhas falsas de "depois de recarregar" (aconteceu no tcalc2, tcor, tfiguras e tmudacalculo). Antes de culpar o site, rodar o teste sozinho.
+- Regressão completa (~45 min; o tfunc leva ~8 min e o tgeral também demora): tgeral, tfunc, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE, thome, tcor, texp, tsegredo, tsegredo2, tadesivos, tmaterias, tfiguras, tmudacalculo, tacesso, tbusca, mais `tests/tmec.js`, `tests/tchaves.js` e `tests/texemp.js` com códigos de tema. A linha "FALHAS (0)" é só o rodapé de quem não falhou.
+- `node tests/tchaves.js <códigos>` percorre as **variações sorteadas** dos exercícios e acusa `{,}` e fórmula crua. Rodar em todos os temas mexidos (nos 152, leva ~5,5 min).
+- Depois de escrever ou mudar um tema, rodar **`node tools/gera-indice.js`** (2 s), senão o `tbusca` acusa índice velho (cada tema guarda a impressão digital do arquivo).
+- Se o shell recusar um heredoc de Python mais complexo, escrever o script num arquivo `.py` na pasta temporária e rodar.
+
+### Ferramentas que ficam no repositório (`tools/`)
+- `gera-indice.js`: índice da busca do Jarvis (`assets/indice-busca.js`), gerado a partir dos temas; dicas e resoluções ficam de fora.
+- `conta-temas.js`: tabela por módulo (exercícios, sem figura, `F.chute`, chefão, laboratórios) e a dívida técnica tema por tema, em Markdown. Usar para atualizar o PROGRESSO.
+- `procura-virgula.js`: varre todas as páginas montadas atrás de `{,}`, `$` ou TeX solto fora das fórmulas (~3 min).
+- `corrige-virgula.py`: troca `F.n(` → `F.nt(` só onde está fora de `$…$` (mostra antes; `--aplica` aplica). Revisar as trocas.
+- `captura-anim.js <tipo> t1,t2,…`: captura momentos das animações de liberação em `tests/capturas/`.
+- `escolhe-cor.py [n]`: escolhe cores novas longe da paleta inteira, dentro da faixa de claridade e saturação dela, para o tema escuro e o claro. Usar sempre que uma matéria ou módulo precisar de cor.
+
+### Armadilhas já conhecidas
+- Número em texto comum é `F.nt`, dentro de fórmula é `F.n` (vale também nas variações dos exercícios). Nunca escrever "R$" (o `$` abre fórmula: escrever "reais") nem `<` colado numa letra dentro de fórmula (`i<j` vira tag HTML: usar `\lt`). Em strings Python que geram TeX, usar raw strings (`\f` e `\a` viram caracteres de controle).
+- Os laboratórios são montados no `montar(F)`, depois do desenho: contar pelo `F.lab(` no código-fonte, não pelo html.
+- Ids de módulo nunca se repetem no projeto; códigos de experimento nunca são reaproveitados (próximo: **EP19**).
+- Mudança de dados salvos: sempre migração não destrutiva, com cópia de segurança em `jarvis:backup:...`, e testada (como o `F.migraCalculo` e o `tests/tmudacalculo.js`).
+- O adesivo "Buraco negro" (Física) é diferente da figura central "buraco negro": a figura é só do ADM; o adesivo segue o código de configurações (dá para restringir em `acesso-config.js` com `adesivos: { buraconegro: "adm" }`).
+- Física de animação e de simulação: conferir em Python (ex.: engrenagens do alemão com folga de 0,2 módulo; lente do buraco negro; N02 espaçado no tempo de percurso).
+- A "cor própria" do painel vale para planeta e galáxia pelas variáveis `--fg1..3`. No buraco negro realista ela vira `hue-rotate` (`--fg-hue`); o de arame segue o tema.
+
+### Sobre o Lucas (como trabalhar com ele)
+- Escreve rápido, com erro de digitação e muitas vezes manda captura de tela marcando o que quer. Entender a intenção e não corrigir a escrita dele.
+- Gosta de testar antes: quer o ZIP e a lista do que testar, e aprova ou pede ajuste. Responde "deu certinho junta lá" quando aprova.
+- Quer honestidade sem enfeite: dizer o que ficou diferente do pedido, o que não foi testado e qual número veio do teste.
