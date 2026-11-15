@@ -40,7 +40,7 @@ window.CATALOGO.push(
   { id:"QD", area:"qui", letra:"D", cor:"--mO", nome:"Reações e estequiometria", desc:"Balanceamento, mol, rendimento e reagente limitante.", temas:[
     ["D01","Funções inorgânicas e nomenclatura",[],true],
     ["D02","Tipos de reação e previsão de produtos",[],true],
-    ["D03","Leis ponderais",[]],
+    ["D03","Leis ponderais",[],true],
     ["D04","Mol, massa molar e constante de Avogadro",[]],
     ["D05","Balanceamento de equações",[]],
     ["D06","Cálculo estequiométrico: limitante, excesso, pureza e rendimento",[]],
