@@ -53,7 +53,8 @@ const { chromium } = require('playwright'); const res = []; const ok = (c, m) =>
   await sl('lab-lim', 'a', 2); await sl('lab-lim', 'b', 6); l = await leitor('lab-lim'); ok(/nenhum/.test(l['limitante']), 'D06: 2 : 6 é a proporção exata');
 
   await abre('D07');
-  e = await p.evaluate(() => SIM.qRedox._estado()); ok(e.ele && e.ele[0] === 2 && e.ele[1] === 2 && e.ok, 'D07: Zn + Cu²⁺ já começa com elétrons iguais (2 e 2)');
+  e = await p.evaluate(() => SIM.qRedox._estado()); ok(e.k === 1 && e.ele && e.ele[0] === 2 && e.ele[1] === 1 && !e.ok, 'D07: abre em Cu + Ag⁺, desbalanceada: 2 elétrons cedidos × 1 recebido');
+  await p.click('#lab-redox [data-s="1"]'); await p.click('#lab-redox [data-s="3"]'); e = await p.evaluate(() => SIM.qRedox._estado()); ok(e.ok && e.minimo && e.ele[0] === 2 && e.ele[1] === 2, 'D07: com 2 Ag⁺ e 2 Ag, elétrons, átomos e carga igualam');
   await p.selectOption('#lab-redox [data-v=sel]', '6'); e = await p.evaluate(() => SIM.qRedox._estado()); ok(e.ele[0] === 1 && e.ele[1] === 5 && !e.ok, 'D07: MnO₄⁻ + Fe²⁺ com coeficientes 1: 1 elétron cedido × 5 recebidos');
   for (let k = 0; k < 4; k++) await p.click('#lab-redox [data-s="1"]'); e = await p.evaluate(() => SIM.qRedox._estado()); ok(e.ele[0] === 5 && e.ele[1] === 5 && !e.ok, 'D07: com 5 Fe²⁺ os elétrons igualam, mas átomos e carga ainda não');
   const red = await p.evaluate(() => { let ruim = 0; SIM.REDOX.forEach((q, i) => { SIM.qRedox._poe(i, SIM.balanceia(q.r, q.p)); const s = SIM.qRedox._estado(); if (!s.ok || !s.minimo || s.ele[0] !== s.ele[1]) ruim++; }); return [SIM.REDOX.length, ruim]; });

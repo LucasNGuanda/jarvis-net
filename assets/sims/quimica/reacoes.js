@@ -53,7 +53,7 @@
      sai do próprio texto (soma dos códigos das letras), para o gabarito não cair sempre na mesma letra. */
   SIM.emb = (a) => a.map((v) => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map((x) => x[1]);
   SIM.pega = (lista, p, i = 0) => (p ? lista[i % lista.length] : lista[Math.floor(Math.random() * lista.length)]);
-  SIM.alt5 = (certo, outros, p) => { const o = [...new Set(outros.filter((x) => x !== certo))], d = (p ? o : SIM.emb(o)).slice(0, 4); let todos; if (p) { const pos = [...String(certo)].reduce((t, c) => t + c.charCodeAt(0), 0) % (d.length + 1); todos = d.slice(0, pos).concat([certo], d.slice(pos)); } else todos = SIM.emb(d.concat([certo])); return { alts: todos, certa: "ABCDE"[todos.indexOf(certo)] }; };
+  SIM.alt5 = (certo, outros, p) => { const o = [...new Set(outros.filter((x) => x !== certo))], h = [...String(certo)].reduce((t, c) => t + c.charCodeAt(0), 0), gira = o.length ? o.slice(h % o.length).concat(o.slice(0, h % o.length)) : o, d = (p ? gira : SIM.emb(o)).slice(0, 4); let todos; if (p) { const pos = h % (d.length + 1); todos = d.slice(0, pos).concat([certo], d.slice(pos)); } else todos = SIM.emb(d.concat([certo])); return { alts: todos, certa: "ABCDE"[todos.indexOf(certo)] }; };
   SIM.vg = (v, d = 2) => String(+(+v).toFixed(d)).replace(".", ",").replace("-", "−"); /* número em texto comum, sem zeros à direita */
 
   /* ---------- desenhos reutilizados nas figuras do módulo D ---------- */

@@ -34,7 +34,7 @@
   const balanco = (el, F, lista, redox) => {
     let k = 0, coef = [], cliques = 0, viu = false;
     el.insertAdjacentHTML("beforeend", `<div class="palco" style="padding:14px 12px"><div data-v="eq" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 4px;min-height:74px"></div><div data-v="tb" style="max-width:600px;margin:10px auto 0"></div></div><div class="leitor" data-v="lt"></div>
-      <div class="ctrls"><div><label class="tx2">equação <select data-v="sel" style="padding:5px 8px;border-radius:8px;border:1px solid var(--line2);background:var(--bg2);color:var(--ink);font:14px var(--f-text);max-width:420px">${lista.map((e, i) => `<option value="${i}">${i + 1}. ${e.r.map(sf).join(" + ")} → ${e.p.map(sf).join(" + ")}</option>`).join("")}</select></label></div><div class="bts"><button class="bt peq" data-b="zera">recomeçar</button><button class="bt peq" data-b="resp">mostrar resposta</button></div></div>
+      <div class="ctrls"><div><label class="tx2">equação <select data-v="sel" style="padding:5px 8px;border-radius:8px;border:1px solid var(--line2);background:var(--bg2);color:var(--ink);font:14px var(--f-text);max-width:420px">${lista.map((e, i) => `<option value="${i}">${i + 1}. ${e.r.map(sf).join(" + ")} → ${e.p.map(sf).join(" + ")}</option>`).join("")}</select></label></div><div class="bts" style="align-self:end"><button class="bt peq" data-b="zera">recomeçar</button><button class="bt peq" data-b="resp">mostrar resposta</button></div></div>
       <div class="status">${redox ? "Em oxirredução, comece pelos <b>elétrons</b>: ajuste os coeficientes de quem oxida e de quem reduz até os elétrons cedidos e recebidos ficarem iguais (primeira linha). Depois acerte os outros átomos, deixando hidrogênio e oxigênio por último; nas equações com íons, a <b>carga</b> total também tem de bater." : "Mexa nos coeficientes com − e +. Os índices das fórmulas não mudam nunca: mudar um índice é trocar de substância."} Cada linha compara o número de átomos de um elemento à esquerda e à direita da seta: verde quando iguala. A equação está balanceada quando todas as linhas estão verdes; o gabarito pede os <b>menores números inteiros</b>.</div>`);
     const q = (s) => el.querySelector(s), esp = () => lista[k].r.concat(lista[k].p);
     const estado = () => { const e = lista[k], tot = SIM.confere(e.r, e.p, coef), linhas = Object.keys(tot).map((a) => [a === "±" ? "carga" : a, tot[a][0], tot[a][1]]); let ele = null; if (redox) ele = [coef[e.ox[0]] * e.ox[1], coef[e.red[0]] * e.red[1]]; const ok = linhas.every((l) => l[1] === l[2]) && (!ele || ele[0] === ele[1]), g = coef.reduce((a, b) => SIM.mdc(a, b), 0); return { linhas, ele, ok, minimo: g === 1 }; };
@@ -51,7 +51,7 @@
     q("[data-v=sel]").addEventListener("change", (ev) => nova(+ev.target.value));
     q("[data-b=zera]").addEventListener("click", () => nova(k));
     q("[data-b=resp]").addEventListener("click", () => { const g = SIM.balanceia(lista[k].r, lista[k].p); if (g) { coef = g; viu = true; desenha(); } });
-    nova(0);
+    if (redox) { q("[data-v=sel]").value = "1"; nova(1); } else nova(0);
   };
   SIM.balanceador = (el, F) => balanco(el, F, SIM.EQS, false);
   SIM.qRedox = (el, F) => balanco(el, F, SIM.REDOX, true);
