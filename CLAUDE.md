@@ -22,7 +22,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - **Estado de cada matéria (fim do chat, β 4.6):**
   - Física: a única com conteúdo escrito. Aba Física com 96 de 96 temas e 913 exercícios; Experimentos com 18 (EP01–EP18; próximo código EP19); Experimental com 11 de 11 no padrão completo.
   - Matemática: só o Cálculo escrito (27 temas); 114 temas "em breve".
-  - Química: 104 temas cadastrados; escrito só o A01 (β 4.8, na branch `quimica-a01` até o Lucas aprovar).
+  - Química: 104 temas cadastrados; escritos o A01 (β 4.8, no `main`) e o A02 a A05 (β 4.9, na branch `quimica-a02-a05` até o Lucas aprovar).
   - Russo, Alemão e Sânscrito: só cadastrados, todos "em breve".
   - Números detalhados e dívida técnica no PROGRESSO.md, em "Estado final".
 - **Física**: 3 abas, Física, Experimentos e Experimental (o Cálculo foi para a matemática na β 4.0). Módulos F, A, T, O, C, M, U, N, X (bônus) e S (simulados).
@@ -110,7 +110,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - **Nas 5 primeiras versões nada vai direto para o `main`**: branch, parar, mandar o que foi feito, o resultado dos testes, capturas e o ZIP; só juntar com o "aprovado" escrito do Lucas. Depois de 5 aprovadas em sequência, afrouxa.
 - Território: `temas/quimica/`, `assets/sims/quimica/` e `assets/catalogo-quimica.js`. Também pode: `assets/indice-busca.js` (gerado) e **uma linha de `<script>` no `index.html` por arquivo de laboratório**. Fora da química também pode, sem perguntar: (a) consertar teste que ficou desatualizado por causa de uma mudança que o Lucas pediu (em commit separado e marcado; regressão sem falha é o padrão) e (b) registrar decisão no CLAUDE.md ou no PROGRESSO.md. Para qualquer outra coisa fora da química, perguntar antes. Não criar componente novo; estender com campo opcional.
 - "Pense como químico" = `F.caixa("fisico", html, "Pense como químico")`; segurança = `F.caixa("pegadinha", html, "Segurança e descarte")`, dizendo se pode em casa ou só no laboratório da escola. Tema da física citado de dentro da química: `F.ret("fisica/FE03")`.
-- Modelo de tema: o T02 (não os da Mecânica). Exercícios já nascem com 15 a 20, todos com figura.
+- Modelo de tema: o T02 (não os da Mecânica). **De 10 a 15 exercícios por tema** (decisão do Lucas ao aprovar o A01, 15/11/2026; antes eram 15 a 20), todos com figura e correção automática. A figura de um exercício nunca traz escrito o nome que é a resposta.
 - Caixas "Nível olimpíada": descrever o estilo de cobrança; **nunca citar questão de memória**. Questão real só de prova que o Lucas mandar.
 - **Tudo para computador (1280 px)**: Playwright sempre em 1280 px. Antes de fazer diferente do que a física faz, perguntar.
 - Laboratórios prioritários da aba Experimentos: EQ19 tabela periódica que acende, EQ20 construtor de moléculas, EQ21 balanceador visual (especificação de cada um em comentário no catálogo).

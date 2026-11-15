@@ -81,7 +81,8 @@ const falhas = []; const conf = (ok, txt, extra) => { console.log((ok ? 'ok     
   t = await tela('onde exporto meu progresso?'); conf(/não tem acesso a nenhuma matéria/.test(t.texto), 'visitante+Jarvis: exportar → explica que ainda não há matéria liberada', t.texto.slice(0, 120));
   // química: A08 vai para o da Química
   await nivel(['quimica', 'jarvis']); r = await R('A08'); conf(r.tipo === 'codigo' && r.alvo.href === '#/quimica/A08', 'só Química: "A08" → o A08 da Química', JSON.stringify(r.alvo));
-  r = await R('Bernoulli'); conf(r.tipo === 'trancado', 'só Química: "Bernoulli" (Física) → trancado', r.tipo);
+  r = await R('Bernoulli'); conf(r.tipo === 'trancado' || (r.tipo === 'lista' && r.mats.every((m) => m === 'quimica')), 'só Química: "Bernoulli" (Física) → trancado, ou só temas da Química (β 4.9: o sinônimo "fluido" aparece no A03 e no A05), nunca Física', r.tipo + ' ' + [...new Set(r.mats || [])].join(','));
+  r = await R('Kepler'); conf(r.tipo === 'trancado', 'só Química: "Kepler" (Física, sem nada parecido na Química) → trancado', r.tipo);
   await tela('onde fica a legenda?'); await p.waitForTimeout(700);
   conf(await p.evaluate(() => location.hash === '#/quimica' && !!document.querySelector('#detalhes.aberto') && !document.querySelector('.jv-bloq')), 'só Química: a legenda abre na Química (não numa página trancada)', await p.evaluate(() => location.hash));
   // sem o código do Jarvis

@@ -9,10 +9,10 @@ window.AREAS.push(
 window.CATALOGO.push(
   { id:"QA", area:"qui", letra:"A", cor:"--mF", nome:"Introdução à química", desc:"Matéria, substâncias, misturas e separação.", temas:[
     ["A01","Objetivos e ramos da química; método científico",[],true],
-    ["A02","Matéria, energia e propriedades da matéria",[]],
-    ["A03","Estados físicos e mudanças de estado",[]],
-    ["A04","Substâncias puras e misturas; alotropia",[]],
-    ["A05","Separação de misturas e grau de pureza",[]],
+    ["A02","Matéria, energia e propriedades da matéria",[],true],
+    ["A03","Estados físicos e mudanças de estado",[],true],
+    ["A04","Substâncias puras e misturas; alotropia",[],true],
+    ["A05","Separação de misturas e grau de pureza",[],true],
     ["A06","Fenômenos físicos e químicos",[]],
     ["A07","Densidade, fusão, ebulição e solubilidade",[]],
     ["A08","Laboratório: segurança, vidrarias e técnicas",[]],
