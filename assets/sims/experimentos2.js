@@ -1,4 +1,4 @@
-/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; EP13 van der Waals; EP14 fenda dupla; EP15 corpo negro; EP16 fissão e fusão; */
+/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; EP13 van der Waals; EP14 fenda dupla; EP15 corpo negro; EP16 fissão e fusão; EP17 gato de Schrödinger (e o desenho do gato, window.GATO); */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -337,6 +337,95 @@
       q("[data-v=sv]").innerHTML = sv;
       const ult = gens.length > 1 ? gens[gens.length - 1] / Math.max(gens[gens.length - 2], 1) : 0;
       q("[data-v=lt]").innerHTML = vis("geração | nêutrons", gens.length - 1 + " | " + (N > 1e6 ? n2(N / 1e6, 1) + " milhões" : N)) + vis("estado", k < 0.995 ? "subcrítico" : k > 1.005 ? "supercrítico" : "crítico") + vis("razão medida N(g)/N(g−1)", gens.length > 1 ? n2(ult, 2) : "—") + vis("energia: fissão do U-235 | fusão D-T", "≈ 173 MeV | 17,6 MeV");
+    });
+  };
+
+  /* ---------- gato original (traço simples), usado no EP17 e em outro lugar do site ----------
+     GATO.svg(estado, t): "acordado" (olhos abertos, rabo balançando, espreguiçando) ou "dormindo" (enroladinho, zzz e estrelinhas).
+     Desenhado em torno de (0, 0), cabe numa caixa de uns 150 × 110. */
+  window.GATO = {
+    svg(estado = "acordado", t = 0) {
+      const cor = "var(--gato, #e3a95c)", traco = "var(--ink)";
+      if (estado === "dormindo") return `<g class="gato gato-dorme" transform="translate(0 ${(1.5 * Math.sin(t * 1.6)).toFixed(2)})">
+        <path class="gato-rabo-d" d="M48 26 q30 4 26 -18 q-2 -10 -12 -8" style="fill:none;stroke:${cor};stroke-width:9;stroke-linecap:round"/>
+        <ellipse cx="0" cy="22" rx="56" ry="26" style="fill:${cor};stroke:${traco};stroke-width:2"/>
+        <circle cx="-36" cy="6" r="24" style="fill:${cor};stroke:${traco};stroke-width:2"/>
+        <path d="M-56 -8 l-4 -20 l16 10 Z M-28 -14 l8 -18 l6 18 Z" style="fill:${cor};stroke:${traco};stroke-width:2;stroke-linejoin:round"/>
+        <path d="M-48 6 q5 4 10 0 M-30 6 q5 4 10 0" style="fill:none;stroke:${traco};stroke-width:2;stroke-linecap:round"/>
+        <path d="M-37 13 l2 2 l2 -2" style="fill:none;stroke:${traco};stroke-width:1.6"/>
+        <ellipse cx="-50" cy="15" rx="4" ry="2.5" style="fill:#f08aa0;opacity:.6"/><ellipse cx="-22" cy="15" rx="4" ry="2.5" style="fill:#f08aa0;opacity:.6"/>
+        <g class="gato-zzz" transform="translate(${(3 * Math.sin(t * 2)).toFixed(1)} ${(-((t * 8) % 12)).toFixed(1)})" style="opacity:${(0.55 + 0.45 * Math.cos(t * 2.6)).toFixed(2)}"><text x="-6" y="-26" style="font:700 14px var(--f-text, sans-serif);fill:var(--ink2)">z</text><text x="6" y="-40" style="font:700 18px var(--f-text, sans-serif);fill:var(--ink2)">z</text><text x="20" y="-56" style="font:700 22px var(--f-text, sans-serif);fill:var(--ink2)">Z</text></g>
+        <g class="gato-estrela" style="opacity:${(0.4 + 0.6 * Math.abs(Math.sin(t * 2.2))).toFixed(2)}"><path d="M-70 -40 l3 7 l7 1 l-5 5 l1 7 l-6 -4 l-6 4 l1 -7 l-5 -5 l7 -1 Z" style="fill:var(--warn)"/><path d="M40 -30 l2 4 l4 1 l-3 3 l1 4 l-4 -2 l-4 2 l1 -4 l-3 -3 l4 -1 Z" style="fill:var(--warn)"/></g>
+      </g>`;
+      return `<g class="gato gato-acorda">
+        <g class="gato-corpo" transform="translate(6 22) scale(${(1 + 0.07 * Math.max(0, Math.sin(t * 1.3))).toFixed(3)} ${(1 - 0.05 * Math.max(0, Math.sin(t * 1.3))).toFixed(3)}) translate(-6 -22)">
+          <path class="gato-rabo" transform="rotate(${(18 * Math.sin(t * 4)).toFixed(1)} 40 18)" d="M40 18 q34 -6 30 -44 q-1 -8 6 -10" style="fill:none;stroke:${cor};stroke-width:9;stroke-linecap:round"/>
+          <ellipse cx="6" cy="22" rx="46" ry="24" style="fill:${cor};stroke:${traco};stroke-width:2"/>
+          <path d="M-30 36 v14 M-14 40 v12 M22 40 v12 M36 36 v14" style="stroke:${cor};stroke-width:9;stroke-linecap:round"/>
+          <path d="M-30 36 v14 M-14 40 v12 M22 40 v12 M36 36 v14" style="stroke:${traco};stroke-width:1.5;opacity:.3;stroke-linecap:round"/>
+        </g>
+        <g class="gato-cabeca" transform="rotate(${(4 * Math.sin(t * 1.3)).toFixed(1)} -38 14)">
+          <circle cx="-38" cy="-6" r="26" style="fill:${cor};stroke:${traco};stroke-width:2"/>
+          <path d="M-60 -18 l-4 -24 l18 12 Z M-30 -30 l8 -20 l8 20 Z" style="fill:${cor};stroke:${traco};stroke-width:2;stroke-linejoin:round"/>
+          <path d="M-58 -22 l-2 -12 l8 6 Z M-27 -32 l5 -11 l4 11 Z" style="fill:#f08aa0;opacity:.6"/>
+          <circle cx="-48" cy="-8" r="5.5" style="fill:#fff;stroke:${traco};stroke-width:1.5"/><circle cx="-28" cy="-8" r="5.5" style="fill:#fff;stroke:${traco};stroke-width:1.5"/>
+          <circle class="gato-pupila" cx="-47" cy="-7" r="2.8" style="fill:${traco}"/><circle class="gato-pupila" cx="-27" cy="-7" r="2.8" style="fill:${traco}"/>
+          <path d="M-40 2 l2 2 l2 -2 M-38 4 q-3 4 -6 2 M-38 4 q3 4 6 2" style="fill:none;stroke:${traco};stroke-width:1.6;stroke-linecap:round"/>
+          <path d="M-56 2 h-14 M-56 6 l-13 4 M-20 2 h14 M-20 6 l13 4" style="stroke:${traco};stroke-width:1;opacity:.6"/>
+          <ellipse cx="-54" cy="2" rx="4" ry="2.5" style="fill:#f08aa0;opacity:.6"/><ellipse cx="-22" cy="2" rx="4" ry="2.5" style="fill:#f08aa0;opacity:.6"/>
+        </g>
+      </g>`;
+    },
+  };
+
+  /* ---------- EP17 · o gato de Schrödinger (de brincadeira): superposição, decaimento e colapso ---------- */
+  SIM.gatoSchrodinger = (el, F) => {
+    const W = 680, H = 320;
+    let t = 0, aberta = false, resultado = null, anim = 0, hist = [];
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("meia-vida do átomo (s)", "T", 2, 30, 1, 8)}
+      <div class="bts"><button class="bt pri" data-a="abre">Abrir a caixa</button><button class="bt" data-a="fecha">Fechar e recomeçar</button></div></div>
+      <div class="status" data-v="st"></div><div class="status gato-hist" data-v="hist" style="font-size:.9em"></div>`);
+    const q = (s) => el.querySelector(s);
+    SIM.gatoSchrodinger._pVivo = (tt, T) => Math.pow(2, -tt / T);
+    q("[data-a=abre]").addEventListener("click", () => {
+      if (aberta) return;
+      const T = val(el, "T"), p = SIM.gatoSchrodinger._pVivo(t, T); aberta = true; anim = 0;
+      resultado = Math.random() < p ? "acordado" : "dormindo";
+      hist.push({ n: hist.length + 1, t, p, r: resultado });
+    });
+    q("[data-a=fecha]").addEventListener("click", () => { aberta = false; resultado = null; t = 0; });
+    q("[data-c=T]").addEventListener("input", () => { if (!aberta) t = 0; });
+    anima(el, F, (dt) => {
+      const T = val(el, "T"); mostra(el, ["T"], 0);
+      if (!aberta) t += dt; else anim += dt;
+      const p = SIM.gatoSchrodinger._pVivo(t, T), osc = 0.06 * Math.sin(t * 3);
+      /* caixa */
+      const bx = 150, by = 60, bw = 280, bh = 200;
+      let sv = `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="10" style="fill:color-mix(in srgb,var(--warn) 10%,var(--bg));stroke:var(--ink2);stroke-width:3"/>`;
+      if (!aberta) {
+        sv += `<g transform="translate(${bx + 150} ${by + 120})" style="opacity:${Math.max(0, Math.min(1, p + osc)).toFixed(3)}">${GATO.svg("acordado", t)}</g><g transform="translate(${bx + 150} ${by + 120})" style="opacity:${Math.max(0, Math.min(1, 1 - p - osc)).toFixed(3)}">${GATO.svg("dormindo", t)}</g>`;
+        sv += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="10" style="fill:color-mix(in srgb,var(--ink3) 22%,transparent)"/>` + D.txt(bx + bw / 2, by + 26, "caixa fechada: os dois ao mesmo tempo", "tx2");
+      } else {
+        const s = Math.min(1, anim / 0.35);
+        if (anim < 0.35) sv += `<circle cx="${bx + bw / 2}" cy="${by + bh / 2}" r="${40 + s * 160}" style="fill:var(--warn);opacity:${(0.6 * (1 - s)).toFixed(2)}"/>`;
+        sv += `<g transform="translate(${bx + 150} ${by + 120}) scale(${(0.6 + 0.4 * s).toFixed(3)})">${GATO.svg(resultado, anim)}</g>` + D.txt(bx + bw / 2, by + 26, resultado === "acordado" ? "o gato está acordado!" : "o gato está dormindo (zzz)", "tx2");
+      }
+      /* átomo, contador e frasco de brincadeira */
+      const decaiu = aberta ? resultado === "dormindo" : null;
+      sv += `<g transform="translate(70 120)"><circle r="22" style="fill:color-mix(in srgb,var(--mN) ${decaiu ? 15 : 45}%,transparent);stroke:var(--mN);stroke-width:2"/>${[0, 1, 2, 3, 4, 5].map((i) => `<circle cx="${8 * Math.cos(i + t)}" cy="${8 * Math.sin(i * 1.7 + t)}" r="4" style="fill:var(--mN)"/>`).join("")}</g>` + D.txt(70, 160, "átomo", "tx2");
+      if (decaiu) sv += D.seta(92, 110, 140, 90, "var(--bad)", 1.6) + D.txt(118, 84, "decaiu", "tx2");
+      sv += D.txt(70, 190, "chance de ter decaído", "tx2") + `<rect x="20" y="198" width="100" height="10" rx="5" style="fill:var(--line2)"/><rect x="20" y="198" width="${(100 * (1 - p)).toFixed(1)}" height="10" rx="5" style="fill:var(--mN)"/>` + D.txt(70, 226, n2((1 - p) * 100, 0) + "%", "tx2");
+      /* gráfico da probabilidade de "acordado" no tempo */
+      const gx = 460, gy = 250, gw = 200, gh = 170, tmax = 4 * T; let d = "";
+      for (let i = 0; i <= 80; i++) { const tt = (tmax * i) / 80; d += (i ? "L" : "M") + (gx + (tt / tmax) * gw).toFixed(1) + " " + (gy - SIM.gatoSchrodinger._pVivo(tt, T) * gh).toFixed(1); }
+      sv += D.seta(gx, gy, gx + gw + 8, gy, "var(--ink2)", 1.2) + D.seta(gx, gy, gx, gy - gh - 10, "var(--ink2)", 1.2) + `<path d="${d}" style="fill:none;stroke:var(--warn);stroke-width:2"/>` + D.txt(gx + 4, gy - gh - 2, "P(acordado) = 2^(−t/T½)", "tx2", "start") + D.txt(gx + gw, gy + 16, "t", "tx2", "end");
+      const tp = Math.min(t, tmax); sv += `<circle cx="${gx + (tp / tmax) * gw}" cy="${gy - SIM.gatoSchrodinger._pVivo(tp, T) * gh}" r="5" style="fill:var(--ink)"/>`;
+      q("[data-v=sv]").innerHTML = sv;
+      const viv = hist.filter((h) => h.r === "acordado").length, esp = hist.reduce((s, h) => s + h.p, 0);
+      q("[data-v=lt]").innerHTML = vis("tempo com a caixa fechada", n2(t, 1) + " s") + vis("chance de acordado | dormindo", n2(p * 100, 0) + "% | " + n2((1 - p) * 100, 0) + "%") + vis("vezes que abri", String(hist.length)) + vis("acordado: obtido | esperado", viv + " | " + n2(esp, 1));
+      q("[data-v=st]").innerHTML = aberta ? `Ao abrir, a superposição <b>colapsou</b>: o átomo ${resultado === "acordado" ? "ainda não tinha decaído, e o gato acordou e está se espreguiçando" : "já tinha decaído, e o gato está dormindo profundamente"}. Feche a caixa para começar de novo.` : `Caixa fechada há ${n2(t, 1)} s. Enquanto ninguém olha, o átomo está numa superposição de "decaiu" e "não decaiu", e o gato também: as duas imagens se misturam com transparências iguais às probabilidades. Abra quando quiser.`;
+      q("[data-v=hist]").innerHTML = hist.length ? "Histórico: " + hist.slice(-12).map((h) => `#${h.n} ${h.r === "acordado" ? "acordado" : "dormindo"} (t = ${n2(h.t, 1)} s, P = ${n2(h.p * 100, 0)}%)`).join(" · ") : "";
     });
   };
 })();
