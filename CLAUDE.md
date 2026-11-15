@@ -22,7 +22,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - **Estado de cada matéria (fim do chat, β 4.6):**
   - Física: a única com conteúdo escrito. Aba Física com 96 de 96 temas e 913 exercícios; Experimentos com 18 (EP01–EP18; próximo código EP19); Experimental com 11 de 11 no padrão completo.
   - Matemática: só o Cálculo escrito (27 temas); 114 temas "em breve".
-  - Química: 104 temas cadastrados; módulos A (A01–A09), B (B01–B08) e C (C01–C07) completos, no `main` (β 5.2). Detalhes no PROGRESSO.md.
+  - Química: 104 temas cadastrados; módulos A (A01–A09), B (B01–B08) e C (C01–C07) no `main` (β 5.2); módulo D (D01–D07, β 5.4) na branch `quimica-modulo-d`. Detalhes no PROGRESSO.md.
   - Russo, Alemão e Sânscrito: só cadastrados, todos "em breve".
   - Números detalhados e dívida técnica no PROGRESSO.md, em "Estado final".
 - **Física**: 3 abas, Física, Experimentos e Experimental (o Cálculo foi para a matemática na β 4.0). Módulos F, A, T, O, C, M, U, N, X (bônus) e S (simulados).
@@ -115,6 +115,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - **Tudo para computador (1280 px)**: Playwright sempre em 1280 px. Antes de fazer diferente do que a física faz, perguntar.
 - **Tabela periódica = ferramenta de rodapé, não aba** (decisão do Lucas, 15/11/2026): interruptor ao lado do título da matéria; barrinha no rodapé que sobe e vira a tabela inteira; depois da primeira vez, interruptor também na engrenagem; vale em todas as matérias; só uma ferramenta de rodapé por vez (tabela ou calculadora). Dados dos elementos em arquivo próprio, conferidos em fonte, com os brancos listados. Especificação completa no PROGRESSO.md, em "Em andamento na sessão de química".
 - **Nomes de simulação são globais** (`window.SIM`, todos os arquivos carregados juntos): um nome repetido apaga o outro sem aviso (aconteceu com `SIM.curvas`, `SIM.decaimento` e `SIM.dipolo`, corrigido na β 5.2). Antes de criar um laboratório, conferir com `node tests/tsim.js`; na dúvida, prefixo `q` nos da Química.
+- **Módulo D (pedido do Lucas, 15/11/2026): 15 a 20 exercícios por tema (feitos com 16) e números sorteados sempre que possível.** Para isso o `F.exercicio` ganhou o campo opcional `gerar(primeiro)` (autorizado pelo Lucas): devolve `enun`, `fig`, `alts`/`certa` ou `num`, `dicas`, `resp`, `sol` e, nos numéricos, `py` (a mesma conta como expressão Python). Ajudantes em `assets/sims/quimica/reacoes.js`: `SIM.pega`, `SIM.alt5`, `SIM.mm`, `SIM.balanceia`, `SIM.dadosMA`, `SIM.dq` (desenhos). Massas atômicas arredondadas de prova, **sempre ditas no enunciado**. Testes de todo tema com sorteio: `node tests/tvaria.js <códigos> --n 10 --saida v.json` e `python3 tools/confere-py.py v.json`; do núcleo: `node tests/tnucleo.js`; dos laboratórios do D: `node tests/tlabsD.js`. Entrega do módulo D em branch própria, com aprovação antes do `main`.
 - Laboratórios prioritários da aba Experimentos: EQ19 tabela periódica que acende, EQ20 construtor de moléculas, EQ21 balanceador visual (especificação de cada um em comentário no catálogo).
 
 ## Para quem continuar daqui
