@@ -435,22 +435,64 @@
     F.aoSair(() => { vivo = false; timers.forEach(clearTimeout); });
   }
 
-  /* experimentos: pêndulo duplo (pequeno, só enfeite) com rastro */
+  /* experimentos: pêndulo duplo (pequeno, só enfeite) com rastro. Tem uma surpresa escondida (ver PROGRESSO.md, β 3.4). */
   function animPendulo(el) {
-    el.innerHTML = `<svg viewBox="-225 -225 450 450" aria-label="pêndulo duplo animado"><g class="r"></g><g class="p"></g></svg>`;
+    const idF = F.id("fx"), idG = F.id("gx");
+    el.innerHTML = `<svg viewBox="-225 -225 450 450" aria-label="pêndulo duplo animado"><defs><filter id="${idF}" x="-60%" y="-60%" width="220%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="ru"/><feDisplacementMap in="SourceGraphic" in2="ru" scale="6" xChannelSelector="R" yChannelSelector="G"/></filter><radialGradient id="${idG}"><stop offset="52%" stop-color="#ffd98a" stop-opacity="0"/><stop offset="60%" stop-color="#ffe2a0"/><stop offset="76%" stop-color="#ff8a3d" stop-opacity=".85"/><stop offset="100%" stop-color="#ff4a3a" stop-opacity="0"/></radialGradient></defs><g class="r"></g><g class="p"></g><g class="x"></g></svg>`;
     let s = [2.2, 2.6, 0, 0], vivo = true, tr = []; const L = 1, g = 9.8;
     const f = ([a1, a2, w1, w2]) => { const d = a1 - a2, den = 3 - Math.cos(2 * d); return [w1, w2, (-g * 3 * Math.sin(a1) - g * Math.sin(a1 - 2 * a2) - 2 * Math.sin(d) * (w2 * w2 + w1 * w1 * Math.cos(d))) / den, (2 * Math.sin(d) * (2 * w1 * w1 + 2 * g * Math.cos(a1) + w2 * w2 * Math.cos(d))) / den]; };
     const rk = (st, h) => { const k1 = f(st), k2 = f(st.map((v, i) => v + (h / 2) * k1[i])), k3 = f(st.map((v, i) => v + (h / 2) * k2[i])), k4 = f(st.map((v, i) => v + h * k3[i])); return st.map((v, i) => v + (h / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i])); };
     let t0 = performance.now(); const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const svg = el.querySelector("svg"), gx = el.querySelector(".x");
+    let pos = [0, 0, 0, 0], ev = null, achou = !!F.store.get("segredo:x", 0);
+    const C = [0, 40]; /* centro do "x" */
+    const fim = () => { ev = null; s = [2.2, 2.6, 0, 0]; tr = []; gx.innerHTML = ""; };
+    svg.addEventListener("pointermove", (e) => {
+      if (ev || reduz) return;
+      const m = svg.getScreenCTM(); if (!m) return;
+      const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
+      if (Math.hypot(p.x - pos[2], p.y - pos[3]) < 8) { ev = { t: 0, p0: pos.slice() }; if (!achou) { achou = true; F.store.set("segredo:x", 1); } }
+    });
+    svg.addEventListener("click", (e) => { if (!ev) return; if (e.target.closest && e.target.closest(".gx-gato")) { location.hash = "#/EP17"; return; } if (ev.t > 3) fim(); });
+    function cena(dt) {
+      ev.t += dt; const t = ev.t, [cx, cy] = C;
+      const cresce = Math.min(1, t / 0.6) * (t > 5.2 ? Math.max(0, 1 - (t - 5.2) / 0.8) : 1), ang = t * 140;
+      let o = "";
+      if (cresce > 0) {
+        /* luz das estrelas de fundo passando perto e se curvando (desvio ∝ 1/b), com uma leve distorção */
+        o += `<g filter="url(#${idF})" style="opacity:${(0.85 * cresce).toFixed(2)}">`;
+        for (let k = -3; k <= 3; k++) { if (!k) continue; const b = k * 26, dsv = Math.min(0.75 * Math.abs(b), 900 / Math.abs(b)) * Math.sign(b) * cresce; /* desvio ∝ 1/b, limitado para não cruzar */ o += `<path d="M-220 ${cy + b} Q${cx} ${cy + b - dsv} 220 ${cy + b}" style="fill:none;stroke:#cfe0ff;stroke-width:1;opacity:.55"/>`; }
+        o += `<circle cx="${cx}" cy="${cy}" r="${46 * cresce}" style="fill:none;stroke:#ffe9b8;stroke-width:2;opacity:.8"/></g>`;
+        o += `<g transform="translate(${cx} ${cy}) scale(${cresce.toFixed(3)})"><g transform="scale(1 .32) rotate(${ang.toFixed(1)})"><circle r="92" style="fill:url(#${idG})"/><path d="M-80 0 A80 80 0 0 1 80 0" style="fill:none;stroke:#fff3d6;stroke-width:3;opacity:.6"/></g><circle r="28" style="fill:#000;stroke:#ffcf7a;stroke-width:1.5"/><g transform="scale(1 .32) rotate(${ang.toFixed(1)})"><path d="M-92 0 A92 92 0 0 0 92 0" style="fill:none;stroke:url(#${idG});stroke-width:26;opacity:.9"/></g></g>`;
+      }
+      /* o pêndulo é puxado espiralando e esticado na direção radial */
+      if (t < 2.6) {
+        const u = Math.max(0, Math.min(1, (t - 0.5) / 2)), pt = (x, y) => { const r0 = Math.hypot(x - cx, y - cy), a0 = Math.atan2(y - cy, x - cx), r = r0 * Math.pow(1 - u, 1.6), a = a0 + 7 * u * u; return [cx + r * Math.cos(a), cy + r * Math.sin(a), a]; };
+        const [x1, y1, a1] = pt(ev.p0[0], ev.p0[1]), [x2, y2, a2] = pt(ev.p0[2], ev.p0[3]), op = (1 - u * u).toFixed(2), est = (k) => 10 + 46 * u * k, fin = (k) => Math.max(0.6, 10 * (1 - u * k));
+        o += `<g style="opacity:${op}"><line x1="-40" y1="0" x2="40" y2="0" style="stroke:var(--ink3);stroke-width:3"/><path d="M0 0 L${x1.toFixed(1)} ${y1.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}" style="stroke:var(--ink);stroke-width:${(2.2 * (1 - u)).toFixed(2)};fill:none"/><ellipse cx="${x1.toFixed(1)}" cy="${y1.toFixed(1)}" rx="${est(0.8).toFixed(1)}" ry="${fin(0.9).toFixed(1)}" transform="rotate(${((a1 * 180) / Math.PI).toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)})" style="fill:var(--mA)"/><ellipse cx="${x2.toFixed(1)}" cy="${y2.toFixed(1)}" rx="${est(1).toFixed(1)}" ry="${fin(1).toFixed(1)}" transform="rotate(${((a2 * 180) / Math.PI).toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)})" style="fill:var(--mU)"/></g>`;
+      }
+      if (t > 2.6 && t < 3.1) o += `<circle cx="${cx}" cy="${cy}" r="${30 + (t - 2.6) * 300}" style="fill:none;stroke:#ffe2a0;stroke-width:3;opacity:${(1 - (t - 2.6) * 2).toFixed(2)}"/>`;
+      /* sai o gato: voa, cai de pé e se espreguiça */
+      if (t > 2.8 && window.GATO) {
+        const tc = t - 2.8, chao = 168, y0 = cy, vy0 = -330, gg = 900; let x = cx + Math.min(tc, 0.9) * 70, y = y0 + vy0 * tc + 0.5 * gg * tc * tc, esc = Math.min(0.62, 0.15 + tc * 0.9), rot = 0;
+        if (y > chao) y = chao; else rot = Math.max(0, 1 - tc / 0.9) * 360;
+        o += `<g class="gx-gato" style="cursor:pointer" transform="translate(${x.toFixed(1)} ${(y - 30).toFixed(1)}) rotate(${rot.toFixed(0)}) scale(${esc.toFixed(3)})"><rect x="-90" y="-70" width="180" height="140" style="fill:transparent"/>${GATO.svg("acordado", tc)}</g>`;
+      }
+      gx.innerHTML = o;
+      if (t > 11) fim();
+    }
     function q(t) {
-      if (!vivo) return; const dt = Math.min(0.03, (t - t0) / 1000); t0 = t; if (!reduz) for (let k = 0; k < 20; k++) s = rk(s, dt / 20);
-      const e = 105, x1 = e * Math.sin(s[0]), y1 = e * Math.cos(s[0]), x2 = x1 + e * Math.sin(s[1]), y2 = y1 + e * Math.cos(s[1]);
+      if (!vivo) return; const dt = Math.min(0.03, (t - t0) / 1000); t0 = t;
+      if (ev) { el.querySelector(".r").innerHTML = ""; el.querySelector(".p").innerHTML = ""; cena(dt); requestAnimationFrame(q); return; }
+      if (!reduz) for (let k = 0; k < 20; k++) s = rk(s, dt / 20);
+      const e = 105, x1 = e * Math.sin(s[0]), y1 = e * Math.cos(s[0]), x2 = x1 + e * Math.sin(s[1]), y2 = y1 + e * Math.cos(s[1]); pos = [x1, y1, x2, y2];
       tr.push([x2, y2]); if (tr.length > 220) tr.shift();
       el.querySelector(".r").innerHTML = tr.map((p, i) => (i ? `<line x1="${tr[i - 1][0].toFixed(1)}" y1="${tr[i - 1][1].toFixed(1)}" x2="${p[0].toFixed(1)}" y2="${p[1].toFixed(1)}" style="stroke:var(--warn);stroke-width:1.6;opacity:${(i / tr.length).toFixed(2)}"/>` : "")).join("");
-      el.querySelector(".p").innerHTML = `<line x1="-40" y1="0" x2="40" y2="0" style="stroke:var(--ink3);stroke-width:3"/><path d="M0 0 L${x1} ${y1} L${x2} ${y2}" style="stroke:var(--ink);stroke-width:2.2;fill:none"/><circle cx="${x1}" cy="${y1}" r="10" style="fill:var(--mA)"/><circle cx="${x2}" cy="${y2}" r="10" style="fill:var(--mU)"/>`;
+      el.querySelector(".p").innerHTML = `<line x1="-40" y1="0" x2="40" y2="0" style="stroke:var(--ink3);stroke-width:3"/><path d="M0 0 L${x1} ${y1} L${x2} ${y2}" style="stroke:var(--ink);stroke-width:2.2;fill:none"/><circle cx="${x1}" cy="${y1}" r="10" style="fill:var(--mA)"/><circle cx="${x2}" cy="${y2}" r="10" style="fill:var(--mU)"/>` + (achou ? `<path d="M206 -212 l2.4 5 l5.4 .7 l-4 3.7 l1 5.4 l-4.8 -2.7 l-4.8 2.7 l1 -5.4 l-4 -3.7 l5.4 -.7 Z" style="fill:var(--ink3);opacity:.7"/>` : "");
       if (!reduz) requestAnimationFrame(q);
     }
     requestAnimationFrame(q); F.aoSair(() => (vivo = false));
+    document.addEventListener("click", function fora(e) { if (!vivo) { document.removeEventListener("click", fora); return; } if (ev && ev.t > 3 && !el.contains(e.target)) fim(); });
   }
 
   /* cálculo: somas de Riemann (pela esquerda) convergindo para a integral, com o erro + reta tangente passeando pela curva */

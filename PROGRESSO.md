@@ -1,6 +1,6 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado atual (14/11/2026, depois da β 3.3)
+## Estado atual (15/11/2026, depois da β 3.4)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
 
 ### Física — 96 de 96 temas escritos
@@ -15,7 +15,7 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 
 ### Outras abas
 - **Cálculo** (vai para Matemática): 27/27 temas, 7 exercícios cada; Simulados de Cálculo SC01 e SC02 com 20 questões cada.
-- **Experimentos**: 10 experimentos (EP01–EP10) em 5 módulos.
+- **Experimentos**: 18 experimentos (EP01–EP18) em 9 módulos (novos na β 3.4: Termodinâmica, Ondas e quântica, Nuclear, Fluidos).
 - **Experimental**: 0 de 11 (módulos FE criados, sem conteúdo).
 - Tela inicial (Jarvis) em `#/home`: Física pronta; Química, Matemática e Russo "em breve".
 - Calculadoras 1 (estilo fx-991ES PLUS) e 2 (estilo fx-82LA CW), uma de cada vez.
@@ -35,7 +35,7 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 1. [x] **Mecânica**: temas escritos (A01–A20). Falta completar até o padrão (ver dívida técnica).
 2. [x] **Termodinâmica**: T01–T08b escritos no padrão completo (β 3.3).
 3. **Aba Experimental**: o capítulo de teoria da física experimental inteiro: medida e erro, algarismos significativos, precisão × acurácia, erro estatístico × sistemático, desvio padrão e desvio da média, propagação de incerteza pela derivada logarítmica (o método do professor do Lucas), ajuste de reta e mínimos quadrados, linearização de gráficos, como escrever um relatório e como comparar um resultado com o valor de referência.
-4. **Experimentos físicos**: faltam **8 experimentos** para fechar a aba (o Lucas corrigiu de 5 para 8 em 14/11).
+4. [x] **Experimentos físicos**: os 8 que faltavam foram feitos na β 3.4 (EP11–EP18), mais a surpresa escondida.
 
 ### Pendências combinadas (fora da Física)
 - Documento do modelo de dados de várias matérias (prefixos `fis:`, `mat:`, `qui:`; migração; registro de acerto e erro além de ● X /): mostrar ao Lucas para aprovar antes de implementar. Rascunho em `docs/MODELO_DE_DADOS.md`.
@@ -349,6 +349,13 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
     - EP16 Fissão e fusão: reação em cadeia por gerações (cada nêutron causa fissão com chance k/2,5; cada fissão solta 2 ou 3), com flashes das fissões, nêutrons voando, atalhos subcrítico/crítico/supercrítico e gráfico do número de nêutrons em escala log; ao lado, a curva da energia de ligação por núcleon (fórmula semiempírica) com pontos medidos e as setas de fissão e fusão. Conferido em Python: 173 MeV na fissão do U-235 e 17,6 MeV na fusão D-T.
     - EP17 O gato de Schrödinger (de brincadeira): gato original desenhado em SVG (peça reaproveitável `window.GATO`), caixa fechada com o gato acordado e o dormindo sobrepostos, cada um com transparência igual à probabilidade real (2^(−t/T½), oscilando de leve), átomo e barra da chance de decaimento, gráfico da probabilidade; "abrir a caixa" sorteia e colapsa com um flash: acordado (rabo balançando, espreguiçando) ou dormindo (zzz e estrelinhas). Contador de aberturas, obtido × esperado e histórico. Caixa explicando que Schrödinger propôs o gato em 1935 como crítica à interpretação de Copenhague. Conferido: em 20 000 aberturas simuladas, 9443 "acordado" contra 9459 esperados.
     - EP18 Escoamento ao redor de um cilindro: lattice Boltzmann D2Q9 (BGK) numa grade de 200 × 80, rodando no navegador a 60 quadros por segundo (o programa mede quantos passos cabem em ~11 ms por quadro). Mostra vorticidade ou velocidade, filetes de tinta, regime esperado para cada Re, Strouhal medido e o de laboratório. Conferido fora do navegador: Re 40 sem desprendimento, Re 60 com desprendimento (o início clássico é ≈ 47); Strouhal ~20% acima do de laboratório, por causa do canal estreito e da grade grossa (dito na página). Mais simples do que o pedido: é 2D, então acima de Re ≈ 190 não vira turbulência de verdade (só fica mais irregular), e isso está explicado na página.
+  - **Surpresa escondida** (pedido do Lucas; NUNCA revelar em texto do site): na página inicial dos Experimentos, encostar o cursor na bolinha verde (a ponta) do pêndulo duplo, com tolerância pequena (8 unidades do desenho, a bolinha tem raio 10). Aparece um buraco negro com disco de acreção girando e raios de luz se curvando (desvio ∝ 1/b, com leve distorção por filtro SVG); o pêndulo é puxado espiralando e esticado na direção radial; depois sai o gato do EP17, que cai de pé e se espreguiça. Clicar no gato leva ao EP17; depois de ~11 s, ou clicando fora (depois que o gato saiu), tudo volta ao normal. A descoberta fica em `fisica:segredo:x` e aparece uma estrelinha discreta no canto da animação, sem texto. Desligada para quem pede "movimento reduzido". Teste: `tests/tsegredo.js`.
+  - Relatório honesto do que ficou mais simples do que o pedido:
+    - EP12: as partículas não colidem entre si (para ficar leve); o custo de informação conta 1 bit por partícula que passa e 1 por abertura inútil.
+    - EP14: as ondas desenhadas saindo das fendas são ilustrativas (comprimento de onda e separação fora de escala); a figura na tela e as marcas da fórmula são as contas reais.
+    - EP16: a reação em cadeia é por gerações (não simula a geometria nem a velocidade dos nêutrons); a curva de energia de ligação é a fórmula semiempírica, que erra os núcleos leves (os pontos medidos estão no gráfico para comparar).
+    - EP18: é 2D, então acima de Re ≈ 190 não vira turbulência de verdade (só uma esteira mais irregular); o Strouhal medido sai ~20% acima do de laboratório (canal estreito e grade grossa). Tudo isso está escrito na página do experimento.
+    - Os códigos pedidos como EP07–EP14 viraram EP11–EP18, porque EP07–EP10 já existiam.
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.

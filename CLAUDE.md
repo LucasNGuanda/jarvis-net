@@ -47,6 +47,13 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Rodar os testes de `tests/` antes de cada commit (`node tests/tgeral.js`, `tests/tmec.js <códigos>`, `tests/tchaves.js <códigos>` etc.); não commitar com teste quebrado.
 - Testar o site de verdade com Playwright e olhar as capturas (`node tests/shotmec.js <COD> "<seletor>@0"` → `tests/capturas/`).
 
+## Decisões de projeto já tomadas
+- A versão (β x.y) aparece ao lado de "Jarvis" na tela inicial, no mesmo degradê do título e mudando de cor junto.
+- Experimentos novos ganham o próximo código livre (EP11, EP12, ...): códigos antigos nunca são reaproveitados, para não quebrar o progresso salvo. Cada experimento fica no módulo do assunto; se não houver módulo, cria-se um.
+- Experimento = simulação interativa que se mexe, com controles, uma explicação curta e sem exercícios.
+- Existe uma surpresa escondida na página inicial dos Experimentos. Ela NUNCA pode ser mencionada em nenhum texto do site (detalhes só no PROGRESSO.md, β 3.4).
+- Tema novo já nasce no padrão completo; os temas antigos que não estão no padrão estão listados como dívida técnica no PROGRESSO.md.
+
 ## O que eu já decidi que não quero
 - Sistema de XP ou grau de feiticeiro: não implementar.
 - Versão de celular: só no fim do projeto.
