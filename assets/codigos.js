@@ -35,7 +35,7 @@
       sec.querySelector("form").addEventListener("submit", (e) => {
         e.preventDefault();
         const r = AC().tentar(sec.dataset.linha, inp.value);
-        if (!r.ok) { msg.textContent = "código não reconhecido"; msg.className = "cod-msg erro"; clearTimeout(msg._t); msg._t = setTimeout(() => (msg.textContent = ""), 3000); return; } /* sem pista e sem animação */
+        if (!r.ok) { msg.textContent = r.usado ? "código já usado" : "código não reconhecido"; msg.className = "cod-msg erro"; clearTimeout(msg._t); msg._t = setTimeout(() => (msg.textContent = ""), 3000); return; } /* sem pista e sem animação */
         inp.value = ""; msg.textContent = ""; pinta();
         if (r.chave === "adm" || r.chave === "tester") animLivro(r.chave);
         else animAvulso(r.chave, () => toast("acesso liberado · " + AC().nome(r.chave)));
@@ -183,7 +183,43 @@
           const y = sy - (1 - u) * (sy + lado), quica = u >= 1 ? 1 : 1 + 0.12 * Math.sin(u * Math.PI), rot = ((k * 37) % 21) - 10;
           h += `<g transform="translate(${f1(sx)} ${f1(y)}) rotate(${rot}) scale(${quica.toFixed(3)})" style="opacity:${(1 - some).toFixed(2)}"><svg x="${f1(-lado / 2)}" y="${f1(-lado / 2)}" width="${f1(lado)}" height="${f1(lado)}" viewBox="0 0 100 100">${a.desenho(A.cor(a))}</svg></g>`; });
         return h; }; },
+    /* β 4.2 · alemão: três engrenagens se encaixam e giram (dentes engrenados de verdade: R₁·ω₁ = R₂·ω₂), com letras góticas aparecendo e sumindo */
+    alemao(W, H) { const cx = W / 2, cy = H / 2, m = Math.min(W, H) / 64, FR = "'UnifrakturMaguntia',serif";
+      try { document.fonts && document.fonts.load("40px UnifrakturMaguntia"); } catch (e) {}
+      const eng = (x, y, n, th) => { const R = (m * n) / 2, Ro = R + m, Rr = R - 1.25 * m, st = (2 * Math.PI) / n; let d = "";
+        for (let k = 0; k < n; k++) { const a0 = th + k * st; [[Rr, 0.2], [Ro, 0.35], [Ro, 0.65], [Rr, 0.8]].forEach(([r, f], j) => { d += (k || j ? "L" : "M") + f1(x + r * Math.cos(a0 + f * st)) + " " + f1(y + r * Math.sin(a0 + f * st)); }); }
+        return d + `Z M${f1(x + R * 0.28)} ${f1(y)}A${f1(R * 0.28)} ${f1(R * 0.28)} 0 1 0 ${f1(x - R * 0.28)} ${f1(y)}A${f1(R * 0.28)} ${f1(R * 0.28)} 0 1 0 ${f1(x + R * 0.28)} ${f1(y)}`; };
+      const n1 = 24, n2 = 14, n3 = 16, R1 = (m * n1) / 2, R2 = (m * n2) / 2, R3 = (m * n3) / 2, f2 = -0.35, f3 = Math.PI + 0.75;
+      const fg = 0.2 * m, x2 = cx + (R1 + R2 + fg) * Math.cos(f2), y2 = cy + (R1 + R2 + fg) * Math.sin(f2), x3 = cx + (R1 + R3 + fg) * Math.cos(f3), y3 = cy + (R1 + R3 + fg) * Math.sin(f3); /* folga de 0,2 módulo: conferido em Python, nenhuma ponta de dente invade a outra engrenagem em 300 instantes (sem folga, os dentes retos raspavam) */
+      const par = (th1, n, f) => f + Math.PI - (n1 / n) * (th1 + (0.5 * 2 * Math.PI) / n1 - f); /* o dente de uma cai no vão da outra */
+      const LET = "DeutschÄÖÜßGrammatikWortLesen".split("").filter((c) => c.trim()), pos = LET.map((c, i) => ({ c, x: W * (0.12 + 0.76 * (((i * 47) % 100) / 100)), y: H * (0.15 + 0.7 * (((i * 71) % 100) / 100)), t0: 0.2 + (i % 14) * 0.13, s: 52 + ((i * 13) % 46) }));
+      return (t) => { const ap = suave(t / 0.45), some = suave((t - 2.05) / 0.6), op = ap * (1 - some), th1 = 1.6 * t * t * 0.6 + 0.2;
+        let h = `<defs><filter id="fx-g" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter></defs>`;
+        pos.forEach((l) => { const u = (t - l.t0) / 0.75; if (u <= 0 || u >= 1) return; h += `<text x="${f1(l.x)}" y="${f1(l.y)}" text-anchor="middle" style="font:400 ${l.s}px ${FR};fill:var(--mDE);opacity:${(0.95 * Math.sin(Math.PI * u) * (1 - some)).toFixed(2)}">${l.c}</text>`; });
+        [[cx, cy, n1, th1], [x2, y2, n2, par(th1, n2, f2)], [x3, y3, n3, par(th1, n3, f3)]].forEach(([x, y, n, th], k) => { const d = eng(x, y, n, th), e = suave((t - k * 0.12) / 0.4);
+          h += `<g style="opacity:${(op * e).toFixed(2)}"><path d="${d}" style="fill:none;stroke:var(--mDE);stroke-width:6;opacity:.45;filter:url(#fx-g)" fill-rule="evenodd"/><path d="${d}" style="fill:color-mix(in srgb,var(--mDE) 16%,transparent);stroke:var(--mDE);stroke-width:2.2;stroke-linejoin:round" fill-rule="evenodd"/></g>`; });
+        return h; }; },
+    /* β 4.2 · sânscrito: as pétalas do lótus se abrem uma a uma e, no centro, o ॐ acende e brilha */
+    sanscrito(W, H) { const cx = W / 2, cy = H / 2, L = Math.min(W, H) * 0.3, DEVA = "'Noto Sans Devanagari','Nirmala UI','Mangal',sans-serif";
+      try { document.fonts && document.fonts.load("700 40px 'Noto Sans Devanagari'", "ॐ"); } catch (e) {}
+      const petala = (comp, larg) => `M0 0C${f1(larg)} ${f1(-comp * 0.3)} ${f1(larg * 0.55)} ${f1(-comp * 0.85)} 0 ${f1(-comp)}C${f1(-larg * 0.55)} ${f1(-comp * 0.85)} ${f1(-larg)} ${f1(-comp * 0.3)} 0 0Z`;
+      const fora = Array.from({ length: 8 }, (_, k) => ({ a: k * 45, t0: 0.1 + k * 0.11 })), dentro = Array.from({ length: 8 }, (_, k) => ({ a: k * 45 + 22.5, t0: 0.55 + k * 0.08 }));
+      return (t) => { const some = suave((t - 2.05) / 0.6), om = suave((t - 1.25) / 0.45), pulsa = 0.5 + 0.5 * Math.sin(t * 9);
+        let h = `<defs><filter id="fx-o" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="14"/></filter></defs>`;
+        [[fora, 1, 0.42], [dentro, 0.68, 0.36]].forEach(([lista, esc, larg]) => lista.forEach((p) => { const u = suave((t - p.t0) / 0.45); if (u <= 0) return;
+          h += `<path d="${petala(L * esc * (0.45 + 0.55 * u), L * larg * esc * (0.5 + 0.5 * u))}" transform="translate(${f1(cx)} ${f1(cy)}) rotate(${f1(p.a * u)})" style="fill:color-mix(in srgb,var(--mSA) ${Math.round(14 + 14 * u)}%,transparent);stroke:var(--mSA);stroke-width:2.2;opacity:${(u * (1 - some)).toFixed(2)}"/>`; }));
+        if (om > 0) h += `<circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(L * 0.42)}" style="fill:var(--mSA);opacity:${((0.35 + 0.25 * pulsa) * om * (1 - some)).toFixed(2)};filter:url(#fx-o)"/><text x="${f1(cx)}" y="${f1(cy + L * 0.2)}" text-anchor="middle" style="font:700 ${f1(L * 0.62)}px ${DEVA};fill:#fff;stroke:var(--mSA);stroke-width:2;opacity:${(om * (1 - some)).toFixed(2)}">ॐ</text>`;
+        return h; }; },
+    /* β 4.2 · Jarvis: o símbolo pisca como uma luz que acorda (falha, falha, acende) e os anéis giram */
+    jarvis(W, H) { const cx = W / 2, cy = H / 2, R = Math.min(W, H) * 0.16, liga = [[0.15, 0.22, 0.5], [0.3, 0.36, 0.25], [0.5, 0.62, 0.8], [0.72, 9, 1]];
+      return (t) => { let luz = 0; liga.forEach(([a, b, v]) => { if (t >= a && t < b) luz = v; }); const some = suave((t - 2.05) / 0.6), gira = suave((t - 0.72) / 0.6), op = luz * (1 - some);
+        return `<defs><filter id="fx-j" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="18"/></filter></defs><circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(R * 1.3)}" style="fill:var(--acc);opacity:${(0.3 * op * (0.7 + 0.3 * Math.sin(t * 7))).toFixed(2)};filter:url(#fx-j)"/>` +
+          `<g transform="translate(${f1(cx)} ${f1(cy)}) scale(${f1(R / 12)})" style="opacity:${op.toFixed(2)}"><g transform="rotate(${f1(gira * 120 + t * 30)})">${J.simboloJarvis ? J.simboloJarvis(true) : ""}</g></g>`; }; },
   };
+  /* símbolo do Jarvis (β 4.2): anel em 6 arcos + anel interno + olho. Centrado em (0,0), raio 12. "solto" = sem o <svg> em volta */
+  J.simboloJarvis = (solto) => { let arcos = ""; for (let k = 0; k < 6; k++) { const a = (k * 60 + 8) * Math.PI / 180, b = (k * 60 + 52) * Math.PI / 180; arcos += `M${f1(11 * Math.cos(a))} ${f1(11 * Math.sin(a))}A11 11 0 0 1 ${f1(11 * Math.cos(b))} ${f1(11 * Math.sin(b))}`; }
+    const g = `<path d="${arcos}" style="fill:none;stroke:var(--acc);stroke-width:2;stroke-linecap:round"/><circle r="6.6" style="fill:none;stroke:var(--acc);stroke-width:1.3;opacity:.8"/><circle r="2.8" style="fill:var(--acc)"/>`;
+    return solto ? g : `<svg viewBox="-13 -13 26 26" aria-hidden="true">${g}</svg>`; };
   function animAvulso(chave, fim) {
     const fab = AVULSAS[chave]; if (!fab) { fim && fim(); return; }
     const p = palco(false), desenha = fab(p.W, p.H);

@@ -4,7 +4,7 @@ const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs');
 const base = 'file://' + path.resolve(__dirname, '..', 'index.html');
 const falhas = []; const conf = (ok, txt, extra) => { console.log((ok ? 'ok     ' : 'FALHA  ') + txt + (extra !== undefined ? ' → ' + extra : '')); if (!ok) falhas.push(txt); };
-const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisica: 'frewill_físic98025_p', fisicaSemAcento: 'frewill_fisic98025_p', matematica: 'free-willp-mat98017', quimica: 'free_quimic', idiomas: 'let-me_slavic98716', config: 'give-meskinn' };
+const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisica: 'frewill_físic98025_p', fisicaSemAcento: 'frewill_fisic98025_p', matematica: 'free-willp-mat98017', quimica: 'free_quimic', idiomas: 'let-me_slavic98716', config: 'give-meskinn', alemao: 'ich-will_deutsch4471', sanscrito: 'om_samskrta8840', jarvis: 'talk-to_jarvis_freewill01' };
 (async () => {
   const b = await chromium.launch(); const ctx = await b.newContext({ viewport: { width: 1280, height: 800 }, acceptDownloads: true }); const p = await ctx.newPage();
   const erros = []; p.on('pageerror', (e) => erros.push(e.message));
@@ -44,7 +44,7 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
   }
 
   // 3. códigos avulsos
-  const AV = { fisica: { abre: ['#/inicio', '#/A01', '#/experimentos', '#/experimental'], fecha: ['#/matematica', '#/quimica', '#/russo'] }, matematica: { abre: ['#/matematica', '#/matematica-calculo', '#/matematica/CI07'], fecha: ['#/inicio', '#/quimica'] }, quimica: { abre: ['#/quimica', '#/quimica-experimentos'], fecha: ['#/A01', '#/matematica'] }, idiomas: { abre: ['#/russo', '#/russo-leitura', '#/alemao', '#/sanscrito'], fecha: ['#/inicio', '#/quimica'] }, config: { abre: [], fecha: ['#/inicio', '#/matematica'] } };
+  const AV = { fisica: { abre: ['#/inicio', '#/A01', '#/experimentos', '#/experimental'], fecha: ['#/matematica', '#/quimica', '#/russo'] }, matematica: { abre: ['#/matematica', '#/matematica-calculo', '#/matematica/CI07'], fecha: ['#/inicio', '#/quimica'] }, quimica: { abre: ['#/quimica', '#/quimica-experimentos'], fecha: ['#/A01', '#/matematica'] }, idiomas: { abre: ['#/russo', '#/russo-leitura'], fecha: ['#/inicio', '#/quimica', '#/alemao', '#/alemao-leitura', '#/sanscrito', '#/sanscrito-leitura'] }, alemao: { abre: ['#/alemao', '#/alemao-leitura', '#/alemao/DG01'], fecha: ['#/russo', '#/sanscrito', '#/inicio'] }, sanscrito: { abre: ['#/sanscrito', '#/sanscrito-leitura', '#/sanscrito/SL03'], fecha: ['#/russo', '#/alemao', '#/inicio'] }, jarvis: { abre: [], fecha: ['#/inicio', '#/matematica', '#/alemao'] }, config: { abre: [], fecha: ['#/inicio', '#/matematica'] } };
   for (const k of Object.keys(AV)) {
     await zera(); await digita('avulso', COD[k]);
     const anim = await p.evaluate(() => !!document.querySelector('.anim-acesso') && !document.querySelector('.anim-acesso.cheia'));
@@ -65,6 +65,25 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
       conf(await p.evaluate(() => !!document.querySelector('.jv-painel .jv-painel-fig')), '  config: a engrenagem abre o painel');
     }
   }
+  // β 4.2: cada código vale uma vez ("código já usado"), sem animação e sem mudar nada
+  await zera(); await digita('avulso', COD.quimica); await pula(); await digita('avulso', COD.quimica);
+  { const r = await p.evaluate(() => ({ msg: document.querySelector('.cod-linha[data-linha=avulso] .cod-msg').textContent, anim: !!document.querySelector('.anim-acesso') })); conf(r.msg === 'código já usado' && !r.anim && (await chaves()) === 'quimica', 'código repetido: "código já usado", sem animação', JSON.stringify(r)); }
+  await digita('adm', COD.adm); await pula(); await p.waitForTimeout(9500); await digita('adm', COD.adm);
+  conf((await p.evaluate(() => document.querySelector('.cod-linha[data-linha=adm] .cod-msg').textContent)) === 'código já usado', 'ADM repetido também: "código já usado"');
+  // β 4.2: só o código do russo → barrinha com alemão e sânscrito trancados (cadeado), cartão do russo aberto
+  await zera(['idiomas']);
+  { const r = await p.evaluate(() => ({ nome: document.querySelector('.jv-mat-idioma .jv-nome').textContent, tranc: [...document.querySelectorAll('.jv-linguas button.tranca')].map((b) => b.dataset.lingua).join(',') }));
+    conf(r.nome === 'Russo' && r.tranc === 'alemao,sanscrito', 'código do russo: barrinha com alemão e sânscrito trancados', JSON.stringify(r)); }
+  await p.click('.jv-linguas [data-lingua=alemao]'); await p.waitForTimeout(250);
+  conf(await p.evaluate(() => document.querySelector('.jv-mat-idioma .jv-mat').classList.contains('sem-acesso')), 'trocar para o alemão sem o código dele: cartão com cadeado');
+  // só o código do alemão (sem o do russo): a barrinha aparece e o cartão começa no alemão
+  await zera(['alemao']);
+  conf(await p.evaluate(() => !!document.querySelector('.jv-linguas') && document.querySelector('.jv-mat-idioma .jv-nome').textContent === 'Alemão' && !document.querySelector('.jv-mat-idioma .jv-mat').classList.contains('sem-acesso')), 'só o código do alemão: o cartão começa no alemão, aberto');
+  // Jarvis: sem o código o campo fica desativado com "em breve"; com o código, ativo
+  await zera(['fisica']);
+  conf(await p.evaluate(() => document.querySelector('.jv-pergunta input').disabled && /em breve/.test(document.querySelector('.jv-pergunta').textContent)), 'sem o código do Jarvis: campo desativado com "em breve"');
+  await zera(['jarvis']);
+  conf(await p.evaluate(() => !document.querySelector('.jv-pergunta input').disabled && !/em breve/.test(document.querySelector('.jv-pergunta').textContent)), 'com o código do Jarvis: campo ativo');
   // física sem acento também vale
   await zera(); await digita('avulso', COD.fisicaSemAcento); await pula();
   conf((await chaves()) === 'fisica', 'código de física sem acento também vale', await chaves());
@@ -77,7 +96,7 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
   conf(/β 4\.\d+\.tester$/.test((await versao()).trim()), 'tester: versão com .tester', await versao());
   for (const h of ['#/inicio', '#/A01', '#/experimentos', '#/experimental']) conf(!(await bloqueada(h)), `tester: ${h} abre`);
   await ir('#/A01'); conf(/\.tester$/.test(await p.evaluate(() => document.getElementById('versao').textContent)), 'tester: sufixo também no topo', await p.evaluate(() => document.getElementById('versao').textContent));
-  for (const h of ['#/matematica', '#/quimica', '#/russo']) { await ir(h); conf(await p.evaluate(() => !!document.querySelector('.jv-bloq') && document.querySelector('.jv-bloq .jv-breve').textContent === 'em construção'), `tester: ${h} trancada como "em construção"`); }
+  for (const h of ['#/matematica', '#/quimica', '#/russo', '#/alemao', '#/sanscrito']) { await ir(h); conf(await p.evaluate(() => !!document.querySelector('.jv-bloq') && document.querySelector('.jv-bloq .jv-breve').textContent === 'em construção'), `tester: ${h} trancada como "em construção"`); }
   await ir('#/home');
   const tq = await cartao('quimica');
   conf(tq && tq.tranca && /^em construção/.test(tq.dica), 'tester: cartão de Química com "em construção"', JSON.stringify(tq));

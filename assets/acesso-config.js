@@ -7,7 +7,7 @@
      "visitante"              → todo mundo vê, sem código
      "tester"                 → quem usou o código de beta tester
      "adm"                    → só o ADM (o ADM vê TUDO sempre, mesmo o que não estiver listado aqui)
-     "fisica", "matematica", "quimica", "idiomas", "config"  → quem usou aquele código avulso (lista em codigos.avulsos)
+     "fisica", "matematica", "quimica", "idiomas", "config", "alemao", "sanscrito", "jarvis"  → quem usou aquele código avulso (lista em codigos.avulsos)
      uma lista, ex.: ["tester", "fisica"]  → quem tiver QUALQUER um deles
 
    EXEMPLOS DE MUDANÇA:
@@ -20,7 +20,8 @@
      • dar a engrenagem (adesivos e figura) aos testers:  engrenagem: { painel: ["config", "tester"], ... }
    ===================================================================================================== */
 window.ACESSO_CFG = {
-  /* códigos de cada linha da página de códigos (#/codigos). Maiúsculas e minúsculas contam; acentos não (física = fisica). */
+  /* códigos de cada linha da página de códigos (#/codigos). Maiúsculas e minúsculas contam; acentos não (física = fisica).
+     Cada código vale uma vez: usar de novo mostra "código já usado" (até voltar a visitante). */
   codigos: {
     adm: ["55_admfreee_will"],
     tester: ["beta8976_@freewill_choise"],
@@ -30,10 +31,13 @@ window.ACESSO_CFG = {
       quimica: ["free_quimic"],
       idiomas: ["let-me_slavic98716"],
       config: ["give-meskinn"],
+      alemao: ["ich-will_deutsch4471"],     /* β 4.2 */
+      sanscrito: ["om_samskrta8840"],       /* β 4.2 */
+      jarvis: ["talk-to_jarvis_freewill01"], /* β 4.2: a busca do campo "Perguntar algo ao Jarvis" */
     },
   },
   /* nome mostrado em "acesso liberado" e na lista do que já está destravado */
-  nomes: { adm: "tudo (ADM)", tester: "Física inteira (beta tester)", fisica: "Física", matematica: "Matemática", quimica: "Química", idiomas: "Idiomas (russo, alemão, sânscrito) e o seletor de idioma", config: "Configurações (adesivos e figura central)" },
+  nomes: { adm: "tudo (ADM)", tester: "Física inteira (beta tester)", fisica: "Física", matematica: "Matemática", quimica: "Química", idiomas: "Russo e o seletor de idioma", config: "Configurações (adesivos e figura central)", alemao: "Alemão", sanscrito: "Sânscrito", jarvis: "Jarvis" },
 
   /* matérias (ids de assets/materias.js) */
   materias: {
@@ -41,8 +45,8 @@ window.ACESSO_CFG = {
     matematica: "matematica",
     quimica: "quimica",
     russo: "idiomas",
-    alemao: "idiomas",
-    sanscrito: "idiomas",
+    alemao: "alemao",       /* só o código do alemão (ou o ADM): nem o tester nem o código do russo abrem */
+    sanscrito: "sanscrito", /* idem, só o código do sânscrito */
   },
   /* abas (ids de AREAS). Sem entrada aqui = a aba segue a matéria dela. */
   abas: {},
@@ -51,7 +55,9 @@ window.ACESSO_CFG = {
   /* adesivos (ids de assets/adesivos.js). Sem entrada = segue engrenagem.adesivos. */
   adesivos: {},
   /* barrinha de idiomas ao lado do cartão do Russo */
-  seletorIdioma: "idiomas",
+  seletorIdioma: ["idiomas", "alemao", "sanscrito"], /* aparece com qualquer código de idioma; o idioma trancado mostra o cadeado */
+  /* busca do Jarvis (β 4.2). Sem acesso: campo desativado com "em breve". A busca só acha o que o nível de quem busca pode ver. */
+  jarvis: "jarvis",
 
   /* texto ao passar o mouse em algo trancado: "visitante" = sem nenhum código; "comAcesso" = já tem algum código */
   avisos: { visitante: "sem acesso · ir para códigos? duplo clique", comAcesso: "em construção · ir para códigos? duplo clique" },

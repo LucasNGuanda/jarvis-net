@@ -12,7 +12,7 @@ const URL = 'file:///home/user/site-fisica/index.html#/home';
   const cat = await p.evaluate(() => { const A = window.ADESIVOS, ids = A.lista.map((a) => a.id); const svgs = A.lista.map((a) => A.svg(a)); return { n: A.lista.length, cats: A.categorias.length, unicos: new Set(ids).size === ids.length, porCat: A.categorias.map((k) => A.lista.filter((a) => a.cat === k.id).length), anim: svgs.filter((s) => /<animate|@keyframes|animation/.test(s)).length, vazios: A.lista.filter((a) => A.svg(a).length < 120).map((a) => a.id), trava: A.lista.every((a) => 'trava' in a && a.trava === null) }; });
   ok(cat.n === 28, 'catálogo com 28 adesivos (' + cat.n + ')'); ok(cat.cats === 6 && cat.porCat.join() === '6,5,6,5,3,3', 'categorias 6/5/6/5/3/3 (com Cientistas) (' + cat.porCat.join('/') + ')');
   ok(cat.unicos, 'ids únicos'); ok(cat.anim === 0, 'nenhuma animação nos SVG'); ok(!cat.vazios.length, 'nenhum desenho vazio ' + cat.vazios.join()); ok(cat.trava, 'campo trava preparado (null) em todos');
-  ok(await p.$('.jv-engrenagem') !== null, 'engrenagem existe'); ok(await p.$eval('.jv-pergunta input', (i) => i.disabled), 'campo do Jarvis continua "em breve" (desativado)');
+  ok(await p.$('.jv-engrenagem') !== null, 'engrenagem existe'); ok(await p.$eval('.jv-pergunta input', (i) => !i.disabled), 'campo do Jarvis ativo para o ADM (β 4.2)');
   await p.click('.jv-engrenagem'); await p.waitForTimeout(200);
   ok(await p.$('.jv-painel') !== null, 'painel abre'); ok((await p.$$('.jv-painel-ad')).length === 28, 'painel mostra os 28');
   await p.screenshot({ path: 'tests/capturas/ad-painel.png' });

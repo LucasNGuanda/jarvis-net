@@ -735,7 +735,9 @@
       if (!vivo) return; const s = reduz ? 1 : (t - t0) / 1000;
       let h = `<path d="M40 250H300M48 112H292M56 96H284L262 70H78Z" style="fill:none;stroke:var(--mDE);stroke-width:3;stroke-linejoin:round"/>`;
       cols.forEach((x, k) => { h += `<path d="M${x - 7} 112V250M${x + 7} 112V250" style="stroke:var(--ink2);stroke-width:2.4"/>`; if (k < 5) { const cx = (x + cols[k + 1]) / 2, a = 0.12 + 0.18 * Math.max(0, Math.sin(s * 1.4 - k * 0.7)); h += `<rect x="${cx - 12}" y="116" width="24" height="130" style="fill:var(--mDE);opacity:${a.toFixed(2)}"/>`; } });
-      h += `<path d="M150 70L158 48L170 58L182 48L190 70" style="fill:none;stroke:var(--mDE);stroke-width:2.6;stroke-linejoin:round"/><circle cx="170" cy="40" r="5" style="fill:var(--mO)"/>`;
+      /* quadriga de frente (β 4.2): quatro cavalos (dois de cada lado) e a Vitória no meio, com o estandarte */
+      [128, 146, 194, 212].forEach((x, k) => { const sob = 2 * Math.sin(s * 2.2 + k); h += `<path d="M${x} 70V${(52 + sob).toFixed(1)}" style="stroke:var(--mDE);stroke-width:4;stroke-linecap:round"/><circle cx="${x}" cy="${(46 + sob).toFixed(1)}" r="5.5" style="fill:var(--mDE)"/>`; });
+      h += `<path d="M160 70L170 44L180 70M170 44V14M162 20H178" style="fill:none;stroke:var(--mDE);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round"/><circle cx="170" cy="9" r="5" style="fill:none;stroke:var(--mO);stroke-width:2"/>`;
       g.innerHTML = h; if (!reduz) requestAnimationFrame(q);
     }
     requestAnimationFrame(q); F.aoSair(() => (vivo = false));
@@ -746,7 +748,10 @@
     const g = el.querySelector(".g"); let vivo = true; const t0 = performance.now(), reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
     function q(t) {
       if (!vivo) return; const s = reduz ? 1 : (t - t0) / 1000, p = 0.5 + 0.5 * Math.sin(s * 1.3);
-      g.innerHTML = `<circle cx="170" cy="150" r="${(98 + 8 * p).toFixed(1)}" style="fill:none;stroke:var(--mSA);stroke-width:2;opacity:${(0.35 + 0.4 * p).toFixed(2)}"/><circle cx="170" cy="150" r="${(118 + 14 * p).toFixed(1)}" style="fill:none;stroke:var(--mO);stroke-width:1.2;stroke-dasharray:3 9;opacity:${(0.3 + 0.3 * p).toFixed(2)}" transform="rotate(${(s * 12).toFixed(1)} 170 150)"/><text x="170" y="196" text-anchor="middle" style="font:700 140px ${DEVA};fill:color-mix(in srgb,var(--mSA) ${Math.round(60 + 30 * p)}%,var(--card));stroke:var(--mSA);stroke-width:1.5">ॐ</text>`;
+      /* lótus aberto em volta do ॐ (β 4.2): pétalas saindo da base, respirando devagar */
+      const pet = (ang, comp, larg) => `<path d="M0 0C${larg} ${-comp * 0.3} ${larg * 0.55} ${-comp * 0.85} 0 ${-comp}C${-larg * 0.55} ${-comp * 0.85} ${-larg} ${-comp * 0.3} 0 0Z" transform="translate(170 262) rotate(${ang})" style="fill:color-mix(in srgb,var(--mSA) 14%,transparent);stroke:var(--mSA);stroke-width:2.2;stroke-linejoin:round"/>`;
+      const ab = 1 + 0.04 * p, lotus = [[-74, 150, 44], [74, 150, 44], [-40, 200, 50], [40, 200, 50], [0, 230, 54]].map(([a, c, l]) => pet(a * ab, c, l)).join("");
+      g.innerHTML = `<circle cx="170" cy="150" r="${(98 + 8 * p).toFixed(1)}" style="fill:none;stroke:var(--mSA);stroke-width:2;opacity:${(0.35 + 0.4 * p).toFixed(2)}"/><circle cx="170" cy="150" r="${(118 + 14 * p).toFixed(1)}" style="fill:none;stroke:var(--mO);stroke-width:1.2;stroke-dasharray:3 9;opacity:${(0.3 + 0.3 * p).toFixed(2)}" transform="rotate(${(s * 12).toFixed(1)} 170 150)"/>${lotus}<text x="170" y="178" text-anchor="middle" style="font:700 104px ${DEVA};fill:color-mix(in srgb,var(--mSA) ${Math.round(60 + 30 * p)}%,var(--card));stroke:var(--card);stroke-width:8px;paint-order:stroke">ॐ</text>`;
       if (!reduz) requestAnimationFrame(q);
     }
     requestAnimationFrame(q); F.aoSair(() => (vivo = false));

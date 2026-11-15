@@ -22,11 +22,13 @@
   A.area = (areaId) => { const ab = C().abas || {}; if (ab[areaId] !== undefined) return A.tem(ab[areaId]); const ar = (window.AREAS || []).find((a) => a.id === areaId); return A.materia(ar ? ar.materia || "fisica" : "fisica"); };
   A.engrenagem = (parte) => A.tem((C().engrenagem || {})[parte] === undefined ? "adm" : C().engrenagem[parte]);
   A.adesivo = (id) => { const ad = C().adesivos || {}; return ad[id] !== undefined ? A.tem(ad[id]) : A.engrenagem("adesivos"); };
+  A.jarvis = () => A.tem(C().jarvis === undefined ? "adm" : C().jarvis); /* β 4.2: busca do Jarvis */
   A.idiomas = () => A.tem(C().seletorIdioma === undefined ? "adm" : C().seletorIdioma);
   A.aviso = () => (A.visitante() ? (C().avisos || {}).visitante : (C().avisos || {}).comAcesso) || "sem acesso · ir para códigos? duplo clique";
   A.sufixo = () => (A.adm() ? ".ADM" : A.chaves().includes("tester") ? ".tester" : "");
   A.nome = (k) => (C().nomes || {})[k] || k;
-  /* tenta um código numa linha ("adm", "tester" ou "avulso"); devolve { ok, chave } e grava se der certo */
+  /* tenta um código numa linha ("adm", "tester" ou "avulso"); devolve { ok, chave } e grava se der certo.
+     Cada código vale uma vez (β 4.2): se a chave já estiver gravada, devolve { ok: false, usado: true } e não roda animação. */
   A.tentar = (linha, texto) => {
     const t = norm(texto), cod = C().codigos || {}; if (!t) return { ok: false };
     const bate = (lista) => (lista || []).some((c) => norm(c) === t);
@@ -35,7 +37,8 @@
     else if (linha === "tester" && bate(cod.tester)) chave = "tester";
     else if (linha === "avulso") chave = Object.keys(cod.avulsos || {}).find((k) => bate(cod.avulsos[k])) || null;
     if (!chave) return { ok: false };
-    const ch = A.chaves(); if (!ch.includes(chave)) ch.push(chave); grava(ch);
+    const ch = A.chaves(); if (ch.includes(chave)) return { ok: false, usado: true, chave };
+    ch.push(chave); grava(ch);
     return { ok: true, chave };
   };
   A.zerar = () => grava([]);

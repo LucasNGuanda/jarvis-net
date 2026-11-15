@@ -1,6 +1,6 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado atual (15/11/2026, depois da β 4.1)
+## Estado atual (15/11/2026, depois da β 4.2; β 4.1 e 4.2 na branch `acesso-codigos`, esperando a aprovação do Lucas para ir ao `main`)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
 
 ### Física — 96 de 96 temas escritos
@@ -21,8 +21,9 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 - Tela inicial (Jarvis) em `#/home`: Física pronta; Matemática, Química e Russo com a casca pronta e os temas cadastrados "em breve" (β 3.8). Painel da engrenagem: figura central (planeta, galáxia ou buraco negro, com cor e velocidade; β 3.9) e 28 adesivos em 6 categorias.
 - Calculadoras 1 (estilo fx-991ES PLUS) e 2 (estilo fx-82LA CW), uma de cada vez.
 - **Acesso por código** (β 4.1): sem código, só a tela inicial aparece (cartões com cadeado, figura central, campo do Jarvis); a página de códigos fica em `#/codigos`. Configuração em `assets/acesso-config.js`. Não é segurança de verdade (site estático: os códigos ficam legíveis no código-fonte).
-- **Idiomas** (β 4.1): o cartão de línguas da tela inicial troca entre Russo, Alemão e Sânscrito (barrinha Я / DE / सं); alemão e sânscrito com as abas Gramática e Leitura e tradução e os módulos DEG, DEL, SAG, SAL vazios ("em breve").
-- Testes automáticos no repositório, em `tests/`: tgeral, tfunc, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE, thome, tcor, texp, tsegredo, tsegredo2, tadesivos, tmaterias, tfiguras, tmudacalculo, tacesso, mais tmec, tchaves e texemp por código. Desde a β 4.1 todos (menos o tacesso) rodam como ADM por meio de `tests/adm.js`, porque o site começa trancado. Capturas em `tests/capturas/`, fora do git; as que os testes antigos gravam na raiz (`home-*.png`, `fisica-com-home.png`, `calc-*.png`, `cor-*.png`) também estão no `.gitignore` (β 3.6).
+- **Idiomas** (β 4.1 e 4.2): o cartão de línguas da tela inicial troca entre Russo, Alemão e Sânscrito (barrinha Я / DE / सं). Alemão: DG01–DG18 e DL01–DL08; Sânscrito: SG01–SG15 e SL01–SL07; todos "em breve". Alemão e sânscrito só abrem com o código próprio ou o ADM.
+- **Jarvis** (β 4.2): o campo da tela inicial virou uma busca dentro do site (sem IA), com código próprio; Ctrl K em qualquer página. Índice gerado por `tools/gera-indice.js`.
+- Testes automáticos no repositório, em `tests/`: tgeral, tfunc, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE, thome, tcor, texp, tsegredo, tsegredo2, tadesivos, tmaterias, tfiguras, tmudacalculo, tacesso, tbusca, mais tmec, tchaves e texemp por código. Desde a β 4.1 todos (menos o tacesso) rodam como ADM por meio de `tests/adm.js`, porque o site começa trancado. Capturas em `tests/capturas/`, fora do git; as que os testes antigos gravam na raiz (`home-*.png`, `fisica-com-home.png`, `calc-*.png`, `cor-*.png`) também estão no `.gitignore` (β 3.6).
 - Correção (β 3.7): as regressões da β 3.4 à β 3.6 olhavam só o código de saída, e dez testes antigos (thome, tcor, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE) não devolviam erro quando uma conferência falhava. Por isso duas falhas passaram sem aviso: no thome, o título com a versão ao lado (desde a β 3.4; era o teste que estava desatualizado), e no tfisON, a contagem de bolinhas do N02 (na β 3.7 atribuí à máquina sobrecarregada; na β 3.8 descobri que é um defeito da simulação, ver β 3.8). Agora esses testes devolvem código de erro quando alguma conferência falha.
 
 ### Matemática, Química e Russo: casca pronta, temas cadastrados (β 3.8), nenhum escrito
@@ -438,6 +439,20 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Idiomas: barrinha vertical à direita do cartão (Я / DE / सं), liberada pelo código do russo; troca nome, cor e desenho do cartão. Alemão: cor `--mDE`, ß girando (Gramática) e portão de Brandemburgo em traço (Leitura). Sânscrito: cor `--mSA`, सं girando e ॐ pulsando. Cores escolhidas em Python como as mais distantes da paleta (distância mínima em Lab 26,1 e 24,1). Prefixos `ale:` e `san:`.
   - Testes: `tests/tacesso.js` novo (visitante, códigos errados, os 5 avulsos e o de física sem acento, tester, ADM sem pular e sem congelar a página, troca de idioma, recarregar, exportar, voltar a visitante, movimento reduzido); `tests/adm.js` injeta ADM nos testes antigos. Capturas: `tests/capturas/anim-adm-quadros.png`, `anim-avulsos-quadros.png`, `anim-tester-*.png`, `lingua-*.png`.
   - Regressão: em andamento (atualizo aqui quando terminar).
+- **β 4.2** — **Alemão e sânscrito completos, e o Jarvis como busca** (pedido de 15/11/2026; na branch `acesso-codigos`, junto com a β 4.1, esperando aprovação).
+  - Regra nova dos códigos: cada código vale uma vez; repetir mostra "código já usado", sem animação e sem mudar nada (até "voltar a visitante").
+  - Alemão (`ich-will_deutsch4471`) e sânscrito (`om_samskrta8840`): só com o código próprio ou o ADM; o código do russo agora libera só o russo e a barrinha (que mostra alemão e sânscrito com borda tracejada e, ao escolher, o cartão com cadeado). Temas cadastrados: DG01–DG18, DL01–DL08, SG01–SG15, SL01–SL07 (módulos renomeados de DEG/DEL/SAG/SAL para DG/DL/SG/SL, como no pedido; nenhum progresso usava os nomes antigos).
+  - Cores trocadas: na β 4.1 alemão e sânscrito ficaram rosados e parecidos. Agora alemão `#ddd188` (dourado) e sânscrito `#e4a281` (açafrão), escolhidas em Python na faixa de claridade e saturação da paleta (distância mínima 27,3 em Lab; 77 e 85 do russo); tema claro `#6f721d` e `#e04b00`.
+  - Desenhos: ícone do alemão = portão de Brandemburgo com a quadriga de frente (quatro cavalos e a Vitória com o estandarte); do sânscrito = ॐ dentro de um lótus aberto; os dois em traço luminoso. As páginas de Leitura ganharam a quadriga e o lótus nos desenhos animados.
+  - Animações curtas: alemão = três engrenagens engrenando (R₁ω₁ = R₂ω₂; folga de 0,2 módulo conferida em Python: nenhuma ponta de dente invade a outra em 300 instantes; sem a folga, os dentes retos raspavam) com letras góticas aparecendo e sumindo; sânscrito = 16 pétalas de lótus abrindo uma a uma e o ॐ acendendo no centro; Jarvis = o símbolo (anel em 6 arcos + olho) falhando e acendendo como uma luz que acorda. Todas terminam em "acesso liberado · …".
+  - Fontes: devanágari e transliteração não tinham fonte no site (dependiam do computador). Agora vêm junto: Noto Sans Devanagari, Inter latin-ext (ā ī ṛ ṣ ṇ ś ẞ) e UnifrakturMaguntia (góticas), todas OFL, de pacotes npm do Fontsource; licenças em `assets/fonts/LICENSE-*.txt`. Conferido com captura (`tests/capturas/fontes42.png`).
+  - **Jarvis (busca, sem IA)**, código `talk-to_jarvis_freewill01`: procura em matérias, abas, módulos e temas (dos catálogos, inclusive "em breve") e no conteúdo dos 152 temas escritos (768 seções, fórmulas e termos em negrito, do índice gerado). Sugere enquanto digita; tolera erro (distância de edição até 1 ou 2 letras); sinônimos em `assets/jarvis-config.js`; código de tema vai direto (A08 existe na Física e na Química: vai para o da matéria atual e, na tela inicial, para a Física); fórmula digitada (ex.: "pV = nRT") acha o tema e aparece desenhada com KaTeX; trechinho com a palavra marcada e link direto para a seção; histórico das últimas 8 buscas (`jarvis:buscas`, entra no exportar); Ctrl K / ⌘ K em qualquer página, setas, Enter e Esc.
+  - Personagem: dúvida de matéria ("qual a fórmula de…", "como resolve…", "o que é…") → uma das 12+1 frases, sorteada, com o link "Matéria, aba, código · nome" do melhor tema e os 3 temas mais próximos embaixo. Navegação ("onde fica a legenda?", "onde exporto meu progresso?", sumário, códigos, calculadora, tema claro, adesivos, continuar, atalho) → responde e leva ao lugar, com o botão piscando. Não achou → diz e sugere o mais próximo; nunca inventa.
+  - Acesso na busca: só aparece o que o nível abre (ADM tudo; tester só Física; visitante com o código do Jarvis só recebe "existe, mas você ainda não tem acesso · ir para códigos?"). Conferido no `tests/tbusca.js` com várias buscas em cada nível, olhando o texto do painel.
+  - Índice: `tools/gera-indice.js` abre o site no Chromium, chama o `html(F)` de cada tema sem desenhar e grava `assets/indice-busca.js` (805 KB, carregado só quando a busca é usada; gera em ~2 s). Dicas, resoluções e a explicação do "chuta antes de ver" ficam fora, para o trechinho não entregar resposta. Cada tema guarda a impressão digital do arquivo; o tbusca acusa índice velho.
+  - Projeto futuro registrado no CLAUDE.md (não implementado): conversa de verdade exigiria API paga e um programa à parte com servidor.
+  - Testes: `tests/tbusca.js` novo (60 conferências); `tests/tacesso.js` ampliado (alemão, sânscrito, Jarvis, "código já usado", barrinha com idiomas trancados); `thome` e `tadesivos`: o campo do Jarvis agora é ativo para o ADM. Capturas: `tests/capturas/anim-42-quadros.png`, `busca-*.png`, `pag42-*.png`, `fontes42.png`.
+  - Regressão: em andamento (atualizo aqui quando terminar).
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.
@@ -526,8 +541,10 @@ O histórico acima usa os códigos antigos.
 
 ## Falta
 - Dívida técnica da Física e do Cálculo (exercícios, figuras e `F.chute`), ver "Estado atual".
-- Pendências combinadas (modelo de dados, mover o Cálculo, GitHub Pages) e as outras matérias (Química, Matemática, Russo), ver "Estado atual".
-- Esperando o Lucas dizer o próximo passo.
+- Pendências combinadas (modelo de dados, GitHub Pages) e as outras matérias (Química, Matemática, Russo), ver "Estado atual".
+- **Esperando o Lucas testar o ZIP da β 4.1 + 4.2 (branch `acesso-codigos`) e aprovar antes de ir para o `main`.**
+- Botão "Exportar para o Anki" (russo) continua só previsto. Campo `easterEggs` (surpresa → código) continua só previsto.
+- Pendências antigas, esperando o Lucas: correção da simulação do N02 (física, precisa de autorização) e os "{,}" vazando no texto do CI02, CII03, TE01 e TE04.
 - Noites 1–11 do briefing (todos os outros temas), unidades e constantes (CODATA), simulados por módulo, formulário com busca, mapa de pré-requisitos.
 
 ## Problemas conhecidos

@@ -11,7 +11,7 @@ const res = []; const ok = (c, m) => res.push([c, m]);
   ok(/^Jarvisβ \d+\.\d+(\.ADM|\.tester)?$/.test(s.titulo), 'título do projeto, com a versão ao lado (desde a β 3.4; com .ADM ou .tester desde a β 4.1) → ' + s.titulo);
   ok(JSON.stringify(s.mats) === JSON.stringify([['fisica', 'A', false, false], ['quimica', 'A', false, false], ['matematica', 'A', false, false], ['russo', 'A', false, false]]), 'as quatro matérias são links (Russo desde a β 3.8) → ' + JSON.stringify(s.mats));
   const perg = await p.evaluate(() => { const f = document.querySelector('.jv-pergunta'); return [f.querySelector('input').disabled, f.querySelector('button').disabled, f.textContent.includes('em breve')]; });
-  ok(perg.every(Boolean), 'campo de pergunta desativado com "em breve" → ' + perg);
+  ok(perg.every((x) => !x), 'campo de pergunta ativo para o ADM (busca do Jarvis, β 4.2; sem o código ele fica "em breve": ver tacesso) → ' + perg);
   await p.screenshot({ path: 'home-escuro.png' });
   // 2. clicar numa desativada não muda nada (matéria de teste, só na memória: hoje as quatro estão prontas)
   await p.evaluate(() => { MATERIAS.push({ id: 'biologia', nome: 'Biologia', desc: 'teste', rota: '#/biologia/inicio', cor: '--mX', icone: 'frasco', pronta: false, prefixo: 'bio' }); JARVIS.home(document.getElementById('pagina')); });
