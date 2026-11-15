@@ -16,7 +16,7 @@ window.CATALOGO.push(
     ["A06","Fenômenos físicos e químicos",[],true],
     ["A07","Densidade, fusão, ebulição e solubilidade",[],true],
     ["A08","Laboratório: segurança, vidrarias e técnicas",[],true],
-    ["A09","Algarismos significativos e erros de medida",[]],
+    ["A09","Algarismos significativos e erros de medida",[],true],
   ] },
   { id:"QB", area:"qui", letra:"B", cor:"--mA", nome:"Atomística", desc:"Modelos atômicos, distribuição eletrônica e tabela periódica.", temas:[
     ["B01","Partículas fundamentais e íons",[]],
