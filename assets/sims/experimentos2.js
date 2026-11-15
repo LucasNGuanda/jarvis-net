@@ -1,4 +1,4 @@
-/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; EP13 van der Waals; EP14 fenda dupla; EP15 corpo negro; EP16 fissão e fusão; EP17 gato de Schrödinger (e o desenho do gato, window.GATO); */
+/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; EP13 van der Waals; EP14 fenda dupla; EP15 corpo negro; EP16 fissão e fusão; EP17 gato de Schrödinger (e o desenho do gato, window.GATO); EP18 cilindro (lattice Boltzmann); */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -426,6 +426,68 @@
       q("[data-v=lt]").innerHTML = vis("tempo com a caixa fechada", n2(t, 1) + " s") + vis("chance de acordado | dormindo", n2(p * 100, 0) + "% | " + n2((1 - p) * 100, 0) + "%") + vis("vezes que abri", String(hist.length)) + vis("acordado: obtido | esperado", viv + " | " + n2(esp, 1));
       q("[data-v=st]").innerHTML = aberta ? `Ao abrir, a superposição <b>colapsou</b>: o átomo ${resultado === "acordado" ? "ainda não tinha decaído, e o gato acordou e está se espreguiçando" : "já tinha decaído, e o gato está dormindo profundamente"}. Feche a caixa para começar de novo.` : `Caixa fechada há ${n2(t, 1)} s. Enquanto ninguém olha, o átomo está numa superposição de "decaiu" e "não decaiu", e o gato também: as duas imagens se misturam com transparências iguais às probabilidades. Abra quando quiser.`;
       q("[data-v=hist]").innerHTML = hist.length ? "Histórico: " + hist.slice(-12).map((h) => `#${h.n} ${h.r === "acordado" ? "acordado" : "dormindo"} (t = ${n2(h.t, 1)} s, P = ${n2(h.p * 100, 0)}%)`).join(" · ") : "";
+    });
+  };
+
+  /* ---------- EP18 · escoamento ao redor de um cilindro: lattice Boltzmann D2Q9 (BGK), leve o bastante para o navegador ---------- */
+  SIM.cilindroLBM = (el, F) => {
+    const NX = 200, NY = 80, D = 16, U = 0.1, CW = 680, CH = Math.round((680 * NY) / NX);
+    let L = null, ver = "vort", rastros = [], img = null, sinal = [], nPassos = 0, St = null;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><canvas width="${NX * 2}" height="${NY * 2}" style="width:100%;max-width:${CW}px;aspect-ratio:${NX}/${NY};image-rendering:auto;border-radius:6px" data-v="cv"></canvas></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("número de Reynolds Re", "Re", 10, 300, 5, 120)}
+      <div class="bts">${botoes([["vort", "vorticidade"], ["vel", "velocidade"]], "ver", "vort")}${botoes([["20", "Re 20"], ["60", "Re 60"], ["120", "Re 120"], ["250", "Re 250"]], "pre", "120")}<button class="bt" data-a="re">Recomeçar</button></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), cv = q("[data-v=cv]"), cx = cv.getContext("2d");
+    const ex = [0, 1, 0, -1, 0, 1, -1, -1, 1], ey = [0, 0, 1, 0, -1, 1, 1, -1, -1], w = [4 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 36, 1 / 36, 1 / 36, 1 / 36], op = [0, 3, 4, 1, 2, 7, 8, 5, 6];
+    const cria = (Re) => {
+      const N = NX * NY, f = new Float32Array(9 * N), g = new Float32Array(9 * N), solid = new Uint8Array(N), ux = new Float32Array(N), uy = new Float32Array(N);
+      const nu = (U * D) / Re, tau = 3 * nu + 0.5, om = 1 / tau, ccx = Math.round(NX / 5), ccy = NY / 2 + 0.5;
+      for (let y = 0; y < NY; y++) for (let x = 0; x < NX; x++) if ((x - ccx) ** 2 + (y - ccy) ** 2 <= (D / 2) ** 2) solid[y * NX + x] = 1;
+      const feq = (k, rho, vx, vy) => { const eu = ex[k] * vx + ey[k] * vy; return w[k] * rho * (1 + 3 * eu + 4.5 * eu * eu - 1.5 * (vx * vx + vy * vy)); };
+      for (let i = 0; i < N; i++) { const y = Math.floor(i / NX), v0 = 0.1 * U * Math.sin((2 * Math.PI * y) / NY); /* perturbação inicial: sem ela, a esteira demora muito para escolher um lado */ for (let k = 0; k < 9; k++) f[k * N + i] = feq(k, 1, U, v0); }
+      const fin = []; for (let k = 0; k < 9; k++) fin.push(feq(k, 1, U, 0));
+      const passo = () => {
+        for (let i = 0; i < N; i++) { if (solid[i]) continue; let r = 0, mx = 0, my = 0; for (let k = 0; k < 9; k++) { const v = f[k * N + i]; r += v; mx += ex[k] * v; my += ey[k] * v; } const vx = mx / r, vy = my / r; ux[i] = vx; uy[i] = vy; const uu = 1.5 * (vx * vx + vy * vy); for (let k = 0; k < 9; k++) { const eu = ex[k] * vx + ey[k] * vy; f[k * N + i] += om * (w[k] * r * (1 + 3 * eu + 4.5 * eu * eu - uu) - f[k * N + i]); } }
+        for (let y = 0; y < NY; y++) for (let x = 0; x < NX; x++) { const i = y * NX + x; if (solid[i]) continue; for (let k = 0; k < 9; k++) { const xn = x + ex[k]; if (xn < 0 || xn >= NX) continue; let yn = y + ey[k]; if (yn < 0) yn += NY; else if (yn >= NY) yn -= NY; const j = yn * NX + xn; if (solid[j]) g[op[k] * N + i] = f[k * N + i]; else g[k * N + j] = f[k * N + i]; } }
+        for (let y = 0; y < NY; y++) { const i0 = y * NX, i1 = i0 + NX - 1; for (let k = 0; k < 9; k++) { g[k * N + i0] = fin[k]; g[k * N + i1] = g[k * N + i1 - 1]; } }
+        f.set(g);
+      };
+      return { passo, ux, uy, solid, tau, ccx, ccy, N };
+    };
+    SIM.cilindroLBM._cria = cria;
+    const reinicia = () => { L = cria(val(el, "Re")); rastros = []; sinal = []; nPassos = 0; St = null; };
+    liga(el, "ver", (k) => (ver = k)); liga(el, "pre", (k) => { q("[data-c=Re]").value = k; reinicia(); });
+    q("[data-a=re]").addEventListener("click", reinicia); q("[data-c=Re]").addEventListener("change", reinicia);
+    q("[data-c=Re]").addEventListener("input", () => mostra(el, ["Re"], 0));
+    reinicia();
+    img = cx.createImageData(NX, NY);
+    const tmp = document.createElement("canvas"); tmp.width = NX; tmp.height = NY; const tcx = tmp.getContext("2d");
+    anima(el, F, () => {
+      mostra(el, ["Re"], 0);
+      if (!el.isConnected) return;
+      /* quantos passos cabem em ~9 ms (mede e se adapta): a página continua leve */
+      const t0 = performance.now(); let n = 0;
+      while (n < 40 && performance.now() - t0 < 11) { L.passo(); n++; nPassos++; if (nPassos % 10 === 0) { const i = Math.round(L.ccy) * NX + L.ccx + 3 * D; sinal.push(L.uy[i]); if (sinal.length > 1500) sinal.shift(); } }
+      /* Strouhal medido pelos cruzamentos de zero da velocidade transversal atrás do cilindro */
+      if (sinal.length > 400 && nPassos % 50 < n + 1) { const m = sinal.slice(-800), med = m.reduce((a, b) => a + b, 0) / m.length, amp = Math.max(...m) - Math.min(...m); let c2 = 0; for (let i = 1; i < m.length; i++) if ((m[i - 1] - med) * (m[i] - med) < 0) c2++; St = amp / U > 0.05 && c2 > 2 ? (D / ((m.length * 10) / (c2 / 2))) / U : 0; }
+      /* desenho: vorticidade (∂v/∂x − ∂u/∂y) ou velocidade */
+      const ux = L.ux, uy = L.uy, so = L.solid, dat = img.data;
+      for (let y = 0; y < NY; y++) for (let x = 0; x < NX; x++) {
+        const i = y * NX + x, p = ((NY - 1 - y) * NX + x) * 4; let r, gg, b;
+        if (so[i]) { r = 140; gg = 140; b = 150; }
+        else if (ver === "vort") { const xa = Math.max(0, x - 1), xb = Math.min(NX - 1, x + 1), ya = (y + NY - 1) % NY, yb = (y + 1) % NY, vo = (uy[y * NX + xb] - uy[y * NX + xa] - (ux[yb * NX + x] - ux[ya * NX + x])) * 0.5, s = Math.max(-1, Math.min(1, vo * 40)); if (s > 0) { r = 18 + 230 * s; gg = 22 + 60 * s; b = 30 + 40 * s; } else { r = 18 - 10 * s; gg = 22 - 110 * s; b = 30 - 220 * s; } }
+        else { const v = Math.min(1, Math.hypot(ux[i], uy[i]) / (1.6 * U)); r = 20 + 235 * Math.max(0, v - 0.5) * 2; gg = 30 + 200 * v; b = 60 + 150 * (1 - v); }
+        dat[p] = r; dat[p + 1] = gg; dat[p + 2] = b; dat[p + 3] = 255;
+      }
+      tcx.putImageData(img, 0, 0); cx.imageSmoothingEnabled = true; cx.drawImage(tmp, 0, 0, NX * 2, NY * 2);
+      /* filetes de "tinta" soltos na frente do cilindro e carregados pelo escoamento */
+      for (let k = 0; k < 3; k++) rastros.push({ x: L.ccx - 18, y: L.ccy - 9 + Math.random() * 18, v: 0 });
+      rastros = rastros.filter((p) => { const xi = Math.floor(p.x), yi = Math.floor(p.y); if (xi < 1 || xi >= NX - 1 || yi < 0 || yi >= NY) return false; const i = ((yi % NY) + NY) % NY * NX + xi; if (so[i]) return false; p.x += ux[i] * n; p.y += uy[i] * n; p.v++; return p.v < 900; });
+      cx.fillStyle = "rgba(255,255,255,.75)"; rastros.forEach((p) => cx.fillRect(p.x * 2 - 1, (NY - p.y) * 2 - 1, 2, 2));
+      const Re = val(el, "Re"), regime = Re < 6 ? "escoamento colado ao cilindro (quase sem esteira)" : Re < 47 ? "dois vórtices presos atrás do cilindro, parados" : Re < 190 ? "rua de vórtices de von Kármán: vórtices se soltando alternadamente" : "esteira cada vez mais irregular (no mundo real, acima de Re ≈ 190 a esteira vira 3D e depois turbulenta)";
+      const Sesp = Re >= 49 && Re <= 180 ? 0.1816 - 3.3265 / Re + 1.6e-4 * Re : null; /* ajuste experimental de Williamson (49 < Re < 178) */
+      q("[data-v=st]").innerHTML = `<b>Regime esperado (Re = ${n2(Re, 0)}):</b> ${regime}. O fluido entra pela esquerda; cores: ${ver === "vort" ? "vorticidade (vermelho gira num sentido, azul no outro)" : "velocidade (claro = rápido)"}. Os pontinhos brancos são "tinta" solta na frente do cilindro. Mudar Re recomeça o escoamento; a esteira leva alguns segundos para se formar.`;
+      q("[data-v=lt]").innerHTML = vis("passos de tempo | por quadro", nPassos + " | " + n) + vis("τ do modelo (estável se > 0,5)", n2(L.tau, 4)) + vis("Strouhal medido f·D/U", St === null ? "medindo…" : St === 0 ? "sem oscilação" : n2(St, 3)) + vis("Strouhal de laboratório (Williamson)", Sesp ? n2(Sesp, 3) : "—");
     });
   };
 })();

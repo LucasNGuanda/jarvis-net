@@ -219,6 +219,6 @@ window.CATALOGO = [
     ["EP16","Fissão e fusão",["!"],true],
   ]},
   { id:"EFl", area:"exp", letra:"≈", cor:"--mK2", nome:"Fluidos", desc:"Navier–Stokes de verdade, num método leve.", temas:[
-    ["EP18","Escoamento ao redor de um cilindro",["!!"]],
+    ["EP18","Escoamento ao redor de um cilindro",["!!"],true],
   ]},
 ];
