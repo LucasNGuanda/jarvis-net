@@ -27,7 +27,7 @@ F.registrar("U01", {
             passos: [
               R`<p>$\nabla\cdot\vec F = \frac{\partial P}{\partial x} + \frac{\partial Q}{\partial y} = ${a} + (${d}) = ${div}$.</p>`,
               R`<p>$(\nabla\times\vec F)_z = \frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y} = ${c} - (${b}) = ${rot}$.</p>`,
-              R`<p>${div > 0 ? "div &gt; 0: o campo \"brota\" de todo lugar (fonte espalhada)." : div < 0 ? "div &lt; 0: o campo \"some\" em todo lugar (sumidouro espalhado)." : "div = 0: o que entra numa caixinha sai (sem fontes)."} ${rot !== 0 ? `rot = ${rot}: a rodinha gira com velocidade angular ${F.n(rot / 2)} rad/s, ${rot > 0 ? "anti-horária" : "horária"}.` : "rot = 0: a rodinha não gira, e o campo é conservativo (é gradiente de alguém)."}</p>`,
+              R`<p>${div > 0 ? "div &gt; 0: o campo \"brota\" de todo lugar (fonte espalhada)." : div < 0 ? "div &lt; 0: o campo \"some\" em todo lugar (sumidouro espalhado)." : "div = 0: o que entra numa caixinha sai (sem fontes)."} ${rot !== 0 ? `rot = ${rot}: a rodinha gira com velocidade angular ${F.nt(rot / 2)} rad/s, ${rot > 0 ? "anti-horária" : "horária"}.` : "rot = 0: a rodinha não gira, e o campo é conservativo (é gradiente de alguém)."}</p>`,
             ] };
         } },
       ],

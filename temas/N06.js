@@ -13,7 +13,7 @@ F.registrar("N06", {
         { nome: "Vazão de Hagen–Poiseuille", gerar: (p) => {
           const L = [["água", 1.0e-3], ["óleo de motor", 0.1], ["glicerina", 1.4]], [nome, mu] = p ? L[0] : F.escolha(L);
           const Rmm = p ? 1 : F.escolha([0.5, 1, 2]), dp = p ? 200 : F.escolha([100, 200, 500]), Lc = p ? 1 : F.escolha([0.5, 1, 2]), Rm = Rmm / 1000, G = dp / Lc, Q = (Math.PI * G * Rm ** 4) / (8 * mu), vm = Q / (Math.PI * Rm * Rm);
-          return { enun: R`<p>Um cano de raio ${F.n(Rmm)} mm e ${F.n(Lc)} m de comprimento leva ${nome} ($\mu = ${F.sigL(mu, 2)}$ Pa·s), com uma diferença de pressão de ${dp} Pa entre as pontas. Qual a vazão? Qual a velocidade no centro?</p>`, fig: "",
+          return { enun: R`<p>Um cano de raio ${F.nt(Rmm)} mm e ${F.nt(Lc)} m de comprimento leva ${nome} ($\mu = ${F.sigL(mu, 2)}$ Pa·s), com uma diferença de pressão de ${dp} Pa entre as pontas. Qual a vazão? Qual a velocidade no centro?</p>`, fig: "",
             passos: [R`<p>Gradiente: $G = \frac{\Delta p}{L} = ${F.n(G)}$ Pa/m.</p>`, R`<p>$Q = \frac{\pi GR^4}{8\mu} = \frac{\pi\cdot${F.n(G)}\cdot(${F.sigL(Rm, 2)})^4}{8\cdot${F.sigL(mu, 2)}} \approx ${F.sigL(Q, 3)}$ m³/s $= ${F.sigL(Q * 1e6, 3)}$ mL/s.</p>`, R`<p>Velocidade média $\bar v = Q/\pi R^2 \approx ${F.sigL(vm, 3)}$ m/s; no centro, o dobro: $${F.sigL(2 * vm, 3)}$ m/s.</p>`] };
         } },
         { nome: "Resistência hidráulica (Ohm dos canos)", gerar: (p) => {

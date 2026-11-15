@@ -15,13 +15,13 @@ F.registrar("matematica/CII03", {
             passos: [
               R`<p>É geométrica: primeiro termo $a = ${a}$, razão $r = ${fr}$. Como $|r| < 1$, converge.</p>`,
               R`<p>Fórmula: $S = \frac{a}{1 - r} = \frac{${a}}{1 - (${fr})} = ${F.n(S, 4)}$.</p>`,
-              R`<p>Conferência rápida com os 4 primeiros termos: $${[0, 1, 2, 3].map((n) => F.n(a * r ** n, 4)).join(" + ").replace(/\+ -/g, "- ")} = ${F.n([0, 1, 2, 3].reduce((s, n) => s + a * r ** n, 0), 4)}$, já perto de ${F.n(S, 3)}.</p>`,
+              R`<p>Conferência rápida com os 4 primeiros termos: $${[0, 1, 2, 3].map((n) => F.n(a * r ** n, 4)).join(" + ").replace(/\+ -/g, "- ")} = ${F.n([0, 1, 2, 3].reduce((s, n) => s + a * r ** n, 0), 4)}$, já perto de ${F.nt(S, 3)}.</p>`,
             ] };
         } },
         { nome: "A bola que quica", gerar: (p) => {
           const h = p ? 2 : F.escolha([1, 2, 5]), e = p ? 0.8 : F.escolha([0.5, 0.7, 0.8, 0.9]), e2 = e * e;
           const D = (h * (1 + e2)) / (1 - e2), t0 = Math.sqrt((2 * h) / 9.8), T = (t0 * (1 + e)) / (1 - e);
-          return { enun: R`<p>Uma bola cai de ${h} m. A cada quique, a velocidade de volta é ${F.n(e, 1)} da de chegada (coeficiente de restituição). Que distância total ela percorre até parar? E quanto tempo leva? ($g = 9{,}8$ m/s²)</p>`, fig: "",
+          return { enun: R`<p>Uma bola cai de ${h} m. A cada quique, a velocidade de volta é ${F.nt(e, 1)} da de chegada (coeficiente de restituição). Que distância total ela percorre até parar? E quanto tempo leva? ($g = 9{,}8$ m/s²)</p>`, fig: "",
             passos: [
               R`<p>Altura depois de cada quique: $h' = e^2h$ (porque $h \propto v^2$). As alturas formam uma PG de razão $e^2 = ${F.n(e2, 2)}$.</p>`,
               R`<p>Distância: desce $h$, depois sobe e desce cada altura nova: $D = h + 2(e^2h + e^4h + \dots) = h + \frac{2e^2h}{1 - e^2} = h\,\frac{1 + e^2}{1 - e^2} = ${F.n(D, 3)}$ m.</p>`,

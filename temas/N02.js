@@ -12,7 +12,7 @@ F.registrar("N02", {
         { nome: "Mangueira com bico", gerar: (p) => {
           const D = p ? 2 : F.escolha([1.5, 2, 2.5]), d = p ? 0.5 : F.escolha([0.4, 0.5, 0.8]), v = p ? 1 : F.escolha([0.5, 1, 1.5]);
           const v2 = v * (D / d) ** 2, Q = (Math.PI * (D / 100) ** 2 * v) / 4;
-          return { enun: R`<p>Uma mangueira de ${F.n(D)} cm de diâmetro leva água a ${F.n(v)} m/s até um bico de ${F.n(d)} cm. Com que velocidade a água sai? Quanto tempo leva para encher um balde de 10 L?</p>`, fig: "",
+          return { enun: R`<p>Uma mangueira de ${F.nt(D)} cm de diâmetro leva água a ${F.nt(v)} m/s até um bico de ${F.nt(d)} cm. Com que velocidade a água sai? Quanto tempo leva para encher um balde de 10 L?</p>`, fig: "",
             passos: [R`<p>Continuidade: $A_1v_1 = A_2v_2$, e $A \propto D^2$: $v_2 = v_1\left(\frac{D}{d}\right)^2 = ${F.n(v)}\cdot${F.n((D / d) ** 2, 3)} \approx ${F.n(v2, 2)}$ m/s.</p>`, R`<p>Vazão: $Q = A_1v_1 = \frac{\pi(${F.n(D / 100)})^2}{4}\cdot${F.n(v)} \approx ${F.n(Q * 1000, 3)}$ L/s.</p>`, R`<p>Balde: $t = \frac{10\text{ L}}{Q} \approx ${F.n(0.01 / Q, 1)}$ s. O bico deixa a água mais rápida, mas <b>não</b> enche o balde mais depressa (a vazão é a mesma).</p>`] };
         } },
         { nome: "Divergente zero?", gerar: (p) => {

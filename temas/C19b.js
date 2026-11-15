@@ -19,7 +19,7 @@ F.registrar("C19b", {
             passos: [
               R`<p>Antes: $${F.n(a[0], 6)} + ${F.n(a[1], 6)} = ${F.n(a[0] + a[1], 6)}$ u. Depois: $${F.n(b[0], 6)} + ${F.n(b[1], 6)} = ${F.n(b[0] + b[1], 6)}$ u.</p>`,
               R`<p>$\Delta m = ${F.n(dm, 6)}$ u; $Q = \Delta m\cdot931{,}5 = ${F.n(dm * 931.494, 2)}$ MeV. Positivo: libera energia (${obs}).</p>`,
-              R`<p>Os produtos levam essa energia como cinética. Por massa de combustível, é uns ${F.n((dm * 931.494) / (a[0] + a[1]), 1)} MeV por u, ou seja, milhões de vezes uma reação química.</p>`,
+              R`<p>Os produtos levam essa energia como cinética. Por massa de combustível, é uns ${F.nt((dm * 931.494) / (a[0] + a[1]), 1)} MeV por u, ou seja, milhões de vezes uma reação química.</p>`,
             ] };
         } },
         { nome: "Usina × carvão", gerar: (p) => {

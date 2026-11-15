@@ -23,7 +23,7 @@ F.registrar("O07", {
           return { enun: R`<p>Um retrovisor convexo tem raio de curvatura de ${Rr} m. Um carro está a ${d} m. Onde aparece a imagem e de que tamanho, comparada com um espelho plano?</p>`, fig: "",
             passos: [
               R`<p>$f = -\frac{${Rr}}{2} = ${F.n(f)}$ m. $\frac1{p'} = \frac1{${F.n(f)}} - \frac1{${d}} \Rightarrow p' = ${F.n(pl, 3)}$ m (virtual, atrás do espelho).</p>`,
-              R`<p>$A = ${F.n(A, 3)}$: a imagem tem ${F.n(100 * A, 1)}% do tamanho do carro. Num espelho plano, a imagem teria 100% e estaria a ${d} m atrás dele.</p>`,
+              R`<p>$A = ${F.n(A, 3)}$: a imagem tem ${F.nt(100 * A, 1)}% do tamanho do carro. Num espelho plano, a imagem teria 100% e estaria a ${d} m atrás dele.</p>`,
               R`<p>A imagem menor faz o carro <b>parecer mais longe</b> do que está, mas o campo de visão é bem maior. Daí o aviso: "os objetos no espelho estão mais perto do que parecem".</p>`,
             ] };
         } },

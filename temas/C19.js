@@ -12,7 +12,7 @@ F.registrar("C19", {
           const casos = [["iodo-131", 8.04, "dias"], ["cobalto-60", 5.27, "anos"], ["carbono-14", 5730, "anos"], ["radônio-222", 3.82, "dias"]];
           const [n, T, u] = p ? casos[0] : F.escolha(casos), k = p ? 3 : F.escolha([2, 3, 4, 5]), t = k * T + (p ? 0 : F.escolha([0, T / 2]));
           const frac = Math.pow(0.5, t / T);
-          return { enun: R`<p>Uma amostra de ${n} (meia-vida de ${F.n(T)} ${u}) tem atividade de 800 Bq. Qual a atividade depois de ${F.n(t, 2)} ${u}?</p>`, fig: "",
+          return { enun: R`<p>Uma amostra de ${n} (meia-vida de ${F.nt(T)} ${u}) tem atividade de 800 Bq. Qual a atividade depois de ${F.nt(t, 2)} ${u}?</p>`, fig: "",
             passos: [
               R`<p>A atividade cai à metade a cada meia-vida: $R = R_0\left(\frac12\right)^{t/T_{1/2}}$.</p>`,
               R`<p>$\frac{t}{T_{1/2}} = \frac{${F.n(t, 2)}}{${F.n(T)}} = ${F.n(t / T, 2)}$ meias-vidas.</p>`,
@@ -22,7 +22,7 @@ F.registrar("C19", {
         { nome: "Energia de ligação", gerar: (p) => {
           const casos = [["⁴He", 2, 2, 4.002603], ["¹²C", 6, 6, 12.0], ["⁵⁶Fe", 26, 30, 55.934936], ["²³⁸U", 92, 146, 238.050788]];
           const [n, Z, N, M] = p ? casos[0] : F.escolha(casos), dm = Z * 1.007825 + N * 1.008665 - M, B = dm * 931.494;
-          return { enun: R`<p>Calcule a energia de ligação total e por núcleon do ${n} (massa atômica ${F.n(M, 6)} u).</p>`, fig: "",
+          return { enun: R`<p>Calcule a energia de ligação total e por núcleon do ${n} (massa atômica ${F.nt(M, 6)} u).</p>`, fig: "",
             passos: [
               R`<p>Massa das peças separadas: ${Z} átomos de hidrogênio ($1{,}007825$ u cada, que já incluem os elétrons) + ${N} nêutrons ($1{,}008665$ u): $${F.n(Z * 1.007825 + N * 1.008665, 6)}$ u.</p>`,
               R`<p>Defeito de massa: $\Delta m = ${F.n(dm, 6)}$ u. O núcleo pesa <b>menos</b> que as peças: essa massa "sumiu" como energia de ligação.</p>`,

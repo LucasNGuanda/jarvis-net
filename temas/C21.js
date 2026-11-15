@@ -12,7 +12,7 @@ F.registrar("C21", {
           return { enun: R`<p>Uma galáxia está a ${d} Mpc (1 Mpc ≈ 3,26 milhões de anos-luz). Com que velocidade ela se afasta de nós? ($H_0 \approx 70$ km/s/Mpc)</p>`, fig: "",
             passos: [
               R`<p>Lei de Hubble: $v = H_0d = 70\times${d} = ${v}$ km/s.</p>`,
-              R`<p>Isso é ${F.n(v / 3e5, 4)}c. ${v / 3e5 > 0.1 ? "Nessa distância, a lei simples já começa a precisar de correções relativísticas e cosmológicas." : "Pequeno comparado a c: o Doppler simples serve."}</p>`,
+              R`<p>Isso é ${F.nt(v / 3e5, 4)}c. ${v / 3e5 > 0.1 ? "Nessa distância, a lei simples já começa a precisar de correções relativísticas e cosmológicas." : "Pequeno comparado a c: o Doppler simples serve."}</p>`,
               R`<p>A luz chega com $\lambda$ esticado por $1 + z \approx 1 + \frac vc = ${F.n(1 + v / 3e5, 4)}$ (desvio para o vermelho). Não é que as galáxias "voem" pelo espaço: o próprio espaço se expande, levando as galáxias junto, como pontos num balão sendo inflado.</p>`,
             ] };
         } },

@@ -18,7 +18,7 @@ F.registrar("O05", {
         } },
         { nome: "Altura pela sombra", gerar: (p) => {
           const S = p ? 15 : F.escolha([6, 12, 15, 24]), h = p ? 1 : F.escolha([1, 1.5, 2]), s = p ? 0.8 : F.escolha([0.6, 0.8, 1.2, 1.5]), H = (S * h) / s;
-          return { enun: R`<p>Num dia de sol, um prédio faz uma sombra de ${S} m, enquanto uma haste vertical de ${F.n(h)} m faz uma sombra de ${F.n(s)} m. Qual a altura do prédio?</p>`, fig: "",
+          return { enun: R`<p>Num dia de sol, um prédio faz uma sombra de ${S} m, enquanto uma haste vertical de ${F.nt(h)} m faz uma sombra de ${F.nt(s)} m. Qual a altura do prédio?</p>`, fig: "",
             passos: [
               R`<p>O Sol está tão longe que seus raios chegam praticamente <b>paralelos</b>: o ângulo deles com o chão é o mesmo para o prédio e para a haste.</p>`,
               R`<p>Triângulos semelhantes: $\frac{H}{${S}} = \frac{${F.n(h)}}{${F.n(s)}}$.</p>`,

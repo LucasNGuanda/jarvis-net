@@ -19,9 +19,9 @@ F.registrar("U02", {
         } },
         { nome: "Circulação num círculo", gerar: (p) => {
           const w = p ? 3 : F.escolha([1, 2, 3, 5]), Rr = p ? 2 : F.escolha([0.5, 1, 2, 4]);
-          return { enun: R`<p>A água de um tanque gira como um corpo rígido, com $\vec v = (-${F.c(w)}y,\ ${F.c(w)}x)$ (m/s, em metros). Qual a circulação $\oint\vec v\cdot d\vec l$ num círculo de raio ${F.n(Rr)} m em volta do centro?</p>`, fig: "",
+          return { enun: R`<p>A água de um tanque gira como um corpo rígido, com $\vec v = (-${F.c(w)}y,\ ${F.c(w)}x)$ (m/s, em metros). Qual a circulação $\oint\vec v\cdot d\vec l$ num círculo de raio ${F.nt(Rr)} m em volta do centro?</p>`, fig: "",
             passos: [
-              R`<p>Direto: no círculo, $\vec v$ é tangente, de módulo ${w}·r = ${F.n(w * Rr)} m/s. Circulação = $|\vec v|\times$ perímetro $= ${F.n(w * Rr)}\times2\pi(${F.n(Rr)}) = ${F.n(2 * w * Rr * Rr)}\pi$.</p>`,
+              R`<p>Direto: no círculo, $\vec v$ é tangente, de módulo ${w}·r = ${F.nt(w * Rr)} m/s. Circulação = $|\vec v|\times$ perímetro $= ${F.n(w * Rr)}\times2\pi(${F.n(Rr)}) = ${F.n(2 * w * Rr * Rr)}\pi$.</p>`,
               R`<p>Por Stokes: $(\nabla\times\vec v)_z = ${w} - (-${w}) = ${2 * w}$, constante. Circulação $= ${2 * w}\times\pi(${F.n(Rr)})^2 = ${F.n(2 * w * Rr * Rr)}\pi \approx ${F.n(2 * Math.PI * w * Rr * Rr, 1)}$ m²/s.</p>`,
               R`<p>As duas contas batem, como o teorema promete.</p>`,
             ] };

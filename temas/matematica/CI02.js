@@ -78,7 +78,7 @@ F.registrar("matematica/CI02", {
 
       F.secao("euler", "Limite fundamental 2: o número e", R`
         ${F.formula(R`\lim_{n\to\infty}\left(1 + \frac1n\right)^n = e \approx 2{,}718281828`)}
-        <p>A história dos juros (Jacob Bernoulli, 1683): R$ 1 a 100% ao ano. Pagando uma vez por ano, vira 2. Pagando 50% duas vezes, $1{,}5^2 = 2{,}25$. Dividindo em $n$ vezes, $(1 + \frac1n)^n$:</p>
+        <p>A história dos juros (Jacob Bernoulli, 1683): 1 real a 100% ao ano. Pagando uma vez por ano, vira 2. Pagando 50% duas vezes, $1{,}5^2 = 2{,}25$. Dividindo em $n$ vezes, $(1 + \frac1n)^n$:</p>
         <table class="tb"><tr><th>n</th><td>1</td><td>2</td><td>12 (mensal)</td><td>365 (diário)</td><td>8760 (por hora)</td><td>10⁶</td></tr><tr><th>valor</th><td>2</td><td>2,25</td><td>2,6130</td><td>2,7146</td><td>2,71813</td><td>2,718280</td></tr></table>
         <p>Cresce, mas trava: o limite é $e$. Do mesmo jeito, $\left(1 + \frac xn\right)^n \to e^x$, e daí saem mais dois limites que usaremos para derivar $e^x$ e $\ln x$:</p>
         ${F.formula(R`\lim_{h\to0}\frac{e^h - 1}{h} = 1,\qquad \lim_{h\to0}\frac{\ln(1 + h)}{h} = 1`)}

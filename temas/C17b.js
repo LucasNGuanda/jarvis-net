@@ -24,7 +24,7 @@ F.registrar("C17b", {
           return { enun: R`<p>Qual a energia de ionização (a partir do estado fundamental) e o raio da 1ª órbita do íon ${nome} (núcleo com $Z = ${Z}$ e um elétron só)?</p>`, fig: "",
             passos: [
               R`<p>Com carga nuclear $Ze$, a força fica $Z$ vezes maior. Refazendo a dedução de Bohr: $E_n = -\frac{13{,}6\,Z^2}{n^2}$ eV e $r_n = \frac{0{,}0529\,n^2}{Z}$ nm.</p>`,
-              R`<p>$E_1 = -13{,}6\times${Z * Z} = ${F.n(-13.6 * Z * Z, 1)}$ eV: são precisos ${F.n(13.6 * Z * Z, 1)} eV para arrancar o elétron.</p>`,
+              R`<p>$E_1 = -13{,}6\times${Z * Z} = ${F.n(-13.6 * Z * Z, 1)}$ eV: são precisos ${F.nt(13.6 * Z * Z, 1)} eV para arrancar o elétron.</p>`,
               R`<p>$r_1 = \frac{0{,}0529}{${Z}} \approx ${F.n(0.0529 / Z, 4)}$ nm: o elétron fica ${Z} vezes mais perto, mais preso. O modelo de Bohr funciona bem para qualquer átomo com <b>um</b> elétron.</p>`,
             ] };
         } },

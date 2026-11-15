@@ -60,9 +60,24 @@
       <div class="status">A água (incompressível) não pode se acumular em lugar nenhum: o que entra por segundo numa seção sai pela outra. Por isso, no estreitamento, ela anda mais rápido: A₁v₁ = A₂v₂. Repare que as bolinhas ficam mais espaçadas na direção do movimento onde é mais rápido, mas o número delas passando por segundo (contado nas duas janelas tracejadas) é o mesmo.</div>`);
     const q = (s) => el.querySelector(s);
     const perfil = (x, d1, d2) => { /* larga → estreita (no meio) → larga */ const a = 0.5 * (1 + Math.tanh((x - W * 0.36) / 22)), b = 0.5 * (1 + Math.tanh((x - W * 0.66) / 22)); const d = d1 + (d2 - d1) * a + (d1 - d2) * b; return d / 2; };
-    const inicia = () => { pts = Array.from({ length: N }, (_, i) => [Math.random() * W, Math.random() * 2 - 1]); };
+    /* β 4.7 (correção autorizada pelo Lucas): no regime permanente o fluxo n·v é o mesmo em toda seção, então a densidade de bolinhas
+       tem que ser ∝ 1/v. Como todas levam o mesmo tempo T para dar a volta, começar espalhadas por igual em x nunca se desfazia, e as
+       janelas só concordavam na média de um ciclo inteiro. Agora elas ficam igualmente espaçadas no TEMPO DE PERCURSO τ(x) = ∫dx/v:
+       cada janela vê uma bolinha a cada T/N. Conferido em Python (n02.py): antes, janelas de 2 s discordavam até 69%; agora, no
+       máximo 2%, com média 20,13 bolinhas/s para N/T = 20,15 (D₁ = 2, D₂ = 0,5, v₁ = 1). Quando D₁ ou D₂ mudam, cada bolinha vai para a
+       mesma fração de τ no perfil novo (a ordem se mantém). Mudar só v₁ multiplica todas as velocidades: o espaçamento continua certo. */
+    const velPx = (x, d1, d2, v1) => v1 * (d1 / (2 * perfil(x, d1, d2))) ** 2 * 60;
+    const tabela = (d1, d2) => { const M = 1000, xs = [], tau = [0]; for (let i = 0; i <= M; i++) xs.push((W * i) / M);
+      for (let i = 0; i < M; i++) tau.push(tau[i] + (xs[i + 1] - xs[i]) * 0.5 * (1 / velPx(xs[i], d1, d2, 1) + 1 / velPx(xs[i + 1], d1, d2, 1))); return { xs, tau, T: tau[M] }; };
+    const xDeTau = (t, tb) => { let lo = 1, hi = tb.tau.length - 1; while (lo < hi) { const m = (lo + hi) >> 1; if (tb.tau[m] < t) lo = m + 1; else hi = m; } const k = lo, f = (t - tb.tau[k - 1]) / (tb.tau[k] - tb.tau[k - 1]); return tb.xs[k - 1] + f * (tb.xs[k] - tb.xs[k - 1]); };
+    const tauDeX = (x, tb) => { const M = tb.xs.length - 1, k = Math.max(1, Math.min(M, Math.floor((x / W) * M) + 1)), f = (x - tb.xs[k - 1]) / (tb.xs[k] - tb.xs[k - 1]); return tb.tau[k - 1] + f * (tb.tau[k] - tb.tau[k - 1]); };
+    let perfilAtual = null; /* [d1, d2, tabela] */
+    const inicia = () => { const d1 = +q("[data-c=d1]").value, d2 = +q("[data-c=d2]").value, tb = tabela(d1, d2); perfilAtual = [d1, d2, tb];
+      pts = Array.from({ length: N }, (_, i) => [xDeTau(((i + 0.5) * tb.T) / N, tb), Math.random() * 2 - 1]); };
     function passo(dt) {
       const d1 = +q("[data-c=d1]").value, d2 = +q("[data-c=d2]").value, v1 = +q("[data-c=v1]").value, esc = 60;
+      if (perfilAtual && (perfilAtual[0] !== d1 || perfilAtual[1] !== d2)) { /* o bocal mudou: cada bolinha vai para a mesma fração do tempo de percurso no perfil novo */
+        const velho = perfilAtual[2], novo = tabela(d1, d2); pts.forEach((p) => { p[0] = xDeTau((tauDeX(p[0], velho) / velho.T) * novo.T, novo); }); perfilAtual = [d1, d2, novo]; }
       const janelas = [W * 0.14, W * 0.51];
       pts.forEach((p) => { const r = perfil(p[0], d1, d2), v = v1 * (d1 / (2 * r)) ** 2; const xa = p[0]; p[0] += v * esc * dt; janelas.forEach((jx, k) => { if (xa < jx && p[0] >= jx) cont[k]++; }); if (p[0] > W) { p[0] -= W; p[1] = Math.random() * 2 - 1; } });
       tCont += dt; if (tCont >= 2) { taxa = cont.map((c) => n2(c / tCont, 1)); cont = [0, 0]; tCont = 0; }

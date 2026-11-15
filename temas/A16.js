@@ -18,7 +18,7 @@ F.registrar("A16", {
           const mM = p ? 2 : F.escolha([2, 4, 0.5]), mR = p ? 2 : F.escolha([2, 0.5, 3]), gp = (9.8 * mM) / (mR * mR), m = p ? 60 : F.escolha([50, 60, 70]);
           return { enun: R`<p>Um planeta tem ${F.nt(mM)} vezes a massa da Terra e ${F.nt(mR)} vezes o raio. Quanto vale a gravidade na superfície dele? Quanto "pesaria" lá uma pessoa de ${m} kg ($g_\text{Terra} = 9{,}8$ m/s²)?</p>`,
             fig: fig(terra(160, 85, 40) + terra(380, 85, Math.min(40 * mR, 80)) + D.txt(160, 150, "Terra", "tx2") + D.txt(380, 168, "planeta", "tx2"), 175),
-            passos: [R`<p>(i) Na superfície, $mg = \frac{GMm}{R^2} \Rightarrow g = \frac{GM}{R^2}$.</p>`, R`<p>(ii) Razão com a Terra: $\frac{g'}{g} = \frac{M'/M}{(R'/R)^2} = \frac{${F.n(mM)}}{${F.n(mR)}^2} = ${F.n(mM / (mR * mR), 3)}$, então $g' \approx ${F.n(gp, 3)}$ m/s².</p>`, R`<p>(iii) A massa continua ${m} kg (é a quantidade de matéria); o peso vira $${m}\cdot${F.n(gp, 3)} \approx ${F.n(m * gp, 3)}$ N, contra ${F.n(m * 9.8)} N aqui.</p>`] };
+            passos: [R`<p>(i) Na superfície, $mg = \frac{GMm}{R^2} \Rightarrow g = \frac{GM}{R^2}$.</p>`, R`<p>(ii) Razão com a Terra: $\frac{g'}{g} = \frac{M'/M}{(R'/R)^2} = \frac{${F.n(mM)}}{${F.n(mR)}^2} = ${F.n(mM / (mR * mR), 3)}$, então $g' \approx ${F.n(gp, 3)}$ m/s².</p>`, R`<p>(iii) A massa continua ${m} kg (é a quantidade de matéria); o peso vira $${m}\cdot${F.n(gp, 3)} \approx ${F.n(m * gp, 3)}$ N, contra ${F.nt(m * 9.8)} N aqui.</p>`] };
         } },
         { nome: "Médio: o satélite", gerar: (p) => {
           const h = p ? 400 : F.escolha([300, 400, 800, 2000]), r = 6371e3 + h * 1e3, v = Math.sqrt(3.986e14 / r), T = (2 * Math.PI * r) / v;

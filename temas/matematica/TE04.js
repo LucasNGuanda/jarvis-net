@@ -11,7 +11,7 @@ F.registrar("matematica/TE04", {
       casos: [
         { nome: "Rotação rígida", gerar: (p) => {
           const w = p ? 3 : F.escolha([1, 2, 3, 5]), r = p ? 0.2 : F.escolha([0.1, 0.2, 0.5, 1]);
-          return { enun: R`<p>Um fluido gira como um corpo rígido com $\omega = ${w}$ rad/s: $\vec v = (-${F.c(w)}y,\ ${F.c(w)}x,\ 0)$. Qual a circulação num círculo horizontal de raio ${F.n(r)} m em volta do eixo, e qual a vorticidade?</p>`, fig: "",
+          return { enun: R`<p>Um fluido gira como um corpo rígido com $\omega = ${w}$ rad/s: $\vec v = (-${F.c(w)}y,\ ${F.c(w)}x,\ 0)$. Qual a circulação num círculo horizontal de raio ${F.nt(r)} m em volta do eixo, e qual a vorticidade?</p>`, fig: "",
             passos: [
               R`<p>Rotacional ${F.ret("fisica/U01")}: $\nabla\times\vec v = (0, 0, ${2 * w})$, a <b>vorticidade</b>, que é o dobro de $\omega$.</p>`,
               R`<p>Stokes, com o disco como superfície: $\oint\vec v\cdot d\vec l = ${2 * w}\cdot\pi(${F.n(r)})^2 = ${F.n(2 * w * r * r)}\pi$.</p>`,
@@ -21,7 +21,7 @@ F.registrar("matematica/TE04", {
         { nome: "Faraday na forma de Stokes", gerar: (p) => {
           const Rr = p ? 0.1 : F.escolha([0.05, 0.1, 0.2]), dB = p ? 0.5 : F.escolha([0.2, 0.5, 2]), r = p ? 0.1 : F.escolha([0.04, 0.1, 0.3]);
           const dentro = r <= Rr, E = dentro ? (r / 2) * dB : ((Rr * Rr) / (2 * r)) * dB;
-          return { enun: R`<p>Um campo magnético uniforme ocupa um cilindro de raio ${F.n(Rr)} m e cresce a ${F.n(dB)} T/s. Qual o campo elétrico induzido a ${F.n(r)} m do eixo?</p>`, fig: "",
+          return { enun: R`<p>Um campo magnético uniforme ocupa um cilindro de raio ${F.nt(Rr)} m e cresce a ${F.nt(dB)} T/s. Qual o campo elétrico induzido a ${F.nt(r)} m do eixo?</p>`, fig: "",
             passos: [
               R`<p>Faraday diferencial: $\nabla\times\vec E = -\partial_t\vec B$ ${F.ret("fisica/U05")}. Stokes num círculo de raio $r$: $\oint\vec E\cdot d\vec l = -\frac{d}{dt}\iint\vec B\cdot d\vec A$.</p>`,
               R`<p>Por simetria, $E$ é tangente e de módulo constante no círculo: $E\cdot2\pi r = ${dentro ? R`\pi r^2\frac{dB}{dt}` : R`\pi R^2\frac{dB}{dt}`}$ (em módulo).</p>`,

@@ -11,7 +11,7 @@ F.registrar("O02", {
         { nome: "Construtiva ou destrutiva?", gerar: (p) => {
           const f = p ? 343 : F.escolha([171.5, 343, 686, 1029]), r1 = p ? 3 : F.escolha([2, 3, 4]), dr = p ? 0.5 : F.escolha([0.25, 0.5, 1, 1.5]);
           const lam = 343 / f, n = dr / lam, inteiro = Math.abs(n - Math.round(n)) < 1e-9, meio = Math.abs(n - Math.floor(n) - 0.5) < 1e-9;
-          return { enun: R`<p>Duas caixas de som em fase tocam ${F.n(f)} Hz. Você está a ${r1} m de uma e a ${F.n(r1 + dr)} m da outra. O som é reforçado ou cancelado? (som a 343 m/s)</p>`, fig: "",
+          return { enun: R`<p>Duas caixas de som em fase tocam ${F.nt(f)} Hz. Você está a ${r1} m de uma e a ${F.nt(r1 + dr)} m da outra. O som é reforçado ou cancelado? (som a 343 m/s)</p>`, fig: "",
             passos: [R`<p>$\lambda = \frac{343}{${F.n(f)}} = ${F.n(lam, 3)}$ m.</p>`, R`<p>Diferença de caminho: $\Delta = ${F.n(dr)}$ m $= ${F.n(n, 3)}\lambda$.</p>`,
               R`<p>${inteiro ? "Número inteiro de λ: as cristas chegam juntas, interferência <b>construtiva</b> (som forte)." : meio ? "Meio λ a mais (número semi-inteiro): crista com vale, interferência <b>destrutiva</b> (silêncio, se as amplitudes forem iguais)." : "Nem inteiro nem semi-inteiro: interferência parcial."}</p>`] };
         } },

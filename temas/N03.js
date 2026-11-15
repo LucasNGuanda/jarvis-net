@@ -10,8 +10,8 @@ F.registrar("N03", {
       casos: [
         { nome: "Torricelli", gerar: (p) => {
           const H = p ? 1 : F.escolha([1, 1.5, 2]), y = p ? 0.2 : F.escolha([0.2, 0.3, 0.5]), g = 9.81, v = Math.sqrt(2 * g * (H - y)), x = 2 * Math.sqrt((H - y) * y);
-          return { enun: R`<p>Um tanque aberto está cheio até ${F.n(H)} m de altura. Um furo pequeno na parede, a ${F.n(y)} m do chão, solta um jato horizontal. Com que velocidade sai e onde cai?</p>`, fig: "",
-            passos: [R`<p>Bernoulli da superfície (parada, $p_\text{atm}$) até o jato ($p_\text{atm}$): $\rho g H = \frac12\rho v^2 + \rho gy \Rightarrow v = \sqrt{2g(H - y)} \approx ${F.n(v, 3)}$ m/s.</p>`, R`<p>Queda de ${F.n(y)} m: $t = \sqrt{2y/g}$; alcance $x = vt = 2\sqrt{(H - y)y} \approx ${F.n(x, 3)}$ m.</p>`, R`<p>O alcance é máximo com o furo no meio ($y = H/2$): $x = H$. Furos a $y$ e a $H - y$ dão o <b>mesmo</b> alcance.</p>`] };
+          return { enun: R`<p>Um tanque aberto está cheio até ${F.nt(H)} m de altura. Um furo pequeno na parede, a ${F.nt(y)} m do chão, solta um jato horizontal. Com que velocidade sai e onde cai?</p>`, fig: "",
+            passos: [R`<p>Bernoulli da superfície (parada, $p_\text{atm}$) até o jato ($p_\text{atm}$): $\rho g H = \frac12\rho v^2 + \rho gy \Rightarrow v = \sqrt{2g(H - y)} \approx ${F.n(v, 3)}$ m/s.</p>`, R`<p>Queda de ${F.nt(y)} m: $t = \sqrt{2y/g}$; alcance $x = vt = 2\sqrt{(H - y)y} \approx ${F.n(x, 3)}$ m.</p>`, R`<p>O alcance é máximo com o furo no meio ($y = H/2$): $x = H$. Furos a $y$ e a $H - y$ dão o <b>mesmo</b> alcance.</p>`] };
         } },
         { nome: "Tubo de Pitot", gerar: (p) => {
           const dp = p ? 500 : F.escolha([200, 500, 1000, 5000]), rho = 1.2, v = Math.sqrt((2 * dp) / rho);
