@@ -336,6 +336,12 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Todas as contas conferidas em Python antes de escrever; chefões também por simulação ou integração numérica (gelo no lago, termômetro atrasado, motor entre corpos finitos com milhares de ciclos de Carnot pequenos, raiz numérica no termômetro de platina do T01).
   - Corrigido antes de entregar: fórmulas quebradas em alternativas do T05b (faltava `String.raw`); escala errada do gráfico de radiação linearizada (T02) e da curva do aquecedor (T04b); ciclo de Carnot desenhado com volumes errados (T08); a pressão medida no laboratório do T05b dava ~10% acima da teoria ideal, o que é física de verdade (as moléculas têm tamanho): o laboratório agora mostra também a previsão descontando a área ocupada, e as duas batem.
   - Física: 96 de 96 temas escritos.
+- **β 3.4** — Experimentos novos (EP11–EP18) e versão ao lado do nome na tela inicial.
+  - Tela inicial: a versão aparece ao lado de "Jarvis", dentro do título, com o mesmo degradê (muda de cor junto) e o conjunto centralizado.
+  - Os códigos EP07–EP10 já existiam (bolinha no fio, duas massas, bloco com pêndulo, discos); os 8 novos são EP11–EP18, em módulos novos: Termodinâmica (EP11–EP13), Ondas e quântica (EP14, EP15, EP17), Nuclear (EP16) e Fluidos (EP18).
+  - `tests/texp.js`: teste rápido das páginas de experimento (fórmulas, erros de JS, laboratório montado e animando).
+  - Experimentos prontos:
+    - EP11 Máquina de Carnot: ciclo se desenhando no diagrama p × V (eixos em escala log, cada etapa de uma cor), pistão com a cor da temperatura do gás, fonte quente/fria/isolante embaixo, setas de calor, barras de rendimento. O "motor real" é o modelo endorreversível de Curzon–Ahlborn (troca de calor com condutância finita, na potência máxima) com 10% de atrito: rende sempre menos que 1 − T_f/T_q e mostra a entropia gerada por ciclo.
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.

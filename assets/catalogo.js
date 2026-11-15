@@ -205,4 +205,20 @@ window.CATALOGO = [
   { id:"EMi", area:"exp", letra:"∞", cor:"--mT", nome:"Mistos", desc:"Sistemas que juntam molas, pêndulos e o que mais vier.", temas:[
     ["EP09","Pêndulo pendurado num bloco com mola",["∫","!"],true],
   ]},
+  { id:"ETe", area:"exp", letra:"T", cor:"--mF", nome:"Termodinâmica", desc:"Motores, demônios e gases reais.", temas:[
+    ["EP11","Máquina de Carnot",["★"],true],
+    ["EP12","O demônio de Maxwell",["!"]],
+    ["EP13","Gás de van der Waals",["!","∫"]],
+  ]},
+  { id:"EQu", area:"exp", letra:"ψ", cor:"--mO", nome:"Ondas e quântica", desc:"Luz, fótons e o gato mais famoso da física.", temas:[
+    ["EP14","Fenda dupla",["★"]],
+    ["EP15","Radiação de corpo negro",["!"]],
+    ["EP17","O gato de Schrödinger",[]],
+  ]},
+  { id:"ENu", area:"exp", letra:"☢", cor:"--mN", nome:"Nuclear", desc:"Reação em cadeia e energia de ligação.", temas:[
+    ["EP16","Fissão e fusão",["!"]],
+  ]},
+  { id:"EFl", area:"exp", letra:"≈", cor:"--mK2", nome:"Fluidos", desc:"Navier–Stokes de verdade, num método leve.", temas:[
+    ["EP18","Escoamento ao redor de um cilindro",["!!"]],
+  ]},
 ];
