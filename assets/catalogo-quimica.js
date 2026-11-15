@@ -26,7 +26,7 @@ window.CATALOGO.push(
     ["B05","Orbitais híbridos",[],true],
     ["B06","Tabela periódica: grupos e períodos",[],true],
     ["B07","Propriedades periódicas",[],true],
-    ["B08","Radioatividade e química nuclear",[]],
+    ["B08","Radioatividade e química nuclear",[],true],
   ] },
   { id:"QC", area:"qui", letra:"C", cor:"--mC", nome:"Ligações químicas", desc:"Iônica, covalente, metálica, geometria e forças intermoleculares.", temas:[
     ["C01","Ligação iônica",[]],
