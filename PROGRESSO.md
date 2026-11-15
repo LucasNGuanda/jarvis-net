@@ -52,12 +52,12 @@ EP01 Pêndulo simples pela lagrangiana, EP02 Pêndulo duplo e caos, EP03 Pêndul
 - **Matemática** (MB, AR, GE, AL) e **Olimpíada e demonstrações** (DM, TNO, DES, CBO, GEO, FUN, PRI): 114 temas cadastrados, todos "em breve".
 - Rota `#/matematica/<COD>`; progresso em `mat:`.
 
-### Química — 2 abas, 104 temas cadastrados, 5 escritos (A01 no `main` desde a β 4.8; A02 a A05 na β 4.9, NA BRANCH `quimica-a02-a05`, aguardando o "aprovado" do Lucas)
+### Química — 2 abas, 104 temas cadastrados, 9 escritos: módulo A completo (A01 β 4.8; A02–A05 β 4.9; A06–A09 β 5.0), tudo no `main`
 Química (módulos QA–QJ: introdução, atomística, ligações, reações e estequiometria, físico-química I e II, eletroquímica, orgânica, bioquímica e ambiental, analítica; 79 temas) e Experimentos (EQ01–EQ25, todos "em breve"; módulo novo EQs "Soluções e indicadores"). mhchem carregado e testado. Progresso em `qui:`.
 
 | Aba | Módulo | Temas | Exercícios (mín–máx) | Total | Sem figura | Com `F.chute` | Com chefão | Laboratórios |
 |---|---|---|---|---|---|---|---|---|
-| Química | QA Introdução à química | 5/9 | 12–18 | 66 | 0 | 5 | 5 | 5 |
+| Química | QA Introdução à química | 9/9 | 12–18 | 114 | 0 | 9 | 9 | 9 |
 
 - **A01 Objetivos e ramos da química; método científico** (`temas/quimica/A01.js`): 18 exercícios (8 Físico, 10 Máximo), todos com figura e correção automática, 2 `F.chute`, 3 exemplos com figura e variações, 3 demonstrações, caixas Pense como químico (2), Pegadinha (2), Segurança e descarte, Nível olimpíada e Ponte, folha com 6 fórmulas, chefão "O frasco que mede quanto do ar serve para queimar". Laboratório "Experimento controlado: o comprimido efervescente" em `assets/sims/quimica/introducao.js` (`SIM.efervescente`).
 - **A02 Matéria, energia e propriedades da matéria**: 12 exercícios (6 Físico, 6 Máximo), 3 demonstrações (1 m³ = 10⁶ cm³; razão de duas extensivas é intensiva; densidade de mistura), laboratório "A amostra misteriosa" (`SIM.densidade`), chefão "O volume que some" (água + etanol: 96,4 mL).
@@ -66,7 +66,14 @@ Química (módulos QA–QJ: introdução, atomística, ligações, reações e e
 - **A05 Separação de misturas e grau de pureza**: 12 exercícios (6 + 6), 2 demonstrações (ordem das etapas; recristalização repetida), vidrarias em SVG (filtração, funil de decantação, destilação simples e fracionada, torre de petróleo), laboratório "Monte a separação" (`SIM.separacao`, três desafios), chefão "A areia do garimpo".
 - Os quatro laboratórios de A02 a A05 estão em `assets/sims/quimica/materia.js` (uma linha de `<script>` no `index.html`).
 - **Exercícios por tema na química: 10 a 15** (decisão do Lucas ao aprovar o A01, 15/11/2026; o A01 ficou com 18).
-- **Ordem combinada:** módulos A → B → C → D → E → F (Modalidade A da OBQ), depois G, H, J e os experimentos. Próximo tema: **A06**, depois do "aprovado" do lote A02–A05.
+- **A06 Fenômenos físicos e químicos**: 12 exercícios, 2 demonstrações (o que a balança mostra; água de hidratação pela proporção fixa), laboratório "Físico ou químico? Siga as partículas" (`SIM.fenomenos`, oito processos), chefão "O caderno de seis observações".
+- **A07 Densidade, fusão, ebulição e solubilidade**: 12 exercícios, 2 demonstrações (solubilidade é proporção; quanto cristaliza), laboratório "Curva de solubilidade" (`SIM.solubilidade`: KNO₃, KCl, NaCl), chefão "Salitre sujo de sal" (cristalização fracionada).
+- **A08 Laboratório: segurança, vidrarias e técnicas**: 12 exercícios, 2 demonstrações (erro relativo de cada vidraria; paralaxe por semelhança de triângulos), 14 vidrarias e 6 pictogramas em SVG, laboratório "Leia o menisco" (`SIM.menisco`), chefão "O relatório com sete erros".
+- **A09 Algarismos significativos e erros de medida**: 12 exercícios, 2 demonstrações (por que a soma olha casas decimais e o produto olha significativos), laboratório "Exato ou preciso?" (`SIM.exatidao`), chefão "Dois alunos, um bloco de alumínio".
+- Os laboratórios de A06 a A09 estão em `assets/sims/quimica/laboratorio.js`.
+- **Desde a β 5.0 a química vai direto para o `main`** (permissão do Lucas ao aprovar o lote A02–A05, 15/11/2026), sempre com os testes do tema antes de cada commit e a regressão completa por lote.
+- **Ordem combinada:** módulos A → B → C → D → E → F (Modalidade A da OBQ), depois G, H, J e os experimentos. Próximo: **módulo B (B01 a B08)**, pedido pelo Lucas.
+- **Fora do padrão ou a saber em A06–A09:** tolerâncias de vidraria do A08 são "típicas" (variam com fabricante e classe) e os pictogramas são desenhos simplificados, não os oficiais; a tabela de solubilidade do A07 e os dados do A06 (massas molares arredondadas) estão de memória; o A09 remete à Física Experimental (FE03, FE04) para incerteza e propagação, sem repetir.
 - **Fora do padrão ou a saber em A02–A05:** teoria de 6 a 8 páginas (temas pequenos); A03 tem só 1 demonstração e o A04 e o A05 têm 2 (o A01 e o A02 têm 3); dados de tabela (densidades, PF, PE, calores latentes, composição do eutético e do azeótropo, faixas do petróleo, ebulição em altitude) escritos de memória e arredondados, sem fonte consultada nesta sessão; a história (Franklin e a mancha de óleo; a queima do diamante no fim do século XVIII) também; as curvas do laboratório do A04 são esquemáticas, sem números; o `texemp` lista zeros finais e temperaturas negativas como "suspeitos", e são de propósito.
 - **Fora do padrão ou a saber no A01:** as caixas "Nível olimpíada" descrevem o estilo de cobrança, sem questão real citada (o Lucas vai mandar provas da OBQ); o laboratório usa um MODELO inventado (dobra a cada 10 °C, tempo ∝ N^(−1/3), volume sem efeito), avisado no próprio laboratório; o `tests/texemp.js` lista os números com zeros finais (254,00 g) como "suspeitos", e eles são de propósito (leitura de balança com centésimo de grama).
 
@@ -684,6 +691,9 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Decisão nova: de 10 a 15 exercícios por tema na química.
   - Fora da pasta da química: `index.html` (a linha do laboratório), `assets/indice-busca.js` (gerado), versão nos três lugares, `CLAUDE.md` e este arquivo.
   - Contas conferidas em Python (comentário no topo de cada tema). Testes em 1280 × 900: tmec nos quatro (0 katex-error, 12 exercícios, 0 sem figura, laboratório, chefão, folha, sem erros de JS), tchaves ok nos quatro, laboratórios conferidos contra as contas (15 conferências ok).
+- **β 5.0** — **Química A06, A07, A08 e A09: módulo A completo** (15/11/2026, direto no `main`, com permissão do Lucas). A β 4.9 (A02–A05) foi aprovada e juntada; na regressão dela, a única falha foi o `tbusca` desatualizado ("Bernoulli" com acesso só à Química passou a achar temas da Química pelo sinônimo "fluido"), corrigido em commit separado e rodado de novo sem falha.
+  - Quatro temas no padrão completo, 12 exercícios cada, e quatro laboratórios em `assets/sims/quimica/laboratorio.js` (linha de `<script>` no `index.html`).
+  - Testes em 1280 × 900: tmec nos quatro (0 katex-error, 12 exercícios, 0 sem figura, laboratório, chefão, folha, sem erros de JS), tchaves ok, laboratórios conferidos contra as contas (9 conferências ok).
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.

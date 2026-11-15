@@ -22,7 +22,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - **Estado de cada matéria (fim do chat, β 4.6):**
   - Física: a única com conteúdo escrito. Aba Física com 96 de 96 temas e 913 exercícios; Experimentos com 18 (EP01–EP18; próximo código EP19); Experimental com 11 de 11 no padrão completo.
   - Matemática: só o Cálculo escrito (27 temas); 114 temas "em breve".
-  - Química: 104 temas cadastrados; escritos o A01 (β 4.8, no `main`) e o A02 a A05 (β 4.9, na branch `quimica-a02-a05` até o Lucas aprovar).
+  - Química: 104 temas cadastrados; módulo A completo (A01–A09, β 4.8 a 5.0), no `main`. Detalhes no PROGRESSO.md.
   - Russo, Alemão e Sânscrito: só cadastrados, todos "em breve".
   - Números detalhados e dívida técnica no PROGRESSO.md, em "Estado final".
 - **Física**: 3 abas, Física, Experimentos e Experimental (o Cálculo foi para a matemática na β 4.0). Módulos F, A, T, O, C, M, U, N, X (bônus) e S (simulados).
@@ -107,7 +107,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 
 ## Sessão de química (regras combinadas em 15/11/2026)
 - Ordem: módulos A → B → C → D → E → F (Modalidade A da OBQ, a do Lucas este ano); depois eletroquímica, orgânica, analítica e os experimentos. Um tema por vez.
-- **Nas 5 primeiras versões nada vai direto para o `main`**: branch, parar, mandar o que foi feito, o resultado dos testes, capturas e o ZIP; só juntar com o "aprovado" escrito do Lucas. Depois de 5 aprovadas em sequência, afrouxa.
+- **A química vai direto para o `main`** (permissão do Lucas em 15/11/2026, ao aprovar o lote A02–A05; antes, as primeiras versões passaram por branch e aprovação). Continua valendo: testes do tema antes de cada commit, um commit por tema, regressão completa por lote, e no fim de cada lote o relatório honesto com o ZIP para ele conferir.
 - Território: `temas/quimica/`, `assets/sims/quimica/` e `assets/catalogo-quimica.js`. Também pode: `assets/indice-busca.js` (gerado) e **uma linha de `<script>` no `index.html` por arquivo de laboratório**. Fora da química também pode, sem perguntar: (a) consertar teste que ficou desatualizado por causa de uma mudança que o Lucas pediu (em commit separado e marcado; regressão sem falha é o padrão) e (b) registrar decisão no CLAUDE.md ou no PROGRESSO.md. Para qualquer outra coisa fora da química, perguntar antes. Não criar componente novo; estender com campo opcional.
 - "Pense como químico" = `F.caixa("fisico", html, "Pense como químico")`; segurança = `F.caixa("pegadinha", html, "Segurança e descarte")`, dizendo se pode em casa ou só no laboratório da escola. Tema da física citado de dentro da química: `F.ret("fisica/FE03")`.
 - Modelo de tema: o T02 (não os da Mecânica). **De 10 a 15 exercícios por tema** (decisão do Lucas ao aprovar o A01, 15/11/2026; antes eram 15 a 20), todos com figura e correção automática. A figura de um exercício nunca traz escrito o nome que é a resposta.
