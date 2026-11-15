@@ -1,0 +1,145 @@
+/* Química B02 · Isótopos, isóbaros e isótonos. Conferido em Python (massas aproximadas pelos números de massa, salvo quando dito):
+   cloro: 75% de 35 e 25% de 37 → 35,5 (com 75,77% e 24,23% e massas exatas 34,969 e 36,966: 35,45);
+   boro: 20% de 10 e 80% de 11 → 10,8; cobre: 69% de 63 e 31% de 65 → 63,62;
+   abundância a partir da média (dois isótopos): x₁ = (m₂ − M)/(m₂ − m₁): gálio 69/71, M = 69,72 → 64%; bromo 79/81, M = 79,90 → 55%; prata 107/109, 107,87 → 56,5%;
+   lítio 6/7, 6,94 → 6%; boro 10,81 → 19%;
+   Cl₂ (75% e 25%): massas 70, 72 e 74 com probabilidades 0,5625; 0,375; 0,0625 (9 : 6 : 1); média 71,0 = 2·35,5;
+   água pesada D₂O: 2·2 + 16 = 20 u contra 18 u (11% mais pesada);
+   chefão: magnésio 24, 25, 26 com x₂₅ = 10% e média 24,32: 24a + 2,5 + 26c = 24,32 e a + c = 0,90 → c = 0,11, a = 0,79;
+   mistura de boro natural (20% de ¹⁰B) com igual quantidade de boro enriquecido (95%): 57,5% → média 10,425. */
+F.registrar("quimica/B02", {
+  retoma: ["B01"],
+  html(F) {
+    const R = String.raw;
+    const fig = (conteudo, h = 170) => D.svg(560, h, conteudo, "figura");
+    const nota = (x, y, A, Z, s, t = 34) => D.txt(x, y, s, "tx", "middle", `style="font-size:${t}px;font-weight:700"`) + D.txt(x - t * 0.36 * s.length - 3, y - t * 0.55, String(A), "tx", "end", `style="font-size:${t * 0.42}px"`) + D.txt(x - t * 0.36 * s.length - 3, y + 2, String(Z), "tx", "end", `style="font-size:${t * 0.42}px"`);
+    /* núcleo com p prótons (vermelho) e n nêutrons (cinza), em espiral */
+    const nucleo = (x, y, p, n, rot = "") => { let s = ""; const tot = p + n; for (let i = 0; i < tot; i++) { const r = 5.2 * Math.sqrt(i), a = i * 2.399, prot = Math.round(((i + 1) * p) / tot) > Math.round((i * p) / tot); s += `<circle cx="${(x + r * Math.cos(a)).toFixed(1)}" cy="${(y + r * Math.sin(a)).toFixed(1)}" r="5.2" style="fill:${prot ? "var(--bad)" : "var(--ink3)"};stroke:var(--bg);stroke-width:.8"/>`; } return s + (rot ? D.txt(x, y + 46, rot, "tx2") : ""); };
+    /* espectro de massas: barras [massa, abundância %] */
+    const espectro = (barras, o = {}) => { const ms = barras.map((b) => b[0]), a = Math.min(...ms) - 1, b = Math.max(...ms) + 1, X = (m) => 110 + ((m - a) / (b - a)) * 340; let s = `<line x1="90" x2="470" y1="140" y2="140" style="stroke:var(--ink2);stroke-width:2"/>`; barras.forEach(([m, ab, r]) => (s += `<rect x="${X(m) - 16}" y="${140 - ab * 1.1}" width="32" height="${ab * 1.1}" style="fill:color-mix(in srgb,var(--mod) 45%,transparent);stroke:var(--mod);stroke-width:2"/>` + D.txt(X(m), 158, String(m), "tx2") + D.txt(X(m), 134 - ab * 1.1, r === undefined ? String(ab).replace(".", ",") + "%" : r, "tx2"))); if (o.media) s += `<path d="M${X(o.media)} 166 l-8 13 l16 0 Z" style="fill:var(--warn)"/>` + D.txt(X(o.media) + 14, 180, o.rotMedia || "média", "tx2", "start"); return s + D.txt(500, 158, "massa (u)", "tx2", "end"); };
+    const tab = (x, y, larg, linhas) => linhas.map((l, i) => l.map((c, j) => D.txt(x + larg.slice(0, j).reduce((a, b) => a + b, 0) + larg[j] / 2, y + i * 22, c, "tx2", "middle", i ? "" : 'style="font-weight:700;fill:var(--ink)"')).join("")).join("") + `<line x1="${x}" x2="${x + larg.reduce((a, b) => a + b, 0)}" y1="${y + 7}" y2="${y + 7}" style="stroke:var(--ink3)"/>`;
+    const gangorra = (m1, m2, x1, M) => { const X = (m) => 120 + ((m - m1) / (m2 - m1)) * 320; return `<line x1="120" x2="440" y1="90" y2="90" style="stroke:var(--ink);stroke-width:4"/><rect x="${120 - 8 - x1 * 0.3}" y="${90 - 16 - x1 * 0.5}" width="${16 + x1 * 0.6}" height="${16 + x1 * 0.5}" style="fill:color-mix(in srgb,var(--mod) 45%,transparent);stroke:var(--mod);stroke-width:2"/><rect x="${440 - 8 - (100 - x1) * 0.3}" y="${90 - 16 - (100 - x1) * 0.5}" width="${16 + (100 - x1) * 0.6}" height="${16 + (100 - x1) * 0.5}" style="fill:color-mix(in srgb,var(--ok) 45%,transparent);stroke:var(--ok);stroke-width:2"/><path d="M${X(M)} 92 l-12 22 l24 0 Z" style="fill:var(--warn)"/>` + D.txt(120, 136, m1 + " u (" + String(x1).replace(".", ",") + "%)", "tx2") + D.txt(440, 136, m2 + " u (" + String(+(100 - x1).toFixed(1)).replace(".", ",") + "%)", "tx2") + D.txt(X(M), 132, String(M).replace(".", ","), "tx2", "middle", 'style="fill:var(--warn)"'); };
+
+    const EL = [["cloro", "Cl", 35, 37, 75], ["boro", "B", 10, 11, 20], ["cobre", "Cu", 63, 65, 70], ["lítio", "Li", 6, 7, 8], ["bromo", "Br", 79, 81, 50]];
+    const exemplos = F.exemplo({
+      titulo: "Isótopos em números",
+      casos: [
+        { nome: "Fácil: a massa atômica como média", gerar: (p) => {
+          const [nome, s, m1, m2, x] = p ? EL[0] : F.escolha(EL), M = (x * m1 + (100 - x) * m2) / 100;
+          return { enun: R`<p>O ${nome} tem dois isótopos: $\ce{^{${m1}}${s}}$, com ${x}% de abundância, e $\ce{^{${m2}}${s}}$, com ${100 - x}%. Tomando a massa de cada isótopo igual ao seu número de massa, calcule a massa atômica do ${nome}.</p>`, fig: fig(espectro([[m1, x], [m2, 100 - x]]), 185),
+            passos: [R`<p>(i) A massa atômica de um elemento é a <b>média ponderada</b> das massas dos isótopos, com as abundâncias como pesos.</p>`,
+              R`<p>(ii) Passe as porcentagens para fração: $${F.n(x / 100)}$ e $${F.n(1 - x / 100)}$. Conferência: somam 1.</p>`,
+              R`<p>(iii) $M = ${F.n(x / 100)}\cdot${m1} + ${F.n(1 - x / 100)}\cdot${m2} = ${F.n((x * m1) / 100, 3)} + ${F.n(((100 - x) * m2) / 100, 3)} = ${F.n(M, 2)}$ u.</p>`,
+              R`<p>(iv) Teste de sanidade: o resultado tem de ficar <b>entre</b> ${m1} e ${m2}, e mais perto do isótopo mais abundante (${x > 50 ? m1 : x < 50 ? m2 : "aqui, bem no meio, porque é meio a meio"}). ${F.nt(M, 2)} passa no teste. E repare: nenhum átomo de ${nome} tem essa massa; ela é a média de uma multidão.</p>`] };
+        } },
+        { nome: "Médio: da média às abundâncias", gerar: (p) => {
+          const [nome, s, m1, m2, M] = p ? ["gálio", "Ga", 69, 71, 69.72] : F.escolha([["gálio", "Ga", 69, 71, 69.72], ["bromo", "Br", 79, 81, 79.9], ["prata", "Ag", 107, 109, 107.87], ["boro", "B", 10, 11, 10.81]]), x = (m2 - M) / (m2 - m1);
+          return { enun: R`<p>O ${nome} tem massa atômica ${F.nt(M)} u e dois isótopos, $\ce{^{${m1}}${s}}$ e $\ce{^{${m2}}${s}}$. Aproximando a massa de cada um pelo número de massa, estime a abundância de cada isótopo.</p>`, fig: fig(gangorra(m1, m2, +(x * 100).toFixed(1), M), 150),
+            passos: [R`<p>(i) Seja $x$ a fração do isótopo ${m1}. A do isótopo ${m2} é $1 - x$ (só há dois).</p>`,
+              R`<p>(ii) Média ponderada: $${m1}x + ${m2}(1 - x) = ${F.n(M)}$.</p>`,
+              R`<p>(iii) $${m2} - ${m2 - m1}x = ${F.n(M)} \Rightarrow x = \frac{${m2} - ${F.n(M)}}{${m2 - m1}} = ${F.n(x, 3)}$.</p>`,
+              R`<p>(iv) $\ce{^{${m1}}${s}}$: ${F.nt(x * 100, 1)}%; $\ce{^{${m2}}${s}}$: ${F.nt((1 - x) * 100, 1)}%. É a regra da gangorra: a média fica mais perto do lado mais pesado, e a distância da média a cada isótopo é proporcional à abundância do <b>outro</b>.</p>`] };
+        } },
+        { nome: "Olimpíada: isótopo de um, isóbaro de outro", gerar: (p) => {
+          const [Z, A, n2] = p ? [20, 40, 22] : F.escolha([[20, 40, 22], [17, 35, 20], [26, 56, 32], [11, 23, 14]]), N = A - Z, A2 = Z + n2, Z3 = A2 - N;
+          return { enun: R`<p>O átomo X tem $Z = ${Z}$ e $A = ${A}$. O átomo Y é <b>isótopo</b> de X e tem ${n2} nêutrons. O átomo W é <b>isóbaro</b> de Y e <b>isótono</b> de X. Determine $Z$, $A$ e $N$ dos três.</p>`, fig: fig(tab(130, 34, [80, 90, 90, 90], [["átomo", "Z", "A", "N"], ["X", String(Z), String(A), "?"], ["Y", "?", "?", String(n2)], ["W", "?", "?", "?"]]), 135),
+            passos: [R`<p>(i) X: $N = A - Z = ${A} - ${Z} = ${N}$.</p>`,
+              R`<p>(ii) Y é isótopo de X: mesmo $Z = ${Z}$. Com ${n2} nêutrons: $A = ${Z} + ${n2} = ${A2}$.</p>`,
+              R`<p>(iii) W é isóbaro de Y: mesmo $A = ${A2}$. W é isótono de X: mesmo $N = ${N}$. Então $Z = A - N = ${A2} - ${N} = ${Z3}$.</p>`,
+              R`<p>(iv) Resultado: X($Z = ${Z}$, $A = ${A}$, $N = ${N}$); Y($${Z}$, $${A2}$, $${n2}$); W($${Z3}$, $${A2}$, $${N}$). Receita: cada palavra "iso" é uma igualdade; escreva-as como equações e use $A = Z + N$ para fechar. W tem outro $Z$: é <b>outro elemento</b>, embora pese o mesmo que Y.</p>`] };
+        } },
+      ],
+    });
+
+    const chefao = F.chefao({
+      titulo: "O espectrômetro de massas não mente",
+      enun: R`<p>Um espectrômetro de massas separa átomos e moléculas pela massa e mede a abundância de cada um. Aproximando as massas pelos números de massa:</p>
+        <p>(a) O magnésio tem três isótopos, 24, 25 e 26. O aparelho mostra 10% para o 25, e a massa atômica do magnésio é 24,32 u. Ache as abundâncias do 24 e do 26. (b) O cloro tem 75% de $\ce{^{35}Cl}$ e 25% de $\ce{^{37}Cl}$. No gás cloro, $\ce{Cl2}$, que massas de molécula aparecem, e em que proporção? (c) Mostre que a média das massas das moléculas do item (b) é o dobro da massa atômica do cloro. (d) Um aluno diz: "a massa atômica do cloro é 35,5; então existe um átomo de cloro com 35,5 u, com meio nêutron". Corrija, em duas linhas. (e) Boro natural tem 20% de $\ce{^{10}B}$. Mistura-se uma amostra com igual número de átomos de boro <b>enriquecido</b>, com 95% de $\ce{^{10}B}$. Qual a massa atômica média da mistura? (f) As duas amostras de boro do item (e) reagem do mesmo jeito com o oxigênio? Como você as distinguiria?</p>`,
+      fig: fig(espectro([[24, 79, "?"], [25, 10, "10%"], [26, 11, "?"]], { media: 24.32, rotMedia: "média: 24,32" }), 190),
+      dicas: [R`<p>(a) Duas incógnitas, duas equações: as frações somam 1, e a média ponderada dá 24,32.</p>`,
+        R`<p>(b) Uma molécula tem dois átomos, escolhidos ao acaso: 35 com 35, 35 com 37 (de dois jeitos) e 37 com 37. Multiplique as probabilidades.</p>`,
+        R`<p>(e) Com o mesmo número de átomos de cada amostra, a fração de $\ce{^{10}B}$ na mistura é a média das duas frações.</p>`],
+      sol: R`<p><b>(a)</b> Sejam $a$ e $c$ as frações do 24 e do 26. $a + c = 1 - 0{,}10 = 0{,}90$ e $24a + 25\cdot0{,}10 + 26c = 24{,}32$, isto é, $24a + 26c = 21{,}82$. Substituindo $a = 0{,}90 - c$: $21{,}60 + 2c = 21{,}82 \Rightarrow c = 0{,}11$ e $a = 0{,}79$. Abundâncias: <b>79%</b> de $\ce{^{24}Mg}$ e <b>11%</b> de $\ce{^{26}Mg}$.</p>
+        <p><b>(b)</b> Massa 70 ($35 + 35$): $0{,}75\cdot0{,}75 = 0{,}5625$. Massa 72 ($35 + 37$ ou $37 + 35$): $2\cdot0{,}75\cdot0{,}25 = 0{,}375$. Massa 74: $0{,}25\cdot0{,}25 = 0{,}0625$. Proporção <b>9 : 6 : 1</b>. Três picos, e é exatamente o que o aparelho mostra.</p>
+        <p><b>(c)</b> $70\cdot0{,}5625 + 72\cdot0{,}375 + 74\cdot0{,}0625 = 39{,}375 + 27{,}0 + 4{,}625 = 71{,}0 = 2\cdot35{,}5$. A média da soma é a soma das médias.</p>
+        <p><b>(d)</b> 35,5 u é a média de uma multidão em que três quartos dos átomos têm massa 35 e um quarto tem 37. Nenhum átomo tem 35,5, do mesmo jeito que nenhuma família tem 1,7 filho. Número de massa é contagem (inteiro); massa atômica do elemento é média (quase nunca inteira).</p>
+        <p><b>(e)</b> Fração de $\ce{^{10}B}$: $\frac{0{,}20 + 0{,}95}{2} = 0{,}575$. Média: $0{,}575\cdot10 + 0{,}425\cdot11 = 5{,}75 + 4{,}675 = $ <b>10,43 u</b> (o boro natural tem 10,8).</p>
+        <p><b>(f)</b> Reagem do mesmo jeito: a química depende dos elétrons, e os isótopos têm os mesmos. A distinção é física: medir a massa (espectrômetro, ou a densidade de um composto de boro, que sai um pouco menor na amostra enriquecida). Há ainda uma diferença nuclear, que é o motivo de se enriquecer boro: o $\ce{^{10}B}$ absorve nêutrons muito mais que o $\ce{^{11}B}$, e por isso é usado em barras de controle de reatores. Contas conferidas em Python.</p>`,
+    });
+
+    const exs = [
+      F.exercicio({ n: 1, nivel: "Físico", enun: R`<p>Os dois núcleos da figura pertencem a átomos que são:</p>`, fig: fig(nucleo(170, 70, 6, 6, "6 prótons, 6 nêutrons") + nucleo(390, 70, 6, 8, "6 prótons, 8 nêutrons"), 140), alts: ["isóbaros.", "isótonos.", "isótopos.", "isoeletrônicos de elementos diferentes.", "de elementos diferentes."], certa: "C", dicas: [R`<p>O que é igual nos dois: prótons, nêutrons ou a soma?</p>`], resp: "C", sol: R`<p>Mesmo número de prótons (6: os dois são carbono), nêutrons diferentes: isótopos. São o carbono-12 e o carbono-14.</p>` }),
+      F.exercicio({ n: 2, nivel: "Físico", enun: R`<p>$\ce{^{40}_{18}Ar}$ e $\ce{^{40}_{20}Ca}$ são:</p>`, fig: fig(nota(190, 90, 40, 18, "Ar", 44) + nota(390, 90, 40, 20, "Ca", 44), 130), alts: ["isótopos.", "isóbaros.", "isótonos.", "o mesmo elemento.", "isoeletrônicos."], certa: "B", dicas: [R`<p>Compare os números de cima.</p>`], resp: "B", sol: R`<p>Mesmo $A = 40$, $Z$ diferentes: isóbaros. Pesam quase o mesmo e são elementos sem nenhuma semelhança química (um gás nobre e um metal).</p>` }),
+      F.exercicio({ n: 3, nivel: "Físico", enun: R`<p>$\ce{^{37}_{17}Cl}$ e $\ce{^{40}_{20}Ca}$ têm em comum o número de:</p>`, fig: fig(tab(150, 34, [90, 80, 80, 80], [["átomo", "Z", "A", "N"], ["Cl", "17", "37", "?"], ["Ca", "20", "40", "?"]]), 115), alts: ["prótons.", "elétrons.", "massa.", "nêutrons: são isótonos.", "nada em comum."], certa: "D", dicas: [R`<p>Calcule $N = A - Z$ para os dois.</p>`], resp: "D", sol: R`<p>$37 - 17 = 20$ e $40 - 20 = 20$: mesmo número de nêutrons, isótonos.</p>` }),
+      F.exercicio({ n: 4, nivel: "Físico", enun: R`<p>O hidrogênio tem três isótopos. Quantos nêutrons tem o <b>trítio</b>, $\ce{^{3}_{1}H}$?</p>`, fig: fig(nucleo(120, 70, 1, 0, "prótio") + nucleo(280, 70, 1, 1, "deutério") + nucleo(440, 70, 1, 2, "trítio: ?"), 140), num: { v: 2, un: "nêutrons" }, dicas: [R`<p>$N = A - Z$.</p>`], resp: "2 nêutrons", sol: R`<p>$3 - 1 = 2$. Prótio: 0 nêutron; deutério: 1; trítio: 2. Os três têm um próton e um elétron: os três são hidrogênio.</p>` }),
+      F.exercicio({ n: 5, nivel: "Físico", enun: R`<p>O cloro tem 75% de $\ce{^{35}Cl}$ e 25% de $\ce{^{37}Cl}$. Com as massas iguais aos números de massa, qual a massa atômica do cloro?</p>`, fig: fig(espectro([[35, 75], [37, 25]]), 185), num: { v: 35.5, tol: 0.003, un: "u" }, dicas: [R`<p>Média ponderada: cada massa vezes a sua fração.</p>`], resp: "35,5 u", sol: R`<p>$0{,}75\cdot35 + 0{,}25\cdot37 = 26{,}25 + 9{,}25 = 35{,}5$ u.</p>` }),
+      F.exercicio({ n: 6, nivel: "Físico", enun: R`<p>Isótopos do mesmo elemento têm propriedades químicas praticamente iguais porque:</p>`, fig: fig(nucleo(170, 60, 17, 18, "³⁵Cl: 17 elétrons") + nucleo(390, 60, 17, 20, "³⁷Cl: 17 elétrons"), 140), alts: ["têm a mesma massa.", "têm o mesmo número de nêutrons.", "têm o mesmo número de prótons e, neutros, o mesmo número de elétrons.", "têm núcleos idênticos.", "são o mesmo átomo."], certa: "C", dicas: [R`<p>A química é feita por qual parte do átomo?</p>`], resp: "C", sol: R`<p>As reações envolvem os elétrons, e isótopos neutros têm os mesmos elétrons, arrumados do mesmo jeito. O que muda é a massa (e as propriedades físicas que dependem dela, como a densidade).</p>` }),
+      F.exercicio({ n: 7, nivel: "Máximo", enun: R`<p>O boro tem 20% de $\ce{^{10}B}$ e 80% de $\ce{^{11}B}$. Qual a sua massa atômica (massas iguais aos números de massa)?</p>`, fig: fig(espectro([[10, 20], [11, 80]]), 185), num: { v: 10.8, tol: 0.003, un: "u" }, dicas: [R`<p>O resultado tem de ficar mais perto de 11.</p>`], resp: "10,8 u", sol: R`<p>$0{,}20\cdot10 + 0{,}80\cdot11 = 2{,}0 + 8{,}8 = 10{,}8$ u.</p>` }),
+      F.exercicio({ n: 8, nivel: "Máximo", enun: R`<p>O gálio tem massa atômica 69,72 u e dois isótopos, de massas 69 e 71. Qual a abundância do gálio-69, em %?</p>`, fig: fig(gangorra(69, 71, 50, 69.72).replace(/\(50%\)/g, "(?)"), 150), num: { v: 64, tol: 0.01, un: "%" }, dicas: [R`<p>$69x + 71(1 - x) = 69{,}72$.</p>`], resp: "64%", sol: R`<p>$71 - 2x = 69{,}72 \Rightarrow x = 0{,}64$. São 64% de $\ce{^{69}Ga}$ e 36% de $\ce{^{71}Ga}$.</p>` }),
+      F.exercicio({ n: 9, nivel: "Máximo", enun: R`<p>A é isótopo de $\ce{^{39}_{19}K}$ e isóbaro de $\ce{^{40}_{20}Ca}$. Quantos nêutrons tem A?</p>`, fig: fig(tab(150, 34, [90, 80, 80, 80], [["átomo", "Z", "A", "N"], ["K", "19", "39", "20"], ["Ca", "20", "40", "20"], ["A", "?", "?", "?"]]), 135), num: { v: 21, un: "nêutrons" }, dicas: [R`<p>Isótopo do potássio: mesmo $Z$. Isóbaro do cálcio: mesmo $A$.</p>`], resp: "21", sol: R`<p>$Z = 19$ e $A = 40$: $N = 40 - 19 = 21$. É o potássio-40, que existe e é radioativo.</p>` }),
+      F.exercicio({ n: 10, nivel: "Máximo", enun: R`<p>No gás cloro (75% de $\ce{^{35}Cl}$, 25% de $\ce{^{37}Cl}$), que porcentagem das moléculas $\ce{Cl2}$ tem massa 72 u?</p>`, fig: fig(espectro([[70, 56.25, "?"], [72, 37.5, "?"], [74, 6.25, "?"]]), 185), num: { v: 37.5, tol: 0.01, un: "%" }, dicas: [R`<p>Massa 72 é um átomo de cada tipo. De quantos jeitos isso acontece?</p>`, R`<p>35 depois 37, ou 37 depois 35: $2\cdot0{,}75\cdot0{,}25$.</p>`], resp: "37,5%", sol: R`<p>$2\cdot0{,}75\cdot0{,}25 = 0{,}375$. As outras: 56,25% com 70 u e 6,25% com 74 u.</p>` }),
+      F.exercicio({ n: 11, nivel: "Máximo", enun: R`<p>A "água pesada" é $\ce{D2O}$, em que D é o deutério ($\ce{^{2}_{1}H}$). Tomando as massas iguais aos números de massa (H = 1, D = 2, O = 16), quantos por cento a molécula de água pesada é mais pesada que a de água comum?</p>`, fig: fig(`<circle cx="160" cy="70" r="22" style="fill:var(--bad)"/><circle cx="134" cy="94" r="10" style="fill:var(--ink)"/><circle cx="186" cy="94" r="10" style="fill:var(--ink)"/>` + D.txt(160, 136, "H₂O: 18 u", "tx2") + `<circle cx="400" cy="70" r="22" style="fill:var(--bad)"/><circle cx="372" cy="96" r="13" style="fill:var(--warn)"/><circle cx="428" cy="96" r="13" style="fill:var(--warn)"/>` + D.txt(400, 136, "D₂O: ? u", "tx2"), 150), num: { v: 11.1, tol: 0.02, un: "%" }, dicas: [R`<p>$\ce{H2O}$: $2\cdot1 + 16$. $\ce{D2O}$: $2\cdot2 + 16$.</p>`], resp: "≈ 11%", sol: R`<p>18 u contra 20 u: $\frac{20 - 18}{18} = 11{,}1\%$. A água pesada tem densidade 1,11 g/mL, e um cubo de gelo dela afunda na água comum. Quimicamente, é água.</p>` }),
+      F.exercicio({ n: 12, nivel: "Máximo", enun: R`<p>Um elemento tem dois isótopos, de massas 63 e 65, e massa atômica 63,62. A abundância do isótopo mais <b>pesado</b> é:</p>`, fig: fig(gangorra(63, 65, 50, 63.62).replace(/\(50%\)/g, "(?)"), 150), alts: ["69%", "62%", "50%", "38%", "31%"], certa: "E", dicas: [R`<p>A média está mais perto de 63 ou de 65? Então qual isótopo é o mais abundante?</p>`, R`<p>$63(1 - y) + 65y = 63{,}62$.</p>`], resp: "E", sol: R`<p>$63 + 2y = 63{,}62 \Rightarrow y = 0{,}31$: 31% do isótopo 65 (é o cobre). <b>A</b> é a abundância do leve: a média fica perto de 63 porque o 63 é o mais comum.</p>` }),
+    ];
+
+    return [
+      F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Atomística · átomos do mesmo elemento que não são iguais</div>
+        <div class="q">A tabela periódica diz que a massa do cloro é 35,45. Mas prótons e nêutrons se contam em números inteiros. De onde vem a vírgula?</div>
+        <p>Vem de uma média. O cloro da natureza é uma mistura de dois tipos de átomo, com massas diferentes, sempre na mesma proporção. Dalton achava que todos os átomos de um elemento eram idênticos; não são, e a conta que conserta isso é uma média ponderada.</p></div>
+        ${F.chute({ q: "três quartos dos átomos de cloro têm massa 35 e um quarto tem massa 37. A massa atômica do cloro é…", ops: ["36, a média de 35 e 37.", "35, a do mais comum.", "35,5, mais perto do mais comum.", "37, a do mais pesado."], certa: 2, exp: "35,5. A média simples (36) só valeria se houvesse o mesmo número de átomos de cada tipo. Havendo três vezes mais do 35, a média é puxada para ele: (3·35 + 1·37) ÷ 4 = 35,5. Média ponderada é isso: cada valor conta tantas vezes quantas aparece." })}`),
+
+      F.secao("isos", "Isótopos, isóbaros e isótonos", R`
+        <p>Comparando dois átomos, o que pode coincidir é $Z$, $A$ ou $N$. Cada coincidência tem um nome, e o nome diz o que é igual:</p>
+        <table class="tb"><tr><th>Nome</th><th>O que é igual</th><th>O que é diferente</th><th>Exemplo</th></tr>
+          <tr><td><b>isótopos</b> (mesmo lugar na tabela)</td><td>$Z$ (prótons)</td><td>$A$ e $N$</td><td>$\ce{^{12}_{6}C}$ e $\ce{^{14}_{6}C}$</td></tr>
+          <tr><td><b>isóbaros</b> (mesmo "peso")</td><td>$A$ (massa)</td><td>$Z$ e $N$</td><td>$\ce{^{40}_{18}Ar}$ e $\ce{^{40}_{20}Ca}$</td></tr>
+          <tr><td><b>isótonos</b></td><td>$N$ (nêutrons)</td><td>$Z$ e $A$</td><td>$\ce{^{37}_{17}Cl}$ e $\ce{^{40}_{20}Ca}$</td></tr>
+          <tr><td><b>isoeletrônicos</b> ${F.ret("B01")}</td><td>número de elétrons</td><td>$Z$ (em geral)</td><td>$\ce{Na+}$ e $\ce{Ne}$</td></tr></table>
+        ${F.fig(fig(nucleo(120, 60, 1, 0, "prótio ¹H") + nucleo(280, 60, 1, 1, "deutério ²H (D)") + nucleo(440, 60, 1, 2, "trítio ³H (T)"), 135), "Os três isótopos do hidrogênio: o mesmo próton (vermelho), com zero, um ou dois nêutrons (cinza). São os únicos isótopos com nomes próprios.")}
+        <p>Só os <b>isótopos</b> são o mesmo elemento. Eles têm a mesma química (os mesmos elétrons) e massas diferentes. Isóbaros e isótonos são elementos diferentes, sem parentesco químico: a coincidência é só numérica.</p>
+        ${F.formula(R`\text{isótopos}: Z_1 = Z_2\qquad \text{isóbaros}: A_1 = A_2\qquad \text{isótonos}: A_1 - Z_1 = A_2 - Z_2`, "As três igualdades")}
+        <h3>Teorema 1: cada "iso" é uma equação</h3>
+        ${F.demo("resolvendo um problema de três átomos", R`<p>(i) Problema: X tem $Z = 20$ e $A = 40$. Y é isótopo de X e tem 22 nêutrons. W é isóbaro de Y e isótono de X. Quem é W?</p>
+          <p>(ii) Tudo o que se sabe de X: $Z = 20$, $A = 40$, $N = 40 - 20 = 20$.</p>
+          <p>(iii) "Isótopo de X" $\Rightarrow Z_Y = 20$. Com $N_Y = 22$: $A_Y = 20 + 22 = 42$.</p>
+          <p>(iv) "Isóbaro de Y" $\Rightarrow A_W = 42$. "Isótono de X" $\Rightarrow N_W = 20$. Logo $Z_W = 42 - 20 = 22$.</p>
+          <p>(v) W tem 22 prótons: é o titânio-42. O método é sempre o mesmo: uma tabela com três colunas ($Z$, $A$, $N$), uma igualdade por palavra "iso", e $A = Z + N$ para completar as casas.</p>`)}
+        ${F.caixa("pegadinha", R`<p><b>Isótopos não são "átomos com massas iguais".</b> É o contrário: mesmo elemento, massas diferentes. Para não trocar: isóto<b>p</b>os, mesmo número de <b>p</b>rótons; isó<b>b</b>aros, mesma massa (<b>b</b>aro vem de peso, como em barômetro); isóto<b>n</b>os, mesmo número de <b>n</b>êutrons. E nenhuma das três palavras fala de elétrons: isso é "isoeletrônico".</p>`)}`),
+
+      F.secao("massa", "Massa atômica: uma média ponderada", R`
+        <p>A massa de um átomo é pequena demais para o quilograma. Usa-se a <b>unidade de massa atômica</b>, u: por definição, <b>um doze avos da massa de um átomo de carbono-12</b>. Nessa escala, a massa de cada isótopo fica muito perto do seu número de massa (o $\ce{^{35}Cl}$ pesa 34,97 u), e é por isso que aqui aproximamos uma pelo outro.</p>
+        <p>Quase todo elemento ocorre na natureza como mistura de isótopos, numa proporção que é a mesma em qualquer amostra (a <b>abundância isotópica</b>). A massa que a tabela periódica traz é a média dessa mistura.</p>
+        <h3>Teorema 2: a massa atômica é a média ponderada pelas abundâncias</h3>
+        ${F.demo("de uma multidão de átomos à fórmula", R`<p>(i) Pegue uma amostra com $n$ átomos de cloro. Deles, $0{,}75\,n$ têm massa 35 u e $0{,}25\,n$ têm massa 37 u.</p>
+          <p>(ii) Massa total: $0{,}75\,n\cdot35 + 0{,}25\,n\cdot37$.</p>
+          <p>(iii) Massa média por átomo: divida por $n$. O $n$ cancela: $M = 0{,}75\cdot35 + 0{,}25\cdot37 = 26{,}25 + 9{,}25 = 35{,}5$ u.</p>
+          <p>(iv) Em geral, com frações $x_1, x_2, \dots$ (que somam 1) e massas $m_1, m_2, \dots$: $M = x_1m_1 + x_2m_2 + \dots$ É a mesma média ponderada da nota final com pesos, ou do preço médio de uma compra.</p>
+          <p>(v) Com as massas e as abundâncias exatas (34,969 u e 75,77%; 36,966 u e 24,23%), sai 35,45 u, o valor da tabela.</p>`)}
+        ${F.formula(R`M = x_1m_1 + x_2m_2 + \dots + x_km_k\qquad\text{com}\qquad x_1 + x_2 + \dots + x_k = 1`, "Massa atômica de um elemento")}
+        <div id="lab-isot"></div>
+        <h3>Teorema 3: a regra da gangorra (dois isótopos)</h3>
+        ${F.demo("da média às abundâncias", R`<p>(i) Com dois isótopos, $x_2 = 1 - x_1$. Então $M = x_1m_1 + (1 - x_1)m_2 = m_2 - x_1(m_2 - m_1)$.</p>
+          <p>(ii) Isolando: $x_1 = \frac{m_2 - M}{m_2 - m_1}$ e, do mesmo jeito, $x_2 = \frac{M - m_1}{m_2 - m_1}$.</p>
+          <p>(iii) Leia a fórmula: a abundância do isótopo 1 é a distância da média até o isótopo <b>2</b>, dividida pela distância total. É a lei da alavanca: numa gangorra em equilíbrio, o mais pesado fica mais perto do apoio ${F.ret("fisica/A14")}.</p>
+          <p>(iv) Gálio: $m_1 = 69$, $m_2 = 71$, $M = 69{,}72$. $x_{69} = \frac{71 - 69{,}72}{2} = 0{,}64$ e $x_{71} = \frac{69{,}72 - 69}{2} = 0{,}36$.</p>`)}
+        ${F.formula(R`x_1 = \frac{m_2 - M}{m_2 - m_1},\qquad x_2 = \frac{M - m_1}{m_2 - m_1}`, "Abundâncias a partir da massa atômica (dois isótopos)")}
+        ${F.fig(fig(gangorra(69, 71, 64, 69.72), 150), "Gálio: a média (69,72) fica mais perto do 69, que é o mais abundante.")}
+        ${F.caixa("fisico", R`<p><b>Antes da conta, o teste do "entre e mais perto".</b> A média ponderada de dois números está sempre <b>entre</b> eles e <b>mais perto do que tem mais peso</b>. Se a sua conta da massa atômica do cloro der 36,5 ou 34, está errada antes de você conferir a aritmética. Esse teste de dois segundos pega a troca das abundâncias, o erro mais comum, e serve para toda média ponderada que você encontrar, em qualquer matéria.</p>`, "Pense como químico")}
+        ${F.caixa("pegadinha", R`<p><b>Número de massa não é massa atômica.</b> O número de massa $A$ é uma contagem de partículas de <b>um</b> átomo: sempre inteiro. A massa atômica do <b>elemento</b> é a média da mistura natural: quase nunca inteira (Cl: 35,45; Cu: 63,55). E nenhum átomo de cloro pesa 35,45 u. Quando a prova pede "número de massa" e você responde com o número da tabela periódica, errou.</p>`)}`),
+
+      F.secao("usos", "O que muda e o que não muda entre isótopos", R`
+        <table class="tb"><tr><th>Igual entre isótopos</th><th>Diferente entre isótopos</th></tr>
+          <tr><td>número de prótons e de elétrons; reações químicas; fórmulas dos compostos</td><td>massa; densidade dos compostos; velocidade de difusão; estabilidade do núcleo (alguns são radioativos)</td></tr></table>
+        <p>O espectrômetro de massas é o aparelho que "vê" isótopos: transforma os átomos em íons, acelera-os e desvia-os com um campo magnético; os mais leves desviam mais ${F.ret("fisica/C13")}. O resultado é um gráfico de barras, uma para cada massa.</p>
+        ${F.fig(fig(espectro([[35, 75.8], [37, 24.2]], { media: 35.45, rotMedia: "35,45" }), 190), "Espectro de massas do cloro: duas barras. A média ponderada (triângulo) é o número da tabela periódica.")}
+        <p>Usos que dependem de isótopos: datação por carbono-14 e traçadores radioativos em medicina ${F.ret("B08")}; urânio enriquecido em $\ce{^{235}U}$ para reatores; água pesada como moderador de nêutrons; e a identificação da origem de alimentos e de amostras pela proporção de isótopos.</p>
+        ${F.caixa("pegadinha", R`<p>Este tema não tem prática de bancada: separar ou medir isótopos exige equipamentos de laboratório de pesquisa. Vale um aviso sobre o que se lê por aí: água pesada não é radioativa (o deutério é estável), mas não é para beber em quantidade; e "isótopo" não é sinônimo de "radioativo": a maioria dos isótopos que formam você é estável.</p>`, "Segurança e descarte")}
+        ${F.caixa("olimpiada", R`<p><b>Como isso é cobrado.</b> Dois tipos de questão. (1) O sistema de três átomos com "isótopo de", "isóbaro de" e "isótono de", às vezes com os números escritos em função de uma incógnita ($Z = 3x - 1$, $A = 5x + 4$): monta-se a tabela e resolve-se a equação. (2) Massa atômica: calcular a média a partir das abundâncias, ou o inverso, as abundâncias a partir da média; a versão de olimpíada dá três isótopos, ou pede as massas possíveis de uma molécula e a proporção entre elas, como o $\ce{Cl2}$ do chefão. Em todas, o teste "entre e mais perto do mais abundante" confere a resposta.</p>`)}
+        ${F.caixa("ponte", R`<p><b>Na universidade</b>, três refinamentos. A massa de um isótopo não é exatamente $A$ u por causa do <b>defeito de massa</b>: parte da massa vira energia de ligação do núcleo ($E = mc^2$ ${F.ret("fisica/C19")}). A abundância isotópica não é perfeitamente constante: varia um pouquinho de um lugar para outro, e por isso as massas atômicas de vários elementos hoje são publicadas como intervalos. E os isótopos reagem com velocidades ligeiramente diferentes (efeito isotópico cinético), o que é usado para descobrir mecanismos de reação ${F.ret("H13")}.</p>`)}`),
+
+      F.secao("exemplos", "Exemplos resolvidos", exemplos),
+      F.secao("desafios", "Exercícios", exs.join("") + chefao),
+    ].join("");
+  },
+  montar(F) { const e = document.getElementById("lab-isot"); e.outerHTML = F.lab("Massa atômica: a média que a tabela periódica mostra", "lab-isot"); SIM.isotopos(document.getElementById("lab-isot"), F); },
+});

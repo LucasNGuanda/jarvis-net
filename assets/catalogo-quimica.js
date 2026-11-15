@@ -20,7 +20,7 @@ window.CATALOGO.push(
   ] },
   { id:"QB", area:"qui", letra:"B", cor:"--mA", nome:"Atomística", desc:"Modelos atômicos, distribuição eletrônica e tabela periódica.", temas:[
     ["B01","Partículas fundamentais e íons",[],true],
-    ["B02","Isótopos, isóbaros e isótonos",[]],
+    ["B02","Isótopos, isóbaros e isótonos",[],true],
     ["B03","Modelos atômicos clássicos",[]],
     ["B04","Modelo quântico e distribuição eletrônica",[]],
     ["B05","Orbitais híbridos",[]],
