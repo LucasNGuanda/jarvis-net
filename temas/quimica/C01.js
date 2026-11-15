@@ -3,7 +3,7 @@
      Na⁺ 102, K⁺ 138, Mg²⁺ 72, Ca²⁺ 100, Al³⁺ 54; F⁻ 133, Cl⁻ 181, O²⁻ 140, S²⁻ 184;
      NaCl 283 pm: −5,09 eV; NaF 235 pm: −6,13 eV; KCl 319 pm: −4,51 eV; KF 271 pm: −5,31 eV; MgO 212 pm: −27,17 eV; CaO 240 pm: −24,00 eV;
    par Na⁺Cl⁻ gasoso (d = 236 pm): −6,10 eV; custo de formar os íons: EI(Na) − AE(Cl) = 5,14 − 3,61 = 1,53 eV; saldo −4,57 eV;
-   pontos de fusão (°C, de tabela): KCl 770; NaCl 801; NaF 993; CaO 2572; MgO 2852;
+   pontos de fusão (°C, de tabela): KCl 770; NaCl 801; NaF 993; CaO 2613; MgO 2852;
    ciclo de Born–Haber do NaCl (kJ/mol): 107 + 496 + 122 − 349 − 787 = −411;
    MgCl₂: 148 + 738 + 1451 + 244 − 698 − 2526 = −643; "NaCl₂" hipotético com energia reticular de −2500: 107 + 496 + 4562 + 244 − 698 − 2500 = +2211. */
 F.registrar("quimica/C01", {
@@ -23,7 +23,7 @@ F.registrar("quimica/C01", {
     const mdc = (a, b) => (b ? mdc(b, a % b) : a);
 
     const PARES = [["Mg", 2, "magnésio", "Cl", 1, "cloreto", 2], ["Al", 3, "alumínio", "O", 2, "óxido", 13], ["Ca", 2, "cálcio", "F", 1, "fluoreto", 2], ["Na", 1, "sódio", "S", 2, "sulfeto", 1], ["K", 1, "potássio", "O", 2, "óxido", 1], ["Al", 3, "alumínio", "Cl", 1, "cloreto", 13], ["Ca", 2, "cálcio", "N", 3, "nitreto", 2]];
-    const COMP = [["NaF", "NaCl", 1, 1, 235, 1, 1, 283, 993, 801], ["MgO", "NaF", 2, 2, 212, 1, 1, 235, 2852, 993], ["NaCl", "KCl", 1, 1, 283, 1, 1, 319, 801, 770], ["MgO", "CaO", 2, 2, 212, 2, 2, 240, 2852, 2572]];
+    const COMP = [["NaF", "NaCl", 1, 1, 235, 1, 1, 283, 993, 801], ["MgO", "NaF", 2, 2, 212, 1, 1, 235, 2852, 993], ["NaCl", "KCl", 1, 1, 283, 1, 1, 319, 801, 770], ["MgO", "CaO", 2, 2, 212, 2, 2, 240, 2852, 2613]];
     const exemplos = F.exemplo({
       titulo: "Fórmulas e energias",
       casos: [
@@ -120,7 +120,7 @@ F.registrar("quimica/C01", {
           <p>(iv) $\ce{MgO}$: cargas 2 e 2, $d = 72 + 140 = 212$ pm: $E = -\frac{1{,}44\cdot4}{0{,}212} = -27{,}2$ eV. Mais de cinco vezes a do sal de cozinha.</p>
           <p>(v) Duas regras: a ligação é tanto mais forte quanto <b>maiores as cargas</b> e <b>menores os íons</b>. A energia para desmontar o cristal inteiro em íons gasosos (a <b>energia reticular</b>) segue as mesmas duas regras, e com ela o ponto de fusão e a dureza.</p>`)}
         ${F.formula(R`E_\text{par} = -\frac{ke^2\,|q_+\,q_-|}{r_+ + r_-}\qquad\qquad ke^2 = 1{,}44\ \text{eV·nm}`, "Energia de Coulomb de um par de íons")}
-        ${F.fig(fig(barras([["KCl", 770], ["NaCl", 801], ["NaF", 993], ["CaO", 2572], ["MgO", 2852]], 3100, "ponto de fusão (°C)"), 170), "Íons menores e, sobretudo, cargas maiores: ponto de fusão mais alto.")}
+        ${F.fig(fig(barras([["KCl", 770], ["NaCl", 801], ["NaF", 993], ["CaO", 2613], ["MgO", 2852]], 3100, "ponto de fusão (°C)"), 170), "Íons menores e, sobretudo, cargas maiores: ponto de fusão mais alto.")}
         <table class="tb"><tr><th>Propriedade dos compostos iônicos</th><th>Explicação pela rede</th></tr>
           <tr><td>sólidos em condições ambientes; pontos de fusão e de ebulição altos</td><td>para fundir é preciso soltar íons presos por atrações fortes, em todas as direções</td></tr>
           <tr><td>duros e quebradiços</td><td>um deslocamento põe cargas iguais frente a frente: repulsão, e o cristal racha</td></tr>
