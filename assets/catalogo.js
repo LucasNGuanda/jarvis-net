@@ -211,7 +211,7 @@ window.CATALOGO = [
     ["EP13","Gás de van der Waals",["!","∫"],true],
   ]},
   { id:"EQu", area:"exp", letra:"ψ", cor:"--mO", nome:"Ondas e quântica", desc:"Luz, fótons e o gato mais famoso da física.", temas:[
-    ["EP14","Fenda dupla",["★"]],
+    ["EP14","Fenda dupla",["★"],true],
     ["EP15","Radiação de corpo negro",["!"]],
     ["EP17","O gato de Schrödinger",[]],
   ]},

@@ -1,4 +1,4 @@
-/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; EP13 van der Waals; */
+/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; EP13 van der Waals; EP14 fenda dupla; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -188,6 +188,54 @@
       sv += `<rect x="${cx + 2}" y="${base - hh - 10}" width="${cw - 4}" height="10" style="fill:var(--ink3)"/><line x1="${cx + cw / 2}" x2="${cx + cw / 2}" y1="${base - hh - 10}" y2="${base - hh - 34}" style="stroke:var(--ink3);stroke-width:4"/>` + D.txt(cx + cw / 2, base + 18, estado, "tx2");
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("ponto crítico: T_c | p_c | v_c", n2(Tc, 0) + " K | " + n2(pc, 1) + " bar | " + n2(vc, 3) + " L/mol") + vis("temperatura agora", n2(T, 0) + " K") + vis("pressão de vapor (Maxwell)", mx && mx.vl ? n2(mx.P, 1) + " bar" : "não há (T ≥ T_c)") + vis("p real ÷ p do gás ideal agora", n2(pAt / ((R * T) / vAt), 2));
+    });
+  };
+
+  /* ---------- EP14 · fenda dupla: onda clássica × um fóton por vez ---------- */
+  SIM.fendaDupla = (el, F) => {
+    const W = 680, H = 320, YJ = 15; /* janela da tela: ±15 mm */
+    let modo = "onda", fotons = [], t = 0, chave = "", acum = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><canvas width="${W * 2}" height="${H * 2}" style="width:100%;max-width:${W}px;aspect-ratio:${W}/${H}" data-v="cv"></canvas></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("comprimento de onda λ (nm)", "lam", 380, 750, 5, 550)}${sl("separação das fendas d (mm)", "d", 0.05, 1, 0.01, 0.25)}${sl("distância até a tela L (m)", "L", 0.5, 3, 0.05, 1)}${sl("largura de cada fenda (mm)", "a", 0.01, 0.1, 0.005, 0.04)}
+      <div class="bts">${botoes([["onda", "onda clássica"], ["foton", "um fóton por vez"]], "modo", "onda")}<button class="bt" data-a="limpa">Limpar a tela</button></div></div>
+      <div class="status">À esquerda, as ondas saindo das duas fendas; à direita, a tela. Onde as duas ondas chegam em fase (diferença de caminho d·sen θ = mλ), há franja clara; meio comprimento de onda fora de fase, escura. As marquinhas ao lado da tela são as posições previstas pela fórmula y = mλL/d. No modo "um fóton por vez", cada fóton chega num ponto aleatório, mas a chance de chegar em cada lugar segue a mesma figura: as franjas aparecem sozinhas, ponto a ponto.</div>`);
+    const q = (s) => el.querySelector(s), cv = q("[data-v=cv]"), cx = cv.getContext("2d");
+    const css = (v) => getComputedStyle(el).getPropertyValue(v).trim() || "#888";
+    liga(el, "modo", (k) => { modo = k; fotons = []; });
+    q("[data-a=limpa]").addEventListener("click", () => (fotons = []));
+    /* intensidade relativa na tela (aproximação de ângulo pequeno): interferência das duas fendas × difração de cada uma */
+    const I = (ymm, lam, d, L, a) => { const y = ymm / 1000, k = Math.PI / (lam * 1e-9 * L), b1 = k * d * 1e-3 * y, b2 = k * a * 1e-3 * y, s = Math.abs(b2) < 1e-9 ? 1 : Math.sin(b2) / b2; return Math.cos(b1) ** 2 * s * s; };
+    SIM.fendaDupla._I = I; SIM.fendaDupla._dy = (lam, d, L) => (lam * 1e-9 * L) / (d * 1e-3) * 1000; /* espaçamento das franjas em mm */
+    const corLam = (l) => { let r = 0, g = 0, b = 0; if (l < 440) { r = (440 - l) / 60; b = 1; } else if (l < 490) { g = (l - 440) / 50; b = 1; } else if (l < 510) { g = 1; b = (510 - l) / 20; } else if (l < 580) { r = (l - 510) / 70; g = 1; } else if (l < 645) { r = 1; g = (645 - l) / 65; } else r = 1; const f = l < 420 ? 0.3 + (0.7 * (l - 380)) / 40 : l > 700 ? 0.3 + (0.7 * (750 - l)) / 50 : 1; return [r * f, g * f, b * f].map((x) => Math.round(255 * Math.pow(x, 0.8))); };
+    anima(el, F, (dt) => {
+      const lam = val(el, "lam"), d = val(el, "d"), L = val(el, "L"), a = Math.min(val(el, "a"), d * 0.9);
+      mostra(el, ["lam"], 0); mostra(el, ["d", "L"], 2); mostra(el, ["a"], 3);
+      const k2 = [lam, d, L, a].join("|"); if (k2 !== chave) { chave = k2; fotons = []; }
+      t += dt;
+      const [cr, cg, cb] = corLam(lam), cor = (al) => `rgba(${cr},${cg},${cb},${al})`;
+      cx.setTransform(2, 0, 0, 2, 0, 0); cx.clearRect(0, 0, W, H);
+      /* barreira com as duas fendas e ondas circulares (comprimento de onda e separação fora de escala, só ilustrativos) */
+      const xb = 120, yc = 160, sep = 14 + d * 60, ondaPx = 6 + (lam - 380) / 20;
+      cx.fillStyle = css("--ink3"); cx.fillRect(xb - 3, 20, 6, yc - sep / 2 - 4 - 20); cx.fillRect(xb - 3, yc - sep / 2 + 4, 6, sep - 8); cx.fillRect(xb - 3, yc + sep / 2 + 4, 6, H - 20 - (yc + sep / 2 + 4));
+      cx.lineWidth = 1.2;
+      for (let i = 0; i < 9; i++) { const xx = 20 + ((t * 40 + i * ondaPx) % (xb - 20)); cx.strokeStyle = cor(0.5); cx.beginPath(); cx.moveTo(xx, 30); cx.lineTo(xx, H - 30); cx.stroke(); }
+      [yc - sep / 2, yc + sep / 2].forEach((ys) => { for (let i = 0; i < 26; i++) { const rr = ((t * 40) % ondaPx) + i * ondaPx; if (xb + rr > 470) break; cx.strokeStyle = cor(Math.max(0, 0.55 - rr / 700)); cx.beginPath(); cx.arc(xb, ys, rr, -1.2, 1.2); cx.stroke(); } });
+      /* tela */
+      const xs = 480, ws = 60, Y = (ymm) => yc - (ymm / YJ) * 140;
+      cx.fillStyle = "#05070a"; cx.fillRect(xs, 20, ws, 280);
+      if (modo === "onda") { for (let py = 20; py < 300; py++) { const ymm = ((yc - py) / 140) * YJ, it = I(ymm, lam, d, L, a); cx.fillStyle = cor(it); cx.fillRect(xs, py, ws, 1); } }
+      else {
+        acum += dt * Math.min(400, 3 + fotons.length / 2); const n = Math.floor(acum); acum -= n; /* começa com uns poucos fótons por segundo e vai acelerando */ for (let k = 0; k < n && fotons.length < 8000; k++) { for (let tent = 0; tent < 200; tent++) { const ymm = (Math.random() * 2 - 1) * YJ; if (Math.random() < I(ymm, lam, d, L, a)) { fotons.push([xs + 2 + Math.random() * (ws - 4), Y(ymm)]); break; } } }
+        cx.fillStyle = cor(0.9); fotons.forEach(([px, py]) => cx.fillRect(px, py, 1.3, 1.3));
+      }
+      /* gráfico da intensidade ao lado e marcas previstas y = mλL/d */
+      const gx = 560, gw = 100; cx.strokeStyle = css("--ink3"); cx.beginPath(); cx.moveTo(gx, 20); cx.lineTo(gx, 300); cx.stroke();
+      cx.strokeStyle = cor(1); cx.lineWidth = 1.6; cx.beginPath(); for (let py = 20; py <= 300; py++) { const ymm = ((yc - py) / 140) * YJ, xx = gx + I(ymm, lam, d, L, a) * gw; py === 20 ? cx.moveTo(xx, py) : cx.lineTo(xx, py); } cx.stroke();
+      if (modo === "foton" && fotons.length > 50) { const nb = 70, bins = new Array(nb).fill(0); fotons.forEach(([, py]) => { const k = Math.floor(((py - 20) / 280) * nb); if (k >= 0 && k < nb) bins[k]++; }); const mx = Math.max(...bins); cx.fillStyle = css("--ink2"); cx.globalAlpha = 0.35; bins.forEach((c, k) => cx.fillRect(gx, 20 + (k * 280) / nb, (c / mx) * gw, 280 / nb - 0.5)); cx.globalAlpha = 1; }
+      const dy = SIM.fendaDupla._dy(lam, d, L); cx.strokeStyle = css("--warn"); cx.lineWidth = 1.5;
+      for (let m = -40; m <= 40; m++) { const ym = m * dy; if (Math.abs(ym) > YJ) continue; const py = Y(ym); cx.beginPath(); cx.moveTo(xs - 10, py); cx.lineTo(xs - 2, py); cx.stroke(); }
+      cx.fillStyle = css("--ink2"); cx.font = "11px Inter, sans-serif"; cx.fillText("tela", xs + 16, 14); cx.fillText("±15 mm", xs + 8, 314); cx.fillText("intensidade", gx + 6, 14); cx.fillText("fendas", xb - 18, 14);
+      q("[data-v=lt]").innerHTML = vis("espaçamento previsto λL/d", n2(dy, 3) + " mm") + vis("máximos previstos na janela de ±15 mm", String(2 * Math.floor(YJ / dy) + 1)) + vis("diferença de caminho na 1ª franja", n2(lam, 0) + " nm = 1λ") + vis(modo === "foton" ? "fótons que chegaram" : "modo", modo === "foton" ? String(fotons.length) : "onda clássica");
     });
   };
 })();
