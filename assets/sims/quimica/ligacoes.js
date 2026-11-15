@@ -176,4 +176,31 @@
     el.querySelectorAll("[data-p]").forEach((b) => b.addEventListener("click", () => { const v = b.dataset.p.split(",").map(Number); th = v[0]; if (v.length > 1) mb = v[1]; q("[data-c=t]").value = th; q("[data-c=m]").value = mb; desenha(); }));
     desenha();
   };
+  /* ---------- C06 · pontos de ebulição dos hidretos ----------
+     Pontos de ebulição a 1 atm (°C), conferidos em fonte: grupo 14: CH₄ −162, SiH₄ −112, GeH₄ −88, SnH₄ −52; grupo 15: NH₃ −33, PH₃ −88, AsH₃ −62, SbH₃ −17;
+     grupo 16: H₂O 100, H₂S −60, H₂Se −41, H₂Te −2; grupo 17: HF 20, HCl −85, HBr −67, HI −35.
+     Extrapolação: reta de mínimos quadrados pelos períodos 3, 4 e 5, prolongada até o 2º período (o que o hidreto "deveria" ferver só com as forças dos irmãos mais pesados).
+     Conferido em Python: grupo 14: −144 (real −162; diferença −18); grupo 15: −127 (real −33; +94); grupo 16: −92 (real 100; +192); grupo 17: −112 (real 20; +132). */
+  SIM.HIDR = { 14: [["CH₄", -162], ["SiH₄", -112], ["GeH₄", -88], ["SnH₄", -52]], 15: [["NH₃", -33], ["PH₃", -88], ["AsH₃", -62], ["SbH₃", -17]], 16: [["H₂O", 100], ["H₂S", -60], ["H₂Se", -41], ["H₂Te", -2]], 17: [["HF", 20], ["HCl", -85], ["HBr", -67], ["HI", -35]] };
+  SIM.hidretos = (el, F) => {
+    const W = 680, H = 300, COR = { 14: "var(--ink2)", 15: "var(--ok)", 16: "var(--mA)", 17: "var(--warn)" }, on = { 14: true, 15: false, 16: true, 17: false }; let ext = false, foco = 16;
+    SIM.hidretos._extra = (g) => { const y = SIM.HIDR[g].slice(1).map((v) => v[1]), m = (y[0] + y[1] + y[2]) / 3, b = (y[2] - y[0]) / 2; return m - 2 * b; };
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><div class="bts">${[14, 15, 16, 17].map((g) => `<button class="bt peq" data-g="${g}" aria-pressed="${on[g]}">grupo ${g}</button>`).join("")}</div></div><div><div class="bts"><button class="bt peq" data-b="e" aria-pressed="false">prever o 2º período</button></div></div></div>
+      <div class="status">Cada linha é uma família de hidretos, do 2º ao 5º período. Do 3º período em diante, o ponto de ebulição sobe com o tamanho da molécula: mais elétrons, forças de dispersão maiores. Ligue <b>prever o 2º período</b>: a reta tracejada prolonga a tendência dos três mais pesados e mostra onde o hidreto mais leve "deveria" ferver. No grupo 14 a previsão quase acerta. Nos grupos 15, 16 e 17, o hidreto real (NH₃, H₂O, HF) ferve muito acima: essa diferença é o efeito das <b>ligações de hidrogênio</b>.</div>`);
+    const q = (s) => el.querySelector(s), X = (p) => 110 + (p - 2) * 150, Y = (t) => 250 - ((t + 180) / 300) * 220;
+    const desenha = () => {
+      let sv = `<line x1="80" x2="620" y1="${Y(-180)}" y2="${Y(-180)}" style="stroke:var(--ink2)"/><line x1="80" x2="80" y1="${Y(-180)}" y2="${Y(120)}" style="stroke:var(--ink2)"/>`;
+      [-150, -100, -50, 0, 50, 100].forEach((t) => (sv += `<line x1="80" x2="620" y1="${Y(t)}" y2="${Y(t)}" style="stroke:var(--ink3);stroke-width:${t ? 0.5 : 1}"/>` + D.txt(72, Y(t) + 4, String(t).replace("-", "−"), "tx2", "end")));
+      [2, 3, 4, 5].forEach((p) => (sv += D.txt(X(p), 272, p + "º período", "tx2"))); sv += D.txt(24, 20, "ponto de ebulição (°C)", "tx2", "start");
+      [14, 15, 16, 17].filter((g) => on[g]).forEach((g) => { const d = SIM.HIDR[g]; sv += `<polyline points="${d.map((v, i) => X(i + 2) + "," + Y(v[1]).toFixed(1)).join(" ")}" style="fill:none;stroke:${COR[g]};stroke-width:2.2"/>`;
+        if (ext) { const e = SIM.hidretos._extra(g); sv += `<line x1="${X(2)}" y1="${Y(e).toFixed(1)}" x2="${X(3)}" y2="${Y(e + (d[3][1] - d[1][1]) / 2).toFixed(1)}" style="stroke:${COR[g]};stroke-width:1.6;stroke-dasharray:5 4"/><circle cx="${X(2)}" cy="${Y(e).toFixed(1)}" r="5" style="fill:var(--bg);stroke:${COR[g]};stroke-width:1.8"/>`; }
+        d.forEach((v, i) => (sv += `<circle cx="${X(i + 2)}" cy="${Y(v[1]).toFixed(1)}" r="5" style="fill:${COR[g]}"/>` + D.txt(X(i + 2) + 9, Y(v[1]) - 8, v[0], "tx2", "start", `style="fill:${COR[g]};font-weight:700"`))); });
+      q("[data-v=sv]").innerHTML = sv; const d = SIM.HIDR[foco], e = SIM.hidretos._extra(foco);
+      q("[data-v=lt]").innerHTML = vis("grupo em foco", foco) + vis(d[0][0] + " real", n2(d[0][1], 0) + " °C") + vis("previsto pela tendência", ext ? n2(e, 0) + " °C" : "—") + vis("diferença", ext ? n2(d[0][1] - e, 0) + " °C" : "—");
+    };
+    el.querySelectorAll("[data-g]").forEach((b) => b.addEventListener("click", () => { const g = +b.dataset.g; on[g] = !on[g]; if (on[g]) foco = g; else foco = [16, 15, 17, 14].find((k) => on[k]) || g; b.setAttribute("aria-pressed", on[g]); desenha(); }));
+    q("[data-b=e]").addEventListener("click", (e) => { ext = !ext; e.target.setAttribute("aria-pressed", ext); desenha(); });
+    desenha();
+  };
 })();

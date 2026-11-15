@@ -34,7 +34,7 @@ window.CATALOGO.push(
     ["C03","Ligação metálica e ligas",[],true],
     ["C04","Geometria molecular (VSEPR)",[],true],
     ["C05","Polaridade",[],true],
-    ["C06","Forças intermoleculares",[]],
+    ["C06","Forças intermoleculares",[],true],
     ["C07","Teoria dos orbitais moleculares",[]],
   ] },
   { id:"QD", area:"qui", letra:"D", cor:"--mO", nome:"Reações e estequiometria", desc:"Balanceamento, mol, rendimento e reagente limitante.", temas:[
