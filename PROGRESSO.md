@@ -1,6 +1,6 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado atual (15/11/2026, depois da β 4.4; a β 4.3 + 4.4 está na branch `adm-buraco-negro`, esperando o Lucas testar)
+## Estado atual (15/11/2026, depois da β 4.5; a β 4.3 a 4.5 está na branch `adm-buraco-negro`, esperando o Lucas testar o ZIP)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
 
 ### Física — 96 de 96 temas escritos
@@ -466,6 +466,11 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - ".ADM" dourado sempre que o acesso é de ADM (classe `adm` no sufixo).
   - A figura central "buraco negro" agora é o MESMO desenho da animação: `window.BURACO` em `assets/figuras.js`, usado pelas duas (disco de acreção com faixa de gás e riscos na velocidade de Kepler, anel de fótons, arco da lente por cima). Cores quentes fixas; a "cor própria" do painel gira o matiz inteiro (hue-rotate). Na figura, só os riscos se mexem a cada quadro (barato).
   - Testes: `tests/tacesso.js` confere que, depois da animação (inteira ou pulada), a figura é o buraco negro, o ".ADM" é dourado e nada fica escondido ou tremendo. Capturas: `tests/capturas/anim-adm-buraco-quadros.png` (refeita), `ouro-quadros.png`.
+  - Regressão da β 4.4: interrompida (tacesso acusou só o nome antigo de um elemento no próprio teste, já corrigido) porque o Lucas pediu a β 4.5; refeita na β 4.5.
+- **β 4.5** — **Beta tester mais forte** (pedido de 15/11/2026).
+  - Animação nova do tester (9,1 s, pulável): o livro já aparece ABERTO, sobre um círculo de energia (dois anéis tracejados girando em sentidos opostos, com símbolos em volta); 260 símbolos verdes (números, grego, símbolos de matemática), cada um com o seu ritmo de troca e o seu tom, chegam de TODOS os lados da tela com uma curva leve e um rastro curto, encolhendo até entrar nas páginas; as páginas viram sozinhas (uma a cada 0,55 s) e o livro brilha mais a cada símbolo absorvido; no auge sobe uma coluna de luz verde; clarão, tela do Jarvis e o livro voa até a versão pelo mesmo caminho de antes, com um rastro de símbolos. ".tester" aparece verde (degradê andando), como o ".ADM" é dourado.
+  - Cor exclusiva do tester: "esmeralda ✦" na lista de cores do título. Muda o título (degradê verde andando e símbolos verdes pequenininhos subindo de dentro das letras) e a figura central (planeta e galáxia seguem as cores do título; o buraco negro gira o matiz para verde). O ADM também tem. Travada no motor (`A.tituloEsmeralda`), fora do arquivo de configuração: nenhum código avulso libera. O tester não tinha seletor de cor (o arco-íris é do código de configurações); agora ele vê o seletor só com "voltar à cor original" e "esmeralda ✦".
+  - Testes: `tests/tacesso.js` confere o livro aberto desde o começo, o círculo de energia e símbolos verdes nos 4 quadrantes da tela, o ".tester" verde, o esmeralda do tester (só ele no seletor, aplicado no título e nas cores da figura, salvo, recarregando e desligando), o ADM com dourado e esmeralda, e configurações e todos os avulsos sem o esmeralda. Capturas: `tests/capturas/anim-tester-quadros.png`, `esmeralda-quadros.png`.
   - Regressão: em andamento (atualizo aqui quando terminar).
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.

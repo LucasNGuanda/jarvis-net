@@ -50,7 +50,7 @@
       <p class="jv-volta"><a class="bt pri" href="#/codigos">ir para códigos</a> &nbsp; <a href="#/home">← tela inicial</a></p></div>`;
   };
   /* versão com o sufixo do acesso (".ADM", ".tester") na tela inicial e no topo */
-  J.pintaVersao = () => { const s = AC() ? AC().sufixo() : "", v = document.getElementById("versao"); if (v) v.textContent = "Jarvis " + (window.VERSAO || "") + s; const j = document.querySelector(".jv-ver .jv-suf"); if (j && !j.dataset.segura) { j.textContent = s; j.classList.toggle("adm", s === ".ADM"); } }; /* β 4.4: ".ADM" dourado */
+  J.pintaVersao = () => { const s = AC() ? AC().sufixo() : "", v = document.getElementById("versao"); if (v) v.textContent = "Jarvis " + (window.VERSAO || "") + s; const j = document.querySelector(".jv-ver .jv-suf"); if (j && !j.dataset.segura) { j.textContent = s; j.classList.toggle("adm", s === ".ADM"); j.classList.toggle("tester", s === ".tester"); } }; /* β 4.4: ".ADM" dourado; β 4.5: ".tester" verde */
 
   /* ---------- aviso "acesso liberado" ---------- */
   function toast(txt) {
@@ -89,11 +89,16 @@
     const luz = brilho > 0 ? `<ellipse cx="0" cy="-6" rx="${f1(70 + 50 * brilho)}" ry="${f1(55 + 40 * brilho)}" style="fill:${cor};opacity:${(0.55 * brilho).toFixed(2)};filter:url(#fx-blur)"/><rect x="${f1(-76 * o)}" y="-50" width="${f1(76 * (1 + o))}" height="100" style="fill:#fff;opacity:${(0.75 * brilho * o).toFixed(2)}"/>` : "";
     return `<rect x="-6" y="-56" width="12" height="112" rx="3" style="fill:#2b1f15"/>` + (o < 0.5 ? pagD + pagE + capa : capa + pagD + pagE) + luz;
   }
+  /* β 4.5 · TESTER: o livro já aparece ABERTO, num círculo de energia girando; os símbolos verdes chegam de TODOS os lados da tela,
+     fazendo uma curva leve e encolhendo até entrar nas páginas; as páginas viram sozinhas e o livro brilha mais a cada símbolo
+     absorvido; no auge sobe uma coluna de luz verde, clarão, tela do Jarvis e o livro voa até a versão (o mesmo caminho de antes). */
   function animLivro(tipo) {
-    const adm = tipo === "adm", p = palco(true), { W, H } = p, cx = W / 2, cy = H * 0.56;
-    const corFeixe = adm ? ["#ffffff", "#ffe08a", "#ffb84d"] : ["#e6ffef", "#5dff9b", "#16b85a"], corLivro = adm ? "#ffd36b" : "#4dff8f", flash = adm ? "#fff8e6" : "#ecfff2";
+    const p = palco(true), { W, H } = p, cx = W / 2, cy = H * 0.56, ESC = 1.7;
+    const corFeixe = ["#e6ffef", "#5dff9b", "#16b85a"], corLivro = "#4dff8f", flash = "#ecfff2";
     const part = Array.from({ length: 38 }, (_, i) => ({ x: (((i * 37) % 100) / 100 - 0.5) * 120, v: 40 + ((i * 53) % 60), f: (i * 0.618) % 1, r: 1.2 + ((i * 7) % 4) * 0.6 }));
-    const chuva = Array.from({ length: 44 }, (_, i) => ({ x: (((i * 41) % 100) / 100 - 0.5) * 210, v: 160 + ((i * 29) % 140), f: (i * 0.37) % 1, c: GLIFOS[(i * 7) % GLIFOS.length] }));
+    const Rl = Math.hypot(W, H) * 0.52, N = 260, VERDES_COR = ["#eafff0", "#b6ffd0", "#7dffb2", "#d8fff0"];
+    /* cada símbolo com o seu ritmo de troca (fr) e o seu tom de verde: nada de todos mudarem juntos */
+    const verdes = Array.from({ length: N }, (_, i) => ({ a0: (((i * 137.508) % 360) * Math.PI) / 180, ts: 0.5 + (4.0 * i) / N + (((i * 13) % 10) / 10) * 0.2, T: 1.15 + (((i * 29) % 10) / 10) * 0.75, gira: (((i * 7) % 2) ? 1 : -1) * (0.35 + ((i * 11) % 10) / 25), c: (i * 31 + i * i * 7) % GLIFOS.length, fr: 3 + ((i * 17) % 7), cor: VERDES_COR[i % 4], tam: 20 + ((i * 11) % 16), R0: Rl * (0.95 + ((i * 17) % 10) / 50) }));
     let rota = null, voo = null, sufixo = null;
     const prepVoo = () => { /* caminho: do buraco negro (embaixo, à esquerda) → entre Química e Matemática → até a versão */
       const ilu = document.querySelector(".jv-ilu"), q = document.querySelector('.jv-mat[data-materia="quimica"]'), m = document.querySelector('.jv-mat[data-materia="matematica"]'), v = document.querySelector(".jv-ver");
@@ -104,37 +109,52 @@
     };
     const bez = (A, C, B, u) => [(1 - u) * (1 - u) * A[0] + 2 * (1 - u) * u * C[0] + u * u * B[0], (1 - u) * (1 - u) * A[1] + 2 * (1 - u) * u * C[1] + u * u * B[1]];
     const ponto = (u) => (u < 0.5 ? bez(voo.P0, voo.C1, voo.P1, u * 2) : bez(voo.P1, voo.C2, voo.P2, (u - 0.5) * 2));
-    const defs = `<defs><linearGradient id="fx-feixe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${corFeixe[0]}" stop-opacity=".95"/><stop offset=".6" stop-color="${corFeixe[1]}" stop-opacity=".8"/><stop offset="1" stop-color="${corFeixe[2]}" stop-opacity=".55"/></linearGradient><filter id="fx-blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter><filter id="fx-blur2" x="-50%" y="-10%" width="200%" height="120%"><feGaussianBlur stdDeviation="6"/></filter></defs>`;
+    const defs = `<defs><linearGradient id="fx-feixe" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="${corFeixe[0]}" stop-opacity=".95"/><stop offset=".55" stop-color="${corFeixe[1]}" stop-opacity=".6"/><stop offset="1" stop-color="${corFeixe[2]}" stop-opacity="0"/></linearGradient><filter id="fx-blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter><filter id="fx-blur2" x="-50%" y="-10%" width="200%" height="120%"><feGaussianBlur stdDeviation="6"/></filter></defs>`;
     const vaiParaHome = () => { if (location.hash !== "#/home") location.hash = "#/home"; };
     const seguraSufixo = () => { const s = document.querySelector(".jv-ver .jv-suf"); if (s && s !== sufixo) { sufixo = s; s.dataset.segura = "1"; s.textContent = ""; } };
-    const revela = () => { const s = document.querySelector(".jv-ver .jv-suf"); if (s) { delete s.dataset.segura; s.textContent = AC().sufixo(); s.classList.remove("chega"); void s.offsetWidth; s.classList.add("chega"); } J.pintaVersao(); };
+    const revela = () => { const s = document.querySelector(".jv-ver .jv-suf"); if (s) { delete s.dataset.segura; s.textContent = AC().sufixo(); s.classList.toggle("tester", AC().sufixo() === ".tester"); s.classList.remove("chega"); void s.offsetWidth; s.classList.add("chega"); } J.pintaVersao(); };
+    /* trajeto de um símbolo: da borda até o livro, com uma curva leve (gira) e acelerando no fim */
+    const trajeto = (g, u) => { const r = 30 + (g.R0 - 30) * (1 - Math.pow(u, 1.8)), a = g.a0 + g.gira * u; return [cx + r * Math.cos(a), cy - 10 + r * Math.sin(a) * 0.9, r]; };
+    /* página virando por cima do livro aberto (coordenadas do livro, antes da escala): fase 0…1 da direita para a esquerda */
+    const pagina = (f) => { const c = Math.cos(Math.PI * f), w = 76 * Math.abs(c), lev = 14 * Math.sin(Math.PI * f), x = c >= 0 ? 0 : -w;
+      return `<path d="M${f1(x)} ${f1(-50 - lev * (c >= 0 ? 0 : 1))}L${f1(x + w)} ${f1(-50 - lev * (c >= 0 ? 1 : 0))}L${f1(x + w)} ${f1(50 - lev * (c >= 0 ? 1 : 0))}L${f1(x)} ${f1(50 - lev * (c >= 0 ? 0 : 1))}Z" style="fill:#fbf6e6;stroke:#c9e9d2;stroke-width:1;opacity:.96"/>`; };
     const desenha = (t) => {
       let h = defs;
       const fundo = t < 5.5 ? suave(t / 0.6) * 0.94 : 0.94 * (1 - suave((t - 5.5) / 0.6));
-      if (fundo > 0) h += `<rect width="${W}" height="${H}" style="fill:#03040a;opacity:${fundo.toFixed(3)}"/>`;
+      if (fundo > 0) h += `<rect width="${W}" height="${H}" style="fill:#020a06;opacity:${fundo.toFixed(3)}"/>`;
       if (t < 5.6) {
-        const ap = suave((t - 0.4) / 0.8), o = suave((t - 1.2) / 1.4), cresce = suave((t - 2.2) / 0.8), brilho = suave((t - 2.8) / 2.2);
-        if (cresce > 0) { /* feixe de luz descendo do alto e se despejando no livro */
-          const hb = (cy - 60) * cresce, lw = 90 + 50 * brilho;
-          h += `<rect x="${f1(cx - lw)}" y="0" width="${f1(2 * lw)}" height="${f1(hb)}" style="fill:url(#fx-feixe);opacity:${(0.35 + 0.4 * brilho).toFixed(2)};filter:url(#fx-blur2)"/><rect x="${f1(cx - lw * 0.35)}" y="0" width="${f1(lw * 0.7)}" height="${f1(hb)}" style="fill:${corFeixe[0]};opacity:${(0.5 + 0.4 * brilho).toFixed(2)};filter:url(#fx-blur2)"/>`;
-          if (!adm) chuva.forEach((c) => { const y = ((t * c.v + c.f * cy) % (cy - 20)); if (y < hb) h += `<text x="${f1(cx + c.x)}" y="${f1(y)}" text-anchor="middle" style="font:800 26px monospace;fill:#ffffff;stroke:#04381a;stroke-width:5px;paint-order:stroke;opacity:${(0.7 + 0.3 * Math.sin(t * 9 + c.f * 7) ** 2).toFixed(2)}">${GLIFOS[(Math.floor(t * 12) + c.c.charCodeAt(0)) % GLIFOS.length]}</text>`; });
-        }
-        if (brilho > 0) part.forEach((pt) => { const u = (t * pt.v / 140 + pt.f) % 1; h += `<circle cx="${f1(cx + pt.x * 1.6 * (0.4 + u))}" cy="${f1(cy - 70 - u * 260 * brilho)}" r="${pt.r}" style="fill:${corFeixe[1]};opacity:${((1 - u) * brilho).toFixed(2)}"/>`; });
-        h += `<g transform="translate(${f1(cx)} ${f1(cy)}) scale(${(1.7 * (0.6 + 0.4 * ap)).toFixed(3)})" style="opacity:${ap.toFixed(2)}">${livroSVG(o, brilho, corLivro)}</g>`;
+        const ap = suave((t - 0.25) / 0.7), absorvido = verdes.filter((g) => t >= g.ts + g.T).length / N, auge = suave((t - 4.3) / 0.7);
+        const brilho = Math.min(1, 0.15 + 0.85 * absorvido + 0.3 * auge) * ap;
+        /* círculo de energia no chão do livro: dois anéis tracejados girando em sentidos opostos e símbolos em volta */
+        const Rc = 150 + 30 * brilho;
+        h += `<g style="opacity:${(ap * (0.45 + 0.55 * brilho)).toFixed(2)}"><ellipse cx="${f1(cx)}" cy="${f1(cy + 70)}" rx="${f1(Rc)}" ry="${f1(Rc * 0.28)}" style="fill:none;stroke:#5dff9b;stroke-width:2;stroke-dasharray:14 8;stroke-dashoffset:${f1(t * 60)}"/><ellipse cx="${f1(cx)}" cy="${f1(cy + 70)}" rx="${f1(Rc * 0.78)}" ry="${f1(Rc * 0.22)}" style="fill:none;stroke:#16b85a;stroke-width:1.6;stroke-dasharray:4 10;stroke-dashoffset:${f1(-t * 45)}"/>`;
+        for (let k = 0; k < 12; k++) { const a = (k / 12) * 2 * Math.PI + t * 0.5; h += `<text x="${f1(cx + Rc * 0.9 * Math.cos(a))}" y="${f1(cy + 70 + Rc * 0.25 * Math.sin(a))}" text-anchor="middle" dominant-baseline="central" style="font:700 12px monospace;fill:#8dffb5;opacity:${(0.4 + 0.5 * (Math.sin(a) + 1) / 2).toFixed(2)}">${GLIFOS[(k * 5 + Math.floor(t * 3)) % GLIFOS.length]}</text>`; }
+        h += `</g>`;
+        /* no auge: coluna de luz verde subindo do livro */
+        if (auge > 0) { const hb = (cy - 40) * auge, lw = 70 + 40 * auge; h += `<rect x="${f1(cx - lw)}" y="${f1(cy - 40 - hb)}" width="${f1(2 * lw)}" height="${f1(hb)}" style="fill:url(#fx-feixe);opacity:${(0.6 * auge).toFixed(2)};filter:url(#fx-blur2)"/>`; }
+        /* os símbolos verdes chegando de todos os lados */
+        verdes.forEach((g) => { const u = (t - g.ts) / g.T; if (u <= 0 || u >= 1) return; const [x, y, r] = trajeto(g, u), op = Math.min(1, u / 0.1) * cl((r - 34) / 60), tam = g.tam * (0.42 + 0.58 * Math.min(1, r / 280));
+          if (op <= 0.01) return; const ch = GLIFOS[(g.c + Math.floor(t * g.fr)) % GLIFOS.length];
+          for (let k = 2; k >= 1; k--) { const [xr, yr] = trajeto(g, Math.max(0, u - k * 0.035)); h += `<text x="${f1(xr)}" y="${f1(yr)}" text-anchor="middle" dominant-baseline="central" style="font:800 ${f1(tam * (1 - 0.15 * k))}px monospace;fill:#2ee59d;opacity:${(op * (0.32 - 0.12 * k)).toFixed(2)}">${ch}</text>`; } /* rastro curto */
+          h += `<text x="${f1(x)}" y="${f1(y)}" text-anchor="middle" dominant-baseline="central" style="font:800 ${f1(tam)}px monospace;fill:${g.cor};stroke:#06401f;stroke-width:${f1(tam * 0.2)}px;paint-order:stroke;opacity:${op.toFixed(2)}">${ch}</text>`; });
+        if (brilho > 0.2) part.forEach((pt) => { const u = (t * pt.v / 140 + pt.f) % 1; h += `<circle cx="${f1(cx + pt.x * 1.6 * (0.4 + u))}" cy="${f1(cy - 70 - u * 260 * brilho)}" r="${pt.r}" style="fill:${corFeixe[1]};opacity:${((1 - u) * brilho).toFixed(2)}"/>`; });
+        /* o livro, já aberto, com as páginas virando sozinhas (uma a cada 0,55 s) */
+        const fase = t > 1.0 && t < 5.0 ? ((t - 1.0) / 0.55) % 1 : -1;
+        h += `<g transform="translate(${f1(cx)} ${f1(cy)}) scale(${(ESC * (0.55 + 0.45 * ap)).toFixed(3)})" style="opacity:${ap.toFixed(2)}">${livroSVG(1, brilho, corLivro)}${fase >= 0 ? pagina(fase) : ""}</g>`;
       }
       if (t >= 5.0 && t < 6.4) { const fl = t < 5.5 ? suave((t - 5.0) / 0.5) : 1 - suave((t - 5.5) / 0.9); h += `<rect width="${W}" height="${H}" style="fill:${flash};opacity:${fl.toFixed(3)}"/>`; }
       if (t >= 5.45 && !rota) { rota = 1; vaiParaHome(); }
       if (t >= 5.5) seguraSufixo();
       if (t >= 5.6 && !voo) voo = prepVoo();
-      if (voo && t >= 5.6 && t < 8.3) { /* o livro voa até a versão */
-        const u = suave((t - 5.7) / 2.5), [x, y] = ponto(u), [x2, y2] = ponto(Math.min(1, u + 0.01)), ang = (Math.atan2(y2 - y, x2 - x) * 180) / Math.PI * 0.15, s = 0.55 - 0.33 * u;
-        for (let k = 1; k <= 8; k++) { const [tx, ty] = ponto(Math.max(0, u - k * 0.018)); h += `<circle cx="${f1(tx)}" cy="${f1(ty)}" r="${f1(3.2 - k * 0.3)}" style="fill:${corFeixe[1]};opacity:${(0.6 - k * 0.07).toFixed(2)}"/>`; }
-        h += `<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(ang)}) scale(${s.toFixed(3)})">${livroSVG(1, 0.35, corLivro)}</g>`;
+      if (voo && t >= 5.6 && t < 8.3) { /* o livro voa até a versão (caminho de sempre) */
+        const u = suave((t - 5.7) / 2.5), [x, y] = ponto(u), [x2, y2] = ponto(Math.min(1, u + 0.01)), ang = (Math.atan2(y2 - y, x2 - x) * 180) / Math.PI * 0.15, sc = 0.55 - 0.33 * u;
+        for (let k = 1; k <= 10; k++) { const [tx, ty] = ponto(Math.max(0, u - k * 0.016)); h += `<text x="${f1(tx)}" y="${f1(ty)}" text-anchor="middle" dominant-baseline="central" style="font:700 ${f1(13 - k * 0.7)}px monospace;fill:${corFeixe[1]};opacity:${(0.75 - k * 0.065).toFixed(2)}">${GLIFOS[(k * 7 + Math.floor(t * 12)) % GLIFOS.length]}</text>`; }
+        h += `<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(ang)}) scale(${sc.toFixed(3)})">${livroSVG(1, 0.5, corLivro)}</g>`;
       }
-      if (voo && t >= 8.2) { /* colisão: brilhinho de impacto e o sufixo aparece */
+      if (voo && t >= 8.2) { /* colisão: brilhinho de impacto e o ".tester" aparece */
         if (!desenha.bateu) { desenha.bateu = 1; revela(); }
         const b = suave((t - 8.2) / 0.8), [x, y] = voo.P2;
-        h += Array.from({ length: 12 }, (_, k) => { const a = (k / 12) * 2 * Math.PI, r0 = 6 + 34 * b, r1 = r0 + 10 * (1 - b); return `<line x1="${f1(x + r0 * Math.cos(a))}" y1="${f1(y + r0 * Math.sin(a))}" x2="${f1(x + r1 * Math.cos(a))}" y2="${f1(y + r1 * Math.sin(a))}" style="stroke:${corFeixe[1]};stroke-width:2.4;stroke-linecap:round;opacity:${(1 - b).toFixed(2)}"/>`; }).join("") + `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(4 + 20 * b)}" style="fill:${corFeixe[0]};opacity:${(0.7 * (1 - b)).toFixed(2)}"/>`;
+        h += Array.from({ length: 14 }, (_, k) => { const a = (k / 14) * 2 * Math.PI, r0 = 6 + 36 * b, r1 = r0 + 11 * (1 - b); return `<line x1="${f1(x + r0 * Math.cos(a))}" y1="${f1(y + r0 * Math.sin(a))}" x2="${f1(x + r1 * Math.cos(a))}" y2="${f1(y + r1 * Math.sin(a))}" style="stroke:${k % 2 ? corFeixe[1] : corFeixe[0]};stroke-width:2.4;stroke-linecap:round;opacity:${(1 - b).toFixed(2)}"/>`; }).join("") + `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(4 + 22 * b)}" style="fill:${corFeixe[0]};opacity:${(0.7 * (1 - b)).toFixed(2)}"/>`;
       }
       p.sv.innerHTML = h;
     };

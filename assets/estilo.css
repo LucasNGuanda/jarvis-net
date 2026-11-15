@@ -888,3 +888,11 @@ a.jv-mat.trancado:hover{transform:none;box-shadow:none;border-color:var(--line2)
 .jv-ver .jv-suf.adm{background:linear-gradient(100deg,#c9961c,#ffe27a,#fff4cf,#ffd24a,#b8860b);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:jv-ouro 6s linear infinite;filter:drop-shadow(0 0 6px rgba(255,200,80,.35))} /* β 4.4: ".ADM" dourado */
 @media (prefers-reduced-motion:reduce){.jv-ver .jv-suf.adm{animation:none}}
 .jv-ver .jv-suf.adm.chega{animation:sufChega 1.1s ease-out,jv-ouro 6s linear infinite}
+
+/* ---------- β 4.5: Jarvis esmeralda (beta tester; o ADM também tem) ---------- */
+.jv.esmeralda .jv-cab h1{background:linear-gradient(100deg,#0b6b4f 0%,#14c8a8 16%,#7dffb2 32%,#e6fff2 40%,#2ee59d 52%,#0f8f6a 70%,#5cf0b0 86%,#0b6b4f 100%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:jv-ouro 10s linear infinite;filter:drop-shadow(0 0 10px rgba(60,240,160,.2))}
+.jv-ouro-p.esm{color:#8dffb5;text-shadow:0 0 5px rgba(46,229,157,.6);font-family:ui-monospace,Menlo,Consolas,monospace}
+.jv-cor .jv-excl-esmeralda{border-color:#2ee59d;color:#8dffb5;background:linear-gradient(100deg,rgba(46,229,157,.18),rgba(125,255,178,.06))}
+.jv-ver .jv-suf.tester{background:linear-gradient(100deg,#14c8a8,#7dffb2,#e6fff2,#2ee59d,#0f8f6a);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:jv-ouro 6s linear infinite;filter:drop-shadow(0 0 6px rgba(60,240,160,.35))}
+.jv-ver .jv-suf.tester.chega{animation:sufChega 1.1s ease-out,jv-ouro 6s linear infinite}
+@media (prefers-reduced-motion:reduce){.jv.esmeralda .jv-cab h1,.jv-ver .jv-suf.tester{animation:none}}

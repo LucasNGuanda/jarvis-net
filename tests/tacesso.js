@@ -91,9 +91,24 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
   // 4. tester
   await zera(); await digita('tester', COD.tester);
   conf(await p.evaluate(() => !!document.querySelector('.anim-acesso.cheia')), 'tester: animação de tela cheia começa');
+  /* β 4.5: o livro já aparece aberto (as duas páginas) e os símbolos verdes chegam de todos os lados */
+  await p.waitForTimeout(1300);
+  { const r = await p.evaluate(() => { const sv = document.querySelector('.anim-acesso svg'), W = innerWidth, H = innerHeight, q = [0, 0, 0, 0];
+      [...sv.querySelectorAll('text')].forEach((t) => { const b = t.getBoundingClientRect(), x = b.left + b.width / 2, y = b.top + b.height / 2; q[(x > W / 2 ? 1 : 0) + (y > H / 2 ? 2 : 0)]++; });
+      return { esquerda: sv.querySelectorAll('rect[x="-76.0"][width="76.0"]').length, circulo: /stroke-dasharray:14 8/.test(sv.innerHTML), quadrantes: q }; });
+    conf(r.esquerda >= 1 && r.circulo && r.quadrantes.every((n) => n >= 3), 'tester: livro aberto desde o começo, círculo de energia e símbolos verdes nos 4 cantos da tela', JSON.stringify(r)); }
   await p.waitForTimeout(1500); await p.keyboard.press('Escape'); await p.waitForTimeout(600);
   conf(await p.evaluate(() => !document.querySelector('.anim-acesso') && location.hash === '#/home'), 'tester: Esc pula a animação e vai para a tela inicial', await p.evaluate(() => location.hash));
   conf(/β 4\.\d+\.tester$/.test((await versao()).trim()), 'tester: versão com .tester', await versao());
+  conf(await p.evaluate(() => document.querySelector('.jv-ver .jv-suf').classList.contains('tester')), 'tester: ".tester" verde');
+  /* β 4.5: cor esmeralda (título + figura) só para o tester (e o ADM); o tester não ganha o arco-íris */
+  await p.hover('.jv-titulo h1'); await p.waitForTimeout(200);
+  conf(await p.evaluate(() => !!document.querySelector('.jv-excl-esmeralda') && !document.querySelector('.jv-cor input[type=range]') && !document.querySelector('.jv-excl-dourado')), 'tester: só "esmeralda ✦" no seletor (sem arco-íris e sem dourado)');
+  await p.click('.jv-excl-esmeralda'); await p.waitForTimeout(1200);
+  conf(await p.evaluate(() => { const j = document.querySelector('.jv'), cs = getComputedStyle(j); return j.classList.contains('esmeralda') && cs.getPropertyValue('--jv2').trim() === '#2ee59d' && JSON.parse(localStorage.getItem('jarvis:cor')) === 'esmeralda' && document.querySelectorAll('.jv-ouro-p.esm').length > 0; }), 'tester: esmeralda no título e nas cores que a figura segue, salva, com símbolos verdes');
+  await p.reload(); await p.waitForTimeout(600); conf(await p.evaluate(() => document.querySelector('.jv').classList.contains('esmeralda')), 'tester: esmeralda continua depois de recarregar');
+  await p.evaluate(() => { const b = document.querySelector('.jv-cor button:not(.jv-ouro-bt)'); b.click(); }); await p.waitForTimeout(200);
+  conf(await p.evaluate(() => !document.querySelector('.jv').classList.contains('esmeralda') && localStorage.getItem('jarvis:cor') === null), 'tester: "voltar à cor original" desliga o esmeralda');
   for (const h of ['#/inicio', '#/A01', '#/experimentos', '#/experimental']) conf(!(await bloqueada(h)), `tester: ${h} abre`);
   await ir('#/A01'); conf(/\.tester$/.test(await p.evaluate(() => document.getElementById('versao').textContent)), 'tester: sufixo também no topo', await p.evaluate(() => document.getElementById('versao').textContent));
   for (const h of ['#/matematica', '#/quimica', '#/russo', '#/alemao', '#/sanscrito']) { await ir(h); conf(await p.evaluate(() => !!document.querySelector('.jv-bloq') && document.querySelector('.jv-bloq .jv-breve').textContent === 'em construção'), `tester: ${h} trancada como "em construção"`); }
@@ -107,7 +122,7 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
   const quadros = await p.evaluate(() => new Promise((ok) => { let n = 0; const t0 = performance.now(); (function f() { n++; if (performance.now() - t0 < 2000) requestAnimationFrame(f); else ok(n); })(); }));
   conf(quadros > 40, 'ADM: a animação não congela a página (quadros em 2 s, no começo)', quadros);
   /* β 4.3: buraco negro no lugar do livro, com o conhecimento sendo sugado; e não trava nem no auge (mais símbolos na tela) */
-  const bn = await p.evaluate(() => { const sv = document.querySelector('.anim-acesso svg'); return { buraco: !!sv.querySelector('#fx-cima') && !!sv.querySelector('#fx-bhg'), simbolos: sv.querySelectorAll('text').length, livro: /#f6ecd4/.test(sv.innerHTML) }; });
+  const bn = await p.evaluate(() => { const sv = document.querySelector('.anim-acesso svg'); return { buraco: !!sv.querySelector('#bn-cima-anim') && !!sv.querySelector('#bn-g-anim'), simbolos: sv.querySelectorAll('text').length, livro: /#f6ecd4/.test(sv.innerHTML) }; });
   conf(bn.buraco && !bn.livro && bn.simbolos > 20, 'ADM: buraco negro (sem o livro) sugando símbolos', JSON.stringify(bn));
   const quadros2 = await p.evaluate(() => new Promise((ok) => { let n = 0; const t0 = performance.now(); (function f() { n++; if (performance.now() - t0 < 2000) requestAnimationFrame(f); else ok(n); })(); }));
   conf(quadros2 > 40, 'ADM: não congela no auge (quadros em 2 s, entre 2 e 4 s)', quadros2);
@@ -129,13 +144,16 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
   await p.evaluate(() => { const b = document.querySelector('.jv-ouro-bt'); b && b.click(); }); await p.waitForTimeout(1500);
   conf(await p.evaluate(() => document.querySelector('.jv').classList.contains('dourado') && JSON.parse(localStorage.getItem('jarvis:cor')) === 'dourado' && document.querySelectorAll('.jv-ouro-p').length > 0), 'ADM: título dourado ligado, salvo e soltando símbolos');
   await p.waitForTimeout(3000); conf((await p.evaluate(() => document.querySelectorAll('.jv-ouro-p').length)) <= 7, 'título dourado discreto: no máximo 7 símbolos de cada vez', await p.evaluate(() => document.querySelectorAll('.jv-ouro-p').length));
+  conf(await p.evaluate(() => !!document.querySelector('.jv-excl-esmeralda') && !!document.querySelector('.jv-excl-dourado')), 'ADM: tem o dourado e também o esmeralda do tester');
   const TODOS_AVULSOS = ['fisica', 'matematica', 'quimica', 'idiomas', 'config', 'alemao', 'sanscrito', 'jarvis'];
   for (const ch of [['tester'], ['config'], TODOS_AVULSOS, TODOS_AVULSOS.concat('tester')]) {
     await p.evaluate((ch) => localStorage.setItem('jarvis:acesso', JSON.stringify({ chaves: ch })), ch); await p.reload(); await p.waitForTimeout(600); /* o que o ADM salvou continua no localStorage */
-    const r = await p.evaluate(() => ({ dourado: document.querySelector('.jv').classList.contains('dourado'), bt: !!document.querySelector('.jv-ouro-bt'), part: document.querySelectorAll('.jv-ouro-p').length, fig: JARVIS.figuraCfg().id }));
+    const r = await p.evaluate(() => ({ dourado: document.querySelector('.jv').classList.contains('dourado'), bt: !!document.querySelector('.jv-excl-dourado'), part: document.querySelectorAll('.jv-ouro-p').length, fig: JARVIS.figuraCfg().id }));
     let figs = '(engrenagem trancada)'; if (await p.$('.jv-engrenagem:not(.trancado)')) { await p.click('.jv-engrenagem'); await p.waitForTimeout(250); figs = await p.evaluate(() => [...document.querySelectorAll('.jv-painel-figbt')].map((b) => b.dataset.fig).join(',')); await p.keyboard.press('Escape'); }
     const nome = ch.length > 2 ? (ch.includes('tester') ? 'todos os avulsos + tester' : 'todos os avulsos') : ch.join('+');
     conf(!r.dourado && !r.bt && !r.part && r.fig === 'planeta' && !/buraconegro/.test(figs), `${nome}: sem buraco negro (nem no painel) e sem título dourado`, `${JSON.stringify(r)} painel: ${figs}`);
+    if (!ch.includes('tester')) { await p.evaluate(() => localStorage.setItem('jarvis:cor', JSON.stringify('esmeralda'))); await p.reload(); await p.waitForTimeout(500);
+      conf(await p.evaluate(() => !document.querySelector('.jv').classList.contains('esmeralda') && !document.querySelector('.jv-excl-esmeralda')), `${nome}: sem o esmeralda (é do tester)`); await p.evaluate(() => localStorage.setItem('jarvis:cor', JSON.stringify('dourado'))); }
   }
   // 6. troca de idioma (como ADM)
   await ir('#/home');

@@ -27,6 +27,7 @@
   const SO_ADM = { figuras: ["buraconegro"] };
   A.figura = (id) => (SO_ADM.figuras.includes(id) ? A.adm() : A.engrenagem("figura")); /* figura central do painel da engrenagem */
   A.tituloDourado = () => A.adm(); /* efeito dourado do título "Jarvis" */
+  A.tituloEsmeralda = () => A.adm() || A.chaves().includes("tester"); /* β 4.5: cor esmeralda (título + figura), exclusiva do beta tester; o ADM também tem */
   A.jarvis = () => A.tem(C().jarvis === undefined ? "adm" : C().jarvis); /* β 4.2: busca do Jarvis */
   A.idiomas = () => A.tem(C().seletorIdioma === undefined ? "adm" : C().seletorIdioma);
   A.aviso = () => (A.visitante() ? (C().avisos || {}).visitante : (C().avisos || {}).comAcesso) || "sem acesso · ir para códigos? duplo clique";
