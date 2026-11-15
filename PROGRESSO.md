@@ -19,12 +19,14 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 - **Experimental**: 11 de 11 (FE01–FE11), todos no padrão completo: 16 exercícios com figura, correção automática e nível; `F.chute`, laboratório, 3 demonstrações, 3 exemplos, as 4 caixas, folha de fórmulas e chefão (β 3.5).
 - Tela inicial (Jarvis) em `#/home`: Física pronta; Química, Matemática e Russo "em breve". Adesivos (β 3.6): engrenagem ao lado do campo do Jarvis abre o painel com 25 adesivos em 5 categorias.
 - Calculadoras 1 (estilo fx-991ES PLUS) e 2 (estilo fx-82LA CW), uma de cada vez.
-- Testes automáticos agora no repositório, em `tests/` (antes ficavam só na pasta temporária da sessão); capturas em `tests/capturas/` (fora do git).
+- Testes automáticos no repositório, em `tests/`: tgeral, tfunc, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE, thome, tcor, texp, tsegredo, tadesivos, mais tmec, tchaves e texemp por código. Capturas em `tests/capturas/`, fora do git; as que os testes antigos gravam na raiz (`home-*.png`, `fisica-com-home.png`, `calc-*.png`, `cor-*.png`) também estão no `.gitignore` (β 3.6).
+- Última regressão completa (β 3.6, 15/11/2026): os 15 testes com exit 0, tgeral com 152 páginas escritas e 0 erro de KaTeX; tmec e tchaves ok em FE01–FE11.
 
 ### Diferenças em relação ao padrão do CLAUDE.md (honesto)
 - Exercícios: o padrão pede 15 a 20. A Mecânica tem 12 a 14; os módulos antigos, 7 (o C, de 7 a 16).
 - "Chuta antes de ver" (`F.chute`): os módulos C, T e FE usam. A Mecânica e os outros ainda não têm.
 - Figuras: nem todo exercício da Mecânica tem figura (todos os exemplos têm).
+- Teoria do Experimental (FE01–FE11): cada tema tem 3 demonstrações e uns 10 mil caracteres de texto (cerca de 3 a 4 páginas), abaixo das ~10 páginas que o padrão pede para tema grande. Os outros itens do padrão estão completos.
 
 ### Dívida técnica (pedido do Lucas em 14/11/2026: resolver depois da Termodinâmica)
 - [ ] **Mecânica** (A01–A20): subir de 12–14 para 15–20 exercícios por tema; pôr figura nos exercícios que não têm; acrescentar o `F.chute` ("chuta antes de ver") em todos os temas.
@@ -36,6 +38,7 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 2. [x] **Termodinâmica**: T01–T08b escritos no padrão completo (β 3.3).
 3. [x] **Aba Experimental**: feita na β 3.5 (FE01–FE11). O capítulo de teoria da física experimental inteiro: medida e erro, algarismos significativos, precisão × acurácia, erro estatístico × sistemático, desvio padrão e desvio da média, propagação de incerteza pela derivada logarítmica (o método do professor do Lucas), ajuste de reta e mínimos quadrados, linearização de gráficos, como escrever um relatório e como comparar um resultado com o valor de referência.
 4. [x] **Experimentos físicos**: os 8 que faltavam foram feitos na β 3.4 (EP11–EP18), mais a surpresa escondida.
+5. [ ] **Próximo passo sugerido**: a dívida técnica (Mecânica até o padrão; depois os módulos com 7 exercícios). Esperando o Lucas escolher.
 
 ### Pendências combinadas (fora da Física)
 - Documento do modelo de dados de várias matérias (prefixos `fis:`, `mat:`, `qui:`; migração; registro de acerto e erro além de ● X /): mostrar ao Lucas para aprovar antes de implementar. Rascunho em `docs/MODELO_DE_DADOS.md`.
@@ -466,15 +469,16 @@ O histórico acima usa os códigos antigos.
 - 0 katex-error; sem erros de JS; energia conservada nos pêndulos.
 
 ## Lembretes do Lucas (para as próximas sessões)
-1. Escrever o módulo de funções especiais (W de Lambert, Gama de Euler, integrais "bolinha" ∮) e o Cálculo 1 e 2 (do zero).
+1. [x] Módulo de funções especiais (CE01 W de Lambert, CE02 Gama, CE03 integrais ∮; β 1.1) e Cálculo 1 e 2 (27/27 temas, 7 exercícios cada; falta subir para o padrão, ver dívida técnica).
 2. Criar uma aba de **jogos interativos** para eletromagnetismo, moderna e elétrica (as partes mais abstratas).
 3. O Lucas vai mandar fotos do "pdfzinho de moderna do Claude".
 4. O Lucas vai mandar o Halliday 2 (recortado de novo).
 5. O Lucas vai mandar provas do ITA e do vestibular coreano (para Simulados S02/S03).
 
 ## Falta
-- Cálculo 1 e 2: do zero, depois (pedido do Lucas).
-- Esperando o Lucas dizer o próximo passo (SOIF, outros módulos ou Cálculo).
+- Dívida técnica da Física e do Cálculo (exercícios, figuras e `F.chute`), ver "Estado atual".
+- Pendências combinadas (modelo de dados, mover o Cálculo, GitHub Pages) e as outras matérias (Química, Matemática, Russo), ver "Estado atual".
+- Esperando o Lucas dizer o próximo passo.
 - Noites 1–11 do briefing (todos os outros temas), unidades e constantes (CODATA), simulados por módulo, formulário com busca, mapa de pré-requisitos.
 
 ## Problemas conhecidos

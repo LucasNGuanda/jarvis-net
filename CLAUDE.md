@@ -44,7 +44,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Toda conta de exemplo, exercício e solução conferida rodando em Python (anotar os números no comentário do topo do tema).
 - A física de cada simulação conferida, inclusive casos limite.
 - Nenhuma fórmula quebrada (procurar `katex-error`). Nenhum tema escrito pode abrir vazio.
-- Rodar os testes de `tests/` antes de cada commit (`node tests/tgeral.js`, `tests/tmec.js <códigos>`, `tests/tchaves.js <códigos>` etc.); não commitar com teste quebrado.
+- Rodar os testes de `tests/` antes de cada commit (`node tests/tgeral.js`, `tests/tmec.js <códigos>`, `tests/tchaves.js <códigos>`, `tests/tadesivos.js` para a tela inicial etc.); não commitar com teste quebrado. Capturas de teste ficam fora do git.
 - Testar o site de verdade com Playwright e olhar as capturas (`node tests/shotmec.js <COD> "<seletor>@0"` → `tests/capturas/`).
 
 ## Decisões de projeto já tomadas
