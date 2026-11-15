@@ -41,7 +41,7 @@ window.CATALOGO.push(
     ["D01","Funções inorgânicas e nomenclatura",[],true],
     ["D02","Tipos de reação e previsão de produtos",[],true],
     ["D03","Leis ponderais",[],true],
-    ["D04","Mol, massa molar e constante de Avogadro",[]],
+    ["D04","Mol, massa molar e constante de Avogadro",[],true],
     ["D05","Balanceamento de equações",[]],
     ["D06","Cálculo estequiométrico: limitante, excesso, pureza e rendimento",[]],
     ["D07","Oxirredução e balanceamento redox",[]],
