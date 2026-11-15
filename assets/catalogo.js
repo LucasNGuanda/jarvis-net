@@ -216,7 +216,7 @@ window.CATALOGO = [
     ["EP17","O gato de Schrödinger",[]],
   ]},
   { id:"ENu", area:"exp", letra:"☢", cor:"--mN", nome:"Nuclear", desc:"Reação em cadeia e energia de ligação.", temas:[
-    ["EP16","Fissão e fusão",["!"]],
+    ["EP16","Fissão e fusão",["!"],true],
   ]},
   { id:"EFl", area:"exp", letra:"≈", cor:"--mK2", nome:"Fluidos", desc:"Navier–Stokes de verdade, num método leve.", temas:[
     ["EP18","Escoamento ao redor de um cilindro",["!!"]],

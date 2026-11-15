@@ -1,4 +1,4 @@
-/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; EP13 van der Waals; EP14 fenda dupla; EP15 corpo negro; */
+/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; EP13 van der Waals; EP14 fenda dupla; EP15 corpo negro; EP16 fissão e fusão; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -283,6 +283,60 @@
       fots.forEach((f) => (sv += `<circle cx="${f.x.toFixed(1)}" cy="${f.y.toFixed(1)}" r="2" style="fill:${f.cor};opacity:${(1 - f.v / 1.2).toFixed(2)}"/>`));
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("pico (Wien) λ = b/T", n2(lmax * 1e9, 0) + " nm") + vis("σT⁴ (Stefan–Boltzmann)", n2(sig * T ** 4 / 1e6, 3) + " MW/m²") + vis("área da curva × π (integral numérica)", n2(cacheTot / 1e6, 3) + " MW/m²") + vis("razão área ÷ σT⁴", n2(cacheTot / (sig * T ** 4), 4));
+    });
+  };
+
+  /* ---------- EP16 · reação em cadeia (fator de multiplicação) e curva de energia de ligação por núcleon ---------- */
+  SIM.fissaoFusao = (el, F) => {
+    const W = 680, H = 330, NU = 2.5;
+    let gens = [], N = 0, viz = [], flashes = [], tg = 0, parado = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("fator de multiplicação k", "k", 0.8, 1.3, 0.01, 1)}${sl("nêutrons iniciais", "n0", 5, 200, 5, 50)}
+      <div class="bts">${botoes([["0.92", "subcrítico"], ["1", "crítico"], ["1.15", "supercrítico"]], "pre", "1")}<button class="bt pri" data-a="re">Recomeçar a reação</button></div></div>
+      <div class="status">Cada fissão de urânio-235 solta 2 ou 3 nêutrons (2,5 em média); cada nêutron provoca uma nova fissão com uma certa chance. O fator de multiplicação k é o número médio de nêutrons de uma geração que geram fissões na seguinte. k &lt; 1: a reação morre (subcrítica). k = 1: cada geração repõe a anterior (crítica, como num reator). k &gt; 1: cresce exponencialmente (supercrítica). À direita, a curva da energia de ligação por núcleon: o ferro está no topo, por isso quebrar núcleos pesados (fissão) e juntar núcleos leves (fusão) libera energia.</div>`);
+    const q = (s) => el.querySelector(s);
+    const reinicia = () => { N = val(el, "n0"); gens = [N]; viz = []; flashes = []; tg = 0; parado = false; };
+    liga(el, "pre", (kk) => { q("[data-c=k]").value = kk; reinicia(); });
+    q("[data-a=re]").addEventListener("click", reinicia); q("[data-c=n0]").addEventListener("input", reinicia);
+    /* próxima geração: cada nêutron causa fissão com probabilidade k/2,5; cada fissão solta 2 ou 3 */
+    const proxima = (n, k) => { if (n > 20000) return Math.round(n * k); const p = k / NU; let s = 0, f = 0; for (let i = 0; i < n; i++) if (Math.random() < p) { s += Math.random() < 0.5 ? 2 : 3; f++; } return { s, f }; };
+    SIM.fissaoFusao._proxima = proxima;
+    /* energia de ligação por núcleon (fórmula semiempírica, Z no vale de estabilidade) e alguns valores medidos */
+    const BA = (A) => { const z = Math.round(A / (1.98 + 0.0155 * Math.pow(A, 2 / 3))); return (15.75 * A - 17.8 * Math.pow(A, 2 / 3) - (0.711 * z * (z - 1)) / Math.cbrt(A) - (23.7 * (A - 2 * z) ** 2) / A) / A; };
+    const medidos = [["²H", 2, 1.112], ["³H", 3, 2.827], ["⁴He", 4, 7.074], ["¹²C", 12, 7.68], ["¹⁶O", 16, 7.976], ["⁵⁶Fe", 56, 8.79], ["⁹²Kr", 92, 8.513], ["¹⁴¹Ba", 141, 8.326], ["²³⁵U", 235, 7.591]];
+    reinicia();
+    anima(el, F, (dt) => {
+      const k = val(el, "k"); mostra(el, ["k"], 2); mostra(el, ["n0"], 0);
+      tg += dt;
+      if (!parado && tg > 0.55) {
+        tg = 0; const r = proxima(N, k), nov = typeof r === "number" ? r : r.s, fis = typeof r === "number" ? Math.round(r / NU) : r.f;
+        for (let i = 0; i < Math.min(fis, 25); i++) flashes.push({ x: 30 + Math.random() * 280, y: 40 + Math.random() * 200, v: 0 });
+        N = nov; gens.push(N); if (N === 0 || N > 1e7 || gens.length > 60) parado = true;
+        viz = []; for (let i = 0; i < Math.min(N, 160); i++) { const a = Math.random() * 6.283; viz.push({ x: 30 + Math.random() * 280, y: 40 + Math.random() * 200, vx: 90 * Math.cos(a), vy: 90 * Math.sin(a) }); }
+      }
+      viz.forEach((p) => { p.x += p.vx * dt; p.y += p.vy * dt; });
+      flashes = flashes.filter((f) => (f.v += dt) < 0.5);
+      /* caixa do "material" com núcleos fixos */
+      let sv = `<rect x="20" y="30" width="300" height="220" rx="6" style="fill:color-mix(in srgb,var(--mN) 8%,transparent);stroke:var(--ink3)"/>`;
+      for (let i = 0; i < 70; i++) sv += `<circle cx="${30 + ((i * 53) % 280)}" cy="${40 + ((i * 31) % 200)}" r="5" style="fill:color-mix(in srgb,var(--mN) 40%,transparent)"/>`;
+      flashes.forEach((f) => (sv += `<circle cx="${f.x}" cy="${f.y}" r="${6 + f.v * 30}" style="fill:none;stroke:var(--warn);stroke-width:2;opacity:${(1 - f.v * 2).toFixed(2)}"/>`));
+      viz.forEach((p) => { if (p.x > 20 && p.x < 320 && p.y > 30 && p.y < 250) sv += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2.2" style="fill:var(--ink)"/>`; });
+      /* gráfico log10 N × geração */
+      const gx = 30, gy = 318, gw = 290, gh = 50, gm = Math.max(30, gens.length);
+      let d = ""; gens.forEach((n, i) => (d += (i ? "L" : "M") + (gx + (i / gm) * gw).toFixed(1) + " " + (gy - (Math.log10(Math.max(n, 1)) / 7) * gh).toFixed(1)));
+      sv += `<line x1="${gx}" x2="${gx + gw}" y1="${gy}" y2="${gy}" style="stroke:var(--ink3)"/><line x1="${gx}" x2="${gx}" y1="${gy}" y2="${gy - gh}" style="stroke:var(--ink3)"/>` + [[0, "1"], [3, "10³"], [6, "10⁶"]].map(([e, t]) => `<line x1="${gx}" x2="${gx + gw}" y1="${gy - (e / 7) * gh}" y2="${gy - (e / 7) * gh}" style="stroke:var(--line2);stroke-dasharray:2 4"/>` + D.txt(gx - 4, gy - (e / 7) * gh + 4, t, "tx2", "end")).join("") + `<path d="${d}" style="fill:none;stroke:var(--warn);stroke-width:2.5"/>` + D.txt(gx + gw, gy - gh - 4, "nêutrons por geração (escala log)", "tx2", "end");
+      /* curva B/A */
+      const bx = 380, by = 250, bw = 280, bh = 200, X = (A) => bx + (A / 250) * bw, Y = (b) => by - (b / 9.5) * bh;
+      let c = ""; for (let A = 4; A <= 250; A += 2) c += (A > 4 ? "L" : "M") + X(A).toFixed(1) + " " + Y(BA(A)).toFixed(1);
+      sv += D.seta(bx, by, bx + bw + 10, by, "var(--ink2)", 1.4) + D.seta(bx, by, bx, by - bh - 10, "var(--ink2)", 1.4) + D.txt(bx + bw + 10, by + 16, "A (núcleons)", "tx2", "end") + D.txt(bx + 6, by - bh - 2, "energia de ligação / núcleon (MeV)", "tx2", "start");
+      [2, 4, 6, 8].forEach((b) => (sv += D.txt(bx - 6, Y(b) + 4, String(b), "tx2", "end")));
+      sv += `<path d="${c}" style="fill:none;stroke:var(--mN);stroke-width:2"/>`;
+      medidos.forEach(([nm, A, b]) => (sv += `<circle cx="${X(A)}" cy="${Y(b)}" r="3.5" style="fill:var(--ink)"/>` + D.txt(X(A) + (A > 200 ? -6 : 6), Y(b) + (nm === "⁹²Kr" ? -6 : nm === "¹⁴¹Ba" ? 14 : -6), nm, "tx2", A > 200 ? "end" : "start")));
+      sv += D.seta(X(235) - 4, Y(7.591) + 18, X(150), Y(8.2) + 22, "var(--warn)", 2) + D.txt(X(190), Y(7.0) + 26, "fissão: +0,9 MeV/núcleon", "tx2");
+      sv += D.seta(X(3) + 8, Y(2.6), X(4) + 10, Y(6.6), "var(--bad)", 2) + D.txt(X(6) + 16, Y(4.5), "fusão: sobe muito", "tx2", "start");
+      q("[data-v=sv]").innerHTML = sv;
+      const ult = gens.length > 1 ? gens[gens.length - 1] / Math.max(gens[gens.length - 2], 1) : 0;
+      q("[data-v=lt]").innerHTML = vis("geração | nêutrons", gens.length - 1 + " | " + (N > 1e6 ? n2(N / 1e6, 1) + " milhões" : N)) + vis("estado", k < 0.995 ? "subcrítico" : k > 1.005 ? "supercrítico" : "crítico") + vis("razão medida N(g)/N(g−1)", gens.length > 1 ? n2(ult, 2) : "—") + vis("energia: fissão do U-235 | fusão D-T", "≈ 173 MeV | 17,6 MeV");
     });
   };
 })();
