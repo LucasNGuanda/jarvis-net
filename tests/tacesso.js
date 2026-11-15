@@ -130,6 +130,7 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
   conf(await p.evaluate(() => !document.querySelector('.anim-acesso') && location.hash === '#/home'), 'ADM: animação termina sozinha na tela inicial');
   conf(/β 4\.\d+\.ADM$/.test((await versao()).trim()), 'ADM: versão com .ADM', await versao());
   conf(await p.evaluate(() => document.querySelector('.jv-ver .jv-suf').classList.contains('adm') && JARVIS.figuraCfg().id === 'buraconegro' && !!document.querySelector('.jv-ilu svg.jv-bn') && document.querySelector('.jv-ilu').style.visibility !== 'hidden' && !document.getElementById('pagina').style.transform), 'ADM (β 4.4): o buraco negro vira a figura central, ".ADM" dourado, nada escondido nem tremendo no fim');
+  conf(await p.evaluate(() => !document.querySelector('.jv-ilu svg.jv-bn').classList.contains('real')), 'ADM (β 4.6): sem o título dourado, depois da explosão fica o buraco negro de arame');
   const adm = await p.evaluate(() => ({ cards: document.querySelectorAll('.jv-materias a.sem-acesso').length, tr: document.querySelectorAll('.jv .trancado').length, ling: !!document.querySelector('.jv-linguas') }));
   conf(adm.cards === 0 && adm.tr === 0 && adm.ling, 'ADM: nada trancado e barrinha de idiomas', JSON.stringify(adm));
   for (const h of ['#/inicio', '#/experimental', '#/matematica-olimpiada', '#/quimica-experimentos', '#/russo-leitura', '#/alemao', '#/sanscrito']) conf(!(await bloqueada(h)), `ADM: ${h} abre`);
@@ -144,6 +145,14 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
   await p.evaluate(() => { const b = document.querySelector('.jv-ouro-bt'); b && b.click(); }); await p.waitForTimeout(1500);
   conf(await p.evaluate(() => document.querySelector('.jv').classList.contains('dourado') && JSON.parse(localStorage.getItem('jarvis:cor')) === 'dourado' && document.querySelectorAll('.jv-ouro-p').length > 0), 'ADM: título dourado ligado, salvo e soltando símbolos');
   await p.waitForTimeout(3000); conf((await p.evaluate(() => document.querySelectorAll('.jv-ouro-p').length)) <= 7, 'título dourado discreto: no máximo 7 símbolos de cada vez', await p.evaluate(() => document.querySelectorAll('.jv-ouro-p').length));
+  /* β 4.6: o buraco negro realista é só do título dourado; tirando o dourado, volta o de arame (com a animação de troca) */
+  conf(await p.evaluate(() => document.querySelector('.jv-ilu svg.jv-bn').classList.contains('real')), 'com o dourado, o buraco negro é o realista (o da animação)');
+  await p.evaluate(() => document.querySelector('.jv-cor button:not(.jv-ouro-bt)').click()); await p.waitForTimeout(400);
+  conf(await p.evaluate(() => document.querySelector('.jv-ilu svg.jv-bn').classList.contains('trocando')), 'tirar o dourado: a troca é animada');
+  await p.waitForTimeout(1300);
+  conf(await p.evaluate(() => { const s = document.querySelector('.jv-ilu svg.jv-bn'); return !s.classList.contains('real') && !s.classList.contains('trocando') && getComputedStyle(s.querySelector('.bn-arame')).display !== 'none' && getComputedStyle(s.querySelector('.bn-real')).display === 'none'; }), 'sem o dourado: volta o buraco negro de arame');
+  await p.evaluate(() => document.querySelector('.jv-excl-dourado').click()); await p.waitForTimeout(1500);
+  conf(await p.evaluate(() => document.querySelector('.jv-ilu svg.jv-bn').classList.contains('real')), 'pôr o dourado de novo: volta o realista');
   conf(await p.evaluate(() => !!document.querySelector('.jv-excl-esmeralda') && !!document.querySelector('.jv-excl-dourado')), 'ADM: tem o dourado e também o esmeralda do tester');
   const TODOS_AVULSOS = ['fisica', 'matematica', 'quimica', 'idiomas', 'config', 'alemao', 'sanscrito', 'jarvis'];
   for (const ch of [['tester'], ['config'], TODOS_AVULSOS, TODOS_AVULSOS.concat('tester')]) {

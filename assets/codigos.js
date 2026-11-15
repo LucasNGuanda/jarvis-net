@@ -192,8 +192,9 @@
       const x = r.left + r.width / 2, y = r.top + r.height / 2;
       return { ilu, x, y, R: 40 * esc, ver: vr ? [vr.right - 10, vr.top + vr.height * 0.55] : [x, 40] };
     };
-    const assenta = () => { /* o buraco negro vira a figura central (fica salvo; dá para trocar na engrenagem) */
-      if (J.figura) J.figura({ id: "buraconegro" }); const ilu = document.querySelector(".jv-ilu"); if (ilu) ilu.style.visibility = ""; };
+    const assenta = () => { /* o buraco negro vira a figura central (fica salvo; dá para trocar na engrenagem). Durante a explosão ele
+         continua o realista; sem o título dourado, depois vira o de arame (β 4.6) */
+      if (J.figura) J.figura({ id: "buraconegro" }); const ilu = document.querySelector(".jv-ilu"); if (ilu) { ilu.style.visibility = ""; const sv = ilu.querySelector("svg.jv-bn"); if (sv) sv.classList.add("real"); } };
     const vaiParaHome = () => { if (location.hash !== "#/home") location.hash = "#/home"; };
     const seguraSufixo = () => { const s = document.querySelector(".jv-ver .jv-suf"); if (s && s !== sufixo) { sufixo = s; s.dataset.segura = "1"; s.textContent = ""; } };
     const revela = () => { const s = document.querySelector(".jv-ver .jv-suf"); if (s) { delete s.dataset.segura; s.textContent = AC().sufixo(); s.classList.toggle("adm", AC().sufixo() === ".ADM"); s.classList.remove("chega"); void s.offsetWidth; s.classList.add("chega"); } J.pintaVersao(); };
@@ -229,6 +230,7 @@
       }
       if (alvo && t >= 7.0) {
         if (!chegou) { chegou = true; assenta(); }
+        if (t >= 8.2 && !desenha.voltou) { desenha.voltou = 1; if (!document.querySelector(".jv.dourado") && window.BURACO && BURACO.troca) BURACO.troca(false); }
         const e = t - 7.0, { x, y } = alvo, Rmax = Math.hypot(W, H);
         if (e < 1.6) { /* EXPLOSÃO: clarão, três ondas de choque, faíscas e cacos de símbolos voando para fora, tela tremendo */
           const cl0 = 1 - suave(e / 0.55);

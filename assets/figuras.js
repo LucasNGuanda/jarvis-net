@@ -74,10 +74,48 @@
     /* gira um desenho já montado (só mexe nos riscos: barato para a figura que roda o tempo todo) */
     gira(raiz, t) { raiz.querySelectorAll(".bn-risco").forEach((e) => { e.style.strokeDashoffset = f1(-t * +e.dataset.v); }); },
   });
+  /* β 4.6: a figura tem DUAS formas. Normal = o buraco negro de arame (β 3.9), nas cores do tema, como as outras figuras.
+     Com o título DOURADO do ADM = o buraco negro realista da animação. Ao ligar ou tirar o dourado, J.trocaBuraco faz a transição
+     (o de agora gira e encolhe até sumir num clarão; o outro nasce do centro e cresce passando um pouco do tamanho). */
+  const ANEIS = [60, 76, 94, 114, 136];
+  const per = (rx, ry) => 2 * Math.PI * Math.sqrt((rx * rx + ry * ry) / 2);
+  const arame = (uid) => `<defs><mask id="mk-${uid}" maskUnits="userSpaceOnUse" x="-160" y="-130" width="320" height="260"><rect x="-160" y="-130" width="320" height="260" fill="#fff"/><path d="M-39 0A39 39 0 0 1 39 0Z" fill="#000"/></mask></defs>
+        <g transform="rotate(-10)">
+          <path d="M-60 1C-60 -80 60 -80 60 1" class="jv-bn-lente"/><path d="M-60 1C-60 -70 60 -70 60 1" class="jv-bn-lente3"/><path d="M-47 5C-47 52 47 52 47 5" class="jv-bn-lente2"/>
+          <circle r="35" class="jv-bn-centro"/><circle r="37.5" class="jv-bn-foton"/>
+          <g mask="url(#mk-${uid})">${ANEIS.map((rx, k) => `<ellipse rx="${rx}" ry="${f1(rx * 0.2)}" class="jv-bn-anel" style="stroke-width:${(1.7 - k * 0.2).toFixed(2)};opacity:${(0.95 - k * 0.12).toFixed(2)}" data-l="${f1(per(rx, rx * 0.2))}"/>`).join("")}</g>
+        </g>`;
   const buraco = {
     id: "buraconegro", nome: "Buraco negro",
-    svg(uid) { return `<svg class="jv-fig jv-bn" viewBox="-160 -130 320 260" role="img" aria-label="Buraco negro com disco de acreção girando">${BURACO.svg(0, 0, 40, 2, 0.95, uid)}</svg>`; },
-    quadro(sv, t) { BURACO.gira(sv, t * 0.6); },
+    svg(uid) { const real = !!document.querySelector(".jv.dourado");
+      return `<svg class="jv-fig jv-bn${real ? " real" : ""}" viewBox="-160 -130 320 260" role="img" aria-label="Buraco negro com disco de acreção girando"><g class="bn-arame">${arame(uid)}</g><g class="bn-real">${BURACO.svg(0, 0, 40, 2, 0.95, uid)}</g></svg>`; },
+    quadro(sv, t) {
+      sv.querySelectorAll(".jv-bn-anel").forEach((e, k) => { const rx = ANEIS[k], L = +e.dataset.l, w = 1.4 * Math.pow(ANEIS[0] / rx, 1.5); e.style.strokeDashoffset = f1(-(((w * t) / (2 * Math.PI)) * L) % L); });
+      BURACO.gira(sv, t * 0.6);
+    },
+  };
+  /* transição entre as duas formas, em todos os buracos negros da página (figura central e miniatura do painel) */
+  const suaveB = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
+  const voltaB = (v) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(v - 1, 3) + c1 * Math.pow(v - 1, 2); }; /* passa um pouco e volta */
+  BURACO.troca = (real, sv) => {
+    const lista = sv ? [sv] : [...document.querySelectorAll("svg.jv-bn")];
+    lista.forEach((s) => {
+      if (s.classList.contains("real") === real || s._trocando) return;
+      const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches; if (reduz) { s.classList.toggle("real", real); return; }
+      const sai = s.querySelector(real ? ".bn-arame" : ".bn-real"), entra = s.querySelector(real ? ".bn-real" : ".bn-arame");
+      const ns = "http://www.w3.org/2000/svg", gid = "bn-cl-" + Math.random().toString(36).slice(2, 8), fl = document.createElementNS(ns, "g"); /* clarão macio: degradê que some nas bordas + um anel */
+      fl.innerHTML = `<defs><radialGradient id="${gid}"><stop offset="0" stop-color="#fffbe8" stop-opacity="1"/><stop offset=".35" stop-color="#ffe7a8" stop-opacity=".7"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient></defs><circle class="bn-cl-luz" style="fill:url(#${gid})"/><circle class="bn-cl-anel" style="fill:none;stroke:#fff3cf;stroke-width:2"/>`; s.appendChild(fl);
+      const luz = fl.querySelector(".bn-cl-luz"), anel = fl.querySelector(".bn-cl-anel");
+      s._trocando = true; s.classList.add("trocando"); let t0 = null;
+      const q = (agora) => { if (t0 === null) t0 = agora; const t = (agora - t0) / 1000;
+        const u = suaveB(t / 0.55), v = suaveB((t - 0.45) / 0.75), c = Math.sin(Math.PI * Math.min(1, t / 0.9));
+        sai.setAttribute("transform", `rotate(${f1(220 * u)}) scale(${f1(Math.max(0.001, 1 - u))})`); sai.style.opacity = f1(1 - u);
+        entra.setAttribute("transform", `rotate(${f1(-160 * (1 - v))}) scale(${(v > 0 ? voltaB(v) : 0.001).toFixed(3)})`); entra.style.opacity = f1(v);
+        luz.setAttribute("r", f1(30 + 110 * suaveB(t / 0.8))); luz.style.opacity = f1(0.8 * c); anel.setAttribute("r", f1(20 + 150 * suaveB(t / 1.0))); anel.style.opacity = f1(0.9 * (1 - suaveB(t / 1.0)));
+        if (t < 1.25) requestAnimationFrame(q);
+        else { [sai, entra].forEach((g) => { g.removeAttribute("transform"); g.style.opacity = ""; }); fl.remove(); s.classList.toggle("real", real); s.classList.remove("trocando"); s._trocando = false; } };
+      requestAnimationFrame(q);
+    });
   };
   const FIGURAS = (window.FIGURAS = [planeta, galaxia, buraco]);
   FIGURAS.porId = (id) => FIGURAS.find((f) => f.id === id) || FIGURAS.find((f) => f.padrao);

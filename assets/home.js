@@ -56,6 +56,7 @@
   const gravarCor = (h) => { try { if (h === null) localStorage.removeItem(CHAVE_COR); else localStorage.setItem(CHAVE_COR, JSON.stringify(h)); } catch (e) {} };
   function aplicaCor(raiz, h) {
     raiz.classList.toggle("dourado", h === "dourado"); raiz.classList.toggle("esmeralda", h === "esmeralda"); raiz.style.removeProperty("--fg-hue");
+    if (window.BURACO && BURACO.troca) BURACO.troca(h === "dourado"); /* β 4.6: o buraco negro realista é só do título dourado; fora dele, volta o de arame (com animação) */
     if (h === "dourado") { ["--jv1", "--jv2", "--jv3"].forEach((v) => raiz.style.removeProperty(v)); raiz.classList.remove("cor-propria"); J.ouroTitulo(raiz, "dourado"); return; }
     if (h === "esmeralda") { /* título E figura central: as variáveis do título são as que a figura segue ("acompanhar a cor do tema") */
       raiz.style.setProperty("--jv1", "#7dffb2"); raiz.style.setProperty("--jv2", "#2ee59d"); raiz.style.setProperty("--jv3", "#14c8a8"); raiz.style.setProperty("--fg-hue", "150"); raiz.classList.add("cor-propria"); J.ouroTitulo(raiz, "esmeralda"); return; }
