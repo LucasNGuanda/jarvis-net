@@ -1,4 +1,4 @@
-/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; FE06 barras de erro; */
+/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; FE06 barras de erro; FE07 linearização; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -202,6 +202,43 @@
       const res = r ? { a: (r.mx[0] + r.mn[0]) / 2, da: (r.mx[0] - r.mn[0]) / 2 } : null;
       q("[data-v=lt]").innerHTML = vis("barras que a sua reta cruza", cruza + " de " + xs.length) + vis("k pela sua reta", n2(100 / a, 1) + " N/m") +
         (ext ? (r ? vis("retas extremas: a máx · a mín", n2(r.mx[0], 2) + " · " + n2(r.mn[0], 2)) + vis("a ± Δa → k ± Δk", n2(res.a, 2) + " ± " + n2(res.da, 2) + " → " + n2(100 / res.a, 1) + " ± " + n2((100 / res.a) * (res.da / res.a), 1) + " N/m") : vis("retas extremas", "nenhuma reta cruza todas as barras")) : "");
+    });
+  };
+
+  /* ---------- FE07 · linearização: escolha o que pôr em cada eixo até a curva virar reta ---------- */
+  SIM.lineariza = (el, F) => {
+    const W = 680, H = 300, ruido = [0.002, -0.003, 0.001, 0.003, -0.002, 0, -0.001, 0.002];
+    /* cada fenômeno é uma lei de potência y = C·x^n; o parâmetro físico sai de C */
+    const fen = {
+      queda: { nome: "queda livre", xl: "t", xu: "s", yl: "h", yu: "m", a: 0.2, b: 0.6, C: 4.9, n: 2, par: (C) => ["g = 2C", 2 * C, "m/s²"], lei: "h = ½ g t²" },
+      pend: { nome: "pêndulo simples", xl: "L", xu: "m", yl: "T", yu: "s", a: 0.2, b: 1.2, C: (2 * Math.PI) / Math.sqrt(9.8), n: 0.5, par: (C) => ["g = 4π²/C²", (4 * Math.PI * Math.PI) / (C * C), "m/s²"], lei: "T = 2π √(L/g)" },
+      boyle: { nome: "gás a temperatura constante", xl: "V", xu: "L", yl: "P", yu: "atm", a: 1, b: 4, C: 4, n: -1, par: (C) => ["nRT = C", C, "atm·L"], lei: "P = nRT / V" },
+      luz: { nome: "lâmpada pontual", xl: "d", xu: "m", yl: "I", yu: "W/m²", a: 0.2, b: 0.8, C: 0.32, n: -2, par: (C) => ["potência = 4πC", 4 * Math.PI * C, "W"], lei: "I = P / (4π d²)" },
+    };
+    const TX = [["1", "x"], ["2", "x²"], ["0.5", "√x"], ["-1", "1/x"], ["-2", "1/x²"]], TY = [["1", "y"], ["2", "y²"]];
+    let fk = "queda", q_ = 1, p_ = 1;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="bts" style="grid-column:1/-1">${botoes(Object.entries(fen).map(([k, f]) => [k, f.nome]), "f", "queda")}</div>
+      <div class="bts" style="grid-column:1/-1"><span class="tx2" style="margin-right:6px">eixo horizontal:</span><span data-v="bx"></span></div>
+      <div class="bts" style="grid-column:1/-1"><span class="tx2" style="margin-right:6px">eixo vertical:</span><span data-v="by"></span></div></div>
+      <div class="status">Os pontos foram medidos com uma pequena flutuação (cerca de 0,3%). Troque o que vai em cada eixo até os pontos ficarem em cima da reta ajustada (linha tracejada). Para uma lei y = C·xⁿ, o gráfico de y<sup>p</sup> × x<sup>q</sup> é uma reta exatamente quando q = p·n, e a inclinação vale C<sup>p</sup>. Daí sai o parâmetro físico. O indicador de curvatura é o maior desvio dos pontos até a reta, dividido pela altura total do gráfico.</div>`);
+    const q = (s) => el.querySelector(s);
+    const rotulos = () => { const f = fen[fk]; q("[data-v=bx]").innerHTML = botoes(TX.map(([k, r]) => [k, r.replace("x", f.xl)]), "tx", String(q_)); q("[data-v=by]").innerHTML = botoes(TY.map(([k, r]) => [k, r.replace("y", f.yl)]), "ty", String(p_)); liga(el, "tx", (k) => (q_ = +k)); liga(el, "ty", (k) => (p_ = +k)); };
+    liga(el, "f", (k) => { fk = k; q_ = 1; p_ = 1; rotulos(); });
+    rotulos();
+    const bonito = (m) => { const e = Math.pow(10, Math.floor(Math.log10(m / 3))), k = m / 3 / e; return (k < 1.5 ? 1 : k < 3.5 ? 2 : 5) * e; };
+    /* mínimos quadrados e curvatura (exportados para os testes) */
+    SIM.lineariza._ajuste = (X, Y) => { const n = X.length, mx = X.reduce((s, v) => s + v, 0) / n, my = Y.reduce((s, v) => s + v, 0) / n; let sxy = 0, sxx = 0; X.forEach((x, i) => { sxy += (x - mx) * (Y[i] - my); sxx += (x - mx) ** 2; }); const a = sxy / sxx, b = my - a * mx, res = Y.map((y, i) => y - (a * X[i] + b)); return { a, b, curv: Math.max(...res.map(Math.abs)) / (Math.max(...Y) - Math.min(...Y)) }; };
+    anima(el, F, () => {
+      const f = fen[fk], xs = ruido.map((_, i) => f.a + ((f.b - f.a) * i) / 7), ys = xs.map((x, i) => f.C * Math.pow(x, f.n) * (1 + ruido[i]));
+      const X = xs.map((x) => Math.pow(x, q_)), Y = ys.map((y) => Math.pow(y, p_)), aj = SIM.lineariza._ajuste(X, Y), reta = aj.curv < 0.015;
+      const xmax = Math.max(...X) * 1.12, ymax = Math.max(...Y) * 1.15, tx = bonito(xmax), ty = bonito(ymax), xt = [], yt = [];
+      for (let v = tx; v < xmax * 0.97; v += tx) xt.push(+v.toPrecision(3)); for (let v = ty; v < ymax * 0.97; v += ty) yt.push(+v.toPrecision(3));
+      const nomeX = TX.find(([k]) => +k === q_)[1].replace("x", f.xl), nomeY = TY.find(([k]) => +k === p_)[1].replace("y", f.yl);
+      const sv = D.graf({ x0: 80, y0: 255, w: 540, h: 215, xmax, ymin: 0, ymax, xlab: nomeX, ylab: nomeY, xt, yt, curvas: [{ pts: [[0, aj.b], [xmax, aj.a * xmax + aj.b]].map(([x, y]) => [x, Math.max(0, Math.min(ymax, y))]), cor: reta ? "var(--ok)" : "var(--ink3)", trac: true }], pontos: X.map((x, i) => [x, Y[i]]) }) + D.txt(620, 30, f.lei, "txm", "end");
+      q("[data-v=sv]").innerHTML = sv;
+      const par = f.par(Math.pow(Math.abs(aj.a), 1 / p_)), certo = Math.abs(q_ - p_ * f.n) < 1e-9;
+      q("[data-v=lt]").innerHTML = vis("curvatura (maior desvio / altura)", n2(aj.curv * 100, 1) + "%") + vis("parece reta?", reta ? "sim!" : "não: ainda é curva") + vis("inclinação", n2(aj.a, 4)) + (reta && certo ? vis(par[0], n2(par[1], 3) + " " + par[2]) : vis("parâmetro", "acerte a reta primeiro"));
     });
   };
 })();

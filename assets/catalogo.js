@@ -175,7 +175,7 @@ window.CATALOGO = [
   ]},
   { id:"FEg", area:"lab", letra:"G", cor:"--mO", nome:"Gráficos e ajustes", desc:"Gráficos com barras de erro, linearização, log-log e mínimos quadrados.", temas:[
     ["FE06","Gráficos com barras de erro",[],true],
-    ["FE07","Linearização: transformando curvas em retas"],
+    ["FE07","Linearização: transformando curvas em retas",[],true],
     ["FE08","Gráficos log-log e mono-log",["★"]],
     ["FE09","Mínimos quadrados (regressão linear)",["∫"]],
   ]},
