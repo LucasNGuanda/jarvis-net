@@ -53,6 +53,7 @@
   /* simulação "seca" para testes: devolve [estado, colisões, energia inicial, energia final] */
   SIM.discosRodar = (P, y0, T, h = 2e-4) => { const M = modelo(P); let y = [...y0], n = 0; const E0 = M.energia(y); for (let t = 0; t < T; t += h) { y = M.passo(y, h); n += M.colide(y); } return { y, n, E0, E1: M.energia(y), omega: M.omega, kappa: M.kappa, A: M.A, B: M.B }; };
 
+  /* nome: "Dois discos, duas molas e duas paredes" · matéria: Física · tema: EP10 */
   SIM.discos = (el, F) => {
     const W = 720, H = 300, esc = 320, x0p = 40, chao = H - 40, X = (x) => x0p + x * esc, Y = (y) => chao - y * esc;
     let modo = "exato", y, n, E0, vivo = true, ult = null, rodando = true, t = 0;

@@ -25,6 +25,7 @@
   const sob = (n) => String(n).split("").map((c) => "⁰¹²³⁴⁵⁶⁷⁸⁹"[+c]).join(""), sub = (n) => String(n).split("").map((c) => "₀₁₂₃₄₅₆₇₈₉"[+c]).join("");
 
   /* ---------- B01 · monte o átomo ---------- */
+  /* nome: "Monte o átomo: prótons, nêutrons e elétrons" · matéria: Química · tema: B01 */
   SIM.atomo = (el, F) => {
     const W = 680, H = 300;
     let p = 6, n = 6, e = 6, tt = 0;
@@ -55,6 +56,7 @@
   };
 
   /* ---------- B02 · massa atômica como média ponderada ---------- */
+  /* nome: "Massa atômica: a média que a tabela periódica mostra" · matéria: Química · tema: B02 */
   SIM.isotopos = (el, F) => {
     const W = 680, H = 280, EL = { Li: [6, 7, 7.6, 6.94, "lítio"], B: [10, 11, 19.9, 10.81, "boro"], Cl: [35, 37, 75.8, 35.45, "cloro"], Cu: [63, 65, 69.2, 63.55, "cobre"], Br: [79, 81, 50.7, 79.9, "bromo"] };
     let k = "Cl";
@@ -81,6 +83,7 @@
   };
 
   /* ---------- B03 · Rutherford: partículas alfa contra uma folha de metal ---------- */
+  /* nome: "Partículas alfa contra o átomo: Thomson ou Rutherford?" · matéria: Química · tema: B03 */
   SIM.rutherford = (el, F) => {
     const W = 680, H = 300, ALVO = { au: ["ouro", 79], ag: ["prata", 47], al: ["alumínio", 13] };
     let alvo = "au", modelo = "r", cache = "", tt = 0, caminhos = [];
@@ -112,6 +115,7 @@
   };
 
   /* ---------- B04 · preencha os orbitais (diagrama de Pauling, Hund e Pauli) ---------- */
+  /* nome: "Preencha os orbitais: Pauling, Pauli e Hund" · matéria: Química · tema: B04 */
   SIM.orbitais = (el, F) => {
     const W = 680, H = 300, ORD = [["1s", 2], ["2s", 2], ["2p", 6], ["3s", 2], ["3p", 6], ["4s", 2], ["3d", 10], ["4p", 6]];
     SIM.orbitais._config = (Z) => { const oc = {}; let r = Z; ORD.forEach(([s, c]) => { const k = Math.min(c, r); oc[s] = k; r -= k; }); if (Z === 24) { oc["4s"] = 1; oc["3d"] = 5; } if (Z === 29) { oc["4s"] = 1; oc["3d"] = 10; } return oc; };
@@ -135,6 +139,7 @@
   };
 
   /* ---------- B05 · orbitais híbridos girando ---------- */
+  /* nome: "Orbitais híbridos em 3D: sp, sp² e sp³" · matéria: Química · tema: B05 */
   SIM.hibridos = (el, F) => {
     const W = 680, H = 300, T = Math.sqrt(8) / 3;
     const TIPOS = { sp: { n: 2, dir: [[1, 0, 0], [-1, 0, 0]], ang: "180°", geo: "linear", ex: "BeH₂, CO₂, C₂H₂ (cada carbono)", p: 2 }, sp2: { n: 3, dir: [[1, 0, 0], [-0.5, 0, 0.866], [-0.5, 0, -0.866]], ang: "120°", geo: "trigonal plana", ex: "BF₃, C₂H₄ (cada carbono)", p: 1 }, sp3: { n: 4, dir: [[0, 1, 0], [T, -1 / 3, 0], [-T / 2, -1 / 3, T * 0.866], [-T / 2, -1 / 3, -T * 0.866]], ang: "109,5°", geo: "tetraédrica", ex: "CH₄, NH₃, H₂O", p: 0 } };
@@ -174,6 +179,7 @@
   /* desenha a tabela: cor(Z) → cor CSS; devolve o SVG (células de 32 × 30) */
   const desenhaTabela = (cor, sel, x0 = 46, y0 = 16, cw = 33, ch = 28) => { let s = ""; for (let Z = 1; Z <= 118; Z++) { const [l, c] = pos(Z), x = x0 + (c - 1) * cw, y = y0 + (l - 1) * ch + (l > 7 ? 10 : 0); s += `<g data-z="${Z}" style="cursor:pointer"><rect x="${x}" y="${y}" width="${cw - 2}" height="${ch - 2}" rx="3" style="fill:${cor(Z)};stroke:${Z === sel ? "var(--ink)" : "var(--bg)"};stroke-width:${Z === sel ? 2.5 : 1}"/><text x="${x + (cw - 2) / 2}" y="${y + 18}" text-anchor="middle" style="font:600 12px var(--f-text);fill:#10131a;pointer-events:none">${SIMB[Z - 1]}</text></g>`; } for (let g = 1; g <= 18; g++) s += D.txt(x0 + (g - 1) * cw + (cw - 2) / 2, y0 - 4, String(g), "tx2"); for (let p = 1; p <= 7; p++) s += D.txt(x0 - 8, y0 + (p - 1) * ch + 18, String(p), "tx2", "end"); return s; };
   SIM.desenhaTabela = desenhaTabela;
+  /* nome: "Tabela periódica: clique e leia o endereço" · matéria: Química · tema: B06 */
   SIM.tabela = (el, F) => {
     const W = 680, H = 300, COR = { bloco: { s: "#ef8a80", p: "#f1d36b", d: "#7fb0f5", f: "#8fd6a8" }, tipo: { metal: "#7fb0f5", semimetal: "#8fd6a8", ametal: "#f1d36b" }, estado: { sólido: "#aeb9cc", líquido: "#7fb0f5", gás: "#f1d36b" } };
     let modo = "bloco", sel = 11;
@@ -193,6 +199,7 @@
   };
 
   /* ---------- B07 · tendências periódicas, de Z = 1 a 36 ---------- */
+  /* nome: "Tendências periódicas: procure o desenho que se repete" · matéria: Química · tema: B07 */
   SIM.tendencias = (el, F) => {
     const W = 680, H = 300;
     const EN = [2.2, null, 0.98, 1.57, 2.04, 2.55, 3.04, 3.44, 3.98, null, 0.93, 1.31, 1.61, 1.9, 2.19, 2.58, 3.16, null, 0.82, 1.0, 1.36, 1.54, 1.63, 1.66, 1.55, 1.83, 1.88, 1.91, 1.9, 1.65, 1.81, 2.01, 2.18, 2.55, 2.96, 3.0];
@@ -225,6 +232,7 @@
   };
 
   /* ---------- B08 · caminhe pela série de decaimento ---------- */
+  /* nome: "Caminhe pela série radioativa: α e β até o chumbo" · matéria: Química · tema: B08 */
   SIM.qDecaimento = (el, F) => {
     const W = 680, H = 300, INI = { u238: [92, 238, [82, 206]], th232: [90, 232, [82, 208]], u235: [92, 235, [82, 207]] };
     let k = "u238", cam = [], msg = "";

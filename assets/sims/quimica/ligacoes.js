@@ -14,6 +14,7 @@
   const mdc = (a, b) => (b ? mdc(b, a % b) : a);
 
   /* ---------- C01 · monte o composto iônico ---------- */
+  /* nome: "Monte o composto iônico: fórmula e força da ligação" · matéria: Química · tema: C01 */
   SIM.ionica = (el, F) => {
     const W = 680, H = 260, CAT = { Na: ["Na⁺", 1, 102, "sódio"], K: ["K⁺", 1, 138, "potássio"], Mg: ["Mg²⁺", 2, 72, "magnésio"], Ca: ["Ca²⁺", 2, 100, "cálcio"], Al: ["Al³⁺", 3, 54, "alumínio"] }, ANI = { F: ["F⁻", 1, 133, "fluoreto"], Cl: ["Cl⁻", 1, 181, "cloreto"], O: ["O²⁻", 2, 140, "óxido"], S: ["S²⁻", 2, 184, "sulfeto"] };
     let c = "Na", a = "Cl";
@@ -74,6 +75,7 @@
       if (q) { let melhor = 0, dm = -1; for (let k = 0; k < 24; k++) { const t = (k * 15 * Math.PI) / 180, m = Math.min(...usados.map((u) => Math.abs(Math.atan2(Math.sin(t - u), Math.cos(t - u)))), 9); if (m > dm + 1e-9) { dm = m; melhor = t; } } const cx = x + dx + 24 * Math.cos(melhor), cy = y + dy + 24 * Math.sin(melhor); s += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="7.5" style="fill:var(--bg);stroke:var(--warn);stroke-width:1.2"/>` + D.txt(cx, cy + 3.6, (Math.abs(q) > 1 ? Math.abs(q) : "") + (q > 0 ? "+" : "−"), "tx2", "middle", 'style="font-size:10px;fill:var(--warn);font-weight:700"'); } });
     return s;
   };
+  /* nome: "Estruturas de Lewis e ressonância" · matéria: Química · tema: C02 */
   SIM.ressonancia = (el, F) => {
     const W = 680, H = 250, M = [["H2O", "H₂O", "água", "96 pm"], ["CO2", "CO₂", "dióxido de carbono", "116 pm"], ["N2", "N₂", "nitrogênio", "110 pm"], ["O3", "O₃", "ozônio", "128 pm"], ["NO3", "NO₃⁻", "íon nitrato", "124 pm"], ["CO3", "CO₃²⁻", "íon carbonato", "129 pm"], ["C6H6", "C₆H₆", "benzeno", "140 pm (C–C)"]];
     let m = "O3", k = 0;
@@ -97,6 +99,7 @@
      "Martelar" desloca as fileiras de cima de uma posição: os cátions continuam mergulhados nos mesmos elétrons, e a ligação não se rompe. */
   const sl = (rot, c, min, max, passo, val) => `<div class="ctrl"><label>${rot}</label><input type="range" min="${min}" max="${max}" step="${passo}" value="${val}" data-c="${c}"><output data-o="${c}"></output></div>`;
   const anima = (el, F, fn) => { let vivo = true, ult = null; const laco = (ts) => { if (!vivo) return; const dt = ult === null ? 0 : Math.min(0.05, (ts - ult) / 1000); ult = ts; fn(dt); requestAnimationFrame(laco); }; requestAnimationFrame(laco); F.aoSair(() => (vivo = false)); };
+  /* nome: "O mar de elétrons: corrente, calor e martelo" · matéria: Química · tema: C03 */
   SIM.metal = (el, F) => {
     const W = 680, H = 250, NX = 12, NY = 4, PX = 50, X0 = 65, Y0 = 50, PY = 50;
     SIM.metal._corrente = (V, T) => V / (1 + 0.004 * (T - 20));
@@ -137,6 +140,7 @@
       return `<line x1="${cx}" y1="${cy}" x2="${ax.toFixed(1)}" y2="${ay.toFixed(1)}" style="stroke:var(--ink2);stroke-width:${(3 + 1.6 * t.z).toFixed(1)};stroke-linecap:round"/><circle cx="${ax.toFixed(1)}" cy="${ay.toFixed(1)}" r="${r.toFixed(1)}" style="fill:color-mix(in srgb,var(--mod) ${t.z > 0 ? 55 : 30}%,var(--bg));stroke:var(--mod);stroke-width:1.5"/>` + D.txt(ax, ay + 4, t.rot, "tx2", "middle", 'style="fill:var(--ink);font-weight:700"'); };
     return its.filter((t) => t.z < 0).map(des).join("") + `<circle cx="${cx}" cy="${cy}" r="14" style="fill:color-mix(in srgb,var(--bad) 45%,var(--bg));stroke:var(--bad);stroke-width:1.5"/>` + D.txt(cx, cy + 4, c, "tx2", "middle", 'style="fill:var(--ink);font-weight:700"') + its.filter((t) => t.z >= 0).map(des).join("");
   };
+  /* nome: "Monte a geometria: átomos ligados e pares isolados" · matéria: Química · tema: C04 */
   SIM.vsepr = (el, F) => {
     const W = 680, H = 270, K = Object.keys(SIM.AXE); let k = "4,0", fi = 0.5, gira = true, pares = true;
     const nome = (q) => { const [X, E] = q.split(",").map(Number); return "AX" + sub(X) + (E ? "E" + sub(E) : ""); };
@@ -154,6 +158,7 @@
      Molécula AX₂: duas ligações com momento μ_lig formando o ângulo θ. As componentes perpendiculares à bissetriz se cancelam e as paralelas se somam:
      μ = 2·μ_lig·cos(θ/2). Conferido em Python: θ = 180°, μ = 0; H₂O (104,5°; μ_lig = 1,51 D): 1,85 D; SO₂ (119°; 1,61 D): 1,63 D; H₂S (92°; 0,70 D): 0,97 D.
      Os μ_lig dos botões foram calculados ao contrário, a partir do momento dipolar medido da molécula (H₂O 1,85 D; SO₂ 1,63 D; H₂S 0,97 D): são momentos de ligação EFETIVOS (incluem o efeito dos pares isolados). */
+  /* nome: "Soma de dipolos: do ângulo ao momento da molécula" · matéria: Química · tema: C05 */
   SIM.qDipolo = (el, F) => {
     const W = 680, H = 270; let th = 104.5, mb = 1.51;
     SIM.qDipolo._conta = (mb, th) => 2 * mb * Math.cos((th * Math.PI) / 360);
@@ -182,6 +187,7 @@
      Extrapolação: reta de mínimos quadrados pelos períodos 3, 4 e 5, prolongada até o 2º período (o que o hidreto "deveria" ferver só com as forças dos irmãos mais pesados).
      Conferido em Python: grupo 14: −144 (real −162; diferença −18); grupo 15: −127 (real −33; +94); grupo 16: −92 (real 100; +192); grupo 17: −112 (real 20; +132). */
   SIM.HIDR = { 14: [["CH₄", -162], ["SiH₄", -112], ["GeH₄", -88], ["SnH₄", -52]], 15: [["NH₃", -33], ["PH₃", -88], ["AsH₃", -62], ["SbH₃", -17]], 16: [["H₂O", 100], ["H₂S", -60], ["H₂Se", -41], ["H₂Te", -2]], 17: [["HF", 20], ["HCl", -85], ["HBr", -67], ["HI", -35]] };
+  /* nome: "Os hidretos e a ligação de hidrogênio" · matéria: Química · tema: C06 */
   SIM.hidretos = (el, F) => {
     const W = 680, H = 300, COR = { 14: "var(--ink2)", 15: "var(--ok)", 16: "var(--mA)", 17: "var(--warn)" }, on = { 14: true, 15: false, 16: true, 17: false }; let ext = false, foco = 16;
     SIM.hidretos._extra = (g) => { const y = SIM.HIDR[g].slice(1).map((v) => v[1]), m = (y[0] + y[1] + y[2]) / 3, b = (y[2] - y[0]) / 2; return m - 2 * b; };
@@ -226,6 +232,7 @@
       if (nomes) s += D.txt(cx + (nv[1] === 4 ? 56 : 28), yy - 5, nv[0], "tx2", "start", `style="fill:${cor};font-size:11px;font-weight:700"`); });
     return s + (nomes ? D.txt(xa, y + h + 6, "átomo", "tx2") + D.txt(cx, y + h + 6, "molécula", "tx2") + D.txt(xb, y + h + 6, "átomo", "tx2") : "");
   };
+  /* nome: "Preencha o diagrama de orbitais moleculares" · matéria: Química · tema: C07 */
   SIM.orbmol = (el, F) => {
     const W = 680, H = 300, K = Object.keys(SIM.OM); let k = "O2", n = 12;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>

@@ -9,6 +9,7 @@
   const sl = (rot, c, min, max, passo, val) => `<div class="ctrl"><label>${rot}</label><input type="range" min="${min}" max="${max}" step="${passo}" value="${val}" data-c="${c}"><output data-o="${c}"></output></div>`;
 
   /* ---------- O01 · a onda na corda ---------- */
+  /* nome: "A onda numa corda" · matéria: Física · tema: O01 */
   SIM.ondaCorda = (el, F) => {
     const W = 680, H = 260, Lx = 4;
     let modo = "trans", fim = "fixa", vivo = true, t0 = performance.now();
@@ -51,6 +52,7 @@
   };
 
   /* ---------- O02 · interferência de duas fontes ---------- */
+  /* nome: "Duas fontes na cuba de ondas" · matéria: Física · tema: O02 */
   SIM.interferencia = (el, F) => {
     const N = 200, PX = 2; /* grade de 200 × 200, mostrada em 400 × 400 */
     let vivo = true, mic = [140, 60], nodais = true, t0 = performance.now();
@@ -100,6 +102,7 @@
   };
 
   /* ---------- O03 · ondas estacionárias ---------- */
+  /* nome: "Cordas e tubos" · matéria: Física · tema: O03 */
   SIM.estacionaria = (el, F) => {
     const W = 680, H = 280;
     let modo = "corda", viajantes = false, vivo = true, t0 = performance.now();
@@ -146,6 +149,7 @@
   };
 
   /* ---------- O04 · efeito Doppler e cone de Mach ---------- */
+  /* nome: "Frentes de onda de uma fonte em movimento" · matéria: Física · tema: O04 */
   SIM.doppler = (el, F) => {
     const W = 680, H = 320, v = 1; /* velocidade do som = 1 unidade; período de emissão 0,35 */
     let vivo = true, frentes = [], xs = 60, t = 0, ult = null, tEmit = 0;

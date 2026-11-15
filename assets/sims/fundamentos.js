@@ -14,6 +14,7 @@
   const mostra = (el, cs, dec = {}) => cs.forEach((c) => (el.querySelector(`[data-o=${c}]`).textContent = n2(val(el, c), dec[c] ?? 1)));
 
   /* ---------- F01 · a mesma bola vista de dois referenciais ---------- */
+  /* nome: "A mesma bola vista de dois referenciais" · matéria: Física · tema: F01 */
   SIM.referencial = (el, F) => {
     const g = 9.8, W = 680, H = 300;
     let ref = "chao", t = 0, trilha = [];
@@ -46,6 +47,7 @@
   };
 
   /* ---------- F02 · vetores: soma, diferença, produto escalar e vetorial ---------- */
+  /* nome: "Soma, diferença e produtos de dois vetores" · matéria: Física · tema: F02 */
   SIM.vetores = (el, F) => {
     const W = 460, H = 420;
     let op = "soma";
@@ -74,6 +76,7 @@
   };
 
   /* ---------- F03 · o círculo trigonométrico ---------- */
+  /* nome: "O círculo trigonométrico e as senoides" · matéria: Física · tema: F03 */
   SIM.circulo = (el, F) => {
     const W = 700, H = 300;
     let girando = false;
@@ -103,6 +106,7 @@
   };
 
   /* ---------- F04 · derivada = inclinação, integral = área ---------- */
+  /* nome: "Derivada como inclinação, integral como área" · matéria: Física · tema: F04 */
   SIM.derivada = (el, F) => {
     const W = 680, H = 400;
     const FS = { muv: { nome: "MUV: x = 2 + 4t − t²", x: (t) => 2 + 4 * t - t * t, v: (t) => 4 - 2 * t }, osc: { nome: "oscilação: x = 3 sen t", x: (t) => 3 * Math.sin(t), v: (t) => 3 * Math.cos(t) }, cub: { nome: "cúbica: x = t³ − 6t² + 9t", x: (t) => t ** 3 - 6 * t * t + 9 * t, v: (t) => 3 * t * t - 12 * t + 9 } };
@@ -137,6 +141,7 @@
   };
 
   /* ---------- F05 · polinômios de Taylor ---------- */
+  /* nome: "Polinômios de Taylor" · matéria: Física · tema: F05 */
   SIM.taylor = (el, F) => {
     const W = 680, H = 340;
     const fat = (n) => (n <= 1 ? 1 : n * fat(n - 1));
@@ -171,6 +176,7 @@
   };
 
   /* ---------- A19 · análise dimensional ---------- */
+  /* nome: "Descobridor de fórmulas" · matéria: Física · tema: A19 */
   SIM.dimensional = (el, F) => {
     const D = { L: [0, 1, 0], g: [0, 1, -2], m: [1, 0, 0], k: [1, 0, -2], T: [1, 1, -2], mu: [1, -1, 0], E: [1, 2, -2], rho: [1, -3, 0], t: [0, 0, 1], hb: [1, 2, -1], G: [-1, 3, -2], c: [0, 1, -1], lam: [0, 1, 0], h: [0, 1, 0] };
     const PROB = {

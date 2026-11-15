@@ -12,6 +12,7 @@
 
   /* ---------- 1. Partícula num campo magnético ----------
      Unidades de tela: ω = ω0·(B/Bref); raio = v/ω. Valores físicos mostrados com a partícula escolhida. */
+  /* nome: "Círculo, seletor, cíclotron" · matéria: Física · tema: C12, C13 */
   SIM.particulaB = (el, F) => {
     const W = 760, H = 400; const [cv, cx] = canvas(el, W, H);
     el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls">
@@ -78,6 +79,7 @@
 
   /* ---------- 2. Espira num campo uniforme: torque e motor ----------
      Vista de cima do eixo: a espira é um segmento que gira; τ = N i A B sen θ. */
+  /* nome: "Espira num campo: torque e motor" · matéria: Física · tema: C13 */
   SIM.espira = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 340 260" width="340" class="e1"></svg><svg viewBox="0 0 340 260" width="340" class="e2"></svg></div>
       <div class="leitor" data-v="l"></div><div class="ctrls">
@@ -117,6 +119,7 @@
 
   /* ---------- 3. Campo magnético de correntes retilíneas (perpendiculares à tela) ----------
      B = μ0 I /(2π r) φ̂. Linhas de campo = curvas de nível de A_z = −(μ0/2π) Σ I ln r. */
+  /* nome: "Campo magnético de correntes" · matéria: Física · tema: C14 */
   SIM.camposB = (el, F) => {
     const W = 760, H = 400, PX = 10; const [cv, cx] = canvas(el, W, H);
     el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls"><div class="bts" style="grid-column:1/-1">
@@ -159,6 +162,7 @@
   /* ---------- 4. Indução: ímã e espira; barra nos trilhos ----------
      Ímã = dipolo pontual no eixo: Φ = μ0 m R² / (2 (R² + d²)^{3/2}) (exato), fem = −N dΦ/dt.
      Barra: fem = BLv, i = BLv/R, força magnética −B²L²v/R; com força F externa: v → FR/(B²L²). */
+  /* nome: "Indução: ímã, espira e barra" · matéria: Física · tema: C15 */
   SIM.inducao = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 720 230" width="720" class="cena"></svg></div><div class="palco"><svg viewBox="0 0 720 150" width="720" class="gr"></svg></div>
       <div class="leitor" data-v="l"></div><div class="ctrls">
@@ -234,6 +238,7 @@
 
   /* ---------- 5. RLC: oscilação e amortecimento; RL ----------
      L q'' + R q' + q/C = 0. Câmera lenta: o período aparece com ~2,5 s. */
+  /* nome: "LC, RLC e RL" · matéria: Física · tema: C15b */
   SIM.rlc = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 360 230" width="360" class="g1"></svg><svg viewBox="0 0 300 230" width="300" class="g2"></svg></div>
       <div class="leitor" data-v="l"></div><div class="ctrls">
@@ -278,6 +283,7 @@
   };
 
   /* ---------- 6. Fasores num RLC série alimentado ---------- */
+  /* nome: "RLC série: fasores e ressonância" · matéria: Física · tema: C15c */
   SIM.fasores = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 300 280" width="300" class="f1"></svg><svg viewBox="0 0 360 280" width="360" class="f2"></svg></div>
       <div class="leitor" data-v="l"></div><div class="ctrls">
@@ -308,6 +314,7 @@
   };
 
   /* ---------- 7. Onda eletromagnética ---------- */
+  /* nome: "Onda eletromagnética" · matéria: Física · tema: C15d */
   SIM.ondaEM = (el, F) => {
     const W = 760, H = 320; const [cv, cx] = canvas(el, W, H);
     el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls">

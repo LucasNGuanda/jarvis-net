@@ -25,6 +25,7 @@
   }
 
   /* ---------- O08 · refração, reflexão total, Brewster ---------- */
+  /* nome: "Refração, reflexão total e Brewster" · matéria: Física · tema: O08 */
   SIM.refracao = (el, F) => {
     const MEIOS = { ar: ["ar", 1.0], agua: ["água", 1.33], vidro: ["vidro", 1.5], diam: ["diamante", 2.42] };
     let m1 = "ar", m2 = "vidro";
@@ -68,6 +69,7 @@
   };
 
   /* ---------- O09 · lentes delgadas e os raios principais ---------- */
+  /* nome: "Lente delgada: raios principais e imagem" · matéria: Física · tema: O09 */
   SIM.lente = (el, F) => {
     const W = 760, H = 380, ox = 380, oy = 190, esc = 6.5, yo = 5;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -115,6 +117,7 @@
   };
 
   /* ---------- O10b · fendas: Young, fenda simples e rede ---------- */
+  /* nome: "Fendas: Young, fenda simples e rede" · matéria: Física · tema: O10b */
   SIM.fendas = (el, F) => {
     const W = 640, Dm = 1, Ymax = 50e-3;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} 320" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -153,6 +156,7 @@
   };
 
   /* ---------- O10b · cores de filme fino (bolha de sabão) ---------- */
+  /* nome: "As cores de um filme de sabão" · matéria: Física · tema: O10b */
   SIM.filme = (el, F) => {
     const W = 640;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} 330" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -182,6 +186,7 @@
   };
   /* ================= Óptica, parte 2 (O05, O06, O07, O10) ================= */
   /* ---------- O05 · sombra e penumbra ---------- */
+  /* nome: "Sombra, penumbra e fonte extensa" · matéria: Física · tema: O05 */
   SIM.sombra = (el, F) => {
     const W = 700, H = 320, xs = 70, xo = 330, xsc = 650, c = 160;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -209,6 +214,7 @@
   };
 
   /* ---------- O06 · dois espelhos planos em ângulo (caleidoscópio) ---------- */
+  /* nome: "Dois espelhos em ângulo" · matéria: Física · tema: O06 */
   SIM.caleidoscopio = (el, F) => {
     const W = 520, H = 420, ox = 260, oy = 210, R0 = 150;
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg><div class="leitor" data-v="lt" style="flex-direction:column;align-items:stretch"></div></div>
@@ -251,6 +257,7 @@
   };
 
   /* ---------- O07 · espelho esférico ---------- */
+  /* nome: "Espelho esférico: raios e imagem" · matéria: Física · tema: O07 */
   SIM.espelhoEsf = (el, F) => {
     const W = 760, H = 380, ox = 600, oy = 190, esc = 7, yo = 5;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -295,6 +302,7 @@
   };
 
   /* ---------- O10 · microscópio e luneta ---------- */
+  /* nome: "Microscópio e luneta" · matéria: Física · tema: O10 */
   SIM.instrumento = (el, F) => {
     const W = 760, H = 320, oy = 160;
     let modo = "micro";

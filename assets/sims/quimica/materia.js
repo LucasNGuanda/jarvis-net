@@ -17,6 +17,7 @@
   const anima = (el, F, fn) => { let vivo = true, ult = null; const laco = (ts) => { if (!vivo) return; const dt = ult === null ? 0 : Math.min(0.05, (ts - ult) / 1000); ult = ts; fn(dt); requestAnimationFrame(laco); }; requestAnimationFrame(laco); F.aoSair(() => (vivo = false)); };
 
   /* ---------- A02 · a amostra misteriosa: densidade é intensiva, massa e volume são extensivas ---------- */
+  /* nome: "A amostra misteriosa: massa, volume e densidade" · matéria: Química · tema: A02 */
   SIM.densidade = (el, F) => {
     const W = 680, H = 300, MAT = { al: ["alumínio", 2.7, "#b8c4d6"], pi: ["pirita", 5.0, "#cbb86a"], fe: ["ferro", 7.87, "#8d99ae"], cu: ["cobre", 8.96, "#d08a5b"], ag: ["prata", 10.5, "#dfe6f0"], pb: ["chumbo", 11.3, "#7d8597"], au: ["ouro", 19.3, "#f2c84b"] };
     let mat = "al", misterio = null, revelado = true;
@@ -56,6 +57,7 @@
   };
 
   /* ---------- A03 · em que estado está? PF e PE de nove substâncias e um modelo de partículas ---------- */
+  /* nome: "Em que estado está?" · matéria: Química · tema: A03 */
   SIM.estados = (el, F) => {
     const W = 680, H = 320, SUB = [["oxigênio", -218.8, -183.0], ["nitrogênio", -210.0, -195.8], ["etanol", -114.1, 78.4], ["mercúrio", -38.8, 356.7], ["água", 0, 100], ["naftaleno", 80.3, 218], ["enxofre", 115.2, 444.6], ["chumbo", 327.5, 1749], ["ferro", 1538, 2862]];
     const X0 = Math.asinh(-2.5), X1 = Math.asinh(30), xDe = (T) => (Math.asinh(T / 100) - X0) / (X1 - X0), TDe = (u) => 100 * Math.sinh(X0 + u * (X1 - X0));
@@ -96,6 +98,7 @@
   };
 
   /* ---------- A04 · a curva denuncia: substância pura, mistura comum, eutética ou azeotrópica (curvas esquemáticas) ---------- */
+  /* nome: "A curva denuncia: pura, comum, eutética ou azeotrópica?" · matéria: Química · tema: A04 */
   SIM.qCurvas = (el, F) => {
     const W = 680, H = 300, TIPOS = { pura: ["substância pura", 0, 0], comum: ["mistura comum", 9, 9], eut: ["mistura eutética", 0, 9], aze: ["mistura azeotrópica", 9, 0] };
     const ordem = ["pura", "comum", "eut", "aze"].sort(() => Math.random() - 0.5), LET = ["A", "B", "C", "D"];
@@ -136,6 +139,7 @@
   };
 
   /* ---------- A05 · monte a separação: escolha a fração, escolha o método, veja o que sai ---------- */
+  /* nome: "Monte a separação" · matéria: Química · tema: A05 */
   SIM.separacao = (el, F) => {
     const W = 680, H = 250, COR = { areia: "#c9a66b", sal: "#e8edf5", ferro: "#8d99ae", água: "#5b8def", óleo: "#e0c341", álcool: "#9ad1c9" };
     const DES = { 1: ["areia", "sal", "ferro"], 2: ["água", "óleo", "sal"], 3: ["água", "álcool", "areia"] }, LIQ = ["água", "óleo", "álcool"];

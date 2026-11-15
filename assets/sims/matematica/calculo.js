@@ -63,6 +63,7 @@
   const clip = (id, o) => `<defs><clipPath id="${id}"><rect x="${o.l}" y="${o.t}" width="${o.W - o.l - o.r}" height="${o.H - o.t - o.b}"/></clipPath></defs>`;
 
   /* ---------- CE01 · W de Lambert: a função e a sua inversa ---------- */
+  /* nome: "W como espelho de x·eˣ, e Newton calculando" · matéria: Matemática · tema: CE01 */
   SIM.lambert = (el, F) => {
     const o = { W: 470, H: 470, l: 40, r: 14, t: 12, b: 30, x0: -4.2, x1: 4.2, y0: -4.2, y1: 4.2 }, P = quadro(o);
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:start"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg>
@@ -107,6 +108,7 @@
   };
 
   /* ---------- CE02 · Gama de Euler: o gráfico e a área ---------- */
+  /* nome: "Γ(x): a curva e a área" · matéria: Matemática · tema: CE02 */
   SIM.gama = (el, F) => {
     const o = { W: 470, H: 380, l: 40, r: 12, t: 12, b: 30, x0: -4.6, x1: 5.2, y0: -6, y1: 8 }, P = quadro(o);
     const o2 = { W: 400, H: 380, l: 40, r: 12, t: 12, b: 30, x0: 0, x1: 12, y0: 0, y1: 1.2 };
@@ -158,6 +160,7 @@
   };
 
   /* ---------- CE03 · ∮: circulação e fluxo, Green na prática ---------- */
+  /* nome: "Circulação e fluxo: a soma na borda × a soma dentro" · matéria: Matemática · tema: CE03 */
   SIM.circulacao = (el, F) => {
     const o = { W: 470, H: 470, l: 30, r: 10, t: 10, b: 24, x0: -3, x1: 3, y0: -3, y1: 3 }, P = quadro(o);
     const CAMPOS = {
@@ -219,6 +222,7 @@
   const liga = (el, attr, fn) => el.querySelectorAll(`[data-${attr}]`).forEach((b) => b.addEventListener("click", () => { el.querySelectorAll(`[data-${attr}]`).forEach((x) => x.setAttribute("aria-pressed", x === b)); fn(b.dataset[attr]); }));
 
   /* ---------- CI01 · ε e δ ---------- */
+  /* nome: "O jogo do ε e δ" · matéria: Matemática · tema: CI01 */
   SIM.limite = (el, F) => {
     const FS = {
       quad: { nome: "(x² − 4)/(x − 2) em 2", f: (x) => (x * x - 4) / (x - 2), a: 2, L: 4, buraco: true, v: [0, 4, 0, 8], e: [0.05, 2, 1], xt: [0, 1, 2, 3, 4], yt: [0, 2, 4, 6, 8] },
@@ -260,6 +264,7 @@
   };
 
   /* ---------- CI02 · sen x / x pelas áreas ---------- */
+  /* nome: "Três áreas espremendo sen x / x" · matéria: Matemática · tema: CI02 */
   SIM.senox = (el, F) => {
     const S = 300, ox = 50, oy = 330;
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 420 360" width="420" data-v="sv"></svg><div class="leitor" data-v="lt" style="flex-direction:column;align-items:stretch"></div></div>
@@ -282,6 +287,7 @@
   };
 
   /* ---------- CI02 · bissecção (valor intermediário) ---------- */
+  /* nome: "Bissecção: o TVI virando algoritmo" · matéria: Matemática · tema: CI02 */
   SIM.bissecao = (el, F) => {
     const FS = {
       cos: { nome: "cos x = x", f: (x) => Math.cos(x) - x, ab: [0, 1], v: [-0.2, 1.2, -1, 1.2], tex: "cos x − x" },
@@ -317,6 +323,7 @@
   };
 
   /* ---------- CI03 · secante → tangente ---------- */
+  /* nome: "Da secante à tangente, e o gráfico de f′" · matéria: Matemática · tema: CI03 */
   SIM.secante = (el, F) => {
     const FS = {
       x2: { nome: "x²", f: (x) => x * x, d: (x) => 2 * x, v: [-2.5, 2.5, -1, 6], yd: [-5.5, 5.5] },
@@ -360,6 +367,7 @@
   };
 
   /* ---------- CI04 · regra da cadeia ---------- */
+  /* nome: "Regra da cadeia: as taxas se multiplicam" · matéria: Matemática · tema: CI04 */
   SIM.cadeia = (el, F) => {
     const FO = { sen: ["sen u", Math.sin, Math.cos, (g) => `sen(${g})`], exp: ["eᵘ", Math.exp, Math.exp, (g) => `e^(${g})`], quad: ["u²", (u) => u * u, (u) => 2 * u, (g) => `(${g})²`], cub: ["u³", (u) => u ** 3, (u) => 3 * u * u, (g) => `(${g})³`] };
     const GI = { dois: ["2x", (x) => 2 * x, () => 2], x2: ["x²", (x) => x * x, (x) => 2 * x], sen: ["sen x", Math.sin, Math.cos], cub: ["x³ − x", (x) => x ** 3 - x, (x) => 3 * x * x - 1] };
@@ -393,6 +401,7 @@
   };
 
   /* ---------- CI05 · salva-vidas (princípio de Fermat) ---------- */
+  /* nome: "O salva-vidas: caminho mais rápido = lei de Snell" · matéria: Matemática · tema: CI05 */
   SIM.salvavidas = (el, F) => {
     const A = [0, 30], B = [40, -20], E = 7.2, ox = 30, oy = 255;
     const X = (x) => ox + E * x, Y = (y) => oy - E * y;
@@ -433,6 +442,7 @@
   const amostra = (f, a, b, n = 600) => { const r = []; let ant = null; for (let i = 0; i <= n; i++) { const x = a + ((b - a) * i) / n, y = f(x); if (ant !== null && isFinite(y) && isFinite(ant) && Math.abs(y - ant) > 50) r.push([x, NaN]); r.push([x, y]); ant = y; } return r; };
 
   /* ---------- CI06 · somas de Riemann ---------- */
+  /* nome: "Somas de Riemann: cinco regras, um limite" · matéria: Matemática · tema: CI06 */
   SIM.riemann = (el, F) => {
     const FS = {
       x2: { nome: "x² em [0, 2]", f: (x) => x * x, a: 0, b: 2, ex: 8 / 3, exTex: "8/3", y: [0, 4.4] },
@@ -477,6 +487,7 @@
   };
 
   /* ---------- CI07 · a função área ---------- */
+  /* nome: "A área acumulada e a sua inclinação" · matéria: Matemática · tema: CI07 */
   SIM.areaAcum = (el, F) => {
     const FS = {
       cos: { nome: "cos t", f: Math.cos, a: 0, v: [-0.2, 7], y: [-1.2, 1.2], ya: [-1.2, 1.2], Ftex: "sen x" },
@@ -514,6 +525,7 @@
   };
 
   /* ---------- CI08 · a família de primitivas ---------- */
+  /* nome: "A família F(x) + C e o campo de direções" · matéria: Matemática · tema: CI08 */
   SIM.primitivas = (el, F) => {
     const FS = {
       x: { nome: "f(x) = 2x", f: (x) => 2 * x, P: (x) => x * x, v: [-3, 3], y: [-4, 8], Ptex: "x²" },
@@ -551,6 +563,7 @@
   };
 
   /* ---------- CI09 · sólidos de revolução por discos ---------- */
+  /* nome: "Sólidos de revolução: somando moedas" · matéria: Matemática · tema: CI09 */
   SIM.revolucao = (el, F) => {
     const FS = {
       cone: { nome: "cone: y = x/2, 0 a 4", f: (x) => x / 2, a: 0, b: 4, V: (Math.PI * 4 * 4) / 3, Vtex: "πr²h/3 = 16π/3" },
@@ -586,6 +599,7 @@
   };
 
   /* ---------- CII01 · integração por partes, em figura ---------- */
+  /* nome: "Por partes, como figura: ∫v du + ∫u dv = retângulo" · matéria: Matemática · tema: CII01 */
   SIM.partes = (el, F) => {
     const FS = {
       ln: { nome: "v = ln u (de u = 1)", v: Math.log, inv: Math.exp, u1: 1, b: [1.2, 6], A: (b) => b * Math.log(b) - b + 1, Atex: "∫₁ᵇ ln u du", Btex: "∫ u dv = ∫₀^(ln b) eᵛ dv" },
@@ -618,6 +632,7 @@
   };
 
   /* ---------- CII02 · integrais impróprias ---------- */
+  /* nome: "Área infinita ou finita? A fronteira p = 1" · matéria: Matemática · tema: CII02 */
   SIM.impropria = (el, F) => {
     let modo = "cauda";
     const o = { W: 600, H: 280, l: 44, r: 14, t: 12, b: 30 }, o2 = { W: 600, H: 200, l: 44, r: 14, t: 12, b: 30 };
@@ -654,6 +669,7 @@
   };
 
   /* ---------- CII03 · somas parciais de séries ---------- */
+  /* nome: "Somas parciais: converge ou não?" · matéria: Matemática · tema: CII03 */
   SIM.series = (el, F) => {
     const SS = {
       geo: { nome: "Σ 1/2ⁿ (n ≥ 1)", a: (n) => Math.pow(0.5, n), lim: 1, limTex: "1" },
@@ -688,6 +704,7 @@
   };
 
   /* ---------- CII04 · polinômios de Taylor ---------- */
+  /* nome: "Polinômios de Taylor abraçando a função" · matéria: Matemática · tema: CII04 */
   SIM.taylorK = (el, F) => { /* β 4.0: antes se chamava SIM.taylor e era sobrescrita pela do F05 (assets/sims/fundamentos.js) */
     const binom = (al, n) => { let c = 1; for (let i = 0; i < n; i++) c *= (al - i) / (i + 1); return c; };
     let fat = [1]; for (let i = 1; i <= 40; i++) fat[i] = fat[i - 1] * i;
@@ -753,6 +770,7 @@
   const faixaNiveis = (lo, hi, k = 9) => Array.from({ length: k }, (_, i) => lo + ((i + 1) * (hi - lo)) / (k + 1));
 
   /* ---------- CII05 · superfície, curvas de nível e fatias ---------- */
+  /* nome: "Mapa topográfico e as fatias de f" · matéria: Matemática · tema: CII05 */
   SIM.superficie = (el, F) => {
     const FS = {
       parab: { nome: "x² + y²", f: (x, y) => x * x + y * y, fx: (x, y) => 2 * x, fy: (x, y) => 2 * y },
@@ -794,6 +812,7 @@
   };
 
   /* ---------- CII06 · gradiente e multiplicadores de Lagrange ---------- */
+  /* nome: "Lagrange: o ótimo é onde os gradientes ficam paralelos" · matéria: Matemática · tema: CII06 */
   SIM.lagrange = (el, F) => {
     const FS = {
       soma: { nome: "f = x + 2y", f: (x, y) => x + 2 * y, g: (x, y) => [1, 2] },
@@ -833,6 +852,7 @@
   };
 
   /* ---------- CII07 · integral dupla como soma de prismas ---------- */
+  /* nome: "Integral dupla: somando prismas" · matéria: Matemática · tema: CII07 */
   SIM.dupla = (el, F) => {
     const FS = {
       quad: { nome: "x + y no quadrado [0,1]²", f: (x, y) => x + y, dentro: (x, y) => x >= 0 && x <= 1 && y >= 0 && y <= 1, v: [-0.1, 1.1], ex: 1, exTex: "1" },
@@ -866,6 +886,7 @@
   };
 
   /* ---------- CII08 · campo de direções e método de Euler ---------- */
+  /* nome: "Campo de direções e o método de Euler" · matéria: Matemática · tema: CII08 */
   SIM.edo1 = (el, F) => {
     const ES = {
       dec: { nome: "y′ = −y (decaimento)", f: (t, y) => -y, ex: (t, y0) => y0 * Math.exp(-t), y: [-0.2, 3.2] },
@@ -901,6 +922,7 @@
   };
 
   /* ---------- CII08 · oscilador amortecido ---------- */
+  /* nome: "Oscilador amortecido: os três regimes" · matéria: Matemática · tema: CII08 */
   SIM.oscilador = (el, F) => {
     const o = { W: 600, H: 300, l: 44, r: 14, t: 12, b: 30, x0: 0, x1: 10, y0: -1.15, y1: 1.15 }, P = quadro(o);
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>

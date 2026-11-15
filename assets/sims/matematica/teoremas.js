@@ -12,6 +12,7 @@
   const gl = (f, a, b) => { const c = (a + b) / 2, h = (b - a) / 2; return GL.reduce((s, [x, w]) => s + w * f(c + h * x), 0) * h; };
 
   /* ---------- TE01 · braquistócrona: corrida de quatro curvas ---------- */
+  /* nome: "Corrida de quatro curvas" · matéria: Matemática · tema: TE01 */
   SIM.braquisto = (el, F) => {
     const g = 9.81, W = 640, H = 330, cores = { reta: "#7ab8e6", arco: "#f2c94c", parab: "#e88fd0", cicl: "var(--ok)" };
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -83,6 +84,7 @@
   };
 
   /* ---------- TE02 · divergência: a soma das caixinhas ---------- */
+  /* nome: "Caixinhas: os fluxos internos se cancelam" · matéria: Matemática · tema: TE02 */
   SIM.divCaixas = (el, F) => {
     const CAMPOS = {
       fonte: { nome: "(x, y)", P: (x, y) => x, Q: (x, y) => y, div: () => 2 },
@@ -117,6 +119,7 @@
   };
 
   /* ---------- TE03 · Pappus: volume de revolução ---------- */
+  /* nome: "Volume de revolução por dois caminhos" · matéria: Matemática · tema: TE03 */
   SIM.pappus = (el, F) => {
     const FORMAS = {
       ret: { nome: "retângulo", fatia: (y, d, s) => (Math.abs(y) <= s / 2 ? [d, d + s] : null), ymax: (s) => s / 2, area: (s) => s * s, xc: (d, s) => d + s / 2 },
@@ -152,6 +155,7 @@
   };
 
   /* ---------- TE04 · Stokes: qualquer chapéu com a mesma borda ---------- */
+  /* nome: "Um chapéu qualquer com a mesma borda" · matéria: Matemática · tema: TE04 */
   SIM.stokesChapeu = (el, F) => {
     const CAMPOS = {
       giro: { nome: "(−y, x, 0)", F: (x, y, z) => [-y, x, 0], rot: (x, y, z) => [0, 0, 2] },
@@ -194,6 +198,7 @@
   };
 
   /* ---------- TE05 · Noether: o que se conserva ---------- */
+  /* nome: "O que se conserva em cada potencial" · matéria: Matemática · tema: TE05 */
   SIM.noether = (el, F) => {
     const POT = {
       kepler: { nome: "central: V = −k/r", a: (x, y, t) => { const r3 = Math.pow(x * x + y * y, 1.5); return [-x / r3, -y / r3]; }, V: (x, y) => -1 / Math.hypot(x, y), s0: [1, 0, 0, 1.15], dt: 0.002, sim: "rotação (e o tempo)", esc: 70, c: [0.4, 0] },

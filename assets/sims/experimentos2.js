@@ -11,6 +11,7 @@
   const anima = (el, F, fn) => { let vivo = true, ult = null; const laco = (ts) => { if (!vivo) return; const dt = ult === null ? 0 : Math.min(0.05, (ts - ult) / 1000); ult = ts; fn(dt); requestAnimationFrame(laco); }; requestAnimationFrame(laco); F.aoSair(() => (vivo = false)); };
 
   /* ---------- EP11 · máquina de Carnot com pistão, calor entrando e saindo e um motor real para comparar ---------- */
+  /* nome: "Máquina de Carnot" · matéria: Física · tema: EP11 */
   SIM.carnotMaquina = (el, F) => {
     const W = 680, H = 330, R = 8.314, g = 5 / 3, VA = 10;
     let s = 0, real = false, rastro = [], ciclos = 0, ultQ = -1;
@@ -64,6 +65,7 @@
   };
 
   /* ---------- EP12 · demônio de Maxwell: portinha controlada, temperatura e entropia de cada lado, custo de informação ---------- */
+  /* nome: "O demônio de Maxwell" · matéria: Física · tema: EP12 */
   SIM.demonio = (el, F) => {
     const W = 680, H = 300, bx = 20, by = 20, bw = 440, bh = 240, meio = bx + bw / 2, porta = 56, r = 4;
     let ps = [], aberta = false, segurando = false, auto = false, bits = 0, S0 = 0, vmed = 0, ultAberta = false, passou = false;
@@ -125,6 +127,7 @@
   };
 
   /* ---------- EP13 · gás de van der Waals: isotermas, construção de Maxwell, ponto crítico e condensação ---------- */
+  /* nome: "Gás de van der Waals" · matéria: Física · tema: EP13 */
   SIM.vanDerWaals = (el, F) => {
     const W = 680, H = 330, R = 0.08314; /* L·bar/(mol·K) */
     const gases = { co2: [3.64, 0.04267], h2o: [5.536, 0.03049], n2: [1.37, 0.0387], he: [0.0346, 0.0238] };
@@ -192,6 +195,7 @@
   };
 
   /* ---------- EP14 · fenda dupla: onda clássica × um fóton por vez ---------- */
+  /* nome: "Fenda dupla" · matéria: Física · tema: EP14 */
   SIM.fendaDupla = (el, F) => {
     const W = 680, H = 320, YJ = 15; /* janela da tela: ±15 mm */
     let modo = "onda", fotons = [], t = 0, chave = "", acum = 0;
@@ -240,6 +244,7 @@
   };
 
   /* ---------- EP15 · radiação de corpo negro: Planck, Wien, Stefan–Boltzmann e a catástrofe do ultravioleta ---------- */
+  /* nome: "Radiação de corpo negro" · matéria: Física · tema: EP15 */
   SIM.corpoNegro = (el, F) => {
     const W = 680, H = 320, h = 6.62607e-34, c = 2.99792e8, k = 1.380649e-23, sig = 5.670374e-8, bW = 2.897772e-3;
     let rj = true;
@@ -287,6 +292,7 @@
   };
 
   /* ---------- EP16 · reação em cadeia (fator de multiplicação) e curva de energia de ligação por núcleon ---------- */
+  /* nome: "Fissão e fusão" · matéria: Física · tema: EP16 */
   SIM.fissaoFusao = (el, F) => {
     const W = 680, H = 330, NU = 2.5;
     let gens = [], N = 0, viz = [], flashes = [], tg = 0, parado = false;
@@ -379,6 +385,7 @@
   };
 
   /* ---------- EP17 · o gato de Schrödinger (de brincadeira): superposição, decaimento e colapso ---------- */
+  /* nome: "O gato de Schrödinger" · matéria: Física · tema: EP17 */
   SIM.gatoSchrodinger = (el, F) => {
     const W = 680, H = 320;
     let t = 0, aberta = false, resultado = null, anim = 0, hist = [];
@@ -430,6 +437,7 @@
   };
 
   /* ---------- EP18 · escoamento ao redor de um cilindro: lattice Boltzmann D2Q9 (BGK), leve o bastante para o navegador ---------- */
+  /* nome: "Escoamento ao redor de um cilindro" · matéria: Física · tema: EP18 */
   SIM.cilindroLBM = (el, F) => {
     const NX = 200, NY = 80, D = 16, U = 0.1, CW = 680, CH = Math.round((680 * NY) / NX);
     let L = null, ver = "vort", rastros = [], img = null, sinal = [], nPassos = 0, St = null;

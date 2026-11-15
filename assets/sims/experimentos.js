@@ -9,6 +9,7 @@
   const pos = (cv, ev, W, H) => { const r = cv.getBoundingClientRect(); return [((ev.clientX - r.left) * W) / r.width, ((ev.clientY - r.top) * H) / r.height]; };
 
   /* ---------- 1. Pêndulo simples ----------  θ'' = −(g/L) sen θ  ×  aproximação θ'' = −(g/L) θ */
+  /* nome: "Pêndulo simples: exato × pequenos ângulos" · matéria: Física · tema: EP01 */
   SIM.pendulo = (el, F) => {
     const W = 760, H = 380; const [cv, cx] = canvas(el, W, H);
     el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls">
@@ -71,6 +72,7 @@
      Equações (forma explícita, deduzida da lagrangiana; conferida com sympy):
      θ1'' = [−g(2m1+m2) sen θ1 − m2 g sen(θ1−2θ2) − 2 sen Δ · m2 (ω2² L2 + ω1² L1 cos Δ)] / (L1 · den)
      θ2'' = [2 sen Δ (ω1² L1 (m1+m2) + g (m1+m2) cos θ1 + ω2² L2 m2 cos Δ)] / (L2 · den),  den = 2m1 + m2 − m2 cos 2Δ, Δ = θ1 − θ2 */
+  /* nome: "Pêndulo duplo" · matéria: Física · tema: EP02 */
   SIM.penduloDuplo = (el, F) => {
     const W = 760, H = 440; const [cv, cx] = canvas(el, W, H);
     el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls">
@@ -126,6 +128,7 @@
 
   /* ---------- 3. Jogo: acerte o alvo com a força de Lorentz ----------
      Tela em px; campo B uniforme na região sombreada: a = (q/m)(E + v × B). ω = (q/m)B. */
+  /* nome: "Acerte o alvo com a força de Lorentz" · matéria: Física · tema: EP04 */
   SIM.jogoLorentz = (el, F) => {
     const W = 760, H = 420; const [cv, cx] = canvas(el, W, H);
     el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls">
@@ -191,6 +194,7 @@
 
   /* ---------- EP09: pêndulo pendurado num bloco com mola (vertical) ----------
      (M+m)ẍ − mℓφ̈ sen φ − mℓφ̇² cos φ + kx = (M+m)g ;  mℓ²φ̈ − mℓẍ sen φ + mgℓ sen φ = 0   (x para baixo) */
+  /* nome: "Bloco na mola com pêndulo" · matéria: Física · tema: EP09 */
   SIM.massaPendulo = (el, F) => {
     const W = 760, H = 420; const [cv, cx] = canvas(el, W, H);
     el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls">
@@ -242,6 +246,7 @@
   /* ---------- EP05: como uma carga irradia (linhas de campo com "dobra") ----------
      Aproximação não relativística (v ≪ c): a parte da linha de campo a uma distância c(t − t_r) do ponto de emissão
      aponta radialmente a partir da posição que a carga TERIA se seguisse com a velocidade de t_r. Onde houve aceleração, aparece a dobra. */
+  /* nome: "Linhas de campo de uma carga acelerada" · matéria: Física · tema: EP05 */
   SIM.radiacao = (el, F) => {
     const W = 760, H = 440; const [cv, cx] = canvas(el, W, H);
     el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls">
@@ -282,6 +287,7 @@
 
   /* ---------- EP06: ímã caindo num tubo condutor ----------
      m dv/dt = mg − b v, com b = 45 μ0² μ² σ w / (1024 a⁴) (dipolo pontual, tubo de parede fina). */
+  /* nome: "Ímã caindo: PVC × metal" · matéria: Física · tema: EP06 */
   SIM.imaTubo = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 340 420" width="340" class="cena"></svg><svg viewBox="0 0 340 300" width="340" class="gr"></svg></div>
       <div class="leitor" data-v="l"></div><div class="ctrls">
@@ -323,6 +329,7 @@
 
   /* ---------- EP07: conta num fio horizontal atraída por uma carga abaixo (exercício do professor) ----------
      F_x = −k q1 q2 x / (d² + x²)^{3/2}  ≈  −(k q1 q2 / d³) x  para x ≪ d. */
+  /* nome: "Conta no fio: exato × MHS" · matéria: Física · tema: EP07 */
   SIM.profMHS = (el, F) => {
     const W = 760, H = 380; const [cv, cx] = canvas(el, W, H);
     el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls">
@@ -366,6 +373,7 @@
 
   /* ---------- EP03: pêndulo triplo (forma matricial geral do pêndulo de n elos) ----------
      Σ_j M_ij cos(θi−θj) ℓiℓj θ̈j = −Σ_j M_ij ℓiℓj sen(θi−θj) θ̇j² − g ℓi sen θi Σ_{k≥i} m_k,  M_ij = Σ_{k≥max(i,j)} m_k */
+  /* nome: "Pêndulo triplo" · matéria: Física · tema: EP03 */
   SIM.penduloTriplo = (el, F) => {
     const W = 760, H = 560; const [cv, cx] = canvas(el, W, H);
     el.insertAdjacentHTML("beforeend", `<div class="leitor" data-v="l"></div><div class="ctrls"><div class="bts" style="grid-column:1/-1">
@@ -413,6 +421,7 @@
 (function () {
   const SIM = window.SIM;
   const cssv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  /* nome: "Duas massas e três molas" · matéria: Física · tema: EP08 */
   SIM.duasMolas = (el, F) => {
     const W = 760, H = 400;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><canvas width="${W * 2}" height="${H * 2}" style="width:${W}px;height:${H}px;border-radius:8px;background:var(--bg);touch-action:none"></canvas></div>

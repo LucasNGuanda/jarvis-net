@@ -25,6 +25,7 @@
   };
   SIM.vLED = (i, Vf, real) => { if (!real) return i > 0 ? Vf : 0; const Is = IREF / Math.expm1(Vf / A); return A * Math.log1p(i / Is); };
 
+  /* nome: "Pilha + resistor + LED" · matéria: Física · tema: C07 */
   SIM.circuito = (el, F) => {
     el.insertAdjacentHTML("beforeend", `
       <div class="palco"><svg viewBox="0 0 640 330" width="640" aria-label="circuito com pilha, resistor e LED">
