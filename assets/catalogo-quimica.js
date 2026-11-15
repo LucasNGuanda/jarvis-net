@@ -43,7 +43,7 @@ window.CATALOGO.push(
     ["D03","Leis ponderais",[],true],
     ["D04","Mol, massa molar e constante de Avogadro",[],true],
     ["D05","Balanceamento de equações",[],true],
-    ["D06","Cálculo estequiométrico: limitante, excesso, pureza e rendimento",[]],
+    ["D06","Cálculo estequiométrico: limitante, excesso, pureza e rendimento",[],true],
     ["D07","Oxirredução e balanceamento redox",[]],
   ] },
   { id:"QE", area:"qui", letra:"E", cor:"--mS", nome:"Físico-química I", desc:"Soluções, propriedades coligativas e termoquímica.", temas:[
