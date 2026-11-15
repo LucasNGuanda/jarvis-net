@@ -42,7 +42,7 @@ window.CATALOGO.push(
     ["D02","Tipos de reação e previsão de produtos",[],true],
     ["D03","Leis ponderais",[],true],
     ["D04","Mol, massa molar e constante de Avogadro",[],true],
-    ["D05","Balanceamento de equações",[]],
+    ["D05","Balanceamento de equações",[],true],
     ["D06","Cálculo estequiométrico: limitante, excesso, pureza e rendimento",[]],
     ["D07","Oxirredução e balanceamento redox",[]],
   ] },
