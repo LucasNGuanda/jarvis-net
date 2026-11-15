@@ -49,7 +49,7 @@
 
     /* ---------- painel (modo de edição) ---------- */
     const montaPainel = () => { painel = document.createElement("div"); painel.className = "jv-painel " + lado; painel.setAttribute("role", "dialog"); painel.setAttribute("aria-label", "Personalizar a tela inicial");
-      const FIG = !window.ACESSO || window.ACESSO.engrenagem("figura") ? window.FIGURAS || [] : [], cfg = J.figuraCfg ? J.figuraCfg() : { id: "planeta", hue: null, vel: 1 }, rotVel = (v) => (v === 0 ? "parado" : String(v).replace(".", ",") + "×");
+      const FIG = !window.ACESSO || window.ACESSO.engrenagem("figura") ? (window.FIGURAS || []).filter((f) => !window.ACESSO || window.ACESSO.figura(f.id)) : [], /* β 4.3: o buraco negro só aparece para o ADM (nem silhueta) */ cfg = J.figuraCfg ? J.figuraCfg() : { id: "planeta", hue: null, vel: 1 }, rotVel = (v) => (v === 0 ? "parado" : String(v).replace(".", ",") + "×");
       const secFig = FIG.length ? `<div class="jv-painel-cat jv-painel-fig"><div class="jv-painel-tit">Figura central</div><div class="jv-painel-figs">${FIG.map((f) => `<button type="button" class="jv-painel-figbt" data-fig="${f.id}" aria-pressed="${cfg.id === f.id}" title="${f.nome}"><span class="jv-painel-mini">${f.svg("m-" + f.id)}</span><span class="jv-painel-fignome">${f.nome}</span></button>`).join("")}</div>
         <label class="jv-painel-linha"><input type="checkbox" data-f="tema"${cfg.hue === null ? " checked" : ""}> acompanhar a cor do tema</label>
         <label class="jv-painel-linha jv-painel-cor"><span>cor</span><input type="range" min="0" max="285" step="1" data-f="cor" value="${cfg.hue === null ? 210 : cfg.hue}"${cfg.hue === null ? " disabled" : ""} aria-label="Cor da figura central"></label>

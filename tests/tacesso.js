@@ -105,8 +105,13 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
   // 5. ADM: animação inteira, sem pular; a página não congela
   await zera(); await digita('adm', COD.adm);
   const quadros = await p.evaluate(() => new Promise((ok) => { let n = 0; const t0 = performance.now(); (function f() { n++; if (performance.now() - t0 < 2000) requestAnimationFrame(f); else ok(n); })(); }));
-  conf(quadros > 40, 'ADM: a animação não congela a página (quadros em 2 s)', quadros);
-  await p.waitForTimeout(8500);
+  conf(quadros > 40, 'ADM: a animação não congela a página (quadros em 2 s, no começo)', quadros);
+  /* β 4.3: buraco negro no lugar do livro, com o conhecimento sendo sugado; e não trava nem no auge (mais símbolos na tela) */
+  const bn = await p.evaluate(() => { const sv = document.querySelector('.anim-acesso svg'); return { buraco: !!sv.querySelector('#fx-cima') && !!sv.querySelector('#fx-bhg'), simbolos: sv.querySelectorAll('text').length, livro: /#f6ecd4/.test(sv.innerHTML) }; });
+  conf(bn.buraco && !bn.livro && bn.simbolos > 20, 'ADM: buraco negro (sem o livro) sugando símbolos', JSON.stringify(bn));
+  const quadros2 = await p.evaluate(() => new Promise((ok) => { let n = 0; const t0 = performance.now(); (function f() { n++; if (performance.now() - t0 < 2000) requestAnimationFrame(f); else ok(n); })(); }));
+  conf(quadros2 > 40, 'ADM: não congela no auge (quadros em 2 s, entre 2 e 4 s)', quadros2);
+  await p.waitForTimeout(5800); /* a animação dura 9,1 s */
   conf(await p.evaluate(() => !document.querySelector('.anim-acesso') && location.hash === '#/home'), 'ADM: animação termina sozinha na tela inicial');
   conf(/β 4\.\d+\.ADM$/.test((await versao()).trim()), 'ADM: versão com .ADM', await versao());
   const adm = await p.evaluate(() => ({ cards: document.querySelectorAll('.jv-materias a.sem-acesso').length, tr: document.querySelectorAll('.jv .trancado').length, ling: !!document.querySelector('.jv-linguas') }));
@@ -114,6 +119,23 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
   for (const h of ['#/inicio', '#/experimental', '#/matematica-olimpiada', '#/quimica-experimentos', '#/russo-leitura', '#/alemao', '#/sanscrito']) conf(!(await bloqueada(h)), `ADM: ${h} abre`);
   await ir('#/codigos'); conf((await p.evaluate(() => [...document.querySelectorAll('.cod-chip')].map((c) => c.textContent).join(','))).length > 0, 'página de códigos mostra o que está destravado', await p.evaluate(() => [...document.querySelectorAll('.cod-chip')].map((c) => c.textContent).join(',')));
 
+  // β 4.3: ADM pula com Esc também; figura "buraco negro" e título dourado: ADM vê, mais ninguém
+  await zera(); await digita('adm', COD.adm); await p.waitForTimeout(1500); await p.keyboard.press('Escape'); await p.waitForTimeout(600);
+  conf(await p.evaluate(() => !document.querySelector('.anim-acesso') && location.hash === '#/home' && /\.ADM$/.test(document.querySelector('.jv-ver').textContent)), 'ADM: Esc pula o buraco negro e já aplica o .ADM');
+  await p.click('.jv-engrenagem'); await p.waitForTimeout(300);
+  conf((await p.evaluate(() => [...document.querySelectorAll('.jv-painel-figbt')].map((b) => b.dataset.fig).join(','))) === 'planeta,galaxia,buraconegro', 'ADM: as 3 figuras no painel, com o buraco negro');
+  await p.click('.jv-painel-figbt[data-fig=buraconegro]'); await p.waitForTimeout(200); await p.keyboard.press('Escape');
+  await p.evaluate(() => { const b = document.querySelector('.jv-ouro-bt'); b && b.click(); }); await p.waitForTimeout(1500);
+  conf(await p.evaluate(() => document.querySelector('.jv').classList.contains('dourado') && JSON.parse(localStorage.getItem('jarvis:cor')) === 'dourado' && document.querySelectorAll('.jv-ouro-p').length > 0), 'ADM: título dourado ligado, salvo e soltando símbolos');
+  await p.waitForTimeout(3000); conf((await p.evaluate(() => document.querySelectorAll('.jv-ouro-p').length)) <= 7, 'título dourado discreto: no máximo 7 símbolos de cada vez', await p.evaluate(() => document.querySelectorAll('.jv-ouro-p').length));
+  const TODOS_AVULSOS = ['fisica', 'matematica', 'quimica', 'idiomas', 'config', 'alemao', 'sanscrito', 'jarvis'];
+  for (const ch of [['tester'], ['config'], TODOS_AVULSOS, TODOS_AVULSOS.concat('tester')]) {
+    await p.evaluate((ch) => localStorage.setItem('jarvis:acesso', JSON.stringify({ chaves: ch })), ch); await p.reload(); await p.waitForTimeout(600); /* o que o ADM salvou continua no localStorage */
+    const r = await p.evaluate(() => ({ dourado: document.querySelector('.jv').classList.contains('dourado'), bt: !!document.querySelector('.jv-ouro-bt'), part: document.querySelectorAll('.jv-ouro-p').length, fig: JARVIS.figuraCfg().id }));
+    let figs = '(engrenagem trancada)'; if (await p.$('.jv-engrenagem:not(.trancado)')) { await p.click('.jv-engrenagem'); await p.waitForTimeout(250); figs = await p.evaluate(() => [...document.querySelectorAll('.jv-painel-figbt')].map((b) => b.dataset.fig).join(',')); await p.keyboard.press('Escape'); }
+    const nome = ch.length > 2 ? (ch.includes('tester') ? 'todos os avulsos + tester' : 'todos os avulsos') : ch.join('+');
+    conf(!r.dourado && !r.bt && !r.part && r.fig === 'planeta' && !/buraconegro/.test(figs), `${nome}: sem buraco negro (nem no painel) e sem título dourado`, `${JSON.stringify(r)} painel: ${figs}`);
+  }
   // 6. troca de idioma (como ADM)
   await ir('#/home');
   for (const [l, nome, rota, cor] of [['alemao', 'Alemão', '#/alemao', '--mDE'], ['sanscrito', 'Sânscrito', '#/sanscrito', '--mSA'], ['russo', 'Russo', '#/russo', '--mR']]) {

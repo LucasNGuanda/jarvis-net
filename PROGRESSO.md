@@ -1,6 +1,6 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado atual (15/11/2026, depois da β 4.2, aprovada pelo Lucas e no `main`)
+## Estado atual (15/11/2026, depois da β 4.3)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
 
 ### Física — 96 de 96 temas escritos
@@ -453,6 +453,13 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Projeto futuro registrado no CLAUDE.md (não implementado): conversa de verdade exigiria API paga e um programa à parte com servidor.
   - Testes: `tests/tbusca.js` novo (60 conferências); `tests/tacesso.js` ampliado (alemão, sânscrito, Jarvis, "código já usado", barrinha com idiomas trancados); `thome` e `tadesivos`: o campo do Jarvis agora é ativo para o ADM. Capturas: `tests/capturas/anim-42-quadros.png`, `busca-*.png`, `pag42-*.png`, `fontes42.png`.
   - Regressão: a mesma de cima, sem FALHA; tbusca 60 conferências, tacesso 130. O Lucas testou o ZIP e aprovou; juntado ao `main`.
+- **β 4.3** — **ADM mais forte: buraco negro, figura e título dourado exclusivos** (pedido de 15/11/2026, depois de o Lucas aprovar a β 4.1 + 4.2, que foram para o `main`).
+  - Animação nova do ADM (9,1 s, pulável com Esc ou "pular"; com movimento reduzido, pula sozinha): a tela escurece e aparece um buraco negro com disco de acreção girando (anéis na velocidade de Kepler, ∝ r^-1,5), anel de fótons, o arco do disco de trás curvado por cima da sombra e as estrelas em volta desviadas pela lente gravitacional (imagem principal empurrada para fora, a secundária do outro lado: d = (d₀ ± √(d₀² + 4θ_E²))/2). 220 símbolos (cirílico, ∫ ∑ ∮, fórmulas de física e de química, devanágari, números e grego) chegam de todos os lados, espiralando (θ = θ₀ + 2,6·ln(R₀/r)) e esticando na direção do movimento quanto mais perto; cada um engolido deixa o buraco maior e mais brilhante. No auge, clarão e tela do Jarvis; o buraco negro voa pelo caminho de antes (embaixo à esquerda → entre Química e Matemática → versão), com rastro de poeira dourada, e colide: clarão de impacto, raios e ".ADM". O livro ficou só para o tester.
+  - Desempenho conferido: 122 quadros em 2 s no começo e 115 no auge (Playwright, Chromium headless).
+  - Figura central "buraco negro" e título dourado: só ADM, travados no motor (`SO_ADM` em `assets/acesso.js`), fora do arquivo de configuração. Para quem não é ADM, a opção nem aparece; se um ADM tinha escolhido e depois voltou a visitante, vale o planeta e a cor original.
+  - Título dourado: degradê dourado que anda devagar pelas letras (CSS, 10 s por volta) e, de dentro de "Jarvis", símbolos de 9 a 12 px que sobem ~40 px e somem (um a cada 0,45 s, no máximo 7 de cada vez, param quando a tela inicial sai ou a aba fica escondida; com movimento reduzido, sem símbolos e sem movimento).
+  - Testes: `tests/tacesso.js` ganhou 9 conferências (buraco negro no lugar do livro, quadros no começo e no auge, Esc, as 3 figuras do ADM, dourado salvo e discreto, e tester, config, todos os avulsos e todos os avulsos + tester sem buraco negro e sem dourado). Capturas: `tests/capturas/anim-adm-buraco-quadros.png`, `ouro-quadros.png`.
+  - Regressão: em andamento (atualizo aqui quando terminar).
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.

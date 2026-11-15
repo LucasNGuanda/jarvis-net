@@ -17,7 +17,9 @@
      Guardada em jarvis:figura = { id, hue (null = acompanha a cor do tema), vel (0 = parado … 2) }; entra no exportar/importar. */
   const CHAVE_FIG = "jarvis:figura";
   const lerFig = () => { try { const o = JSON.parse(localStorage.getItem(CHAVE_FIG)); return o && typeof o === "object" ? o : {}; } catch (e) { return {}; } };
-  J.figuraCfg = () => { const o = window.ACESSO && !window.ACESSO.engrenagem("figura") ? {} : lerFig(), F = window.FIGURAS; /* sem acesso: a figura padrão */ return { id: F ? F.porId(o.id).id : "planeta", hue: typeof o.hue === "number" ? o.hue : null, vel: typeof o.vel === "number" ? Math.max(0, Math.min(2, o.vel)) : 1 }; };
+  J.figuraCfg = () => { const o = window.ACESSO && !window.ACESSO.engrenagem("figura") ? {} : lerFig(), F = window.FIGURAS; /* sem acesso: a figura padrão */
+    let id = F ? F.porId(o.id).id : "planeta"; if (window.ACESSO && !window.ACESSO.figura(id)) id = "planeta"; /* β 4.3: o buraco negro é só do ADM (salvo antes por um ADM que voltou a visitante → planeta) */
+    return { id, hue: typeof o.hue === "number" ? o.hue : null, vel: typeof o.vel === "number" ? Math.max(0, Math.min(2, o.vel)) : 1 }; };
   const tons = (h) => [`hsl(${h - 12}, 85%, 66%)`, `hsl(${h}, 80%, 60%)`, `hsl(${h + 14}, 88%, 56%)`]; /* os mesmos três tons do título */
   J.corFigura = (el, hue) => { if (hue === null) ["--fg1", "--fg2", "--fg3"].forEach((v) => el.style.removeProperty(v)); else tons(hue).forEach((c, k) => el.style.setProperty(`--fg${k + 1}`, c)); };
   let est = null, velAtual = 1;
@@ -48,9 +50,11 @@
 
   /* cor do Jarvis: o título e o planeta mudam juntos. Guardada em jarvis:cor (docs/MODELO_DE_DADOS.md, seção 5). */
   const CHAVE_COR = "jarvis:cor", MATIZ_MAX = 285; /* 0 = vermelho … 285 = lilás */
-  const lerCor = () => { try { const v = JSON.parse(localStorage.getItem(CHAVE_COR)); return typeof v === "number" ? v : null; } catch (e) { return null; } };
+  /* β 4.3: além do número (matiz), jarvis:cor pode valer "dourado" (efeito exclusivo do ADM; para os outros vale a cor original) */
+  const lerCor = () => { try { const v = JSON.parse(localStorage.getItem(CHAVE_COR)); return typeof v === "number" ? v : v === "dourado" && window.ACESSO && window.ACESSO.tituloDourado() ? "dourado" : null; } catch (e) { return null; } };
   const gravarCor = (h) => { try { if (h === null) localStorage.removeItem(CHAVE_COR); else localStorage.setItem(CHAVE_COR, JSON.stringify(h)); } catch (e) {} };
   function aplicaCor(raiz, h) {
+    raiz.classList.toggle("dourado", h === "dourado"); if (h === "dourado") { ["--jv1", "--jv2", "--jv3"].forEach((v) => raiz.style.removeProperty(v)); raiz.classList.remove("cor-propria"); J.ouroTitulo(raiz); return; }
     if (h === null) { ["--jv1", "--jv2", "--jv3"].forEach((v) => raiz.style.removeProperty(v)); raiz.classList.remove("cor-propria"); return; }
     /* degradê com três tons vizinhos da cor escolhida */
     raiz.style.setProperty("--jv1", `hsl(${h - 12}, 85%, 66%)`);
@@ -59,11 +63,29 @@
     raiz.classList.add("cor-propria");
   }
   J._aplicaCor = aplicaCor;
+  /* β 4.3 · título dourado (só ADM): o degradê anda pelas letras (CSS) e, de dentro de "Jarvis", sobem símbolos pequenininhos.
+     Leve: no máximo 7 de cada vez, um a cada ~0,45 s, cada um some sozinho; para quando sai da tela inicial ou da opção. */
+  const OURO_SIMB = ["∫", "∮", "∑", "∂", "∇", "E=mc²", "F=ma", "pV=nRT", "ħω", "λ=h/p", "H₂O", "CO₂", "NaCl", "CH₄", "Я", "Ж", "Ф", "Щ", "ॐ", "क", "स", "ज्ञ", "α", "β", "λ", "Ω", "π", "φ", "Δ"];
+  J.ouroTitulo = (raiz) => {
+    if (raiz._ouro) return; const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches; if (reduz) return;
+    const tit = raiz.querySelector(".jv-titulo"), h1 = tit && tit.querySelector("h1"); if (!h1) return;
+    raiz._ouro = setInterval(() => {
+      if (!document.body.contains(raiz) || !raiz.classList.contains("dourado")) { clearInterval(raiz._ouro); raiz._ouro = null; return; }
+      if (document.hidden || tit.querySelectorAll(".jv-ouro-p").length >= 7) return;
+      const txt = [...h1.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim()); if (!txt) return;
+      const rg = document.createRange(); rg.selectNodeContents(txt); const r = rg.getBoundingClientRect(), b = tit.getBoundingClientRect();
+      const s = document.createElement("span"); s.className = "jv-ouro-p"; s.setAttribute("aria-hidden", "true"); s.textContent = OURO_SIMB[Math.floor(Math.random() * OURO_SIMB.length)];
+      s.style.left = (r.left - b.left + r.width * (0.06 + 0.88 * Math.random())).toFixed(1) + "px"; s.style.top = (r.top - b.top + r.height * (0.35 + 0.4 * Math.random())).toFixed(1) + "px";
+      s.style.setProperty("--dx", ((Math.random() - 0.5) * 16).toFixed(1) + "px"); s.style.fontSize = (9 + Math.random() * 3).toFixed(1) + "px";
+      s.addEventListener("animationend", () => s.remove()); tit.appendChild(s);
+    }, 450);
+  };
   function seletorCor(raiz) {
-    const t = raiz.querySelector(".jv-titulo"), inp = raiz.querySelector(".jv-cor input"), bt = raiz.querySelector(".jv-cor button");
+    const t = raiz.querySelector(".jv-titulo"), inp = raiz.querySelector(".jv-cor input"), bt = raiz.querySelector(".jv-cor button:not(.jv-ouro-bt)");
     const livre = !window.ACESSO || window.ACESSO.engrenagem("corTitulo"); /* acesso (β 4.1): sem ele, a cor original e sem seletor */
     if (!livre) { const c = raiz.querySelector(".jv-cor"); if (c) c.remove(); aplicaCor(raiz, null); return; }
-    const h0 = lerCor(); if (h0 !== null) inp.value = h0;
+    const h0 = lerCor(); if (typeof h0 === "number") inp.value = h0;
+    if (window.ACESSO && window.ACESSO.tituloDourado()) { const ob = document.createElement("button"); ob.type = "button"; ob.className = "jv-ouro-bt"; ob.textContent = "dourado ✦"; ob.title = "Título dourado (só do ADM)"; bt.after(ob); ob.addEventListener("click", () => { aplicaCor(raiz, "dourado"); gravarCor("dourado"); }); }
     aplicaCor(raiz, h0);
     inp.addEventListener("input", () => { const h = +inp.value; aplicaCor(raiz, h); gravarCor(h); });
     bt.addEventListener("click", () => { aplicaCor(raiz, null); gravarCor(null); inp.value = 50; });

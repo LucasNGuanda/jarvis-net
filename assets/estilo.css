@@ -882,3 +882,11 @@ a.jv-mat.trancado:hover{transform:none;box-shadow:none;border-color:var(--line2)
 .jv-linguas button.tranca{border:1px dashed var(--line2)}
 @media (prefers-reduced-motion:reduce){.jb-pisca{animation:none;outline:3px solid var(--acc)}}
 .jv-busca-ativa input:focus,.jv-busca-ativa input:focus-visible{outline:none;box-shadow:none}
+
+/* ---------- β 4.3: título dourado (só ADM) ---------- */
+.jv.dourado .jv-cab h1{background:linear-gradient(100deg,#8a5d0c 0%,#c9961c 18%,#ffe27a 34%,#fff4cf 42%,#ffd24a 52%,#b8860b 70%,#e8bd45 86%,#8a5d0c 100%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:jv-ouro 10s linear infinite;filter:drop-shadow(0 0 10px rgba(255,200,80,.18))}
+@keyframes jv-ouro{from{background-position:0% 50%}to{background-position:300% 50%}}
+.jv-ouro-p{position:absolute;z-index:2;pointer-events:none;font-weight:600;font-family:var(--f-text);color:#ffd970;text-shadow:0 0 5px rgba(255,196,70,.55);white-space:nowrap;transform:translate(-50%,0);animation:jv-sobe 2.6s ease-out forwards}
+@keyframes jv-sobe{0%{opacity:0;transform:translate(-50%,0) scale(.7)}18%{opacity:.85}100%{opacity:0;transform:translate(calc(-50% + var(--dx,0px)),-42px) scale(1)}}
+.jv-cor .jv-ouro-bt{border-color:#c9961c;color:#ffd970;background:linear-gradient(100deg,rgba(201,150,28,.18),rgba(255,226,122,.08))}
+@media (prefers-reduced-motion:reduce){.jv.dourado .jv-cab h1{animation:none}}
