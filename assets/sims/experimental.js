@@ -1,4 +1,4 @@
-/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; */
+/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; FE06 barras de erro; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -164,6 +164,44 @@
       q("[data-v=sv]").innerHTML = sv;
       const nXY = SIM.compara._n(x, y, dx + dy), vXY = veredito(nXY), mm = SIM.compara._media(x, dx, y, dy);
       q("[data-v=lt]").innerHTML = vis("desvio percentual |x − ref|/ref", n2((100 * Math.abs(x - ref)) / ref, 2) + "%") + vis("discrepância em unidades de Δx", n2(nR, 2) + " Δx: " + vR[0]) + (dois ? vis("x × y: |x − y|/(Δx + Δy)", n2(nXY, 2) + ": " + vXY[0]) + vis("média ponderada (1/Δ²)", n2(mm.m, 3) + " ± " + n2(mm.u, 3)) : "");
+    });
+  };
+
+  /* ---------- FE06 · gráfico com barras de erro: ajuste a reta à mão e veja as retas extremas ---------- */
+  SIM.barras = (el, F) => {
+    const W = 680, H = 420, xs = [0.5, 1, 1.5, 2, 2.5, 3];
+    let ruido = [0.12, -0.18, 0.05, 0.2, -0.1, -0.04], ext = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("inclinação da sua reta a (cm/N)", "a", 3, 5, 0.01, 3.6)}${sl("ponto onde ela corta o eixo b (cm)", "b", -1, 1, 0.01, 0.5)}${sl("tamanho das barras Δy (cm)", "dy", 0.05, 0.6, 0.01, 0.2)}
+      <div class="bts"><button class="bt" data-a="ext" aria-pressed="false">Mostrar as retas extremas</button><button class="bt" data-a="novo">Novos dados</button></div></div>
+      <div class="status">Uma mola foi esticada por pesos de 0,5 N a 3,0 N, e cada alongamento tem uma barra de erro de ±Δy. Mexa na sua reta até ela cruzar o máximo de barras. As <b>retas extremas</b> são a mais inclinada e a menos inclinada que ainda cruzam todas as barras: a inclinação vale a média delas, e a incerteza, metade da diferença. A constante da mola sai de k = 100/a (em N/m, com a em cm/N). No painel de baixo, a distância de cada ponto até a sua reta aparece ampliada: uma barra é cruzada quando toca a linha do zero. Se as barras forem pequenas demais, nenhuma reta cruza todas: aí ou as incertezas estão subestimadas, ou o modelo (a reta) está errado.</div>`);
+    const q = (s) => el.querySelector(s);
+    q("[data-a=ext]").addEventListener("click", (e) => { ext = !ext; e.target.setAttribute("aria-pressed", ext); });
+    q("[data-a=novo]").addEventListener("click", () => { ruido = xs.map(() => { let s = 0; for (let i = 0; i < 6; i++) s += Math.random() - 0.5; return 0.15 * s * Math.SQRT2; }); });
+    /* retas extremas: maior e menor inclinação de uma reta que cruza todas as barras verticais (o ótimo de um problema linear fica num vértice: duas barras tocadas na ponta) */
+    SIM.barras._ext = (X, Y, DY) => { let mx = null, mn = null; for (let i = 0; i < X.length; i++) for (let j = i + 1; j < X.length; j++) for (const si of [-1, 1]) for (const sj of [-1, 1]) { const a = (Y[j] + sj * DY[j] - (Y[i] + si * DY[i])) / (X[j] - X[i]), b = Y[i] + si * DY[i] - a * X[i]; if (X.every((x, k) => Math.abs(a * x + b - Y[k]) <= DY[k] + 1e-9)) { if (!mx || a > mx[0]) mx = [a, b]; if (!mn || a < mn[0]) mn = [a, b]; } } return mx ? { mx, mn } : null; };
+    anima(el, F, () => {
+      const a = val(el, "a"), b = val(el, "b"), dy = val(el, "dy"); mostra(el, ["a", "b", "dy"], 2);
+      const ys = xs.map((x, i) => 4 * x + ruido[i]), dys = xs.map(() => dy);
+      const g = { x0: 70, y0: 260, w: 560, h: 230, xmax: 3.4, ymin: -1, ymax: 14, xlab: "F (N)", ylab: "alongamento (cm)", xt: [0.5, 1, 1.5, 2, 2.5, 3], yt: [0, 4, 8, 12] };
+      const X = (x) => g.x0 + (x / g.xmax) * g.w, Yp = (y) => g.y0 - ((y - g.ymin) / (g.ymax - g.ymin)) * g.h;
+      const linha = (aa, bb, cor, trac) => `<line x1="${X(0)}" y1="${Yp(bb)}" x2="${X(3.4)}" y2="${Yp(aa * 3.4 + bb)}" style="stroke:${cor};stroke-width:2${trac ? ";stroke-dasharray:6 4" : ""}"/>`;
+      const r = SIM.barras._ext(xs, ys, dys);
+      let sv = D.graf({ ...g, erros: xs.map((x, i) => [x, ys[i], dy]) });
+      if (ext && r) sv += linha(r.mx[0], r.mx[1], "var(--warn)", true) + linha(r.mn[0], r.mn[1], "var(--warn)", true);
+      sv += linha(a, b, "var(--mN)");
+      let cruza = 0;
+      xs.forEach((x, i) => { const ok = Math.abs(a * x + b - ys[i]) <= dy; if (ok) cruza++; sv += `<circle cx="${X(x)}" cy="${Yp(ys[i])}" r="5" style="fill:none;stroke:${ok ? "var(--ok)" : "var(--bad)"};stroke-width:2"/>`; });
+      /* painel de resíduos ampliado: y − (a x + b) da SUA reta, com as barras; cruza a barra quem toca o zero */
+      const ry0 = 360, esc = 48, XR = (x) => X(x);
+      sv += D.txt(g.x0 + 10, 296, "resíduos (ampliado): y − (a·F + b) da sua reta, em cm", "tx2", "start") + `<line x1="${g.x0}" x2="${g.x0 + g.w}" y1="${ry0}" y2="${ry0}" style="stroke:var(--mN);stroke-width:1.6"/>` + [-1, 1].map((k) => `<line x1="${g.x0}" x2="${g.x0 + g.w}" y1="${ry0 - k * esc}" y2="${ry0 - k * esc}" style="stroke:var(--line2);stroke-dasharray:3 4"/>` + D.txt(g.x0 - 6, ry0 - k * esc + 4, (k > 0 ? "+" : "−") + "1", "tx2", "end")).join("") + D.txt(g.x0 - 6, ry0 + 4, "0", "tx2", "end");
+      const cl = (v) => Math.max(ry0 - 56, Math.min(ry0 + 56, v));
+      if (ext && r) [r.mx, r.mn].forEach(([aa, bb]) => (sv += `<line x1="${XR(0)}" y1="${cl(ry0 - esc * (bb - b))}" x2="${XR(3.4)}" y2="${cl(ry0 - esc * ((aa - a) * 3.4 + bb - b))}" style="stroke:var(--warn);stroke-width:1.6;stroke-dasharray:6 4"/>`));
+      xs.forEach((x, i) => { const e = ys[i] - (a * x + b), ok = Math.abs(e) <= dy, c = ok ? "var(--ok)" : "var(--bad)"; sv += `<line x1="${XR(x)}" x2="${XR(x)}" y1="${cl(ry0 - esc * (e - dy))}" y2="${cl(ry0 - esc * (e + dy))}" style="stroke:${c};stroke-width:2"/><circle cx="${XR(x)}" cy="${cl(ry0 - esc * e)}" r="4" style="fill:${c}"/>`; });
+      q("[data-v=sv]").innerHTML = sv;
+      const res = r ? { a: (r.mx[0] + r.mn[0]) / 2, da: (r.mx[0] - r.mn[0]) / 2 } : null;
+      q("[data-v=lt]").innerHTML = vis("barras que a sua reta cruza", cruza + " de " + xs.length) + vis("k pela sua reta", n2(100 / a, 1) + " N/m") +
+        (ext ? (r ? vis("retas extremas: a máx · a mín", n2(r.mx[0], 2) + " · " + n2(r.mn[0], 2)) + vis("a ± Δa → k ± Δk", n2(res.a, 2) + " ± " + n2(res.da, 2) + " → " + n2(100 / res.a, 1) + " ± " + n2((100 / res.a) * (res.da / res.a), 1) + " N/m") : vis("retas extremas", "nenhuma reta cruza todas as barras")) : "");
     });
   };
 })();
