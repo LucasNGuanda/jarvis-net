@@ -118,4 +118,36 @@
       q("[data-v=sv]").innerHTML = sv; if (Math.abs(alvo - desl) > 0.5) saida();
     });
   };
+  /* ---------- C04 · geometria molecular (VSEPR) ----------
+     SIM.GEO[n]: direções (vetores unitários) que afastam ao máximo n regiões de elétrons em volta do átomo central.
+     Conferido em Node: ângulos entre vizinhos 180° (2); 120° (3); 109,47° (4, cos = −1/3); 90° e 120° (5); 90° (6).
+     SIM.AXE["X,E"]: X átomos ligados e E pares isolados. Os pares isolados ocupam as PRIMEIRAS posições de SIM.GEO, escolhidas para dar a geometria observada:
+     na bipirâmide, as equatoriais (menos vizinhos a 90°); no octaedro, posições opostas. SIM.desGeo desenha em projeção ortográfica (gira em torno do eixo vertical). */
+  const s8 = Math.sqrt(8) / 3, c3 = (k) => [Math.cos((k * 2 * Math.PI) / 3), Math.sin((k * 2 * Math.PI) / 3)];
+  SIM.GEO = { 2: [[1, 0, 0], [-1, 0, 0]], 3: [[0, 1, 0], [-Math.sqrt(3) / 2, -0.5, 0], [Math.sqrt(3) / 2, -0.5, 0]], 4: [[0, 1, 0], ...[0, 1, 2].map((k) => [s8 * c3(k)[0], -1 / 3, s8 * c3(k)[1]])], 5: [...[0, 1, 2].map((k) => [c3(k)[0], 0, c3(k)[1]]), [0, 1, 0], [0, -1, 0]], 6: [[0, -1, 0], [0, 1, 0], [1, 0, 0], [-1, 0, 0], [0, 0, 1], [0, 0, -1]] };
+  SIM.AXE = { "2,0": ["linear", "linear", "180°", "CO₂, BeCl₂"], "3,0": ["trigonal plana", "trigonal plana", "120°", "BF₃, SO₃"], "2,1": ["trigonal plana", "angular", "menor que 120°", "SO₂ (119°)"], "4,0": ["tetraédrica", "tetraédrica", "109,5°", "CH₄, NH₄⁺"], "3,1": ["tetraédrica", "piramidal", "menor que 109,5°", "NH₃ (107°)"], "2,2": ["tetraédrica", "angular", "menor que 109,5°", "H₂O (104,5°)"],
+    "5,0": ["bipirâmide trigonal", "bipirâmide trigonal", "90° e 120°", "PCl₅"], "4,1": ["bipirâmide trigonal", "gangorra", "menores que 90° e 120°", "SF₄"], "3,2": ["bipirâmide trigonal", "forma de T", "menor que 90°", "ClF₃ (87,5°)"], "2,3": ["bipirâmide trigonal", "linear", "180°", "XeF₂, I₃⁻"],
+    "6,0": ["octaédrica", "octaédrica", "90°", "SF₆"], "5,1": ["octaédrica", "pirâmide de base quadrada", "menor que 90°", "BrF₅"], "4,2": ["octaédrica", "quadrada plana", "90°", "XeF₄"] };
+  SIM.desGeo = (X, E, o = {}) => {
+    const { cx = 0, cy = 0, L = 56, fi = 0.5, incl = 0.3, c = "A", x = "X", pares = true } = o, cf = Math.cos(fi), sf = Math.sin(fi), ct = Math.cos(incl), st = Math.sin(incl);
+    const its = SIM.GEO[X + E].map((v, i) => { const a = v[0] * cf + v[2] * sf, z0 = -v[0] * sf + v[2] * cf, b = v[1] * ct - z0 * st, z = v[1] * st + z0 * ct; return { px: a, py: -b, z, par: i < E, rot: Array.isArray(x) ? x[i - E] : x }; }).sort((p, q) => p.z - q.z);
+    const des = (t) => { if (t.par) { if (!pares) return ""; const m = Math.hypot(t.px, t.py), ang = (Math.atan2(t.py, t.px) * 180) / Math.PI, rx = 0.2 * L * m + 9, d = 0.36 * L + rx * 0.5, ex = cx + t.px * (0.5 * L + (m > 0.05 ? rx * 0.6 / m * m : 0)), ey = cy + t.py * (0.5 * L + (m > 0.05 ? rx * 0.6 / m * m : 0)), ux = m > 0.05 ? -t.py / m : 0, uy = m > 0.05 ? t.px / m : 1;
+        return `<ellipse cx="${(cx + t.px * d).toFixed(1)}" cy="${(cy + t.py * d).toFixed(1)}" rx="${rx.toFixed(1)}" ry="10" transform="rotate(${ang.toFixed(1)} ${(cx + t.px * d).toFixed(1)} ${(cy + t.py * d).toFixed(1)})" style="fill:color-mix(in srgb,var(--warn) ${t.z > 0 ? 34 : 20}%,transparent);stroke:var(--warn);stroke-width:1.2"/><circle cx="${(ex + ux * 3.5).toFixed(1)}" cy="${(ey + uy * 3.5).toFixed(1)}" r="2" style="fill:var(--warn)"/><circle cx="${(ex - ux * 3.5).toFixed(1)}" cy="${(ey - uy * 3.5).toFixed(1)}" r="2" style="fill:var(--warn)"/>`; }
+      const r = 11 + 3 * t.z, ax = cx + t.px * L, ay = cy + t.py * L;
+      return `<line x1="${cx}" y1="${cy}" x2="${ax.toFixed(1)}" y2="${ay.toFixed(1)}" style="stroke:var(--ink2);stroke-width:${(3 + 1.6 * t.z).toFixed(1)};stroke-linecap:round"/><circle cx="${ax.toFixed(1)}" cy="${ay.toFixed(1)}" r="${r.toFixed(1)}" style="fill:color-mix(in srgb,var(--mod) ${t.z > 0 ? 55 : 30}%,var(--bg));stroke:var(--mod);stroke-width:1.5"/>` + D.txt(ax, ay + 4, t.rot, "tx2", "middle", 'style="fill:var(--ink);font-weight:700"'); };
+    return its.filter((t) => t.z < 0).map(des).join("") + `<circle cx="${cx}" cy="${cy}" r="14" style="fill:color-mix(in srgb,var(--bad) 45%,var(--bg));stroke:var(--bad);stroke-width:1.5"/>` + D.txt(cx, cy + 4, c, "tx2", "middle", 'style="fill:var(--ink);font-weight:700"') + its.filter((t) => t.z >= 0).map(des).join("");
+  };
+  SIM.vsepr = (el, F) => {
+    const W = 680, H = 270, K = Object.keys(SIM.AXE); let k = "4,0", fi = 0.5, gira = true, pares = true;
+    const nome = (q) => { const [X, E] = q.split(",").map(Number); return "AX" + sub(X) + (E ? "E" + sub(E) : ""); };
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><div class="bts">${botoes(K.map((q) => [q, nome(q)]), "k", k)}</div></div><div><div class="bts"><button class="bt peq" data-b="g" aria-pressed="true">girar</button><button class="bt peq" data-b="p" aria-pressed="true">pares isolados</button></div></div></div>
+      <div class="status">A = átomo central; X = átomo ligado; E = par isolado (amarelo). As regiões de elétrons em volta do átomo central se repelem e ficam o mais longe possível umas das outras: isso fixa o <b>arranjo eletrônico</b>. A <b>geometria molecular</b> é o desenho formado só pelos átomos. Esconda os pares isolados para ver a forma que dá nome à molécula, e compare espécies com o mesmo arranjo (AX₄, AX₃E, AX₂E₂). Os ângulos do desenho são os ideais; nas moléculas reais, os pares isolados apertam um pouco os ângulos entre as ligações.</div>`);
+    const q = (s) => el.querySelector(s);
+    const leitor = () => { const [X, E] = k.split(",").map(Number), d = SIM.AXE[k]; q("[data-v=lt]").innerHTML = vis("regiões de elétrons", X + E) + vis("arranjo eletrônico", d[0]) + vis("geometria molecular", d[1]) + vis("ângulo entre ligações", d[2]) + vis("exemplo", d[3]); };
+    liga(el, "k", (v) => { k = v; leitor(); });
+    q("[data-b=g]").addEventListener("click", (e) => { gira = !gira; e.target.setAttribute("aria-pressed", gira); }); q("[data-b=p]").addEventListener("click", (e) => { pares = !pares; e.target.setAttribute("aria-pressed", pares); });
+    leitor();
+    anima(el, F, (dt) => { if (gira) fi += dt * 0.7; const [X, E] = k.split(",").map(Number); q("[data-v=sv]").innerHTML = D.txt(340, 24, nome(k), "tx", "middle", 'style="font-size:20px;font-weight:700"') + SIM.desGeo(X, E, { cx: 340, cy: 145, L: 84, fi, pares }); });
+  };
 })();
