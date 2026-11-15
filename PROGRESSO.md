@@ -1,67 +1,246 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado atual (15/11/2026, depois da β 4.2, aprovada pelo Lucas e no `main`)
-As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
+## Estado final (15/11/2026, β 4.6, fim do chat; tudo no `main`, aprovado pelo Lucas)
+As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md`. Aqui fica o estado do trabalho. Números contados automaticamente
+abrindo o conteúdo de cada tema (script de contagem com Playwright), não de memória.
 
-### Física — 96 de 96 temas escritos
-Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto" = com correção automática; todos têm chefão, salvo indicação):
-- **F Fundamentos** (6/6): F01–F05 e A19, 7 exercícios cada, sem correção automática.
-- **A Mecânica** (21/21): A01 12, A02 13, A03 14, A04 12, A05 12, A06 13, A07 13, A08 14, A09 12, A10 12, A11 12, A12 13, A12b 12, A13 13, A14a 13, A14 12, A15 12, A16 13, A17 13, A18 12, A20 12 (todos com correção automática e nível Físico/Máximo).
-- **T Termodinâmica** (11/11): T01, T02, T03, T04, T04b, T05, T05b, T06, T07, T08, T08b com 16 exercícios cada, todos com figura, correção automática e nível; todos com `F.chute`, laboratório e chefão. Primeiro módulo inteiro no padrão completo do CLAUDE.md.
-- **O Ondas e Óptica** (11/11): 7 exercícios cada.
-- **C Eletricidade e Magnetismo** (20/20): de 7 a 16 por tema (C07 16; C04 11; C01, C02, C03, C03b, C11, C14 10; os outros 7 a 9).
-- **M Física Moderna** (8/8), **U Universitária** (6/6), **N Navier–Stokes** (7/7): 7 exercícios cada.
-- **X Bônus**: X01 (3 exercícios, sem chefão). **S Simulados**: S02 com 15 questões do IME; S00, S01, S03 e S04 só com a página de entrada.
+### Física — 3 abas: Física, Experimentos, Experimental
+**Aba Física: 96 de 96 temas escritos, 913 exercícios** (todos os temas com chefão, menos o X01 e os simulados).
+**Tabela completa (todas as abas com conteúdo escrito):**
 
-### Outras abas
-- **Física agora tem 3 abas** (β 4.0): Física, Experimentos e Experimental.
-- **Cálculo** (na Matemática desde a β 4.0): 27/27 temas, 7 exercícios cada; Simulados de Cálculo SC01 e SC02 com 20 questões cada. Rota `#/matematica/<COD>`.
-- **Experimentos**: 18 experimentos (EP01–EP18) em 9 módulos (novos na β 3.4: Termodinâmica, Ondas e quântica, Nuclear, Fluidos).
-- **Experimental**: 11 de 11 (FE01–FE11), todos no padrão completo: 16 exercícios com figura, correção automática e nível; `F.chute`, laboratório, 3 demonstrações, 3 exemplos, as 4 caixas, folha de fórmulas e chefão (β 3.5).
-- Tela inicial (Jarvis) em `#/home`: Física pronta; Matemática, Química e Russo com a casca pronta e os temas cadastrados "em breve" (β 3.8). Painel da engrenagem: figura central (planeta, galáxia ou buraco negro, com cor e velocidade; β 3.9) e 28 adesivos em 6 categorias.
-- Calculadoras 1 (estilo fx-991ES PLUS) e 2 (estilo fx-82LA CW), uma de cada vez.
-- **Acesso por código** (β 4.1): sem código, só a tela inicial aparece (cartões com cadeado, figura central, campo do Jarvis); a página de códigos fica em `#/codigos`. Configuração em `assets/acesso-config.js`. Não é segurança de verdade (site estático: os códigos ficam legíveis no código-fonte).
-- **Idiomas** (β 4.1 e 4.2): o cartão de línguas da tela inicial troca entre Russo, Alemão e Sânscrito (barrinha Я / DE / सं). Alemão: DG01–DG18 e DL01–DL08; Sânscrito: SG01–SG15 e SL01–SL07; todos "em breve". Alemão e sânscrito só abrem com o código próprio ou o ADM.
-- **Jarvis** (β 4.2): o campo da tela inicial virou uma busca dentro do site (sem IA), com código próprio; Ctrl K em qualquer página. Índice gerado por `tools/gera-indice.js`.
-- Testes automáticos no repositório, em `tests/`: tgeral, tfunc, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE, thome, tcor, texp, tsegredo, tsegredo2, tadesivos, tmaterias, tfiguras, tmudacalculo, tacesso, tbusca, mais tmec, tchaves e texemp por código. Desde a β 4.1 todos (menos o tacesso) rodam como ADM por meio de `tests/adm.js`, porque o site começa trancado. Capturas em `tests/capturas/`, fora do git; as que os testes antigos gravam na raiz (`home-*.png`, `fisica-com-home.png`, `calc-*.png`, `cor-*.png`) também estão no `.gitignore` (β 3.6).
-- Correção (β 3.7): as regressões da β 3.4 à β 3.6 olhavam só o código de saída, e dez testes antigos (thome, tcor, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE) não devolviam erro quando uma conferência falhava. Por isso duas falhas passaram sem aviso: no thome, o título com a versão ao lado (desde a β 3.4; era o teste que estava desatualizado), e no tfisON, a contagem de bolinhas do N02 (na β 3.7 atribuí à máquina sobrecarregada; na β 3.8 descobri que é um defeito da simulação, ver β 3.8). Agora esses testes devolvem código de erro quando alguma conferência falha.
+| Aba | Módulo | Temas | Exercícios (mín–máx) | Total | Sem figura | Com `F.chute` | Com chefão | Laboratórios |
+|---|---|---|---|---|---|---|---|---|
+| Física | F Fundamentos e a matemática do físico | 6/6 | 7–7 | 42 | 42 | 0 | 6 | 6 |
+| Física | A Mecânica | 21/21 | 12–14 | 264 | 178 | 0 | 21 | 21 |
+| Física | T Termodinâmica | 11/11 | 16–16 | 176 | 0 | 11 | 11 | 11 |
+| Física | O Ondas e Óptica | 11/11 | 7–7 | 77 | 77 | 0 | 11 | 12 |
+| Física | C Eletricidade e Magnetismo | 20/20 | 7–16 | 189 | 49 | 20 | 20 | 24 |
+| Física | M Física Moderna | 8/8 | 7–7 | 56 | 56 | 0 | 8 | 9 |
+| Física | U Universitária | 6/6 | 7–7 | 42 | 42 | 0 | 6 | 6 |
+| Física | N Fluidos até Navier–Stokes | 7/7 | 7–7 | 49 | 49 | 0 | 7 | 7 |
+| Física | X Bônus | 1/1 | 3–3 | 3 | 3 | 0 | 0 | 5 |
+| Física | S Simulados | 5/5 | 0–15 | 15 | 2 | 0 | 0 | 0 |
+| Experimental | FEm Medidas e incertezas | 5/5 | 16–16 | 80 | 0 | 5 | 5 | 5 |
+| Experimental | FEg Gráficos e ajustes | 4/4 | 16–16 | 64 | 0 | 4 | 4 | 4 |
+| Experimental | FEr Relatório e erros | 2/2 | 16–16 | 32 | 0 | 2 | 2 | 2 |
+| Experimentos | EPd Pêndulos | 3/3 | 0–2 | 4 | 4 | 0 | 0 | 3 |
+| Experimentos | EEm Eletromagnetismo | 3/3 | 0–0 | 0 | 0 | 0 | 0 | 3 |
+| Experimentos | EAt Força de atração | 1/1 | 0–0 | 0 | 0 | 0 | 0 | 1 |
+| Experimentos | EMo Mola | 2/2 | 1–1 | 2 | 1 | 0 | 0 | 2 |
+| Experimentos | EMi Mistos | 1/1 | 0–0 | 0 | 0 | 0 | 0 | 1 |
+| Experimentos | ETe Termodinâmica | 3/3 | 0–0 | 0 | 0 | 0 | 0 | 3 |
+| Experimentos | EQu Ondas e quântica | 3/3 | 0–0 | 0 | 0 | 0 | 0 | 3 |
+| Experimentos | ENu Nuclear | 1/1 | 0–0 | 0 | 0 | 0 | 0 | 1 |
+| Experimentos | EFl Fluidos | 1/1 | 0–0 | 0 | 0 | 0 | 0 | 1 |
+| Cálculo (Matemática) | K1 Cálculo 1 | 9/9 | 7–7 | 63 | 63 | 0 | 9 | 10 |
+| Cálculo (Matemática) | K2 Cálculo 2 | 8/8 | 7–7 | 56 | 56 | 0 | 8 | 9 |
+| Cálculo (Matemática) | K3 Funções especiais e integrais | 3/3 | 7–7 | 21 | 21 | 0 | 3 | 3 |
+| Cálculo (Matemática) | K4 Teoremas | 5/5 | 7–7 | 35 | 35 | 0 | 5 | 5 |
+| Cálculo (Matemática) | K5 Simulados de Cálculo | 2/2 | 20–20 | 40 | 40 | 0 | 0 | 0 |
 
-### Matemática, Química e Russo: casca pronta, temas cadastrados (β 3.8), nenhum escrito
-- **Matemática** (`assets/catalogo-matematica.js`): abas Matemática (MB, AR, GE, AL), Cálculo (Cálculo 3 e Cálculo 4 "em breve"; o Cálculo 1 e 2 continuam na Física até a mudança combinada) e Olimpíada e demonstrações (DM, TNO, DES, CBO, GEO, FUN, PRI). Todos os módulos com 0 temas.
-- **Química** (`assets/catalogo-quimica.js`): abas Química (módulos A a J, com ids QA–QJ para não colidir com os da Física) e Experimentos (sem módulos ainda). mhchem (`\ce{}`) carregado.
-- Temas cadastrados na β 3.8: Matemática 114 (MB 5, AR 17, GE 35, AL 26; DM 7, TNO 6, DES 4, CBO 4, GEO 4, FUN 3, PRI 3), Química 97 (A–J 79; Experimentos EQ01–EQ18), Russo 26 (RG 18, RL 8). Todos "em breve".
-- **Russo** (`assets/catalogo-russo.js`): abas Gramática (RG) e Leitura e tradução (RL); botão "Exportar para o Anki" previsto e desativado.
+- S Simulados: S02 tem 15 questões do IME; S00, S01, S03 e S04 só a página de entrada. X01: 5 laboratórios, sem chefão. Experimentos: cada um é uma simulação (laboratório), sem exercícios por decisão (EP01, EP02 e EP08/EP10 guardam 1 ou 2 perguntas antigas).
+- Mecânica, tema a tema: A01 12, A02 13, A03 14, A04 12, A05 12, A06 13, A07 13, A08 14, A09 12, A10 12, A11 12, A12 13, A12b 12, A13 13, A14a 13, A14 12, A15 12, A16 13, A17 13, A18 12, A20 12 (todos com correção automática e nível).
+- Eletricidade, tema a tema: C01 10, C02 10, C03 10, C03b 10, C04 11, C05 9, C06 9, C07 16, C08 9, C09 7, C10 8, C10b 9, C11 10, C12 8, C13 9, C14 10, C15 9, C15b 9, C15c 8, C15d 8.
 
-### Diferenças em relação ao padrão do CLAUDE.md (honesto)
-- Exercícios: o padrão pede 15 a 20. A Mecânica tem 12 a 14; os módulos antigos, 7 (o C, de 7 a 16).
-- "Chuta antes de ver" (`F.chute`): os módulos C, T e FE usam. A Mecânica e os outros ainda não têm.
-- Figuras: nem todo exercício da Mecânica tem figura (todos os exemplos têm).
-- Teoria do Experimental (FE01–FE11): cada tema tem 3 demonstrações e uns 10 mil caracteres de texto (cerca de 3 a 4 páginas), abaixo das ~10 páginas que o padrão pede para tema grande. Os outros itens do padrão estão completos.
+**Aba Experimentos: 18 experimentos** (simulação que se mexe, com controles e explicação curta; sem exercícios, por decisão):
+EP01 Pêndulo simples pela lagrangiana, EP02 Pêndulo duplo e caos, EP03 Pêndulo triplo, EP04 O jogo da força de Lorentz, EP05 Radiação de uma carga acelerada, EP06 Ímã caindo num tubo condutor, EP07 A bolinha elétrica no fio, EP08 Duas massas e três molas, EP09 Pêndulo pendurado num bloco com mola, EP10 Dois discos rolando ligados por molas, EP11 Máquina de Carnot, EP12 O demônio de Maxwell, EP13 Gás de van der Waals, EP14 Fenda dupla, EP15 Radiação de corpo negro, EP16 Fissão e fusão, EP17 O gato de Schrödinger, EP18 Escoamento ao redor de um cilindro. Próximo código livre: EP19 (códigos nunca são reaproveitados).
 
-### Dívida técnica (pedido do Lucas em 14/11/2026: resolver depois da Termodinâmica)
-- [ ] **Mecânica** (A01–A20): subir de 12–14 para 15–20 exercícios por tema; pôr figura nos exercícios que não têm; acrescentar o `F.chute` ("chuta antes de ver") em todos os temas.
-- [ ] **Demais módulos** (F, O, C, M, U, N e o Cálculo, agora na Matemática): subir de 7 para 15–20 exercícios por tema (o C já tem de 7 a 16).
-- Regra a partir de agora: tema novo já nasce no padrão completo (15–20 exercícios, figura em todo exercício, `F.chute`).
+**Aba Experimental: 11 de 11 temas no padrão completo, 176 exercícios** (16 por tema, todos com figura, correção automática, nível e `F.chute`): FE01 O que é medir, FE02 Incerteza tipo A e B, FE03 Média, desvio padrão e incerteza da média, FE04 Propagação de incertezas, FE05 Discrepância e compatibilidade, FE06 Gráficos com barras de erro, FE07 Linearização, FE08 Log-log e mono-log, FE09 Mínimos quadrados, FE10 Erros sistemáticos, FE11 Como escrever um relatório.
 
-### O que ainda falta na Física (ordem de prioridade do Lucas)
-1. [x] **Mecânica**: temas escritos (A01–A20). Falta completar até o padrão (ver dívida técnica).
-2. [x] **Termodinâmica**: T01–T08b escritos no padrão completo (β 3.3).
-3. [x] **Aba Experimental**: feita na β 3.5 (FE01–FE11). O capítulo de teoria da física experimental inteiro: medida e erro, algarismos significativos, precisão × acurácia, erro estatístico × sistemático, desvio padrão e desvio da média, propagação de incerteza pela derivada logarítmica (o método do professor do Lucas), ajuste de reta e mínimos quadrados, linearização de gráficos, como escrever um relatório e como comparar um resultado com o valor de referência.
-4. [x] **Experimentos físicos**: os 8 que faltavam foram feitos na β 3.4 (EP11–EP18), mais a surpresa escondida.
-5. [ ] **Próximo passo sugerido**: a dívida técnica (Mecânica até o padrão; depois os módulos com 7 exercícios). Esperando o Lucas escolher.
+### Matemática — 3 abas
+- **Cálculo** (veio da física na β 4.0): 27 de 27 escritos (Cálculo 1 CI01–CI09, Cálculo 2 CII01–CII08, Funções especiais CE01–CE03, Teoremas TE01–TE05: 7 exercícios cada, todos com chefão; Simulados SC01 e SC02 com 20 questões cada). Cálculo 3 e 4 "em breve".
+- **Matemática** (MB, AR, GE, AL) e **Olimpíada e demonstrações** (DM, TNO, DES, CBO, GEO, FUN, PRI): 114 temas cadastrados, todos "em breve".
+- Rota `#/matematica/<COD>`; progresso em `mat:`.
 
-### Pendências combinadas (fora da Física)
-- Documento do modelo de dados de várias matérias (prefixos `fis:`, `mat:`, `qui:`; migração; registro de acerto e erro além de ● X /): mostrar ao Lucas para aprovar antes de implementar. Rascunho em `docs/MODELO_DE_DADOS.md`.
-- Ativar o GitHub Pages (bloqueado nesta sessão; o Lucas liga à mão em Settings → Pages).
-- Versão de celular: só no fim.
+### Química — 2 abas, 97 temas cadastrados, todos "em breve"
+Química (módulos QA–QJ: introdução, atomística, ligações, reações e estequiometria, físico-química I e II, eletroquímica, orgânica, bioquímica e ambiental, analítica; 79 temas) e Experimentos (EQ01–EQ18). mhchem carregado. Progresso em `qui:`.
 
-### Decisões de hoje (14/11/2026), todas registradas no CLAUDE.md
-- Criado o `CLAUDE.md` com perfil, jeito de falar, projeto, padrão de tema, estilo, qualidade, o que não fazer, pendências e a regra de manter CLAUDE.md e PROGRESSO.md sempre atualizados.
-- Estrutura das matérias: Física (Física, Cálculo → sai, Experimentos, Experimental); Matemática (Matemática, Cálculo, Olimpíada e demonstrações); Química (Química, Experimentos); Russo (Gramática, Leitura e tradução; vocabulário no Anki, o site exporta baralho).
-- Depois de tudo: portal com progresso geral, mapa de erros e busca única; mais tarde, programa à parte com a API.
-- No mapa de erros, separar erro de conteúdo, conta na pressa e interpretação/pegadinha.
-- Não implementar: XP/grau de feiticeiro, repetição espaçada de russo no site. Celular só no fim.
-- Faltam 8 experimentos (não 5).
+### Idiomas — Russo, Alemão e Sânscrito (cartão com a barrinha Я / DE / सं), tudo "em breve"
+- Russo: Gramática RG01–RG18, Leitura RL01–RL08; botão "Exportar para o Anki" previsto e desativado. `rus:`.
+- Alemão: Gramática DG01–DG18, Leitura DL01–DL08. `ale:`. Sânscrito: Gramática SG01–SG15, Leitura SL01–SL07 (objetivo: ler a Bhagavad Gita). `san:`.
+- Fontes no próprio site: Inter (latim, latin-ext, cirílico, grego), Noto Sans Devanagari, UnifrakturMaguntia (OFL).
+
+### Tela inicial (Jarvis, `#/home`)
+- Cartões das matérias, figura central (planeta, galáxia e buraco negro, este só do ADM), título com seletor de cor, campo do Jarvis, engrenagem (painel "Personalizar") e cadeado (códigos).
+- **Adesivos: 28 em 6 categorias** (Física 6, Química 5, Matemática 6, Russo e Olimpíadas 5, Cientistas 3: Newton, Einstein e Marie Curie, Meus 3). Estáticos, nunca por cima de nada clicável, salvos em `jarvis:adesivos`.
+- **Jarvis = busca dentro do site, sem IA** (β 4.2): índice gerado por `tools/gera-indice.js`, sinônimos e navegação em `assets/jarvis-config.js`, 12+1 frases do personagem, Ctrl K em qualquer página, só acha o que o nível de acesso deixa ver.
+
+### Segredinhos (NUNCA mencionar em texto do site)
+1. **Experimentos** (β 3.4): na página inicial da aba Experimentos, encostar o cursor na bolinha verde da ponta do pêndulo duplo (tolerância de 8 unidades). Aparece um buraco negro que puxa o pêndulo espiralando; depois sai o gato do EP17, que cai de pé. Clicar no gato leva ao EP17. Descoberta em `fisica:segredo:x`, com uma estrelinha discreta. Detalhes na β 3.4, abaixo.
+2. **Matemática** (β 3.8): na página inicial da Matemática, 4 cliques seguidos no poliedro (no máximo 0,7 s entre eles). Vem uma "falha no sistema" de ~2 s (chuva verde de dígitos e símbolos, a página tremendo) e depois um tesserato girando nos planos xw e yz, com a legenda "tesserato, o cubo de 4 dimensões". Volta sozinho em ~10 s ou com um clique fora; fica salvo, com um selinho. Detalhes na β 3.8, abaixo.
+
+### Sistema de acesso (β 4.1 a 4.6)
+- Não é segurança de verdade: o site é estático e tudo fica legível no código-fonte (o Lucas sabe).
+- Sem código (visitante), só a tela inicial aparece, com cadeados. Passar o mouse num item trancado mostra "sem acesso · ir para códigos? duplo clique"; quem já tem algum código vê "em construção". O duplo clique ou o cadeado levam a `#/codigos`.
+- Página de códigos: 3 linhas (ADM, tester, avulsos), a lista do que está destravado e "Voltar a visitante". Código errado: "código não reconhecido". Código repetido: "código já usado". Cada código só vale na linha dele.
+- **Códigos:**
+  - ADM `55_admfreee_will`: tudo.
+  - Tester `beta8976_@freewill_choise`: a Física inteira.
+  - Avulsos:
+    - Física `frewill_físic98025_p` (vale sem o acento);
+    - Matemática `free-willp-mat98017`;
+    - Química `free_quimic`;
+    - Russo e a barrinha de idiomas `let-me_slavic98716`;
+    - Configurações (engrenagem e arco-íris do título) `give-meskinn`;
+    - Alemão `ich-will_deutsch4471`;
+    - Sânscrito `om_samskrta8840`;
+    - Jarvis `talk-to_jarvis_freewill01`.
+- Configuração editável: `assets/acesso-config.js`. Cada matéria, aba, parte da engrenagem e adesivo tem um nível: "visitante", "tester", "adm", o nome de um avulso ou uma lista deles.
+- **Exclusivos, fixos no motor** (`assets/acesso.js`, fora da configuração):
+  - Só do ADM: a figura "buraco negro" e o título dourado.
+  - Do tester (e do ADM): o título e a figura esmeralda.
+- **Animações:**
+  - ADM: buraco negro que suga símbolos de todas as matérias, desce até o meio, vira a figura central e explode; a onda acende o ".ADM" dourado.
+  - Tester: livro já aberto, símbolos verdes de todos os lados, voo até a versão e ".tester" verde.
+  - Avulsos: animações curtas de 2,65 s, terminando em "acesso liberado · …".
+  - Todas puláveis (Esc ou botão); com "reduzir movimento", pulam sozinhas.
+- O buraco negro da figura central tem duas formas: o de arame (normal) e o realista (só com o título dourado), com transição animada entre elas.
+- Acesso em `jarvis:acesso`; idioma em `jarvis:lingua`; buscas em `jarvis:buscas`. Tudo entra no exportar/importar.
+
+### Testes (`tests/`) e última regressão
+tgeral, tfunc, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE, thome, tcor, texp, tsegredo, tsegredo2, tadesivos, tmaterias, tfiguras, tmudacalculo, tacesso, tbusca, mais tmec, tchaves e texemp por código. Todos rodam como ADM via `tests/adm.js` (menos o tacesso). Capturas em `tests/capturas/` (fora do git).
+- **Última regressão (15/11/2026, sobre a β 4.6 final): 23 execuções, todas com código 0 e nenhuma linha de FALHA** (21 testes + tchaves A01 T03 C07 FE03 + tmec A01 FE03; 772 conferências "ok"). tgeral: 437 páginas, 152 temas escritos, 1970 links, 1310 exercícios, 157 laboratórios, **0 fórmulas quebradas (katex-error)**, nenhum tema vazio, nenhum link quebrado; **0 erros de JavaScript** (16 testes com "sem erros JS" e o tfunc "sem erros no console"). Calculadora 1: 103 de 103; calculadora 2: 41 de 41; tacesso, tbusca, surpresas (tsegredo e tsegredo2), mudança do Cálculo e todos os da física sem falha. Avisos informativos do tgeral (não são falha): S00, S01, S03 e S04 com conteúdo curto (só a página de entrada).
+
+### Dívida técnica (o que ficou abaixo do padrão do CLAUDE.md)
+- [ ] **Exercícios por tema (meta: 15 a 20):**
+  - com 7: F (6 temas), O (11), M (8), U (6), N (7) e o Cálculo inteiro (CI, CII, CE, TE: 25 temas);
+  - a Mecânica tem 12 a 14 (21 temas);
+  - a Eletricidade vai de 7 a 16 (só o C07 está na meta; C09 tem 7; os outros, de 8 a 11);
+  - o X01 tem 3.
+- [ ] **Exercícios sem figura** (contagem automática: exercício sem desenho próprio):
+  - Mecânica: 178 de 264;
+  - Eletricidade: 49 de 189 (C06 a C15d);
+  - F, O, M, U, N e Cálculo: todos (42 + 77 + 56 + 42 + 49 + 175 = 441);
+  - X01: 3.
+  - Termodinâmica e Experimental: nenhum sem figura.
+- [ ] **Temas sem `F.chute` ("chuta antes de ver"):** F, A, O, M, U, N, X01 e o Cálculo inteiro. Só T, C e FE têm.
+- [ ] **Teoria mais curta que o padrão:**
+  - O padrão pede ~10 páginas nos temas grandes. O Experimental tem ~3 a 4 páginas por tema; os módulos antigos de 7 exercícios também são mais curtos.
+  - Os temas antigos não têm todas as caixas (Pense como físico, Pegadinha, Nível olimpíada, Ponte para a universidade) nem 3 exemplos com figura em todos os casos.
+- [ ] **Simulados:** S00, S01, S03 e S04 só têm a página de entrada; X01 e os simulados não têm chefão.
+- [ ] **Defeitos conhecidos, esperando o Lucas:**
+  - a simulação do N02 tem uma contagem que falha às vezes no tfisON, porque começa fora do regime permanente; a correção mexe na física e precisa de autorização;
+  - números com `{,}` vazando no texto comum do CI02, CII03, TE01 e TE04.
+
+**Tabela tema por tema** (só os temas com alguma dívida; meta de 15 exercícios; Experimentos e Simulados ficam fora porque têm formato próprio):
+
+| Tema | Exercícios | Faltam para 15 | Sem figura | `F.chute` |
+|---|---|---|---|---|
+| F01 | 7 | 8 | 7 | falta |
+| F02 | 7 | 8 | 7 | falta |
+| F03 | 7 | 8 | 7 | falta |
+| F04 | 7 | 8 | 7 | falta |
+| F05 | 7 | 8 | 7 | falta |
+| A19 | 7 | 8 | 7 | falta |
+| A01 | 12 | 3 | 10 | falta |
+| A02 | 13 | 2 | 2 | falta |
+| A03 | 14 | 1 | 8 | falta |
+| A04 | 12 | 3 | 3 | falta |
+| A05 | 12 | 3 | 7 | falta |
+| A06 | 13 | 2 | 6 | falta |
+| A07 | 13 | 2 | 7 | falta |
+| A08 | 14 | 1 | 8 | falta |
+| A09 | 12 | 3 | 8 | falta |
+| A10 | 12 | 3 | 9 | falta |
+| A11 | 12 | 3 | 10 | falta |
+| A12 | 13 | 2 | 9 | falta |
+| A12b | 12 | 3 | 7 | falta |
+| A13 | 13 | 2 | 10 | falta |
+| A14a | 13 | 2 | 11 | falta |
+| A14 | 12 | 3 | 10 | falta |
+| A15 | 12 | 3 | 11 | falta |
+| A16 | 13 | 2 | 13 | falta |
+| A17 | 13 | 2 | 9 | falta |
+| A18 | 12 | 3 | 10 | falta |
+| A20 | 12 | 3 | 10 | falta |
+| O01 | 7 | 8 | 7 | falta |
+| O02 | 7 | 8 | 7 | falta |
+| O03 | 7 | 8 | 7 | falta |
+| O04 | 7 | 8 | 7 | falta |
+| O05 | 7 | 8 | 7 | falta |
+| O06 | 7 | 8 | 7 | falta |
+| O07 | 7 | 8 | 7 | falta |
+| O08 | 7 | 8 | 7 | falta |
+| O09 | 7 | 8 | 7 | falta |
+| O10 | 7 | 8 | 7 | falta |
+| O10b | 7 | 8 | 7 | falta |
+| C01 | 10 | 5 | — | tem |
+| C02 | 10 | 5 | — | tem |
+| C03 | 10 | 5 | — | tem |
+| C03b | 10 | 5 | — | tem |
+| C04 | 11 | 4 | — | tem |
+| C05 | 9 | 6 | — | tem |
+| C11 | 10 | 5 | — | tem |
+| C06 | 9 | 6 | 3 | tem |
+| C08 | 9 | 6 | 4 | tem |
+| C09 | 7 | 8 | 3 | tem |
+| C10 | 8 | 7 | 4 | tem |
+| C10b | 9 | 6 | 3 | tem |
+| C12 | 8 | 7 | 4 | tem |
+| C13 | 9 | 6 | 4 | tem |
+| C14 | 10 | 5 | 5 | tem |
+| C15 | 9 | 6 | 5 | tem |
+| C15b | 9 | 6 | 4 | tem |
+| C15c | 8 | 7 | 3 | tem |
+| C15d | 8 | 7 | 7 | tem |
+| C16 | 7 | 8 | 7 | falta |
+| C17 | 7 | 8 | 7 | falta |
+| C17b | 7 | 8 | 7 | falta |
+| C18 | 7 | 8 | 7 | falta |
+| C19 | 7 | 8 | 7 | falta |
+| C19b | 7 | 8 | 7 | falta |
+| C20 | 7 | 8 | 7 | falta |
+| C21 | 7 | 8 | 7 | falta |
+| U01 | 7 | 8 | 7 | falta |
+| U02 | 7 | 8 | 7 | falta |
+| U03 | 7 | 8 | 7 | falta |
+| U04 | 7 | 8 | 7 | falta |
+| U05 | 7 | 8 | 7 | falta |
+| U06 | 7 | 8 | 7 | falta |
+| N01 | 7 | 8 | 7 | falta |
+| N02 | 7 | 8 | 7 | falta |
+| N03 | 7 | 8 | 7 | falta |
+| N04 | 7 | 8 | 7 | falta |
+| N05 | 7 | 8 | 7 | falta |
+| N06 | 7 | 8 | 7 | falta |
+| N07 | 7 | 8 | 7 | falta |
+| X01 | 3 | 12 | 3 | falta |
+| matematica/CI01 | 7 | 8 | 7 | falta |
+| matematica/CI02 | 7 | 8 | 7 | falta |
+| matematica/CI03 | 7 | 8 | 7 | falta |
+| matematica/CI04 | 7 | 8 | 7 | falta |
+| matematica/CI05 | 7 | 8 | 7 | falta |
+| matematica/CI06 | 7 | 8 | 7 | falta |
+| matematica/CI07 | 7 | 8 | 7 | falta |
+| matematica/CI08 | 7 | 8 | 7 | falta |
+| matematica/CI09 | 7 | 8 | 7 | falta |
+| matematica/CII01 | 7 | 8 | 7 | falta |
+| matematica/CII02 | 7 | 8 | 7 | falta |
+| matematica/CII03 | 7 | 8 | 7 | falta |
+| matematica/CII04 | 7 | 8 | 7 | falta |
+| matematica/CII05 | 7 | 8 | 7 | falta |
+| matematica/CII06 | 7 | 8 | 7 | falta |
+| matematica/CII07 | 7 | 8 | 7 | falta |
+| matematica/CII08 | 7 | 8 | 7 | falta |
+| matematica/CE01 | 7 | 8 | 7 | falta |
+| matematica/CE02 | 7 | 8 | 7 | falta |
+| matematica/CE03 | 7 | 8 | 7 | falta |
+| matematica/TE01 | 7 | 8 | 7 | falta |
+| matematica/TE02 | 7 | 8 | 7 | falta |
+| matematica/TE03 | 7 | 8 | 7 | falta |
+| matematica/TE04 | 7 | 8 | 7 | falta |
+| matematica/TE05 | 7 | 8 | 7 | falta |
+| **Total (104 temas com alguma dívida)** | **881** | **679** (em 104 temas) | **671** | **85 sem** |
+
+Totais: 104 temas abaixo do padrão; faltam 679 exercícios para todos chegarem a 15; 671 exercícios sem figura; 85 temas sem `F.chute`.
+
+- Regra: tema novo já nasce no padrão completo (15–20 exercícios, figura em todo exercício, `F.chute`, chefão, as 4 caixas).
+
+### Pendências combinadas
+- Modelo de dados (`docs/MODELO_DE_DADOS.md`): decidir se a física passa de `fisica:` para `fis:` (exige migrar o progresso salvo) e o registro de acerto e erro para o mapa de erros.
+- Ativar o GitHub Pages (o Lucas liga à mão em Settings → Pages).
+- Previstos e não implementados: botão "Exportar para o Anki" (russo); campo `easterEggs` (surpresa → código); Cálculo 3 e 4.
+- Versão de celular: só no fim. Depois de tudo: portal com progresso geral e mapa de erros. Bem mais tarde: programa à parte com API (conversa de verdade do Jarvis; nunca chave de API dentro do site).
 
 ## Revisão geral (pedido de 14/11/2026) → β 2.0
 1. [x] Módulos com letras novas: Termodinâmica = **T**, Ondas e Óptica = **O**, com cores bem diferentes. Códigos trocados (B01 → T01…, B16 → O01…) em links, [n]←, busca, sumário e simulados; progresso salvo migrado.
@@ -453,6 +632,30 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Projeto futuro registrado no CLAUDE.md (não implementado): conversa de verdade exigiria API paga e um programa à parte com servidor.
   - Testes: `tests/tbusca.js` novo (60 conferências); `tests/tacesso.js` ampliado (alemão, sânscrito, Jarvis, "código já usado", barrinha com idiomas trancados); `thome` e `tadesivos`: o campo do Jarvis agora é ativo para o ADM. Capturas: `tests/capturas/anim-42-quadros.png`, `busca-*.png`, `pag42-*.png`, `fontes42.png`.
   - Regressão: a mesma de cima, sem FALHA; tbusca 60 conferências, tacesso 130. O Lucas testou o ZIP e aprovou; juntado ao `main`.
+- **β 4.3** — **ADM mais forte: buraco negro, figura e título dourado exclusivos** (pedido de 15/11/2026, depois de o Lucas aprovar a β 4.1 + 4.2, que foram para o `main`). O voo até a versão descrito abaixo foi trocado na β 4.4.
+  - Animação nova do ADM (9,1 s, pulável com Esc ou "pular"; com movimento reduzido, pula sozinha): a tela escurece e aparece um buraco negro com disco de acreção girando (anéis na velocidade de Kepler, ∝ r^-1,5), anel de fótons, o arco do disco de trás curvado por cima da sombra e as estrelas em volta desviadas pela lente gravitacional (imagem principal empurrada para fora, a secundária do outro lado: d = (d₀ ± √(d₀² + 4θ_E²))/2). 220 símbolos (cirílico, ∫ ∑ ∮, fórmulas de física e de química, devanágari, números e grego) chegam de todos os lados, espiralando (θ = θ₀ + 2,6·ln(R₀/r)) e esticando na direção do movimento quanto mais perto; cada um engolido deixa o buraco maior e mais brilhante. No auge, clarão e tela do Jarvis; o buraco negro voa pelo caminho de antes (embaixo à esquerda → entre Química e Matemática → versão), com rastro de poeira dourada, e colide: clarão de impacto, raios e ".ADM". O livro ficou só para o tester.
+  - Desempenho conferido: 122 quadros em 2 s no começo e 115 no auge (Playwright, Chromium headless).
+  - Nome do X01 (bônus da Física) trocado de "A função gam fresco do Lucas" para "Função gama fresco" (pedido do Lucas). Dentro do tema, o símbolo continua se chamando "gam fresco".
+  - Figura central "buraco negro" e título dourado: só ADM, travados no motor (`SO_ADM` em `assets/acesso.js`), fora do arquivo de configuração. Para quem não é ADM, a opção nem aparece; se um ADM tinha escolhido e depois voltou a visitante, vale o planeta e a cor original.
+  - Título dourado: degradê dourado que anda devagar pelas letras (CSS, 10 s por volta) e, de dentro de "Jarvis", símbolos de 9 a 12 px que sobem ~40 px e somem (um a cada 0,45 s, no máximo 7 de cada vez, param quando a tela inicial sai ou a aba fica escondida; com movimento reduzido, sem símbolos e sem movimento).
+  - Testes: `tests/tacesso.js` ganhou 9 conferências (buraco negro no lugar do livro, quadros no começo e no auge, Esc, as 3 figuras do ADM, dourado salvo e discreto, e tester, config, todos os avulsos e todos os avulsos + tester sem buraco negro e sem dourado). Capturas: `tests/capturas/anim-adm-buraco-quadros.png`, `ouro-quadros.png`.
+  - Regressão da β 4.3: interrompida no meio (tacesso, tbusca e tgeral sem falha) porque o Lucas pediu mudanças; refeita na β 4.4.
+- **β 4.4** — **O buraco negro do ADM vai para o meio e explode** (pedido de 15/11/2026, depois de testar o ZIP da β 4.3).
+  - Depois do clarão, o buraco negro não voa mais até a versão: desce até o meio da tela do Jarvis e toma o lugar da figura central (a figura passa a ser o buraco negro e fica salva em `jarvis:figura`; dá para trocar na engrenagem). Lá ele EXPLODE: clarão, três ondas de choque, 40 faíscas, 46 cacos de símbolos voando para fora e a tela tremendo meio segundo. Quando a onda passa pela versão, o ".ADM" acende, dourado (degradê dourado andando, como o título), com um brilho de impacto. Pular (Esc ou botão) aplica tudo de uma vez.
+  - ".ADM" dourado sempre que o acesso é de ADM (classe `adm` no sufixo).
+  - A figura central "buraco negro" agora é o MESMO desenho da animação: `window.BURACO` em `assets/figuras.js`, usado pelas duas (disco de acreção com faixa de gás e riscos na velocidade de Kepler, anel de fótons, arco da lente por cima). Cores quentes fixas; a "cor própria" do painel gira o matiz inteiro (hue-rotate). Na figura, só os riscos se mexem a cada quadro (barato).
+  - Testes: `tests/tacesso.js` confere que, depois da animação (inteira ou pulada), a figura é o buraco negro, o ".ADM" é dourado e nada fica escondido ou tremendo. Capturas: `tests/capturas/anim-adm-buraco-quadros.png` (refeita), `ouro-quadros.png`.
+  - Regressão da β 4.4: interrompida (tacesso acusou só o nome antigo de um elemento no próprio teste, já corrigido) porque o Lucas pediu a β 4.5; refeita na β 4.5.
+- **β 4.5** — **Beta tester mais forte** (pedido de 15/11/2026).
+  - Animação nova do tester (9,1 s, pulável): o livro já aparece ABERTO, sobre um círculo de energia (dois anéis tracejados girando em sentidos opostos, com símbolos em volta); 260 símbolos verdes (números, grego, símbolos de matemática), cada um com o seu ritmo de troca e o seu tom, chegam de TODOS os lados da tela com uma curva leve e um rastro curto, encolhendo até entrar nas páginas; as páginas viram sozinhas (uma a cada 0,55 s) e o livro brilha mais a cada símbolo absorvido; no auge sobe uma coluna de luz verde; clarão, tela do Jarvis e o livro voa até a versão pelo mesmo caminho de antes, com um rastro de símbolos. ".tester" aparece verde (degradê andando), como o ".ADM" é dourado.
+  - Cor exclusiva do tester: "esmeralda ✦" na lista de cores do título. Muda o título (degradê verde andando e símbolos verdes pequenininhos subindo de dentro das letras) e a figura central (planeta e galáxia seguem as cores do título; o buraco negro gira o matiz para verde). O ADM também tem. Travada no motor (`A.tituloEsmeralda`), fora do arquivo de configuração: nenhum código avulso libera. O tester não tinha seletor de cor (o arco-íris é do código de configurações); agora ele vê o seletor só com "voltar à cor original" e "esmeralda ✦".
+  - Testes: `tests/tacesso.js` confere o livro aberto desde o começo, o círculo de energia e símbolos verdes nos 4 quadrantes da tela, o ".tester" verde, o esmeralda do tester (só ele no seletor, aplicado no título e nas cores da figura, salvo, recarregando e desligando), o ADM com dourado e esmeralda, e configurações e todos os avulsos sem o esmeralda. Capturas: `tests/capturas/anim-tester-quadros.png`, `esmeralda-quadros.png`.
+  - Regressão da β 4.5: interrompida no tfis (os 10 testes anteriores, de tacesso a tcalc2, sem nenhuma falha) porque o Lucas pediu a β 4.6; refeita na β 4.6.
+- **β 4.6** — **O buraco negro realista é só do título dourado** (pedido de 15/11/2026, depois de testar o ZIP da β 4.5).
+  - A figura central "buraco negro" (só do ADM) tem duas formas: a normal é o de arame da β 3.9 (nas cores do tema, como as outras figuras; com o esmeralda, verde); com o título dourado, o realista da animação. Ligar ou tirar o dourado faz uma transição (1,25 s): o de agora gira e encolhe até sumir, um clarão macio com anel se abre e o outro nasce do centro girando, passa um pouco do tamanho e assenta. Vale também para a miniatura do painel. Com movimento reduzido, troca sem animação.
+  - Animação do ADM: o realista desce, toma o lugar da figura e explode; se o título não está dourado, logo depois da explosão ele faz a transição e fica o de arame.
+  - Testes: `tests/tacesso.js` confere o realista com o dourado, a troca animada ao tirar, o de arame sem o dourado, a volta ao pôr de novo e o de arame no fim da animação do ADM. Captura: `tests/capturas/buraco-troca-quadros.png`.
+  - Regressão: em andamento (atualizo aqui quando terminar).
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.
@@ -540,11 +743,7 @@ O histórico acima usa os códigos antigos.
 5. O Lucas vai mandar provas do ITA e do vestibular coreano (para Simulados S02/S03).
 
 ## Falta
-- Dívida técnica da Física e do Cálculo (exercícios, figuras e `F.chute`), ver "Estado atual".
-- Pendências combinadas (modelo de dados, GitHub Pages) e as outras matérias (Química, Matemática, Russo), ver "Estado atual".
-- Botão "Exportar para o Anki" (russo) continua só previsto. Campo `easterEggs` (surpresa → código) continua só previsto.
-- Pendências antigas, esperando o Lucas: correção da simulação do N02 (física, precisa de autorização) e os "{,}" vazando no texto do CI02, CII03, TE01 e TE04.
-- Noites 1–11 do briefing (todos os outros temas), unidades e constantes (CODATA), simulados por módulo, formulário com busca, mapa de pré-requisitos.
+- Ver "Dívida técnica" e "Pendências combinadas" no Estado final, no topo.
 
 ## Problemas conhecidos
 - Depois que o LED queima, é preciso baixar a tensão/subir R antes de "Trocar o LED"; senão ele queima de novo na hora (é física, mas pode confundir).

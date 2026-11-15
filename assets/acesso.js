@@ -22,6 +22,12 @@
   A.area = (areaId) => { const ab = C().abas || {}; if (ab[areaId] !== undefined) return A.tem(ab[areaId]); const ar = (window.AREAS || []).find((a) => a.id === areaId); return A.materia(ar ? ar.materia || "fisica" : "fisica"); };
   A.engrenagem = (parte) => A.tem((C().engrenagem || {})[parte] === undefined ? "adm" : C().engrenagem[parte]);
   A.adesivo = (id) => { const ad = C().adesivos || {}; return ad[id] !== undefined ? A.tem(ad[id]) : A.engrenagem("adesivos"); };
+  /* β 4.3: EXCLUSIVOS DO ADM, fixos aqui no motor de propósito: nenhum nível do acesso-config.js (nem "config", nem avulso,
+     nem tester) consegue liberar. Pedido do Lucas: "nem agora nem depois". */
+  const SO_ADM = { figuras: ["buraconegro"] };
+  A.figura = (id) => (SO_ADM.figuras.includes(id) ? A.adm() : A.engrenagem("figura")); /* figura central do painel da engrenagem */
+  A.tituloDourado = () => A.adm(); /* efeito dourado do título "Jarvis" */
+  A.tituloEsmeralda = () => A.adm() || A.chaves().includes("tester"); /* β 4.5: cor esmeralda (título + figura), exclusiva do beta tester; o ADM também tem */
   A.jarvis = () => A.tem(C().jarvis === undefined ? "adm" : C().jarvis); /* β 4.2: busca do Jarvis */
   A.idiomas = () => A.tem(C().seletorIdioma === undefined ? "adm" : C().seletorIdioma);
   A.aviso = () => (A.visitante() ? (C().avisos || {}).visitante : (C().avisos || {}).comAcesso) || "sem acesso · ir para códigos? duplo clique";

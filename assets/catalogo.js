@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 4.2";
+window.VERSAO = "β 4.6";
 /* Áreas (abas do topo). Cada área pertence a uma matéria (assets/materias.js); o topo mostra só as abas da matéria atual.
    inicio = rota da página inicial da aba; anim = desenho da página inicial (em app.js, F.ANIM); icone = SVG da aba. */
 window.AREAS = [
@@ -117,7 +117,7 @@ window.CATALOGO = [
     ["N07","Reynolds, turbulência e o Problema do Milênio",["!"],true],
   ]},
   { id:"X", letra:"★", cor:"--mX", nome:"Bônus", desc:"Coisas inventadas e curiosidades fora da ordem.", temas:[
-    ["X01","A função gam fresco do Lucas",["∫"],true],
+    ["X01","Função gama fresco",["∫"],true],
   ]},
   { id:"S", letra:"S", cor:"--mS", nome:"Simulados", desc:"Questões escolhidas pelo Lucas, com a fonte de cada uma (ex.: [ITA 2010]).", temas:[
     ["S00","Como funcionam os simulados",[],true],

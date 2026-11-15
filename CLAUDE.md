@@ -19,7 +19,13 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 
 ## O projeto (Jarvis)
 - Este repositório é o meu sistema de estudo pessoal. Tela inicial (`#/home`) com um botão por matéria; cada matéria tem suas abas.
-- **Física**: 3 abas, Física, Experimentos e Experimental (o Cálculo foi para a matemática na β 4.0). Módulos F, A, T, O, C, M, U, N.
+- **Estado de cada matéria (fim do chat, β 4.6):**
+  - Física: a única com conteúdo escrito. Aba Física com 96 de 96 temas e 913 exercícios; Experimentos com 18 (EP01–EP18; próximo código EP19); Experimental com 11 de 11 no padrão completo.
+  - Matemática: só o Cálculo escrito (27 temas); 114 temas "em breve".
+  - Química: 97 temas, todos "em breve".
+  - Russo, Alemão e Sânscrito: só cadastrados, todos "em breve".
+  - Números detalhados e dívida técnica no PROGRESSO.md, em "Estado final".
+- **Física**: 3 abas, Física, Experimentos e Experimental (o Cálculo foi para a matemática na β 4.0). Módulos F, A, T, O, C, M, U, N, X (bônus) e S (simulados).
 - **Matemática**: abas Matemática (MB, AR, GE, AL), Cálculo (Cálculo 1 e 2, Cálculo 3 e 4 "em breve", Funções especiais e integrais, Teoremas, Simulados de Cálculo: os 27 temas escritos vieram da física na β 4.0, com os mesmos módulos K1–K5, ordem e códigos) e Olimpíada e demonstrações (DM, TNO, DES, CBO, GEO, FUN, PRI). 141 temas (27 escritos; os outros 114 "em breve").
 - **Química**: abas Química (módulos A–J: introdução, atomística, ligações, reações e estequiometria, físico-química I e II, eletroquímica, orgânica, bioquímica e ambiental, analítica; 79 temas) e Experimentos (módulos QG, QR, QE, QN, QT; EQ01–EQ18, simulações no padrão dos de física). Todos "em breve" (β 3.8).
 - **Idiomas** (β 4.1, completados na β 4.2): Russo, Alemão e Sânscrito dividem um cartão na tela inicial, com a barrinha Я / DE / सं à direita (troca nome, cor e desenho; salvo em `jarvis:lingua`; idioma trancado aparece com borda tracejada e o cartão com cadeado). Cada idioma tem as abas Gramática e Leitura e tradução. Cadastro: `idioma: true` em `assets/materias.js`; abas e módulos do alemão (DG01–DG18, DL01–DL08) e do sânscrito (SG01–SG15, SL01–SL07; objetivo: ler a Bhagavad Gita) em `assets/catalogo-idiomas.js`, todos "em breve". Cores `--mDE` (dourado) e `--mSA` (açafrão), escolhidas em Python longe da paleta e do russo; prefixos `rus:`, `ale:`, `san:`.
@@ -44,6 +50,25 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Cada matéria se registra num arquivo de configuração: acrescentar matéria, aba, módulo ou tema é só editar esse arquivo.
 - Cada matéria e cada aba tem o seu desenho animado na página inicial, leve, em SVG ou CSS.
 - **Acesso por código** (β 4.1): o site começa trancado (visitante vê só a tela inicial). Página `#/codigos` com 3 linhas: ADM (tudo), tester (só a Física; o resto "em construção"; engrenagem trancada) e avulsos (física, matemática, química, idiomas = russo e a barrinha, configurações, alemão, sânscrito e Jarvis). Cada código vale uma vez: repetir mostra "código já usado", sem animação (até "voltar a visitante"). Os códigos e o nível de cada matéria, aba, parte da engrenagem e adesivo ficam em `assets/acesso-config.js` (o Lucas edita esse arquivo conforme cada parte fica pronta); motor em `assets/acesso.js`; página e animações em `assets/codigos.js`. Salvo em `jarvis:acesso` (entra no exportar/importar). Sufixo na versão: ".ADM" ou ".tester". Código errado: aviso discreto, sem animação e sem pista. Toda animação pode ser pulada. Não é segurança de verdade (site estático) e nunca deve ser apresentado como tal. Surpresa → código: campo `easterEggs` previsto, não implementado.
+- **Regras do acesso (resumo fixo):**
+  - Visitante só vê a tela inicial.
+  - Item trancado: aviso ao passar o mouse e duplo clique para os códigos.
+  - Rota direta para algo trancado: página "sem acesso" (ou "em construção", para quem já tem algum código).
+  - Cada código vale uma vez ("código já usado"); errado é só "código não reconhecido", sem pista e sem animação.
+  - A busca do Jarvis nunca mostra nada trancado.
+  - Os códigos e os níveis ficam em `assets/acesso-config.js`. O que é exclusivo fica no motor e não se configura.
+  - Nunca dizer que isso é segurança de verdade.
+- **Padrão das animações de liberação:**
+  - um único SVG por cima da tela, redesenhado por requestAnimationFrame;
+  - sempre pulável (botão "pular ⏭" e Esc); com "reduzir movimento" do sistema, pula direto para o fim e aplica o resultado;
+  - nunca trava a página (o tacesso mede mais de 40 quadros em 2 s no começo e no auge);
+  - ADM e tester são de tela cheia (~9 s) e mexem na versão (".ADM" dourado, ".tester" verde);
+  - avulsos duram 2,65 s, sem tela cheia e sem mexer na versão, e terminam em "acesso liberado · <o que foi>";
+  - toda conta de física da animação é conferida em Python (ex.: engrenagens do alemão, lente do buraco negro).
+- **Exclusivos do ADM** (β 4.3), fixos no motor (`assets/acesso.js`, `SO_ADM`), de propósito FORA do `acesso-config.js`: nenhum outro código libera, nem agora nem depois (nem `give-meskinn`, nem avulso, nem tester). São: a figura central "buraco negro" (quem não é ADM não vê nem a opção) e o título "Jarvis" dourado (degradê dourado andando pelas letras e símbolos pequenininhos subindo de dentro delas; opção "dourado ✦" na lista de cores, salva em `jarvis:cor = "dourado"`). O adesivo "Buraco negro" da Física é outra coisa e continua com o código de configurações.
+- Animações de liberação: ADM = buraco negro que suga símbolos de todas as matérias, desce até o meio da tela do Jarvis, vira a figura central e explode; a onda acende o ".ADM" dourado (β 4.4). Tester = livro que já aparece aberto, símbolos verdes chegando de todos os lados, voo até a versão e ".tester" verde (β 4.5). A diferença entre as duas é proposital.
+- **Exclusivo do tester** (β 4.5, o ADM também tem), fixo no motor como os do ADM: a cor "esmeralda ✦" do título e da figura central. O tester vê o seletor de cor só com essa opção (o arco-íris continua do código de configurações).
+- A figura central "buraco negro" (só ADM) tem duas formas (β 4.6): a normal é o de arame (β 3.9, nas cores do tema); só com o título dourado ela vira o realista, que é o mesmo desenho da animação (`window.BURACO` em `assets/figuras.js`; mudar um muda o outro). Ligar ou tirar o dourado faz uma transição animada (`BURACO.troca`).
 - **Jarvis = busca, SEM IA** (β 4.2): o campo "Perguntar algo ao Jarvis" só procura dentro do site (nomes de temas, seções, fórmulas, termos, cientistas, módulos, matérias), sugere enquanto digita, tolera erro de digitação, usa sinônimos, vai direto com um código de tema, guarda as últimas buscas (`jarvis:buscas`) e abre com Ctrl K em qualquer página. Não existe painel de chat, nem chamada de API, nem lugar esperando chave. Código próprio (`jarvis`); sem ele (e fora do ADM) o campo fica "em breve". Só acha o que o nível de quem busca pode abrir; se só houver coisa trancada, responde "existe, mas você ainda não tem acesso · ir para códigos?", sem nome, trecho ou código. Dúvida de matéria → não responde: sorteia uma das 12+1 frases do personagem com o link do tema e mostra os 3 temas mais próximos. Pergunta de navegação → responde e leva ao lugar. Nunca inventa tema: se não achar, diz e sugere o mais próximo.
 - Arquivos do Jarvis: `assets/jarvis-config.js` (sinônimos, perguntas de navegação, frases, palavras vazias; o Lucas edita), `assets/jarvis-busca.js` (motor e tela), `assets/indice-busca.js` (GERADO: não editar à mão). **Depois de escrever ou mudar um tema, rodar `node tools/gera-indice.js`**; o `tests/tbusca.js` acusa índice desatualizado. Dicas, resoluções e a explicação do "chuta antes de ver" ficam fora do índice, para o trechinho não entregar resposta.
 - **Projeto futuro (NÃO implementar até o Lucas pedir):** um modo de conversa de verdade, em que o Jarvis responde dúvidas de matéria. Exigiria API paga e um programa à parte, com servidor, porque chave de API nunca pode ficar dentro de um site estático. Por enquanto o Jarvis é só busca com personagem.

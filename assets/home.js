@@ -17,9 +17,11 @@
      Guardada em jarvis:figura = { id, hue (null = acompanha a cor do tema), vel (0 = parado … 2) }; entra no exportar/importar. */
   const CHAVE_FIG = "jarvis:figura";
   const lerFig = () => { try { const o = JSON.parse(localStorage.getItem(CHAVE_FIG)); return o && typeof o === "object" ? o : {}; } catch (e) { return {}; } };
-  J.figuraCfg = () => { const o = window.ACESSO && !window.ACESSO.engrenagem("figura") ? {} : lerFig(), F = window.FIGURAS; /* sem acesso: a figura padrão */ return { id: F ? F.porId(o.id).id : "planeta", hue: typeof o.hue === "number" ? o.hue : null, vel: typeof o.vel === "number" ? Math.max(0, Math.min(2, o.vel)) : 1 }; };
+  J.figuraCfg = () => { const o = window.ACESSO && !window.ACESSO.engrenagem("figura") ? {} : lerFig(), F = window.FIGURAS; /* sem acesso: a figura padrão */
+    let id = F ? F.porId(o.id).id : "planeta"; if (window.ACESSO && !window.ACESSO.figura(id)) id = "planeta"; /* β 4.3: o buraco negro é só do ADM (salvo antes por um ADM que voltou a visitante → planeta) */
+    return { id, hue: typeof o.hue === "number" ? o.hue : null, vel: typeof o.vel === "number" ? Math.max(0, Math.min(2, o.vel)) : 1 }; };
   const tons = (h) => [`hsl(${h - 12}, 85%, 66%)`, `hsl(${h}, 80%, 60%)`, `hsl(${h + 14}, 88%, 56%)`]; /* os mesmos três tons do título */
-  J.corFigura = (el, hue) => { if (hue === null) ["--fg1", "--fg2", "--fg3"].forEach((v) => el.style.removeProperty(v)); else tons(hue).forEach((c, k) => el.style.setProperty(`--fg${k + 1}`, c)); };
+  J.corFigura = (el, hue) => { if (hue === null) ["--fg1", "--fg2", "--fg3", "--fg-hue"].forEach((v) => el.style.removeProperty(v)); else { tons(hue).forEach((c, k) => el.style.setProperty(`--fg${k + 1}`, c)); el.style.setProperty("--fg-hue", hue); } }; /* --fg-hue: o buraco negro (cores fixas) gira o matiz */
   let est = null, velAtual = 1;
   const reduz = () => { try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } };
   function laco(agora) {
@@ -48,9 +50,16 @@
 
   /* cor do Jarvis: o título e o planeta mudam juntos. Guardada em jarvis:cor (docs/MODELO_DE_DADOS.md, seção 5). */
   const CHAVE_COR = "jarvis:cor", MATIZ_MAX = 285; /* 0 = vermelho … 285 = lilás */
-  const lerCor = () => { try { const v = JSON.parse(localStorage.getItem(CHAVE_COR)); return typeof v === "number" ? v : null; } catch (e) { return null; } };
+  /* β 4.3: além do número (matiz), jarvis:cor pode valer "dourado" (efeito exclusivo do ADM; para os outros vale a cor original) */
+  /* β 4.5: e "esmeralda" (exclusiva do beta tester; o ADM também tem) */
+  const lerCor = () => { try { const v = JSON.parse(localStorage.getItem(CHAVE_COR)), A = window.ACESSO; return typeof v === "number" ? v : v === "dourado" && A && A.tituloDourado() ? "dourado" : v === "esmeralda" && A && A.tituloEsmeralda() ? "esmeralda" : null; } catch (e) { return null; } };
   const gravarCor = (h) => { try { if (h === null) localStorage.removeItem(CHAVE_COR); else localStorage.setItem(CHAVE_COR, JSON.stringify(h)); } catch (e) {} };
   function aplicaCor(raiz, h) {
+    raiz.classList.toggle("dourado", h === "dourado"); raiz.classList.toggle("esmeralda", h === "esmeralda"); raiz.style.removeProperty("--fg-hue");
+    if (window.BURACO && BURACO.troca) BURACO.troca(h === "dourado"); /* β 4.6: o buraco negro realista é só do título dourado; fora dele, volta o de arame (com animação) */
+    if (h === "dourado") { ["--jv1", "--jv2", "--jv3"].forEach((v) => raiz.style.removeProperty(v)); raiz.classList.remove("cor-propria"); J.ouroTitulo(raiz, "dourado"); return; }
+    if (h === "esmeralda") { /* título E figura central: as variáveis do título são as que a figura segue ("acompanhar a cor do tema") */
+      raiz.style.setProperty("--jv1", "#7dffb2"); raiz.style.setProperty("--jv2", "#2ee59d"); raiz.style.setProperty("--jv3", "#14c8a8"); raiz.style.setProperty("--fg-hue", "150"); raiz.classList.add("cor-propria"); J.ouroTitulo(raiz, "esmeralda"); return; }
     if (h === null) { ["--jv1", "--jv2", "--jv3"].forEach((v) => raiz.style.removeProperty(v)); raiz.classList.remove("cor-propria"); return; }
     /* degradê com três tons vizinhos da cor escolhida */
     raiz.style.setProperty("--jv1", `hsl(${h - 12}, 85%, 66%)`);
@@ -59,14 +68,35 @@
     raiz.classList.add("cor-propria");
   }
   J._aplicaCor = aplicaCor;
+  /* β 4.3 · título dourado (só ADM): o degradê anda pelas letras (CSS) e, de dentro de "Jarvis", sobem símbolos pequenininhos.
+     Leve: no máximo 7 de cada vez, um a cada ~0,45 s, cada um some sozinho; para quando sai da tela inicial ou da opção. */
+  const ESM_SIMB = ["0", "1", "2", "3", "5", "7", "8", "9", "α", "β", "γ", "δ", "θ", "λ", "μ", "π", "σ", "φ", "ψ", "ω", "Σ", "Δ", "Ω", "∫", "∂", "∇", "∞", "√", "≈", "∑"];
+  const OURO_SIMB = ["∫", "∮", "∑", "∂", "∇", "E=mc²", "F=ma", "pV=nRT", "ħω", "λ=h/p", "H₂O", "CO₂", "NaCl", "CH₄", "Я", "Ж", "Ф", "Щ", "ॐ", "क", "स", "ज्ञ", "α", "β", "λ", "Ω", "π", "φ", "Δ"];
+  J.ouroTitulo = (raiz, modo = "dourado") => {
+    raiz._ouroModo = modo; if (raiz._ouro) return; const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches; if (reduz) return;
+    const tit = raiz.querySelector(".jv-titulo"), h1 = tit && tit.querySelector("h1"); if (!h1) return;
+    raiz._ouro = setInterval(() => {
+      if (!document.body.contains(raiz) || !raiz.classList.contains(raiz._ouroModo)) { clearInterval(raiz._ouro); raiz._ouro = null; return; }
+      if (document.hidden || tit.querySelectorAll(".jv-ouro-p").length >= 7) return;
+      const txt = [...h1.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim()); if (!txt) return;
+      const rg = document.createRange(); rg.selectNodeContents(txt); const r = rg.getBoundingClientRect(), b = tit.getBoundingClientRect();
+      const L = raiz._ouroModo === "esmeralda" ? ESM_SIMB : OURO_SIMB, s = document.createElement("span"); s.className = "jv-ouro-p" + (raiz._ouroModo === "esmeralda" ? " esm" : ""); s.setAttribute("aria-hidden", "true"); s.textContent = L[Math.floor(Math.random() * L.length)];
+      s.style.left = (r.left - b.left + r.width * (0.06 + 0.88 * Math.random())).toFixed(1) + "px"; s.style.top = (r.top - b.top + r.height * (0.35 + 0.4 * Math.random())).toFixed(1) + "px";
+      s.style.setProperty("--dx", ((Math.random() - 0.5) * 16).toFixed(1) + "px"); s.style.fontSize = (9 + Math.random() * 3).toFixed(1) + "px";
+      s.addEventListener("animationend", () => s.remove()); tit.appendChild(s);
+    }, 450);
+  };
   function seletorCor(raiz) {
-    const t = raiz.querySelector(".jv-titulo"), inp = raiz.querySelector(".jv-cor input"), bt = raiz.querySelector(".jv-cor button");
-    const livre = !window.ACESSO || window.ACESSO.engrenagem("corTitulo"); /* acesso (β 4.1): sem ele, a cor original e sem seletor */
-    if (!livre) { const c = raiz.querySelector(".jv-cor"); if (c) c.remove(); aplicaCor(raiz, null); return; }
-    const h0 = lerCor(); if (h0 !== null) inp.value = h0;
-    aplicaCor(raiz, h0);
-    inp.addEventListener("input", () => { const h = +inp.value; aplicaCor(raiz, h); gravarCor(h); });
-    bt.addEventListener("click", () => { aplicaCor(raiz, null); gravarCor(null); inp.value = 50; });
+    const t = raiz.querySelector(".jv-titulo"), inp = raiz.querySelector(".jv-cor input"), bt = raiz.querySelector(".jv-cor button:not(.jv-ouro-bt)");
+    const A = window.ACESSO, livre = !A || A.engrenagem("corTitulo"); /* acesso (β 4.1): sem ele, a cor original e sem seletor */
+    const exclusivas = A ? [["dourado", "dourado ✦", "Título dourado (só do ADM)", A.tituloDourado()], ["esmeralda", "esmeralda ✦", "Jarvis esmeralda (do beta tester)", A.tituloEsmeralda()]].filter((x) => x[3]) : [];
+    if (!livre && !exclusivas.length) { const c = raiz.querySelector(".jv-cor"); if (c) c.remove(); aplicaCor(raiz, null); return; }
+    if (!livre) { const l = raiz.querySelector(".jv-cor label"); if (l) l.remove(); } /* β 4.5: o tester não tem o arco-íris (é do código de configurações), só a cor exclusiva dele */
+    const h0 = lerCor(); if (typeof h0 === "number" && livre) inp.value = h0;
+    let depois = bt; exclusivas.forEach(([id, txt, tit]) => { const ob = document.createElement("button"); ob.type = "button"; ob.className = "jv-ouro-bt jv-excl-" + id; ob.dataset.cor = id; ob.textContent = txt; ob.title = tit; depois.after(ob); depois = ob; ob.addEventListener("click", () => { aplicaCor(raiz, id); gravarCor(id); }); });
+    aplicaCor(raiz, typeof h0 === "number" && !livre ? null : h0);
+    if (inp && livre) inp.addEventListener("input", () => { const h = +inp.value; aplicaCor(raiz, h); gravarCor(h); });
+    bt.addEventListener("click", () => { aplicaCor(raiz, null); gravarCor(null); if (inp) inp.value = 50; });
     /* no celular não há "passar o mouse": tocar no título abre e fecha o seletor */
     t.querySelector("h1").addEventListener("click", () => t.classList.toggle("aberto"));
   }
@@ -91,7 +121,7 @@
     const P = window.PROJETO || { nome: "Jarvis" }, ling = J.lingua(), mats = (window.MATERIAS || []).filter((m) => !m.idioma || m.id === ling), suf = AC() ? AC().sufixo() : "";
     const seletor = IDIOMAS().length > 1 && pode("idiomas") ? `<div class="jv-linguas" role="group" aria-label="Idioma da matéria de línguas">${IDIOMAS().map((m) => `<button type="button" data-lingua="${esc(m.id)}" aria-pressed="${m.id === ling}" title="${esc(m.nome)}${pode("materia", m.id) ? "" : " (trancado)"}"${pode("materia", m.id) ? "" : ` class="tranca"`} style="--cor:var(${esc(m.cor)})">${esc(m.letra || m.nome[0])}</button>`).join("")}</div>` : "";
     el.innerHTML = `<div class="jv">
-      <header class="jv-cab"><div class="jv-titulo" tabindex="-1"><h1 title="Passe o mouse para mudar a cor">${esc(P.nome)}${window.VERSAO ? `<span class="jv-ver">${esc(window.VERSAO)}<span class="jv-suf">${esc(suf)}</span></span>` : ""}</h1>
+      <header class="jv-cab"><div class="jv-titulo" tabindex="-1"><h1 title="Passe o mouse para mudar a cor">${esc(P.nome)}${window.VERSAO ? `<span class="jv-ver">${esc(window.VERSAO)}<span class="jv-suf${suf === ".ADM" ? " adm" : suf === ".tester" ? " tester" : ""}">${esc(suf)}</span></span>` : ""}</h1>
         <div class="jv-cor" role="group" aria-label="Cor do ${esc(P.nome)}"><label>cor<input type="range" min="0" max="${MATIZ_MAX}" step="1" value="50" aria-label="Cor, do vermelho ao lilás"></label><button type="button">voltar à cor original</button></div></div></header>
       <nav class="jv-materias" aria-label="Matérias">${mats.map((m) => (m.idioma ? `<div class="jv-mat-idioma">${cartao(m)}${seletor}</div>` : cartao(m))).join("")}</nav>
       <div class="jv-ilu"></div>
