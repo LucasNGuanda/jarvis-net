@@ -27,7 +27,7 @@
     const raiz = el.querySelector(".jv"), camada = document.createElement("div");
     camada.className = "jv-adesivos"; camada.setAttribute("aria-hidden", "true"); el.prepend(camada);
     const gear = el.querySelector(".jv-engrenagem");
-    let itens = ler().filter((it) => A.porId(it.id)), editando = false, sel = null, painel = null, lado = "dir", ativo = null; /* ativo: o que está sendo arrastado segue o mouse, sem empurrão */
+    let itens = ler().filter((it) => A.porId(it.id) && (!window.ACESSO || window.ACESSO.adesivo(it.id))), editando = false, sel = null, painel = null, lado = "dir", ativo = null; /* ativo: o que está sendo arrastado segue o mouse, sem empurrão */
 
     /* zonas proibidas em coordenadas da camada (com folga) */
     const zonas = () => { const L = camada.getBoundingClientRect(), z = []; const add = (e) => { if (e.closest(".jv-adesivos")) return; const cs = getComputedStyle(e); if (cs.display === "none") return; e.getClientRects().length && [...e.getClientRects()].forEach((r) => { if (r.width && r.height) z.push({ x0: r.left - L.left - FOLGA, x1: r.right - L.left + FOLGA, y0: r.top - L.top - FOLGA, y1: r.bottom - L.top + FOLGA }); }); };
@@ -49,7 +49,7 @@
 
     /* ---------- painel (modo de edição) ---------- */
     const montaPainel = () => { painel = document.createElement("div"); painel.className = "jv-painel " + lado; painel.setAttribute("role", "dialog"); painel.setAttribute("aria-label", "Personalizar a tela inicial");
-      const FIG = window.FIGURAS || [], cfg = J.figuraCfg ? J.figuraCfg() : { id: "planeta", hue: null, vel: 1 }, rotVel = (v) => (v === 0 ? "parado" : String(v).replace(".", ",") + "×");
+      const FIG = !window.ACESSO || window.ACESSO.engrenagem("figura") ? window.FIGURAS || [] : [], cfg = J.figuraCfg ? J.figuraCfg() : { id: "planeta", hue: null, vel: 1 }, rotVel = (v) => (v === 0 ? "parado" : String(v).replace(".", ",") + "×");
       const secFig = FIG.length ? `<div class="jv-painel-cat jv-painel-fig"><div class="jv-painel-tit">Figura central</div><div class="jv-painel-figs">${FIG.map((f) => `<button type="button" class="jv-painel-figbt" data-fig="${f.id}" aria-pressed="${cfg.id === f.id}" title="${f.nome}"><span class="jv-painel-mini">${f.svg("m-" + f.id)}</span><span class="jv-painel-fignome">${f.nome}</span></button>`).join("")}</div>
         <label class="jv-painel-linha"><input type="checkbox" data-f="tema"${cfg.hue === null ? " checked" : ""}> acompanhar a cor do tema</label>
         <label class="jv-painel-linha jv-painel-cor"><span>cor</span><input type="range" min="0" max="285" step="1" data-f="cor" value="${cfg.hue === null ? 210 : cfg.hue}"${cfg.hue === null ? " disabled" : ""} aria-label="Cor da figura central"></label>
@@ -57,12 +57,12 @@
       painel.innerHTML = `<div class="jv-painel-cab"><b>Personalizar</b><span class="esp"></span><button type="button" class="bt peq" data-p="lado" title="Mudar o painel de lado">⇄</button><button type="button" class="bt peq pri" data-p="fim">Concluir</button></div>
         ${secFig}<div class="jv-painel-secao"><div class="jv-painel-tit">Adesivos</div><button type="button" class="bt peq" data-p="limpar">Limpar tudo</button></div>
         <p class="jv-painel-dica">Arraste um adesivo para a tela (ou clique nele). Clique num adesivo da tela para mover, girar, redimensionar ou remover. Eles não podem ficar em cima de nada clicável.</p>` +
-        A.categorias.map((k) => { const lista = A.lista.filter((a) => a.cat === k.id); return lista.length ? `<div class="jv-painel-cat"><div class="jv-painel-tit" style="color:${k.cor}">${k.nome}</div><div class="jv-painel-grade">${lista.map((a) => `<button type="button" class="jv-painel-ad" data-id="${a.id}" title="${a.nome}" aria-label="Pôr adesivo: ${a.nome}">${A.svg(a)}</button>`).join("")}</div></div>` : ""; }).join("");
+        A.categorias.map((k) => { const lista = A.lista.filter((a) => a.cat === k.id && (!window.ACESSO || window.ACESSO.adesivo(a.id))); return lista.length ? `<div class="jv-painel-cat"><div class="jv-painel-tit" style="color:${k.cor}">${k.nome}</div><div class="jv-painel-grade">${lista.map((a) => `<button type="button" class="jv-painel-ad" data-id="${a.id}" title="${a.nome}" aria-label="Pôr adesivo: ${a.nome}">${A.svg(a)}</button>`).join("")}</div></div>` : ""; }).join("");
       el.appendChild(painel);
       ligaFigura(painel, rotVel);
       painel.querySelector("[data-p=fim]").addEventListener("click", () => modo(false));
       painel.querySelector("[data-p=lado]").addEventListener("click", () => { lado = lado === "dir" ? "esq" : "dir"; painel.className = "jv-painel " + lado; desenha(); });
-      painel.querySelector("[data-p=limpar]").addEventListener("click", () => { if (!itens.length || !confirm("Tirar todos os adesivos da tela inicial?")) return; itens = []; sel = null; gravar([]); desenha(); });
+      painel.querySelector("[data-p=limpar]").addEventListener("click", () => { if (!itens.length || !confirm("Tirar todos os adesivos da tela inicial?")) return; itens = []; sel = null; gravar(ocultos); desenha(); });
       painel.querySelectorAll(".jv-painel-ad").forEach((b) => b.addEventListener("pointerdown", (ev) => arrastaNovo(ev, b.dataset.id)));
       painel.querySelectorAll(".jv-painel-ad").forEach((b) => b.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); colocaLivre(b.dataset.id); } })); };
     /* seção "Figura central" (β 3.9): miniaturas paradas, cor e velocidade; tudo salvo em jarvis:figura pelo J.figura */
@@ -81,7 +81,8 @@
       if (on) montaPainel(); else if (painel) { painel.remove(); painel = null; } desenha(); };
     gear.addEventListener("click", () => modo(!editando));
 
-    const salvar = () => gravar(itens.map(({ u, id, x, y, s, r }) => ({ u, id, x, y, s, r })));
+    const ocultos = ler().filter((it) => !itens.some((x) => x.u === it.u)); /* acesso (β 4.1): adesivos que esta pessoa não vê continuam salvos */
+    const salvar = () => gravar(itens.map(({ u, id, x, y, s, r }) => ({ u, id, x, y, s, r })).concat(ocultos));
     /* clique sem arrastar (ou Enter): põe o adesivo no lugar livre mais perto da esquerda do globo */
     const colocaLivre = (id) => { const { W, H } = dim(), Z = zonas().concat(itens.map((o) => { const b = caixa({ cx: o._cx ?? W / 2 + o.x, cy: o._cy ?? o.y, s: o.s, r: o.r }); return { x0: b.x0 - 4, x1: b.x1 + 4, y0: b.y0 - 4, y1: b.y1 + 4 }; })), st = maisProxima({ cx: W / 2 - 300, cy: Math.min(H - 80, 330), s: S_NOVO, r: 0 }, Z, W, H); if (!st) return; const it = { u: uid(), id, s: S_NOVO, r: 0, ...deCamada(st, W) }; itens.push(it); sel = it.u; salvar(); desenha(); };
 

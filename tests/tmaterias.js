@@ -5,7 +5,7 @@
 const { chromium } = require('playwright');
 const BASE = 'file:///home/user/site-fisica/index.html#/';
 (async () => {
-  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 860 } });
+  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 860 } }); await require('./adm')(p);
   const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
   const falhas = []; const ok = (c, msg) => { if (!c) falhas.push(msg); console.log((c ? 'ok   ' : 'FALHA ') + msg); };
   const PAGS = { fisica: ['inicio', 'experimentos', 'experimental'], matematica: ['matematica', 'matematica-calculo', 'olimpiada'], quimica: ['quimica', 'quimica-experimentos'], russo: ['russo', 'russo-leitura'] };

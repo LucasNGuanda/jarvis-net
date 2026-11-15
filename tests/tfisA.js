@@ -2,7 +2,7 @@ const RAIZ = 'file://' + require('path').resolve(__dirname, '..', 'index.html');
 const { chromium } = require('playwright');
 const res = []; const ok = (c, m) => res.push([c, m]);
 const perto = (a, b, t = 1e-6) => Math.abs(a - b) <= t * Math.max(1, Math.abs(b));
-(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
+(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } }); await require('./adm')(p);
   const errs = []; p.on('pageerror', e => errs.push(e.message));
   const vai = async (c) => { await p.goto(RAIZ + '#/' + c); await p.waitForTimeout(1300); };
   await vai('A01'); let r = await p.evaluate(() => SIM.vaiVolta._conta(8, 5, -4, 5));

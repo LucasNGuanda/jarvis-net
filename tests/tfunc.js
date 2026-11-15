@@ -7,7 +7,7 @@ const S = require('path').join(__dirname, 'capturas') + '/';
 const ok = [], falha = [];
 const conf = (cond, msg) => (cond ? ok : falha).push(msg);
 (async () => {
-  const b = await chromium.launch(); const ctx = await b.newContext({ viewport: { width: 1280, height: 800 }, acceptDownloads: true }); const p = await ctx.newPage();
+  const b = await chromium.launch(); const ctx = await b.newContext({ viewport: { width: 1280, height: 800 }, acceptDownloads: true }); const p = await ctx.newPage(); await require('./adm')(p);
   const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
   p.on('dialog', d => d.accept());
   await p.goto(U + '#/inicio'); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForTimeout(600);

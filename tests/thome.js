@@ -1,17 +1,17 @@
 const RAIZ = 'file://' + require('path').resolve(__dirname, '..', 'index.html'); /* site na pasta acima de tests/ */
 const { chromium } = require('playwright');
 const res = []; const ok = (c, m) => res.push([c, m]);
-(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
+(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } }); await require('./adm')(p);
   const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('requestfailed', r => errs.push('falhou ' + r.url()));
   const base = RAIZ;
   // 1. sem hash abre a tela inicial
   await p.goto(base); await p.waitForTimeout(1200);
   let s = await p.evaluate(() => ({ home: !!document.querySelector('.jv'), modo: document.body.classList.contains('modo-home'), topo: getComputedStyle(document.querySelector('.topo')).display, menu: getComputedStyle(document.querySelector('.menu')).display, titulo: document.querySelector('.jv-cab h1').textContent, mats: [...document.querySelectorAll('.jv-mat')].map(m => [m.dataset.materia, m.tagName, m.classList.contains('desativada'), m.textContent.includes('em breve')]) }));
   ok(s.home && s.modo && s.topo === 'none' && s.menu === 'none', 'sem hash: abre a tela inicial, sem a faixa e o menu da física → ' + JSON.stringify([s.home, s.modo, s.topo, s.menu]));
-  ok(/^Jarvisβ \d+\.\d+$/.test(s.titulo), 'título do projeto, com a versão ao lado (desde a β 3.4) → ' + s.titulo);
+  ok(/^Jarvisβ \d+\.\d+(\.ADM|\.tester)?$/.test(s.titulo), 'título do projeto, com a versão ao lado (desde a β 3.4; com .ADM ou .tester desde a β 4.1) → ' + s.titulo);
   ok(JSON.stringify(s.mats) === JSON.stringify([['fisica', 'A', false, false], ['quimica', 'A', false, false], ['matematica', 'A', false, false], ['russo', 'A', false, false]]), 'as quatro matérias são links (Russo desde a β 3.8) → ' + JSON.stringify(s.mats));
   const perg = await p.evaluate(() => { const f = document.querySelector('.jv-pergunta'); return [f.querySelector('input').disabled, f.querySelector('button').disabled, f.textContent.includes('em breve')]; });
-  ok(perg.every(Boolean), 'campo de pergunta desativado com "em breve" → ' + perg);
+  ok(perg.every((x) => !x), 'campo de pergunta ativo para o ADM (busca do Jarvis, β 4.2; sem o código ele fica "em breve": ver tacesso) → ' + perg);
   await p.screenshot({ path: 'home-escuro.png' });
   // 2. clicar numa desativada não muda nada (matéria de teste, só na memória: hoje as quatro estão prontas)
   await p.evaluate(() => { MATERIAS.push({ id: 'biologia', nome: 'Biologia', desc: 'teste', rota: '#/biologia/inicio', cor: '--mX', icone: 'frasco', pronta: false, prefixo: 'bio' }); JARVIS.home(document.getElementById('pagina')); });
