@@ -1,4 +1,4 @@
-/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; */
+/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -100,6 +100,41 @@
       if (e) sv += `<rect x="${X(e.m - e.sm)}" y="244" width="${Math.max(2, X(e.m + e.sm) - X(e.m - e.sm))}" height="14" style="fill:color-mix(in srgb,var(--warn) 40%,transparent);stroke:var(--warn)"/><line x1="${X(e.m - e.s)}" x2="${X(e.m + e.s)}" y1="270" y2="270" style="stroke:var(--mN);stroke-width:2"/><circle cx="${X(e.m)}" cy="251" r="4" style="fill:var(--warn)"/>` + D.txt(X(e.m + e.s) + 6, 274, "média ± σ", "tx2", "start") + D.txt(X(e.m + e.sm) + 6, 256, "média ± σ/√N", "tx2", "start");
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("média", e ? n2(e.m, 3) : "—") + vis("desvio padrão σ (espalhamento)", e ? n2(e.s, 3) : "—") + vis("desvio da média σ/√N (incerteza)", e ? n2(e.sm, 3) : "—") + vis("intervalos que contêm o verdadeiro", exps ? acertos + " de " + exps + " (" + n2((100 * acertos) / exps, 0) + "%)" : "—");
+    });
+  };
+
+  /* ---------- FE04 · propagação de incertezas pela derivada logarítmica: quem contribui quanto ---------- */
+  SIM.propaga = (el, F) => {
+    const W = 680, H = 250;
+    /* cada fórmula: f = k · Π x_i^a_i; variáveis com valor e incerteza (sliders) */
+    const forms = {
+      pend: { nome: "g = 4π² L / T²", k: 4 * Math.PI * Math.PI, un: "m/s²", vs: [["L", "comprimento L (m)", 1, 0.3, 2, 0.01, "ΔL (mm)", 2, 0.5, 10, 0.5, 1e-3], ["T", "período T (s)", -2, 1.1, 2.9, 0.001, "ΔT (ms)", 4, 1, 50, 1, 1e-3]] },
+      esf: { nome: "ρ = 6m / (π d³)", k: 6 / Math.PI, un: "g/cm³", vs: [["m", "massa m (g)", 1, 5, 50, 0.1, "Δm (g)", 0.1, 0.01, 1, 0.01, 1], ["d", "diâmetro d (cm)", -3, 1, 4, 0.01, "Δd (mm)", 0.1, 0.05, 1, 0.05, 0.1]] },
+      vel: { nome: "v = d / t", k: 1, un: "m/s", vs: [["d", "distância d (m)", 1, 1, 100, 0.5, "Δd (cm)", 50, 1, 100, 1, 0.01], ["t", "tempo t (s)", -1, 0.5, 20, 0.01, "Δt (s)", 0.05, 0.01, 0.3, 0.01, 1]] },
+    };
+    let fk = "pend";
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls" data-v="ct"></div><div class="bts" style="margin:6px 0">${botoes([["pend", "pêndulo: g = 4π²L/T²"], ["esf", "densidade de uma esfera"], ["vel", "velocidade média"]], "f", "pend")}</div>
+      <div class="status">Pela derivada logarítmica, a incerteza relativa do resultado é a soma das incertezas relativas de cada medida, cada uma multiplicada pelo módulo do seu expoente: Δf/f = |a|·Δx/x + |b|·Δy/y. As barras mostram quanto cada medida contribui. A barra mais comprida é a que vale a pena melhorar. Também aparece a versão em quadratura (raiz da soma dos quadrados), usada na universidade.</div>`);
+    const q = (s) => el.querySelector(s);
+    const monta = () => { const f = forms[fk]; q("[data-v=ct]").innerHTML = f.vs.map(([id, rot, , mn, mx, ps, rotd, dv, dmn, dmx, dps]) => sl(rot, id, mn, mx, ps, id === "L" ? 0.5 : id === "T" ? 1.419 : id === "m" ? 20 : id === "d" && fk === "esf" ? 2 : id === "d" ? 100 : 12.5) + sl(rotd, "d" + id, dmn, dmx, dps, dv)).join(""); };
+    SIM.propaga._rel = (pares) => { const termos = pares.map(([a, x, dx]) => Math.abs(a) * (dx / x)); return { termos, lin: termos.reduce((s, t) => s + t, 0), quad: Math.sqrt(termos.reduce((s, t) => s + t * t, 0)) }; };
+    liga(el, "f", (k) => { fk = k; monta(); });
+    monta();
+    anima(el, F, () => {
+      const f = forms[fk];
+      const pares = f.vs.map(([id, , a, , , , , , , , , fat]) => [a, val(el, id), val(el, "d" + id) * fat]);
+      f.vs.forEach(([id]) => { mostra(el, [id], 3); mostra(el, ["d" + id], 2); });
+      const r = SIM.propaga._rel(pares), valor = pares.reduce((p, [a, x]) => p * Math.pow(x, a), f.k);
+      const bx = 220, bw = 400, mx = Math.max(r.lin, 1e-9);
+      let sv = D.txt(20, 30, f.nome, "txm", "start");
+      pares.forEach(([a, x, dx], i) => { const t = r.termos[i], y = 60 + i * 50, nome = f.vs[i][0]; sv += D.txt(bx - 10, y + 16, `|${a}| · Δ${nome}/${nome} = ${n2(t * 100, 3)}%`, "tx2", "end") + `<rect x="${bx}" y="${y}" width="${(t / mx) * bw}" height="24" rx="3" style="fill:color-mix(in srgb,${i ? "var(--warn)" : "var(--mA)"} 50%,transparent);stroke:${i ? "var(--warn)" : "var(--mA)"}"/>`; });
+      const yT = 60 + pares.length * 50 + 10;
+      sv += `<line x1="${bx}" x2="${bx + bw}" y1="${yT - 6}" y2="${yT - 6}" style="stroke:var(--ink3)"/>` + D.txt(bx - 10, yT + 16, "soma (professor) = " + n2(r.lin * 100, 3) + "%", "tx2", "end") + `<rect x="${bx}" y="${yT}" width="${bw}" height="24" rx="3" style="fill:color-mix(in srgb,var(--ok) 40%,transparent);stroke:var(--ok)"/>`;
+      sv += D.txt(bx - 10, yT + 56, "quadratura = " + n2(r.quad * 100, 3) + "%", "tx2", "end") + `<rect x="${bx}" y="${yT + 40}" width="${(r.quad / mx) * bw}" height="24" rx="3" style="fill:color-mix(in srgb,var(--ink3) 40%,transparent);stroke:var(--ink3)"/>`;
+      q("[data-v=sv]").innerHTML = sv;
+      const dv = valor * r.lin;
+      q("[data-v=lt]").innerHTML = vis("resultado", n2(valor, 4) + " " + f.un) + vis("incerteza (soma das relativas)", "± " + n2(dv, 4) + " " + f.un) + vis("incerteza relativa", n2(r.lin * 100, 2) + "%") + vis("quem mais contribui", f.vs[r.termos.indexOf(Math.max(...r.termos))][0]);
     });
   };
 })();

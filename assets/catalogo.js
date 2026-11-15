@@ -170,7 +170,7 @@ window.CATALOGO = [
     ["FE01","O que é medir: unidades e algarismos significativos",[],true],
     ["FE02","O que é incerteza (tipo A e tipo B)",[],true],
     ["FE03","Média, desvio padrão e incerteza da média",[],true],
-    ["FE04","Propagação de incertezas",["∫","★"]],
+    ["FE04","Propagação de incertezas",["∫","★"],true],
     ["FE05","Comparando resultados: discrepância e compatibilidade"],
   ]},
   { id:"FEg", area:"lab", letra:"G", cor:"--mO", nome:"Gráficos e ajustes", desc:"Gráficos com barras de erro, linearização, log-log e mínimos quadrados.", temas:[
