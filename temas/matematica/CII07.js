@@ -1,7 +1,7 @@
 /* CII07 · Integrais duplas e triplas. Conferido com sympy (scratchpad cii2.py):
    ∫₀²∫₀¹(x + 2y) dy dx = 4; ∬ xy no triângulo 0 ≤ y ≤ x ≤ 1 = 1/8; ∫₀¹∫ₓ¹ e^(y²) dy dx = (e − 1)/2; ∬_(r ≤ 2)(x² + y²) = 8π;
    disco com σ = σ₀r/R: M = 2πσ₀R²/3; ∬_(r ≤ R) e^(−r²) = π(1 − e^(−R²)); esfera rolando: a = (5/7) g sen θ. */
-F.registrar("CII07", {
+F.registrar("matematica/CII07", {
   retoma: ["CI09", "CII05"],
   html(F) {
     const R = String.raw;

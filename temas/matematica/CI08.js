@@ -1,7 +1,7 @@
 /* CI08 · Integral indefinida e substituição. Conferido com sympy (scratchpad ci2.py):
    ∫x√(1 + x²) = (1 + x²)^(3/2)/3; ∫₀¹xe^(x²) = (e − 1)/2 ≈ 0,8591; ∫tg x = −ln|cos x|; ∫₀^(π/2) sen³x cos x = 1/4;
    ∫₀^(π/2) sen x/(sen x + cos x) = π/4; ∫dx/(1 + eˣ) = x − ln(1 + eˣ). */
-F.registrar("CI08", {
+F.registrar("matematica/CI08", {
   retoma: ["CI07"],
   html(F) {
     const R = String.raw;
@@ -86,7 +86,7 @@ F.registrar("CI08", {
         F.exercicio({ n: 3, enun: R`<p>Calcule $\int x\sqrt{1 + x^2}\,dx$.</p>`, fig: "", dicas: [R`<p>$u = 1 + x^2$.</p>`, R`<p>$\int\sqrt u\,\frac{du}2$.</p>`], resp: R`$\frac13(1 + x^2)^{3/2} + C$.`, sol: R`<p>$\frac12\cdot\frac{u^{3/2}}{3/2} = \frac{u^{3/2}}{3}$.</p>` }),
         F.exercicio({ n: 4, enun: R`<p>Calcule $\int_0^1x\,e^{x^2}dx$ e $\int_0^{\pi/2}\operatorname{sen}^3x\cos x\,dx$.</p>`, fig: "", dicas: [R`<p>Primeira: $u = x^2$.</p>`, R`<p>Segunda: $u = \operatorname{sen}x$; limites $0 \to 1$.</p>`], resp: R`$\frac{e - 1}{2} \approx 0{,}859$ e $\frac14$.`, sol: R`<p>$\frac12[e^u]_0^1$ e $\left[\frac{u^4}{4}\right]_0^1$.</p>` }),
         F.exercicio({ n: 5, enun: R`<p>Uma partícula tem $a(t) = 6t$ (m/s²), $v(0) = 2$ m/s e $x(0) = 1$ m. Ache $x(t)$ e a posição em $t = 2$ s.</p>`, fig: "", dicas: [R`<p>$v = 3t^2 + C_1$.</p>`, R`<p>$x = t^3 + 2t + C_2$.</p>`], resp: R`$x(t) = t^3 + 2t + 1$; $x(2) = 13$ m.`, sol: R`<p>$C_1 = 2$, $C_2 = 1$. Aceleração que cresce no tempo dá $t^3$: o "jerk" (derivada da aceleração) é 6 m/s³.</p>` }),
-        F.exercicio({ n: 6, marcas: ["!"], enun: R`<p>Um capacitor descarrega com corrente $i(t) = I_0e^{-t/\tau}$. Que carga sai dele entre $t = 0$ e $t \to \infty$? E até $t = \tau$?</p>`, fig: "", dicas: [R`<p>$Q = \int i\,dt$, com $\int e^{-t/\tau}dt = -\tau e^{-t/\tau}$.</p>`, R`<p>Até $\tau$: $I_0\tau(1 - e^{-1})$.</p>`], resp: R`Total $I_0\tau$; até $t = \tau$, $I_0\tau(1 - 1/e) \approx 63\%$ do total.`, sol: R`<p>$\int_0^Ti\,dt = I_0\tau\left(1 - e^{-T/\tau}\right)$. É de onde vem o "63% em uma constante de tempo" do circuito RC ${F.ret("C10b")}. (O limite $T \to \infty$ é uma integral imprópria, ${F.ret("CII02")}.)</p>` }),
+        F.exercicio({ n: 6, marcas: ["!"], enun: R`<p>Um capacitor descarrega com corrente $i(t) = I_0e^{-t/\tau}$. Que carga sai dele entre $t = 0$ e $t \to \infty$? E até $t = \tau$?</p>`, fig: "", dicas: [R`<p>$Q = \int i\,dt$, com $\int e^{-t/\tau}dt = -\tau e^{-t/\tau}$.</p>`, R`<p>Até $\tau$: $I_0\tau(1 - e^{-1})$.</p>`], resp: R`Total $I_0\tau$; até $t = \tau$, $I_0\tau(1 - 1/e) \approx 63\%$ do total.`, sol: R`<p>$\int_0^Ti\,dt = I_0\tau\left(1 - e^{-T/\tau}\right)$. É de onde vem o "63% em uma constante de tempo" do circuito RC ${F.ret("fisica/C10b")}. (O limite $T \to \infty$ é uma integral imprópria, ${F.ret("CII02")}.)</p>` }),
         F.exercicio({ n: 7, marcas: ["!"], enun: R`<p>Calcule $\int\operatorname{tg}x\,dx$ e $\int\frac{\ln x}{x}\,dx$.</p>`, fig: "", dicas: [R`<p>$\operatorname{tg} = \frac{\operatorname{sen}}{\cos}$, $u = \cos x$.</p>`, R`<p>$u = \ln x$, $du = \frac{dx}x$.</p>`], resp: R`$-\ln|\cos x| + C$; $\ \frac{(\ln x)^2}{2} + C$.`, sol: R`<p>No primeiro, $du = -\operatorname{sen}x\,dx$ e fica $-\int\frac{du}u$. No segundo, $\int u\,du$.</p>` }),
       ].join("") + chefao),
     ].join("");

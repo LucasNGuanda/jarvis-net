@@ -2,7 +2,7 @@
    x = 5 + 3t − t²: v = 3 − 2t, para em t = 1,5 s com x = 7,25 m; ∫₀³ 2t dt = 9; mola k = 200, 0 → 0,1 m: 1 J; ∫₀² 6x² dx = 16 J;
    x = t³ − 6t² + 9t: para em t = 1 e 3; em [0, 3] deslocamento 0 e distância 8; a = 0,5t do repouso: em t = 4 s, v = 4 m/s e x = 16/3 m. */
 F.registrar("F04", {
-  retoma: ["CI03", "CI07", "F05"],
+  retoma: ["matematica/CI03", "matematica/CI07", "F05"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -34,7 +34,7 @@ F.registrar("F04", {
     return [
       F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Fundamentos · cálculo</div>
         <div class="q">O velocímetro mostra a velocidade "agora". Mas o que é velocidade num instante, se num instante você não anda nada?</div>
-        <p>É o limite da velocidade média num intervalo cada vez menor: a <b>derivada</b>. E o caminho de volta, somar pedacinhos $v\,\Delta t$ para achar o quanto se andou, é a <b>integral</b>. Newton inventou o cálculo justamente para fazer mecânica. Aqui vai o essencial para usar na física; o cálculo com rigor está na aba Cálculo ${F.ret("CI03")}.</p></div>`),
+        <p>É o limite da velocidade média num intervalo cada vez menor: a <b>derivada</b>. E o caminho de volta, somar pedacinhos $v\,\Delta t$ para achar o quanto se andou, é a <b>integral</b>. Newton inventou o cálculo justamente para fazer mecânica. Aqui vai o essencial para usar na física; o cálculo com rigor está na aba Cálculo ${F.ret("matematica/CI03")}.</p></div>`),
 
       F.secao("derivada", "Derivada: taxa de variação", R`
         ${F.formula(R`v = \frac{dx}{dt} = \lim_{\Delta t\to0}\frac{x(t + \Delta t) - x(t)}{\Delta t},\qquad a = \frac{dv}{dt} = \frac{d^2x}{dt^2}`, "Velocidade e aceleração instantâneas")}
@@ -45,7 +45,7 @@ F.registrar("F04", {
 
       F.secao("integral", "Integral: soma de pedacinhos", R`
         ${F.formula(R`\Delta x = \int_{t_1}^{t_2}v(t)\,dt,\qquad W = \int_{x_1}^{x_2}F(x)\,dx,\qquad \Delta v = \int a\,dt`, "Integral como área")}
-        <p>No gráfico $v \times t$, a área sob a curva é o deslocamento (área abaixo do eixo conta negativa). No gráfico $F \times x$, a área é o trabalho. O Teorema Fundamental do Cálculo ${F.ret("CI07")} diz que integrar desfaz derivar: para calcular a área, ache uma função cuja derivada é o integrando.</p>
+        <p>No gráfico $v \times t$, a área sob a curva é o deslocamento (área abaixo do eixo conta negativa). No gráfico $F \times x$, a área é o trabalho. O Teorema Fundamental do Cálculo ${F.ret("matematica/CI07")} diz que integrar desfaz derivar: para calcular a área, ache uma função cuja derivada é o integrando.</p>
         ${F.caixa("pegadinha", R`<p><b>Deslocamento × distância:</b> $\int v\,dt$ dá o deslocamento (com sinal). A distância percorrida é $\int|v|\,dt$: se a velocidade troca de sinal, é preciso separar os trechos.</p>`)}
         ${F.caixa("olimpiada", R`<p><b>Truque:</b> $a = v\frac{dv}{dx}$ (regra da cadeia). Quando a força depende da posição, $F(x) = mv\frac{dv}{dx}$ integra direto em $\frac12mv^2$: é o teorema trabalho-energia saindo de $F = ma$.</p>`)}
         ${exemplario}`),

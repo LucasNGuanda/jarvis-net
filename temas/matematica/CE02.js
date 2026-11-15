@@ -1,7 +1,7 @@
 /* CE02 · Função Gama de Euler. Números conferidos com scipy (scratchpad ce.py):
    Γ(7/2)=15√π/8=3,3234; Γ(−3/2)=4√π/3=2,3633; Γ(−1/2)=−2√π; ∫x⁴e^(−2x)=0,75; ∫e^(−x³)=Γ(4/3)=0,8930; ∫sen⁶ (0..π/2)=5π/32;
    mínimo de Γ em x=1,4616 (Γ=0,8856); Stirling 10! = 3 598 696 (−0,83%); V₅ = 8π²/15 = 5,2638 é o maior volume de bola unitária; ∫x³/(eˣ−1) = π⁴/15. */
-F.registrar("CE02", {
+F.registrar("matematica/CE02", {
   retoma: ["CE01"],
   html(F) {
     const R = String.raw;
@@ -65,7 +65,7 @@ F.registrar("CE02", {
           <p>(iii) O colchete é zero nas duas pontas (em 0 por causa do $t^x$; no infinito a exponencial vence a potência). Sobra:</p>
           ${F.formula(R`\Gamma(x+1) = x\,\Gamma(x)`)}
           <p>(iv) Daí $\Gamma(2) = 1$, $\Gamma(3) = 2\cdot1$, $\Gamma(4) = 3\cdot2\cdot1$, ou seja, $\Gamma(n+1) = n!$. A gama é o fatorial "deslocado de 1" (a convenção é chata, mas é histórica).</p>`)}
-        ${F.caixa("ponte", R`<p><b>A sua função gam fresco ${F.ret("X01")} fez o mesmo movimento:</b> pegar algo definido só para inteiros e achar uma fórmula que aceita quebrados. Lá a soma $1 + \dots + n$ tinha fórmula curta. Aqui o produto não tem, e por isso o Euler precisou de uma integral.</p>`)}`),
+        ${F.caixa("ponte", R`<p><b>A sua função gam fresco ${F.ret("fisica/X01")} fez o mesmo movimento:</b> pegar algo definido só para inteiros e achar uma fórmula que aceita quebrados. Lá a soma $1 + \dots + n$ tinha fórmula curta. Aqui o produto não tem, e por isso o Euler precisou de uma integral.</p>`)}`),
 
       F.secao("lab", "Laboratório", R`<p>Arraste o $x$. Compare o valor da curva com a área pintada (calculada na hora, por soma numérica). Leve o $x$ para valores negativos e veja os polos.</p><div id="lab-g"></div>`),
 

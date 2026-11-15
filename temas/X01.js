@@ -99,7 +99,7 @@ F.registrar("X01", {
       F.secao("parentes", "Parentes famosos", R`
         <ul>
           <li><b>Hiperfatorial:</b> $H(n) = 1^1\cdot2^2\cdot3^3\cdots n^n$. Em vez de repetir a mesma base, cada número vem elevado a ele mesmo. Foi estendido para números quebrados por <b>Kinkelin</b>, em 1860 (a função $K$), e daí sai a constante de Glaisher–Kinkelin $A \approx 1{,}2824$.</li>
-          <li><b>A gama do Euler:</b> $\Gamma(n+1) = n!$ ${F.ret("CE02")}. O mesmo problema que você resolveu ("como colocar 0,5 numa coisa definida só para inteiros"), só que com produto em vez de soma no expoente.</li>
+          <li><b>A gama do Euler:</b> $\Gamma(n+1) = n!$ ${F.ret("matematica/CE02")}. O mesmo problema que você resolveu ("como colocar 0,5 numa coisa definida só para inteiros"), só que com produto em vez de soma no expoente.</li>
           <li><b>Superfatorial</b> (Sloane): $1!\cdot2!\cdots n!$. Estendido pela função $G$ de Barnes.</li></ul>
         <table class="tb"><tr><th style="text-transform:none">$n$</th><th style="text-transform:none">$n!$</th><th style="text-transform:none">$H(n)$</th><th style="text-transform:none">$n\gf$</th></tr>
           <tr><td>2</td><td>2</td><td>4</td><td>8</td></tr><tr><td>3</td><td>6</td><td>108</td><td>729</td></tr><tr><td>4</td><td>24</td><td>27 648</td><td>1 048 576</td></tr><tr><td>5</td><td>120</td><td>86 400 000</td><td>30 517 578 125</td></tr></table>

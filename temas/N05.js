@@ -39,7 +39,7 @@ F.registrar("N05", {
 
       F.secao("cauchy", "Passo 1: F = ma num pedacinho de fluido", R`
         <p>Pegue um volume pequeno $dV$ que anda com o fluido. Massa: $\rho\,dV$. Aceleração: a derivada material $\frac{D\vec v}{Dt} = \frac{\partial\vec v}{\partial t} + (\vec v\cdot\nabla)\vec v$. Forças: o peso $\rho\vec g\,dV$ e as forças de contato nas faces, que vêm do tensor $\sigma$.</p>
-        <p>A força de contato total numa região é $\oint\sigma\hat n\,dA$, e pelo teorema da divergência ${F.ret("TE02")} isso é $\int\nabla\cdot\sigma\,dV$. Então, por unidade de volume:</p>
+        <p>A força de contato total numa região é $\oint\sigma\hat n\,dA$, e pelo teorema da divergência ${F.ret("matematica/TE02")} isso é $\int\nabla\cdot\sigma\,dV$. Então, por unidade de volume:</p>
         ${F.formula(R`\rho\frac{D\vec v}{Dt} = \nabla\cdot\sigma + \rho\vec g,\qquad (\nabla\cdot\sigma)_i = \sum_j\frac{\partial\sigma_{ij}}{\partial x_j}`, "Equação de Cauchy (vale para qualquer meio contínuo)")}
         <p>Até aqui não falamos nada sobre o material: isso vale para água, mel, aço ou geleia. O que diferencia um do outro é <b>como</b> $\sigma$ depende do movimento.</p>`),
 

@@ -4,7 +4,7 @@
    tubo de ressonância (440 Hz, ressonâncias a 19 cm e 57,5 cm): λ = 0,77 m, v = 338,8 m/s, correção de ponta 0,25 cm;
    corda pinçada no meio: bₙ ∝ sen(nπ/2)/n² (pares somem); a 1/5: o 5º some. */
 F.registrar("O03", {
-  retoma: ["O01", "O02", "CII04"],
+  retoma: ["O01", "O02", "matematica/CII04"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -30,7 +30,7 @@ F.registrar("O03", {
       dicas: [R`<p>(a) $\sin(n\pi/2) = 0$ para $n$ par.</p>`, R`<p>(c) Olhe o $1/n^2$.</p>`],
       sol: R`<p><b>(a)</b> No meio, $\sin(n\pi/2) = 0$ para todo $n$ par: só sobram os harmônicos ímpares (1º, 3º, 5º…), com $b_3/b_1 = -1/9$, $b_5/b_1 = 1/25$.</p>
         <p><b>(b)</b> Em $a = L/5$: $\sin(n\pi/5) = 0$ para $n = 5, 10, 15\dots$ Some o 5º harmônico e os seus múltiplos. Faz sentido: o ponto pinçado não pode ser nó de um modo que ele mesmo excita.</p>
-        <p><b>(c)</b> O $1/n^2$: a forma triangular tem "bico" (inclinação descontínua), e cada derivada que falta na suavidade da forma inicial custa um fator $1/n$ nos coeficientes ${F.ret("CII04")}. Um martelo de piano (bem mais "duro") excita harmônicos mais altos que um dedo.</p>
+        <p><b>(c)</b> O $1/n^2$: a forma triangular tem "bico" (inclinação descontínua), e cada derivada que falta na suavidade da forma inicial custa um fator $1/n$ nos coeficientes ${F.ret("matematica/CII04")}. Um martelo de piano (bem mais "duro") excita harmônicos mais altos que um dedo.</p>
         <p><b>(d)</b> Perto da ponta ($a$ pequeno), $\sin(n\pi a/L) \approx n\pi a/L$, e os $b_n$ caem só como $1/n$: muitos harmônicos altos, som brilhante e metálico. No meio, os pares somem e os altos caem rápido: som mais puro e doce. A física do timbre é Fourier.</p>`,
     });
     return [

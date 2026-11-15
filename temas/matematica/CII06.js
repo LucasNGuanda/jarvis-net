@@ -1,7 +1,7 @@
 /* CII06 · Gradiente, máximos e mínimos, multiplicadores de Lagrange. Conferido com sympy (scratchpad cii2.py):
    ∇(x²y) em (1, 2) = (4, 1), derivada direcional em (3, 4)/5 = 16/5; x³ − 3x + y²: mínimo em (1, 0), sela em (−1, 0);
    caixa sem tampa de 32 → 4 × 4 × 2, área 48; mínimos quadrados de (1; 2,1), (2; 3,9), (3; 6,2) → y = 2,05x − 0,033; plano x + 2y + 2z = 9 → (1, 2, 2), distância 3. */
-F.registrar("CII06", {
+F.registrar("matematica/CII06", {
   retoma: ["CII05", "CI05"],
   html(F) {
     const R = String.raw;
@@ -51,7 +51,7 @@ F.registrar("CII06", {
         <ul><li>$\nabla f$ aponta para onde $f$ <b>sobe mais rápido</b> ($\theta = 0$), e $|\nabla f|$ é essa taxa máxima.</li>
           <li>$-\nabla f$ é a descida mais íngreme (por onde a água escorre).</li>
           <li>Na direção perpendicular a $\nabla f$, $f$ não muda: o gradiente é <b>perpendicular às curvas de nível</b>.</li></ul>
-        ${F.caixa("fisico", R`<p>$\vec E = -\nabla V$ (o campo é perpendicular às equipotenciais e aponta para o potencial menor ${F.ret("C04")}); $\vec F = -\nabla U$ (força conservativa); $\vec q = -k\nabla T$ (o calor flui do quente para o frio, lei de Fourier). Os três são "descer a ladeira".</p>`)}`),
+        ${F.caixa("fisico", R`<p>$\vec E = -\nabla V$ (o campo é perpendicular às equipotenciais e aponta para o potencial menor ${F.ret("fisica/C04")}); $\vec F = -\nabla U$ (força conservativa); $\vec q = -k\nabla T$ (o calor flui do quente para o frio, lei de Fourier). Os três são "descer a ladeira".</p>`)}`),
 
       F.secao("extremos", "Máximos, mínimos e selas", R`
         <p>Num máximo ou mínimo local (no interior, com $f$ derivável), todas as parciais zeram: $\nabla f = \vec0$. Os pontos com $\nabla f = \vec0$ são os <b>pontos críticos</b>. Em 2D aparece um tipo novo: o <b>ponto de sela</b>, máximo numa direção e mínimo em outra ($x^2 - y^2$ no laboratório da CII05).</p>
@@ -68,7 +68,7 @@ F.registrar("CII06", {
         ${F.demo("o retângulo de maior área com perímetro fixo", R`<p>(i) Maximizar $A = xy$ com $2x + 2y = P$.</p>
           <p>(ii) $\nabla A = (y, x)$ e $\nabla g = (2, 2)$. Lagrange: $y = 2\lambda$ e $x = 2\lambda$, então $x = y$.</p>
           <p>(iii) É um quadrado, de lado $\frac P4$ ∎. Sem Lagrange, daria para isolar $y$ e cair em Cálculo 1; com três ou mais variáveis e vínculos complicados, Lagrange é muito mais limpo.</p>`)}
-        <p><b>O que é o λ?</b> Ele mede quanto o ótimo de $f$ melhora se você afrouxar o vínculo um pouquinho: $\lambda = \frac{df_\text{ótimo}}{dc}$. Na mecânica, os multiplicadores dos vínculos são exatamente as <b>forças de vínculo</b> (a tração do pêndulo, a normal de uma superfície) ${F.ret("U03")}. Na termodinâmica, a temperatura (chefão).</p>
+        <p><b>O que é o λ?</b> Ele mede quanto o ótimo de $f$ melhora se você afrouxar o vínculo um pouquinho: $\lambda = \frac{df_\text{ótimo}}{dc}$. Na mecânica, os multiplicadores dos vínculos são exatamente as <b>forças de vínculo</b> (a tração do pêndulo, a normal de uma superfície) ${F.ret("fisica/U03")}. Na termodinâmica, a temperatura (chefão).</p>
         ${exemplario}`),
 
       F.secao("desafios", "Desafios", [

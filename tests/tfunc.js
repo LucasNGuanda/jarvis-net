@@ -103,19 +103,22 @@ const conf = (cond, msg) => (cond ? ok : falha).push(msg);
   await p.click('#bt-breve');
 
   // 6. abas, sumário, cartões do início
-  for (const [aba, area] of [['fisica', 'inicio'], ['calculo', 'calculo'], ['exp', 'experimentos'], ['lab', 'experimental']]) {
-    await p.goto(U + "#/inicio"); await p.waitForTimeout(400); await p.click(`.aba[data-area="${aba}"]`); await p.waitForTimeout(500);
+  /* β 4.0: a aba Cálculo saiu da física e foi para a matemática */
+  for (const [aba, area, de] of [['fisica', 'inicio', 'inicio'], ['exp', 'experimentos', 'inicio'], ['lab', 'experimental', 'inicio'], ['matcalc', 'matematica-calculo', 'matematica']]) {
+    await p.goto(U + "#/" + de); await p.waitForTimeout(400); await p.click(`.aba[data-area="${aba}"]`); await p.waitForTimeout(500);
     conf(p.url().endsWith('#/' + area), `aba ${aba} leva a #/${area}`);
     const cards = await p.$$eval('.modc', as => as.map(a => a.getAttribute('href')));
     for (const h of cards) { await p.goto(U + h); await p.waitForTimeout(350); const t = await p.textContent('#pagina'); if (!t || t.length < 50) falha.push('cartão vazio ' + h); }
     await p.goto(U + '#/' + area); await p.waitForTimeout(300);
     await p.click('.topo nav.links a[href="#/sumario"]'); await p.waitForTimeout(400);
     const links = await p.$$eval('#pagina a[href^="#/"]', as => as.map(a => a.getAttribute('href')));
-    let vazios = [], semAlvo = []; for (const h of links) { await p.goto(U + h); await p.waitForTimeout(h.split('/').length > 2 ? 1000 : 700);
+    /* β 4.0: rota com a matéria na frente (#/matematica/CI01/teoria): a âncora é o 4º pedaço, não o 3º */
+    const ancDe = (h) => { const q = h.slice(2).split('/'), ns = ['matematica', 'quimica', 'russo'].includes(q[0]); return ns ? q[2] : q[1]; };
+    let vazios = [], semAlvo = []; for (const h of links) { await p.goto(U + h); await p.waitForTimeout(ancDe(h) ? 1000 : 700);
       const r = await p.evaluate((anc) => { const t = document.querySelector('#pagina').innerText.length; if (!anc) return [t, true];
         const alvo = anc === 'exercicios' ? (document.getElementById('exercicios') || document.getElementById('desafios') || document.querySelector('.ex')?.closest('.secao')) : null;
         if (alvo) { const b = alvo.getBoundingClientRect(); return [t, b.top < 300 && b.bottom > 60]; }
-        return [t, window.scrollY > 100]; }, h.split('/')[2]);
+        return [t, window.scrollY > 100]; }, ancDe(h));
       if (r[0] < 1500 && !/S0[0-9]/.test(h)) vazios.push(h); if (!r[1] && !/S0[0-9]/.test(h)) semAlvo.push(h); }
     conf(vazios.length === 0, `sumário de ${aba}: ${links.length} links, abrem vazios: ${vazios.join(' ') || 'nenhum'} (Simulados ignorados: só têm a página de entrada)`);
     conf(semAlvo.length === 0, `sumário de ${aba}: links teoria/exercícios rolam até a seção certa; sem alvo: ${semAlvo.slice(0, 8).join(' ') || 'nenhum'}`);
@@ -140,6 +143,6 @@ const conf = (cond, msg) => (cond ? ok : falha).push(msg);
 
   conf(errs.length === 0, 'sem erros no console' + (errs.length ? ': ' + errs.slice(0, 3).join(' | ') : ''));
   console.log('OK (' + ok.length + '):\n  ' + ok.join('\n  '));
-  console.log('FALHAS (' + falha.length + '):\n  ' + falha.join('\n  '));
+  console.log('FALHAS (' + falha.length + '):\n  ' + falha.join('\n  ')); process.exitCode = falha.length ? 1 : 0; /* β 4.0: falha vira código de erro */
   await b.close();
 })();

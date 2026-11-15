@@ -1,5 +1,5 @@
 /* CI01 · Funções e limites. Limites conferidos com sympy (scratchpad ci.py). */
-F.registrar("CI01", {
+F.registrar("matematica/CI01", {
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({

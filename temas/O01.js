@@ -2,7 +2,7 @@
    corda com T = 100 N, μ = 10 g/m: v = 100 m/s, λ = 2 m a 50 Hz; potência com A = 5 mm: 1,23 W; y = 0,03 sen(2πx − 10πt): λ = 1 m, f = 5 Hz, v = 5 m/s, v_máx = 0,942 m/s;
    som 343 m/s: λ(20 Hz) = 17,15 m, λ(20 kHz) = 1,715 cm; pulso numa corda pendurada de 4,9 m: t = 2√(L/g) = 1,41 s. */
 F.registrar("O01", {
-  retoma: ["A20", "CII08"],
+  retoma: ["A20", "matematica/CII08"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({

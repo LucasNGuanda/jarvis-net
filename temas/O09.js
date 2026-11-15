@@ -35,7 +35,7 @@ F.registrar("O09", {
       titulo: "A tela, a lente e o 4f",
       enun: R`<p>(a) Uma lente convergente de distância focal $f$ forma uma imagem real de um objeto numa tela. Mostre que a distância objeto–tela $L = p + p'$ é no mínimo $4f$. (b) Com $L > 4f$ fixo, existem <b>duas</b> posições da lente que dão imagem nítida na tela, separadas por $d$. Mostre que $f = \frac{L^2 - d^2}{4L}$ (método de Bessel, usado para medir $f$ sem saber onde fica o "centro" da lente). (c) Com $L = 100$ cm e $d = 60$ cm, quanto vale $f$?</p>`,
       fig: "",
-      dicas: [R`<p>(a) $L(p) = p + \frac{pf}{p - f}$, para $p > f$. Derive e iguale a zero ${F.ret("CI05")}.</p>`, R`<p>(b) $p + p' = L$ e $\frac1p + \frac1{p'} = \frac1f$ viram $p^2 - Lp + Lf = 0$. As duas raízes são as duas posições; a diferença entre elas é $d$.</p>`],
+      dicas: [R`<p>(a) $L(p) = p + \frac{pf}{p - f}$, para $p > f$. Derive e iguale a zero ${F.ret("matematica/CI05")}.</p>`, R`<p>(b) $p + p' = L$ e $\frac1p + \frac1{p'} = \frac1f$ viram $p^2 - Lp + Lf = 0$. As duas raízes são as duas posições; a diferença entre elas é $d$.</p>`],
       sol: R`<p><b>(a)</b> $L'(p) = 1 - \frac{f^2}{(p - f)^2} = 0 \Rightarrow p = 2f$, e então $p' = 2f$ e $L_\text{mín} = 4f$ (é mínimo porque $L \to \infty$ nas duas pontas). Com a tela mais perto que $4f$, não há imagem real.</p>
         <p><b>(b)</b> $p^2 - Lp + Lf = 0$ tem raízes $p = \frac{L \pm\sqrt{L^2 - 4Lf}}{2}$. A diferença é $d = \sqrt{L^2 - 4Lf}$, e isolando: $f = \frac{L^2 - d^2}{4L}$ ∎. Repare na simetria: as duas posições são $p$ e $p'$ trocados.</p>
         <p><b>(c)</b> $f = \frac{10\,000 - 3600}{400} = 16$ cm. Confira: as posições são $p = 20$ cm ($p' = 80$) e $p = 80$ cm ($p' = 20$), e $\frac1{20} + \frac1{80} = \frac1{16}$ ✓.</p>`,

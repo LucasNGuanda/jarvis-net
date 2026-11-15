@@ -83,7 +83,7 @@ F.registrar("A04", {
         <h3>Teorema 3: área sob $v \times t$ é o deslocamento (para qualquer movimento)</h3>
         ${F.demo("demonstração", R`<p>(i) Divida o intervalo de $t_1$ a $t_2$ em $n$ pedaços pequenos de duração $\Delta t$.</p>
           <p>(ii) Em cada pedaço, a velocidade quase não muda: o corpo anda aproximadamente $v_k\,\Delta t$, que é a área de um retângulo fininho sob o gráfico.</p>
-          <p>(iii) Somando: $\Delta s \approx \sum_k v_k\,\Delta t$, uma soma de Riemann ${F.ret("CI06")}. Com $n \to \infty$, a soma vira a área exata sob a curva: $\Delta s = \int_{t_1}^{t_2}v\,dt$. Onde $v < 0$, os retângulos ficam abaixo do eixo e contam negativos. $\blacksquare$</p>`)}
+          <p>(iii) Somando: $\Delta s \approx \sum_k v_k\,\Delta t$, uma soma de Riemann ${F.ret("matematica/CI06")}. Com $n \to \infty$, a soma vira a área exata sob a curva: $\Delta s = \int_{t_1}^{t_2}v\,dt$. Onde $v < 0$, os retângulos ficam abaixo do eixo e contam negativos. $\blacksquare$</p>`)}
         ${F.formula(R`\Delta s = \text{área sob } v\times t,\qquad \Delta v = \text{área sob } a\times t,\qquad d = \text{área sob } |v|\times t`, "As três áreas")}
         <h3>Teorema 4: zero da velocidade ⇔ extremo da posição</h3>
         ${F.demo("demonstração", R`<p>(i) Enquanto $v > 0$, a área acumulada cresce: $s$ aumenta. Quando $v < 0$, ela diminui.</p>
@@ -91,7 +91,7 @@ F.registrar("A04", {
         <table class="tb"><tr><th>gráfico</th><th>inclinação</th><th>área</th></tr><tr><td>$s \times t$</td><td>velocidade</td><td>(sem significado útil)</td></tr><tr><td>$v \times t$</td><td>aceleração</td><td>deslocamento</td></tr><tr><td>$a \times t$</td><td>(arrancada, "jerk")</td><td>variação da velocidade</td></tr></table>
         ${F.caixa("fisico", R`<p><b>Unidades nas áreas</b>: a "área" de um gráfico $v \times t$ tem unidade de (m/s)·s = m. Não pense em centímetros quadrados do papel: leia sempre os valores nos eixos. É por isso que uma curva que parece um semicírculo no papel é uma elipse em unidades físicas (exemplo de olimpíada).</p>`)}
         ${F.caixa("olimpiada", R`<p><b>Perseguições pelo gráfico</b>: a distância entre dois corpos que saem do mesmo ponto é a área entre as curvas $v \times t$ deles. Ela é máxima quando as velocidades se igualam (as curvas se cruzam) e zera quando as áreas ficam iguais. Isso resolve em segundos problemas que dariam um sistema de equações (veja o chefão).</p>`)}
-        ${F.caixa("ponte", R`<p><b>Na universidade</b>, isso é o Teorema Fundamental do Cálculo ${F.ret("CI07")}: derivar (inclinação) e integrar (área) são operações inversas. No laboratório, a análise gráfica vira ajuste de curvas: linearizar dados para achar parâmetros (módulo Experimental, ${F.ret("FE07")}).</p>`)}
+        ${F.caixa("ponte", R`<p><b>Na universidade</b>, isso é o Teorema Fundamental do Cálculo ${F.ret("matematica/CI07")}: derivar (inclinação) e integrar (área) são operações inversas. No laboratório, a análise gráfica vira ajuste de curvas: linearizar dados para achar parâmetros (módulo Experimental, ${F.ret("FE07")}).</p>`)}
         ${exemplos}`),
 
       F.secao("desafios", "Exercícios", exs.join("") + chefao),

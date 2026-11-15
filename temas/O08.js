@@ -2,7 +2,7 @@
    crítico água 48,8°, vidro 41,8°, diamante 24,4°; Brewster vidro 56,3°; 30° ar→vidro dá 19,5°; profundidade aparente de 2 m de água = 1,50 m;
    prisma 60° n = 1,5: desvio mínimo 37,2°; fibra 1,50/1,48: aceitação 14,1°; arco-íris 42,1°; lâmina 5 cm a 45°: deslocamento 1,65 cm; Malus 0°/45°/90° = 1/8. */
 F.registrar("O08", {
-  retoma: ["C15d", "CI05"],
+  retoma: ["C15d", "matematica/CI05"],
   html(F) {
     const R = String.raw;
     const g = (x) => (x * 180) / Math.PI, rd = (x) => (x * Math.PI) / 180;
@@ -40,7 +40,7 @@ F.registrar("O08", {
       sol: R`<p><b>(a)</b> Entrada: $i - r$. Reflexão: $180° - 2r$. Saída: $i - r$. Soma: $180° + 2i - 4r$.</p>
         <p><b>(b)</b> $\frac{dD}{di} = 2 - 4\frac{\cos i}{n\cos r} = 0 \Rightarrow n\cos r = 2\cos i$. Elevando ao quadrado: $n^2 - \operatorname{sen}^2i = 4\cos^2i \Rightarrow n^2 - 1 = 3\cos^2i$ ∎.</p>
         <p><b>(c)</b> $\cos^2i = \frac{1{,}333^2 - 1}{3} \approx 0{,}259$, $i \approx 59{,}4°$, $r \approx 40{,}2°$, $D_\text{mín} \approx 137{,}9°$. Ângulo do arco: $180° - 137{,}9° \approx 42{,}1°$ (conferi minimizando numericamente).</p>
-        <p><b>(d)</b> Perto do mínimo, muitos raios saem quase no mesmo ângulo e se acumulam: é o brilho do arco (uma "cáustica"). Como $n$ é um pouco menor para o vermelho, o ângulo dele é maior (~42,4°) que o do violeta (~40,6°): vermelho por fora. Essa é a otimização de ${F.ret("CI05")} explicando um fenômeno do céu.</p>`,
+        <p><b>(d)</b> Perto do mínimo, muitos raios saem quase no mesmo ângulo e se acumulam: é o brilho do arco (uma "cáustica"). Como $n$ é um pouco menor para o vermelho, o ângulo dele é maior (~42,4°) que o do violeta (~40,6°): vermelho por fora. Essa é a otimização de ${F.ret("matematica/CI05")} explicando um fenômeno do céu.</p>`,
     });
     return [
       F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Óptica · refração</div>
@@ -53,7 +53,7 @@ F.registrar("O08", {
         ${F.demo("Snell pela frente de onda (Huygens)", R`<p>(i) Uma frente de onda plana chega inclinada à superfície. Enquanto uma ponta dela ainda anda no meio 1 por um tempo $\Delta t$, percorrendo $v_1\Delta t$, a outra ponta já está no meio 2 e anda só $v_2\Delta t$.</p>
           <p>(ii) Os dois triângulos retângulos que se formam compartilham a hipotenusa $L$ (o trecho da superfície): $v_1\Delta t = L\operatorname{sen}\theta_1$ e $v_2\Delta t = L\operatorname{sen}\theta_2$.</p>
           <p>(iii) Dividindo: $\frac{\operatorname{sen}\theta_1}{\operatorname{sen}\theta_2} = \frac{v_1}{v_2} = \frac{n_2}{n_1}$ ∎. A frente "freia" de um lado antes do outro e gira, como um carrinho de compras que encosta uma roda na grama.</p>`)}
-        ${F.caixa("ponte", R`<p>Outra dedução, pelo caminho de menor tempo (princípio de Fermat), está no laboratório do salva-vidas ${F.ret("CI05")}. E a dedução "de verdade", pelas condições de contorno dos campos $\vec E$ e $\vec B$ das equações de Maxwell, é a que dá também quanto reflete (Fresnel, no laboratório abaixo) ${F.ret("C15d")}.</p>`)}
+        ${F.caixa("ponte", R`<p>Outra dedução, pelo caminho de menor tempo (princípio de Fermat), está no laboratório do salva-vidas ${F.ret("matematica/CI05")}. E a dedução "de verdade", pelas condições de contorno dos campos $\vec E$ e $\vec B$ das equações de Maxwell, é a que dá também quanto reflete (Fresnel, no laboratório abaixo) ${F.ret("C15d")}.</p>`)}
         <div id="lab-ref"></div>`),
 
       F.secao("total", "Reflexão interna total e fibras ópticas", R`

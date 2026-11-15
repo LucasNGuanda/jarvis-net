@@ -1,7 +1,7 @@
 /* CII04 · Séries de potências e de Taylor. Conferido com sympy (scratchpad ci2.py):
    e^(−x²) = 1 − x² + x⁴/2 − x⁶/6 + …; ∫₀¹e^(−x²) com 4 termos = 0,74286 (exato 0,74682); K relativística = ½mv² + (3/8)mv⁴/c² + …;
    a 0,1c a clássica erra 0,75%; e − Σ_{k≤9} 1/k! = 3,0×10⁻⁷; Machin com 5 + 1 termos: erro 6,9×10⁻⁸; √1,1 ≈ 1,04875 (exato 1,048809). */
-F.registrar("CII04", {
+F.registrar("matematica/CII04", {
   retoma: ["CII03", "CI03"],
   html(F) {
     const R = String.raw;
@@ -73,16 +73,16 @@ F.registrar("CII04", {
         ${F.demo("e^(iθ) = cos θ + i sen θ", R`<p>(i) Ponha $x = i\theta$ na série de $e^x$, lembrando $i^2 = -1$, $i^3 = -i$, $i^4 = 1$: $e^{i\theta} = 1 + i\theta - \frac{\theta^2}{2!} - i\frac{\theta^3}{3!} + \frac{\theta^4}{4!} + \dots$</p>
           <p>(ii) Separe os termos reais e os com $i$: $\left(1 - \frac{\theta^2}{2!} + \frac{\theta^4}{4!} - \dots\right) + i\left(\theta - \frac{\theta^3}{3!} + \dots\right)$.</p>
           <p>(iii) São as séries do cosseno e do seno:</p>${F.formula(R`e^{i\theta} = \cos\theta + i\operatorname{sen}\theta\qquad\Longrightarrow\qquad e^{i\pi} + 1 = 0`)}`)}
-        <p>É essa fórmula que diz quanto vale o seu gam fresco nos negativos quebrados: $(-1)^b = e^{i\pi b}$ ${F.ret("X01")}. Na física, ela transforma oscilações em exponenciais: circuitos de corrente alternada com fasores ${F.ret("C15c")}, ondas, toda a mecânica quântica.</p>`),
+        <p>É essa fórmula que diz quanto vale o seu gam fresco nos negativos quebrados: $(-1)^b = e^{i\pi b}$ ${F.ret("fisica/X01")}. Na física, ela transforma oscilações em exponenciais: circuitos de corrente alternada com fasores ${F.ret("fisica/C15c")}, ondas, toda a mecânica quântica.</p>`),
 
       F.secao("fisica", "Taylor na física", R`
         ${F.demo("a energia cinética de Newton vem de Einstein", R`<p>(i) Relatividade: $K = mc^2(\gamma - 1)$, com $\gamma = \left(1 - \frac{v^2}{c^2}\right)^{-1/2}$.</p>
           <p>(ii) Binomial com $\alpha = -\frac12$ e $x = -\frac{v^2}{c^2}$: $\gamma = 1 + \frac12\frac{v^2}{c^2} + \frac38\frac{v^4}{c^4} + \dots$</p>
           <p>(iii) $K = \frac12mv^2 + \frac38m\frac{v^4}{c^2} + \dots$ O primeiro termo é a fórmula da escola; o segundo é a primeira correção relativística. A $0{,}1c$, a fórmula clássica erra só 0,75%.</p>`)}
-        <ul><li><b>Pêndulo</b>: $\operatorname{sen}\theta \approx \theta - \frac{\theta^3}{6}$; o termo cúbico dá a correção do período $T \approx T_0\left(1 + \frac{\theta_0^2}{16}\right)$ do seu experimento ${F.ret("EP01")}.</li>
+        <ul><li><b>Pêndulo</b>: $\operatorname{sen}\theta \approx \theta - \frac{\theta^3}{6}$; o termo cúbico dá a correção do período $T \approx T_0\left(1 + \frac{\theta_0^2}{16}\right)$ do seu experimento ${F.ret("fisica/EP01")}.</li>
           <li><b>Pequenas oscilações</b>: perto de um mínimo, $U(x) \approx U(x_0) + \frac12U''(x_0)(x - x_0)^2$: toda energia potencial vira uma mola ${F.ret("CI05")}.</li>
           <li><b>Gravidade perto do chão</b>: $\frac{GMm}{(R + h)^2} \approx \frac{GMm}{R^2}\left(1 - \frac{2h}{R}\right)$: o "$g$ constante" é o termo de ordem zero.</li>
-          <li><b>Dipolo</b>: o campo de duas cargas opostas, visto de longe, é o 1º termo não nulo de Taylor em $\frac dr$: cai como $\frac1{r^3}$ ${F.ret("C03")}.</li></ul>
+          <li><b>Dipolo</b>: o campo de duas cargas opostas, visto de longe, é o 1º termo não nulo de Taylor em $\frac dr$: cai como $\frac1{r^3}$ ${F.ret("fisica/C03")}.</li></ul>
         ${exemplario}`),
 
       F.secao("desafios", "Desafios", [
@@ -96,5 +96,5 @@ F.registrar("CII04", {
       ].join("") + chefao),
     ].join("");
   },
-  montar(F) { const e = document.getElementById("lab-tay"); e.outerHTML = F.lab("Polinômios de Taylor abraçando a função", "lab-tay"); SIM.taylor(document.getElementById("lab-tay"), F); },
+  montar(F) { const e = document.getElementById("lab-tay"); e.outerHTML = F.lab("Polinômios de Taylor abraçando a função", "lab-tay"); SIM.taylorK(document.getElementById("lab-tay"), F); },
 });

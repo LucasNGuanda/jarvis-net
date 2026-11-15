@@ -105,7 +105,7 @@ F.registrar("A03", {
         ${F.formula(R`d_\text{total} = \underbrace{v_0\,t_r}_{\text{reação (MRU)}} + \underbrace{\frac{v_0^2}{2b}}_{\text{freada (MUV)}}`, "Distância de parada")}
         <p>O primeiro termo cresce com $v_0$; o segundo, com $v_0^2$. Em velocidade alta, a freada domina: a 108 km/h e 5 m/s², são 90 m só freando.</p>
         ${F.caixa("olimpiada", R`<p><b>Truque do instante do meio</b> (Teorema 4): a velocidade média de cada trecho dá a velocidade instantânea no meio do trecho. Com dois trechos, você tem duas velocidades em dois instantes conhecidos, e a aceleração sai direto, sem montar sistema. Veja o exemplo de olimpíada.</p>`)}
-        ${F.caixa("ponte", R`<p><b>Na universidade</b>, a aceleração quase nunca é constante: com $a(t)$ qualquer, $v = v_0 + \int a\,dt$ e $s = s_0 + \int v\,dt$ ${F.ret("F04")}. As fórmulas do MUV são o caso particular $a$ = constante. Quando a força depende da velocidade (resistência do ar), aparece uma equação diferencial ${F.ret("CII08")}.</p>`)}
+        ${F.caixa("ponte", R`<p><b>Na universidade</b>, a aceleração quase nunca é constante: com $a(t)$ qualquer, $v = v_0 + \int a\,dt$ e $s = s_0 + \int v\,dt$ ${F.ret("F04")}. As fórmulas do MUV são o caso particular $a$ = constante. Quando a força depende da velocidade (resistência do ar), aparece uma equação diferencial ${F.ret("matematica/CII08")}.</p>`)}
         ${exemplos}`),
 
       F.secao("desafios", "Exercícios", exs.join("") + chefao),

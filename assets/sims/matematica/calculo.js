@@ -688,7 +688,7 @@
   };
 
   /* ---------- CII04 · polinômios de Taylor ---------- */
-  SIM.taylor = (el, F) => {
+  SIM.taylorK = (el, F) => { /* β 4.0: antes se chamava SIM.taylor e era sobrescrita pela do F05 (assets/sims/fundamentos.js) */
     const binom = (al, n) => { let c = 1; for (let i = 0; i < n; i++) c *= (al - i) / (i + 1); return c; };
     let fat = [1]; for (let i = 1; i <= 40; i++) fat[i] = fat[i - 1] * i;
     const FS = {

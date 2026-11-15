@@ -24,7 +24,7 @@ const res = []; const ok = (c, m) => res.push([c, m]);
   ok(s.hash === '#/inicio' && !s.modo && s.topo !== 'none' && /Física/.test(s.titulo) && s.abaAtual === 'fisica', 'Física → #/inicio, com faixa e menu da física → ' + JSON.stringify(s));
   // 4. botão Home na faixa, ao lado do átomo
   const ordem = await p.evaluate(() => [...document.querySelectorAll('.topo nav.abas .aba')].map(a => a.getAttribute('href')));
-  ok(ordem[0] === '#/home' && ordem[1] === '#/inicio' && ordem.length === 5, 'faixa: Home antes do átomo da Física, resto igual → ' + ordem);
+  ok(ordem[0] === '#/home' && ordem[1] === '#/inicio' && ordem.join() === '#/home,#/inicio,#/experimentos,#/experimental', 'faixa: Home antes do átomo da Física; a física tem 3 abas desde a β 4.0 (o Cálculo foi para a matemática) → ' + ordem);
   await p.screenshot({ path: 'fisica-com-home.png' });
   await p.click('.topo .aba-home'); await p.waitForTimeout(800);
   ok(await p.evaluate(() => location.hash === '#/home' && !!document.querySelector('.jv')), 'botão Home volta para a tela inicial');

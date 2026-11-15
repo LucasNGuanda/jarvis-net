@@ -1,6 +1,6 @@
 /* CI07 · Teorema Fundamental do Cálculo. Conferido com sympy (scratchpad ci2.py):
    ∫₁²(3x² + 1) = 8; ∫₀^(π/2) cos = 1; ∫₁ᵉ dx/x = 1; média de x² em [0, 3] = 3; d/dx ∫₀^(x³) sen t dt = 3x² sen x³; W = 8 J → v = 4 m/s. */
-F.registrar("CI07", {
+F.registrar("matematica/CI07", {
   retoma: ["CI06", "CI04"],
   html(F) {
     const R = String.raw;
@@ -74,7 +74,7 @@ F.registrar("CI07", {
         ${F.demo("o teorema trabalho–energia", R`<p>(i) $W = \int_{x_1}^{x_2}F\,dx$, com $F = ma = m\frac{dv}{dt}$.</p>
           <p>(ii) Troque a variável: $dx = v\,dt$, então $W = \int m\frac{dv}{dt}v\,dt = \int_{v_1}^{v_2}m\,v\,dv$.</p>
           <p>(iii) Primitiva de $mv$ em $v$: $\frac12mv^2$. TFC: $W = \frac12mv_2^2 - \frac12mv_1^2 = \Delta K$ ∎. A energia cinética é exatamente "a primitiva do momento".</p>`)}
-        <p>Do mesmo jeito: $x(t) = x_0 + \int_0^tv\,dt'$; a energia potencial é $U(x) = -\int F\,dx$ (por isso $F = -U'$); o potencial elétrico é $V = -\int\vec E\cdot d\vec\ell$ ${F.ret("C04")}. Sempre que uma grandeza é taxa de outra, o TFC liga as duas.</p>
+        <p>Do mesmo jeito: $x(t) = x_0 + \int_0^tv\,dt'$; a energia potencial é $U(x) = -\int F\,dx$ (por isso $F = -U'$); o potencial elétrico é $V = -\int\vec E\cdot d\vec\ell$ ${F.ret("fisica/C04")}. Sempre que uma grandeza é taxa de outra, o TFC liga as duas.</p>
         <h3>Limites variáveis</h3>
         <p>Com a regra da cadeia: $\frac{d}{dx}\int_a^{g(x)}f(t)\,dt = f\bigl(g(x)\bigr)\,g'(x)$. Isso deriva até integrais "impossíveis", como $\int_0^xe^{-t^2}dt$ (a função erro, das probabilidades): a derivada é simplesmente $e^{-x^2}$.</p>`),
 

@@ -1,7 +1,7 @@
 /* SC01 · MIT Integration Bee 2026, fase classificatória (qualifying round): 20 integrais.
    Respostas minhas (não há gabarito no arquivo), todas conferidas em Python (mpmath): definidas por quadratura numérica,
    indefinidas derivando a primitiva em vários pontos. Ver scratchpad/vmit.py. "log" = logaritmo natural (convenção do MIT). */
-F.registrar("SC01", {
+F.registrar("matematica/SC01", {
   retoma: ["CI08", "CII01", "CII02"],
   html(F) {
     const R = String.raw;

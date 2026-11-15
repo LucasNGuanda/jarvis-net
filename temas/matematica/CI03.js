@@ -1,5 +1,5 @@
 /* CI03 · Derivada: definição e significado. Conferido com sympy (scratchpad ci.py): √4,1 ≈ 2,02485 (aprox. 2,025); f(x) = x² sen(1/x) tem f′(0) = 0. */
-F.registrar("CI03", {
+F.registrar("matematica/CI03", {
   retoma: ["CI01", "CI02"],
   html(F) {
     const R = String.raw;
@@ -65,11 +65,11 @@ F.registrar("CI03", {
       F.secao("fisica", "O que a derivada é, na física", R`
         <table class="tb"><tr><th>derivada</th><th>significado</th></tr>
           <tr><td>$v = \frac{dx}{dt}$, $\ a = \frac{dv}{dt} = \frac{d^2x}{dt^2}$</td><td>cinemática</td></tr>
-          <tr><td>$i = \frac{dq}{dt}$</td><td>corrente é a taxa de passagem de carga ${F.ret("C06")}</td></tr>
+          <tr><td>$i = \frac{dq}{dt}$</td><td>corrente é a taxa de passagem de carga ${F.ret("fisica/C06")}</td></tr>
           <tr><td>$P = \frac{dW}{dt}$</td><td>potência</td></tr>
           <tr><td>$F = -\frac{dU}{dx}$</td><td>força a partir da energia potencial: aponta "ladeira abaixo"</td></tr>
-          <tr><td>$\varepsilon = -\frac{d\Phi_B}{dt}$</td><td>lei de Faraday ${F.ret("C15")}</td></tr>
-          <tr><td>$E = -\frac{dV}{dx}$</td><td>campo elétrico a partir do potencial ${F.ret("C04")}</td></tr></table>
+          <tr><td>$\varepsilon = -\frac{d\Phi_B}{dt}$</td><td>lei de Faraday ${F.ret("fisica/C15")}</td></tr>
+          <tr><td>$E = -\frac{dV}{dx}$</td><td>campo elétrico a partir do potencial ${F.ret("fisica/C04")}</td></tr></table>
         ${F.demo("o MHS sai de duas derivadas", R`<p>(i) $x(t) = A\cos(\omega t)$. Derivando (com a regra da cadeia, próximo tema): $v = -A\omega\operatorname{sen}(\omega t)$.</p>
           <p>(ii) Derivando de novo: $a = -A\omega^2\cos(\omega t) = -\omega^2x$.</p>
           <p>(iii) Com $F = ma = -kx$: $-m\omega^2x = -kx \Rightarrow \omega = \sqrt{k/m}$. A fórmula do período da mola, $T = 2\pi\sqrt{m/k}$, é uma conta de derivada.</p>`)}`),
@@ -81,7 +81,7 @@ F.registrar("CI03", {
         <p>$f' > 0$: $f$ cresce. $f' < 0$: decresce. $f' = 0$: tangente horizontal (candidato a máximo ou mínimo, ${F.ret("CI05")}). No laboratório, o gráfico de baixo é $f'$: compare onde ele cruza o zero com os topos e vales de cima.</p>
         <h3>Aproximação linear</h3>
         ${F.formula(R`f(a + h) \approx f(a) + f'(a)\,h\qquad(h \text{ pequeno})`)}
-        <p>É a ideia de "diferencial": $df = f'(x)\,dx$. É como os físicos propagam erros e fazem quase toda aproximação ${F.ret("F05")}.</p>`),
+        <p>É a ideia de "diferencial": $df = f'(x)\,dx$. É como os físicos propagam erros e fazem quase toda aproximação ${F.ret("fisica/F05")}.</p>`),
 
       F.secao("exemplos", "Exemplos", exemplario),
 

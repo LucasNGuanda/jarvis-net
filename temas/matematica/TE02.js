@@ -1,8 +1,8 @@
 /* TE02 · Teorema da Divergência (Gauss–Ostrogradsky). Conferido em Python:
    (x, y, z) na esfera: 4πR³; (x², y², z²) no cubo unitário: 3; volume do cone pela fórmula (1/3)∮ r·n dA: πa²h/3;
    (x, 0) no triângulo (0,0), (1,0), (0,1): 1/2. */
-F.registrar("TE02", {
-  retoma: ["U01", "U02", "CE03", "CII07"],
+F.registrar("matematica/TE02", {
+  retoma: ["fisica/U01", "fisica/U02", "CE03", "CII07"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -46,13 +46,13 @@ F.registrar("TE02", {
 
       F.secao("enunciado", "O teorema", R`
         ${F.formula(R`\oint_{\partial V}\vec F\cdot\hat n\,dA = \iiint_V\nabla\cdot\vec F\,dV\qquad\qquad \text{(2D: }\oint_{\partial D}\vec F\cdot\hat n\,ds = \iint_D\nabla\cdot\vec F\,dA\text{)}`, "Teorema da Divergência")}
-        <p>Ingredientes: $V$ é uma região limitada do espaço; $\partial V$ é a superfície que a envolve (fechada, sem furos); $\hat n$ é a normal que aponta <b>para fora</b>; $\vec F$ tem derivadas contínuas em $V$. O divergente $\nabla\cdot\vec F = \partial_xF_x + \partial_yF_y + \partial_zF_z$ é a "densidade de fonte" ${F.ret("U01")}.</p>
+        <p>Ingredientes: $V$ é uma região limitada do espaço; $\partial V$ é a superfície que a envolve (fechada, sem furos); $\hat n$ é a normal que aponta <b>para fora</b>; $\vec F$ tem derivadas contínuas em $V$. O divergente $\nabla\cdot\vec F = \partial_xF_x + \partial_yF_y + \partial_zF_z$ é a "densidade de fonte" ${F.ret("fisica/U01")}.</p>
         <p>É o Teorema Fundamental do Cálculo ${F.ret("CI07")} em 3D: lá, "a integral da derivada no intervalo = valor nas pontas" (as pontas são a borda do intervalo). Aqui, "a integral da derivada (divergente) no volume = o fluxo pela borda".</p>
         <div id="lab-dv"></div>
-        ${F.caixa("pegadinha", R`<p><b>O campo precisa ser bom dentro de toda a região.</b> Para $\vec E = \hat r/r^2$, o divergente é zero fora da origem, mas o fluxo por uma esfera em volta da origem é $4\pi$. Não há contradição: o campo explode na origem, e o teorema não vale com a singularidade dentro (ela é uma delta de Dirac ${F.ret("U01")}). E a superfície tem de ser fechada: por uma superfície aberta, o teorema não diz nada.</p>`)}`),
+        ${F.caixa("pegadinha", R`<p><b>O campo precisa ser bom dentro de toda a região.</b> Para $\vec E = \hat r/r^2$, o divergente é zero fora da origem, mas o fluxo por uma esfera em volta da origem é $4\pi$. Não há contradição: o campo explode na origem, e o teorema não vale com a singularidade dentro (ela é uma delta de Dirac ${F.ret("fisica/U01")}). E a superfície tem de ser fechada: por uma superfície aberta, o teorema não diz nada.</p>`)}`),
 
       F.secao("aplicacoes", "O que a física tira dele", R`
-        <ul><li><b>Lei de Gauss</b> ${F.ret("C03b")}: $\oint\vec E\cdot d\vec A = Q/\varepsilon_0$ (integral) $\Longleftrightarrow$ $\nabla\cdot\vec E = \rho/\varepsilon_0$ (diferencial). O teorema faz a ponte, porque vale para qualquer volume ${F.ret("U02")}.</li>
+        <ul><li><b>Lei de Gauss</b> ${F.ret("fisica/C03b")}: $\oint\vec E\cdot d\vec A = Q/\varepsilon_0$ (integral) $\Longleftrightarrow$ $\nabla\cdot\vec E = \rho/\varepsilon_0$ (diferencial). O teorema faz a ponte, porque vale para qualquer volume ${F.ret("fisica/U02")}.</li>
           <li><b>Equação da continuidade</b>: a massa que sai por uma superfície é a que some de dentro: $\oint\rho\vec v\cdot d\vec A = -\frac{d}{dt}\int\rho\,dV$. Com o teorema: $\frac{\partial\rho}{\partial t} + \nabla\cdot(\rho\vec v) = 0$. Vale para carga, probabilidade e calor.</li>
           <li><b>Empuxo de Arquimedes</b>: a força da pressão num corpo submerso é $-\oint p\,\hat n\,dA = -\int\nabla p\,dV$ (versão do teorema para escalares). Com $p = p_0 + \rho g(-z)$: $\nabla p = -\rho g\hat z$, e a força é $\rho gV\,\hat z$, para cima. Arquimedes, demonstrado.</li>
           <li><b>Volume pela casca</b>: como $\nabla\cdot\vec r = 3$, vale $V = \frac13\oint\vec r\cdot d\vec A$. Calcula volumes só olhando a superfície (e é assim que programas de CAD fazem).</li></ul>

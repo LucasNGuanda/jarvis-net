@@ -93,7 +93,7 @@ F.registrar("A17", {
         <div id="lab-empuxo"></div>
         ${F.caixa("fisico", R`<p><b>Submarinos e peixes</b> controlam a densidade média: o submarino enche ou esvazia tanques de lastro; muitos peixes têm a bexiga natatória, uma bolsa de gás que eles inflam ou esvaziam para ficar parados em qualquer profundidade sem nadar.</p>`)}
         ${F.caixa("olimpiada", R`<p><b>Força numa parede = pressão média × área</b> (só para paredes retangulares a partir da superfície), mas o ponto de aplicação fica a $h/3$ do fundo, não no meio. Para torques em comportas e represas, integre ${F.ret("F04")}. E Arquimedes resolve "o nível sobe ou desce?": compare o volume deslocado antes e depois.</p>`)}
-        ${F.caixa("ponte", R`<p><b>Na universidade</b>, a lei de Stevin vira $\nabla p = \rho\vec g$, o caso parado da equação de Euler ${F.ret("N03")}; o empuxo sai do teorema da divergência aplicado à pressão sobre uma superfície fechada ${F.ret("TE02")}. Num fluido em rotação ou num foguete acelerando, o "$g$" efetivo muda e a superfície da água se inclina ou vira um paraboloide.</p>`)}
+        ${F.caixa("ponte", R`<p><b>Na universidade</b>, a lei de Stevin vira $\nabla p = \rho\vec g$, o caso parado da equação de Euler ${F.ret("N03")}; o empuxo sai do teorema da divergência aplicado à pressão sobre uma superfície fechada ${F.ret("matematica/TE02")}. Num fluido em rotação ou num foguete acelerando, o "$g$" efetivo muda e a superfície da água se inclina ou vira um paraboloide.</p>`)}
         ${exemplos}`),
 
       F.secao("desafios", "Exercícios", exs.join("") + chefao),

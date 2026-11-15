@@ -1,6 +1,6 @@
 /* CII02 · Integrais impróprias. Conferido com sympy/scipy (scratchpad ci2.py):
    ∫₁^∞ dx/x² = 1; ∫₀^∞ xe^(−x) = 1; ∫₀¹ dx/√x = 2; ∫_(−∞)^∞ dx/(1 + x²) = π; ∫₀^∞ sen x/x = π/2; ∫₁^∞ e^(−x²) ≈ 0,1394 ≤ e^(−1). */
-F.registrar("CII02", {
+F.registrar("matematica/CII02", {
   retoma: ["CI07", "CII01"],
   html(F) {
     const R = String.raw;
@@ -62,7 +62,7 @@ F.registrar("CII02", {
       F.secao("fisica", "Impróprias na física", R`
         <table class="tb"><tr><th>integral</th><th>significado</th></tr>
           <tr><td>$\int_R^\infty\frac{GMm}{r^2}dr = \frac{GMm}{R}$</td><td>energia de escape ${F.ret("CI09")}</td></tr>
-          <tr><td>$V(r) = \int_r^\infty\frac{kq}{s^2}ds = \frac{kq}{r}$</td><td>potencial elétrico com referência no infinito ${F.ret("C04")}</td></tr>
+          <tr><td>$V(r) = \int_r^\infty\frac{kq}{s^2}ds = \frac{kq}{r}$</td><td>potencial elétrico com referência no infinito ${F.ret("fisica/C04")}</td></tr>
           <tr><td>$\int_0^\infty I_0e^{-t/\tau}dt = I_0\tau$</td><td>carga total de uma descarga RC</td></tr>
           <tr><td>$\int_{-\infty}^\infty e^{-x^2}dx = \sqrt\pi$</td><td>normalização da gaussiana (estatística, mecânica quântica)</td></tr>
           <tr><td>$\int_{-\infty}^\infty\frac{dx}{1 + x^2} = \pi$</td><td>a curva de Lorentz (ressonância, linhas espectrais)</td></tr>

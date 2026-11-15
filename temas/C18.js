@@ -2,7 +2,7 @@
    γ(0,6) = 1,25; γ(0,8) = 5/3; múon a 0,998c: γ = 15,8, 658 m sem dilatação e 10,4 km com; 0,6c ⊕ 0,6c = 0,882c; GPS: −7,2 μs/dia (velocidade) + 45,7 (gravidade) ≈ +38 μs/dia;
    elétron: 0,511 MeV; a 0,8c: K = 0,341 MeV, p = 0,681 MeV/c; gêmeos a 0,8c até 8 anos-luz: 20 anos na Terra, 12 na nave; Doppler 0,6c: fator 0,5 e 2; o Sol perde 4,3 × 10⁹ kg/s. */
 F.registrar("C18", {
-  retoma: ["C15d", "CII04"],
+  retoma: ["C15d", "matematica/CII04"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -68,7 +68,7 @@ F.registrar("C18", {
 
       F.secao("energia", "E = mc²", R`
         ${F.formula(R`p = \gamma mv,\qquad E = \gamma mc^2,\qquad K = (\gamma - 1)mc^2,\qquad E^2 = (pc)^2 + (mc^2)^2`, "Momento e energia relativísticos")}
-        <p>Parada, uma partícula tem energia $E_0 = mc^2$ (energia de repouso). Para $v \ll c$, Taylor dá $K = (\gamma - 1)mc^2 \approx \frac12mv^2$ ${F.ret("CII04")}. Quando $v \to c$, $\gamma \to \infty$: acelerar uma massa até $c$ exigiria energia infinita. Partículas sem massa (fótons) têm $E = pc$ e só andam a $c$.</p>
+        <p>Parada, uma partícula tem energia $E_0 = mc^2$ (energia de repouso). Para $v \ll c$, Taylor dá $K = (\gamma - 1)mc^2 \approx \frac12mv^2$ ${F.ret("matematica/CII04")}. Quando $v \to c$, $\gamma \to \infty$: acelerar uma massa até $c$ exigiria energia infinita. Partículas sem massa (fótons) têm $E = pc$ e só andam a $c$.</p>
         <p>A massa é uma forma de energia: no Sol, a fusão converte 4,3 milhões de toneladas de massa em energia <b>por segundo</b>. 1 kg de massa equivale a $9\times10^{16}$ J, uns 25 bilhões de kWh. Num reator nuclear ${F.ret("C19")}, uma fração de ~0,1% da massa do urânio vira energia.</p>
         ${exemplario}`),
 

@@ -92,7 +92,7 @@ F.registrar("A11", {
         ${F.formula(R`P = \frac{W}{\Delta t} = \vec F\cdot\vec v,\qquad \eta = \frac{P_\text{útil}}{P_\text{total}}`, "Potência (W = J/s) e rendimento")}
         ${F.caixa("fisico", R`<p><b>Quilowatt-hora</b>: a conta de luz cobra energia, não potência. 1 kWh $= 1000$ W durante 3600 s $= 3{,}6\times10^6$ J. Um chuveiro de 5,5 kW ligado 10 minutos gasta $\approx 0{,}92$ kWh; subir uma escada de 3 m (70 kg) gasta só 2100 J $\approx 0{,}0006$ kWh.</p>`)}
         ${F.caixa("olimpiada", R`<p><b>Energia + dinâmica circular</b> é o par mais cobrado: a energia dá $v^2$ em função da posição; a 2ª lei na direção radial dá a força de contato; "descolar" ou "fio frouxo" é força de contato = 0. É o roteiro do looping, do pêndulo e do chefão.</p>`)}
-        ${F.caixa("ponte", R`<p><b>Na universidade</b>, força conservativa é a que tem rotacional nulo, $\vec F = -\nabla E_p$ ${F.ret("U01")}; e a conservação da energia vem de uma simetria (as leis não mudam com o tempo), pelo teorema de Noether ${F.ret("TE05")}.</p>`)}
+        ${F.caixa("ponte", R`<p><b>Na universidade</b>, força conservativa é a que tem rotacional nulo, $\vec F = -\nabla E_p$ ${F.ret("U01")}; e a conservação da energia vem de uma simetria (as leis não mudam com o tempo), pelo teorema de Noether ${F.ret("matematica/TE05")}.</p>`)}
         ${exemplos}`),
 
       F.secao("desafios", "Exercícios", exs.join("") + chefao),

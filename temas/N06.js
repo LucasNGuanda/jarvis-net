@@ -4,7 +4,7 @@
    agulha (R = 0,15 mm, L = 2 cm, Q = 0,1 mL/s): Δp = 8μLQ/πR⁴ ≈ 1,0e4 Pa, v̄ = 1,41 m/s, Re ≈ 424 (laminar);
    artéria com raio 20% menor: Δp × 1/0,8⁴ = 2,44; Couette–Poiseuille com vazão zero: G = −6μU/h², u = 0 em y = 2h/3. */
 F.registrar("N06", {
-  retoma: ["N04", "N05", "CII08"],
+  retoma: ["N04", "N05", "matematica/CII08"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({

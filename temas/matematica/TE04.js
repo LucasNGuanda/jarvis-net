@@ -2,8 +2,8 @@
    (−y, x, 0) no círculo de raio R: 2πR²; (z, x, y): rot = (1, 1, 1), circulação no triângulo (1,0,0)→(0,1,0)→(0,0,1) = 3/2;
    (yz, xz, xy): rot = 0, potencial xyz, trabalho até (1,2,3) = 6; Faraday (R = 0,1 m, dB/dt = 0,5 T/s): E = 0,025 V/m;
    (z − y, xz, y): rot = (1 − x, 1, z + 1), circulação no círculo unitário = π = fluxo do rotacional por z = h(1 − x² − y²) para h = 0; 0,7; −1,2. */
-F.registrar("TE04", {
-  retoma: ["U01", "U02", "CE03", "TE02"],
+F.registrar("matematica/TE04", {
+  retoma: ["fisica/U01", "fisica/U02", "CE03", "TE02"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -13,7 +13,7 @@ F.registrar("TE04", {
           const w = p ? 3 : F.escolha([1, 2, 3, 5]), r = p ? 0.2 : F.escolha([0.1, 0.2, 0.5, 1]);
           return { enun: R`<p>Um fluido gira como um corpo rígido com $\omega = ${w}$ rad/s: $\vec v = (-${F.c(w)}y,\ ${F.c(w)}x,\ 0)$. Qual a circulação num círculo horizontal de raio ${F.n(r)} m em volta do eixo, e qual a vorticidade?</p>`, fig: "",
             passos: [
-              R`<p>Rotacional ${F.ret("U01")}: $\nabla\times\vec v = (0, 0, ${2 * w})$, a <b>vorticidade</b>, que é o dobro de $\omega$.</p>`,
+              R`<p>Rotacional ${F.ret("fisica/U01")}: $\nabla\times\vec v = (0, 0, ${2 * w})$, a <b>vorticidade</b>, que é o dobro de $\omega$.</p>`,
               R`<p>Stokes, com o disco como superfície: $\oint\vec v\cdot d\vec l = ${2 * w}\cdot\pi(${F.n(r)})^2 = ${F.n(2 * w * r * r)}\pi$.</p>`,
               R`<p>$\approx ${F.n(2 * Math.PI * w * r * r, 3)}$ m²/s. Direto: velocidade $\omega r$ vezes o perímetro $2\pi r$ dá o mesmo. ✓</p>`,
             ] };
@@ -23,7 +23,7 @@ F.registrar("TE04", {
           const dentro = r <= Rr, E = dentro ? (r / 2) * dB : ((Rr * Rr) / (2 * r)) * dB;
           return { enun: R`<p>Um campo magnético uniforme ocupa um cilindro de raio ${F.n(Rr)} m e cresce a ${F.n(dB)} T/s. Qual o campo elétrico induzido a ${F.n(r)} m do eixo?</p>`, fig: "",
             passos: [
-              R`<p>Faraday diferencial: $\nabla\times\vec E = -\partial_t\vec B$ ${F.ret("U05")}. Stokes num círculo de raio $r$: $\oint\vec E\cdot d\vec l = -\frac{d}{dt}\iint\vec B\cdot d\vec A$.</p>`,
+              R`<p>Faraday diferencial: $\nabla\times\vec E = -\partial_t\vec B$ ${F.ret("fisica/U05")}. Stokes num círculo de raio $r$: $\oint\vec E\cdot d\vec l = -\frac{d}{dt}\iint\vec B\cdot d\vec A$.</p>`,
               R`<p>Por simetria, $E$ é tangente e de módulo constante no círculo: $E\cdot2\pi r = ${dentro ? R`\pi r^2\frac{dB}{dt}` : R`\pi R^2\frac{dB}{dt}`}$ (em módulo).</p>`,
               R`<p>$E = ${dentro ? R`\frac r2\frac{dB}{dt}` : R`\frac{R^2}{2r}\frac{dB}{dt}`} \approx ${F.n(E, 4)}$ V/m. ${dentro ? "Dentro do cilindro, cresce com r." : "Fora, há campo elétrico mesmo onde B = 0!"}</p>`,
             ] };
@@ -43,7 +43,7 @@ F.registrar("TE04", {
     return [
       F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Cálculo · teoremas</div>
         <div class="q">Quanto um campo "gira" dentro de um laço?</div>
-        <p>Ponha uma rodinha de pás em cada pedacinho de uma superfície ${F.ret("U01")}. O giro total de todas elas é igual a quanto o campo empurra ao longo da borda: os empurrões internos de rodinhas vizinhas se cancelam, e só sobra a borda. Isso é o Teorema de Stokes, e com ele as leis de Faraday e de Ampère passam da forma integral (laços) para a diferencial (pontos).</p></div>`),
+        <p>Ponha uma rodinha de pás em cada pedacinho de uma superfície ${F.ret("fisica/U01")}. O giro total de todas elas é igual a quanto o campo empurra ao longo da borda: os empurrões internos de rodinhas vizinhas se cancelam, e só sobra a borda. Isso é o Teorema de Stokes, e com ele as leis de Faraday e de Ampère passam da forma integral (laços) para a diferencial (pontos).</p></div>`),
 
       F.secao("enunciado", "O teorema", R`
         ${F.formula(R`\oint_{\partial S}\vec F\cdot d\vec l = \iint_S(\nabla\times\vec F)\cdot\hat n\,dA`, "Teorema de Stokes")}
@@ -53,8 +53,8 @@ F.registrar("TE04", {
         <div id="lab-sk"></div>`),
 
       F.secao("aplicacoes", "O que a física tira dele", R`
-        <ul><li><b>Faraday</b> ${F.ret("C15")}: $\oint\vec E\cdot d\vec l = -\frac{d\Phi_B}{dt}$ $\Longleftrightarrow$ $\nabla\times\vec E = -\partial_t\vec B$.</li>
-          <li><b>Ampère–Maxwell</b> ${F.ret("C14")}: $\oint\vec B\cdot d\vec l = \mu_0I + \dots$ $\Longleftrightarrow$ $\nabla\times\vec B = \mu_0\vec J + \mu_0\varepsilon_0\partial_t\vec E$ ${F.ret("U05")}.</li>
+        <ul><li><b>Faraday</b> ${F.ret("fisica/C15")}: $\oint\vec E\cdot d\vec l = -\frac{d\Phi_B}{dt}$ $\Longleftrightarrow$ $\nabla\times\vec E = -\partial_t\vec B$.</li>
+          <li><b>Ampère–Maxwell</b> ${F.ret("fisica/C14")}: $\oint\vec B\cdot d\vec l = \mu_0I + \dots$ $\Longleftrightarrow$ $\nabla\times\vec B = \mu_0\vec J + \mu_0\varepsilon_0\partial_t\vec E$ ${F.ret("fisica/U05")}.</li>
           <li><b>Campo conservativo</b>: se $\nabla\times\vec F = 0$ numa região sem buracos, a circulação em qualquer laço é zero, o trabalho não depende do caminho e existe potencial: $\vec F = -\nabla U$.</li>
           <li><b>Fluidos</b>: a vorticidade $\nabla\times\vec v$ é o dobro da velocidade angular local; a circulação em volta de uma asa é o que gera sustentação (teorema de Kutta–Joukowski).</li></ul>
         ${F.caixa("pegadinha", R`<p><b>Rotacional zero com circulação diferente de zero.</b> O campo $\vec F = \frac{(-y, x, 0)}{x^2 + y^2}$ tem rotacional zero em todo lugar fora do eixo $z$, mas circulação $2\pi$ em qualquer laço em volta do eixo. Stokes não falha: qualquer superfície com essa borda é furada pelo eixo, onde o campo não está definido. É o campo $\vec B$ de um fio, e o potencial vetor fora de um solenoide (efeito Aharonov–Bohm, que é observado).</p>`)}

@@ -1,7 +1,7 @@
 /* CII01 · Técnicas de integração. Conferido com sympy (scratchpad ci2.py):
    ∫x cos x = x sen x + cos x; ∫ln x = x ln x − x; ∫₀^π x sen x = π; ∫eˣcos x = eˣ(sen x + cos x)/2; ∫dx/(x² − 5x + 6) = ln|(x − 3)/(x − 2)|;
    ∫₀¹√(1 − x²) = π/4; ∫₀^π sen² = π/2; ∫₀^∞ x²e^(−x) = 2; ∫₀¹ ln(1 + x)/(1 + x²) = (π/8) ln 2 ≈ 0,27220. */
-F.registrar("CII01", {
+F.registrar("matematica/CII01", {
   retoma: ["CI08", "CI04"],
   html(F) {
     const R = String.raw;

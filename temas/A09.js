@@ -90,7 +90,7 @@ F.registrar("A09", {
           <p>(iii) Corpos mais pesados (mesmo formato) têm $v_t$ maior. $\blacksquare$</p>`)}
         ${F.formula(R`F_\text{ar} = kv^2,\qquad v_t = \sqrt{\frac{mg}{k}}`, "Arrasto quadrático e velocidade terminal")}
         ${F.caixa("olimpiada", R`<p><b>Máximo de $a\cos\theta + b\sin\theta$</b>: aparece sempre que uma força inclinada mexe ao mesmo tempo no atrito e na componente útil. O máximo é $\sqrt{a^2 + b^2}$, em $\tan\theta = b/a$. No exemplo de olimpíada, puxar a $\arctan\mu$ é o melhor ângulo.</p>`)}
-        ${F.caixa("ponte", R`<p><b>Na universidade</b>: com $F = bv$, a equação $m\frac{dv}{dt} = mg - bv$ dá $v(t) = v_t\left(1 - e^{-bt/m}\right)$ ${F.ret("CII08")}: a velocidade se aproxima de $v_t$ exponencialmente. E o atrito seco tem origem microscópica: só uma fração minúscula da área "aparente" está realmente em contato, nos picos das rugosidades.</p>`)}
+        ${F.caixa("ponte", R`<p><b>Na universidade</b>: com $F = bv$, a equação $m\frac{dv}{dt} = mg - bv$ dá $v(t) = v_t\left(1 - e^{-bt/m}\right)$ ${F.ret("matematica/CII08")}: a velocidade se aproxima de $v_t$ exponencialmente. E o atrito seco tem origem microscópica: só uma fração minúscula da área "aparente" está realmente em contato, nos picos das rugosidades.</p>`)}
         ${exemplos}`),
 
       F.secao("desafios", "Exercícios", exs.join("") + chefao),

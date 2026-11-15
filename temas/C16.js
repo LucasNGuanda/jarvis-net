@@ -2,7 +2,7 @@
    Conferido em Python (scratchpad nuc.py): Wien b = 2,898 × 10⁻³ m·K: 3000 K → 966 nm, 5772 K → 502 nm, 310 K → 9,3 μm, 2,725 K → 1,06 mm;
    Sol: σT⁴ = 6,3 × 10⁷ W/m², total 3,83 × 10²⁶ W; corpo humano (1,8 m², 310 K em ambiente de 293 K): perda líquida ≈ 190 W; ∫x³/(eˣ − 1) = π⁴/15 = 6,494. */
 F.registrar("C16", {
-  retoma: ["CE01", "CE02"],
+  retoma: ["matematica/CE01", "matematica/CE02"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -14,7 +14,7 @@ F.registrar("C16", {
           const txt = lam < 380e-9 ? "ultravioleta" : lam < 750e-9 ? "visível" : lam < 1e-3 ? "infravermelho" : "micro-ondas";
           return { enun: R`<p>Em que comprimento de onda fica o pico da radiação de ${nome} ($T \approx ${F.n(T, 3)}$ K)?</p>`, fig: "",
             passos: [
-              R`<p>Lei de Wien: $\lambda_\text{máx}T = b = 2{,}898\times10^{-3}$ m·K (ela sai da W de Lambert ${F.ret("CE01")}).</p>`,
+              R`<p>Lei de Wien: $\lambda_\text{máx}T = b = 2{,}898\times10^{-3}$ m·K (ela sai da W de Lambert ${F.ret("matematica/CE01")}).</p>`,
               R`<p>$\lambda_\text{máx} = \frac{2{,}898\times10^{-3}}{${F.n(T, 3)}} \approx ${lam > 1e-4 ? F.n(lam * 1000, 2) + "\\ \\text{mm}" : lam > 1e-6 ? F.n(lam * 1e6, 2) + "\\ \\mu\\text{m}" : F.n(lam * 1e9, 0) + "\\ \\text{nm}"}$: <b>${txt}</b>.</p>`,
               R`<p>${T < 1000 ? "Por isso câmeras térmicas enxergam pessoas no escuro: nós brilhamos, mas no infravermelho." : T < 4000 ? "A maior parte da energia de uma lâmpada incandescente vai para o infravermelho: ela é mais aquecedor que lâmpada." : "Quanto mais quente, mais azul: estrelas avermelhadas são frias, azuladas são quentes."}</p>`,
             ] };
@@ -25,16 +25,16 @@ F.registrar("C16", {
             passos: [
               R`<p>Stefan–Boltzmann: $P = \sigma AT^4$, com $\sigma = 5{,}67\times10^{-8}$ W/(m²·K⁴).</p>`,
               R`<p>Com a mesma área: $\frac{P'}{P} = \left(\frac{T'}{T}\right)^4 = ${F.n(f)}^4 = ${F.n(f ** 4, 4)}$.</p>`,
-              R`<p>O $T^4$ é brutal: um pouco mais quente já brilha muito mais. A constante vem da integral $\int_0^\infty\frac{x^3}{e^x - 1}dx = \frac{\pi^4}{15}$ ${F.ret("CE02")}.</p>`,
+              R`<p>O $T^4$ é brutal: um pouco mais quente já brilha muito mais. A constante vem da integral $\int_0^\infty\frac{x^3}{e^x - 1}dx = \frac{\pi^4}{15}$ ${F.ret("matematica/CE02")}.</p>`,
             ] };
         } },
       ],
     });
     const chefao = F.chefao({
       titulo: "De onde vem a fórmula de Planck",
-      enun: R`<p>Numa cavidade, cada "modo" de vibração da onda eletromagnética funciona como um oscilador de frequência $f$. (a) Pela física clássica (equipartição), cada oscilador tem energia média $kT$, qualquer que seja $f$. Mostre que isso dá energia infinita, já que o número de modos cresce sem limite com $f$. (b) Planck supôs que a energia de cada oscilador só pode ser $0, hf, 2hf, 3hf, \dots$, com probabilidade proporcional a $e^{-E/kT}$ (Boltzmann ${F.ret("CII06")}). Mostre que a energia média vira $\bar E = \frac{hf}{e^{hf/kT} - 1}$. (c) Mostre que, para $hf \ll kT$, ela volta a ser $kT$, e que, para $hf \gg kT$, cai exponencialmente. Por que isso "cura" a catástrofe?</p>`,
+      enun: R`<p>Numa cavidade, cada "modo" de vibração da onda eletromagnética funciona como um oscilador de frequência $f$. (a) Pela física clássica (equipartição), cada oscilador tem energia média $kT$, qualquer que seja $f$. Mostre que isso dá energia infinita, já que o número de modos cresce sem limite com $f$. (b) Planck supôs que a energia de cada oscilador só pode ser $0, hf, 2hf, 3hf, \dots$, com probabilidade proporcional a $e^{-E/kT}$ (Boltzmann ${F.ret("matematica/CII06")}). Mostre que a energia média vira $\bar E = \frac{hf}{e^{hf/kT} - 1}$. (c) Mostre que, para $hf \ll kT$, ela volta a ser $kT$, e que, para $hf \gg kT$, cai exponencialmente. Por que isso "cura" a catástrofe?</p>`,
       fig: "",
-      dicas: [R`<p>(b) $\bar E = \frac{\sum_n nhf\,x^n}{\sum_nx^n}$ com $x = e^{-hf/kT}$. As duas somas saem da série geométrica ${F.ret("CII03")}: $\sum x^n = \frac1{1 - x}$ e $\sum nx^n = \frac{x}{(1 - x)^2}$ (derive a primeira).</p>`, R`<p>(c) Para $u = hf/kT$ pequeno, $e^u - 1 \approx u$ (Taylor ${F.ret("CII04")}).</p>`],
+      dicas: [R`<p>(b) $\bar E = \frac{\sum_n nhf\,x^n}{\sum_nx^n}$ com $x = e^{-hf/kT}$. As duas somas saem da série geométrica ${F.ret("matematica/CII03")}: $\sum x^n = \frac1{1 - x}$ e $\sum nx^n = \frac{x}{(1 - x)^2}$ (derive a primeira).</p>`, R`<p>(c) Para $u = hf/kT$ pequeno, $e^u - 1 \approx u$ (Taylor ${F.ret("matematica/CII04")}).</p>`],
       sol: R`<p><b>(a)</b> O número de modos por intervalo de frequência cresce como $f^2$. Com $kT$ cada, a energia por frequência cresce como $f^2$ e a integral até o infinito diverge: a "catástrofe do ultravioleta" (Rayleigh–Jeans, a curva tracejada do laboratório).</p>
         <p><b>(b)</b> $\bar E = hf\frac{x/(1 - x)^2}{1/(1 - x)} = \frac{hf\,x}{1 - x} = \frac{hf}{1/x - 1} = \frac{hf}{e^{hf/kT} - 1}$ ∎.</p>
         <p><b>(c)</b> $hf \ll kT$: $e^u - 1 \approx u$ e $\bar E \approx kT$ (clássico). $hf \gg kT$: $\bar E \approx hf\,e^{-hf/kT}$, que vai a zero. Os modos de alta frequência ficam "congelados": a energia térmica $kT$ não é suficiente para pagar nem um pacote $hf$. Somando com o número de modos, sai a lei de Planck, e a energia total fica finita, proporcional a $T^4$.</p>
@@ -50,7 +50,7 @@ F.registrar("C16", {
         <div id="lab-cn"></div>
         ${F.formula(R`I(\lambda, T) = \frac{2hc^2}{\lambda^5}\cdot\frac{1}{e^{hc/\lambda kT} - 1}`, "Lei de Planck")}
         ${F.formula(R`\lambda_\text{máx}T = 2{,}898\times10^{-3}\text{ m·K}\qquad\qquad P = \sigma AT^4,\ \ \sigma = 5{,}67\times10^{-8}\ \tfrac{\text{W}}{\text{m}^2\text{K}^4}`, "Leis de Wien e de Stefan–Boltzmann")}
-        <p>As duas saem da fórmula de Planck: Wien, achando o máximo (a equação dá $x = 5 + W(-5e^{-5})$, ${F.ret("CE01")}); Stefan, integrando em todos os $\lambda$ (aparece $\Gamma(4)\zeta(4) = \frac{\pi^4}{15}$, ${F.ret("CE02")}).</p>
+        <p>As duas saem da fórmula de Planck: Wien, achando o máximo (a equação dá $x = 5 + W(-5e^{-5})$, ${F.ret("matematica/CE01")}); Stefan, integrando em todos os $\lambda$ (aparece $\Gamma(4)\zeta(4) = \frac{\pi^4}{15}$, ${F.ret("matematica/CE02")}).</p>
         <table class="tb"><tr><th>objeto</th><th>T</th><th>pico</th></tr><tr><td>radiação cósmica de fundo</td><td>2,725 K</td><td>1,06 mm (micro-ondas)</td></tr><tr><td>corpo humano</td><td>310 K</td><td>9,3 μm (infravermelho)</td></tr><tr><td>lâmpada incandescente</td><td>3000 K</td><td>966 nm (infravermelho próximo)</td></tr><tr><td>Sol</td><td>5772 K</td><td>502 nm (visível)</td></tr></table>
         ${F.caixa("fisico", R`<p><b>Você irradia uns 940 W</b> (1,8 m² de pele a 310 K), mas também absorve das paredes a 20 °C: a perda líquida fica perto de 190 W. É por isso que uma sala com paredes frias dá sensação de frio mesmo com o ar quente.</p>`)}`),
 

@@ -1,7 +1,7 @@
 /* TE03 · Teoremas de Pappus–Guldin. Conferido em Python:
    toro R = 3, r = 1: V = 2π²Rr² = 59,22, A = 4π²Rr = 118,4; centroide do meio disco 4r/(3π) = 0,4244r; do arco de semicírculo 2r/π = 0,6366r;
    retângulo 1 × 3 a 2 do eixo: V = 2π·2,5·3 = 47,12 (= π(3² − 2²)·3); triângulo equilátero de lado 2 com centroide a 5 do eixo: V = 54,41, A = 188,5. */
-F.registrar("TE03", {
+F.registrar("matematica/TE03", {
   retoma: ["CI09", "CII07"],
   html(F) {
     const R = String.raw;

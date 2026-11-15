@@ -97,7 +97,7 @@ F.registrar("A06", {
           <p>(iii) É um polinômio do 2º grau em $x$ com coeficiente de $x^2$ negativo: parábola com a concavidade para baixo. $\blacksquare$</p>`)}
         ${F.caixa("pegadinha", R`<p><b>No topo a velocidade não é zero</b>: só a componente vertical zera; a horizontal continua lá, $v_0\cos\theta$. E a aceleração no topo continua $g$, para baixo. Outro erro comum: usar $R = \frac{v_0^2\sin2\theta}g$ quando o lançamento sai de uma altura (aí os tempos de subida e descida são diferentes e a fórmula não vale).</p>`)}
         ${F.caixa("olimpiada", R`<p><b>Equação em $\tan\theta$</b>: trocando $\frac1{\cos^2\theta}$ por $1 + \tan^2\theta$, a equação da trajetória vira uma equação do 2º grau em $\tan\theta$. Dá para achar os dois ângulos que acertam um alvo e, pelo discriminante, a <b>parábola de segurança</b>: a região que dá para atingir com uma velocidade fixa (exemplo de olimpíada e chefão).</p>`)}
-        ${F.caixa("ponte", R`<p><b>Com resistência do ar</b>, a trajetória deixa de ser parábola: a descida fica mais íngreme que a subida e o ângulo de alcance máximo cai para menos de 45° (no futebol e no golfe, uns 30–40°). A conta exige resolver equações diferenciais ${F.ret("CII08")}; o tema ${F.ret("A09")} trata do arrasto.</p>`)}
+        ${F.caixa("ponte", R`<p><b>Com resistência do ar</b>, a trajetória deixa de ser parábola: a descida fica mais íngreme que a subida e o ângulo de alcance máximo cai para menos de 45° (no futebol e no golfe, uns 30–40°). A conta exige resolver equações diferenciais ${F.ret("matematica/CII08")}; o tema ${F.ret("A09")} trata do arrasto.</p>`)}
         ${exemplos}`),
 
       F.secao("desafios", "Exercícios", exs.join("") + chefao),

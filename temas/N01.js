@@ -2,7 +2,7 @@
    escoamento de estagnação v = (kx, −ky), k = 2: aceleração em (1, 1) = (4, 4); bocal u = u₀(1 + x/L), u₀ = 1 m/s, L = 0,5 m: a(0) = 2 m/s²;
    advecção de temperatura (vento de 10 m/s, gradiente de 1 K por 100 km): ∂T/∂t = −0,36 K/h. */
 F.registrar("N01", {
-  retoma: ["U01", "CII05", "A05"],
+  retoma: ["U01", "matematica/CII05", "A05"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -27,7 +27,7 @@ F.registrar("N01", {
       titulo: "Euler e Lagrange dão a mesma aceleração",
       enun: R`<p>Escoamento $\vec v = (kx, -ky)$. (a) Descrição de Lagrange: resolva $\dot x = kx$, $\dot y = -ky$ para uma partícula que começa em $(x_0, y_0)$. Que curvas as partículas seguem? (b) Derive $x(t)$ e $y(t)$ duas vezes para achar a aceleração da partícula. (c) Agora pela descrição de Euler: calcule $\frac{D\vec v}{Dt} = \frac{\partial\vec v}{\partial t} + (\vec v\cdot\nabla)\vec v$ no ponto onde a partícula está. Os dois resultados batem? (d) A partícula chega ao ponto de estagnação $(0, 0)$?</p>`,
       fig: "",
-      dicas: [R`<p>(a) EDOs separadas ${F.ret("CII08")}: exponenciais.</p>`, R`<p>(a) $xy = x_0y_0e^{kt}e^{-kt}$.</p>`],
+      dicas: [R`<p>(a) EDOs separadas ${F.ret("matematica/CII08")}: exponenciais.</p>`, R`<p>(a) $xy = x_0y_0e^{kt}e^{-kt}$.</p>`],
       sol: R`<p><b>(a)</b> $x = x_0e^{kt}$, $y = y_0e^{-kt}$. Como $xy = x_0y_0$ é constante, as partículas andam sobre <b>hipérboles</b> (é o escoamento de um jato batendo numa parede, perto do ponto onde ele bate).</p>
         <p><b>(b)</b> $\ddot x = k^2x_0e^{kt} = k^2x$, $\ddot y = k^2y_0e^{-kt} = k^2y$. Aceleração: $(k^2x, k^2y)$.</p>
         <p><b>(c)</b> $\partial_t\vec v = 0$; $(\vec v\cdot\nabla)\vec v = kx\,(k, 0) + (-ky)(0, -k) = (k^2x, k^2y)$. ✓ A derivada material é exatamente a aceleração da partícula: é a "ponte" entre as duas descrições.</p>
@@ -48,7 +48,7 @@ F.registrar("N01", {
 
       F.secao("material", "A derivada material", R`
         ${F.formula(R`\frac{D}{Dt} = \frac{\partial}{\partial t} + \vec v\cdot\nabla\qquad\qquad \vec a = \frac{D\vec v}{Dt} = \underbrace{\frac{\partial\vec v}{\partial t}}_{\text{local}} + \underbrace{(\vec v\cdot\nabla)\vec v}_{\text{convectiva}}`, "Derivada material (ou total, ou substancial)")}
-        <p>De onde vem: uma grandeza $q(\vec r, t)$ vista por uma partícula que está em $\vec r(t)$ muda, pela regra da cadeia ${F.ret("CII05")}, com $\frac{dq}{dt} = \frac{\partial q}{\partial t} + \frac{\partial q}{\partial x}\dot x + \frac{\partial q}{\partial y}\dot y + \frac{\partial q}{\partial z}\dot z = \frac{\partial q}{\partial t} + \vec v\cdot\nabla q$. A parte <b>local</b> é quanto $q$ muda num ponto fixo; a <b>convectiva</b>, quanto muda porque a partícula foi para um lugar onde $q$ é diferente.</p>
+        <p>De onde vem: uma grandeza $q(\vec r, t)$ vista por uma partícula que está em $\vec r(t)$ muda, pela regra da cadeia ${F.ret("matematica/CII05")}, com $\frac{dq}{dt} = \frac{\partial q}{\partial t} + \frac{\partial q}{\partial x}\dot x + \frac{\partial q}{\partial y}\dot y + \frac{\partial q}{\partial z}\dot z = \frac{\partial q}{\partial t} + \vec v\cdot\nabla q$. A parte <b>local</b> é quanto $q$ muda num ponto fixo; a <b>convectiva</b>, quanto muda porque a partícula foi para um lugar onde $q$ é diferente.</p>
         ${F.caixa("fisico", R`<p><b>Meteorologia</b>: se o ar não troca calor (cada pacote de ar mantém a temperatura, $DT/Dt = 0$), então num ponto fixo $\frac{\partial T}{\partial t} = -\vec v\cdot\nabla T$. Vento de 10 m/s vindo de uma região 1 K mais fria a cada 100 km: $\frac{\partial T}{\partial t} = -10\cdot10^{-5} = -10^{-4}$ K/s $\approx -0{,}36$ K/h. É a "advecção de ar frio" do jornal.</p>`)}
         ${F.caixa("pegadinha", R`<p><b>"Estacionário" não quer dizer "sem aceleração"</b>. Num bocal, o campo de velocidade não muda com o tempo, mas cada gota acelera ao entrar na parte estreita. E num escoamento uniforme que oscila no tempo, a aceleração é toda local. O termo $(\vec v\cdot\nabla)\vec v$ é <b>não linear</b> (velocidade vezes derivada da velocidade): é dele que vêm a turbulência e a dificuldade do Problema do Milênio (N07).</p>`)}
         ${exemplario}`),

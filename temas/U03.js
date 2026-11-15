@@ -2,7 +2,7 @@
    Atwood 3 kg/2 kg: a = g/5 = 1,96 m/s²; pêndulo de 1 m: T = 2,01 s; plano 30°: 4,905 m/s²; haste girando (ω = 2, r₀ = 0,1 m até 1 m): t = arccosh(10)/2 = 1,50 s;
    cilindro rolando a 30°: (2/3)g sen θ = 3,27 m/s²; aro R = 0,1 m: ω_c = 9,90 rad/s; ω = 15: θ* = 64,2°, ω_osc = ω sen θ* = 13,50 rad/s; ω = 6: ω_osc = √(g/R − ω²) = 7,88 rad/s. */
 F.registrar("U03", {
-  retoma: ["U01", "CI05", "CII08"],
+  retoma: ["U01", "matematica/CI05", "matematica/CII08"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -50,7 +50,7 @@ F.registrar("U03", {
         ${F.formula(R`L(q, \dot q, t) = T - V\qquad\qquad \frac{d}{dt}\left(\frac{\partial L}{\partial\dot q}\right) = \frac{\partial L}{\partial q}`, "Lagrangiana e equação de Euler–Lagrange")}
         <ol><li>Escolha <b>coordenadas generalizadas</b> $q_1, q_2, \dots$: o mínimo de números que descreve a posição, respeitando os vínculos (um pêndulo precisa só de $\theta$; uma conta num trilho, só da posição ao longo dele). O número delas são os <b>graus de liberdade</b>.</li>
           <li>Escreva a energia cinética $T$ e a potencial $V$ em função de $q$ e $\dot q$.</li>
-          <li>Monte $L = T - V$ e aplique Euler–Lagrange a cada coordenada. Pronto: uma equação de movimento por grau de liberdade ${F.ret("CII08")}.</li></ol>
+          <li>Monte $L = T - V$ e aplique Euler–Lagrange a cada coordenada. Pronto: uma equação de movimento por grau de liberdade ${F.ret("matematica/CII08")}.</li></ol>
         <p><b>Teste com uma mola</b>: $L = \frac12m\dot x^2 - \frac12kx^2$. Então $\frac{\partial L}{\partial\dot x} = m\dot x$, $\frac{\partial L}{\partial x} = -kx$, e a equação é $m\ddot x = -kx$. É Newton, sem desenhar nada.</p>
         <p><b>Pêndulo</b>: $T = \frac12ml^2\dot\theta^2$, $V = -mgl\cos\theta$. Euler–Lagrange: $ml^2\ddot\theta = -mgl\sin\theta$, ou $\ddot\theta = -\frac{g}{l}\sin\theta$. A tração do fio não apareceu em lugar nenhum.</p>
         ${F.caixa("pegadinha", R`<p><b>É $T - V$, não $T + V$</b>. A soma é a energia (que se conserva). A diferença não tem significado "físico" óbvio, mas é ela que gera as equações certas (a U04 explica por quê: o caminho real torna estacionária a integral de $T - V$). E cuidado com o sinal de $V$: para a gravidade com $\theta$ a partir do fundo, $V = -mgl\cos\theta$ (mínimo no fundo).</p>`)}`),

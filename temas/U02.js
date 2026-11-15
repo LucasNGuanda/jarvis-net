@@ -2,7 +2,7 @@
    fluxo de (x, y, z) por esfera R: 4πR³; (x², 0, 0) no cubo unitário: 1; circulação de (−y, x) num círculo: 2πR²; área da elipse por Green: πab;
    (y, 0) no quadrado unitário anti-horário: −1; B dentro de fio (10 A, a = 1 mm) a 0,5 mm: 1 mT; túnel pela Terra: 84,4 min, v máx = 7,9 km/s. */
 F.registrar("U02", {
-  retoma: ["U01", "CE03", "CII07", "C03b"],
+  retoma: ["U01", "matematica/CE03", "matematica/CII07", "C03b"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -41,11 +41,11 @@ F.registrar("U02", {
     return [
       F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Universitária · teoremas integrais</div>
         <div class="q">Dá para saber o que acontece dentro olhando só a borda?</div>
-        <p>Sim, e essa é uma das ideias mais lindas da matemática. O Teorema Fundamental do Cálculo diz que $\int_a^b f'\,dx = f(b) - f(a)$: a soma das derivadas no miolo é igual ao valor nas pontas ${F.ret("CI07")}. Os teoremas de Gauss e de Stokes são o mesmo teorema, um andar acima: somar divergente no volume dá o fluxo pela casca; somar rotacional numa superfície dá a circulação na borda.</p></div>`),
+        <p>Sim, e essa é uma das ideias mais lindas da matemática. O Teorema Fundamental do Cálculo diz que $\int_a^b f'\,dx = f(b) - f(a)$: a soma das derivadas no miolo é igual ao valor nas pontas ${F.ret("matematica/CI07")}. Os teoremas de Gauss e de Stokes são o mesmo teorema, um andar acima: somar divergente no volume dá o fluxo pela casca; somar rotacional numa superfície dá a circulação na borda.</p></div>`),
 
       F.secao("gauss", "Teorema da divergência (Gauss)", R`
         ${F.formula(R`\oint_{\partial V}\vec F\cdot d\vec A = \int_V(\nabla\cdot\vec F)\,dV`, "Teorema da divergência")}
-        <p>Ideia: corte o volume em caixinhas. O fluxo que sai de cada uma é $(\nabla\cdot\vec F)\,dV$ ${F.ret("U01")}. Somando todas, o fluxo pelas faces internas se cancela (o que sai de uma caixinha entra na vizinha), e só sobra o fluxo pela casca de fora ${F.ret("CE03")}.</p>
+        <p>Ideia: corte o volume em caixinhas. O fluxo que sai de cada uma é $(\nabla\cdot\vec F)\,dV$ ${F.ret("U01")}. Somando todas, o fluxo pelas faces internas se cancela (o que sai de uma caixinha entra na vizinha), e só sobra o fluxo pela casca de fora ${F.ret("matematica/CE03")}.</p>
         <p>Exemplo: $\vec F = (x, y, z)$ por uma esfera de raio $R$. Na superfície, $\vec F\cdot\hat n = R$, então o fluxo é $R\cdot4\pi R^2 = 4\pi R^3$. Pelo teorema: $\nabla\cdot\vec F = 3$, e $3\cdot\frac43\pi R^3 = 4\pi R^3$. ✓</p>
         <div id="lab-fl"></div>
         ${F.caixa("fisico", R`<p><b>Lei de Gauss, das duas formas</b>. Integral: $\oint\vec E\cdot d\vec A = Q_\text{dentro}/\varepsilon_0$ ${F.ret("C03b")}. Escrevendo $Q = \int\rho\,dV$ e usando o teorema: $\int\nabla\cdot\vec E\,dV = \int\frac{\rho}{\varepsilon_0}dV$ para <b>todo</b> volume, então os integrandos são iguais: $\nabla\cdot\vec E = \rho/\varepsilon_0$. A forma integral serve para contas com simetria; a diferencial vale ponto a ponto.</p>`)}`),

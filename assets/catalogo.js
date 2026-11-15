@@ -1,12 +1,11 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 3.9";
+window.VERSAO = "β 4.0";
 /* Áreas (abas do topo). Cada área pertence a uma matéria (assets/materias.js); o topo mostra só as abas da matéria atual.
    inicio = rota da página inicial da aba; anim = desenho da página inicial (em app.js, F.ANIM); icone = SVG da aba. */
 window.AREAS = [
   { id:"fisica", materia:"fisica", nome:"Física", inicio:"inicio", titulo:"Física", anim:"atomo", icone:`<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="5" style="stroke:var(--mC)"/><ellipse cx="16" cy="16" rx="13" ry="5" transform="rotate(60 16 16)" style="stroke:var(--mA)"/><ellipse cx="16" cy="16" rx="13" ry="5" transform="rotate(120 16 16)" style="stroke:var(--mU)"/><circle cx="16" cy="16" r="2.4" fill="currentColor" stroke="none"/></svg>` },
-  { id:"calculo", materia:"fisica", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo", anim:"calculo", icone:`<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M9.5 4.5c-1.8 0-2.3 1.6-2.6 3.6L5.2 23.9c-.3 2-.8 3.6-2.6 3.6" style="stroke:var(--mK1)" stroke-width="2.1" stroke-linecap="round"/><path d="M29.3 4.5c-1.8 0-2.3 1.6-2.6 3.6L25 23.9c-.3 2-.8 3.6-2.6 3.6" style="stroke:var(--mK2)" stroke-width="2.1" stroke-linecap="round"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>` },
   { id:"exp", materia:"fisica", nome:"Experimentos", inicio:"experimentos", titulo:"Experimentos físicos", anim:"pendulo", icone:`<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><line x1="6" y1="4" x2="26" y2="4" style="stroke:var(--ink3)" stroke-width="2"/><line x1="16" y1="4" x2="10" y2="16" style="stroke:currentColor" stroke-width="1.8"/><line x1="10" y1="16" x2="19" y2="25" style="stroke:currentColor" stroke-width="1.8"/><circle cx="10" cy="16" r="3" style="fill:var(--mA)"/><circle cx="19" cy="25" r="3.4" style="fill:var(--mU)"/></svg>` },
   { id:"lab", materia:"fisica", nome:"Experimental", inicio:"experimental", titulo:"Física experimental", anim:"calculadora", icone:`<svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" aria-hidden="true"><path d="M16 5v14M9 12h14" style="stroke:var(--mN)" stroke-width="2.6"/><path d="M9 25h14" style="stroke:var(--mO)" stroke-width="2.6"/></svg>` },
 ];
@@ -129,45 +128,6 @@ window.CATALOGO = [
   ]},
 
   /* ===================== ÁREA CÁLCULO ===================== */
-  { id:"K1", area:"calculo", letra:"1", cor:"--mK1", nome:"Cálculo 1", desc:"Limites, derivadas e integrais de uma variável.", temas:[
-    ["CI01","Funções e limites",["★"],true],
-    ["CI02","Continuidade e limites fundamentais",[],true],
-    ["CI03","Derivada: definição e significado",["★"],true],
-    ["CI04","Regras de derivação e regra da cadeia",[],true],
-    ["CI05","Aplicações da derivada: máximos, mínimos, L'Hôpital",["★"],true],
-    ["CI06","Integral definida e somas de Riemann",[],true],
-    ["CI07","Teorema Fundamental do Cálculo",["★","!"],true],
-    ["CI08","Integral indefinida e substituição",[],true],
-    ["CI09","Aplicações da integral: áreas, volumes, trabalho",[],true],
-  ]},
-  { id:"K2", area:"calculo", letra:"2", cor:"--mK2", nome:"Cálculo 2", desc:"Técnicas de integração, séries, várias variáveis e EDOs.", temas:[
-    ["CII01","Técnicas de integração: partes, frações parciais, trigonométricas",["!"],true],
-    ["CII02","Integrais impróprias",[],true],
-    ["CII03","Sequências e séries numéricas",["!"],true],
-    ["CII04","Séries de potências e de Taylor",["★"],true],
-    ["CII05","Funções de várias variáveis e derivadas parciais",[],true],
-    ["CII06","Gradiente, máximos e mínimos, multiplicadores de Lagrange",["!"],true],
-    ["CII07","Integrais duplas e triplas",["!"],true],
-    ["CII08","Equações diferenciais ordinárias",["★","!"],true],
-  ]},
-  { id:"K3", area:"calculo", letra:"∮", cor:"--mK3", nome:"Funções especiais e integrais", desc:"W de Lambert, Gama de Euler e integrais fechadas (as \"bolinhas\").", temas:[
-    ["CE01","Função W de Lambert",["!"],true],
-    ["CE02","Função Gama de Euler",["∫","!"],true],
-    ["CE03","Integrais fechadas ∮ (curvas e superfícies)",["∫","!!"],true],
-  ]},
-  { id:"K4", area:"calculo", letra:"∴", cor:"--mK4", nome:"Teoremas", desc:"Os grandes teoremas do cálculo que a física usa: Euler–Lagrange, Gauss, Pappus, Stokes e Noether.", temas:[
-    ["TE01","Princípio de Hamilton e equações de Euler–Lagrange",["∫","!!"],true],
-    ["TE02","Teorema da Divergência (Gauss–Ostrogradsky)",["∫","!"],true],
-    ["TE03","Teoremas de Pappus–Guldin",["∫"],true],
-    ["TE04","Teorema de Stokes",["∫","!!"],true],
-    ["TE05","Teorema de Noether",["!!"],true],
-  ]},
-  { id:"K5", area:"calculo", letra:"S", cor:"--mK5", nome:"Simulados de Cálculo", desc:"Provas de verdade, com a fonte e a resolução: MIT Integration Bee e USP.", temas:[
-    ["SC01","MIT Integration Bee 2026: classificatória",["MIT","∫","!"],true],
-    ["SC02","USP · MAT 111 (Cálculo I): Prova 1, 2015",["USP"],true],
-  ]},
-
-  /* ===================== ÁREA EXPERIMENTAL (medidas, incertezas, gráficos) — temas a definir com o Lucas ===================== */
   { id:"FEm", area:"lab", letra:"±", cor:"--mN", nome:"Medidas e incertezas", desc:"O que é medir, o que é incerteza e como ela se propaga nas contas.", temas:[
     ["FE01","O que é medir: unidades e algarismos significativos",[],true],
     ["FE02","O que é incerteza (tipo A e tipo B)",[],true],

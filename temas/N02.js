@@ -3,7 +3,7 @@
    aorta (r = 1 cm, 0,3 m/s): 5,65 L/min, nos capilares (área total 0,3 m²): 0,31 mm/s; rio 20 m × 2 m a 1 m/s → 10 m × 1,5 m: 2,67 m/s;
    filete da torneira (r₀ = 0,5 cm, 0,5 m/s) 10 cm abaixo: v = 1,49 m/s, r = 0,29 cm. */
 F.registrar("N02", {
-  retoma: ["N01", "TE02", "U01"],
+  retoma: ["N01", "matematica/TE02", "U01"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -40,7 +40,7 @@ F.registrar("N02", {
 
       F.secao("integral", "Forma integral e forma diferencial", R`
         ${F.formula(R`\frac{d}{dt}\int_V\rho\,dV = -\oint_{\partial V}\rho\,\vec v\cdot d\vec A\qquad\Longleftrightarrow\qquad \frac{\partial\rho}{\partial t} + \nabla\cdot(\rho\vec v) = 0`, "Equação da continuidade")}
-        <p>Esquerda: a massa dentro de um volume fixo só muda pelo que entra ou sai pela borda. Direita: com o teorema da divergência ${F.ret("TE02")} e "vale para qualquer volume", vira uma equação em cada ponto. A mesma equação vale para carga elétrica ${F.ret("U05")} e para probabilidade na quântica ${F.ret("U06")}.</p>
+        <p>Esquerda: a massa dentro de um volume fixo só muda pelo que entra ou sai pela borda. Direita: com o teorema da divergência ${F.ret("matematica/TE02")} e "vale para qualquer volume", vira uma equação em cada ponto. A mesma equação vale para carga elétrica ${F.ret("U05")} e para probabilidade na quântica ${F.ret("U06")}.</p>
         <p>Com a derivada material ${F.ret("N01")}, $\nabla\cdot(\rho\vec v) = \vec v\cdot\nabla\rho + \rho\nabla\cdot\vec v$, e a equação vira $\frac{D\rho}{Dt} = -\rho\,\nabla\cdot\vec v$: o divergente da velocidade é a <b>taxa de expansão</b> de um pedacinho de fluido.</p>
         ${F.formula(R`\rho = \text{constante}\ \Longrightarrow\ \nabla\cdot\vec v = 0\qquad\qquad \text{num tubo: } A_1v_1 = A_2v_2 = Q`, "Fluido incompressível")}
         <div id="lab-boc"></div>`),

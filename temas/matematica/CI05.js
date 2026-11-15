@@ -1,7 +1,7 @@
 /* CI05 · Aplicações da derivada: máximos, mínimos, L'Hôpital. Conferido em Python (scratchpad ci.py):
    caixa 30×30 → x = 5 cm, V = 2000 cm³; 20×30 → x ≈ 3,924, V ≈ 1056,3; escada no corredor (1, 8) → 11,18 m;
    salva-vidas p ≈ 35,30 m, T ≈ 22,96 s (reta 24,76 s); projétil de 2 m com 10 m/s → 40,28°, alcance 12,04 m; Pmáx = E²/4r = 18 W. */
-F.registrar("CI05", {
+F.registrar("matematica/CI05", {
   retoma: ["CI03", "CI04"],
   html(F) {
     const R = String.raw;
@@ -26,7 +26,7 @@ F.registrar("CI05", {
               R`<p>Corrente: $i = \frac{E}{R + r}$. Potência no resistor: $P(R) = Ri^2 = \frac{${E * E}R}{(R + ${F.n(r)})^2}$.</p>`,
               R`<p>Quociente: $P'(R) = ${E * E}\cdot\frac{(R + r)^2 - R\cdot2(R + r)}{(R + r)^4} = ${E * E}\cdot\frac{r - R}{(R + r)^3}$.</p>`,
               R`<p>$P' = 0 \iff R = r = ${F.n(r)}$ Ω. Para $R < r$, $P' > 0$; para $R > r$, $P' < 0$: é máximo.</p>`,
-              R`<p>$P_\text{máx} = \frac{E^2}{4r} = \frac{${E * E}}{${F.n(4 * r, 0)}} = ${F.n((E * E) / (4 * r), 2)}$ W. É o "casamento de impedâncias" ${F.ret("C10")}: nesse ponto, metade da energia esquenta a própria bateria (rendimento de 50%).</p>`,
+              R`<p>$P_\text{máx} = \frac{E^2}{4r} = \frac{${E * E}}{${F.n(4 * r, 0)}} = ${F.n((E * E) / (4 * r), 2)}$ W. É o "casamento de impedâncias" ${F.ret("fisica/C10")}: nesse ponto, metade da energia esquenta a própria bateria (rendimento de 50%).</p>`,
             ] };
         } },
         { nome: "L'Hôpital", gerar: (p) => {
@@ -76,7 +76,7 @@ F.registrar("CI05", {
           <p>(iv) As frações são senos dos ângulos com a normal: $\frac{p}{\sqrt{p^2 + h_1^2}} = \operatorname{sen}\theta_1$ e a outra é $\operatorname{sen}\theta_2$. Então $T' = 0$ dá:</p>
           ${F.formula(R`\frac{\operatorname{sen}\theta_1}{v_1} = \frac{\operatorname{sen}\theta_2}{v_2}\quad\Longleftrightarrow\quad n_1\operatorname{sen}\theta_1 = n_2\operatorname{sen}\theta_2`, "Lei de Snell (com n = c/v)")}
           <p>(v) É mínimo porque $T$ é convexa (soma de duas funções convexas), então só tem um ponto crítico e ele é o fundo.</p>`)}
-        <p>Com os números do laboratório ($v_1 = 5$, $v_2 = 1{,}5$ m/s), o melhor é entrar em $p \approx 35{,}3$ m: $T \approx 22{,}96$ s, contra $24{,}76$ s em linha reta. O mesmo princípio dá a reflexão (ângulo de incidência = de reflexão) e, generalizado, vira o princípio da mínima ação da mecânica de Lagrange ${F.ret("U04")}.</p>`),
+        <p>Com os números do laboratório ($v_1 = 5$, $v_2 = 1{,}5$ m/s), o melhor é entrar em $p \approx 35{,}3$ m: $T \approx 22{,}96$ s, contra $24{,}76$ s em linha reta. O mesmo princípio dá a reflexão (ângulo de incidência = de reflexão) e, generalizado, vira o princípio da mínima ação da mecânica de Lagrange ${F.ret("fisica/U04")}.</p>`),
 
       F.secao("tvm", "Teorema do valor médio", R`
         ${F.formula(R`f \text{ contínua em } [a, b] \text{ e derivável em } (a, b)\ \Longrightarrow\ \exists\,c:\ f'(c) = \frac{f(b) - f(a)}{b - a}`, "TVM (Lagrange)")}
@@ -89,7 +89,7 @@ F.registrar("CI05", {
           <p>(ii) $\frac{f(x)}{g(x)} = \frac{f(x) - f(a)}{g(x) - g(a)} = \frac{\frac{f(x) - f(a)}{x - a}}{\frac{g(x) - g(a)}{x - a}}$.</p>
           <p>(iii) Quando $x \to a$, em cima vai a $f'(a)$ e embaixo a $g'(a)$ ∎. Perto de $a$, as duas funções são quase as retas tangentes, e a razão das retas é a razão das inclinações.</p>`)}
         <p><b>As outras indeterminações</b> viram $\frac00$ ou $\frac\infty\infty$ com um truque:</p>
-        <ul><li>$0\cdot\infty$: escreva como fração. $\lim_{x\to0^+}x\ln x = \lim\frac{\ln x}{1/x} \overset{L'H}{=} \lim\frac{1/x}{-1/x^2} = \lim(-x) = 0$. (É o limite que mostra que o gam fresco vai a 1 perto do zero ${F.ret("X01")}.)</li>
+        <ul><li>$0\cdot\infty$: escreva como fração. $\lim_{x\to0^+}x\ln x = \lim\frac{\ln x}{1/x} \overset{L'H}{=} \lim\frac{1/x}{-1/x^2} = \lim(-x) = 0$. (É o limite que mostra que o gam fresco vai a 1 perto do zero ${F.ret("fisica/X01")}.)</li>
           <li>$1^\infty$, $0^0$, $\infty^0$: tire o $\ln$. $\lim_{x\to0^+}x^x$: $\ln(x^x) = x\ln x \to 0$, então $x^x \to e^0 = 1$. Por isso se convenciona $0^0 = 1$.</li></ul>
         ${F.caixa("pegadinha", R`<p>(1) L'Hôpital <b>não</b> é a regra do quociente: derive em cima e embaixo separadamente. (2) Só vale com $\frac00$ ou $\frac\infty\infty$: $\lim_{x\to0}\frac{x + 1}{x + 2} = \frac12$, mas "derivando" daria 1. (3) Às vezes ele anda em círculos ($\frac{e^x + e^{-x}}{e^x - e^{-x}}$ no infinito): divida pela maior exponencial em vez disso.</p>`)}`),
 

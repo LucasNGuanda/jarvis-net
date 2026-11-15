@@ -2,7 +2,7 @@
    f = x²y + yz em (1,2,3): ∇f = (4, 4, 2), |∇f| = 6, derivada na direção (2,1,2)/3 = 16/3; G = (xy, yz, zx): div = x + y + z, rot = (−y, −z, −x);
    (2xy + z, x², x) tem rot = 0 e potencial x²y + xz (trabalho de 0 a (1,2,3) = 5); div(rⁿ r̂) = (n + 2)rⁿ⁻¹. */
 F.registrar("U01", {
-  retoma: ["CII05", "CII06", "C03b"],
+  retoma: ["matematica/CII05", "matematica/CII06", "C03b"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -13,7 +13,7 @@ F.registrar("U01", {
           const gx = 2 * A * x0 + B * y0, gy = B * x0 + 2 * C * y0, mod = Math.hypot(gx, gy);
           return { enun: R`<p>Uma "montanha" tem altura $h(x, y) = ${F.c(A)}x^2 ${B < 0 ? "-" : "+"} ${F.c(Math.abs(B))}xy ${C < 0 ? "-" : "+"} ${F.c(Math.abs(C))}y^2$. No ponto $(${x0}, ${y0})$: para onde a subida é mais íngreme, e qual a inclinação?</p>`, fig: "",
             passos: [
-              R`<p>Derivadas parciais ${F.ret("CII05")}: $\frac{\partial h}{\partial x} = ${F.c(2 * A)}x ${B < 0 ? "-" : "+"} ${F.c(Math.abs(B))}y$ e $\frac{\partial h}{\partial y} = ${F.c(B)}x ${C < 0 ? "-" : "+"} ${F.c(Math.abs(2 * C))}y$.</p>`,
+              R`<p>Derivadas parciais ${F.ret("matematica/CII05")}: $\frac{\partial h}{\partial x} = ${F.c(2 * A)}x ${B < 0 ? "-" : "+"} ${F.c(Math.abs(B))}y$ e $\frac{\partial h}{\partial y} = ${F.c(B)}x ${C < 0 ? "-" : "+"} ${F.c(Math.abs(2 * C))}y$.</p>`,
               R`<p>No ponto: $\nabla h = (${gx}, ${gy})$.</p>`,
               R`<p>A subida mais íngreme é na direção de $\nabla h$, com inclinação $|\nabla h| = \sqrt{${gx * gx} + ${gy * gy}} \approx ${F.n(mod, 2)}$. Andando perpendicular a $\nabla h$, a altura não muda: é a curva de nível.</p>`,
             ] };
@@ -48,7 +48,7 @@ F.registrar("U01", {
         <p>Um campo vetorial põe uma seta em cada ponto do espaço: a velocidade da água num rio, o campo elétrico, o vento. Na física de faculdade, as leis viram afirmações sobre as <b>derivadas</b> desses campos. São só três "derivadas" importantes, e cada uma mede uma coisa que dá para enxergar: para onde sobe (gradiente), quanto brota (divergente) e quanto gira (rotacional).</p></div>`),
 
       F.secao("nabla", "O operador nabla", R`
-        <p>Tudo sai de um único símbolo, o <b>nabla</b>, um "vetor de derivadas parciais" ${F.ret("CII05")}:</p>
+        <p>Tudo sai de um único símbolo, o <b>nabla</b>, um "vetor de derivadas parciais" ${F.ret("matematica/CII05")}:</p>
         ${F.formula(R`\nabla = \left(\frac{\partial}{\partial x},\ \frac{\partial}{\partial y},\ \frac{\partial}{\partial z}\right)`, "Nabla")}
         <p>Ele não é um vetor de verdade (sozinho não vale nada), mas funciona como um nas três "multiplicações" de vetores:</p>
         <table class="tb"><tr><th>nome</th><th>conta</th><th>age em</th><th>dá</th><th>significado</th></tr>
@@ -58,7 +58,7 @@ F.registrar("U01", {
 
       F.secao("grad", "Gradiente", R`
         ${F.formula(R`\nabla f = \left(\frac{\partial f}{\partial x},\ \frac{\partial f}{\partial y},\ \frac{\partial f}{\partial z}\right)\qquad\qquad df = \nabla f\cdot d\vec r`, "Gradiente")}
-        <p>A segunda fórmula é a chave: andando $d\vec r$, a função muda $\nabla f\cdot d\vec r$. Como o produto escalar é máximo quando os vetores são paralelos, $\nabla f$ <b>aponta para onde $f$ sobe mais rápido</b>, e $|\nabla f|$ é essa taxa. Andando perpendicular, $f$ não muda: o gradiente é perpendicular às curvas (superfícies) de nível ${F.ret("CII06")}.</p>
+        <p>A segunda fórmula é a chave: andando $d\vec r$, a função muda $\nabla f\cdot d\vec r$. Como o produto escalar é máximo quando os vetores são paralelos, $\nabla f$ <b>aponta para onde $f$ sobe mais rápido</b>, e $|\nabla f|$ é essa taxa. Andando perpendicular, $f$ não muda: o gradiente é perpendicular às curvas (superfícies) de nível ${F.ret("matematica/CII06")}.</p>
         <p><b>Derivada direcional</b>: a taxa de variação na direção de um vetor unitário $\hat u$ é $\nabla f\cdot\hat u$. Exemplo: $f = x^2y + yz$ em $(1, 2, 3)$ tem $\nabla f = (2xy,\ x^2 + z,\ y) = (4, 4, 2)$, de módulo 6. Na direção $\hat u = (2, 1, 2)/3$: $\frac{8 + 4 + 4}{3} = \frac{16}{3}$.</p>
         ${F.caixa("fisico", R`<p><b>Força é menos gradiente da energia potencial</b>: $\vec F = -\nabla U$. A bola rola "morro abaixo" na paisagem de $U$. Da mesma forma, $\vec E = -\nabla V$: o campo elétrico aponta para onde o potencial cai mais rápido, perpendicular às equipotenciais ${F.ret("C04")}.</p>`)}`),
 

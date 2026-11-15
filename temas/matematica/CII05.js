@@ -1,7 +1,7 @@
 /* CII05 · Funções de várias variáveis e derivadas parciais. Conferido com sympy (scratchpad cii2.py):
    ∂/∂x(x²y³ + sen xy) = 2xy³ + y cos xy; Schwarz em e^(xy); regra cíclica do gás ideal = −1; cilindro r = 10 ± 0,1, h = 20 ± 0,2: dV = 60π ≈ 188 cm³ (3%);
    sen(x − ct) resolve a equação de onda; formiga em T = 100 − x² − 2y²: dT/dt = −8; ∇²(1/r) = 0 e ∇²ln(x² + y²) = 0. */
-F.registrar("CII05", {
+F.registrar("matematica/CII05", {
   retoma: ["CI03", "CI04"],
   html(F) {
     const R = String.raw;
@@ -39,8 +39,8 @@ F.registrar("CII05", {
       sol: R`<p>(i) $\frac{\partial V}{\partial x} = -\frac{x}{r^3}$.</p>
         <p>(ii) $\frac{\partial^2V}{\partial x^2} = -\frac{1}{r^3} + x\cdot\frac{3}{r^4}\cdot\frac{x}{r} = -\frac{1}{r^3} + \frac{3x^2}{r^5}$.</p>
         <p>(iii) Somando as três: $-\frac{3}{r^3} + \frac{3(x^2 + y^2 + z^2)}{r^5} = -\frac3{r^3} + \frac{3r^2}{r^5} = 0$ ∎ (conferi com álgebra simbólica).</p>
-        <p><b>Bônus:</b> $\partial_x\ln(x^2 + y^2) = \frac{2x}{x^2 + y^2}$, $\partial_x^2 = \frac{2(y^2 - x^2)}{(x^2 + y^2)^2}$; somando com a de $y$, dá 0. É o potencial de um <b>fio infinito carregado</b> (em 2D, a "carga pontual" é um fio) ${F.ret("C04")}.</p>
-        <p class="det" style="color:var(--ink2)">A equação de Laplace $\nabla^2V = 0$ vale em toda região sem carga. Com carga, vira a de Poisson, $\nabla^2V = -\rho/\varepsilon_0$, a lei de Gauss na forma diferencial ${F.ret("U05")}.</p>`,
+        <p><b>Bônus:</b> $\partial_x\ln(x^2 + y^2) = \frac{2x}{x^2 + y^2}$, $\partial_x^2 = \frac{2(y^2 - x^2)}{(x^2 + y^2)^2}$; somando com a de $y$, dá 0. É o potencial de um <b>fio infinito carregado</b> (em 2D, a "carga pontual" é um fio) ${F.ret("fisica/C04")}.</p>
+        <p class="det" style="color:var(--ink2)">A equação de Laplace $\nabla^2V = 0$ vale em toda região sem carga. Com carga, vira a de Poisson, $\nabla^2V = -\rho/\varepsilon_0$, a lei de Gauss na forma diferencial ${F.ret("fisica/U05")}.</p>`,
     });
     return [
       F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Cálculo 2 · 5</div>
@@ -49,7 +49,7 @@ F.registrar("CII05", {
 
       F.secao("funcoes", "Funções de várias variáveis", R`
         <p>$f(x, y)$ associa um número a cada ponto do plano. O gráfico $z = f(x, y)$ é uma <b>superfície</b>; mais prático que desenhar a superfície é desenhar as <b>curvas de nível</b> $f(x, y) = c$, como num mapa topográfico.</p>
-        <table class="tb"><tr><th>curvas de nível de…</th><th>chamam-se</th></tr><tr><td>altitude</td><td>curvas de nível (mapa topográfico)</td></tr><tr><td>potencial elétrico</td><td>equipotenciais ${F.ret("C04")}</td></tr><tr><td>pressão atmosférica</td><td>isóbaras</td></tr><tr><td>temperatura</td><td>isotermas</td></tr></table>
+        <table class="tb"><tr><th>curvas de nível de…</th><th>chamam-se</th></tr><tr><td>altitude</td><td>curvas de nível (mapa topográfico)</td></tr><tr><td>potencial elétrico</td><td>equipotenciais ${F.ret("fisica/C04")}</td></tr><tr><td>pressão atmosférica</td><td>isóbaras</td></tr><tr><td>temperatura</td><td>isotermas</td></tr></table>
         <div id="lab-sup"></div>
         <p><b>Limites em 2D</b> são mais exigentes: dá para chegar a um ponto por infinitos caminhos, e o limite tem de ser o mesmo em todos. $f = \frac{xy}{x^2 + y^2}$ em $(0, 0)$: pela reta $y = mx$, $f = \frac{m}{1 + m^2}$, que depende da reta. Pelo eixo $x$ dá 0; pela diagonal, $\frac12$. O limite não existe.</p>`),
 
@@ -72,7 +72,7 @@ F.registrar("CII05", {
         <ul><li><b>Onda</b>: $\frac{\partial^2u}{\partial t^2} = c^2\frac{\partial^2u}{\partial x^2}$. Qualquer $u = f(x - ct)$ é solução: um pulso que anda com velocidade $c$ sem mudar de forma.</li>
           <li><b>Calor</b>: $\frac{\partial T}{\partial t} = \alpha\frac{\partial^2T}{\partial x^2}$.</li>
           <li><b>Laplace</b>: $\nabla^2V = 0$ (potencial onde não há carga; é o chefão).</li>
-          <li><b>Schrödinger</b> e <b>Navier–Stokes</b>, o ponto final do site ${F.ret("N01")}.</li></ul>
+          <li><b>Schrödinger</b> e <b>Navier–Stokes</b>, o ponto final do site ${F.ret("fisica/N01")}.</li></ul>
         ${exemplario}`),
 
       F.secao("desafios", "Desafios", [
@@ -82,7 +82,7 @@ F.registrar("CII05", {
         F.exercicio({ n: 4, enun: R`<p>Mostre que $u(x, t) = \operatorname{sen}(x - ct)$ satisfaz a equação de onda $u_{tt} = c^2u_{xx}$. Faça o mesmo para $e^{-(x - ct)^2}$.</p>`, fig: "", dicas: [R`<p>$u_t = -c\cos(x - ct)$, $u_{tt} = -c^2\operatorname{sen}(\ldots)$.</p>`, R`<p>Em geral, para $u = f(x - ct)$: $u_{tt} = c^2f''$ e $u_{xx} = f''$ (cadeia).</p>`], resp: R`As duas satisfazem; qualquer $f(x - ct)$ satisfaz.`, sol: R`<p>Com $s = x - ct$: $\partial_x = \frac{d}{ds}$ e $\partial_t = -c\frac{d}{ds}$. Então $u_{tt} = c^2f''(s) = c^2u_{xx}$. É um pulso andando para a direita; $f(x + ct)$ anda para a esquerda.</p>` }),
         F.exercicio({ n: 5, enun: R`<p>No gás ideal $PV = nRT$, calcule $\left(\frac{\partial P}{\partial V}\right)_T$, $\left(\frac{\partial V}{\partial T}\right)_P$ e $\left(\frac{\partial T}{\partial P}\right)_V$ e mostre que o produto é $-1$.</p>`, fig: "", dicas: [R`<p>$P = \frac{nRT}{V}$, $V = \frac{nRT}{P}$, $T = \frac{PV}{nR}$.</p>`, R`<p>Produto: $-\frac{nRT}{V^2}\cdot\frac{nR}{P}\cdot\frac{V}{nR}$; use $PV = nRT$.</p>`], resp: R`$-\frac{nRT}{V^2}$, $\frac{nR}{P}$, $\frac{V}{nR}$; produto $-\frac{nRT}{PV} = -1$.`, sol: R`<p>O sinal negativo vem de que, numa curva de nível de $F(P, V, T) = 0$, as três variáveis não podem crescer juntas.</p>` }),
         F.exercicio({ n: 6, marcas: ["!"], enun: R`<p>Uma formiga anda numa chapa com $T(x, y) = 100 - x^2 - 2y^2$. Passando por $(1, 1)$ com velocidade $(2, 1)$, que taxa de variação de temperatura ela sente? Em que direção ela deveria andar para a temperatura <i>não</i> mudar?</p>`, fig: "", dicas: [R`<p>$\dot T = T_x\dot x + T_y\dot y$.</p>`, R`<p>Não mudar: $T_x\dot x + T_y\dot y = 0$, ou seja, $-2\dot x - 4\dot y = 0$.</p>`], resp: R`$-8$ °C/s; para não mudar, andar na direção $(2, -1)$ (ou $(-2, 1)$), tangente à isoterma.`, sol: R`<p>Ao longo de uma curva de nível, $T$ é constante por definição. Próximo tema: essa direção é perpendicular ao gradiente ${F.ret("CII06")}.</p>` }),
-        F.exercicio({ n: 7, marcas: ["!"], enun: R`<p>A energia de um pêndulo é $E(\theta, \omega) = \frac12m\ell^2\omega^2 - mg\ell\cos\theta$. Mostre que, se $\dot\theta = \omega$ e $\dot\omega = -\frac g\ell\operatorname{sen}\theta$, então $\frac{dE}{dt} = 0$.</p>`, fig: "", dicas: [R`<p>$\frac{dE}{dt} = E_\theta\dot\theta + E_\omega\dot\omega$.</p>`, R`<p>$E_\theta = mg\ell\operatorname{sen}\theta$, $E_\omega = m\ell^2\omega$.</p>`], resp: R`$mg\ell\operatorname{sen}\theta\,\omega + m\ell^2\omega\left(-\frac g\ell\operatorname{sen}\theta\right) = 0$.`, sol: R`<p>É a conservação de energia do pêndulo ${F.ret("EP01")}, provada pela regra da cadeia. Na mecânica de Hamilton, isso vira uma regra geral: a energia se conserva quando ela não depende explicitamente do tempo ${F.ret("U04")}.</p>` }),
+        F.exercicio({ n: 7, marcas: ["!"], enun: R`<p>A energia de um pêndulo é $E(\theta, \omega) = \frac12m\ell^2\omega^2 - mg\ell\cos\theta$. Mostre que, se $\dot\theta = \omega$ e $\dot\omega = -\frac g\ell\operatorname{sen}\theta$, então $\frac{dE}{dt} = 0$.</p>`, fig: "", dicas: [R`<p>$\frac{dE}{dt} = E_\theta\dot\theta + E_\omega\dot\omega$.</p>`, R`<p>$E_\theta = mg\ell\operatorname{sen}\theta$, $E_\omega = m\ell^2\omega$.</p>`], resp: R`$mg\ell\operatorname{sen}\theta\,\omega + m\ell^2\omega\left(-\frac g\ell\operatorname{sen}\theta\right) = 0$.`, sol: R`<p>É a conservação de energia do pêndulo ${F.ret("fisica/EP01")}, provada pela regra da cadeia. Na mecânica de Hamilton, isso vira uma regra geral: a energia se conserva quando ela não depende explicitamente do tempo ${F.ret("fisica/U04")}.</p>` }),
       ].join("") + chefao),
     ].join("");
   },

@@ -56,7 +56,7 @@ F.registrar("C20", {
         <p>Um silício puro conduz pouco. Trocando um átomo em cada milhão por outro:</p>
         <ul><li><b>Tipo n</b>: fósforo (5 elétrons de valência, um a mais que o Si). O elétron extra fica fracamente preso e vai para a condução: portadores negativos.</li>
           <li><b>Tipo p</b>: boro (3 elétrons). Fica faltando um, uma lacuna: portadores positivos.</li></ul>
-        <p>A mágica está em juntar os dois. Na <b>junção p–n</b>, elétrons do lado n preenchem lacunas do lado p perto da fronteira, deixando uma camada sem portadores com um campo elétrico interno. Resultado: a corrente passa fácil num sentido e quase nada no outro. É o <b>diodo</b>, com a curva exponencial de Shockley $i = I_s(e^{V/V_T} - 1)$ que resolvemos com a W de Lambert ${F.ret("CE01")}.</p>
+        <p>A mágica está em juntar os dois. Na <b>junção p–n</b>, elétrons do lado n preenchem lacunas do lado p perto da fronteira, deixando uma camada sem portadores com um campo elétrico interno. Resultado: a corrente passa fácil num sentido e quase nada no outro. É o <b>diodo</b>, com a curva exponencial de Shockley $i = I_s(e^{V/V_T} - 1)$ que resolvemos com a W de Lambert ${F.ret("matematica/CE01")}.</p>
         <table class="tb"><tr><th>dispositivo</th><th>como usa a junção</th></tr>
           <tr><td>LED</td><td>elétrons e lacunas se recombinam na junção e emitem fótons com energia ≈ gap</td></tr>
           <tr><td>célula solar / fotodiodo</td><td>o contrário: fótons criam pares, e o campo da junção os separa (corrente)</td></tr>

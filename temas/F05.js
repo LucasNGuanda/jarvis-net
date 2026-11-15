@@ -4,7 +4,7 @@
    átomos numa pessoa de 70 kg ≈ 7e27; 1,02¹⁰ ≈ 1,2 (real 1,219); cos 0,1 ≈ 0,995;
    dipolo no eixo: 2kqd/x³, erro de 0,5% em x = 10d. */
 F.registrar("F05", {
-  retoma: ["CII04", "F04", "A19"],
+  retoma: ["matematica/CII04", "F04", "A19"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -40,7 +40,7 @@ F.registrar("F05", {
 
       F.secao("taylor", "Série de Taylor", R`
         ${F.formula(R`f(x) = f(0) + f'(0)\,x + \frac{f''(0)}{2!}x^2 + \frac{f'''(0)}{3!}x^3 + \cdots`, "Série de Taylor em torno de 0")}
-        <p>Perto de um ponto, qualquer função "boa" parece uma reta, depois uma parábola, depois uma cúbica… Cada termo corrige o anterior ${F.ret("CII04")}. As que mais aparecem na física:</p>
+        <p>Perto de um ponto, qualquer função "boa" parece uma reta, depois uma parábola, depois uma cúbica… Cada termo corrige o anterior ${F.ret("matematica/CII04")}. As que mais aparecem na física:</p>
         ${F.formula(R`\begin{aligned}\sin x &\approx x - \tfrac{x^3}{6}, & \cos x &\approx 1 - \tfrac{x^2}2, & e^x &\approx 1 + x + \tfrac{x^2}2,\\ (1 + x)^n &\approx 1 + nx + \tfrac{n(n-1)}2x^2, & \ln(1 + x) &\approx x - \tfrac{x^2}2, & \tfrac1{1 - x} &= 1 + x + x^2 + \cdots\end{aligned}`, "Aproximações de bolso (|x| ≪ 1)")}
         <div id="lab-tay"></div>
         ${F.caixa("pegadinha", R`<p><b>Raio de convergência:</b> as séries de $\sin$, $\cos$ e $e^x$ valem para qualquer $x$ (com termos suficientes). As de $(1 + x)^n$, $\ln(1 + x)$ e $\frac1{1 - x}$ só convergem para $|x| < 1$: fora disso, somar mais termos <b>piora</b>. No laboratório, ponha $\frac1{1 - x}$ com $x = -1{,}2$ e aumente $N$.</p>`)}`),

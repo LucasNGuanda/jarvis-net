@@ -3,7 +3,7 @@
    σ = [[−100, 30], [30, −100]] Pa: vetor tensão em n = (1,0): (−100, 30); em n = (1,1)/√2: (−49,5; −49,5), componente normal −70 Pa;
    gotinha de névoa (r = 10 μm) no ar: velocidade terminal de Stokes 1,21 cm/s. */
 F.registrar("N04", {
-  retoma: ["N03", "U01", "CII06"],
+  retoma: ["N03", "U01", "matematica/CII06"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -18,7 +18,7 @@ F.registrar("N04", {
         { nome: "Vetor tensão num plano", gerar: (p) => {
           const P = p ? 100 : F.escolha([50, 100, 200]), t = p ? 30 : F.escolha([10, 30, 60]);
           return { enun: R`<p>Num ponto de um fluido, o tensor de tensões (no plano $xy$) é $\sigma = \begin{pmatrix}-${P} & ${t}\\ ${t} & -${P}\end{pmatrix}$ Pa. Qual a força por área num plano com normal $\hat n = (1, 1)/\sqrt2$? Qual a componente normal?</p>`, fig: "",
-            passos: [R`<p>Vetor tensão (Cauchy): $\vec t = \sigma\hat n = \frac{1}{\sqrt2}(-${P} + ${t},\ ${t} - ${P})$.</p>`, R`<p>$\vec t \approx (${F.n((t - P) / Math.SQRT2, 2)};\ ${F.n((t - P) / Math.SQRT2, 2)})$ Pa.</p>`, R`<p>Normal: $\vec t\cdot\hat n = -${P} + ${t} = ${t - P}$ Pa. Nesse plano a tensão é só normal (sem cisalhamento): $(1,1)$ é uma <b>direção principal</b> de $\sigma$, com autovalor $-p + \tau$ ${F.ret("CII06")}.</p>`] };
+            passos: [R`<p>Vetor tensão (Cauchy): $\vec t = \sigma\hat n = \frac{1}{\sqrt2}(-${P} + ${t},\ ${t} - ${P})$.</p>`, R`<p>$\vec t \approx (${F.n((t - P) / Math.SQRT2, 2)};\ ${F.n((t - P) / Math.SQRT2, 2)})$ Pa.</p>`, R`<p>Normal: $\vec t\cdot\hat n = -${P} + ${t} = ${t - P}$ Pa. Nesse plano a tensão é só normal (sem cisalhamento): $(1,1)$ é uma <b>direção principal</b> de $\sigma$, com autovalor $-p + \tau$ ${F.ret("matematica/CII06")}.</p>`] };
         } },
       ],
     });

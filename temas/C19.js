@@ -33,7 +33,7 @@ F.registrar("C19", {
     });
     const chefao = F.chefao({
       titulo: "Datação: quantos anos tem o osso?",
-      enun: R`<p>Seres vivos mantêm a mesma razão ¹⁴C/¹²C da atmosfera (cerca de $1{,}2\times10^{-12}$). Ao morrer, o ¹⁴C decai (meia-vida 5730 anos) e não é reposto. (a) Um osso tem 25% da atividade de ¹⁴C de um osso atual. Qual a idade? (b) E com 10%? (c) A medida tem incerteza de 2% na atividade relativa (por exemplo, $10\% \pm 0{,}2\%$). Qual a incerteza na idade? Use a derivada ${F.ret("CI04")}. (d) Por que o carbono-14 não serve para datar dinossauros?</p>`,
+      enun: R`<p>Seres vivos mantêm a mesma razão ¹⁴C/¹²C da atmosfera (cerca de $1{,}2\times10^{-12}$). Ao morrer, o ¹⁴C decai (meia-vida 5730 anos) e não é reposto. (a) Um osso tem 25% da atividade de ¹⁴C de um osso atual. Qual a idade? (b) E com 10%? (c) A medida tem incerteza de 2% na atividade relativa (por exemplo, $10\% \pm 0{,}2\%$). Qual a incerteza na idade? Use a derivada ${F.ret("matematica/CI04")}. (d) Por que o carbono-14 não serve para datar dinossauros?</p>`,
       fig: "",
       dicas: [R`<p>$t = \frac{T_{1/2}}{\ln2}\ln\frac{R_0}{R}$.</p>`, R`<p>(c) $\frac{dt}{d(R/R_0)} = -\frac{T_{1/2}}{\ln2}\cdot\frac{1}{R/R_0}$.</p>`],
       sol: R`<p><b>(a)</b> 25% = duas meias-vidas: 11 460 anos.</p>
@@ -60,7 +60,7 @@ F.registrar("C19", {
 
       F.secao("decaimento", "Decaimento radioativo", R`
         ${F.formula(R`N(t) = N_0e^{-\lambda t},\qquad R = \lambda N,\qquad T_{1/2} = \frac{\ln2}{\lambda}`, "Lei do decaimento")}
-        <p>Cada núcleo instável tem uma probabilidade fixa por segundo, $\lambda$, de decair, sem "envelhecer". Daí a EDO $\dot N = -\lambda N$ ${F.ret("CII08")} e a exponencial. A atividade $R$ se mede em becquerel (1 Bq = 1 decaimento/s). Num gráfico de $\ln R$ contra $t$, os pontos caem numa reta de inclinação $-\lambda$: é assim que o Halliday tira a meia-vida do iodo-128 no exemplo 42-4 (≈ 25 min).</p>
+        <p>Cada núcleo instável tem uma probabilidade fixa por segundo, $\lambda$, de decair, sem "envelhecer". Daí a EDO $\dot N = -\lambda N$ ${F.ret("matematica/CII08")} e a exponencial. A atividade $R$ se mede em becquerel (1 Bq = 1 decaimento/s). Num gráfico de $\ln R$ contra $t$, os pontos caem numa reta de inclinação $-\lambda$: é assim que o Halliday tira a meia-vida do iodo-128 no exemplo 42-4 (≈ 25 min).</p>
         <div id="lab-dec"></div>
         <table class="tb"><tr><th>tipo</th><th>o que sai</th><th>o que muda</th><th>exemplo</th></tr>
           <tr><td>α</td><td>núcleo de ⁴He</td><td>$Z - 2$, $A - 4$</td><td>$^{238}\text{U} \to {^{234}\text{Th}} + \alpha$ (Q = 4,27 MeV)</td></tr>

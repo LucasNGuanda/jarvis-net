@@ -1,6 +1,6 @@
 /* Matemática (β 3.7): áreas (abas do topo) e módulos. Mesmo formato do assets/catalogo.js: acrescentar módulo ou tema é só editar aqui.
    Temas: ["COD", "Nome", [marcas], pronto]. Temas cadastrados na β 3.8, todos "em breve". Rota de um tema: #/matematica/<COD>.
-   O Cálculo 1 e 2 continuam na Física até a mudança combinada (numa branch de teste, com o progresso exportado antes). */
+   β 4.0: a aba Cálculo inteira (K1–K5, 27 temas) veio da física. Os temas ficam em temas/matematica/ e as simulações em assets/sims/matematica/. */
 window.AREAS.push(
   { id:"mat", materia:"matematica", nome:"Matemática", inicio:"matematica", titulo:"Matemática", anim:"solido", icone:`<svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" aria-hidden="true"><path d="M5 27V5M5 27h22" style="stroke:var(--ink3)" stroke-width="1.8"/><path d="M6 24C11 24 12 8 17 8s6 12 10 6" style="stroke:var(--mK2)" stroke-width="2.4"/></svg>` },
   { id:"matcalc", materia:"matematica", nome:"Cálculo", inicio:"matematica-calculo", titulo:"Cálculo", anim:"calculo", icone:`<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M6 27h5v-8H6zM11 27h5v-12h-5zM16 27h5v-15h-5z" style="stroke:var(--mK1);fill:color-mix(in srgb,var(--mK1) 25%,transparent)" stroke-width="1.4"/><path d="M5 21C11 13 18 9 27 7" style="stroke:currentColor" stroke-width="2" stroke-linecap="round"/></svg>` },
@@ -99,9 +99,48 @@ window.CATALOGO.push(
     ["PL04","Aprofundamento em Polinômios",[]],
     ["IC01","Introdução ao Cálculo",[]],
   ] },
-  /* aba Cálculo (o Cálculo 1 e 2 ainda estão na Física) */
+  /* aba Cálculo (β 4.0: os 5 módulos vieram da física com os mesmos ids, códigos e ordem; Cálculo 3 e 4 continuam "em breve") */
+  { id:"K1", area:"matcalc", letra:"1", cor:"--mK1", nome:"Cálculo 1", desc:"Limites, derivadas e integrais de uma variável.", temas:[
+    ["CI01","Funções e limites",["★"],true],
+    ["CI02","Continuidade e limites fundamentais",[],true],
+    ["CI03","Derivada: definição e significado",["★"],true],
+    ["CI04","Regras de derivação e regra da cadeia",[],true],
+    ["CI05","Aplicações da derivada: máximos, mínimos, L'Hôpital",["★"],true],
+    ["CI06","Integral definida e somas de Riemann",[],true],
+    ["CI07","Teorema Fundamental do Cálculo",["★","!"],true],
+    ["CI08","Integral indefinida e substituição",[],true],
+    ["CI09","Aplicações da integral: áreas, volumes, trabalho",[],true],
+  ]},
+  { id:"K2", area:"matcalc", letra:"2", cor:"--mK2", nome:"Cálculo 2", desc:"Técnicas de integração, séries, várias variáveis e EDOs.", temas:[
+    ["CII01","Técnicas de integração: partes, frações parciais, trigonométricas",["!"],true],
+    ["CII02","Integrais impróprias",[],true],
+    ["CII03","Sequências e séries numéricas",["!"],true],
+    ["CII04","Séries de potências e de Taylor",["★"],true],
+    ["CII05","Funções de várias variáveis e derivadas parciais",[],true],
+    ["CII06","Gradiente, máximos e mínimos, multiplicadores de Lagrange",["!"],true],
+    ["CII07","Integrais duplas e triplas",["!"],true],
+    ["CII08","Equações diferenciais ordinárias",["★","!"],true],
+  ]},
   { id:"MK3", area:"matcalc", letra:"3", cor:"--mK3", nome:"Cálculo 3", desc:"Em breve.", temas:[] },
   { id:"MK4", area:"matcalc", letra:"4", cor:"--mK4", nome:"Cálculo 4", desc:"Em breve.", temas:[] },
+  { id:"K3", area:"matcalc", letra:"∮", cor:"--mK3", nome:"Funções especiais e integrais", desc:"W de Lambert, Gama de Euler e integrais fechadas (as \"bolinhas\").", temas:[
+    ["CE01","Função W de Lambert",["!"],true],
+    ["CE02","Função Gama de Euler",["∫","!"],true],
+    ["CE03","Integrais fechadas ∮ (curvas e superfícies)",["∫","!!"],true],
+  ]},
+  { id:"K4", area:"matcalc", letra:"∴", cor:"--mK4", nome:"Teoremas", desc:"Os grandes teoremas do cálculo que a física usa: Euler–Lagrange, Gauss, Pappus, Stokes e Noether.", temas:[
+    ["TE01","Princípio de Hamilton e equações de Euler–Lagrange",["∫","!!"],true],
+    ["TE02","Teorema da Divergência (Gauss–Ostrogradsky)",["∫","!"],true],
+    ["TE03","Teoremas de Pappus–Guldin",["∫"],true],
+    ["TE04","Teorema de Stokes",["∫","!!"],true],
+    ["TE05","Teorema de Noether",["!!"],true],
+  ]},
+  { id:"K5", area:"matcalc", letra:"S", cor:"--mK5", nome:"Simulados de Cálculo", desc:"Provas de verdade, com a fonte e a resolução: MIT Integration Bee e USP.", temas:[
+    ["SC01","MIT Integration Bee 2026: classificatória",["MIT","∫","!"],true],
+    ["SC02","USP · MAT 111 (Cálculo I): Prova 1, 2015",["USP"],true],
+  ]},
+
+  /* ===================== ÁREA EXPERIMENTAL (medidas, incertezas, gráficos) — temas a definir com o Lucas ===================== */
   /* aba Olimpíada e demonstrações */
   { id:"DM", area:"olim", letra:"DM", cor:"--mA", nome:"Técnicas de demonstração", desc:"Indução, absurdo, contrapositiva, casa dos pombos e invariantes.", temas:[
     ["DM01","Demonstração direta e contrapositiva",[]],

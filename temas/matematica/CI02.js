@@ -1,6 +1,6 @@
 /* CI02 · Continuidade e limites fundamentais. Conferido com sympy/scipy (scratchpad ci.py):
    cos x = x → 0,739085; x³ − x − 1 = 0 → 1,324718; W(1) = 0,567143; (1 + 1/n)^n na tabela; lim (1 + 2/x)^(3x) = e⁶. */
-F.registrar("CI02", {
+F.registrar("matematica/CI02", {
   retoma: ["CI01"],
   html(F) {
     const R = String.raw;
@@ -59,7 +59,7 @@ F.registrar("CI02", {
           <tr><td><b>salto</b></td><td>$\frac{x}{|x|}$ em 0</td><td>tensão ao fechar uma chave; atrito ao inverter o movimento</td></tr>
           <tr><td><b>infinita</b></td><td>$\frac1x$ em 0</td><td>campo de uma carga pontual em $r = 0$</td></tr>
           <tr><td><b>oscilante</b></td><td>$\operatorname{sen}\frac1x$ em 0</td><td>(raro: quase um monstro matemático)</td></tr></table>
-        ${F.caixa("fisico", R`<p>Grandezas que guardam energia são contínuas no tempo: a posição de uma massa, a carga de um capacitor, a corrente num indutor ${F.ret("C15b")}. Já a força, a corrente num capacitor e a tensão num indutor podem saltar. Em prova de circuitos, "imediatamente após fechar a chave" usa exatamente isso.</p>`)}`),
+        ${F.caixa("fisico", R`<p>Grandezas que guardam energia são contínuas no tempo: a posição de uma massa, a carga de um capacitor, a corrente num indutor ${F.ret("fisica/C15b")}. Já a força, a corrente num capacitor e a tensão num indutor podem saltar. Em prova de circuitos, "imediatamente após fechar a chave" usa exatamente isso.</p>`)}`),
 
       F.secao("tvi", "Teorema do valor intermediário", R`
         ${F.formula(R`f \text{ contínua em } [a, b],\ \ f(a) < k < f(b)\ \Longrightarrow\ \exists\,c \in (a, b):\ f(c) = k`, "TVI (Bolzano)")}
@@ -74,7 +74,7 @@ F.registrar("CI02", {
         ${F.demo("pelas áreas e pelo teorema do confronto", R`<p>(i) No círculo de raio 1, com $0 < x < \frac\pi2$: triângulo pequeno $\subset$ setor $\subset$ triângulo grande (veja o laboratório). As áreas: $\frac{\operatorname{sen}x}{2} \leq \frac x2 \leq \frac{\operatorname{tg}x}{2}$. (A área do setor é $\frac x2$ porque o ângulo está em radianos: é aqui que o radiano é obrigatório.)</p>
           <p>(ii) Divida tudo por $\frac{\operatorname{sen}x}{2} > 0$: $1 \leq \frac{x}{\operatorname{sen}x} \leq \frac{1}{\cos x}$. Invertendo (inverte as desigualdades): $\cos x \leq \frac{\operatorname{sen}x}{x} \leq 1$.</p>
           <p>(iii) <b>Confronto</b> (sanduíche): $\cos x \to 1$ e $1 \to 1$; o que está espremido no meio também vai a 1. Para $x < 0$ é igual, porque $\frac{\operatorname{sen}x}{x}$ é par ∎.</p>`)}
-        <p>Consequências: $\frac{\operatorname{tg}x}{x} \to 1$, $\frac{1 - \cos x}{x^2} \to \frac12$, e, mais importante, as aproximações de ângulo pequeno $\operatorname{sen}\theta \approx \theta$ e $\cos\theta \approx 1 - \frac{\theta^2}{2}$, que transformam o pêndulo em MHS ${F.ret("EP01")} e aparecem em toda a óptica. Este limite também é a derivada do seno em 0 ${F.ret("CI03")}.</p>`),
+        <p>Consequências: $\frac{\operatorname{tg}x}{x} \to 1$, $\frac{1 - \cos x}{x^2} \to \frac12$, e, mais importante, as aproximações de ângulo pequeno $\operatorname{sen}\theta \approx \theta$ e $\cos\theta \approx 1 - \frac{\theta^2}{2}$, que transformam o pêndulo em MHS ${F.ret("fisica/EP01")} e aparecem em toda a óptica. Este limite também é a derivada do seno em 0 ${F.ret("CI03")}.</p>`),
 
       F.secao("euler", "Limite fundamental 2: o número e", R`
         ${F.formula(R`\lim_{n\to\infty}\left(1 + \frac1n\right)^n = e \approx 2{,}718281828`)}

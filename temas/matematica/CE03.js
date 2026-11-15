@@ -1,8 +1,8 @@
 /* CE03 · Integrais fechadas ∮ (curvas e superfícies). Números conferidos em Python (scratchpad ce.py):
    ∮(−y,x)·dr no círculo R=2 → 8π; elipse 3×2 → 6π; fluxo de 2 nC → 225,9 N·m²/C; espira r=10 cm com dB/dt=0,5 T/s → 15,7 mV e E=0,025 V/m;
    ∫dx/(1+x⁴) = π/√2 = 2,2214 (resíduos), ∫dx/(1+x²) = π. */
-F.registrar("CE03", {
-  retoma: ["U01", "U02"],
+F.registrar("matematica/CE03", {
+  retoma: ["fisica/U01", "fisica/U02"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -69,9 +69,9 @@ F.registrar("CE03", {
           <p>(iv) $\vec F\cdot\vec r\,{}' = R^2\sin^2t + R^2\cos^2t = R^2$, e $\oint = \int_0^{2\pi}R^2\,dt = 2\pi R^2$.</p>
           <p>Repare: $2\pi R^2 = 2\times(\text{área do disco})$. Não é coincidência; é o teorema de Green (próxima seção).</p>`)}
         <h3>Campos conservativos: ∮ = 0</h3>
-        <p>Se $\vec F = \nabla\varphi$ (é o gradiente de um potencial ${F.ret("U01")}), então $\int_C\vec F\cdot d\vec r = \varphi(\text{fim}) - \varphi(\text{início})$, e num caminho fechado isso dá <b>zero</b>. Gravidade e campo eletrostático são assim:</p>
+        <p>Se $\vec F = \nabla\varphi$ (é o gradiente de um potencial ${F.ret("fisica/U01")}), então $\int_C\vec F\cdot d\vec r = \varphi(\text{fim}) - \varphi(\text{início})$, e num caminho fechado isso dá <b>zero</b>. Gravidade e campo eletrostático são assim:</p>
         ${F.formula(R`\oint\vec E\cdot d\vec\ell = 0\quad\text{(eletrostática)}`)}
-        <p>Isso <b>é</b> a lei das malhas de Kirchhoff ${F.ret("C10b")}: dar a volta num circuito e voltar ao mesmo potencial. Com indução ${F.ret("C15")}, o lado direito deixa de ser zero: $\oint\vec E\cdot d\vec\ell = -\frac{d\Phi_B}{dt}$, e o campo elétrico passa a "girar".</p>`),
+        <p>Isso <b>é</b> a lei das malhas de Kirchhoff ${F.ret("fisica/C10b")}: dar a volta num circuito e voltar ao mesmo potencial. Com indução ${F.ret("fisica/C15")}, o lado direito deixa de ser zero: $\oint\vec E\cdot d\vec\ell = -\frac{d\Phi_B}{dt}$, e o campo elétrico passa a "girar".</p>`),
 
       F.secao("green", "O teorema de Green", R`
         ${F.formula(R`\oint_C\left(P\,dx + Q\,dy\right) = \iint_D\left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right)dA`, "Green (C percorrida no sentido anti-horário)")}
@@ -92,16 +92,16 @@ F.registrar("CE03", {
       F.secao("tresd", "Em 3D: Stokes e Gauss", R`
         ${F.formula(R`\oint_C\vec F\cdot d\vec r = \iint_S(\nabla\times\vec F)\cdot d\vec A`, "Stokes: curva fechada = borda da superfície")}
         ${F.formula(R`\oiint_S\vec F\cdot d\vec A = \iiint_V\nabla\cdot\vec F\,dV`, "Gauss (divergência): superfície fechada = casca do volume")}
-        <p>O símbolo $\oiint$ (duas integrais com uma bolinha) é a integral numa superfície <b>fechada</b>, como uma esfera ou a casca de uma batata. Os dois teoremas dizem a mesma coisa que Green, um grau acima: o total na borda = a soma do que acontece dentro. A dedução está em ${F.ret("U02")}.</p>
+        <p>O símbolo $\oiint$ (duas integrais com uma bolinha) é a integral numa superfície <b>fechada</b>, como uma esfera ou a casca de uma batata. Os dois teoremas dizem a mesma coisa que Green, um grau acima: o total na borda = a soma do que acontece dentro. A dedução está em ${F.ret("fisica/U02")}.</p>
         ${F.demo("os dois lados de Gauss, para F = (x, y, z) numa esfera", R`<p>(i) Na superfície da esfera de raio $R$, $\vec F = \vec r$ aponta para fora e tem módulo $R$: $\vec F\cdot\hat n = R$. Fluxo $= R\cdot4\pi R^2 = 4\pi R^3$.</p>
           <p>(ii) Dentro: $\nabla\cdot\vec F = 1 + 1 + 1 = 3$. Volume $\times3 = \frac43\pi R^3\cdot3 = 4\pi R^3$ ✓.</p>`)}
         <h3>As equações de Maxwell, com bolinhas</h3>
         <table class="tb"><tr><th>lei</th><th>forma integral</th><th>o que diz</th></tr>
-          <tr><td>Gauss ${F.ret("C03b")}</td><td>$\oiint\vec E\cdot d\vec A = \frac{Q_\text{dentro}}{\varepsilon_0}$</td><td>carga é fonte de campo elétrico</td></tr>
+          <tr><td>Gauss ${F.ret("fisica/C03b")}</td><td>$\oiint\vec E\cdot d\vec A = \frac{Q_\text{dentro}}{\varepsilon_0}$</td><td>carga é fonte de campo elétrico</td></tr>
           <tr><td>Gauss magnético</td><td>$\oiint\vec B\cdot d\vec A = 0$</td><td>não existe "carga magnética"</td></tr>
-          <tr><td>Faraday ${F.ret("C15")}</td><td>$\oint\vec E\cdot d\vec\ell = -\frac{d}{dt}\iint\vec B\cdot d\vec A$</td><td>fluxo magnético variando faz $\vec E$ girar</td></tr>
-          <tr><td>Ampère–Maxwell ${F.ret("C14")}</td><td>$\oint\vec B\cdot d\vec\ell = \mu_0I + \mu_0\varepsilon_0\frac{d}{dt}\iint\vec E\cdot d\vec A$</td><td>corrente (e $\vec E$ variando) faz $\vec B$ girar</td></tr></table>
-        <p>Com Stokes e Gauss, cada uma vira a forma diferencial ${F.ret("U05")}, e daí saem as ondas eletromagnéticas ${F.ret("C15d")}.</p>`),
+          <tr><td>Faraday ${F.ret("fisica/C15")}</td><td>$\oint\vec E\cdot d\vec\ell = -\frac{d}{dt}\iint\vec B\cdot d\vec A$</td><td>fluxo magnético variando faz $\vec E$ girar</td></tr>
+          <tr><td>Ampère–Maxwell ${F.ret("fisica/C14")}</td><td>$\oint\vec B\cdot d\vec\ell = \mu_0I + \mu_0\varepsilon_0\frac{d}{dt}\iint\vec E\cdot d\vec A$</td><td>corrente (e $\vec E$ variando) faz $\vec B$ girar</td></tr></table>
+        <p>Com Stokes e Gauss, cada uma vira a forma diferencial ${F.ret("fisica/U05")}, e daí saem as ondas eletromagnéticas ${F.ret("fisica/C15d")}.</p>`),
 
       F.secao("vortice", "O vórtice: quando a bolinha guarda um segredo", R`
         <p>O campo $\vec F = \frac{(-y, x)}{x^2 + y^2}$ (é o $\vec B$ de um fio, a menos de uma constante) tem $\text{rot}\,\vec F = 0$ em todo lugar onde existe. Mesmo assim, $\oint\vec F\cdot d\vec r = 2\pi$ em qualquer curva que dê uma volta no fio.</p>
@@ -115,7 +115,7 @@ F.registrar("CE03", {
         F.exercicio({ n: 2, enun: R`<p>O campo $\vec F = (2xy,\ x^2)$ é conservativo? Quanto vale $\oint\vec F\cdot d\vec r$ num triângulo qualquer? E qual é o potencial?</p>`, fig: "", dicas: [R`<p>Calcule $\partial_xQ - \partial_yP$.</p>`, R`<p>Procure $\varphi$ com $\partial_x\varphi = 2xy$ e $\partial_y\varphi = x^2$.</p>`], resp: R`Sim: $\oint = 0$ em qualquer curva fechada; $\varphi = x^2y$.`, sol: R`<p>$\partial_xQ - \partial_yP = 2x - 2x = 0$ em todo o plano (sem buracos), então pelo Green $\oint = 0$. E $\nabla(x^2y) = (2xy, x^2)$ ✓.</p>` }),
         F.exercicio({ n: 3, enun: R`<p>Use $\frac12\oint(x\,dy - y\,dx)$ para achar a área da elipse com semieixos 3 e 2.</p>`, fig: "", dicas: [R`<p>$x = 3\cos t$, $y = 2\sin t$.</p>`, R`<p>$x\,dy - y\,dx = 6\,dt$.</p>`], resp: R`$6\pi \approx 18{,}85$.`, sol: R`<p>$\frac12\int_0^{2\pi}6\,dt = 6\pi = \pi ab$ ✓.</p>` }),
         F.exercicio({ n: 4, enun: R`<p>Qual o fluxo de $\vec F = (x, y, z)$ pela superfície de um cubo de aresta $L$ (centrado onde você quiser)?</p>`, fig: "", dicas: [R`<p>Gauss: troque a superfície pelo volume.</p>`, R`<p>$\nabla\cdot\vec F = 3$.</p>`], resp: R`$3L^3$.`, sol: R`<p>$\oiint = \iiint3\,dV = 3L^3$, independente da posição. Fazer pelas seis faces dá o mesmo, mas com muito mais trabalho (tente uma face só para conferir: no cubo $[0, L]^3$, a face $x = L$ dá $L\cdot L^2$).</p>` }),
-        F.exercicio({ n: 5, enun: R`<p>Uma carga de 2 nC está em algum lugar dentro de uma batata. Qual o fluxo elétrico pela casca da batata?</p>`, fig: "", dicas: [R`<p>Gauss não liga para o formato.</p>`, R`<p>$\varepsilon_0 = 8{,}854\times10^{-12}$ F/m.</p>`], resp: R`$\approx 226$ N·m²/C.`, sol: R`<p>$\Phi = Q/\varepsilon_0 = 2\times10^{-9}/8{,}854\times10^{-12} \approx 225{,}9$ N·m²/C. É o mesmo número do laboratório da lei de Gauss ${F.ret("C03b")}.</p>` }),
+        F.exercicio({ n: 5, enun: R`<p>Uma carga de 2 nC está em algum lugar dentro de uma batata. Qual o fluxo elétrico pela casca da batata?</p>`, fig: "", dicas: [R`<p>Gauss não liga para o formato.</p>`, R`<p>$\varepsilon_0 = 8{,}854\times10^{-12}$ F/m.</p>`], resp: R`$\approx 226$ N·m²/C.`, sol: R`<p>$\Phi = Q/\varepsilon_0 = 2\times10^{-9}/8{,}854\times10^{-12} \approx 225{,}9$ N·m²/C. É o mesmo número do laboratório da lei de Gauss ${F.ret("fisica/C03b")}.</p>` }),
         F.exercicio({ n: 6, marcas: ["!"], enun: R`<p>Para o vórtice $\vec F = (-y, x)/(x^2 + y^2)$, quanto vale $\oint$ (anti-horário) em: (a) um quadrado de lado 2 centrado na origem; (b) o mesmo quadrado centrado em $(3, 0)$; (c) um círculo de raio 1 em volta da origem, percorrido <b>duas vezes</b>?</p>`, fig: "", dicas: [R`<p>Fora da origem, $\text{rot}\,\vec F = 0$: dá para deformar a curva sem mudar a ∮, desde que não passe pela origem.</p>`, R`<p>Teste no laboratório com o "Fio de corrente".</p>`], resp: R`(a) $2\pi$; (b) $0$; (c) $4\pi$.`, sol: R`<p>(a) Deforme o quadrado num círculo: $2\pi$. (b) A origem fica fora, a região de dentro é toda boa, Green dá 0. (c) Cada volta soma $2\pi$. Em física: $\oint\vec B\cdot d\vec\ell = \mu_0I\times(\text{número de voltas})$.</p>` }),
         F.exercicio({ n: 7, marcas: ["!"], enun: R`<p>Uma espira circular de raio 10 cm está num campo $\vec B$ uniforme, perpendicular a ela, que cresce a 0,5 T/s. Quanto vale $\oint\vec E\cdot d\vec\ell$ na espira? E o módulo do campo elétrico induzido nela?</p>`, fig: "", dicas: [R`<p>Faraday: $\oint\vec E\cdot d\vec\ell = -\frac{d}{dt}(BA)$.</p>`, R`<p>Por simetria, $E$ é tangente e constante na espira: $\oint = E\cdot2\pi r$.</p>`], resp: R`$|\oint| \approx 15{,}7$ mV; $E = 0{,}025$ V/m.`, sol: R`<p>$A = \pi(0{,}1)^2 = 0{,}0314$ m²; $|\oint| = 0{,}5\times0{,}0314 = 1{,}57\times10^{-2}$ V. $E = 1{,}57\times10^{-2}/(2\pi\cdot0{,}1) = 0{,}025$ V/m. Note: $\oint\vec E\cdot d\vec\ell \neq 0$, então esse $\vec E$ <b>não</b> é conservativo, e "diferença de potencial" perde o sentido.</p>` }),
       ].join("") + chefao),

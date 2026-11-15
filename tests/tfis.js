@@ -106,21 +106,21 @@ const perto = (a, b, tol = 0.01) => Math.abs(a - b) <= tol * Math.max(Math.abs(b
   await caso('caminho real: S = −g²/3', 'U04', 'lab-acao', { e: 0 }, [], [['S do caminho real', -(g * g) / 3, 0.001], ['diferença', 0]]);
   await caso('ε = 2: ΔS = mε²π²/(2T)·… > 0', 'U04', 'lab-acao', { e: 2 }, [], [['diferença', 2 * 2 * Math.PI ** 2 / 4 / 2, 0.01]]); // ½mε²∫η̇² = ½·4·(π/T)²·T/2 = π²
   // --- Cálculo ---
-  await caso('W₀(1) = 0,5671 (constante Ω)', 'CE01', 'lab-w', { a: 1 }, [], [['W₀(a)', 0.567143, 0.001], ['conferindo', 1, 0.001]]);
-  await caso('W no início do controle (a ≈ −1/e) → ≈ −1', 'CE01', 'lab-w', { a: -0.36787 }, [], [['W₀(a)', -1, 0.03]]);
-  await caso('Γ(5) = 24', 'CE02', 'lab-g', { x: 5 }, [], [['Γ(x)', 24, 0.001]]);
-  await caso('Γ(½) = √π... x = 0,5', 'CE02', 'lab-g', { x: 0.5 }, [], [['Γ(x)', Math.sqrt(Math.PI), 0.002]]);
-  await caso('Green: ∮ = ∬ rot', 'CE03', 'lab-c', { cx: 0.3, cy: -0.4, R: 1.2 }, [], [['∮', (v, o) => perto(v, num(acha(o, '∬')), 0.01)]]);
-  await caso('Riemann n = 100: erro ≈ 0', 'CI06', 'lab-rie', { n: 100 }, [], [['exato', 8 / 3, 0.001], ['soma', 8 / 3, 0.02]]);
-  await caso('Snell no salva-vidas: sen θ₁/v₁ = sen θ₂/v₂ no mínimo', 'CI05', 'lab-sv', {}, ['button'], [['sen θ₁', (v, o) => perto(v, num(acha(o, 'sen θ₂')), 0.03)]], 600);
-  await caso('Taylor: perto de 0 o erro some', 'CII04', 'lab-tay', { n: 30, x: 0.05 }, [], [['erro', (v) => Math.abs(v) < 1e-3]]);
-  await caso('integral dupla n = 80 ≈ π/2', 'CII07', 'lab-dup', { n: 80 }, [], [['exato', Math.PI / 2, 0.001], ['erro', (v) => Math.abs(v) < 0.02]]);
-  await caso('sólido n = 60 → 16π/3', 'CI09', 'lab-rev', { n: 60 }, [], [['exato', 16 * Math.PI / 3, 0.001], ['erro', (v) => Math.abs(v) < 0.3]]);
-  await caso('oscilador sem atrito (γ = 0): T = 2π/ω₀', 'CII08', 'lab-osc', { w: 2, g: 0 }, [], [['período', Math.PI, 0.01]]);
-  await caso('γ = ω₀ → crítico', 'CII08', 'lab-osc', { w: 3, g: 3 }, [], [['regime', (v, o, t) => /crít/i.test(t)]]);
-  await caso('Euler com h pequeno → erro pequeno', 'CII08', 'lab-edo', { h: 0.05 }, [], [['erro', (v, o) => Math.abs(v) < 0.1 * Math.abs(num(acha(o, 'exata')) || 1)]]);
-  await caso('regra da cadeia: g′·f′ = inclinação medida', 'CI04', 'lab-cad', { x: 0.7 }, [], [['g′ · f′', (v, o) => perto(v, num(acha(o, 'inclinação medida')), 0.02)]]);
-  await caso('secante com h = 0,0015 (controle no fim, escala log) → tangente', 'CI03', 'lab-sec', { a: 0.5, h: 1 }, [], [['secante', (v, o) => perto(v, num(acha(o, 'tangente')), 0.02)]]);
+  await caso('W₀(1) = 0,5671 (constante Ω)', 'matematica/CE01', 'lab-w', { a: 1 }, [], [['W₀(a)', 0.567143, 0.001], ['conferindo', 1, 0.001]]);
+  await caso('W no início do controle (a ≈ −1/e) → ≈ −1', 'matematica/CE01', 'lab-w', { a: -0.36787 }, [], [['W₀(a)', -1, 0.03]]);
+  await caso('Γ(5) = 24', 'matematica/CE02', 'lab-g', { x: 5 }, [], [['Γ(x)', 24, 0.001]]);
+  await caso('Γ(½) = √π... x = 0,5', 'matematica/CE02', 'lab-g', { x: 0.5 }, [], [['Γ(x)', Math.sqrt(Math.PI), 0.002]]);
+  await caso('Green: ∮ = ∬ rot', 'matematica/CE03', 'lab-c', { cx: 0.3, cy: -0.4, R: 1.2 }, [], [['∮', (v, o) => perto(v, num(acha(o, '∬')), 0.01)]]);
+  await caso('Riemann n = 100: erro ≈ 0', 'matematica/CI06', 'lab-rie', { n: 100 }, [], [['exato', 8 / 3, 0.001], ['soma', 8 / 3, 0.02]]);
+  await caso('Snell no salva-vidas: sen θ₁/v₁ = sen θ₂/v₂ no mínimo', 'matematica/CI05', 'lab-sv', {}, ['button'], [['sen θ₁', (v, o) => perto(v, num(acha(o, 'sen θ₂')), 0.03)]], 600);
+  await caso('Taylor: perto de 0 o erro some', 'matematica/CII04', 'lab-tay', { n: 30, x: 0.05 }, [], [['erro', (v) => Math.abs(v) < 1e-3]]);
+  await caso('integral dupla n = 80 ≈ π/2', 'matematica/CII07', 'lab-dup', { n: 80 }, [], [['exato', Math.PI / 2, 0.001], ['erro', (v) => Math.abs(v) < 0.02]]);
+  await caso('sólido n = 60 → 16π/3', 'matematica/CI09', 'lab-rev', { n: 60 }, [], [['exato', 16 * Math.PI / 3, 0.001], ['erro', (v) => Math.abs(v) < 0.3]]);
+  await caso('oscilador sem atrito (γ = 0): T = 2π/ω₀', 'matematica/CII08', 'lab-osc', { w: 2, g: 0 }, [], [['período', Math.PI, 0.01]]);
+  await caso('γ = ω₀ → crítico', 'matematica/CII08', 'lab-osc', { w: 3, g: 3 }, [], [['regime', (v, o, t) => /crít/i.test(t)]]);
+  await caso('Euler com h pequeno → erro pequeno', 'matematica/CII08', 'lab-edo', { h: 0.05 }, [], [['erro', (v, o) => Math.abs(v) < 0.1 * Math.abs(num(acha(o, 'exata')) || 1)]]);
+  await caso('regra da cadeia: g′·f′ = inclinação medida', 'matematica/CI04', 'lab-cad', { x: 0.7 }, [], [['g′ · f′', (v, o) => perto(v, num(acha(o, 'inclinação medida')), 0.02)]]);
+  await caso('secante com h = 0,0015 (controle no fim, escala log) → tangente', 'matematica/CI03', 'lab-sec', { a: 0.5, h: 1 }, [], [['secante', (v, o) => perto(v, num(acha(o, 'tangente')), 0.02)]]);
   await caso('Я(3) = 6', 'X01', 'lab-ya', { x2: 3 }, [], [['Я(x)', (v, o, t) => perto(num(t.split('=').pop()), 6)]]);
   // --- Experimentos ---
   { await vai('EP01'); const o = await le('lab-p1', { L: 1, g: 9.81 }); res.push([perto(num(acha(o, 'T₀ = 2π')), 2 * Math.PI * Math.sqrt(1 / g), 0.005), `EP01: T₀(1 m) = 2,006 s: ${acha(o, 'T₀ = 2π')}`]);
@@ -136,9 +136,9 @@ const perto = (a, b, tol = 0.01) => Math.abs(a - b) <= tol * Math.max(Math.abs(b
   await caso('redemoinho (−y, x): div 0, rot 2', 'U01', 'lab-cv', { x: 0.8, y: 0.4 }, [], [['div', 0], ['rot F', 2], ['rodinha', 1]]);
   await caso('fonte (x, y): div 2, rot 0', 'U01', 'lab-cv', { x: 0.8, y: 0.4 }, ['[data-k="fonte"]'], [['div', 2], ['rot F', 0]]);
   await caso('i total = E/R_eq', 'C08', 'lab-as', { E: 10, R1: 100, R2: 200, R3: 300 }, [], [['i total', (v, o) => perto(v, 10 / numU(acha(o, 'R equivalente')), 0.01)]]);
-  await caso('TFC: inclinação de A(x) = f(x)', 'CI07', 'lab-tfc', { x: 0.6 }, [], [['inclinação de A', (v, o) => perto(v, num(acha(o, 'f(x)')), 0.02)]]);
-  await caso('por partes: A + B = retângulo', 'CII01', 'lab-par', { b: 0.7 }, [], [['A + B', (v, o) => perto(v, num(acha(o, 'retângulo')), 0.005)]]);
-  await caso('p = 2: ∫₁^∞ dx/x² = 1', 'CII02', 'lab-imp', { p: 2 }, [], [['imprópria', 1, 0.01]]);
+  await caso('TFC: inclinação de A(x) = f(x)', 'matematica/CI07', 'lab-tfc', { x: 0.6 }, [], [['inclinação de A', (v, o) => perto(v, num(acha(o, 'f(x)')), 0.02)]]);
+  await caso('por partes: A + B = retângulo', 'matematica/CII01', 'lab-par', { b: 0.7 }, [], [['A + B', (v, o) => perto(v, num(acha(o, 'retângulo')), 0.005)]]);
+  await caso('p = 2: ∫₁^∞ dx/x² = 1', 'matematica/CII02', 'lab-imp', { p: 2 }, [], [['imprópria', 1, 0.01]]);
   await caso('pêndulo duplo: energia conservada', 'EP02', 'lab-p2', {}, [], [['erro relativo', (v) => Math.abs(v) < 0.1]], 3000);
   await caso('pêndulo triplo: energia conservada', 'EP03', 'lab-p3', {}, [], [['erro relativo', (v) => Math.abs(v) < 0.1]], 3000);
   await caso('Drude: deriva média ≈ aτ', 'C06', 'lab-dr', {}, [], [['velocidade de deriva média', (v, o) => perto(v, numU(acha(o, 'esperada')), 0.25)]], 4000);

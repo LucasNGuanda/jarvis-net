@@ -1,7 +1,7 @@
 /* CII08 · Equações diferenciais ordinárias. Conferido com sympy/scipy (scratchpad cii2.py):
    café 90 °C → 70 °C em 5 min (ambiente 20 °C): k = 0,0673/min, chega a 40 °C em 18,6 min; y″ + 2y′ + 5y = 0 → e^(−t)(A cos 2t + B sen 2t);
    paraquedista m = 80 kg, c = 0,25 kg/m: v_t = 56 m/s, 90% em 8,41 s (conferido com integração numérica); Euler com h = 0,5 em y′ = y: 2,25 contra e. */
-F.registrar("CII08", {
+F.registrar("matematica/CII08", {
   retoma: ["CI08", "CII01"],
   html(F) {
     const R = String.raw;
@@ -62,7 +62,7 @@ F.registrar("CII08", {
           <tr><td>$m\dot v = mg - bv$</td><td>queda com arrasto linear</td><td>$v_t(1 - e^{-t/\tau})$</td></tr>
           <tr><td>$\ddot x = -\omega^2x$</td><td>MHS (mola, pêndulo pequeno, LC)</td><td>$A\cos(\omega t + \varphi)$</td></tr>
           <tr><td>$\ddot x + 2\gamma\dot x + \omega_0^2x = 0$</td><td>oscilador amortecido, RLC</td><td>laboratório 2</td></tr></table>
-        <p><b>Existência e unicidade</b> (Picard): para $y' = f(t, y)$ com $f$ "boa", por cada ponto inicial passa <b>uma única</b> solução. As soluções nunca se cruzam. Por isso o futuro de um sistema mecânico é determinado pelo presente (posição e velocidade): é o determinismo de Laplace, e também a razão de o caos ser possível só a partir de 3 variáveis ${F.ret("EP02")}.</p>
+        <p><b>Existência e unicidade</b> (Picard): para $y' = f(t, y)$ com $f$ "boa", por cada ponto inicial passa <b>uma única</b> solução. As soluções nunca se cruzam. Por isso o futuro de um sistema mecânico é determinado pelo presente (posição e velocidade): é o determinismo de Laplace, e também a razão de o caos ser possível só a partir de 3 variáveis ${F.ret("fisica/EP02")}.</p>
         <div id="lab-edo"></div>`),
 
       F.secao("primeira", "Primeira ordem: separáveis e lineares", R`
@@ -71,8 +71,8 @@ F.registrar("CII08", {
         ${F.demo("carga de um capacitor (RC)", R`<p>(i) Malha: $E = Ri + \frac qC$, com $i = \dot q$: $\dot q + \frac{1}{RC}q = \frac ER$.</p>
           <p>(ii) Fator integrante: $\mu = e^{t/RC}$. Então $\left(e^{t/RC}q\right)' = \frac ERe^{t/RC}$.</p>
           <p>(iii) Integrando: $e^{t/RC}q = CEe^{t/RC} + K$. Com $q(0) = 0$: $K = -CE$.</p>
-          <p>(iv) $q(t) = CE\left(1 - e^{-t/RC}\right)$ ∎. A constante de tempo $\tau = RC$ aparece sozinha ${F.ret("C10b")}.</p>`)}
-        ${F.caixa("ideia", R`<p><b>Método de Euler</b> (o do laboratório): $y_{n+1} = y_n + h\,f(t_n, y_n)$, andar em linha reta pela inclinação atual. Simples e com erro $\propto h$. Os experimentos do site usam o <b>Runge–Kutta de 4ª ordem</b> (RK4), que prova a inclinação em quatro pontos do passo e tem erro $\propto h^4$ ${F.ret("EP02")}.</p>`)}`),
+          <p>(iv) $q(t) = CE\left(1 - e^{-t/RC}\right)$ ∎. A constante de tempo $\tau = RC$ aparece sozinha ${F.ret("fisica/C10b")}.</p>`)}
+        ${F.caixa("ideia", R`<p><b>Método de Euler</b> (o do laboratório): $y_{n+1} = y_n + h\,f(t_n, y_n)$, andar em linha reta pela inclinação atual. Simples e com erro $\propto h$. Os experimentos do site usam o <b>Runge–Kutta de 4ª ordem</b> (RK4), que prova a inclinação em quatro pontos do passo e tem erro $\propto h^4$ ${F.ret("fisica/EP02")}.</p>`)}`),
 
       F.secao("segunda", "Segunda ordem: osciladores", R`
         ${F.formula(R`ay'' + by' + cy = 0\quad\xrightarrow{\ y = e^{rt}\ }\quad ar^2 + br + c = 0`, "Equação característica")}
@@ -82,8 +82,8 @@ F.registrar("CII08", {
           <p>(ii) Característica: $r = -\gamma \pm \sqrt{\gamma^2 - \omega_0^2}$.</p>
           <p>(iii) $\gamma < \omega_0$ (sub): $x = Ae^{-\gamma t}\cos(\omega_dt + \varphi)$, com $\omega_d = \sqrt{\omega_0^2 - \gamma^2}$, um pouco mais lento que sem atrito.</p>
           <p>(iv) $\gamma = \omega_0$ (crítico): $(A + Bt)e^{-\omega_0t}$, o retorno mais rápido sem oscilar. $\gamma > \omega_0$ (super): duas exponenciais, retorno lento.</p>
-          <p>(v) No circuito RLC, é a mesma equação com $L \leftrightarrow m$, $R \leftrightarrow b$, $\frac1C \leftrightarrow k$ ${F.ret("C15b")}.</p>`)}
-        <p><b>Forçado e ressonância</b>: com uma força $F_0\cos\Omega t$, a resposta permanente tem amplitude $\frac{F_0/m}{\sqrt{(\omega_0^2 - \Omega^2)^2 + 4\gamma^2\Omega^2}}$, que dispara quando $\Omega \approx \omega_0$ e $\gamma$ é pequeno (balanço empurrado no ritmo certo, rádio sintonizando uma estação). A ressonância paramétrica do experimento da mola com pêndulo é um primo disso ${F.ret("EP09")}.</p>
+          <p>(v) No circuito RLC, é a mesma equação com $L \leftrightarrow m$, $R \leftrightarrow b$, $\frac1C \leftrightarrow k$ ${F.ret("fisica/C15b")}.</p>`)}
+        <p><b>Forçado e ressonância</b>: com uma força $F_0\cos\Omega t$, a resposta permanente tem amplitude $\frac{F_0/m}{\sqrt{(\omega_0^2 - \Omega^2)^2 + 4\gamma^2\Omega^2}}$, que dispara quando $\Omega \approx \omega_0$ e $\gamma$ é pequeno (balanço empurrado no ritmo certo, rádio sintonizando uma estação). A ressonância paramétrica do experimento da mola com pêndulo é um primo disso ${F.ret("fisica/EP09")}.</p>
         ${exemplario}`),
 
       F.secao("desafios", "Desafios", [

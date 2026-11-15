@@ -1,7 +1,7 @@
 /* SC02 · USP, MAT 111 (Cálculo I, IME-USP), Prova 1, tipo C, prof. Paolo Piccione, 14/05/2015 (o cabeçalho das páginas diz 2014).
    20 questões a–e. Gabarito MEU (o arquivo não traz gabarito), conferido em Python:
    1b 2b 3a 4c 5a 6a 7b 8d 9c 10e 11b 12d 13a 14d 15e 16b 17c 18c 19d 20e. */
-F.registrar("SC02", {
+F.registrar("matematica/SC02", {
   retoma: ["CI01", "CI02", "CI04"],
   html(F) {
     const R = String.raw;

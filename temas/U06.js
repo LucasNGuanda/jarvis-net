@@ -3,7 +3,7 @@
    P(0 < x < L/4) no fundamental = 1/4 − 1/(2π) = 9,1%; superposição 1+2 (1 nm): oscila a 2,73 × 10¹⁴ Hz (período 3,67 fs);
    oscilador: ψ₀ = e^(−mωx²/2ħ) dá Hψ₀ = (ħω/2)ψ₀, ∫ψ₀² dx = √(πħ/(mω)). */
 F.registrar("U06", {
-  retoma: ["C17", "C17b", "U04", "CII02"],
+  retoma: ["C17", "C17b", "U04", "matematica/CII02"],
   html(F) {
     const R = String.raw;
     const exemplario = F.exemplo({
@@ -33,7 +33,7 @@ F.registrar("U06", {
       titulo: "O estado fundamental do oscilador",
       enun: R`<p>Para o oscilador harmônico quântico, $V = \frac12m\omega^2x^2$. (a) Teste a função $\psi_0(x) = A\,e^{-\alpha x^2}$ na equação de Schrödinger independente do tempo e ache o $\alpha$ que funciona. (b) Qual a energia? (c) Normalize (ache $A$). (d) Compare com a regra de Bohr–Sommerfeld da U04. Por que a energia mínima não é zero?</p>`,
       fig: "",
-      dicas: [R`<p>(a) $\psi_0'' = (4\alpha^2x^2 - 2\alpha)\psi_0$. Os termos com $x^2$ têm de se cancelar sozinhos.</p>`, R`<p>(c) Integral gaussiana ${F.ret("CII02")}: $\int_{-\infty}^{\infty}e^{-ax^2}dx = \sqrt{\pi/a}$.</p>`],
+      dicas: [R`<p>(a) $\psi_0'' = (4\alpha^2x^2 - 2\alpha)\psi_0$. Os termos com $x^2$ têm de se cancelar sozinhos.</p>`, R`<p>(c) Integral gaussiana ${F.ret("matematica/CII02")}: $\int_{-\infty}^{\infty}e^{-ax^2}dx = \sqrt{\pi/a}$.</p>`],
       sol: R`<p><b>(a)</b> $-\frac{\hbar^2}{2m}(4\alpha^2x^2 - 2\alpha)\psi_0 + \frac12m\omega^2x^2\psi_0 = E\psi_0$. Termos em $x^2$: $-\frac{2\hbar^2\alpha^2}{m} + \frac12m\omega^2 = 0 \Rightarrow \alpha = \frac{m\omega}{2\hbar}$.</p>
         <p><b>(b)</b> Sobra $E = \frac{\hbar^2\alpha}{m} = \frac{\hbar\omega}{2}$.</p>
         <p><b>(c)</b> $\int A^2e^{-m\omega x^2/\hbar}dx = A^2\sqrt{\frac{\pi\hbar}{m\omega}} = 1 \Rightarrow A = \left(\frac{m\omega}{\pi\hbar}\right)^{1/4}$.</p>
@@ -52,7 +52,7 @@ F.registrar("U06", {
 
       F.secao("estacionarios", "Estados estacionários", R`
         ${F.formula(R`\psi(x, t) = \phi(x)\,e^{-iEt/\hbar}\qquad\qquad -\frac{\hbar^2}{2m}\phi'' + V\phi = E\phi`, "Equação independente do tempo")}
-        <p>Separando variáveis ${F.ret("CII08")}, a parte espacial obedece à equação independente do tempo (um problema de autovalor: só certos $E$ dão soluções aceitáveis). Nesses estados, $|\psi|^2 = |\phi|^2$ não muda com o tempo: por isso se chamam <b>estacionários</b>, e por isso um elétron num nível de Bohr não irradia.</p>
+        <p>Separando variáveis ${F.ret("matematica/CII08")}, a parte espacial obedece à equação independente do tempo (um problema de autovalor: só certos $E$ dão soluções aceitáveis). Nesses estados, $|\psi|^2 = |\phi|^2$ não muda com o tempo: por isso se chamam <b>estacionários</b>, e por isso um elétron num nível de Bohr não irradia.</p>
         <p><b>Poço infinito</b> de largura $L$ ($V = 0$ dentro, $\infty$ fora): dentro, $\phi'' = -k^2\phi$, então $\phi = A\sin(kx)$; e $\phi$ tem de zerar nas paredes, então $kL = n\pi$. Daí:</p>
         ${F.formula(R`\phi_n(x) = \sqrt{\frac2L}\sin\frac{n\pi x}{L}\qquad\qquad E_n = \frac{n^2h^2}{8mL^2}\quad(n = 1, 2, 3, \dots)`, "Poço infinito")}
         <p>Para um elétron num poço de 1 nm: $E_1 = 0{,}376$ eV, $E_2 = 1{,}50$ eV. A transição $2\to1$ emite um fóton de 1099 nm (infravermelho próximo). Note que $E_1 \neq 0$: uma partícula presa nunca fica parada.</p>

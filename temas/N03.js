@@ -24,7 +24,7 @@ F.registrar("N03", {
       titulo: "Quanto tempo o tanque leva para esvaziar",
       enun: R`<p>Um tanque cilíndrico de seção $A$, com água até a altura $H$, tem um furo de área $a \ll A$ no fundo. (a) Use Torricelli e a continuidade para escrever $\frac{dh}{dt}$. (b) Resolva a EDO e ache o tempo para esvaziar. (c) Que fração desse tempo leva para a altura cair até a metade? (d) Números: $H = 1$ m e $A/a = 100$. (e) Por que uma clepsidra (relógio de água) precisa de um formato especial do recipiente para o nível descer com velocidade constante?</p>`,
       fig: "",
-      dicas: [R`<p>(a) $A\,\frac{dh}{dt} = -a\sqrt{2gh}$.</p>`, R`<p>(b) Separe: $\frac{dh}{\sqrt h} = -\frac aA\sqrt{2g}\,dt$ ${F.ret("CII08")}.</p>`],
+      dicas: [R`<p>(a) $A\,\frac{dh}{dt} = -a\sqrt{2gh}$.</p>`, R`<p>(b) Separe: $\frac{dh}{\sqrt h} = -\frac aA\sqrt{2g}\,dt$ ${F.ret("matematica/CII08")}.</p>`],
       sol: R`<p><b>(a)</b> A água que sai pelo furo ($a\cdot\sqrt{2gh}$ por segundo) é a que some do tanque: $\frac{dh}{dt} = -\frac aA\sqrt{2gh}$.</p>
         <p><b>(b)</b> $2(\sqrt H - \sqrt h) = \frac aA\sqrt{2g}\,t$. Vazio ($h = 0$): $t_\text{total} = \frac Aa\sqrt{\frac{2H}{g}}$.</p>
         <p><b>(c)</b> $h = H/2$: $t = \frac Aa\sqrt{\frac 2g}\left(\sqrt H - \sqrt{H/2}\right) = t_\text{total}\left(1 - \frac{1}{\sqrt2}\right) \approx 0{,}29\,t_\text{total}$. A primeira metade da altura sai em 29% do tempo; a segunda leva 71%, porque o jato vai ficando fraco.</p>

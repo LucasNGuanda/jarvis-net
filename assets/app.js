@@ -17,6 +17,27 @@
   F.pfx = () => { const mid = F.materia ? F.materia() : "fisica", m = (window.MATERIAS || []).find((x) => x.id === mid); return mid === "fisica" || !m || !m.prefixo ? PFX : m.prefixo + ":"; };
   const chave = (k) => (GLOBAIS.has(k) ? PFX : F.pfx()) + k;
   F.PREFIXOS = () => ["fisica:", "jarvis:"].concat((window.MATERIAS || []).filter((m) => m.id !== "fisica" && m.prefixo).map((m) => m.prefixo + ":"));
+  /* β 4.0: a aba Cálculo (27 temas) saiu da física e foi para a matemática. Migração ÚNICA e NÃO destrutiva:
+     COPIA de fisica: para mat: o progresso desses temas (feitos, marca:COD-n, resultado:COD-n, chefao:COD) e o "continuar de onde parei"
+     da aba (ultimo:calculo → ultimo:matcalc). Nada é apagado de fisica: — a versão antiga do site continua achando tudo.
+     Antes de copiar, guarda um retrato de todo o progresso em jarvis:backup:antes-calculo (entra no "Exportar progresso"). */
+  const CALCULO = new Set([].concat(Array.from({ length: 9 }, (_, i) => "CI0" + (i + 1)), Array.from({ length: 8 }, (_, i) => "CII0" + (i + 1)), ["CE01", "CE02", "CE03", "TE01", "TE02", "TE03", "TE04", "TE05", "SC01", "SC02"]));
+  F.CALCULO = CALCULO;
+  F.migraCalculo = (sempre) => {
+    try {
+      if (!sempre && localStorage.getItem("mat:migrou-calculo")) return 0;
+      const ls = localStorage, chaves = []; for (let i = 0; i < ls.length; i++) chaves.push(ls.key(i));
+      if (!ls.getItem("jarvis:backup:antes-calculo")) { const foto = {}; chaves.filter((k) => /^(fisica|mat|qui|rus|jarvis):/.test(k)).forEach((k) => (foto[k] = ls.getItem(k))); ls.setItem("jarvis:backup:antes-calculo", JSON.stringify({ quando: new Date().toISOString(), chaves: foto })); }
+      let n = 0;
+      chaves.forEach((k) => { const m = /^fisica:((?:marca|resultado):([A-Za-z0-9]+)-\d+|chefao:([A-Za-z0-9]+))$/.exec(k); if (!m || !CALCULO.has(m[2] || m[3])) return; if (ls.getItem("mat:" + m[1]) === null) { ls.setItem("mat:" + m[1], ls.getItem(k)); n++; } });
+      const fv = JSON.parse(ls.getItem("fisica:feitos") || "{}"), mv = JSON.parse(ls.getItem("mat:feitos") || "{}");
+      Object.keys(fv).forEach((c) => { if (CALCULO.has(c) && !(c in mv)) { mv[c] = fv[c]; n++; } });
+      ls.setItem("mat:feitos", JSON.stringify(mv));
+      if (ls.getItem("fisica:ultimo:calculo") !== null && ls.getItem("mat:ultimo:matcalc") === null) { ls.setItem("mat:ultimo:matcalc", ls.getItem("fisica:ultimo:calculo")); n++; }
+      ls.setItem("mat:migrou-calculo", "1");
+      return n;
+    } catch (e) { return -1; }
+  };
   F.store = {
     get(k, d) { try { const v = localStorage.getItem(chave(k)); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
     set(k, v) { try { localStorage.setItem(chave(k), JSON.stringify(v)); } catch (e) {} },
@@ -53,6 +74,7 @@
       Object.entries(novo).forEach(([k, v]) => localStorage.setItem(k, v));
     }
   } catch (e) {}
+  F.migraCalculo(); /* β 4.0: depois da troca de códigos antiga, para copiar já com os códigos atuais */
 
   /* ---------- números em português ---------- */
   // F.t(9.1234, 2) -> "9,12" (texto)   F.m(...) -> "9{,}12" (dentro de $...$)
@@ -133,7 +155,7 @@
   F.caixa = (tipo, html, titulo) => `<div class="caixa ${tipo}"><div class="cab">${ICONES[tipo] ? F.ic(tipo) : ""}${titulo || CX[tipo]}</div>${html}</div>`;
   F.demo = (titulo, html) => `<div class="caixa demo"><div class="cab">${titulo ? "&nbsp;· " + titulo : ""}</div>${html}<span class="qed">∎</span><div style="clear:both"></div></div>`;
   F.fig = (svg, leg) => `<figure class="fig" style="margin:14px 0">${svg}${leg ? `<figcaption>${leg}</figcaption>` : ""}</figure>`;
-  F.ret = (cod) => { const t = F.achar(cod), ok = t && t.pronto; return `<a class="selo ret${ok ? "" : " breve"}" href="${t ? F.href(t.cod, t.mat) : "#/" + cod}" title="retoma ${t ? t.nome : cod}${ok ? "" : " (em breve: ainda não escrito)"}">[${cod}]←</a>`; };
+  F.ret = (cod) => { const t = F.achar(cod), ok = t && t.pronto; return `<a class="selo ret${ok ? "" : " breve"}" href="${t ? F.href(t.cod, t.mat) : "#/" + cod}" title="retoma ${t ? t.nome : cod}${ok ? "" : " (em breve: ainda não escrito)"}">[${t ? t.cod : cod}]←</a>`; };
   F.selos = (arr = []) => arr.map((m) => `<span class="selo" title="${LEG[m] || ""}">${m}</span>`).join("");
   const LEG = { "★": "cai muito em OBF/ITA", "!": "difícil", "!!": "muito difícil", "?": "confuso, não bobear", "∫": "exige cálculo", ITA: "cobrado no ITA", IME: "cobrado no IME", MIT: "MIT Integration Bee", USP: "prova da USP", RU: "aparece em olimpíada russa" };
   F.LEG = LEG;
@@ -805,6 +827,8 @@
     if (mat && mat.pronta && (!h[1] || h[1] === "inicio") && mat.rota !== "#/" + (h[1] ? cod + "/" + h[1] : cod)) { location.replace(mat.rota); return; } /* só o id da matéria: #/fisica → #/inicio; link antigo #/quimica/inicio → #/quimica */
     if (mat && mat.id === "fisica" && h[1] && h[1] !== "inicio") { location.replace("#/" + h.slice(1).join("/")); return; } /* #/fisica/A01 → #/A01 */
     if (mat && mat.id !== "fisica" && h[1]) { mid = mat.id; cod = h[1]; anc = h[2]; } /* tema de outra matéria: #/quimica/A01[/âncora] */
+    if (mid === "fisica" && cod === "calculo") { location.replace("#/matematica-calculo"); return; } /* β 4.0: a aba Cálculo foi para a matemática */
+    if (mid === "fisica" && CALCULO.has(cod)) { location.replace("#/matematica/" + cod + (anc ? "/" + anc : "")); return; } /* link antigo #/CI07 → #/matematica/CI07 */
     const arIni = mid === "fisica" ? AREAS.find((a) => a.inicio === cod) : null;
     if (arIni) { F.area = arIni.id; pgInicio(pag, F.area); }
     else if (cod === "legenda") { location.replace("#/" + AREA(F.area).inicio); setTimeout(() => { const d = $("#detalhes"); if (d) d.classList.add("aberto"); }, 50); return; } /* a legenda agora fica só no painel do topo */
@@ -902,6 +926,7 @@
           if (k === PFX + "feitos") { try { v = JSON.stringify(Object.assign(JSON.parse(localStorage.getItem(k) || "{}"), JSON.parse(v))); } catch (e) {} } /* soma, não apaga o que já estava feito */
           localStorage.setItem(k, v);
         });
+        F.migraCalculo(true); /* backup feito antes da mudança do Cálculo: o progresso desses temas também vai para a matemática */
         alert("Progresso importado."); location.reload();
       }
       catch (e) { alert("Não consegui ler esse arquivo. Ele precisa ser o .json exportado por este site."); }

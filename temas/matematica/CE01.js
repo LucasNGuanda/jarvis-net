@@ -1,7 +1,7 @@
 /* CE01 · Função W de Lambert. Números conferidos com scipy.special.lambertw (scratchpad ce.py):
    W(e)=1, W(2e²)=2, W₀(−ln2/2)=−ln2, W₋₁(−ln2/2)=−2ln2, xˣ=100 → 3,5973, e^x=3x → 0,6191 e 1,5121, Wien 2,8214 e 4,9651 (b = 2,898e−3 m·K),
    2^x=x² → −0,7667, diodo (E=5 V, R=1 kΩ, Is=1e−12 A, n=1): i = 4,426 mA, V_D = 0,574 V. */
-F.registrar("CE01", {
+F.registrar("matematica/CE01", {
   html(F) {
     const R = String.raw;
     const W = (x, r = 0) => MAT.W(x, r);

@@ -1,7 +1,7 @@
 /* CI06 · Integral definida e somas de Riemann. Conferido em Python (scratchpad ci2.py):
    Σ(k/n)²(1/n) = (2n² + 3n + 1)/(6n²) → 1/3; esquerda n = 4 de x² em [0, 2] = 1,75; trapézio n = 2 de eˣ em [0, 1] = 1,7539;
    média de sen em [0, π] = 2/π; Σ n/(n² + k²) → π/4. */
-F.registrar("CI06", {
+F.registrar("matematica/CI06", {
   retoma: ["CI01"],
   html(F) {
     const R = String.raw;
@@ -72,14 +72,14 @@ F.registrar("CI06", {
         <table class="tb"><tr><th>integral</th><th>na física</th></tr>
           <tr><td>$\Delta x = \int v\,dt$</td><td>deslocamento (área do gráfico v × t)</td></tr>
           <tr><td>$\Delta v = \int a\,dt$</td><td>variação de velocidade</td></tr>
-          <tr><td>$Q = \int i\,dt$</td><td>carga que passou ${F.ret("C06")}</td></tr>
+          <tr><td>$Q = \int i\,dt$</td><td>carga que passou ${F.ret("fisica/C06")}</td></tr>
           <tr><td>$W = \int F\,dx$</td><td>trabalho de força variável</td></tr>
           <tr><td>$I = \int F\,dt$</td><td>impulso</td></tr></table>
-        ${F.caixa("fisico", R`<p><b>Valor eficaz da tomada:</b> os 127 V são a raiz da <i>média</i> de $V^2$ num período: $V_\text{ef} = \sqrt{\overline{V^2}} = \frac{V_\text{pico}}{\sqrt2}$, porque a média de $\operatorname{sen}^2$ num período é $\frac12$ ${F.ret("C15c")}.</p>`)}
+        ${F.caixa("fisico", R`<p><b>Valor eficaz da tomada:</b> os 127 V são a raiz da <i>média</i> de $V^2$ num período: $V_\text{ef} = \sqrt{\overline{V^2}} = \frac{V_\text{pico}}{\sqrt2}$, porque a média de $\operatorname{sen}^2$ num período é $\frac12$ ${F.ret("fisica/C15c")}.</p>`)}
         ${exemplario}`),
 
       F.secao("desafios", "Desafios", [
-        F.exercicio({ n: 1, enun: R`<p>Calcule $1 + 2 + \dots + 100$. Depois use $\sum_{k=1}^nk = \frac{n(n+1)}2$ para mostrar, por somas da direita, que $\int_0^1x\,dx = \frac12$.</p>`, fig: "", dicas: [R`<p>É o Я(100) do gam fresco ${F.ret("X01")}.</p>`, R`<p>$S_n = \frac1{n^2}\sum k$.</p>`], resp: R`$5050$; $S_n = \frac{n+1}{2n} \to \frac12$.`, sol: R`<p>$S_n = \frac{n(n+1)}{2n^2} = \frac12 + \frac{1}{2n}$. Confere com a área do triângulo de base 1 e altura 1.</p>` }),
+        F.exercicio({ n: 1, enun: R`<p>Calcule $1 + 2 + \dots + 100$. Depois use $\sum_{k=1}^nk = \frac{n(n+1)}2$ para mostrar, por somas da direita, que $\int_0^1x\,dx = \frac12$.</p>`, fig: "", dicas: [R`<p>É o Я(100) do gam fresco ${F.ret("fisica/X01")}.</p>`, R`<p>$S_n = \frac1{n^2}\sum k$.</p>`], resp: R`$5050$; $S_n = \frac{n+1}{2n} \to \frac12$.`, sol: R`<p>$S_n = \frac{n(n+1)}{2n^2} = \frac12 + \frac{1}{2n}$. Confere com a área do triângulo de base 1 e altura 1.</p>` }),
         F.exercicio({ n: 2, enun: R`<p>Estime $\int_0^2x^2\,dx$ com 4 retângulos pela esquerda e com 4 pela direita. O valor exato está entre os dois?</p>`, fig: "", dicas: [R`<p>$\Delta x = 0{,}5$. Esquerda: 0; 0,5; 1; 1,5.</p>`, R`<p>Direita: 0,5; 1; 1,5; 2.</p>`], resp: R`Esquerda $1{,}75$; direita $3{,}75$; exato $\frac83 \approx 2{,}667$ fica no meio.`, sol: R`<p>Esquerda: $(0 + 0{,}25 + 1 + 2{,}25)\times0{,}5 = 1{,}75$. Direita: $(0{,}25 + 1 + 2{,}25 + 4)\times0{,}5 = 3{,}75$. Para função crescente, esquerda subestima e direita superestima. A média das duas (2,75) é o trapézio.</p>` }),
         F.exercicio({ n: 3, enun: R`<p>Sem fazer conta: quanto vale $\int_{-3}^{3}x^5\cos x\,dx$? E $\int_0^{2\pi}\operatorname{sen}x\,dx$?</p>`, fig: "", dicas: [R`<p>$x^5\cos x$ é ímpar: $f(-x) = -f(x)$.</p>`, R`<p>Área com sinal.</p>`], resp: R`Os dois são $0$.`, sol: R`<p>Função ímpar em intervalo simétrico: as áreas da esquerda e da direita se cancelam. No seno, o morro de $[0, \pi]$ cancela o vale de $[\pi, 2\pi]$.</p>` }),
         F.exercicio({ n: 4, enun: R`<p>A corrente num fio é $i(t) = 3t^2$ (A, com $t$ em s). Quanta carga passa entre $t = 0$ e $t = 2$ s? Use $\int_0^bt^2\,dt = \frac{b^3}{3}$ (que sai igual à demonstração com $b$ no lugar de 1).</p>`, fig: "", dicas: [R`<p>$Q = \int i\,dt$.</p>`, R`<p>$3\cdot\frac{8}{3}$.</p>`], resp: R`$Q = 8$ C.`, sol: R`<p>$Q = 3\int_0^2t^2dt = 3\cdot\frac83 = 8$ C.</p>` }),

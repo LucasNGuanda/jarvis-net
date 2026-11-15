@@ -99,7 +99,7 @@ F.registrar("A12", {
           ${F.formula(R`\Delta v = u\ln\frac{m_0}{m_f},\qquad F_\text{empuxo} = u\left|\frac{dm}{dt}\right|`, "Equação do foguete e força de empuxo")}
           <p>(iv) Dividindo $m\,dv = u\,dm_g$ por $dt$: $ma = u\frac{dm_g}{dt}$, a força de empuxo. $\blacksquare$</p>`)}
         ${F.caixa("olimpiada", R`<p><b>"Força = velocidade × vazão de massa"</b> aparece em tudo: jato de mangueira na parede, areia caindo na esteira, corrente caindo na balança (chefão), gota de chuva que cresce. A pergunta-chave é sempre: em $dt$, que massa muda de velocidade, e de quanto?</p>`)}
-        ${F.caixa("ponte", R`<p><b>Na universidade</b>, a conservação de $\vec p$ é consequência de uma simetria: as leis da física são as mesmas aqui e um metro ao lado (simetria de translação no espaço). Isso é o teorema de Noether ${F.ret("TE05")}, e na mecânica de Lagrange $\vec p$ aparece como o "momento conjugado" de uma coordenada que não aparece no lagrangiano ${F.ret("U03")}.</p>`)}
+        ${F.caixa("ponte", R`<p><b>Na universidade</b>, a conservação de $\vec p$ é consequência de uma simetria: as leis da física são as mesmas aqui e um metro ao lado (simetria de translação no espaço). Isso é o teorema de Noether ${F.ret("matematica/TE05")}, e na mecânica de Lagrange $\vec p$ aparece como o "momento conjugado" de uma coordenada que não aparece no lagrangiano ${F.ret("U03")}.</p>`)}
         ${exemplos}`),
 
       F.secao("desafios", "Exercícios", exs.join("") + chefao),

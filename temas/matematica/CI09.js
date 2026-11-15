@@ -1,7 +1,7 @@
 /* CI09 · Aplicações da integral: áreas, volumes, trabalho. Conferido em Python (scratchpad ci2.py):
    área entre x² e 2x = 4/3; mola k = 200: 1 J e 3 J; v_esc Terra = 11,19 km/s; represa 10 m × 20 m: 9,8 MN;
    hemisfério R = 1 m: W = ρgπR⁴/4 = 7697 J; paraboloide = 8π; CM da barra λ ∝ x: 2L/3; arco de x^(3/2) de 0 a 4: 9,0734. */
-F.registrar("CI09", {
+F.registrar("matematica/CI09", {
   retoma: ["CI07", "CI08"],
   html(F) {
     const R = String.raw;
