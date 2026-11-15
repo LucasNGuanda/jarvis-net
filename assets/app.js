@@ -10,10 +10,16 @@
   F.$ = $; F.$$ = $$;
 
   /* ---------- armazenamento (sempre com try/catch) ---------- */
+  /* β 3.8: cada matéria guarda o seu progresso com o seu prefixo (MATERIAS[].prefixo: fisica, mat, qui, rus).
+     A física continua em "fisica:" (nada muda no que já está salvo). As configurações do site inteiro também ficam em "fisica:". */
   const PFX = "fisica:";
+  const GLOBAIS = new Set(["tema", "idioma", "mostrarBreve", "menuAbertos", "codigos"]);
+  F.pfx = () => { const mid = F.materia ? F.materia() : "fisica", m = (window.MATERIAS || []).find((x) => x.id === mid); return mid === "fisica" || !m || !m.prefixo ? PFX : m.prefixo + ":"; };
+  const chave = (k) => (GLOBAIS.has(k) ? PFX : F.pfx()) + k;
+  F.PREFIXOS = () => ["fisica:", "jarvis:"].concat((window.MATERIAS || []).filter((m) => m.id !== "fisica" && m.prefixo).map((m) => m.prefixo + ":"));
   F.store = {
-    get(k, d) { try { const v = localStorage.getItem(PFX + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
-    set(k, v) { try { localStorage.setItem(PFX + k, JSON.stringify(v)); } catch (e) {} },
+    get(k, d) { try { const v = localStorage.getItem(chave(k)); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(chave(k), JSON.stringify(v)); } catch (e) {} },
     tudo() { const o = {}; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith(PFX)) o[k] = localStorage.getItem(k); } } catch (e) {} return o; },
   };
 
@@ -127,7 +133,7 @@
   F.caixa = (tipo, html, titulo) => `<div class="caixa ${tipo}"><div class="cab">${ICONES[tipo] ? F.ic(tipo) : ""}${titulo || CX[tipo]}</div>${html}</div>`;
   F.demo = (titulo, html) => `<div class="caixa demo"><div class="cab">${titulo ? "&nbsp;· " + titulo : ""}</div>${html}<span class="qed">∎</span><div style="clear:both"></div></div>`;
   F.fig = (svg, leg) => `<figure class="fig" style="margin:14px 0">${svg}${leg ? `<figcaption>${leg}</figcaption>` : ""}</figure>`;
-  F.ret = (cod) => { const t = F.achar(cod), ok = t && t.pronto; return `<a class="selo ret${ok ? "" : " breve"}" href="#/${cod}" title="retoma ${t ? t.nome : cod}${ok ? "" : " (em breve: ainda não escrito)"}">[${cod}]←</a>`; };
+  F.ret = (cod) => { const t = F.achar(cod), ok = t && t.pronto; return `<a class="selo ret${ok ? "" : " breve"}" href="${t ? F.href(t.cod, t.mat) : "#/" + cod}" title="retoma ${t ? t.nome : cod}${ok ? "" : " (em breve: ainda não escrito)"}">[${cod}]←</a>`; };
   F.selos = (arr = []) => arr.map((m) => `<span class="selo" title="${LEG[m] || ""}">${m}</span>`).join("");
   const LEG = { "★": "cai muito em OBF/ITA", "!": "difícil", "!!": "muito difícil", "?": "confuso, não bobear", "∫": "exige cálculo", ITA: "cobrado no ITA", IME: "cobrado no IME", MIT: "MIT Integration Bee", USP: "prova da USP", RU: "aparece em olimpíada russa" };
   F.LEG = LEG;
@@ -299,9 +305,15 @@
   F.evento = (n) => (ouvintes[n] || []).forEach((fn) => fn());
 
   /* ---------- catálogo ---------- */
-  F.achar = (cod) => { for (const m of CATALOGO) for (const t of m.temas) if (t[0] === cod) return { cod, nome: t[1], marcas: t[2] || [], pronto: !!t[3], mod: m }; return null; };
+  /* β 3.8: códigos de tema são únicos DENTRO de cada matéria (a química tem A01, a física também). F.achar procura na matéria pedida
+     (padrão: a matéria atual); "quimica/A01" também funciona. chave = id interno do tema (física: "A01"; outras: "quimica/A01"). */
   const areaDe = (m) => m.area || "fisica";
   const AREA = (id) => AREAS.find((a) => a.id === id) || AREAS[0];
+  const materiaDoMod = (m) => AREA(areaDe(m)).materia || "fisica";
+  F.materia = () => AREA(F.area).materia || "fisica";
+  F.achar = (cod, mid) => { if (cod && cod.includes("/")) [mid, cod] = cod.split("/"); mid = mid || F.materia(); for (const m of CATALOGO) { if (materiaDoMod(m) !== mid) continue; for (const t of m.temas) if (t[0] === cod) return { cod, nome: t[1], marcas: t[2] || [], pronto: !!t[3], mod: m, mat: mid, chave: mid === "fisica" ? cod : mid + "/" + cod }; } return null; };
+  /* link de um tema: física nas rotas antigas (#/A01), as outras com a matéria na frente (#/quimica/A01) */
+  F.href = (cod, de, anc) => { const mid = typeof de === "string" ? de : de ? materiaDoMod(de) : F.materia(); return "#/" + (mid === "fisica" ? "" : mid + "/") + cod + (anc ? "/" + anc : ""); };
   F.area = "fisica";
   const feitos = () => F.store.get("feitos", {});
 
@@ -311,7 +323,7 @@
     const abertos = F.store.get("menuAbertos", ["C"]);
     menu.innerHTML = CATALOGO.map((m) => `<div class="mod ${abertos.includes(m.id) ? "aberto" : ""} ${m.temas.some((t) => t[3]) ? "" : "vazio"}" data-mod="${m.id}" data-area="${areaDe(m)}" style="--c:var(${m.cor})">
       <button aria-expanded="${abertos.includes(m.id)}" class="${m.temas.some((t) => t[3]) ? "" : "vazio"}"><span class="letra${[...m.letra].length > 1 ? " longa" : ""}">${m.letra}</span><span class="nome">${m.nome}</span>${(() => { const k = m.temas.filter((t) => t[3]).length; return `<span class="conta" title="${k} de ${m.temas.length} temas escritos${k ? "" : " (em breve)"}">${k}/${m.temas.length}</span>`; })()}<span class="seta">›</span></button>
-      <ul>${m.temas.map((t) => `<li><a href="#/${t[0]}" data-cod="${t[0]}" class="${t[3] ? "" : "breve"}" ${t[3] ? "" : 'title="Ainda não escrito" aria-disabled="true"'}><span class="cod">${t[0]}</span><span class="nome">${t[1]}</span>${t[3] ? '<span class="bola"></span>' : '<span class="breve-tag">em breve</span>'}</a></li>`).join("")}</ul></div>`).join("");
+      <ul>${m.temas.map((t) => `<li><a href="${F.href(t[0], m)}" data-cod="${t[0]}" class="${t[3] ? "" : "breve"}" ${t[3] ? "" : 'title="Ainda não escrito" aria-disabled="true"'}><span class="cod">${t[0]}</span><span class="nome">${t[1]}</span>${t[3] ? '<span class="bola"></span>' : '<span class="breve-tag">em breve</span>'}</a></li>`).join("")}</ul></div>`).join("");
         $$(".mod>button", menu).forEach((b) => b.addEventListener("click", () => {
       const m = b.parentElement; m.classList.toggle("aberto"); b.setAttribute("aria-expanded", m.classList.contains("aberto"));
       F.store.set("menuAbertos", $$(".mod.aberto", menu).map((x) => x.dataset.mod));
@@ -348,7 +360,7 @@
     $$(".topo .aba").forEach((a) => a.classList.toggle("atual", a.dataset.area === F.area));
     const ar = AREA(F.area);
     $(".topo nav.links a").setAttribute("href", "#/" + ar.inicio);
-    $$("#menu-mods a[data-cod]").forEach((a) => {
+    $$("#menu-mods .mod:not(.outra-area) a[data-cod]").forEach((a) => {
       const bola = a.querySelector(".bola"); if (bola) bola.classList.toggle("feito", !!f[a.dataset.cod]);
       a.classList.toggle("atual", a.dataset.cod === temaAtual);
     });
@@ -362,14 +374,14 @@
     mods.forEach((m) => m.temas.forEach((t) => { total++; if (t[3]) prontos++; if (f[t[0]]) nfeitos++; }));
     const anim = F.id("anim");
     const ult = F.store.get("ultimo:" + areaId, null), ui = ult && F.achar(ult.cod);
-    const continuar = ui && ui.pronto ? `<a class="continuar" href="#/${ui.cod}${ult.secao ? "/" + ult.secao : ""}" style="--c:var(${ui.mod.cor})"><span class="letra">${ui.mod.letra}</span><span><small>Continuar de onde parei</small><b>${ui.cod} · ${ui.nome}</b></span>${F.ic("seta")}</a>` : "";
+    const continuar = ui && ui.pronto ? `<a class="continuar" href="${F.href(ui.cod, ui.mat, ult.secao)}" style="--c:var(${ui.mod.cor})"><span class="letra">${ui.mod.letra}</span><span><small>Continuar de onde parei</small><b>${ui.cod} · ${ui.nome}</b></span>${F.ic("seta")}</a>` : "";
     el.innerHTML = `<div class="hero2"><div><h1>${ar.titulo}</h1>${continuar}</div><div class="anim" id="${anim}"></div></div>
       <div class="cartao"><div class="tit"><span class="tag">Progresso</span>${nfeitos} de ${total} temas feitos · ${prontos} já escritos</div>
-        <div class="barra" style="--c:var(--ok)"><i style="width:${total ? (100 * nfeitos) / total : 0}%"></i></div></div>
+        <div class="barra" style="--c:var(--ok)"><i style="width:${total ? (100 * nfeitos) / total : 0}%"></i></div></div>${ar.extra || ""}
       <h2 style="margin-top:32px">Módulos</h2>${mods.length ? "" : `<div class="vazio" style="margin-top:12px"><b>Em breve</b>Os módulos desta aba ainda vão ser criados.</div>`}
       <div class="mods">${mods.map((m) => { const n = m.temas.length, k = m.temas.filter((t) => f[t[0]]).length; const prim = m.temas.find((t) => t[3]) || m.temas[0] || [ar.inicio]; /* módulo ainda sem temas: o cartão fica "em breve" e não leva a lugar nenhum */
         const esc = m.temas.filter((t) => t[3]).length;
-        return `<a class="modc ${esc ? "" : "breve"}" href="#/${prim[0]}" style="--c:var(${m.cor})"><div class="letra${[...m.letra].length > 1 ? " longa" : ""}">${m.letra}</div><h3>${m.nome}</h3><p>${m.desc}</p><div class="barra"><i style="width:${n ? (100 * k) / n : 0}%"></i></div><p style="margin-top:6px">${esc ? `${k}/${n} feitos · ${esc} ${esc === 1 ? "escrito" : "escritos"}` : "em breve"}</p></a>`; }).join("")}</div>
+        return `<a class="modc ${esc ? "" : "breve"}" href="${m.temas.length ? F.href(prim[0], m) : "#/" + ar.inicio}" style="--c:var(${m.cor})"><div class="letra${[...m.letra].length > 1 ? " longa" : ""}">${m.letra}</div><h3>${m.nome}</h3><p>${m.desc}</p><div class="barra"><i style="width:${n ? (100 * k) / n : 0}%"></i></div><p style="margin-top:6px">${esc ? `${k}/${n} feitos · ${esc} ${esc === 1 ? "escrito" : "escritos"}` : "em breve"}</p></a>`; }).join("")}</div>
       <h2 style="margin-top:36px">Como usar</h2>
       <div class="grade2" style="margin-top:12px">
         <div class="cartao"><b>Ordem de um tema</b><ol style="margin:8px 0 0;padding-left:1.2em;color:var(--ink2)"><li>Pergunta de abertura</li><li>Laboratório (chute antes de mexer)</li><li>A ideia, com números</li><li>Teoria completa e demonstrações</li><li>Exemplos passo a passo</li><li>Resumo, exercícios e chefão</li></ol></div>
@@ -543,22 +555,64 @@
   }
 
   /* ---------- desenhos das páginas iniciais das outras matérias (β 3.7), no mesmo estilo do átomo: SVG redesenhado a cada quadro ---------- */
-  /* Matemática: icosaedro em arame girando (arestas da frente fortes, as de trás apagadas) */
+  /* Matemática: icosaedro em arame girando (arestas da frente fortes, as de trás apagadas).
+     β 3.8: guarda também o segundo segredo do site (ver PROGRESSO.md, β 3.8; nunca mencionar em texto do site). */
   function animSolido(el) {
-    el.innerHTML = `<svg viewBox="-170 -150 340 300" aria-label="sólido platônico girando"><g class="g"></g></svg>`;
+    const idL = F.id("luz");
+    el.innerHTML = `<svg viewBox="-170 -150 340 300" aria-label="sólido platônico girando"><defs><filter id="${idL}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g class="g"></g><g class="sl"></g></svg>`;
     const f = (1 + Math.sqrt(5)) / 2, V = [];
     [-1, 1].forEach((a) => [-f, f].forEach((b) => V.push([0, a, b], [a, b, 0], [b, 0, a])));
     const A = []; for (let i = 0; i < 12; i++) for (let j = i + 1; j < 12; j++) if (Math.abs(Math.hypot(V[i][0] - V[j][0], V[i][1] - V[j][1], V[i][2] - V[j][2]) - 2) < 1e-9) A.push([i, j]);
-    const cores = ["var(--mK2)", "var(--mC)", "var(--mA)"], g = el.querySelector(".g");
-    let vivo = true; const t0 = performance.now(), reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /* hipercubo: 16 vértices (±1, ±1, ±1, ±1); aresta = vértices que diferem numa coordenada só (32 arestas) */
+    const H = []; for (let k = 0; k < 16; k++) H.push([0, 1, 2, 3].map((b) => ((k >> b) & 1 ? 1 : -1)));
+    const HA = []; for (let i = 0; i < 16; i++) for (let j = i + 1; j < 16; j++) if (H[i].filter((v, k) => v !== H[j][k]).length === 1) HA.push([i, j, H[i].findIndex((v, k) => v !== H[j][k])]);
+    const cores = ["var(--mK2)", "var(--mC)", "var(--mA)"], svg = el.querySelector("svg"), g = el.querySelector(".g"), sl = el.querySelector(".sl");
+    let vivo = true, ev = null, cliques = [], achou = !!F.store.get("segredo:t", 0); const t0 = performance.now(), reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const selo = () => (sl.innerHTML = achou ? `<path d="M152 -140 l2.4 5 l5.4 .7 l-4 3.7 l1 5.4 l-4.8 -2.7 l-4.8 2.7 l1 -5.4 l-4 -3.7 l5.4 -.7 Z" style="fill:var(--ink3);opacity:.7"/>` : "");
+    selo();
+    /* 4 cliques seguidos (no máximo 0,7 s entre um e outro) */
+    svg.addEventListener("click", (e) => { if (ev || reduz) return; const agora = performance.now(); cliques = cliques.filter((x) => agora - x < 700 * 4).concat(agora); for (let k = cliques.length - 1; k > 0; k--) if (cliques[k] - cliques[k - 1] > 700) { cliques = cliques.slice(k); break; } if (cliques.length >= 4) { cliques = []; dispara(); } });
+    const pr = document.querySelector(".principal");
+    function falha() { /* chuva de caracteres verdes com ruído e linhas tremendo (~2 s), numa tela por cima de tudo e sem receber clique */
+      const cv = document.createElement("canvas"), esc = 0.5, W = Math.ceil(innerWidth * esc), Hh = Math.ceil(innerHeight * esc); cv.width = W; cv.height = Hh; cv.className = "falha-tela"; document.body.appendChild(cv);
+      const c = cv.getContext("2d"), CH = "0123456789αβγδεζηθλμνξπρσφψωΣΔΩΦΨ∫∑∏∂∇∞≈≠≤≥√±×÷∈∀∃⊂∪∩", T = 9, cols = Math.ceil(W / T), y = Array.from({ length: cols }, () => -Math.random() * Hh), t1 = performance.now();
+      c.fillStyle = "#020604"; c.fillRect(0, 0, W, Hh); c.font = `${T}px monospace`;
+      const quadro = (agora) => { const u = (agora - t1) / 1000; if (u > 2 || !cv.isConnected) { cv.remove(); if (pr) pr.style.transform = ""; return; }
+        cv.style.opacity = String(Math.min(1, u / 0.15, (2 - u) / 0.3));
+        c.fillStyle = "rgba(2,6,4,0.18)"; c.fillRect(0, 0, W, Hh);
+        for (let k = 0; k < cols; k++) { const ch = CH[(Math.random() * CH.length) | 0]; c.fillStyle = "#c8ffd8"; c.fillText(ch, k * T, y[k]); c.fillStyle = "#2bd96a"; c.fillText(CH[(Math.random() * CH.length) | 0], k * T, y[k] - T); y[k] += T * (0.6 + Math.random() * 0.6); if (y[k] > Hh && Math.random() > 0.96) y[k] = 0; }
+        for (let k = 0; k < 40; k++) { c.fillStyle = `rgba(160,255,190,${Math.random() * 0.25})`; c.fillRect(Math.random() * W, Math.random() * Hh, 1 + Math.random() * 2, 1); }
+        for (let k = 0; k < 3; k++) { const yy = (Math.random() * Hh) | 0, hh = 1 + ((Math.random() * 6) | 0), dx = ((Math.random() - 0.5) * 24) | 0; const fx = c.getImageData(0, yy, W, hh); c.putImageData(fx, dx, yy); c.fillStyle = "rgba(120,255,170,.18)"; c.fillRect(0, yy, W, 1); }
+        if (pr) pr.style.transform = Math.random() < 0.35 ? `translate(${((Math.random() - 0.5) * 8).toFixed(1)}px, ${((Math.random() - 0.5) * 3).toFixed(1)}px)` : "";
+        requestAnimationFrame(quadro); };
+      requestAnimationFrame(quadro);
+    }
+    function dispara() { ev = { t: 0 }; if (!achou) { achou = true; F.store.set("segredo:t", 1); } falha(); }
+    const fim = () => { ev = null; selo(); };
+    function tesserato(t) { /* gira em 4D nos planos xw e yz, projeta 4D → 3D → tela; o cubo de dentro vira o de fora e vice-versa */
+      const a = 0.62 * t, b = 0.38 * t, d4 = 3, d3 = 6, R = 46, ty = 0.55, tx = 0.32;
+      const P = H.map(([x, y, z, w]) => { [x, w] = [x * Math.cos(a) - w * Math.sin(a), x * Math.sin(a) + w * Math.cos(a)]; [y, z] = [y * Math.cos(b) - z * Math.sin(b), y * Math.sin(b) + z * Math.cos(b)]; const k = d4 / (d4 - w); x *= k; y *= k; z *= k;
+        [x, z] = [x * Math.cos(ty) + z * Math.sin(ty), -x * Math.sin(ty) + z * Math.cos(ty)]; [y, z] = [y * Math.cos(tx) - z * Math.sin(tx), y * Math.sin(tx) + z * Math.cos(tx)]; const q = d3 / (d3 - z); return [R * x * q, R * y * q - 8]; });
+      const cor = (i, j, eixo) => (eixo === 3 ? "var(--mC)" : H[i][3] > 0 ? "var(--mK2)" : "var(--mA)");
+      let h = `<g filter="url(#${idL})">` + HA.map(([i, j, e]) => `<line x1="${P[i][0].toFixed(1)}" y1="${P[i][1].toFixed(1)}" x2="${P[j][0].toFixed(1)}" y2="${P[j][1].toFixed(1)}" style="stroke:${cor(i, j, e)};stroke-width:1.3;opacity:.95"/>`).join("") + P.map(([x, y]) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2" style="fill:#fff;opacity:.85"/>`).join("") + `</g>`;
+      const op = Math.max(0, Math.min(1, (t - 0.4) / 0.6, (5.5 - t) / 1));
+      if (op > 0) h += `<text x="0" y="142" text-anchor="middle" style="font:12px var(--f-text);fill:var(--ink2);opacity:${op.toFixed(2)}">tesserato, o cubo de 4 dimensões</text>`;
+      return h;
+    }
+    let ult = performance.now();
     function q(t) {
       if (!vivo) return;
-      const s = reduz ? 1 : (t - t0) / 1000, a = 0.45 * s, b = 0.27 * s + 0.4, R = 72;
-      const P = V.map(([x, y, z]) => { const x1 = x * Math.cos(a) + z * Math.sin(a), z1 = -x * Math.sin(a) + z * Math.cos(a), y2 = y * Math.cos(b) - z1 * Math.sin(b), z2 = y * Math.sin(b) + z1 * Math.cos(b); return [R * x1, R * y2, z2]; });
+      const dt = Math.min(0.05, (t - ult) / 1000); ult = t;
+      if (ev) { ev.t += dt; if (ev.t > 12) fim(); }
+      if (ev && ev.t > 2) { g.innerHTML = tesserato(ev.t - 2); sl.innerHTML = ""; requestAnimationFrame(q); return; }
+      const s = reduz ? 1 : (t - t0) / 1000, a = 0.45 * s, b = 0.27 * s + 0.4, R = 72, tr = ev ? (Math.random() - 0.5) * 10 : 0;
+      const P = V.map(([x, y, z]) => { const x1 = x * Math.cos(a) + z * Math.sin(a), z1 = -x * Math.sin(a) + z * Math.cos(a), y2 = y * Math.cos(b) - z1 * Math.sin(b), z2 = y * Math.sin(b) + z1 * Math.cos(b); return [R * x1 + tr, R * y2, z2]; });
       g.innerHTML = `<ellipse cx="0" cy="128" rx="110" ry="10" style="fill:var(--materia);opacity:.12"/>` + A.map(([i, j], k) => { const z = (P[i][2] + P[j][2]) / 2, frente = z > -0.2; return `<line x1="${P[i][0].toFixed(1)}" y1="${P[i][1].toFixed(1)}" x2="${P[j][0].toFixed(1)}" y2="${P[j][1].toFixed(1)}" style="stroke:${cores[k % 3]};stroke-width:${frente ? 2.4 : 1.3};opacity:${frente ? 0.9 : 0.3}${frente ? "" : ";stroke-dasharray:4 5"}"/>`; }).join("") + P.map(([x, y, z]) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${z > 0 ? 5 : 3.2}" style="fill:${z > 0 ? "var(--ink)" : "var(--ink3)"};stroke:var(--bg);stroke-width:1.5"/>`).join("");
-      if (!reduz) requestAnimationFrame(q);
+      if (!reduz || ev) requestAnimationFrame(q);
     }
-    requestAnimationFrame(q); F.aoSair(() => (vivo = false));
+    requestAnimationFrame(q); F.aoSair(() => { vivo = false; const c = document.querySelector(".falha-tela"); if (c) c.remove(); if (pr) pr.style.transform = ""; });
+    document.addEventListener("click", function fora(e) { if (!vivo) { document.removeEventListener("click", fora); return; } if (ev && ev.t > 2.5 && !el.contains(e.target)) fim(); });
+    J_SEGREDO.t = () => ev; /* para os testes */
   }
   /* Olimpíada: demonstração sem palavras 1 + 3 + 5 + … + (2n − 1) = n², com as camadas em L aparecendo uma a uma */
   function animImpares(el) {
@@ -615,30 +669,63 @@
     }
     requestAnimationFrame(q); F.aoSair(() => (vivo = false));
   }
+  /* Russo · Gramática: três matrioskas na prateleira, balançando de leve, cada uma no seu ritmo */
+  function animMatrioska(el) {
+    el.innerHTML = `<svg viewBox="0 0 340 300" aria-label="matrioskas balançando"><g class="g"></g></svg>`;
+    const g = el.querySelector(".g"), M = [[66, 246, 0.86, "var(--mK5)", 0.0], [158, 246, 1.18, "var(--mR)", 1.3], [268, 246, 1.55, "var(--mT)", 2.4]];
+    const boneca = (c) => `<path d="M50 8C36 8 32 20 34 31C24 42 22 70 28 85Q50 95 72 85C78 70 76 42 66 31C68 20 64 8 50 8Z" style="fill:color-mix(in srgb,${c} 30%,var(--card));stroke:${c};stroke-width:2.4"/><circle cx="50" cy="25" r="10" style="fill:var(--card);stroke:${c};stroke-width:1.8"/><circle cx="46" cy="24" r="1.3" style="fill:var(--ink)"/><circle cx="54" cy="24" r="1.3" style="fill:var(--ink)"/><circle cx="44" cy="29" r="1.8" style="fill:${c};opacity:.5"/><circle cx="56" cy="29" r="1.8" style="fill:${c};opacity:.5"/><path d="M47.5 30.5Q50 32.5 52.5 30.5" style="fill:none;stroke:var(--ink);stroke-width:1.1"/><path d="M35 38Q50 44 65 38" style="fill:none;stroke:${c};stroke-width:1.8"/><ellipse cx="50" cy="64" rx="15" ry="18" style="fill:var(--card);stroke:${c};stroke-width:1.6"/><circle cx="50" cy="62" r="3.5" style="fill:var(--mO)"/>` + [0, 1, 2, 3, 4, 5].map((i) => `<circle cx="${(50 + 7 * Math.cos((i * Math.PI) / 3)).toFixed(1)}" cy="${(62 + 7 * Math.sin((i * Math.PI) / 3)).toFixed(1)}" r="2.6" style="fill:none;stroke:${c};stroke-width:1.2"/>`).join("");
+    let vivo = true; const t0 = performance.now(), reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function q(t) {
+      if (!vivo) return;
+      const s = reduz ? 0 : (t - t0) / 1000;
+      g.innerHTML = `<path d="M18 ${M[0][1] + 6}H322" style="stroke:var(--ink3);stroke-width:2;stroke-linecap:round"/>` + M.map(([x, y, k, c, f]) => `<g transform="translate(${x} ${y}) rotate(${(5 * Math.sin(1.5 * s + f)).toFixed(2)}) scale(${k}) translate(-50 -92)">${boneca(c)}</g>`).join("");
+      if (!reduz) requestAnimationFrame(q);
+    }
+    requestAnimationFrame(q); F.aoSair(() => (vivo = false));
+  }
+  /* Russo · Leitura: a letra Я girando em torno do eixo vertical (de costas ela vira um R) e letras cirílicas subindo */
+  function animLetraYa(el) {
+    el.innerHTML = `<svg viewBox="0 0 340 300" aria-label="letra cirílica girando"><g class="g"></g></svg>`;
+    const g = el.querySelector(".g"), L = "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮ", bolhas = Array.from({ length: 12 }, (_, i) => ({ x: 30 + ((i * 53) % 280), f: (i * 0.37) % 1, c: L[(i * 7) % L.length], v: 0.08 + ((i * 3) % 5) * 0.015 }));
+    let vivo = true; const t0 = performance.now(), reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function q(t) {
+      if (!vivo) return;
+      const s = reduz ? 0.4 : (t - t0) / 1000, k = Math.cos(0.9 * s);
+      let h = bolhas.map((b) => { const u = (s * b.v + b.f) % 1; return `<text x="${b.x}" y="${(280 - u * 250).toFixed(1)}" text-anchor="middle" style="font:600 18px var(--f-text);fill:var(--mR);opacity:${(0.35 * Math.sin(Math.PI * u)).toFixed(2)}">${b.c}</text>`; }).join("");
+      h += `<ellipse cx="170" cy="250" rx="${(70 * Math.max(0.25, Math.abs(k))).toFixed(1)}" ry="8" style="fill:var(--materia);opacity:.15"/>`;
+      h += `<g transform="translate(170 150) scale(${k.toFixed(3)} 1)"><text x="0" y="62" text-anchor="middle" style="font:800 170px var(--f-text);fill:color-mix(in srgb,var(--mR) ${Math.round(55 + 35 * Math.abs(k))}%,var(--card));stroke:var(--mR);stroke-width:2">Я</text></g>`;
+      g.innerHTML = h;
+      if (!reduz) requestAnimationFrame(q);
+    }
+    requestAnimationFrame(q); F.aoSair(() => (vivo = false));
+  }
   /* desenho de cada página inicial: o nome vem do campo anim da área (AREAS) */
-  F.ANIM = { atomo: animAtomo, calculo: animCalculo, pendulo: animPendulo, calculadora: animCalculadora, solido: animSolido, impares: animImpares, benzeno: animBenzeno, bequer: animBequer };
+  F.ANIM = { atomo: animAtomo, calculo: animCalculo, pendulo: animPendulo, calculadora: animCalculadora, solido: animSolido, impares: animImpares, benzeno: animBenzeno, bequer: animBequer, matrioska: animMatrioska, letraYa: animLetraYa };
+  const J_SEGREDO = (F._seg = F._seg || {});
 
   function pgSumario(el) {
     el.innerHTML = `<div class="cab-tema"><div class="sobre">Mapa</div><h1>Sumário em árvore</h1><p style="color:var(--ink2)">Temas já escritos têm link para a teoria e para os exercícios.</p></div>` +
       CATALOGO.filter((m) => areaDe(m) === F.area).map((m) => `<h3 style="margin:24px 0 8px;color:var(${m.cor})">${m.letra} · ${m.nome}</h3><pre style="font:14px/1.7 var(--f-text);margin:0;white-space:pre-wrap">${m.temas.map((t) => t[3]
-        ? `● <a href="#/${t[0]}">${t[0]} ${t[1]}</a>\n |___> <a href="#/${t[0]}/teoria">teoria</a>  <a href="#/${t[0]}/exercicios">[exercícios]</a>`
+        ? `● <a href="${F.href(t[0], m)}">${t[0]} ${t[1]}</a>\n |___> <a href="${F.href(t[0], m, "teoria")}">teoria</a>  <a href="${F.href(t[0], m, "exercicios")}">[exercícios]</a>`
         : `<span style="color:var(--ink3)">○ ${t[0]} ${t[1]}</span> <span class="breve-tag" style="margin-left:4px">em breve</span>`).join("\n")}</pre>`).join("");
   }
 
   /* ---------- tema ---------- */
   F.registrar = (cod, def) => { F.temas = F.temas || {}; F.temas[cod] = def; if (pendente === cod) { pendente = null; rota(); } };
   let pendente = null;
-  function carregaTema(cod) {
-    if (F.temas && F.temas[cod]) return true;
-    pendente = cod;
+  /* física: temas/<COD>.js com F.registrar("COD", …); outras matérias: temas/<matéria>/<COD>.js com F.registrar("<matéria>/COD", …) */
+  function carregaTema(info) {
+    const k = info.chave, arq = info.mat === "fisica" ? `temas/${info.cod}.js` : `temas/${info.mat}/${info.cod}.js`;
+    if (F.temas && F.temas[k]) return true;
+    pendente = k;
     const s = document.createElement("script");
-    s.src = `temas/${cod}.js`;
-    s.onerror = () => { $("#pagina").innerHTML = `<p>Não achei o arquivo <code>temas/${cod}.js</code>.</p>`; };
+    s.src = arq;
+    s.onerror = () => { $("#pagina").innerHTML = `<p>Não achei o arquivo <code>${arq}</code>.</p>`; };
     document.body.appendChild(s);
     return false;
   }
   function pgTema(el, info, ancora) {
-    const def = F.temas[info.cod];
+    const def = F.temas[info.chave];
     temaAtual = info.cod; exercicios = []; fila = [];
     document.documentElement.style.setProperty("--mod", `var(${info.mod.cor})`);
     const corpo = def.html(F);
@@ -646,13 +733,13 @@
       <h1>${info.cod} · ${info.nome}</h1><div class="marcas">${F.selos(info.marcas)}${(def.retoma || []).map(F.ret).join("")}</div>
       <nav class="indice" id="indice"></nav></div>${corpo}
       <div class="fim"><div><b>Terminou o tema?</b><div style="color:var(--ink2);font-size:14px">Marca como feito e a bolinha do menu fica verde.</div></div><span class="esp"></span><button class="bt pri" id="bt-feito"></button></div>`;
-    $("#indice").innerHTML = $$(".secao", el).map((s) => `<a href="#/${info.cod}/${s.id}">${s.querySelector("h2").textContent.replace(/^\d+/, "")}</a>`).join("");
+    $("#indice").innerHTML = $$(".secao", el).map((s) => `<a href="${F.href(info.cod, info.mat, s.id)}">${s.querySelector("h2").textContent.replace(/^\d+/, "")}</a>`).join("");
     const bf = $("#bt-feito");
     const pinta = () => { bf.textContent = feitos()[info.cod] ? "✓ Feito (desmarcar)" : "Marcar como feito"; };
     bf.addEventListener("click", () => { const f = feitos(); if (f[info.cod]) delete f[info.cod]; else f[info.cod] = Date.now(); F.store.set("feitos", f); pinta(); pintaMenu(); });
     pinta();
     F.math(el);
-    folhaDeFormulas(el, info.cod);
+    folhaDeFormulas(el, info);
     const q = fila; fila = []; q.forEach((fn) => fn());
     lembraUltimo(info);
     if (def.montar) def.montar(F, el);
@@ -681,7 +768,7 @@
   }
 
   /* folha de fórmulas: junta, no fim do tema, todas as fórmulas em destaque da página (resumo para revisar) */
-  function folhaDeFormulas(el, cod) {
+  function folhaDeFormulas(el, info) {
     const fs = $$(".formula", el).filter((f) => !f.closest(".lab, .exemplo, .ex, .chefao, .rev-painel"));
     if (fs.length < 2 || el.querySelector("#resumo")) return; /* temas que já têm "Resumo" escrito à mão não precisam */
     const sec = document.createElement("section");
@@ -691,7 +778,7 @@
     fs.forEach((f) => { const c = f.cloneNode(true); c.removeAttribute("id"); grade.appendChild(c); });
     const alvo = el.querySelector("#desafios, #exercicios") || el.querySelector(".fim");
     alvo.parentNode.insertBefore(sec, alvo);
-    const ind = $("#indice"); if (ind) { const a = document.createElement("a"); a.href = `#/${cod}/formulas`; a.textContent = "Folha de fórmulas"; const ref = ind.querySelector(`a[href$="/desafios"], a[href$="/exercicios"]`); ind.insertBefore(a, ref); }
+    const ind = $("#indice"); if (ind) { const a = document.createElement("a"); a.href = F.href(info.cod, info.mat, "formulas"); a.textContent = "Folha de fórmulas"; const ref = ind.querySelector(`a[href$="/desafios"], a[href$="/exercicios"]`); ind.insertBefore(a, ref); }
   }
 
   /* ---------- rotas ---------- */
@@ -699,14 +786,14 @@
   F.aoSair = (fn) => paradas.push(fn); // simulações registram como parar a animação
   function rota() {
     {
-      const h0 = (location.hash || "#/home").slice(2).split("/");
-      if (h0[0] === renderizado && h0[1] && achaAncora(h0[1])) { achaAncora(h0[1]).scrollIntoView(); return; }
+      const h0 = (location.hash || "#/home").slice(2).split("/"), ns = !!(h0[1] && window.MATERIAS && MATERIAS.some((m) => m.id === h0[0] && m.id !== "fisica")), b0 = ns ? h0[0] + "/" + h0[1] : h0[0], a0 = ns ? h0[2] : h0[1];
+      if (b0 === renderizado && a0 && achaAncora(a0)) { achaAncora(a0).scrollIntoView(); return; }
     }
     paradas.forEach((fn) => { try { fn(); } catch (e) {} }); paradas = [];
     gaveta(false);
     const h = (location.hash || "#/home").slice(2).split("/");
     const pag = $("#pagina");
-    const cod = h[0] || "home", anc = h[1];
+    let cod = h[0] || "home", anc = h[1], mid = "fisica";
     renderizado = null;
     temaAtual = null;
     document.documentElement.style.removeProperty("--mod");
@@ -716,18 +803,21 @@
     if (J && cod === "home") { J.home(pag); window.scrollTo(0, 0); return; }
     if (mat && !mat.pronta) { J.emBreve(pag, mat); window.scrollTo(0, 0); return; }
     if (mat && mat.pronta && (!h[1] || h[1] === "inicio") && mat.rota !== "#/" + (h[1] ? cod + "/" + h[1] : cod)) { location.replace(mat.rota); return; } /* só o id da matéria: #/fisica → #/inicio; link antigo #/quimica/inicio → #/quimica */
-    const arIni = AREAS.find((a) => a.inicio === cod);
+    if (mat && mat.id === "fisica" && h[1] && h[1] !== "inicio") { location.replace("#/" + h.slice(1).join("/")); return; } /* #/fisica/A01 → #/A01 */
+    if (mat && mat.id !== "fisica" && h[1]) { mid = mat.id; cod = h[1]; anc = h[2]; } /* tema de outra matéria: #/quimica/A01[/âncora] */
+    const arIni = mid === "fisica" ? AREAS.find((a) => a.inicio === cod) : null;
     if (arIni) { F.area = arIni.id; pgInicio(pag, F.area); }
     else if (cod === "legenda") { location.replace("#/" + AREA(F.area).inicio); setTimeout(() => { const d = $("#detalhes"); if (d) d.classList.add("aberto"); }, 50); return; } /* a legenda agora fica só no painel do topo */
     else if (cod === "sumario") pgSumario(pag);
     else {
-      const info = F.achar(cod);
-      if (!info && RENOMEADOS[cod]) { location.replace("#/" + RENOMEADOS[cod] + (anc ? "/" + anc : "")); return; } /* link antigo (ex.: #/B12) */
+      const info = F.achar(cod, mid);
+      if (info) F.area = areaDe(info.mod); /* antes de desenhar: o progresso é lido com o prefixo da matéria */
+      if (!info && mid === "fisica" && RENOMEADOS[cod]) { location.replace("#/" + RENOMEADOS[cod] + (anc ? "/" + anc : "")); return; } /* link antigo (ex.: #/B12) */
       if (!info) pag.innerHTML = `<p>Tema ${cod} não existe.</p>`;
       else if (!info.pronto) pag.innerHTML = `<div class="cab-tema"><div class="sobre" style="color:var(${info.mod.cor})">${info.mod.letra} · ${info.mod.nome}</div><h1>${info.cod} · ${info.nome}</h1></div><p style="color:var(--ink2)">Este tema ainda não foi escrito.</p>`;
-      else if (carregaTema(cod)) { pgTema(pag, info, anc); renderizado = cod; }
+      else if (carregaTema(info)) { pgTema(pag, info, anc); renderizado = info.chave; }
       else pag.innerHTML = `<p style="color:var(--ink2)">Carregando…</p>`;
-      if (info) { temaAtual = info.cod; F.area = areaDe(info.mod); }
+      if (info) temaAtual = info.cod;
     }
     pintaMenu();
     if (!anc) window.scrollTo(0, 0);
@@ -790,8 +880,8 @@
   /* ---------- exportar / importar progresso ---------- */
   function backup() {
     $("#bt-exp").addEventListener("click", () => {
-      const tudo = F.store.tudo(); /* + a tela inicial (prefixo jarvis:, ex.: cor e adesivos) */
-      try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith("jarvis:")) tudo[k] = localStorage.getItem(k); } } catch (e) {}
+      const tudo = F.store.tudo(), outros = F.PREFIXOS().filter((x) => x !== PFX); /* + tela inicial (jarvis:) e as outras matérias (mat:, qui:, rus:) */
+      try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (outros.some((x) => k.startsWith(x))) tudo[k] = localStorage.getItem(k); } } catch (e) {}
       const blob = new Blob([JSON.stringify(tudo, null, 1)], { type: "application/json" });
       const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
       a.download = "progresso-fisica-" + new Date().toISOString().slice(0, 10) + ".json"; a.click();
@@ -801,8 +891,9 @@
       const f = ev.target.files[0]; if (!f) return;
       try {
         let o = JSON.parse(await f.text());
-        if (!o || typeof o !== "object" || !Object.keys(o).some((k) => k.startsWith(PFX) || k.startsWith("jarvis:"))) throw new Error("formato");
-        const jv = {}; Object.keys(o).forEach((k) => { if (k.startsWith("jarvis:")) { jv[k] = o[k]; delete o[k]; } }); /* tela inicial: fora da migração de códigos */
+        const outros = F.PREFIXOS().filter((x) => x !== PFX);
+        if (!o || typeof o !== "object" || !Object.keys(o).some((k) => k.startsWith(PFX) || outros.some((x) => k.startsWith(x)))) throw new Error("formato");
+        const jv = {}; Object.keys(o).forEach((k) => { if (outros.some((x) => k.startsWith(x))) { jv[k] = o[k]; delete o[k]; } }); /* tela inicial e outras matérias: fora da migração de códigos da física */
         if (Object.keys(o).some((k) => k.startsWith(PFX)) && +(o[PFX + "codigos"] || 1) < VERSAO_CODIGOS) o = F.migraDados(o); /* backup feito antes da troca de códigos */
         Object.entries(jv).forEach(([k, v]) => localStorage.setItem(k, typeof v === "string" ? v : JSON.stringify(v)));
         Object.entries(o).forEach(([k, v]) => {

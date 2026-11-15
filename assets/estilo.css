@@ -23,7 +23,7 @@
   --ok:#4cc38a; --warn:#e8b04b; --bad:#ef6b6b;
   /* uma cor por módulo */
   /* uma cor por módulo, ~35° de matiz entre vizinhos dentro de cada área */
-  --mF:#9aa7bd; --mA:#6f8dff; --mT:#ef5350; --mO:#ecd04a; --mC:#b48cf5;
+  --mR:#39a6ef; --mF:#9aa7bd; --mA:#6f8dff; --mT:#ef5350; --mO:#ecd04a; --mC:#b48cf5;
   --mM:#ec6fa6; --mU:#3fbf8a; --mN:#38c4dc;
   --mX:#a5cf4e; --mS:#f39c3c; --mK1:#f5b942; --mK2:#d58cff; --mK3:#4fc3c9; --mK4:#ef6f6f; --mK5:#f07fb5;
   --mod:var(--acc);                /* cor do módulo atual (trocada pelo JS) */
@@ -37,7 +37,7 @@
   --bg:#f5f6f9; --bg2:#eceff4; --card:#ffffff; --card2:#f7f8fb;
   --ink:#151a24; --ink2:#4c5568; --ink3:#7d8699; --line:#dde2ea; --line2:#c9d0dc;
   --acc:#2f63d6; --ok:#1f8f5c; --warn:#a86d09; --bad:#c43c3c;
-  --mF:#5d6b82; --mA:#3f5fd6; --mT:#c62828; --mO:#9c7a00; --mC:#7c4fc4;
+  --mR:#1080cb; --mF:#5d6b82; --mA:#3f5fd6; --mT:#c62828; --mO:#9c7a00; --mC:#7c4fc4;
   --mM:#c23c78; --mU:#1a8a5e; --mN:#0f8aa0;
   --mX:#5c8a1e; --mS:#b86010; --mK1:#a87400; --mK2:#9447c9; --mK3:#14848a; --mK4:#c23b3b; --mK5:#b8326f;
   --shadow:0 1px 2px rgba(20,30,50,.06), 0 6px 18px rgba(20,30,50,.06);
@@ -751,3 +751,5 @@ body.area-vazia #menu-mods:not(.buscando) .mod.vazio:not(.outra-area){display:bl
 #menu-mods .mod.vazio{border:0;border-radius:0;padding:0;text-align:inherit;color:inherit} /* a caixa genérica .vazio não vale para o módulo vazio do menu */
 .letra.longa{font-size:11px;letter-spacing:-.03em}
 .modc .letra.longa{font-size:13px}
+/* β 3.8: tela de efeito por cima de tudo, sem receber clique (some sozinha em ~2 s) */
+.falha-tela{position:fixed;inset:0;width:100vw;height:100vh;z-index:1000;pointer-events:none;image-rendering:pixelated}
