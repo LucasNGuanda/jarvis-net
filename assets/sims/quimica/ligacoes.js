@@ -150,4 +150,30 @@
     leitor();
     anima(el, F, (dt) => { if (gira) fi += dt * 0.7; const [X, E] = k.split(",").map(Number); q("[data-v=sv]").innerHTML = D.txt(340, 24, nome(k), "tx", "middle", 'style="font-size:20px;font-weight:700"') + SIM.desGeo(X, E, { cx: 340, cy: 145, L: 84, fi, pares }); });
   };
+  /* ---------- C05 · soma dos dipolos de duas ligações iguais ----------
+     Molécula AX₂: duas ligações com momento μ_lig formando o ângulo θ. As componentes perpendiculares à bissetriz se cancelam e as paralelas se somam:
+     μ = 2·μ_lig·cos(θ/2). Conferido em Python: θ = 180°, μ = 0; H₂O (104,5°; μ_lig = 1,51 D): 1,85 D; SO₂ (119°; 1,61 D): 1,63 D; H₂S (92°; 0,70 D): 0,97 D.
+     Os μ_lig dos botões foram calculados ao contrário, a partir do momento dipolar medido da molécula (H₂O 1,85 D; SO₂ 1,63 D; H₂S 0,97 D): são momentos de ligação EFETIVOS (incluem o efeito dos pares isolados). */
+  SIM.dipolo = (el, F) => {
+    const W = 680, H = 270; let th = 104.5, mb = 1.51;
+    SIM.dipolo._conta = (mb, th) => 2 * mb * Math.cos((th * Math.PI) / 360);
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("ângulo", "t", 60, 180, 0.5, th)}${sl("dipolo da ligação", "m", 0, 2.5, 0.01, mb)}<div class="bts">${[["180", "linear (180°)"], ["104.5,1.51", "H₂O"], ["119,1.61", "SO₂"], ["92,0.7", "H₂S"]].map(([k, n]) => `<button class="bt peq" data-p="${k}">${n}</button>`).join("")}</div></div>
+      <div class="status">Cada ligação polar é um vetor (seta amarela), que aponta para o átomo mais eletronegativo. O momento dipolar da molécula é a <b>soma vetorial</b> (seta vermelha). Com as duas ligações em linha reta, os vetores se cancelam: ligações polares, molécula apolar. Fechando o ângulo, sobra uma resultante cada vez maior. Aqui o átomo central é o mais eletronegativo; se fosse o contrário, todas as setas se inverteriam e o módulo seria o mesmo.</div>`);
+    const q = (s) => el.querySelector(s);
+    const desenha = () => {
+      const a = (th * Math.PI) / 360, cx = 340, cy = 95, Lg = 105, mu = SIM.dipolo._conta(mb, th), e = 34; let sv = "";
+      [-1, 1].forEach((sg) => { const x = cx + sg * Lg * Math.sin(a), y = cy + Lg * Math.cos(a), ux = (cx - x) / Lg, uy = (cy - y) / Lg, nx = -uy * sg * 14, ny = ux * sg * 14, c = mb * e / 2;
+        sv += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" style="stroke:var(--ink2);stroke-width:4;stroke-linecap:round"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="15" style="fill:color-mix(in srgb,var(--mod) 45%,var(--bg));stroke:var(--mod);stroke-width:1.5"/>` + D.txt(x, y + 4, "X", "tx2", "middle", 'style="fill:var(--ink);font-weight:700"');
+        if (mb > 0.02) { const mx = (cx + x) / 2 + nx, my = (cy + y) / 2 + ny; sv += D.seta(mx - ux * c, my - uy * c, mx + ux * c, my + uy * c, "var(--warn)", 2.2); } });
+      sv += `<circle cx="${cx}" cy="${cy}" r="18" style="fill:color-mix(in srgb,var(--bad) 45%,var(--bg));stroke:var(--bad);stroke-width:1.5"/>` + D.txt(cx, cy + 4, "A", "tx2", "middle", 'style="fill:var(--ink);font-weight:700"');
+      if (mu > 0.02) sv += D.seta(cx, cy - 24, cx, cy - 24 - mu * e * 0.5, "var(--bad)", 3) + D.txt(cx + 12, cy - 30, "resultante", "tx2", "start"); else sv += D.txt(cx, cy - 34, "resultante nula", "tx2");
+      sv += D.txt(cx, 258, "μ = 2 · " + n2(mb, 2) + " · cos(" + n2(th / 2, 2) + "°) = " + n2(mu, 2) + " D", "tx2");
+      q("[data-v=sv]").innerHTML = sv; q("[data-o=t]").textContent = n2(th, 1) + "°"; q("[data-o=m]").textContent = n2(mb, 2) + " D";
+      q("[data-v=lt]").innerHTML = vis("momento dipolar", n2(mu, 2) + " D") + vis("parte que se cancela (cada lado)", n2(mb * Math.sin(a), 2) + " D") + vis("molécula", mu < 0.02 ? "apolar" : "polar");
+    };
+    el.querySelectorAll("input[data-c]").forEach((i) => i.addEventListener("input", () => { if (i.dataset.c === "t") th = +i.value; else mb = +i.value; desenha(); }));
+    el.querySelectorAll("[data-p]").forEach((b) => b.addEventListener("click", () => { const v = b.dataset.p.split(",").map(Number); th = v[0]; if (v.length > 1) mb = v[1]; q("[data-c=t]").value = th; q("[data-c=m]").value = mb; desenha(); }));
+    desenha();
+  };
 })();

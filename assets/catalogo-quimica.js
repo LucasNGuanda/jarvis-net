@@ -33,7 +33,7 @@ window.CATALOGO.push(
     ["C02","Ligação covalente e ressonância",[],true],
     ["C03","Ligação metálica e ligas",[],true],
     ["C04","Geometria molecular (VSEPR)",[],true],
-    ["C05","Polaridade",[]],
+    ["C05","Polaridade",[],true],
     ["C06","Forças intermoleculares",[]],
     ["C07","Teoria dos orbitais moleculares",[]],
   ] },
