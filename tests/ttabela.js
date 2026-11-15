@@ -93,6 +93,7 @@ const res = []; const ok = (c, m) => res.push([!!c, m]);
   const h1 = await hist(1700), h2 = await hist(1872), h3 = await hist(2015);
   ok(h1.ac < h2.ac && h2.ac < h3.ac && h3.ac === 118, '(9) linha do tempo: a tabela se preenche com os anos → ' + [h1.ac, h2.ac, h3.ac].join(' < '));
   ok(/31/.test(h2.bur) && /32/.test(h2.bur) && /21/.test(h2.bur) && h3.bur === '' && /Mendeleiev/.test(h2.t), '(9) lacunas previstas por Mendeleiev aparecem tracejadas (Sc, Ga, Ge) → ' + h2.bur);
+  ok(await p.evaluate(() => [...document.querySelectorAll('[data-modo][aria-pressed=true]')].map(b => b.dataset.modo).join(',')) === 'hist', 'só o botão do modo atual fica marcado');
   await p.click('[data-modo=rad]');
   const rad = await p.evaluate(() => ({ z: [...document.querySelectorAll('.tp-c:not(.apag)')].map(c => +c.dataset.z), fe: document.querySelector('.tp-c[data-z="26"]').classList.contains('apag') }));
   ok(rad.z.includes(43) && rad.z.includes(61) && rad.z.includes(92) && rad.fe && rad.z.filter(z => z >= 84).length === 35, '(10) radioativos marcados: Tc, Pm e todos de Z ≥ 84 → ' + rad.z.length);
@@ -100,6 +101,8 @@ const res = []; const ok = (c, m) => res.push([!!c, m]);
   await p.click('[data-modo=est]'); const es = await p.evaluate(() => [...document.querySelectorAll('.tp-c:not(.apag)')].map(c => c.querySelector('.tp-m').textContent).join(''));
   ok(es.length >= 10 && /^★+$/.test(es), '(11) estrelas nos elementos mais cobrados → ' + es.length);
   ok(await p.evaluate(() => document.querySelectorAll('[data-modo]').length === 10 && !!document.querySelector('.tp-topo input[type=search]')), 'botões dos recursos acima da tabela (10 modos + busca)');
+  const nota = await p.evaluate(() => { const r = document.querySelector('.tp-rod'), g = document.querySelector('.tp-gaveta').getBoundingClientRect(), b = r.getBoundingClientRect(); return { t: r.textContent, dentro: b.top >= g.top && b.bottom <= innerHeight - 30 && b.height > 10 }; });
+  ok(/critério do Jarvis/.test(nota.t) && /não uma estatística de provas/.test(nota.t) && /van der Waals/.test(nota.t) && /não existe medido ou em que as fontes discordam/.test(nota.t) && nota.dentro, 'notinha fixa na tabela: ★ é critério do Jarvis; raio de van der Waals; o que significa "sem dado" → visível: ' + nota.dentro);
   await p.keyboard.press('Escape'); await p.waitForTimeout(400);
 
   // ----- vale em qualquer matéria; persiste -----
