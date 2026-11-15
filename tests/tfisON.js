@@ -33,7 +33,7 @@ const num = (t) => parseFloat(String(t).replace(/−/g, '-').replace(/\./g, '').
   // N02
   await vai('N02'); o = await le('lab-boc', { d1: 2, d2: 0.5, v1: 1 }, [], 4500);
   ok(perto(num(ac(o, 'v₂')), 16, 0.002) && perto(num(ac(o, 'vazão')), 0.314, 0.01), 'N02 2 cm → 0,5 cm: v₂ = 16, Q = 0,314 L/s → ' + JSON.stringify(o));
-  const tx = ac(o, 'janelas').split(' e ').map(num); ok(tx.length === 2 && Math.abs(tx[0] - tx[1]) <= 0.25 * Math.max(tx[0], tx[1]), 'N02 bolinhas por segundo iguais nas duas janelas (ruído estatístico) → ' + ac(o, 'janelas'));
+  const tx = ac(o, 'janelas').split(' e ').map(num); ok(tx.length === 2 && Math.abs(tx[0] - tx[1]) <= 0.1 * Math.max(tx[0], tx[1]), 'N02 bolinhas por segundo iguais nas duas janelas (β 4.7: espaçadas no tempo de percurso; diferença ≤ 10%) → ' + ac(o, 'janelas'));
   // N03
   await vai('N03'); o = await le('lab-ber', { y: 0.2, r: 100 });
   ok(perto(num(ac(o, 'jato')), Math.sqrt(2 * 9.81 * 0.8), 0.002) && perto(num(ac(o, 'alcance')), 0.8, 0.005) && perto(num(ac(o, 'esvaziar')), 100 * Math.sqrt(1.6 / 9.81), 0.005), 'N03 furo a 0,2 m: v = 3,96, alcance 0,8, esvazia em 40,4 s → ' + JSON.stringify(o));

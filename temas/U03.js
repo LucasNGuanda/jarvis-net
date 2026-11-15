@@ -20,7 +20,7 @@ F.registrar("U03", {
         { nome: "Conta no aro girando", gerar: (p) => {
           const Rr = p ? 0.1 : F.escolha([0.05, 0.1, 0.2, 0.5]), g = 9.81, wc = Math.sqrt(g / Rr), w = p ? 15 : +(wc * F.escolha([0.6, 1.3, 1.6, 2.2])).toFixed(1);
           const acima = w > wc, th = acima ? Math.acos(g / (w * w * Rr)) : 0;
-          return { enun: R`<p>Uma conta desliza sem atrito num aro vertical de raio ${F.n(Rr)} m que gira a $\omega = ${F.n(w)}$ rad/s em torno do diâmetro vertical. Onde fica o equilíbrio estável e com que frequência a conta oscila em volta dele?</p>`, fig: "",
+          return { enun: R`<p>Uma conta desliza sem atrito num aro vertical de raio ${F.nt(Rr)} m que gira a $\omega = ${F.n(w)}$ rad/s em torno do diâmetro vertical. Onde fica o equilíbrio estável e com que frequência a conta oscila em volta dele?</p>`, fig: "",
             passos: [
               R`<p>$\omega_c = \sqrt{g/R} = ${F.n(wc, 2)}$ rad/s. Equação (veja a seção do aro): $\ddot\theta = \sin\theta\,(\omega^2\cos\theta - g/R)$.</p>`,
               acima ? R`<p>$\omega &gt; \omega_c$: o fundo fica instável. Equilíbrio em $\cos\theta^* = \frac{g}{\omega^2R} = ${F.n(g / (w * w * Rr), 3)}$, ou seja, $\theta^* \approx ${F.n((th * 180) / Math.PI, 1)}°$.</p>` : R`<p>$\omega &lt; \omega_c$: o único equilíbrio estável é o fundo, $\theta = 0$.</p>`,

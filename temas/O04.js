@@ -14,7 +14,7 @@ F.registrar("O04", {
           return { enun: R`<p>Uma ambulância com sirene de ${f} Hz passa por você a ${vs} m/s. Que frequências você ouve quando ela chega e quando ela vai embora? (som a 343 m/s)</p>`, fig: "",
             passos: [R`<p>Fonte chegando: as frentes ficam amontoadas na frente, $\lambda' = (v - v_s)/f$, e $f' = f\frac{v}{v - v_s} = ${f}\cdot\frac{343}{${343 - vs}} \approx ${F.n((f * v) / (v - vs), 1)}$ Hz.</p>`,
               R`<p>Indo embora: $f' = f\frac{v}{v + v_s} \approx ${F.n((f * v) / (v + vs), 1)}$ Hz.</p>`,
-              R`<p>O "salto" na passagem é de ${F.n((f * v) / (v - vs) - (f * v) / (v + vs), 0)} Hz, cerca de ${F.n(12 * Math.log2((v + vs) / (v - vs)), 1)} semitons: dá para ouvir a nota cair.</p>`] };
+              R`<p>O "salto" na passagem é de ${F.nt((f * v) / (v - vs) - (f * v) / (v + vs), 0)} Hz, cerca de ${F.nt(12 * Math.log2((v + vs) / (v - vs)), 1)} semitons: dá para ouvir a nota cair.</p>`] };
         } },
         { nome: "Nível sonoro", gerar: (p) => {
           const b = p ? 80 : F.escolha([60, 70, 80, 90, 100]), r1 = p ? 10 : F.escolha([2, 5, 10]), r2 = p ? 100 : F.escolha([20, 50, 100]);

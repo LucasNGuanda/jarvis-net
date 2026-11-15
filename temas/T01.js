@@ -25,7 +25,7 @@ F.registrar("T01", {
         { nome: "Fácil: o boletim do tempo em Nova York", gerar: (p) => {
           const f = p ? 86 : F.escolha([14, 50, 86, 104]), c = (f - 32) / 1.8;
           return { enun: R`<p>Um site americano diz que amanhã fará ${f} °F em Nova York. Quanto é isso em Celsius e em kelvin?</p>`, fig: dois((c + 30) / 80, `${f} °F`, (c + 30) / 80, "? °C"),
-            passos: [R`<p>(i) Entre o gelo e o vapor há 100 divisões em Celsius (0 a 100) e 180 em Fahrenheit (32 a 212). Regra de três: $\frac{C - 0}{100} = \frac{F - 32}{180}$.</p>`, R`<p>(ii) $C = \frac{${f} - 32}{1{,}8} = \frac{${f - 32}}{1{,}8} \approx ${F.n(c, 3)}$ °C.</p>`, R`<p>(iii) $T = C + 273{,}15 \approx ${F.n(c + 273.15, 3)}$ K. Conferência rápida: 1 °C a mais vale 1,8 °F a mais, então ${f} °F está ${F.n(f - 32)} °F acima do gelo, isto é, ${F.nt(c, 3)} °C.</p>`] };
+            passos: [R`<p>(i) Entre o gelo e o vapor há 100 divisões em Celsius (0 a 100) e 180 em Fahrenheit (32 a 212). Regra de três: $\frac{C - 0}{100} = \frac{F - 32}{180}$.</p>`, R`<p>(ii) $C = \frac{${f} - 32}{1{,}8} = \frac{${f - 32}}{1{,}8} \approx ${F.n(c, 3)}$ °C.</p>`, R`<p>(iii) $T = C + 273{,}15 \approx ${F.n(c + 273.15, 3)}$ K. Conferência rápida: 1 °C a mais vale 1,8 °F a mais, então ${f} °F está ${F.nt(f - 32)} °F acima do gelo, isto é, ${F.nt(c, 3)} °C.</p>`] };
         } },
         { nome: "Médio: a escala do laboratório", gerar: (p) => {
           const xg = p ? 20 : F.escolha([-10, 10, 20, 40]), xv = p ? 220 : F.escolha([140, 220, 260]), c = p ? 50 : F.escolha([30, 50, 70]), x = xg + ((xv - xg) * c) / 100;

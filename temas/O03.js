@@ -13,13 +13,13 @@ F.registrar("O03", {
         { nome: "Corda de instrumento", gerar: (p) => {
           const L = p ? 0.65 : F.escolha([0.33, 0.65, 1.0]), f1 = p ? 110 : F.escolha([82.4, 110, 196, 329.6]), mu = p ? 6 : F.escolha([2, 4, 6]);
           const v = 2 * L * f1, T = (mu / 1000) * v * v;
-          return { enun: R`<p>Uma corda de ${F.n(L)} m e densidade ${mu} g/m deve vibrar com fundamental de ${F.n(f1)} Hz. Qual a velocidade das ondas, a tração necessária e os 3 primeiros harmônicos?</p>`, fig: "",
-            passos: [R`<p>Fundamental da corda presa: $\lambda_1 = 2L$, então $v = 2Lf_1 = ${F.n(v, 1)}$ m/s.</p>`, R`<p>$T = \mu v^2 = ${F.n(mu / 1000)}\cdot${F.n(v, 1)}^2 \approx ${F.n(T, 1)}$ N.</p>`, R`<p>Harmônicos: $f_n = nf_1$: ${F.n(f1, 1)}, ${F.n(2 * f1, 1)} e ${F.n(3 * f1, 1)} Hz. Todos juntos dão o "timbre" da nota.</p>`] };
+          return { enun: R`<p>Uma corda de ${F.nt(L)} m e densidade ${mu} g/m deve vibrar com fundamental de ${F.nt(f1)} Hz. Qual a velocidade das ondas, a tração necessária e os 3 primeiros harmônicos?</p>`, fig: "",
+            passos: [R`<p>Fundamental da corda presa: $\lambda_1 = 2L$, então $v = 2Lf_1 = ${F.n(v, 1)}$ m/s.</p>`, R`<p>$T = \mu v^2 = ${F.n(mu / 1000)}\cdot${F.n(v, 1)}^2 \approx ${F.n(T, 1)}$ N.</p>`, R`<p>Harmônicos: $f_n = nf_1$: ${F.nt(f1, 1)}, ${F.nt(2 * f1, 1)} e ${F.nt(3 * f1, 1)} Hz. Todos juntos dão o "timbre" da nota.</p>`] };
         } },
         { nome: "Tubos: aberto × fechado", gerar: (p) => {
           const L = p ? 0.6 : F.escolha([0.3, 0.6, 1.2]), v = 343;
-          return { enun: R`<p>Um tubo de ${F.n(L)} m. Quais os 3 primeiros harmônicos se ele for aberto nas duas pontas? E se uma ponta for fechada? (som a 343 m/s)</p>`, fig: "",
-            passos: [R`<p>Aberto–aberto: ventres nas duas pontas, $\lambda_n = \frac{2L}{n}$, $f_n = \frac{nv}{2L}$: ${[1, 2, 3].map((n) => F.n((n * v) / (2 * L), 1)).join("; ")} Hz.</p>`, R`<p>Fechado–aberto: nó na ponta fechada e ventre na aberta, $\lambda = \frac{4L}{m}$ com $m$ <b>ímpar</b>: $f = \frac{mv}{4L}$ = ${[1, 3, 5].map((m) => F.n((m * v) / (4 * L), 1)).join("; ")} Hz.</p>`, R`<p>O fechado soa uma oitava abaixo e sem os harmônicos pares: um som "oco" (o clarinete se comporta assim; a flauta, como tubo aberto).</p>`] };
+          return { enun: R`<p>Um tubo de ${F.nt(L)} m. Quais os 3 primeiros harmônicos se ele for aberto nas duas pontas? E se uma ponta for fechada? (som a 343 m/s)</p>`, fig: "",
+            passos: [R`<p>Aberto–aberto: ventres nas duas pontas, $\lambda_n = \frac{2L}{n}$, $f_n = \frac{nv}{2L}$: ${[1, 2, 3].map((n) => F.nt((n * v) / (2 * L), 1)).join("; ")} Hz.</p>`, R`<p>Fechado–aberto: nó na ponta fechada e ventre na aberta, $\lambda = \frac{4L}{m}$ com $m$ <b>ímpar</b>: $f = \frac{mv}{4L}$ = ${[1, 3, 5].map((m) => F.nt((m * v) / (4 * L), 1)).join("; ")} Hz.</p>`, R`<p>O fechado soa uma oitava abaixo e sem os harmônicos pares: um som "oco" (o clarinete se comporta assim; a flauta, como tubo aberto).</p>`] };
         } },
       ],
     });

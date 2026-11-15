@@ -11,7 +11,7 @@ F.registrar("U06", {
       casos: [
         { nome: "Níveis e cor da luz", gerar: (p) => {
           const L = p ? 1 : F.escolha([0.5, 0.8, 1, 1.5, 2]), E1 = 0.376 / (L * L), n = p ? 2 : F.escolha([2, 3, 4]), dE = (n * n - 1) * E1;
-          return { enun: R`<p>Um elétron está preso num poço infinito de largura ${F.n(L)} nm (um modelo grosseiro de uma molécula ou de um "ponto quântico"). Ache $E_1$, $E_${n}$ e o comprimento de onda do fóton emitido na transição $${n}\to1$.</p>`, fig: "",
+          return { enun: R`<p>Um elétron está preso num poço infinito de largura ${F.nt(L)} nm (um modelo grosseiro de uma molécula ou de um "ponto quântico"). Ache $E_1$, $E_${n}$ e o comprimento de onda do fóton emitido na transição $${n}\to1$.</p>`, fig: "",
             passos: [
               R`<p>$E_n = \frac{n^2h^2}{8mL^2}$. Para o elétron, $\frac{h^2}{8m} = 0{,}376$ eV·nm². Então $E_1 = \frac{0{,}376}{${F.n(L * L, 2)}} \approx ${F.n(E1, 3)}$ eV.</p>`,
               R`<p>$E_${n} = ${n * n}E_1 \approx ${F.n(n * n * E1, 3)}$ eV; $\Delta E \approx ${F.n(dE, 3)}$ eV.</p>`,

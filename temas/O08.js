@@ -23,7 +23,7 @@ F.registrar("O08", {
         } },
         { nome: "Profundidade aparente", gerar: (p) => {
           const h = p ? 2 : F.escolha([1, 1.5, 2, 3]), n = p ? 1.33 : F.escolha([1.33, 1.5]);
-          return { enun: R`<p>Uma moeda está no fundo de ${n === 1.33 ? "uma piscina" : "um bloco de vidro"} com ${F.n(h)} m de profundidade. Olhando de cima, quase na vertical, a que profundidade ela parece estar?</p>`, fig: "",
+          return { enun: R`<p>Uma moeda está no fundo de ${n === 1.33 ? "uma piscina" : "um bloco de vidro"} com ${F.nt(h)} m de profundidade. Olhando de cima, quase na vertical, a que profundidade ela parece estar?</p>`, fig: "",
             passos: [
               R`<p>Raios que saem da moeda se afastam da normal ao sair para o ar. O olho prolonga esses raios para trás, e eles se cruzam mais perto da superfície.</p>`,
               R`<p>Para ângulos pequenos, $\operatorname{tg} \approx \operatorname{sen}$, e Snell dá $\frac{h_\text{ap}}{h} = \frac{n_\text{ar}}{n} = \frac{1}{${F.n(n)}}$.</p>`,

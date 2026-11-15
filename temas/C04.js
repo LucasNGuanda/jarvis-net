@@ -70,7 +70,7 @@ F.registrar("C04", {
         <h3>1. Energia potencial elétrica</h3>
         <p>Uma força é conservativa se o trabalho entre dois pontos não depende do caminho ${F.ret("A11")}. A força de Coulomb é central e só depende de $r$, então é conservativa. Definimos $\Delta U = -W_\text{campo}$.</p>
         ${F.demo("energia de duas cargas", R`<p>(i) Trazendo $q_2$ do infinito até a distância $r$ de $q_1$ por um caminho radial, o trabalho do campo é $W = \int_\infty^r \frac{kq_1q_2}{r'^2}\,dr' = kq_1q_2\left[-\frac{1}{r'}\right]_\infty^r = -\frac{kq_1q_2}{r}$ (negativo se as duas forem positivas: o campo freia).</p><p>(ii) $U(r) - U(\infty) = -W$ e escolhemos $U(\infty) = 0$:</p>${F.formula(R`U = \frac{kq_1q_2}{r}`)}`)}
-        <p>Para muitas cargas: soma sobre todos os pares, $U = \sum_{i<j}\frac{kq_iq_j}{r_{ij}}$.</p>
+        <p>Para muitas cargas: soma sobre todos os pares, $U = \sum_{i \lt j}\frac{kq_iq_j}{r_{ij}}$.</p>
         <h3>2. Potencial</h3>
         ${F.formula(R`V = \frac{U}{q_0},\qquad \Delta V = V_B - V_A = -\int_A^B\vec E\cdot d\vec\ell,\qquad [V] = \text{J/C} = \text{V}`, "Potencial elétrico")}
         <p>Carga pontual: $V = kq/r$. Muitas cargas: $V = \sum kq_i/r_i$, uma soma de <b>escalares</b> (sem componentes!). Distribuição contínua: $V = \int k\,dq/r$.</p>

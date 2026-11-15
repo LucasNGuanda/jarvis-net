@@ -21,7 +21,7 @@ F.registrar("C16", {
         } },
         { nome: "Stefan–Boltzmann", gerar: (p) => {
           const T1 = p ? 5772 : F.escolha([3000, 5772, 10000]), f = p ? 2 : F.escolha([2, 3, 0.5]);
-          return { enun: R`<p>Uma estrela tem superfície a ${T1} K. Se a temperatura fosse multiplicada por ${F.n(f)} (com o mesmo raio), por quanto se multiplicaria a potência irradiada?</p>`, fig: "",
+          return { enun: R`<p>Uma estrela tem superfície a ${T1} K. Se a temperatura fosse multiplicada por ${F.nt(f)} (com o mesmo raio), por quanto se multiplicaria a potência irradiada?</p>`, fig: "",
             passos: [
               R`<p>Stefan–Boltzmann: $P = \sigma AT^4$, com $\sigma = 5{,}67\times10^{-8}$ W/(m²·K⁴).</p>`,
               R`<p>Com a mesma área: $\frac{P'}{P} = \left(\frac{T'}{T}\right)^4 = ${F.n(f)}^4 = ${F.n(f ** 4, 4)}$.</p>`,

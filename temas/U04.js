@@ -22,7 +22,7 @@ F.registrar("U04", {
           return { enun: R`<p>Uma partícula livre de ${m} kg vai de $x = 0$ a $x = ${L}$ m em ${T} s. Compare a ação do movimento uniforme com a de um caminho "inventado": parada na metade do tempo e depois o dobro da velocidade.</p>`, fig: "",
             passos: [
               R`<p>Sem potencial, $L = T$ (cinética). Uniforme: $v = ${F.n(L / T)}$ m/s, $S = \frac12m v^2\cdot T = ${F.n(S1)}$ J·s.</p>`,
-              R`<p>Inventado: parada ($S = 0$) por ${F.n(T / 2)} s e depois $v = ${F.n((2 * L) / T)}$ m/s por ${F.n(T / 2)} s: $S = \frac12\cdot${m}\cdot${F.n((2 * L) / T)}^2\cdot${F.n(T / 2)} = ${F.n(S2)}$ J·s.</p>`,
+              R`<p>Inventado: parada ($S = 0$) por ${F.nt(T / 2)} s e depois $v = ${F.n((2 * L) / T)}$ m/s por ${F.nt(T / 2)} s: $S = \frac12\cdot${m}\cdot${F.n((2 * L) / T)}^2\cdot${F.n(T / 2)} = ${F.n(S2)}$ J·s.</p>`,
               R`<p>O dobro. Em geral, $\int v^2\,dt$ com $\int v\,dt$ fixo é mínimo com $v$ constante (desigualdade de Cauchy–Schwarz): a natureza escolheu o movimento uniforme, que é a 1ª lei de Newton.</p>`,
             ] };
         } },

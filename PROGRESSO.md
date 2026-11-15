@@ -1,6 +1,6 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado final (15/11/2026, β 4.6, fim do chat; tudo no `main`, aprovado pelo Lucas)
+## Estado final (15/11/2026, β 4.7, fim do chat; tudo no `main`, aprovado pelo Lucas)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md`. Aqui fica o estado do trabalho. Números contados automaticamente
 abrindo o conteúdo de cada tema (script de contagem com Playwright), não de memória.
 
@@ -118,9 +118,7 @@ tgeral, tfunc, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE, thome,
   - O padrão pede ~10 páginas nos temas grandes. O Experimental tem ~3 a 4 páginas por tema; os módulos antigos de 7 exercícios também são mais curtos.
   - Os temas antigos não têm todas as caixas (Pense como físico, Pegadinha, Nível olimpíada, Ponte para a universidade) nem 3 exemplos com figura em todos os casos.
 - [ ] **Simulados:** S00, S01, S03 e S04 só têm a página de entrada; X01 e os simulados não têm chefão.
-- [ ] **Defeitos conhecidos, esperando o Lucas:**
-  - a simulação do N02 tem uma contagem que falha às vezes no tfisON, porque começa fora do regime permanente; a correção mexe na física e precisa de autorização;
-  - números com `{,}` vazando no texto comum do CI02, CII03, TE01 e TE04.
+- [x] Defeitos conhecidos: os dois foram corrigidos na β 4.7 (simulação do N02 e os `{,}` vazando), com autorização do Lucas. Ver β 4.7 no histórico.
 
 **Tabela tema por tema** (só os temas com alguma dívida; meta de 15 exercícios; Experimentos e Simulados ficam fora porque têm formato próprio):
 
@@ -655,6 +653,11 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - A figura central "buraco negro" (só do ADM) tem duas formas: a normal é o de arame da β 3.9 (nas cores do tema, como as outras figuras; com o esmeralda, verde); com o título dourado, o realista da animação. Ligar ou tirar o dourado faz uma transição (1,25 s): o de agora gira e encolhe até sumir, um clarão macio com anel se abre e o outro nasce do centro girando, passa um pouco do tamanho e assenta. Vale também para a miniatura do painel. Com movimento reduzido, troca sem animação.
   - Animação do ADM: o realista desce, toma o lugar da figura e explode; se o título não está dourado, logo depois da explosão ele faz a transição e fica o de arame.
   - Testes: `tests/tacesso.js` confere o realista com o dourado, a troca animada ao tirar, o de arame sem o dourado, a volta ao pôr de novo e o de arame no fim da animação do ADM. Captura: `tests/capturas/buraco-troca-quadros.png`.
+  - Regressão: em andamento (atualizo aqui quando terminar).
+- **β 4.7** — **As duas pendências antigas, autorizadas pelo Lucas** (15/11/2026, fim do chat).
+  - **N02 (bocal):** o erro era que as bolinhas começavam espalhadas por igual no espaço; no regime permanente a densidade tem que ser ∝ 1/v (fluxo n·v igual em toda seção), e como todas levam o mesmo tempo T para dar a volta, o erro nunca se desfazia: as duas janelas só concordavam na média de um ciclo inteiro. Correção: as bolinhas ficam igualmente espaçadas no tempo de percurso τ(x) = ∫dx/v (tabela com a regra do trapézio e busca binária) e, quando D₁ ou D₂ mudam, cada uma vai para a mesma fração de τ no perfil novo. Conferido em Python (mesmo modelo do JS): antes, janelas de 2 s discordavam até 69% (ex.: 38,5 × 12 bolinhas/s); depois, no máximo 2% (20 × 20,5), com média 20,13 para o fluxo teórico N/T = 20,15; remapeando depois de mudar D₁ = 3 e D₂ = 0,8, continua em 2%. Continuidade intacta: v₂ = 15,98 m/s na janela para 16 esperado (D₁ = 2, D₂ = 0,5, v₁ = 1). No navegador: 12 leituras seguidas, pior diferença 2%; com v₁ = 1,6 o fluxo sobe para 32 bolinhas/s (1,6 × 20). O tfisON agora exige diferença ≤ 10% (antes 25%).
+  - **`{,}` vazando:** a causa era `F.n()` (formato de dentro das fórmulas) usado em texto comum, quase sempre nas variações sorteadas dos exercícios. Varri o projeto inteiro de dois jeitos: o tchaves em todos os 152 temas (todas as variações) e uma varredura de todas as páginas montadas (com laboratórios) procurando `{,}`, `$` ou comando do TeX soltos. Eram 32 temas com `{,}`, não 4: A04, A07, A09, A12, A16, C16, C17b, C18, C19, C19b, C20, C21, N02, N03, N04, N06, O02, O03, O04, O05, O07, O08, O10b, T01, U01, U02, U03, U04, U06 e, na matemática, CII03, TE01 e TE04. Corrigidos com um corretor que lê cada modelo de texto e sabe se está dentro ou fora de `$…$` (modelos aninhados herdam o estado; quando a própria expressão põe o `$` em volta, não mexe): 65 trocas `F.n` → `F.nt`, todas revisadas uma a uma. Mais dois casos de fórmula quebrada do mesmo tipo: CI02 (o "R$ 1" do dinheiro abria uma fórmula; virou "1 real") e C04 (`\sum_{i<j}`, em que o navegador lia `<j` como tag; virou `i \lt j`). Depois: tchaves 152 de 152 ok e a varredura sem nenhum caso.
+  - Índice da busca regenerado (34 temas mudaram).
   - Regressão: em andamento (atualizo aqui quando terminar).
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.

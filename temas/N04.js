@@ -12,7 +12,7 @@ F.registrar("N04", {
         { nome: "Escoamento de Couette", gerar: (p) => {
           const L = [["água", 1e-3], ["óleo de motor", 0.1], ["mel", 10]], [nome, mu] = p ? L[1] : F.escolha(L);
           const h = p ? 1 : F.escolha([0.5, 1, 2]), U = p ? 1 : F.escolha([0.5, 1, 2]), A = 0.01, tau = (mu * U) / (h / 1000);
-          return { enun: R`<p>Uma placa de 100 cm² desliza a ${F.n(U)} m/s sobre uma camada de ${nome} ($\mu = ${F.n(mu, 4)}$ Pa·s) de ${F.n(h)} mm, apoiada sobre uma placa parada. Qual a força para manter a placa andando?</p>`, fig: "",
+          return { enun: R`<p>Uma placa de 100 cm² desliza a ${F.nt(U)} m/s sobre uma camada de ${nome} ($\mu = ${F.n(mu, 4)}$ Pa·s) de ${F.nt(h)} mm, apoiada sobre uma placa parada. Qual a força para manter a placa andando?</p>`, fig: "",
             passos: [R`<p>O fluido gruda nas duas placas (condição de não deslizamento) e o perfil de velocidade é linear: $u(y) = U\frac yh$, com $\frac{du}{dy} = \frac Uh$.</p>`, R`<p>Lei de Newton da viscosidade: $\tau = \mu\frac{du}{dy} = ${F.n(mu, 4)}\cdot\frac{${F.n(U)}}{${F.n(h / 1000)}} \approx ${F.n(tau, 3)}$ Pa.</p>`, R`<p>$F = \tau A \approx ${F.n(tau * A, 4)}$ N. A potência dissipada (vira calor) é $FU \approx ${F.n(tau * A * U, 4)}$ W.</p>`] };
         } },
         { nome: "Vetor tensão num plano", gerar: (p) => {

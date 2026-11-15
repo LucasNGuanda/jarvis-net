@@ -23,11 +23,11 @@ F.registrar("matematica/TE01", {
           let lo = 1e-6, hi = 2 * Math.PI - 1e-6; const f = (T) => (T - Math.sin(T)) / (1 - Math.cos(T)) - D / H;
           for (let i = 0; i < 100; i++) { const m = (lo + hi) / 2; if (f(m) > 0) hi = m; else lo = m; }
           const th = (lo + hi) / 2, Rc = H / (1 - Math.cos(th)), Tc = th * Math.sqrt(Rc / g), L = Math.hypot(D, H), Tr = L * Math.sqrt(2 / (g * H));
-          return { enun: R`<p>Uma conta desliza sem atrito, a partir do repouso, de $A = (0, 0)$ até $B$, ${F.n(D)} m para o lado e ${F.n(H)} m abaixo. Compare o tempo pela reta e pela braquistócrona.</p>`, fig: "",
+          return { enun: R`<p>Uma conta desliza sem atrito, a partir do repouso, de $A = (0, 0)$ até $B$, ${F.nt(D)} m para o lado e ${F.nt(H)} m abaixo. Compare o tempo pela reta e pela braquistócrona.</p>`, fig: "",
             passos: [
               R`<p>Reta: comprimento $L = ${F.n(L, 3)}$ m, aceleração constante $g\frac{H}{L}$, então $T = L\sqrt{\frac{2}{gH}} \approx ${F.n(Tr, 3)}$ s.</p>`,
               R`<p>Cicloide $x = R(\theta - \sin\theta)$, $y = R(1 - \cos\theta)$ passando por $B$: $\frac{\theta - \sin\theta}{1 - \cos\theta} = \frac{D}{H} = ${F.n(D / H, 3)}$, resolvido numericamente: $\theta_B \approx ${F.n(th, 3)}$ rad e $R \approx ${F.n(Rc, 3)}$ m.</p>`,
-              R`<p>Tempo na cicloide: $T = \theta_B\sqrt{R/g} \approx ${F.n(Tc, 3)}$ s, ${F.n((100 * (Tr - Tc)) / Tr, 0)}% mais rápido que a reta.${th > Math.PI ? " Aqui $\\theta_B > \\pi$: a curva passa abaixo de B e sobe no final, e ainda assim ganha." : ""}</p>`,
+              R`<p>Tempo na cicloide: $T = \theta_B\sqrt{R/g} \approx ${F.n(Tc, 3)}$ s, ${F.nt((100 * (Tr - Tc)) / Tr, 0)}% mais rápido que a reta.${th > Math.PI ? " Aqui $\\theta_B > \\pi$: a curva passa abaixo de B e sobe no final, e ainda assim ganha." : ""}</p>`,
             ] };
         } },
       ],

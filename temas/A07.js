@@ -20,7 +20,7 @@ F.registrar("A07", {
           const rpm = p ? 600 : F.escolha([300, 600, 900, 1200]), r = p ? 0.2 : F.escolha([0.1, 0.2, 0.25]), f = rpm / 60, w = 2 * Math.PI * f, v = w * r;
           return { enun: R`<p>O prato de um esmeril gira a ${rpm} rpm e tem raio de ${F.nt(r)} m. Ache a frequência em Hz, o período, a velocidade angular, a rapidez de um ponto da borda e a aceleração centrípeta dele.</p>`,
             fig: fig(disco(280, 80, 62) + D.seta(342, 80, 342, 30, "var(--mA)") + D.txt(352, 40, "v", "txm", "start") + D.txt(280, 158, `R = ${F.t(r, 2)} m`, "tx2")),
-            passos: [R`<p>(i) $f = \frac{${rpm}}{60} = ${F.n(f)}$ Hz (voltas por segundo); $T = \frac1f = ${F.n(1 / f, 4)}$ s.</p>`, R`<p>(ii) $\omega = 2\pi f \approx ${F.n(w, 3)}$ rad/s; $v = \omega R \approx ${F.n(v, 3)}$ m/s.</p>`, R`<p>(iii) $a_c = \omega^2R = \frac{v^2}{R} \approx ${F.n(w * w * r, 4)}$ m/s², umas ${F.n((w * w * r) / 9.8, 0)} vezes $g$: por isso a pedra de um esmeril precisa ser muito resistente.</p>`] };
+            passos: [R`<p>(i) $f = \frac{${rpm}}{60} = ${F.n(f)}$ Hz (voltas por segundo); $T = \frac1f = ${F.n(1 / f, 4)}$ s.</p>`, R`<p>(ii) $\omega = 2\pi f \approx ${F.n(w, 3)}$ rad/s; $v = \omega R \approx ${F.n(v, 3)}$ m/s.</p>`, R`<p>(iii) $a_c = \omega^2R = \frac{v^2}{R} \approx ${F.n(w * w * r, 4)}$ m/s², umas ${F.nt((w * w * r) / 9.8, 0)} vezes $g$: por isso a pedra de um esmeril precisa ser muito resistente.</p>`] };
         } },
         { nome: "Médio: a bicicleta", gerar: (p) => {
           const coroa = p ? 20 : F.escolha([18, 20, 24]), catraca = p ? 5 : F.escolha([4, 5, 6]), roda = p ? 35 : F.escolha([30, 35]), fp = p ? 1 : F.escolha([0.8, 1, 1.5]);

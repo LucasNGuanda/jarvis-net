@@ -10,16 +10,16 @@ F.registrar("C18", {
       casos: [
         { nome: "Dilatação do tempo", gerar: (p) => {
           const b = p ? 0.8 : F.escolha([0.6, 0.8, 0.9, 0.99]), t0 = p ? 2.2 : F.escolha([1, 2.2, 10]), g = 1 / Math.sqrt(1 - b * b);
-          return { enun: R`<p>Uma partícula vive ${F.n(t0)} μs no seu próprio referencial e viaja a ${F.n(b)}c. Quanto tempo ela vive, medido no laboratório? Que distância percorre?</p>`, fig: "",
+          return { enun: R`<p>Uma partícula vive ${F.nt(t0)} μs no seu próprio referencial e viaja a ${F.nt(b)}c. Quanto tempo ela vive, medido no laboratório? Que distância percorre?</p>`, fig: "",
             passos: [
               R`<p>$\gamma = \frac{1}{\sqrt{1 - ${F.n(b)}^2}} = ${F.n(g, 3)}$.</p>`,
               R`<p>O tempo próprio (no relógio que viaja junto) é o menor: $\Delta t = \gamma\Delta t_0 = ${F.n(g, 3)}\times${F.n(t0)} = ${F.n(g * t0, 2)}$ μs.</p>`,
-              R`<p>Distância: $v\Delta t = ${F.n(b)}\cdot3\times10^8\cdot${F.n(g * t0, 2)}\times10^{-6} \approx ${F.n(b * 3e8 * g * t0 * 1e-6, 0)}$ m. Sem relatividade, você calcularia só ${F.n(b * 3e8 * t0 * 1e-6, 0)} m.</p>`,
+              R`<p>Distância: $v\Delta t = ${F.n(b)}\cdot3\times10^8\cdot${F.n(g * t0, 2)}\times10^{-6} \approx ${F.n(b * 3e8 * g * t0 * 1e-6, 0)}$ m. Sem relatividade, você calcularia só ${F.nt(b * 3e8 * t0 * 1e-6, 0)} m.</p>`,
             ] };
         } },
         { nome: "Soma de velocidades", gerar: (p) => {
           const u = p ? 0.6 : F.escolha([0.5, 0.6, 0.8, 0.9]), v = p ? 0.6 : F.escolha([0.5, 0.6, 0.7, 0.9]), w = (u + v) / (1 + u * v);
-          return { enun: R`<p>Uma nave passa pela Terra a ${F.n(u)}c e dispara para a frente um míssil a ${F.n(v)}c (em relação à nave). Qual a velocidade do míssil medida da Terra?</p>`, fig: "",
+          return { enun: R`<p>Uma nave passa pela Terra a ${F.nt(u)}c e dispara para a frente um míssil a ${F.nt(v)}c (em relação à nave). Qual a velocidade do míssil medida da Terra?</p>`, fig: "",
             passos: [
               R`<p>Galileu diria $${F.n(u)} + ${F.n(v)} = ${F.n(u + v)}c$${u + v > 1 ? ", mais rápido que a luz: impossível" : ""}.</p>`,
               R`<p>Einstein: $w = \frac{u + v}{1 + uv/c^2} = \frac{${F.n(u + v)}}{1 + ${F.n(u * v, 4)}} = ${F.n(w, 4)}c$.</p>`,

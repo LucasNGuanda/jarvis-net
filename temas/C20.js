@@ -11,11 +11,11 @@ F.registrar("C20", {
         { nome: "Cor de um LED", gerar: (p) => {
           const casos = [["vermelho (AlGaAs)", 1.9], ["amarelo (GaAsP)", 2.1], ["verde (InGaN)", 2.3], ["azul (InGaN)", 2.7]];
           const [n, Eg] = p ? casos[0] : F.escolha(casos);
-          return { enun: R`<p>Um LED ${n} tem um gap de energia de ${F.n(Eg)} eV. Qual o comprimento de onda da luz? Qual a tensão mínima para ele acender?</p>`, fig: "",
+          return { enun: R`<p>Um LED ${n} tem um gap de energia de ${F.nt(Eg)} eV. Qual o comprimento de onda da luz? Qual a tensão mínima para ele acender?</p>`, fig: "",
             passos: [
               R`<p>Num LED, um elétron da banda de condução cai numa lacuna da de valência e emite um fóton com energia ≈ gap: $E = E_g = ${F.n(Eg)}$ eV.</p>`,
               R`<p>$\lambda = \frac{1240}{${F.n(Eg)}} \approx ${F.n(1240 / Eg, 0)}$ nm.</p>`,
-              R`<p>Para empurrar elétrons por cima do gap, a tensão precisa ser de pelo menos uns ${F.n(Eg)} V: é a "tensão do LED" que aparece nos circuitos ${F.ret("C07")} (o vermelho ~2 V, o azul ~3 V). O LED azul eficiente só saiu nos anos 1990 (Nobel de 2014), e com ele vieram o LED branco e as telas modernas.</p>`,
+              R`<p>Para empurrar elétrons por cima do gap, a tensão precisa ser de pelo menos uns ${F.nt(Eg)} V: é a "tensão do LED" que aparece nos circuitos ${F.ret("C07")} (o vermelho ~2 V, o azul ~3 V). O LED azul eficiente só saiu nos anos 1990 (Nobel de 2014), e com ele vieram o LED branco e as telas modernas.</p>`,
             ] };
         } },
         { nome: "Gap e fotodetector", gerar: (p) => {

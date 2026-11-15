@@ -12,11 +12,11 @@ F.registrar("O10b", {
         { nome: "Young: espaço entre franjas", gerar: (p) => {
           const lam = p ? 600 : F.escolha([450, 500, 550, 600, 650]), d = p ? 0.25 : F.escolha([0.1, 0.2, 0.25, 0.5]), D = p ? 2 : F.escolha([1, 1.5, 2, 3]);
           const dy = (lam * 1e-9 * D) / (d * 1e-3);
-          return { enun: R`<p>Luz de ${lam} nm passa por duas fendas separadas por $d = ${F.n(d)}$ mm. Qual o espaço entre franjas claras numa tela a ${F.n(D)} m?</p>`, fig: "",
+          return { enun: R`<p>Luz de ${lam} nm passa por duas fendas separadas por $d = ${F.n(d)}$ mm. Qual o espaço entre franjas claras numa tela a ${F.nt(D)} m?</p>`, fig: "",
             passos: [
               R`<p>Franja clara de ordem $m$: diferença de caminho $d\operatorname{sen}\theta = m\lambda$. Para ângulos pequenos, $\operatorname{sen}\theta \approx \operatorname{tg}\theta = \frac yD$, então $y_m = \frac{m\lambda D}{d}$.</p>`,
               R`<p>Entre duas vizinhas: $\Delta y = \frac{\lambda D}{d} = \frac{${lam}\times10^{-9}\cdot${F.n(D)}}{${F.n(d)}\times10^{-3}} = ${F.n(dy * 1000, 2)}$ mm.</p>`,
-              R`<p>Leitura: $\lambda$ é minúsculo, mas $\frac Dd$ é enorme (${F.n(D / (d * 1e-3), 0)} vezes): a montagem "amplifica" o comprimento de onda até milímetros. Foi assim que Young mediu $\lambda$ da luz em 1801.</p>`,
+              R`<p>Leitura: $\lambda$ é minúsculo, mas $\frac Dd$ é enorme (${F.nt(D / (d * 1e-3), 0)} vezes): a montagem "amplifica" o comprimento de onda até milímetros. Foi assim que Young mediu $\lambda$ da luz em 1801.</p>`,
             ] };
         } },
         { nome: "Filme fino (antirreflexo)", gerar: (p) => {
