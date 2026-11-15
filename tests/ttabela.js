@@ -44,6 +44,11 @@ const res = []; const ok = (c, m) => res.push([!!c, m]);
   const ordemCfg = await p.evaluate(() => { const l = [...document.querySelectorAll('#painel-config .cfg-linha')].map(x => x.textContent.trim().slice(0, 16)); return l.join(' | '); });
   ok(/Calculadora 1.*Calculadora 2.*Tabela periódica/.test(ordemCfg), 'engrenagem: Tabela periódica abaixo das calculadoras → ' + ordemCfg);
 
+  // ----- movimento -----
+  const mov = await p.evaluate(() => { const g = getComputedStyle(document.querySelector('.tp-gaveta')), b = getComputedStyle(document.querySelector('.tp-barra')), c = getComputedStyle(document.querySelector('.tp-c')); return { g: g.transitionDuration, gp: g.transitionProperty, gt: g.transitionTimingFunction, b: b.transitionDuration, bt: b.transform, c: c.transitionProperty + ' ' + c.transitionDuration, vis: document.querySelector('.tp').classList.contains('tp-vis') }; });
+  ok(/0\.3s/.test(mov.g) && /transform/.test(mov.gp) && /cubic-bezier/.test(mov.gt), 'movimento: a tabela desliza em 0,3 s, com curva não linear → ' + mov.g + ' · ' + mov.gt.split('),')[0] + ')');
+  ok(mov.b === '0.28s' && mov.vis && (mov.bt === 'none' || /matrix\(1, 0, 0, 1, 0, 0\)/.test(mov.bt)), 'movimento: a barra entra subindo (0,28 s) e termina no lugar → ' + mov.b + ' ' + mov.bt);
+  ok(/background-color/.test(mov.c) && /0\.25s/.test(mov.c), 'movimento: as células transicionam a cor de fundo em 0,25 s → ' + mov.c);
   // ----- abrir e fechar -----
   await p.click('.tp-barra'); await p.waitForTimeout(700);
   const ab = await p.evaluate(() => { const g = document.querySelector('.tp-gaveta').getBoundingClientRect(), cs = [...document.querySelectorAll('.tp-c')], r = cs.map(c => c.getBoundingClientRect()); return { aberta: document.querySelector('.tp').classList.contains('tp-aberta'), w: g.width, topo: g.top, n: cs.length, dentro: r.every(x => x.width > 20 && x.height > 20 && x.top >= g.top && x.bottom <= innerHeight - 30), rolagem: document.documentElement.scrollWidth > innerWidth }; });
@@ -62,15 +67,20 @@ const res = []; const ok = (c, m) => res.push([!!c, m]);
   await p.click('.tp-c[data-z="26"]'); let t = await dir();
   ok(/Fe/.test(t) && /ferro/i.test(t) && /número atômico/.test(t) && /configuração/.test(t) && /descoberta/.test(t) && /usos/.test(t) && /ponto de fusão/.test(t), '(2) ficha do ferro com os campos pedidos');
   await p.click('[data-modo=prop]'); await p.selectOption('.tp-ctl select', 'ae');
-  const calor = await p.evaluate(() => ({ leg: document.querySelector('.tp-leg').textContent, he: document.querySelector('.tp-c[data-z="2"]').classList.contains('semd'), cl: document.querySelector('.tp-c[data-z="17"]').style.background, ops: document.querySelectorAll('.tp-ctl option').length }));
+  const calor = await p.evaluate(() => ({ leg: document.querySelector('.tp-leg').textContent, he: document.querySelector('.tp-c[data-z="2"]').classList.contains('semd'), cl: document.querySelector('.tp-c[data-z="17"]').style.backgroundColor, ops: document.querySelectorAll('.tp-ctl option').length }));
   ok(calor.ops === 7 && /sem dado/.test(calor.leg) && calor.cl, '(1) mapa de calor: 7 propriedades, legenda com escala, cloro colorido → ' + calor.ops);
   ok(calor.he, '(1) afinidade eletrônica do hélio em branco ("sem dado"), não inventada');
+  // desempenho: 118 células mudando de cor ao mesmo tempo
+  const fps = await p.evaluate(() => new Promise((fim) => { let n = 0, t0 = performance.now(); const sel = document.querySelector('.tp-ctl select'), ops = ['pf', 'en', 'raio', 'dens']; let k = 0; const troca = setInterval(() => { sel.value = ops[k++ % 4]; sel.dispatchEvent(new Event('change')); }, 260); const q = (ts) => { n++; if (ts - t0 < 1300) requestAnimationFrame(q); else { clearInterval(troca); fim(Math.round((n * 1000) / (ts - t0))); } }; requestAnimationFrame(q); }));
+  ok(fps >= 40, 'desempenho: trocando de mapa de calor 5 vezes em 1,3 s, a página segue acima de 40 quadros por segundo → ' + fps + ' fps');
+  const meio = await p.evaluate(async () => { const sel = document.querySelector('.tp-ctl select'), c = document.querySelector('.tp-c[data-z="26"]'); sel.value = 'en'; sel.dispatchEvent(new Event('change')); await new Promise(r => setTimeout(r, 400)); const a = getComputedStyle(c).backgroundColor; sel.value = 'pf'; sel.dispatchEvent(new Event('change')); await new Promise(r => setTimeout(r, 110)); const m = getComputedStyle(c).backgroundColor; await new Promise(r => setTimeout(r, 400)); const z = getComputedStyle(c).backgroundColor; return { a, m, z }; });
+  ok(meio.a !== meio.z && meio.m !== meio.a && meio.m !== meio.z, 'movimento: no meio da troca de escala, a cor do ferro é intermediária (não pula) → ' + [meio.a, meio.m, meio.z].join(' → '));
   await p.click('[data-modo=fam]'); await p.click('[data-fam=hal]');
   const fam = await p.evaluate(() => [...document.querySelectorAll('.tp-c:not(.apag)')].map(c => c.dataset.z).join(','));
   ok(fam === '9,17,35,53,85,117', '(3) família dos halogênios destacada → ' + fam);
   const nf = await p.evaluate(() => document.querySelectorAll('[data-fam]').length); ok(nf === 10, '(3) dez famílias → ' + nf);
   await p.click('[data-modo=bloco]');
-  ok(await p.evaluate(() => { const c = (z) => document.querySelector('.tp-c[data-z="' + z + '"]').style.background; return c(11) !== c(17) && c(17) !== c(26) && c(26) !== c(60) && c(11) === c(20); }), '(4) blocos s, p, d, f com cores diferentes');
+  ok(await p.evaluate(() => { const c = (z) => document.querySelector('.tp-c[data-z="' + z + '"]').style.backgroundColor; return c(11) !== c(17) && c(17) !== c(26) && c(26) !== c(60) && c(11) === c(20); }), '(4) blocos s, p, d, f com cores diferentes');
   await p.click('[data-modo=ficha]'); await p.fill('.tp-topo input', 'ouro'); await p.waitForTimeout(200);
   const bs = await p.evaluate(() => ({ vis: [...document.querySelectorAll('.tp-c:not(.apag)')].map(c => c.dataset.z).join(','), dir: document.querySelector('.tp-dir h4').textContent }));
   ok(bs.vis === '79' && /Au/.test(bs.dir), '(5) busca por nome ("ouro") → ' + JSON.stringify(bs));
@@ -78,7 +88,7 @@ const res = []; const ok = (c, m) => res.push([!!c, m]);
   await p.fill('.tp-topo input', '92'); ok((await p.evaluate(() => document.querySelector('.tp-dir h4').textContent)).startsWith('U'), '(5) busca por Z');
   await p.fill('.tp-topo input', '');
   await p.click('[data-modo=temp]');
-  const est = async (K) => { await p.evaluate((k) => { const s = document.querySelector('.tp-ctl input[type=range]'); s.value = k; s.dispatchEvent(new Event('input')); }, K); return p.evaluate(() => { const c = (z) => document.querySelector('.tp-c[data-z="' + z + '"]').style.background; return [c(26), c(80), c(2)].join('|'); }); };
+  const est = async (K) => { await p.evaluate((k) => { const s = document.querySelector('.tp-ctl input[type=range]'); s.value = k; s.dispatchEvent(new Event('input')); }, K); return p.evaluate(() => { const c = (z) => document.querySelector('.tp-c[data-z="' + z + '"]').style.backgroundColor; return [c(26), c(80), c(2)].join('|'); }); };
   const t1 = await est(298), t2 = await est(6000), t0 = await est(0);
   ok(t1.split('|').length === 3 && new Set(t1.split('|')).size === 3 && new Set(t2.split('|')).size <= 2 && t0 !== t1, '(6) termômetro de 0 a 6000 K muda as cores (298 K: Fe, Hg e He diferentes)');
   ok(await p.evaluate(() => { const s = document.querySelector('.tp-ctl input[type=range]'); return s.min === '0' && s.max === '6000'; }), '(6) faixa de 0 a 6000 K');
@@ -127,6 +137,13 @@ const res = []; const ok = (c, m) => res.push([!!c, m]);
   await p.goto(RAIZ + '#/quimica'); await p.waitForTimeout(1000);
   await p.click('.hero2 h1 .tp-sw'); await p.waitForTimeout(400); ok(await p.evaluate(() => !document.querySelector('.tp').hidden && document.querySelector('.hero2 h1 .tp-sw').title === 'desativar tabela periódica'), 'ligar de novo pelo título');
   await p.click('.hero2 h1 .tp-sw'); await p.waitForTimeout(400); ok(await p.evaluate(() => document.querySelector('.tp').hidden && !document.body.classList.contains('tp-on')), 'desligar o interruptor esconde a barra');
+
+  // ----- quem desligou animações no sistema: troca instantânea -----
+  const r = await b.newPage({ viewport: { width: 1280, height: 900 } }); await require('./adm')(r); await r.emulateMedia({ reducedMotion: 'reduce' }); await r.goto(RAIZ + '#/quimica'); await r.waitForTimeout(1000);
+  await r.evaluate(() => { localStorage.removeItem('fisica:tabela'); }); await r.reload(); await r.waitForTimeout(1000); await r.click('.hero2 h1 .tp-sw'); await r.waitForTimeout(200); await r.click('.tp-barra'); await r.waitForTimeout(80);
+  const red = await r.evaluate(() => { const g = getComputedStyle(document.querySelector('.tp-gaveta')), bb = getComputedStyle(document.querySelector('.tp-barra')), c = getComputedStyle(document.querySelector('.tp-c')), d = document.querySelector('.tp-dir > *'); return { g: g.transitionDuration, b: bb.transitionDuration, c: c.transitionDuration, an: d ? getComputedStyle(d).animationName : '', topo: document.querySelector('.tp-gaveta').getBoundingClientRect().top < innerHeight - 200 }; });
+  ok(/^0s/.test(red.g) && red.b === '0s' && /^0s/.test(red.c) && red.an === 'none' && red.topo, 'reduzir movimento: sem transição e sem animação; a tabela já está aberta 80 ms depois do clique → ' + JSON.stringify(red));
+  await r.click('.hero2 h1 .tp-sw'); await r.waitForTimeout(60); ok(await r.evaluate(() => document.querySelector('.tp').hidden), 'reduzir movimento: desligar esconde na hora'); await r.close();
 
   // ----- visitante: nada -----
   const v = await b.newPage({ viewport: { width: 1280, height: 900 } }); await v.goto(RAIZ + '#/home'); await v.waitForTimeout(800);

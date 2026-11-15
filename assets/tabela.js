@@ -6,6 +6,9 @@
    Os DADOS dos elementos ficam em assets/tabela-dados.js (window.TABELA_DADOS), separados deste código: é lá que se corrige um valor.
    Valor ausente (null) aparece como "sem dado": nunca é inventado aqui. Nomes em português: SIM.ELEM (assets/sims/quimica/atomistica.js).
    Salvo em fisica:tabela (ligada?) e fisica:tabela-usada (já foi ligada alguma vez?); as configurações do site inteiro ficam no prefixo fisica:.
+   Movimento (β 5.3, ajuste pedido pelo Lucas): a barra entra subindo e sai descendo (0,28 s); a tabela sobe e desce deslizando (0,30 s), com a mesma
+   curva de aceleração das calculadoras; a ficha entra com um deslize curto (0,18 s) quando o assunto muda; as cores das 118 células transicionam (0,25 s,
+   só a cor de fundo e a opacidade). Com "reduzir movimento" ligado no sistema, tudo troca na hora.
    Tudo o que este arquivo põe na página (barra, gaveta, interruptores e estilo) é criado aqui: no index.html só há as duas linhas de <script>. */
 (function () {
   const T = (window.TABELA = {});
@@ -51,11 +54,12 @@
   const CSS = `
   .tp-sw{vertical-align:middle;margin-left:14px;transform:scale(.82);opacity:.75}.tp-sw:hover{opacity:1}
   body.tp-on{padding-bottom:34px}
-  .tp-barra{position:fixed;left:0;right:0;bottom:0;height:32px;z-index:52;display:flex;align-items:center;gap:12px;padding:0 16px;border:0;border-top:1px solid var(--line2);background:var(--card);color:var(--ink2);font:600 13px var(--f-text);cursor:pointer;width:100%;text-align:left}
+  .tp-barra{position:fixed;left:0;right:0;bottom:0;height:32px;z-index:52;display:flex;align-items:center;gap:12px;padding:0 16px;border:0;border-top:1px solid var(--line2);background:var(--card);color:var(--ink2);font:600 13px var(--f-text);cursor:pointer;width:100%;text-align:left;transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+  .tp-vis .tp-barra{transform:none}
   .tp-barra:hover{color:var(--ink);background:color-mix(in srgb,var(--mod) 8%,var(--card))}
   .tp-barra svg{flex:none}.tp-barra .tp-seta{margin-left:auto;font-size:11px;transition:transform .3s}.tp-aberta .tp-barra .tp-seta{transform:rotate(180deg)}
-  .tp-gaveta{position:fixed;left:0;right:0;bottom:32px;z-index:51;height:min(calc(100vh - 32px - 56px),720px);background:var(--bg);border-top:1px solid var(--line2);box-shadow:0 -10px 40px rgba(0,0,0,.45);transform:translateY(calc(100% + 40px));transition:transform .4s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;visibility:hidden}
-  .tp-aberta .tp-gaveta{transform:none;visibility:visible}
+  .tp-gaveta{position:fixed;left:0;right:0;bottom:32px;z-index:51;height:min(calc(100vh - 32px - 56px),720px);background:var(--bg);border-top:1px solid var(--line2);box-shadow:0 -10px 40px rgba(0,0,0,.45);transform:translateY(calc(100% + 40px));transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s linear .3s;display:flex;flex-direction:column;visibility:hidden;will-change:transform}
+  .tp-aberta .tp-gaveta{transform:none;visibility:visible;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s}
   .tp-topo{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
   .tp-topo b{font:700 15px var(--f-text);margin-right:6px}.tp-topo input[type=search]{width:190px;padding:5px 9px;border-radius:8px;border:1px solid var(--line2);background:var(--bg2);color:var(--ink);font:14px var(--f-text)}
   .tp-modos{display:flex;gap:5px;flex-wrap:wrap;flex:1}.tp-modos .bt{font-size:12.5px;padding:4px 9px}
@@ -65,7 +69,7 @@
   .tp-ctl input[type=range]{width:300px}.tp-ctl select{padding:4px 8px;border-radius:8px;border:1px solid var(--line2);background:var(--bg2);color:var(--ink);font:13px var(--f-text)}
   .tp-ctl .bt{font-size:12.5px;padding:4px 9px}
   .tp-grade{display:grid;grid-template-columns:repeat(18,1fr);grid-template-rows:repeat(7,1fr) .35fr repeat(2,1fr);gap:3px;flex:1;min-height:0}
-  .tp-c{position:relative;border:1px solid var(--line2);border-radius:5px;background:var(--bg2);color:var(--ink);cursor:pointer;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;min-width:0;min-height:0;overflow:hidden;font-family:var(--f-text);transition:opacity .2s,background .2s}
+  .tp-c{position:relative;border:1px solid var(--line2);border-radius:5px;background:var(--bg2);color:var(--ink);cursor:pointer;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;min-width:0;min-height:0;overflow:hidden;font-family:var(--f-text);transition:opacity .22s ease,background-color .25s ease}
   .tp-c:hover,.tp-c:focus-visible{outline:2px solid var(--mod);outline-offset:0;z-index:1}
   .tp-c small{position:absolute;left:3px;top:2px;font-size:9px;color:var(--ink3)}.tp-c b{font-size:15px;font-weight:700}.tp-c i{font-style:normal;font-size:8.5px;color:var(--ink2);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
   .tp-c .tp-m{position:absolute;right:2px;top:1px;font-size:9px}.tp-c.sel{outline:2px solid var(--warn);z-index:2}.tp-c.apag{opacity:.16}.tp-c.semd{background:repeating-linear-gradient(45deg,var(--bg2) 0 4px,var(--line) 4px 6px)}
@@ -77,9 +81,14 @@
   .tp-dir td.maior{color:var(--ok);font-weight:700}.tp-dir .tp-nota{color:var(--ink3);font-size:12px;margin-top:8px}
   .tp-leg{display:flex;align-items:center;gap:8px;font-size:12px}.tp-leg span.g{width:160px;height:10px;border-radius:5px;display:inline-block}.tp-leg span.q{width:12px;height:12px;border-radius:3px;display:inline-block;vertical-align:-2px;margin-right:4px}
   .tp-pau{font:13px var(--f-text)}.tp-pau span{display:inline-block;min-width:34px;margin:1px 3px 1px 0;padding:1px 4px;border-radius:5px;border:1px solid var(--line2);text-align:center;color:var(--ink3)}.tp-pau span.ch{color:var(--ink);font-weight:700}.tp-pau span.at{outline:2px solid var(--warn)}
-  @media print{.tp-barra,.tp-gaveta{display:none}}@media (prefers-reduced-motion:reduce){.tp-gaveta{transition:none}}`;
+  @keyframes tp-entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .tp-dir.tp-troca>*{animation:tp-entra .18s ease-out both}
+  @media print{.tp-barra,.tp-gaveta{display:none}}
+  @media (prefers-reduced-motion:reduce){.tp-gaveta,.tp-aberta .tp-gaveta,.tp-barra,.tp-c{transition:none!important}.tp-dir.tp-troca>*{animation:none!important}}`;
 
   /* ---------- estado da interface ---------- */
+  let ultimaChave = "", ligadaAgora = false;
+  const semMovimento = () => !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
   let raiz = null, modo = "ficha", sel = 1, cmp = [1, 8], prop = "en", fam = "alc", temp = 298, zfill = 26, ano = 1869, busca = "", timer = null;
   const MODOS = [["ficha", "ficha"], ["prop", "mapa de calor"], ["fam", "famílias"], ["bloco", "blocos"], ["temp", "termômetro"], ["conf", "preenchimento"], ["cmp", "comparar"], ["hist", "descoberta"], ["rad", "radioativos"], ["est", "★ OBQ e ITA"]];
   const q = (s) => raiz.querySelector(s);
@@ -144,11 +153,13 @@
       if (modo === "est") { if (est.has(z)) { marca = "★"; bg = "color-mix(in srgb,var(--warn) 40%,var(--bg2))"; } else apag = true; }
       if (modo === "ficha") { if (est.has(z)) marca = "★"; else if (e.meia) marca = "☢"; }
       if (achados.length) apag = !achados.includes(z);
-      b.style.background = semd || buraco ? "" : bg; b.classList.toggle("apag", apag && !buraco); b.classList.toggle("semd", semd); b.classList.toggle("buraco", buraco); b.classList.toggle("sel", z === sel && modo !== "cmp"); b.querySelector(".tp-m").textContent = marca; b.querySelector("i").textContent = rot; });
+      b.style.backgroundColor = semd || buraco ? "" : bg; b.classList.toggle("apag", apag && !buraco); b.classList.toggle("semd", semd); b.classList.toggle("buraco", buraco); b.classList.toggle("sel", z === sel && modo !== "cmp"); b.querySelector(".tp-m").textContent = marca; b.querySelector("i").textContent = rot; });
     const c = q(".tp-ctl");
     if (modo === "prop") { const p = PROP.find((x) => x[0] === prop), lg = c.querySelector(".tp-leg"); if (lg) lg.innerHTML = `${nf(min, p[3])} <span class="g" style="background:linear-gradient(90deg,${mistura(0)},${mistura(0.5)},${mistura(1)})"></span> ${nf(max, p[3])} ${p[2]} · <span class="q semd" style="background:repeating-linear-gradient(45deg,var(--bg2) 0 3px,var(--line2) 3px 5px)"></span>sem dado`; }
     const v = c.querySelector(".tp-v"); if (v) v.textContent = modo === "temp" ? temp + " K (" + nf(temp - 273.15, 0) + " °C)" : modo === "conf" ? "Z = " + zfill + " · " + nome(zfill) : "ano " + ano;
-    q(".tp-dir").innerHTML = modo === "cmp" ? compara() : modo === "conf" ? preench() : modo === "hist" ? historia() : ficha(sel);
+    const dir = q(".tp-dir"), chave = modo + ":" + (modo === "cmp" ? cmp.join(",") : modo === "conf" || modo === "hist" ? "" : sel);
+    dir.innerHTML = modo === "cmp" ? compara() : modo === "conf" ? preench() : modo === "hist" ? historia() : ficha(sel);
+    if (chave !== ultimaChave) { ultimaChave = chave; dir.classList.remove("tp-troca"); void dir.offsetWidth; dir.classList.add("tp-troca"); }
   }
   const linha = (r, v) => `<tr><td>${r}</td><td>${v}</td></tr>`;
   function ficha(z) { const e = EL(z); if (!e) return "<p>Sem dados para este elemento.</p>"; const g = T.grupo(z), kc = (k) => (k === null || k === undefined ? "sem dado" : nf(k, 1) + " K (" + nf(k - 273.15, 0) + " °C)");
@@ -163,7 +174,10 @@
 
   /* ---------- ligar, desligar, abrir ---------- */
   T.abre = (on) => { if (!raiz) return; raiz.classList.toggle("tp-aberta", on); q(".tp-barra").setAttribute("aria-expanded", on); q(".tp-barra").title = on ? "Baixar a tabela periódica" : "Abrir a tabela periódica"; if (!on) para(); };
-  T.liga = (on) => { if (on && !pode()) on = false; if (on) monta(); if (raiz) { raiz.hidden = !on; if (!on) T.abre(false); } document.body.classList.toggle("tp-on", !!on); sincroniza(); };
+  T.liga = (on) => { if (on && !pode()) on = false; if (on) monta(); ligadaAgora = !!on;
+    if (raiz) { if (on) { raiz.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => { if (ligadaAgora) raiz.classList.add("tp-vis"); })); }
+      else { T.abre(false); raiz.classList.remove("tp-vis"); const some = () => { if (!ligadaAgora) raiz.hidden = true; }; if (semMovimento()) some(); else setTimeout(some, 290); } }
+    document.body.classList.toggle("tp-on", !!on); sincroniza(); };
   T.ligaSalvo = (on) => { grava(K_ON, !!on); if (on) { grava(K_USO, true); if (window.CALC && CALC.ligaSalvo) CALC.ligaSalvo(false); if (window.CALC2 && CALC2.ligaSalvo) CALC2.ligaSalvo(false); } T.liga(on); };
   T.ligada = () => !!le(K_ON);
   T._ = { EL, FAM, PROP, acha: () => acha(), modo: (m) => { modo = m; controles(); pinta(); }, estado: () => ({ modo, sel, cmp, prop, fam, temp, zfill, ano }), define: (o) => { if (o.sel) sel = o.sel; if (o.cmp) cmp = o.cmp; if (o.prop) prop = o.prop; if (o.fam) fam = o.fam; if (o.temp !== undefined) temp = o.temp; if (o.zfill) zfill = o.zfill; if (o.ano) ano = o.ano; controles(); pinta(); } };
