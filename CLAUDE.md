@@ -20,8 +20,8 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 ## O projeto (Jarvis)
 - Este repositório é o meu sistema de estudo pessoal. Tela inicial (`#/home`) com um botão por matéria; cada matéria tem suas abas.
 - **Física**: abas Física, Cálculo (vai sair daqui), Experimentos e Experimental. Módulos F, A, T, O, C, M, U, N.
-- **Matemática**: abas Matemática, Cálculo e Olimpíada e demonstrações.
-- **Química**: abas Química e Experimentos (simulações interativas, no padrão dos de física).
+- **Matemática**: abas Matemática (MB, AR, GE, AL), Cálculo (Cálculo 3 e 4 "em breve"; o 1 e o 2 vêm da física depois) e Olimpíada e demonstrações (DM, TNO, DES, CBO, GEO, FUN, PRI). Casca pronta na β 3.7, temas a definir.
+- **Química**: abas Química (módulos A–J: introdução, atomística, ligações, reações e estequiometria, físico-química I e II, eletroquímica, orgânica, bioquímica e ambiental, analítica) e Experimentos (simulações interativas, no padrão dos de física). Casca pronta na β 3.7, temas a definir.
 - **Russo**: abas Gramática e Leitura e tradução. Vocabulário fica no Anki, não no site; o site exporta baralho.
 - Depois de tudo: portal com progresso geral, mapa de erros e busca única. Bem mais tarde: um programa à parte usando a API.
 
@@ -33,9 +33,10 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 
 ## Estilo e técnica
 - Tema escuro, uma cor por módulo, faixa do topo que some ao descer, menu lateral, `index.html` único com rotas por hash.
-- Conteúdo separado do código: temas em `temas/<COD>.js` (`F.registrar`), simulações em `assets/sims/*.js` (`window.SIM`), motor em `assets/app.js`, catálogo em `assets/catalogo.js`, matérias da tela inicial em `assets/materias.js`.
+- Conteúdo separado do código: temas em `temas/<COD>.js` (`F.registrar`), simulações em `assets/sims/*.js` (`window.SIM`), motor em `assets/app.js`, catálogos por matéria (`assets/catalogo.js` Física, `assets/catalogo-matematica.js`, `assets/catalogo-quimica.js`), matérias da tela inicial em `assets/materias.js`.
+- Base comum (β 3.7): as três matérias usam o mesmo motor, CSS e componentes. Cada aba é uma área em `AREAS` (campos `materia`, `inicio`, `titulo`, `anim`, `icone`); o topo mostra só as abas da matéria atual; a única diferença visual entre matérias é a cor (`--materia`). Ids de módulo e códigos de tema nunca se repetem entre matérias (Química usa QA–QJ para os módulos A–J).
 - Componentes reutilizáveis: `F.secao`, `F.formula`, `F.caixa`, `F.demo`, `F.exemplo`, `F.exercicio`, `F.chefao`, `F.lab`, `F.revela`, `F.chute`, `F.ret`. **Nunca criar componente novo sem necessidade**: estender o que existe com campos opcionais (ex.: `F.exercicio` aceita `certa`, `num: {v, tol, un}`, `nivel`).
-- KaTeX só dentro de `$…$`; número em texto comum com `F.nt`, dentro de fórmula com `F.n`.
+- KaTeX só dentro de `$…$`; número em texto comum com `F.nt`, dentro de fórmula com `F.n`. Química com `\ce{}` (mhchem carregado).
 - Progresso no `localStorage` (prefixo `fisica:`; tela inicial `jarvis:`), com exportar e importar (os dois prefixos entram no arquivo exportado).
 - Cada matéria se registra num arquivo de configuração: acrescentar matéria, aba, módulo ou tema é só editar esse arquivo.
 - Cada matéria e cada aba tem o seu desenho animado na página inicial, leve, em SVG ou CSS.
@@ -44,7 +45,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Toda conta de exemplo, exercício e solução conferida rodando em Python (anotar os números no comentário do topo do tema).
 - A física de cada simulação conferida, inclusive casos limite.
 - Nenhuma fórmula quebrada (procurar `katex-error`). Nenhum tema escrito pode abrir vazio.
-- Rodar os testes de `tests/` antes de cada commit (`node tests/tgeral.js`, `tests/tmec.js <códigos>`, `tests/tchaves.js <códigos>`, `tests/tadesivos.js` para a tela inicial etc.); não commitar com teste quebrado. Capturas de teste ficam fora do git.
+- Rodar os testes de `tests/` antes de cada commit (`node tests/tgeral.js`, `tests/tmec.js <códigos>`, `tests/tchaves.js <códigos>`, `tests/tadesivos.js` para a tela inicial, `tests/tmaterias.js` para a base das matérias etc.); não commitar com teste quebrado. Conferir também as linhas FALHA, não só o código de saída. Capturas de teste ficam fora do git.
 - Testar o site de verdade com Playwright e olhar as capturas (`node tests/shotmec.js <COD> "<seletor>@0"` → `tests/capturas/`).
 
 ## Decisões de projeto já tomadas

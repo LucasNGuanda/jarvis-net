@@ -42,7 +42,7 @@ const num = (t) => parseFloat(String(t).replace(/−/g, '-').replace(/\./g, '').
   await vai('N04'); o = await le('lab-ele', { g: 1 }, ['[data-k="cis"]', '[data-f="agua"]']); ok(/0,001|1,00 × 10⁻³/.test(ac(o, 'τₓᵧ')), 'N04 cisalhamento γ̇ = 1, água: τ = 2μ·½ = 0,001 Pa → ' + ac(o, 'τₓᵧ'));
   o = await le('lab-ele', { g: 1 }, ['[data-k="rot"]'], 800); ok(/^0 Pa/.test(ac(o, 'τₓᵧ')) && perto(num(ac(o, 'ângulo')), 90, 0.001), 'N04 rotação: tensão zero e a cruz continua a 90° → ' + ac(o, 'τₓᵧ') + ', ' + ac(o, 'ângulo'));
   o = await le('lab-ele', { g: 1 }, ['[data-k="def"]', '[data-f="mel"]']); ok(perto(num(ac(o, 'normal')), 20, 0.001), 'N04 deformação pura no mel: 2με = 20 Pa → ' + ac(o, 'normal'));
-  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok');
+  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok'); process.exitCode = res.every((r) => r[0]) ? 0 : 1; /* β 3.7: falha vira código de erro */
   res.forEach(r => console.log((r[0] ? 'ok     ' : 'FALHA  ') + r[1]));
   console.log(errs.length ? 'ERROS JS: ' + errs.join(' | ') : 'sem erros JS');
   await b.close();

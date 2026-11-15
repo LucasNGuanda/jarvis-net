@@ -27,6 +27,6 @@ const perto = (a, b, t = 1e-6) => Math.abs(a - b) <= t * Math.max(1, Math.abs(b)
   ok(/1,33→Certo/.test(cor[0]) && /1.333→Certo/.test(cor[1]) && /Escrev/.test(cor[2]) && /Ainda/.test(cor[3]) && (await p.evaluate(() => [F.lerNumero('1.000.000'), F.lerNumero('1.234,5'), F.lerNumero('3,2e5'), F.lerNumero('−2,5')])).join() === '1000000,1234.5,320000,-2.5', 'correção numérica: 1,33 e 1.333 certos (2%); "4/3" pede número; 2 errado → ' + cor.join(' | '));
   const reg = await p.evaluate(() => JSON.parse(localStorage.getItem('fisica:resultado:A03-11')));
   ok(reg && reg.r === 'certo' && reg.dada === '1,33', 'primeira tentativa guardada em resultado:A03-11 → ' + JSON.stringify(reg));
-  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok'); res.forEach(r => console.log((r[0] ? 'ok     ' : 'FALHA  ') + r[1]));
+  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok'); process.exitCode = res.every((r) => r[0]) ? 0 : 1; /* β 3.7: falha vira código de erro */ res.forEach(r => console.log((r[0] ? 'ok     ' : 'FALHA  ') + r[1]));
   console.log(errs.length ? 'ERROS: ' + errs.join(' | ') : 'sem erros JS');
   await b.close(); })();

@@ -310,7 +310,7 @@
     const menu = $("#menu-mods");
     const abertos = F.store.get("menuAbertos", ["C"]);
     menu.innerHTML = CATALOGO.map((m) => `<div class="mod ${abertos.includes(m.id) ? "aberto" : ""} ${m.temas.some((t) => t[3]) ? "" : "vazio"}" data-mod="${m.id}" data-area="${areaDe(m)}" style="--c:var(${m.cor})">
-      <button aria-expanded="${abertos.includes(m.id)}" class="${m.temas.some((t) => t[3]) ? "" : "vazio"}"><span class="letra">${m.letra}</span><span class="nome">${m.nome}</span>${(() => { const k = m.temas.filter((t) => t[3]).length; return `<span class="conta" title="${k} de ${m.temas.length} temas escritos${k ? "" : " (em breve)"}">${k}/${m.temas.length}</span>`; })()}<span class="seta">›</span></button>
+      <button aria-expanded="${abertos.includes(m.id)}" class="${m.temas.some((t) => t[3]) ? "" : "vazio"}"><span class="letra${[...m.letra].length > 1 ? " longa" : ""}">${m.letra}</span><span class="nome">${m.nome}</span>${(() => { const k = m.temas.filter((t) => t[3]).length; return `<span class="conta" title="${k} de ${m.temas.length} temas escritos${k ? "" : " (em breve)"}">${k}/${m.temas.length}</span>`; })()}<span class="seta">›</span></button>
       <ul>${m.temas.map((t) => `<li><a href="#/${t[0]}" data-cod="${t[0]}" class="${t[3] ? "" : "breve"}" ${t[3] ? "" : 'title="Ainda não escrito" aria-disabled="true"'}><span class="cod">${t[0]}</span><span class="nome">${t[1]}</span>${t[3] ? '<span class="bola"></span>' : '<span class="breve-tag">em breve</span>'}</a></li>`).join("")}</ul></div>`).join("");
         $$(".mod>button", menu).forEach((b) => b.addEventListener("click", () => {
       const m = b.parentElement; m.classList.toggle("aberto"); b.setAttribute("aria-expanded", m.classList.contains("aberto"));
@@ -332,7 +332,17 @@
     });
     pintaMenu();
   }
+  /* abas do topo: Home + as áreas da matéria atual (AREAS em assets/catalogo*.js); a cor da matéria vai para --materia */
+  let materiaAbas = null;
+  const materiaDe = (areaId) => AREA(areaId).materia || "fisica";
+  function abasTopo() {
+    const mid = materiaDe(F.area); if (mid === materiaAbas) return; materiaAbas = mid;
+    const box = $(".topo .abas-materia"); if (box) box.innerHTML = AREAS.filter((a) => (a.materia || "fisica") === mid).map((a) => `<a class="aba" data-area="${a.id}" href="#/${a.inicio}" aria-label="${a.nome}">${a.icone || ""}<span class="aba-txt">${a.nome}</span></a>`).join("");
+    const mat = (window.MATERIAS || []).find((m) => m.id === mid); document.body.style.setProperty("--materia", mat ? `var(${mat.cor})` : "var(--mA)"); document.body.dataset.materia = mid;
+  }
   function pintaMenu() {
+    abasTopo();
+    document.body.classList.toggle("area-vazia", !CATALOGO.some((m) => areaDe(m) === F.area && m.temas.some((t) => t[3]))); /* nada escrito ainda: o menu mostra os módulos mesmo assim */
     const f = feitos();
     $$("#menu-mods .mod").forEach((m) => m.classList.toggle("outra-area", m.dataset.area !== F.area));
     $$(".topo .aba").forEach((a) => a.classList.toggle("atual", a.dataset.area === F.area));
@@ -356,16 +366,16 @@
     el.innerHTML = `<div class="hero2"><div><h1>${ar.titulo}</h1>${continuar}</div><div class="anim" id="${anim}"></div></div>
       <div class="cartao"><div class="tit"><span class="tag">Progresso</span>${nfeitos} de ${total} temas feitos · ${prontos} já escritos</div>
         <div class="barra" style="--c:var(--ok)"><i style="width:${total ? (100 * nfeitos) / total : 0}%"></i></div></div>
-      <h2 style="margin-top:32px">Módulos</h2>
-      <div class="mods">${mods.map((m) => { const n = m.temas.length, k = m.temas.filter((t) => f[t[0]]).length; const prim = m.temas.find((t) => t[3]) || m.temas[0];
+      <h2 style="margin-top:32px">Módulos</h2>${mods.length ? "" : `<div class="vazio" style="margin-top:12px"><b>Em breve</b>Os módulos desta aba ainda vão ser criados.</div>`}
+      <div class="mods">${mods.map((m) => { const n = m.temas.length, k = m.temas.filter((t) => f[t[0]]).length; const prim = m.temas.find((t) => t[3]) || m.temas[0] || [ar.inicio]; /* módulo ainda sem temas: o cartão fica "em breve" e não leva a lugar nenhum */
         const esc = m.temas.filter((t) => t[3]).length;
-        return `<a class="modc ${esc ? "" : "breve"}" href="#/${prim[0]}" style="--c:var(${m.cor})"><div class="letra">${m.letra}</div><h3>${m.nome}</h3><p>${m.desc}</p><div class="barra"><i style="width:${(100 * k) / n}%"></i></div><p style="margin-top:6px">${esc ? `${k}/${n} feitos · ${esc} ${esc === 1 ? "escrito" : "escritos"}` : "em breve"}</p></a>`; }).join("")}</div>
+        return `<a class="modc ${esc ? "" : "breve"}" href="#/${prim[0]}" style="--c:var(${m.cor})"><div class="letra${[...m.letra].length > 1 ? " longa" : ""}">${m.letra}</div><h3>${m.nome}</h3><p>${m.desc}</p><div class="barra"><i style="width:${n ? (100 * k) / n : 0}%"></i></div><p style="margin-top:6px">${esc ? `${k}/${n} feitos · ${esc} ${esc === 1 ? "escrito" : "escritos"}` : "em breve"}</p></a>`; }).join("")}</div>
       <h2 style="margin-top:36px">Como usar</h2>
       <div class="grade2" style="margin-top:12px">
         <div class="cartao"><b>Ordem de um tema</b><ol style="margin:8px 0 0;padding-left:1.2em;color:var(--ink2)"><li>Pergunta de abertura</li><li>Laboratório (chute antes de mexer)</li><li>A ideia, com números</li><li>Teoria completa e demonstrações</li><li>Exemplos passo a passo</li><li>Resumo, exercícios e chefão</li></ol></div>
         <div class="cartao"><b>Marcação de certeza</b><p style="color:var(--ink2);margin:8px 0 0">Em cada exercício marque <b>●</b> certeza, <b>X</b> dúvida ou <b>/</b> chutei. Fica salvo neste navegador. O chefão destrava quando todos estiverem marcados. Dicas e respostas só abrem se você clicar.</p></div>
       </div>`;
-    ({ calculo: animCalculo, exp: animPendulo, lab: animCalculadora }[areaId] || animAtomo)(document.getElementById(anim));
+    (F.ANIM[ar.anim] || animAtomo)(document.getElementById(anim));
   }
 
   /* átomo girando: 3 órbitas com elétrons (com rastro); o conjunto precessa devagar */
@@ -532,6 +542,82 @@
     F.aoSair(() => (vivo = false));
   }
 
+  /* ---------- desenhos das páginas iniciais das outras matérias (β 3.7), no mesmo estilo do átomo: SVG redesenhado a cada quadro ---------- */
+  /* Matemática: icosaedro em arame girando (arestas da frente fortes, as de trás apagadas) */
+  function animSolido(el) {
+    el.innerHTML = `<svg viewBox="-170 -150 340 300" aria-label="sólido platônico girando"><g class="g"></g></svg>`;
+    const f = (1 + Math.sqrt(5)) / 2, V = [];
+    [-1, 1].forEach((a) => [-f, f].forEach((b) => V.push([0, a, b], [a, b, 0], [b, 0, a])));
+    const A = []; for (let i = 0; i < 12; i++) for (let j = i + 1; j < 12; j++) if (Math.abs(Math.hypot(V[i][0] - V[j][0], V[i][1] - V[j][1], V[i][2] - V[j][2]) - 2) < 1e-9) A.push([i, j]);
+    const cores = ["var(--mK2)", "var(--mC)", "var(--mA)"], g = el.querySelector(".g");
+    let vivo = true; const t0 = performance.now(), reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function q(t) {
+      if (!vivo) return;
+      const s = reduz ? 1 : (t - t0) / 1000, a = 0.45 * s, b = 0.27 * s + 0.4, R = 72;
+      const P = V.map(([x, y, z]) => { const x1 = x * Math.cos(a) + z * Math.sin(a), z1 = -x * Math.sin(a) + z * Math.cos(a), y2 = y * Math.cos(b) - z1 * Math.sin(b), z2 = y * Math.sin(b) + z1 * Math.cos(b); return [R * x1, R * y2, z2]; });
+      g.innerHTML = `<ellipse cx="0" cy="128" rx="110" ry="10" style="fill:var(--materia);opacity:.12"/>` + A.map(([i, j], k) => { const z = (P[i][2] + P[j][2]) / 2, frente = z > -0.2; return `<line x1="${P[i][0].toFixed(1)}" y1="${P[i][1].toFixed(1)}" x2="${P[j][0].toFixed(1)}" y2="${P[j][1].toFixed(1)}" style="stroke:${cores[k % 3]};stroke-width:${frente ? 2.4 : 1.3};opacity:${frente ? 0.9 : 0.3}${frente ? "" : ";stroke-dasharray:4 5"}"/>`; }).join("") + P.map(([x, y, z]) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${z > 0 ? 5 : 3.2}" style="fill:${z > 0 ? "var(--ink)" : "var(--ink3)"};stroke:var(--bg);stroke-width:1.5"/>`).join("");
+      if (!reduz) requestAnimationFrame(q);
+    }
+    requestAnimationFrame(q); F.aoSair(() => (vivo = false));
+  }
+  /* Olimpíada: demonstração sem palavras 1 + 3 + 5 + … + (2n − 1) = n², com as camadas em L aparecendo uma a uma */
+  function animImpares(el) {
+    el.innerHTML = `<svg viewBox="0 0 340 300" aria-label="soma dos ímpares é um quadrado"><g class="g"></g></svg>`;
+    const g = el.querySelector(".g"), N = 6, L = 34, x0 = 68, y0 = 262, cores = ["var(--mK5)", "var(--mC)", "var(--mA)", "var(--mN)", "var(--mU)", "var(--mK1)"];
+    let vivo = true; const t0 = performance.now(), reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function q(t) {
+      if (!vivo) return;
+      const s = reduz ? 99 : (t - t0) / 1000, ciclo = 1.1 * (N + 2), u = s % ciclo, n = Math.min(N, Math.floor(u / 1.1) + 1), fr = Math.min(1, (u - 1.1 * (n - 1)) / 0.45);
+      let h = "";
+      for (let k = 1; k <= n; k++) { const op = k < n ? 1 : fr; for (let i = 0; i < k; i++) for (let j = 0; j < k; j++) { if (i < k - 1 && j < k - 1) continue; h += `<rect x="${x0 + i * L + 2}" y="${y0 - (j + 1) * L + 2}" width="${L - 4}" height="${L - 4}" rx="5" style="fill:color-mix(in srgb,${cores[k - 1]} 30%,transparent);stroke:${cores[k - 1]};stroke-width:1.6;opacity:${op.toFixed(2)}"/>`; } }
+      const soma = Array.from({ length: n }, (_, k) => 2 * k + 1).join(" + ");
+      h += `<text x="170" y="34" text-anchor="middle" style="font:600 16px var(--f-text);fill:var(--ink)">${soma} = ${n}²</text><text x="170" y="56" text-anchor="middle" style="font:13px var(--f-text);fill:var(--ink2)">cada L tem 2k − 1 quadradinhos</text>`;
+      g.innerHTML = h;
+      if (!reduz) requestAnimationFrame(q);
+    }
+    requestAnimationFrame(q); F.aoSair(() => (vivo = false));
+  }
+  /* Química: benzeno girando devagar, com as ligações duplas trocando de lugar (as duas estruturas de ressonância de Kekulé) */
+  function animBenzeno(el) {
+    el.innerHTML = `<svg viewBox="-170 -150 340 300" aria-label="molécula de benzeno com ressonância"><g class="g"></g></svg>`;
+    const g = el.querySelector(".g");
+    let vivo = true; const t0 = performance.now(), reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function q(t) {
+      if (!vivo) return;
+      const s = reduz ? 0 : (t - t0) / 1000, rot = 0.12 * s, w = 0.5 + 0.5 * Math.cos(1.3 * s), RC = 70, RH = 122;
+      const ang = (k) => rot - Math.PI / 2 + (k * Math.PI) / 3, C = [0, 1, 2, 3, 4, 5].map((k) => [RC * Math.cos(ang(k)), RC * Math.sin(ang(k))]), H = [0, 1, 2, 3, 4, 5].map((k) => [RH * Math.cos(ang(k)), RH * Math.sin(ang(k))]);
+      let h = `<circle r="38" style="fill:none;stroke:var(--materia);stroke-width:1.5;stroke-dasharray:3 6;opacity:.45"/>`;
+      C.forEach((p, k) => { const q2 = C[(k + 1) % 6], dupla = k % 2 === 0 ? w : 1 - w, mx = -(q2[1] - p[1]), my = q2[0] - p[0], n = Math.hypot(mx, my), sg = (mx * (p[0] + q2[0]) + my * (p[1] + q2[1])) > 0 ? 1 : -1, ox = sg * (mx / n) * 9, oy = sg * (my / n) * 9, enc = 0.16, ax = p[0] + (q2[0] - p[0]) * enc - ox, ay = p[1] + (q2[1] - p[1]) * enc - oy, bx = q2[0] - (q2[0] - p[0]) * enc - ox, by = q2[1] - (q2[1] - p[1]) * enc - oy;
+        h += `<line x1="${p[0].toFixed(1)}" y1="${p[1].toFixed(1)}" x2="${q2[0].toFixed(1)}" y2="${q2[1].toFixed(1)}" style="stroke:var(--ink2);stroke-width:3"/><line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" style="stroke:var(--mN);stroke-width:3;opacity:${dupla.toFixed(2)}"/>`;
+        h += `<line x1="${p[0].toFixed(1)}" y1="${p[1].toFixed(1)}" x2="${H[k][0].toFixed(1)}" y2="${H[k][1].toFixed(1)}" style="stroke:var(--ink3);stroke-width:2.2"/>`; });
+      C.forEach(([x, y]) => (h += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="14" style="fill:var(--card);stroke:var(--mN);stroke-width:2.4"/><text x="${x.toFixed(1)}" y="${(y + 5).toFixed(1)}" text-anchor="middle" style="font:700 13px var(--f-text);fill:var(--ink)">C</text>`));
+      H.forEach(([x, y]) => (h += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10" style="fill:var(--card);stroke:var(--ink3);stroke-width:1.8"/><text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle" style="font:600 11px var(--f-text);fill:var(--ink2)">H</text>`));
+      g.innerHTML = h;
+      if (!reduz) requestAnimationFrame(q);
+    }
+    requestAnimationFrame(q); F.aoSair(() => (vivo = false));
+  }
+  /* Experimentos de química: béquer com bolhas subindo (cada bolha sobe, balança de leve e estoura na superfície) */
+  function animBequer(el) {
+    el.innerHTML = `<svg viewBox="0 0 340 300" aria-label="béquer com bolhas"><g class="g"></g></svg>`;
+    const g = el.querySelector(".g"), bolhas = Array.from({ length: 14 }, (_, i) => ({ x: 120 + ((i * 37) % 100), r: 3 + ((i * 7) % 5), v: 22 + ((i * 13) % 18), f: (i * 0.71) % 1 }));
+    let vivo = true; const t0 = performance.now(), reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function q(t) {
+      if (!vivo) return;
+      const s = reduz ? 2 : (t - t0) / 1000, topo = 132, fundo = 246;
+      let h = `<path d="M106 120 L106 238 Q106 254 122 254 L218 254 Q234 254 234 238 L234 120" style="fill:none;stroke:var(--ink2);stroke-width:3;stroke-linejoin:round"/><path d="M98 112 L112 120 M242 112 L228 120" style="stroke:var(--ink2);stroke-width:3;stroke-linecap:round"/>`;
+      h += `<path d="M108 ${topo} Q140 ${topo - 3 + 2 * Math.sin(s * 2)} 170 ${topo} T232 ${topo} L232 238 Q232 252 218 252 L122 252 Q108 252 108 238 Z" style="fill:color-mix(in srgb,var(--mN) 24%,transparent)"/>`;
+      for (let k = 0; k < 5; k++) h += `<line x1="108" x2="${k % 2 ? 118 : 124}" y1="${148 + k * 20}" y2="${148 + k * 20}" style="stroke:var(--ink3);stroke-width:1.5"/>`;
+      bolhas.forEach((b) => { const u = ((s * b.v) / (fundo - topo) + b.f) % 1, y = fundo - u * (fundo - topo), x = b.x + 4 * Math.sin(3 * s + b.f * 9); h += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(b.r * (0.6 + 0.4 * u)).toFixed(1)}" style="fill:none;stroke:var(--mN);stroke-width:1.6;opacity:${(u > 0.92 ? (1 - u) / 0.08 : 0.9).toFixed(2)}"/>`; });
+      h += `<path d="M150 104 q-6 -12 2 -22 q6 -8 0 -18" style="fill:none;stroke:var(--ink3);stroke-width:1.6;stroke-linecap:round;opacity:${(0.35 + 0.25 * Math.sin(s * 1.5)).toFixed(2)}"/><path d="M190 100 q6 -12 -2 -22 q-6 -8 0 -18" style="fill:none;stroke:var(--ink3);stroke-width:1.6;stroke-linecap:round;opacity:${(0.35 + 0.25 * Math.cos(s * 1.3)).toFixed(2)}"/>`;
+      g.innerHTML = h;
+      if (!reduz) requestAnimationFrame(q);
+    }
+    requestAnimationFrame(q); F.aoSair(() => (vivo = false));
+  }
+  /* desenho de cada página inicial: o nome vem do campo anim da área (AREAS) */
+  F.ANIM = { atomo: animAtomo, calculo: animCalculo, pendulo: animPendulo, calculadora: animCalculadora, solido: animSolido, impares: animImpares, benzeno: animBenzeno, bequer: animBequer };
+
   function pgSumario(el) {
     el.innerHTML = `<div class="cab-tema"><div class="sobre">Mapa</div><h1>Sumário em árvore</h1><p style="color:var(--ink2)">Temas já escritos têm link para a teoria e para os exercícios.</p></div>` +
       CATALOGO.filter((m) => areaDe(m) === F.area).map((m) => `<h3 style="margin:24px 0 8px;color:var(${m.cor})">${m.letra} · ${m.nome}</h3><pre style="font:14px/1.7 var(--f-text);margin:0;white-space:pre-wrap">${m.temas.map((t) => t[3]
@@ -629,8 +715,9 @@
     document.body.classList.toggle("modo-home", !!J && (cod === "home" || (!!mat && !mat.pronta)));
     if (J && cod === "home") { J.home(pag); window.scrollTo(0, 0); return; }
     if (mat && !mat.pronta) { J.emBreve(pag, mat); window.scrollTo(0, 0); return; }
-    if (mat && mat.pronta && !h[1] && mat.rota !== "#/" + cod) { location.replace(mat.rota); return; } /* só o id da matéria: #/fisica → #/inicio */
-    if (cod === "inicio" || cod === "calculo" || cod === "experimentos" || cod === "experimental") { F.area = { calculo: "calculo", experimentos: "exp", experimental: "lab" }[cod] || "fisica"; pgInicio(pag, F.area); }
+    if (mat && mat.pronta && (!h[1] || h[1] === "inicio") && mat.rota !== "#/" + (h[1] ? cod + "/" + h[1] : cod)) { location.replace(mat.rota); return; } /* só o id da matéria: #/fisica → #/inicio; link antigo #/quimica/inicio → #/quimica */
+    const arIni = AREAS.find((a) => a.inicio === cod);
+    if (arIni) { F.area = arIni.id; pgInicio(pag, F.area); }
     else if (cod === "legenda") { location.replace("#/" + AREA(F.area).inicio); setTimeout(() => { const d = $("#detalhes"); if (d) d.classList.add("aberto"); }, 50); return; } /* a legenda agora fica só no painel do topo */
     else if (cod === "sumario") pgSumario(pag);
     else {

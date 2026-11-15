@@ -146,7 +146,7 @@ const res = [];
   res.push([await p.evaluate(() => document.getElementById('calculadora')?.classList.contains('visivel')), 'ligada continua ligada depois de recarregar']);
   await p.click('#bt-config'); await p.click('#cfg-calc'); await p.waitForTimeout(700);
   res.push([await p.evaluate(() => document.getElementById('calculadora').hidden), 'interruptor desliga e a calculadora some']);
-  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok');
+  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok'); process.exitCode = res.every((r) => r[0]) ? 0 : 1; /* β 3.7: falha vira código de erro */
   res.filter(r => !r[0]).forEach(r => console.log('FALHA  ' + r[1]));
   console.log('---'); res.filter(r => r[0]).forEach(r => console.log('ok     ' + r[1]));
   console.log(errs.length ? 'ERROS JS: ' + errs.join(' | ') : 'sem erros JS');

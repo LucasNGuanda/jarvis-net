@@ -1,6 +1,6 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado atual (15/11/2026, depois da β 3.6)
+## Estado atual (15/11/2026, depois da β 3.7)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
 
 ### Física — 96 de 96 temas escritos
@@ -17,10 +17,15 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 - **Cálculo** (vai para Matemática): 27/27 temas, 7 exercícios cada; Simulados de Cálculo SC01 e SC02 com 20 questões cada.
 - **Experimentos**: 18 experimentos (EP01–EP18) em 9 módulos (novos na β 3.4: Termodinâmica, Ondas e quântica, Nuclear, Fluidos).
 - **Experimental**: 11 de 11 (FE01–FE11), todos no padrão completo: 16 exercícios com figura, correção automática e nível; `F.chute`, laboratório, 3 demonstrações, 3 exemplos, as 4 caixas, folha de fórmulas e chefão (β 3.5).
-- Tela inicial (Jarvis) em `#/home`: Física pronta; Química, Matemática e Russo "em breve". Adesivos (β 3.6): engrenagem ao lado do campo do Jarvis abre o painel com 25 adesivos em 5 categorias.
+- Tela inicial (Jarvis) em `#/home`: Física pronta; Matemática e Química com a casca pronta (β 3.7: abas e módulos, sem temas); Russo "em breve". Adesivos (β 3.6): engrenagem ao lado do campo do Jarvis abre o painel com 25 adesivos em 5 categorias.
 - Calculadoras 1 (estilo fx-991ES PLUS) e 2 (estilo fx-82LA CW), uma de cada vez.
 - Testes automáticos no repositório, em `tests/`: tgeral, tfunc, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE, thome, tcor, texp, tsegredo, tadesivos, mais tmec, tchaves e texemp por código. Capturas em `tests/capturas/`, fora do git; as que os testes antigos gravam na raiz (`home-*.png`, `fisica-com-home.png`, `calc-*.png`, `cor-*.png`) também estão no `.gitignore` (β 3.6).
-- Última regressão completa (β 3.6, 15/11/2026): os 15 testes com exit 0, tgeral com 152 páginas escritas e 0 erro de KaTeX; tmec e tchaves ok em FE01–FE11.
+- Correção (β 3.7): as regressões da β 3.4 à β 3.6 olhavam só o código de saída, e dez testes antigos (thome, tcor, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE) não devolviam erro quando uma conferência falhava. Por isso duas falhas passaram sem aviso: no thome, o título com a versão ao lado (desde a β 3.4; era o teste que estava desatualizado), e no tfisON, a contagem de bolinhas do N02, que falha às vezes quando o computador está sobrecarregado (passou nas 3 vezes em que rodei sozinho). Agora esses testes devolvem código de erro quando alguma conferência falha.
+
+### Matemática e Química (β 3.7): casca pronta, sem conteúdo
+- **Matemática** (`assets/catalogo-matematica.js`): abas Matemática (MB, AR, GE, AL), Cálculo (Cálculo 3 e Cálculo 4 "em breve"; o Cálculo 1 e 2 continuam na Física até a mudança combinada) e Olimpíada e demonstrações (DM, TNO, DES, CBO, GEO, FUN, PRI). Todos os módulos com 0 temas.
+- **Química** (`assets/catalogo-quimica.js`): abas Química (módulos A a J, com ids QA–QJ para não colidir com os da Física) e Experimentos (sem módulos ainda). mhchem (`\ce{}`) carregado.
+- Esperando o Lucas mandar a lista de temas de cada módulo.
 
 ### Diferenças em relação ao padrão do CLAUDE.md (honesto)
 - Exercícios: o padrão pede 15 a 20. A Mecânica tem 12 a 14; os módulos antigos, 7 (o C, de 7 a 16).
@@ -389,6 +394,17 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Teste novo `tests/tadesivos.js` (29 conferências: catálogo, painel, arrastar válido e proibido, girar, redimensionar, remover, limpar, pointer-events, botão Física clicável, janela de 900 px, persistência, exportação).
   - Limitações honestas: a colisão usa a caixa do adesivo girado (90% do lado, porque os desenhos têm margem), não o contorno exato do desenho; o painel cobre parte da tela enquanto está aberto (por isso o botão de trocar de lado); dois adesivos empurrados pela janela menor podem ficar um sobre o outro (nunca sobre um botão); adesivos entre si podem se sobrepor se você quiser.
   - Limpeza: as capturas que os testes antigos gravam na raiz (`home-*.png`, `fisica-com-home.png`, `calc-*.png`, `cor-*.png`) saíram do git e foram para o `.gitignore`.
+- **β 3.7** — **Base comum e cascas da Matemática e da Química** (pedido de 15/11/2026, sessão da BASE).
+  - A base já era quase toda comum (componentes `F.*`, CSS, menu, legenda, configurações, calculadoras). O que estava preso à física e foi separado: as abas do topo (escritas à mão no `index.html`; agora saem de `AREAS`, que ganhou os campos `materia`, `anim` e `icone`, e o topo mostra só as abas da matéria atual), a lista fixa de rotas de início (agora qualquer área de `AREAS` tem a sua página inicial), a escolha do desenho de cada início (`F.ANIM`) e as matérias "em breve" da tela inicial.
+  - Cada matéria se registra no seu arquivo: `assets/catalogo.js` (Física), `assets/catalogo-matematica.js`, `assets/catalogo-quimica.js`. Acrescentar aba, módulo ou tema = editar o arquivo da matéria.
+  - Igual à Física em tudo o que não é conteúdo: topo, botão Home, menu com códigos e bolinhas, cartões de módulo, contador de progresso, "Continuar de onde parei", componentes, tema, fontes, espaçamento, caixas, marcações, Legenda e símbolos. A cor da matéria (Física --mA, Matemática --mK2, Química --mN) aparece como um fio embaixo da aba atual (`--materia`), nas três matérias.
+  - Módulos sem temas: o cartão fica "em breve" com a barra vazia (antes a conta 0/0 enchia a barra); se a área não tem nada escrito, o menu mostra os módulos mesmo assim; aba sem módulos mostra a caixa "Em breve". Corrigido também um defeito antigo: o módulo vazio do menu pegava o estilo da caixa genérica `.vazio` (borda tracejada e recuo enorme) quando se clicava em "Mostrar temas em breve" na Física. Códigos de 2 ou 3 letras (MB, TNO…) ganharam fonte menor na bolinha.
+  - Desenhos das páginas iniciais (SVG redesenhado a cada quadro, como o átomo): Matemática, icosaedro em arame girando; Cálculo da Matemática, o mesmo das somas de Riemann do Cálculo da Física; Olimpíada, a demonstração sem palavras 1 + 3 + 5 + … + (2n − 1) = n² com as camadas em L aparecendo; Química, benzeno girando com as duas estruturas de Kekulé se alternando (ressonância); Experimentos de química, béquer com bolhas subindo.
+  - mhchem: `assets/katex/contrib/mhchem.min.js`, da mesma versão do KaTeX (0.16.11), tirado do pacote oficial do npm (o CDN estava bloqueado nesta sessão).
+  - Progresso: nenhuma chave do localStorage mudou (tudo continua com o prefixo `fisica:`, porque o documento do modelo de dados com prefixos por matéria ainda espera a aprovação do Lucas), então o progresso salvo não é tocado. Não consegui exportar o .json de verdade: ele fica no navegador do Lucas, fora do alcance desta sessão.
+  - Trabalho feito na branch `base-materias`, testado e depois juntado ao `main`.
+  - Teste novo `tests/tmaterias.js`: as 9 páginas iniciais, abas por matéria, estilos calculados iguais aos da Física (fora a cor), animações, links da tela inicial, link antigo `#/quimica/inicio`, mhchem, e um tema de teste em memória dentro da Química com chute, exercício com correção, chefão, lab, caixa, folha de fórmulas e "Continuar de onde parei". `thome` atualizado (Química e Matemática abertas; Russo é a matéria "em breve" do teste).
+  - Capturas lado a lado: `tests/capturas/comparacao-materias.png` e `tests/capturas/comparacao-abas.png`.
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.

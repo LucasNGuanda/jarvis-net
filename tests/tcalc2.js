@@ -75,7 +75,7 @@ const res = [];
   await p.reload(); await p.waitForTimeout(1200);
   const rel = await p.evaluate(() => [!!document.getElementById('calculadora2') && document.getElementById('calculadora2').classList.contains('visivel'), !document.getElementById('calculadora') || !document.getElementById('calculadora').classList.contains('visivel')]);
   ok(rel[0] && rel[1], 'recarregando a página, continua só a 2 ligada → ' + rel);
-  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok');
+  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok'); process.exitCode = res.every((r) => r[0]) ? 0 : 1; /* β 3.7: falha vira código de erro */
   res.forEach(r => console.log((r[0] ? 'ok     ' : 'FALHA  ') + r[1]));
   console.log(errs.length ? 'ERROS: ' + errs.join(' | ') : 'sem erros JS');
   await b.close();

@@ -36,7 +36,7 @@ const num = (t) => parseFloat(String(t).replace(/−/g, '-').replace(/\./g, '').
   ok(nex.length === 15 && nex[0] === 'S02.16' && nex[14] === 'S02.30', 'S02: questões 16 a 30 → ' + nex[0] + '…' + nex[nex.length - 1] + ' (' + nex.length + ')');
   for (const [c, n] of [['SC01', 20], ['SC02', 20]]) { await vai(c); const k = await p.evaluate(() => document.querySelectorAll('.ex').length); ok(k === n, `${c}: ${n} questões → ${k}`); }
   await vai('calculo'); const mods = await p.evaluate(() => document.body.innerText.includes('Simulados de Cálculo')); ok(mods, 'página Cálculo mostra o módulo "Simulados de Cálculo"');
-  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok');
+  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok'); process.exitCode = res.every((r) => r[0]) ? 0 : 1; /* β 3.7: falha vira código de erro */
   res.forEach(r => console.log((r[0] ? 'ok     ' : 'FALHA  ') + r[1]));
   console.log(errs.length ? 'ERROS: ' + errs.join(' | ') : 'sem erros JS');
   await b.close();

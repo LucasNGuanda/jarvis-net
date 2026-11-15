@@ -44,7 +44,7 @@ const num = (t) => parseFloat(String(t).replace(/−/g, '-').replace(',', '.'));
     const f = await p.evaluate(() => [...document.querySelectorAll('#lab-nt [data-v=gr] text')].filter(t => /conservado|varia/.test(t.textContent)).map(t => t.textContent === 'conservado' ? 1 : 0));
     res.push([JSON.stringify(f) === JSON.stringify(esp), `TE05 ${k}: (E, L, pₓ) conservados = ${f.join(',')} (esperado ${esp.join(',')})`]);
   }
-  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok');
+  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok'); process.exitCode = res.every((r) => r[0]) ? 0 : 1; /* β 3.7: falha vira código de erro */
   res.forEach(r => console.log((r[0] ? 'ok     ' : 'FALHA  ') + r[1]));
   console.log(errs.length ? 'ERROS JS: ' + errs.join(' | ') : 'sem erros JS');
   await b.close();

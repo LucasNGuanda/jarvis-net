@@ -142,7 +142,7 @@ const perto = (a, b, tol = 0.01) => Math.abs(a - b) <= tol * Math.max(Math.abs(b
   await caso('pêndulo duplo: energia conservada', 'EP02', 'lab-p2', {}, [], [['erro relativo', (v) => Math.abs(v) < 0.1]], 3000);
   await caso('pêndulo triplo: energia conservada', 'EP03', 'lab-p3', {}, [], [['erro relativo', (v) => Math.abs(v) < 0.1]], 3000);
   await caso('Drude: deriva média ≈ aτ', 'C06', 'lab-dr', {}, [], [['velocidade de deriva média', (v, o) => perto(v, numU(acha(o, 'esperada')), 0.25)]], 4000);
-  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' conferências ok');
+  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' conferências ok'); process.exitCode = res.every((r) => r[0]) ? 0 : 1; /* β 3.7: falha vira código de erro */
   res.filter(r => !r[0]).forEach(r => console.log('FALHA  ' + r[1]));
   console.log('---'); res.filter(r => r[0]).forEach(r => console.log('ok     ' + r[1]));
   console.log(errs.length ? 'ERROS JS: ' + errs.join(' | ') : 'sem erros JS');

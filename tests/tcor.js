@@ -45,6 +45,6 @@ const res = []; const ok = (c, m) => res.push([c, m]);
   ok(await m.evaluate(() => getComputedStyle(document.querySelector('.jv-cor')).visibility === 'visible'), 'no celular, tocar no Jarvis abre o seletor');
   await m.tap('.jv-ilu'); await m.waitForTimeout(300);
   ok(await m.evaluate(() => getComputedStyle(document.querySelector('.jv-cor')).visibility === 'hidden'), 'tocar fora fecha');
-  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok'); res.forEach(r => console.log((r[0] ? 'ok     ' : 'FALHA  ') + r[1]));
+  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok'); process.exitCode = res.every((r) => r[0]) ? 0 : 1; /* β 3.7: falha vira código de erro */ res.forEach(r => console.log((r[0] ? 'ok     ' : 'FALHA  ') + r[1]));
   console.log(errs.length ? 'ERROS: ' + errs.join(' | ') : 'sem erros JS');
   await b.close(); })();

@@ -1,12 +1,14 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 3.6";
+window.VERSAO = "β 3.7";
+/* Áreas (abas do topo). Cada área pertence a uma matéria (assets/materias.js); o topo mostra só as abas da matéria atual.
+   inicio = rota da página inicial da aba; anim = desenho da página inicial (em app.js, F.ANIM); icone = SVG da aba. */
 window.AREAS = [
-  { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
-  { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },
-  { id:"exp", nome:"Experimentos", inicio:"experimentos", titulo:"Experimentos físicos" },
-  { id:"lab", nome:"Experimental", inicio:"experimental", titulo:"Física experimental" },
+  { id:"fisica", materia:"fisica", nome:"Física", inicio:"inicio", titulo:"Física", anim:"atomo", icone:`<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="5" style="stroke:var(--mC)"/><ellipse cx="16" cy="16" rx="13" ry="5" transform="rotate(60 16 16)" style="stroke:var(--mA)"/><ellipse cx="16" cy="16" rx="13" ry="5" transform="rotate(120 16 16)" style="stroke:var(--mU)"/><circle cx="16" cy="16" r="2.4" fill="currentColor" stroke="none"/></svg>` },
+  { id:"calculo", materia:"fisica", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo", anim:"calculo", icone:`<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M9.5 4.5c-1.8 0-2.3 1.6-2.6 3.6L5.2 23.9c-.3 2-.8 3.6-2.6 3.6" style="stroke:var(--mK1)" stroke-width="2.1" stroke-linecap="round"/><path d="M29.3 4.5c-1.8 0-2.3 1.6-2.6 3.6L25 23.9c-.3 2-.8 3.6-2.6 3.6" style="stroke:var(--mK2)" stroke-width="2.1" stroke-linecap="round"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>` },
+  { id:"exp", materia:"fisica", nome:"Experimentos", inicio:"experimentos", titulo:"Experimentos físicos", anim:"pendulo", icone:`<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><line x1="6" y1="4" x2="26" y2="4" style="stroke:var(--ink3)" stroke-width="2"/><line x1="16" y1="4" x2="10" y2="16" style="stroke:currentColor" stroke-width="1.8"/><line x1="10" y1="16" x2="19" y2="25" style="stroke:currentColor" stroke-width="1.8"/><circle cx="10" cy="16" r="3" style="fill:var(--mA)"/><circle cx="19" cy="25" r="3.4" style="fill:var(--mU)"/></svg>` },
+  { id:"lab", materia:"fisica", nome:"Experimental", inicio:"experimental", titulo:"Física experimental", anim:"calculadora", icone:`<svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" aria-hidden="true"><path d="M16 5v14M9 12h14" style="stroke:var(--mN)" stroke-width="2.6"/><path d="M9 25h14" style="stroke:var(--mO)" stroke-width="2.6"/></svg>` },
 ];
 window.CATALOGO = [
   { id:"F", letra:"F", cor:"--mF", nome:"Fundamentos e a matemática do físico", desc:"Vetores, trigonometria, cálculo, aproximações e análise dimensional.", temas:[

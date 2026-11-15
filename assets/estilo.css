@@ -744,3 +744,10 @@ body.modo-home #pagina{position:relative;min-height:calc(100vh - 104px)}
 .jv-painel-ad:hover,.jv-painel-ad:focus-visible{border-color:var(--ink3)}
 .jv-painel-ad svg{width:100%;height:100%;display:block;pointer-events:none}
 .jv-adesivos.editando .jv-ad.invalido{opacity:.45;outline:1.5px dashed var(--bad)}
+/* ---------- β 3.7: base comum das matérias (Física, Matemática, Química) ---------- */
+.abas-materia{display:contents}
+.aba.atual{box-shadow:inset 0 0 0 1px var(--line),inset 0 -2px 0 var(--materia,var(--mA))}
+body.area-vazia #menu-mods:not(.buscando) .mod.vazio:not(.outra-area){display:block}
+#menu-mods .mod.vazio{border:0;border-radius:0;padding:0;text-align:inherit;color:inherit} /* a caixa genérica .vazio não vale para o módulo vazio do menu */
+.letra.longa{font-size:11px;letter-spacing:-.03em}
+.modc .letra.longa{font-size:13px}

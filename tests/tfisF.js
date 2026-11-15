@@ -52,7 +52,7 @@ const num = (t) => parseFloat(String(t).replace(/−/g, '-').replace(/\./g, '').
   const per = await p.evaluate(() => { const P = { m1: 2, m2: 1, k1: 40, k2: 30, modo: 'linear' }; let y = [0.05, 0, 0, 0]; const h = 1e-4; let t = 0, cruz = []; let prev = y[1] - y[0]; for (let i = 0; i < 40000; i++) { const r = SIM.discosRodar(P, y, h, h); y = r.y; t += h; const d = y[1] - y[0]; if (prev < 0 && d >= 0) cruz.push(t); prev = d; } return cruz[2] - cruz[1]; });
   ok(perto(per, 0.6148, 0.003), 'EP10 período medido na simulação linear = 2π/ω = 0,615 s → ' + per.toFixed(4));
   o = await le('lab-dis', {}, [], 1500); ok(/7,27|10,22/.test(JSON.stringify(o)) || perto(num(ac(o, 'ω do modo')), 10.22, 0.001), 'EP10 leitor mostra ω = 10,22 → ' + ac(o, 'ω do modo'));
-  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok');
+  console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' ok'); process.exitCode = res.every((r) => r[0]) ? 0 : 1; /* β 3.7: falha vira código de erro */
   res.forEach(r => console.log((r[0] ? 'ok     ' : 'FALHA  ') + r[1]));
   console.log(errs.length ? 'ERROS: ' + errs.join(' | ') : 'sem erros JS');
   await b.close();
