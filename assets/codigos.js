@@ -50,7 +50,7 @@
       <p class="jv-volta"><a class="bt pri" href="#/codigos">ir para códigos</a> &nbsp; <a href="#/home">← tela inicial</a></p></div>`;
   };
   /* versão com o sufixo do acesso (".ADM", ".tester") na tela inicial e no topo */
-  J.pintaVersao = () => { const s = AC() ? AC().sufixo() : "", v = document.getElementById("versao"); if (v) v.textContent = "Jarvis " + (window.VERSAO || "") + s; const j = document.querySelector(".jv-ver .jv-suf"); if (j && !j.dataset.segura) j.textContent = s; };
+  J.pintaVersao = () => { const s = AC() ? AC().sufixo() : "", v = document.getElementById("versao"); if (v) v.textContent = "Jarvis " + (window.VERSAO || "") + s; const j = document.querySelector(".jv-ver .jv-suf"); if (j && !j.dataset.segura) { j.textContent = s; j.classList.toggle("adm", s === ".ADM"); } }; /* β 4.4: ".ADM" dourado */
 
   /* ---------- aviso "acesso liberado" ---------- */
   function toast(txt) {
@@ -145,8 +145,9 @@
      0–0,6 s a tela escurece · 0,3–1,3 s o buraco negro aparece (disco de acreção girando, anel de fótons, estrelas em volta
      desviadas pela lente gravitacional) · 1,0–5,2 s símbolos de todas as matérias chegam de todos os lados, espiralando
      (θ = θ₀ + 2,6·ln(R₀/r): giram mais rápido quanto mais perto) e esticando na direção do movimento; cada um engolido deixa o
-     buraco maior e mais brilhante · 5,0–6,4 s clarão e tela do Jarvis · 5,7–8,2 s o buraco negro voa pelo caminho de sempre
-     (embaixo à esquerda → entre Química e Matemática → versão) · 8,2 s colisão, clarão de impacto e ".ADM". */
+     buraco maior e mais brilhante · 5,0–6,4 s clarão e tela do Jarvis · 5,6–7,0 s (β 4.4) o buraco negro desce até o meio e toma
+     o lugar da figura central (que passa a ser o buraco negro, salvo) · 7,0 s EXPLOSÃO: clarão, ondas de choque, faíscas e cacos
+     de símbolos, tela tremendo · a onda chega à versão e acende o ".ADM" dourado. */
   const SABER = [
     ...["Я", "Ж", "Щ", "Ф", "Ы", "Э", "Ю", "Б", "Д", "Л"].map((c) => [c, "#a9d8ff"]),
     ...["∫", "∑", "∮", "∂", "∇", "√", "∞", "∏", "∬"].map((c) => [c, "#e3c6ff"]),
@@ -155,42 +156,28 @@
     ...["ॐ", "क", "ज्ञ", "स", "ध", "श", "ऋ", "अ", "गी"].map((c) => [c, "#ffb48a"]),
     ...["0", "1", "2", "3", "5", "7", "8", "π", "φ", "α", "β", "Ω", "Σ", "λ", "μ", "e", "i"].map((c) => [c, "#ffffff"]),
   ];
-  /* buraco negro centrado em (x,y), raio do horizonte R; rot = tempo (o disco gira); b = brilho 0…1 */
-  function buracoSVG(x, y, R, t, b) {
-    const cores = ["#fff7e0", "#ffe08a", "#ffc04d", "#ff9a2e", "#ff7a1a", "#e85a10", "#b83a08"];
-    /* disco: faixa contínua desfocada (o gás quente) + riscos finos por cima, cada anel girando na velocidade de Kepler (∝ r^-1,5) */
-    const aneis = (meia) => `<g clip-path="url(#fx-${meia})"><g style="filter:url(#fx-bhb)">` + Array.from({ length: 10 }, (_, k) => { const rx = R * (1.28 + 0.19 * k), c = cores[Math.min(6, Math.round(k * 0.7))];
-        return `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(rx)}" ry="${f1(rx * 0.24)}" style="fill:none;stroke:${c};stroke-width:${f1(R * 0.22)};opacity:${(b * 0.5 * (1 - k / 11)).toFixed(2)}"/>`; }).join("") + `</g>` +
-      cores.map((c, k) => { const rx = R * (1.35 + 0.27 * k), vel = 190 / Math.pow(rx / R, 1.5);
-        return `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(rx)}" ry="${f1(rx * 0.24)}" style="fill:none;stroke:${k < 2 ? "#fffaf0" : c};stroke-width:${f1(Math.max(1, R * 0.07))};stroke-linecap:round;stroke-dasharray:${f1(rx * 0.55)} ${f1(rx * 0.22)} ${f1(rx * 0.18)} ${f1(rx * 0.3)};stroke-dashoffset:${f1(-t * vel)};opacity:${(b * 0.75 * (1 - 0.08 * k)).toFixed(2)}"/>`; }).join("") + `</g>`;
-    return `<defs><radialGradient id="fx-bhg"><stop offset="0" stop-color="#ffd27a" stop-opacity="${(0.6 * b).toFixed(2)}"/><stop offset=".45" stop-color="#ff9a2e" stop-opacity="${(0.22 * b).toFixed(2)}"/><stop offset="1" stop-color="#ff7a1a" stop-opacity="0"/></radialGradient>
-        <clipPath id="fx-cima"><rect x="${f1(x - R * 6)}" y="${f1(y - R * 6)}" width="${f1(R * 12)}" height="${f1(R * 6)}"/></clipPath><clipPath id="fx-baixo"><rect x="${f1(x - R * 6)}" y="${f1(y)}" width="${f1(R * 12)}" height="${f1(R * 6)}"/></clipPath>
-        <filter id="fx-bhb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${f1(Math.max(0.6, R * 0.07))}"/></filter></defs>
-      <circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(R * 4.2)}" style="fill:url(#fx-bhg)"/>
-      ${aneis("cima")}
-      <ellipse cx="${f1(x)}" cy="${f1(y - R * 0.05)}" rx="${f1(R * 1.5)}" ry="${f1(R * 1.26)}" clip-path="url(#fx-cima)" style="fill:none;stroke:#ffd27a;stroke-width:${f1(R * 0.24)};opacity:${(0.85 * b).toFixed(2)};filter:url(#fx-bhb)"/>
-      <ellipse cx="${f1(x)}" cy="${f1(y + R * 0.03)}" rx="${f1(R * 1.3)}" ry="${f1(R * 1.12)}" clip-path="url(#fx-baixo)" style="fill:none;stroke:#ffb04d;stroke-width:${f1(R * 0.1)};opacity:${(0.55 * b).toFixed(2)}"/>
-      <circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(R)}" style="fill:#000"/>
-      <circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(R * 1.05)}" style="fill:none;stroke:#fff3cf;stroke-width:${f1(Math.max(1.2, R * 0.035))};opacity:${(0.5 + 0.5 * b).toFixed(2)}"/>
-      ${aneis("baixo")}`;
-  }
+  const buracoSVG = (x, y, R, t, b) => (window.BURACO ? window.BURACO.svg(x, y, R, t, b, "anim") : ""); /* desenho comum: assets/figuras.js (β 4.4) */
   function animBuraco() {
     const p = palco(true), { W, H } = p, cx = W / 2, cy = H * 0.5, Rb = Math.min(W, H) * 0.07, Rlonge = Math.hypot(W, H) * 0.46; /* nascem na borda da tela */
     const est = Array.from({ length: 170 }, (_, i) => ({ x: ((i * 7919) % 1000) / 1000 * W, y: ((i * 104729) % 997) / 997 * H, r: 0.5 + ((i * 31) % 10) / 8, f: (i * 0.37) % 6.28 }));
     const N = 220, sab = Array.from({ length: N }, (_, i) => { const [c, cor] = SABER[(i * 37) % SABER.length]; return { c, cor, ts: 0.7 + (3.8 * i) / N + (((i * 13) % 10) / 10) * 0.25, T: 1.4 + (((i * 29) % 10) / 10) * 0.8, a0: (((i * 61) % 360) * Math.PI) / 180, R0: Rlonge * (0.9 + ((i * 17) % 10) / 40), tam: 15 + ((i * 11) % 12) }; });
-    let rota = null, voo = null, sufixo = null;
-    const prepVoo = () => { /* o mesmo caminho do livro: embaixo à esquerda → entre Química e Matemática → versão */
-      const ilu = document.querySelector(".jv-ilu"), q = document.querySelector('.jv-mat[data-materia="quimica"]'), m = document.querySelector('.jv-mat[data-materia="matematica"]'), v = document.querySelector(".jv-ver");
-      if (!ilu || !q || !m || !v) return null;
-      const a = ilu.getBoundingClientRect(), qr = q.getBoundingClientRect(), mr = m.getBoundingClientRect(), vr = v.getBoundingClientRect();
-      const P0 = [a.left + a.width * 0.2, a.top + a.height * 0.78], P1 = [(qr.right + mr.left) / 2, (qr.top + qr.bottom) / 2], P2 = [vr.right + 4, vr.top + vr.height * 0.55];
-      return { P0, C1: [P0[0] - 150, (P0[1] + P1[1]) / 2 + 30], P1, C2: [P1[0] + 30, P2[1] + 60], P2 };
+    const cacos = Array.from({ length: 46 }, (_, i) => { const [c, cor] = SABER[(i * 23) % SABER.length]; return { c, cor, a: (i / 46) * 2 * Math.PI + ((i * 7) % 10) * 0.05, v: 380 + ((i * 53) % 10) * 70, tam: 13 + ((i * 7) % 10) }; });
+    let rota = null, alvo = null, sufixo = null, chegou = false, revelou = false;
+    const R_FIM = Rb * 1.5; /* raio do buraco negro no auge (0,25 + 0,75)·(1 + 0,35 + 0,15) */
+    /* β 4.4: o buraco negro vai para o MEIO da tela do Jarvis e toma o lugar da figura central; lá ele explode e a onda acende o ".ADM" */
+    const prepAlvo = () => {
+      const ilu = document.querySelector(".jv-ilu"), sv = ilu && ilu.querySelector("svg"), v = document.querySelector(".jv-ver"); if (!ilu || !sv) return null;
+      const r = sv.getBoundingClientRect(), esc = Math.min(r.width / 320, r.height / 260), vr = v ? v.getBoundingClientRect() : null;
+      ilu.style.visibility = "hidden"; /* a figura de antes some: quem ocupa o lugar é o buraco negro que está chegando */
+      const x = r.left + r.width / 2, y = r.top + r.height / 2;
+      return { ilu, x, y, R: 40 * esc, ver: vr ? [vr.right - 10, vr.top + vr.height * 0.55] : [x, 40] };
     };
-    const bez = (A, C, B, u) => [(1 - u) * (1 - u) * A[0] + 2 * (1 - u) * u * C[0] + u * u * B[0], (1 - u) * (1 - u) * A[1] + 2 * (1 - u) * u * C[1] + u * u * B[1]];
-    const ponto = (u) => (u < 0.5 ? bez(voo.P0, voo.C1, voo.P1, u * 2) : bez(voo.P1, voo.C2, voo.P2, (u - 0.5) * 2));
+    const assenta = () => { /* o buraco negro vira a figura central (fica salvo; dá para trocar na engrenagem) */
+      if (J.figura) J.figura({ id: "buraconegro" }); const ilu = document.querySelector(".jv-ilu"); if (ilu) ilu.style.visibility = ""; };
     const vaiParaHome = () => { if (location.hash !== "#/home") location.hash = "#/home"; };
     const seguraSufixo = () => { const s = document.querySelector(".jv-ver .jv-suf"); if (s && s !== sufixo) { sufixo = s; s.dataset.segura = "1"; s.textContent = ""; } };
-    const revela = () => { const s = document.querySelector(".jv-ver .jv-suf"); if (s) { delete s.dataset.segura; s.textContent = AC().sufixo(); s.classList.remove("chega"); void s.offsetWidth; s.classList.add("chega"); } J.pintaVersao(); };
+    const revela = () => { const s = document.querySelector(".jv-ver .jv-suf"); if (s) { delete s.dataset.segura; s.textContent = AC().sufixo(); s.classList.toggle("adm", AC().sufixo() === ".ADM"); s.classList.remove("chega"); void s.offsetWidth; s.classList.add("chega"); } J.pintaVersao(); };
+    const treme = (k) => { const pg = document.getElementById("pagina"); if (pg) pg.style.transform = k ? `translate(${f1((Math.random() - 0.5) * 8 * k)}px, ${f1((Math.random() - 0.5) * 8 * k)}px)` : ""; };
     const espiral = (g, u, Rh) => { const r = Rh * 0.95 + (g.R0 - Rh * 0.95) * (1 - Math.pow(u, 2.4)), a = g.a0 + 2.6 * Math.log(g.R0 / r); return [cx + r * Math.cos(a), cy + r * Math.sin(a) * 0.8, r]; };
     const desenha = (t) => {
       let h = "";
@@ -215,20 +202,30 @@
       if (t >= 5.0 && t < 6.4) { const fl = t < 5.5 ? suave((t - 5.0) / 0.5) : 1 - suave((t - 5.5) / 0.9); h += `<rect width="${W}" height="${H}" style="fill:#fff8e6;opacity:${fl.toFixed(3)}"/>`; }
       if (t >= 5.45 && !rota) { rota = 1; vaiParaHome(); }
       if (t >= 5.5) seguraSufixo();
-      if (t >= 5.6 && !voo) voo = prepVoo();
-      if (voo && t >= 5.6 && t < 8.3) { /* o buraco negro (pequeno) voa até a versão, puxando um rastro de poeira dourada */
-        const u = suave((t - 5.7) / 2.5), [x, y] = ponto(u);
-        for (let k = 1; k <= 12; k++) { const [tx, ty] = ponto(Math.max(0, u - k * 0.015)); h += `<circle cx="${f1(tx + 3 * Math.sin(t * 9 + k))}" cy="${f1(ty + 3 * Math.cos(t * 7 + k))}" r="${f1(3.4 - k * 0.22)}" style="fill:${k % 2 ? "#ffc04d" : "#fff1c2"};opacity:${(0.75 - k * 0.055).toFixed(2)}"/>`; }
-        h += buracoSVG(x, y, 21 - 9 * u, t, 0.95);
+      if (t >= 5.6 && !alvo) alvo = prepAlvo();
+      if (alvo && t >= 5.6 && t < 7.0) { /* desce do meio da tela até o lugar da figura central, ajustando o tamanho */
+        const u = suave((t - 5.6) / 1.4), x = cx + (alvo.x - cx) * u, y = cy + (alvo.y - cy) * u - 40 * Math.sin(Math.PI * u), R = R_FIM + (alvo.R - R_FIM) * u;
+        h += buracoSVG(x, y, R, t, 1);
       }
-      if (voo && t >= 8.2) { /* colisão: clarão de impacto e o ".ADM" aparece */
-        if (!desenha.bateu) { desenha.bateu = 1; revela(); }
-        const b = suave((t - 8.2) / 0.85), [x, y] = voo.P2;
-        h += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(10 + 70 * b)}" style="fill:#fff6d6;opacity:${(0.55 * (1 - b)).toFixed(2)}"/>` + Array.from({ length: 16 }, (_, k) => { const a = (k / 16) * 2 * Math.PI, r0 = 8 + 46 * b, r1 = r0 + 14 * (1 - b); return `<line x1="${f1(x + r0 * Math.cos(a))}" y1="${f1(y + r0 * Math.sin(a))}" x2="${f1(x + r1 * Math.cos(a))}" y2="${f1(y + r1 * Math.sin(a))}" style="stroke:${k % 2 ? "#ffd27a" : "#ffffff"};stroke-width:2.6;stroke-linecap:round;opacity:${(1 - b).toFixed(2)}"/>`; }).join("") + `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(5 + 24 * b)}" style="fill:none;stroke:#ffe08a;stroke-width:2;opacity:${(1 - b).toFixed(2)}"/>`;
+      if (alvo && t >= 7.0) {
+        if (!chegou) { chegou = true; assenta(); }
+        const e = t - 7.0, { x, y } = alvo, Rmax = Math.hypot(W, H);
+        if (e < 1.6) { /* EXPLOSÃO: clarão, três ondas de choque, faíscas e cacos de símbolos voando para fora, tela tremendo */
+          const cl0 = 1 - suave(e / 0.55);
+          h += `<rect width="${W}" height="${H}" style="fill:#fff2c8;opacity:${(0.75 * cl0).toFixed(3)}"/><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(30 + 160 * suave(e / 0.4))}" style="fill:#fffbe8;opacity:${(0.9 * cl0).toFixed(2)}"/>`;
+          [0, 0.18, 0.36].forEach((d, k) => { const u = (e - d) / 1.3; if (u <= 0 || u >= 1) return; h += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(Rmax * suave(u))}" style="fill:none;stroke:${["#ffffff", "#ffd27a", "#ff9a2e"][k]};stroke-width:${f1(10 - 6 * u)};opacity:${(0.85 * (1 - u)).toFixed(2)}"/>`; });
+          for (let k = 0; k < 40; k++) { const a = (k / 40) * 2 * Math.PI + k * 0.37, r0 = 20 + 700 * suave(e / 1.1) * (0.6 + ((k * 13) % 10) / 25), r1 = r0 + 26 * (1 - e / 1.6); h += `<line x1="${f1(x + r0 * Math.cos(a))}" y1="${f1(y + r0 * Math.sin(a))}" x2="${f1(x + r1 * Math.cos(a))}" y2="${f1(y + r1 * Math.sin(a))}" style="stroke:${k % 3 ? "#ffd27a" : "#ffffff"};stroke-width:2.2;stroke-linecap:round;opacity:${(1 - e / 1.6).toFixed(2)}"/>`; }
+          cacos.forEach((c) => { const r = 40 + c.v * e * (1 - 0.25 * e); h += `<text x="${f1(x + r * Math.cos(c.a))}" y="${f1(y + r * Math.sin(c.a))}" text-anchor="middle" dominant-baseline="central" style="font:700 ${c.tam}px var(--f-text);fill:${c.cor};opacity:${(1 - e / 1.6).toFixed(2)}">${c.c}</text>`; });
+          treme(e < 0.5 ? 1 - e / 0.5 : 0);
+        } else treme(0);
+        /* a onda de choque chega à versão: ".ADM" acende, dourado, com um brilho de impacto */
+        const dV = Math.hypot(alvo.ver[0] - x, alvo.ver[1] - y), tV = 0.15 + 1.3 * 0.55 * (dV / Rmax); /* quando a primeira onda passa por lá (aprox.) */
+        if (e >= tV && !revelou) { revelou = true; revela(); }
+        if (revelou) { const b = suave((e - tV) / 0.9), [vx, vy] = alvo.ver; if (b < 1) h += `<circle cx="${f1(vx)}" cy="${f1(vy)}" r="${f1(6 + 34 * b)}" style="fill:#ffe9a8;opacity:${(0.6 * (1 - b)).toFixed(2)}"/>` + Array.from({ length: 12 }, (_, k) => { const a = (k / 12) * 2 * Math.PI, r0 = 6 + 30 * b, r1 = r0 + 10 * (1 - b); return `<line x1="${f1(vx + r0 * Math.cos(a))}" y1="${f1(vy + r0 * Math.sin(a))}" x2="${f1(vx + r1 * Math.cos(a))}" y2="${f1(vy + r1 * Math.sin(a))}" style="stroke:#ffd27a;stroke-width:2.2;stroke-linecap:round;opacity:${(1 - b).toFixed(2)}"/>`; }).join(""); }
       }
       p.sv.innerHTML = h;
     };
-    roda(p, 9.1, desenha, () => { vaiParaHome(); setTimeout(() => { revela(); J.pintaVersao(); }, 60); });
+    roda(p, 9.0, desenha, () => { treme(0); if (!chegou) { chegou = true; if (J.figura) J.figura({ id: "buraconegro" }); } vaiParaHome(); setTimeout(() => { const ilu = document.querySelector(".jv-ilu"); if (ilu) ilu.style.visibility = ""; revela(); J.pintaVersao(); }, 60); });
   }
 
   /* ---------- ANIMAÇÕES DOS CÓDIGOS AVULSOS (2,6 s, sem tela cheia) ---------- */

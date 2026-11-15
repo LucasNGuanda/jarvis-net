@@ -114,6 +114,7 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
   await p.waitForTimeout(5800); /* a animação dura 9,1 s */
   conf(await p.evaluate(() => !document.querySelector('.anim-acesso') && location.hash === '#/home'), 'ADM: animação termina sozinha na tela inicial');
   conf(/β 4\.\d+\.ADM$/.test((await versao()).trim()), 'ADM: versão com .ADM', await versao());
+  conf(await p.evaluate(() => document.querySelector('.jv-ver .jv-suf').classList.contains('adm') && JARVIS.figuraCfg().id === 'buraconegro' && !!document.querySelector('.jv-ilu svg.jv-bn') && document.querySelector('.jv-ilu').style.visibility !== 'hidden' && !document.getElementById('pagina').style.transform), 'ADM (β 4.4): o buraco negro vira a figura central, ".ADM" dourado, nada escondido nem tremendo no fim');
   const adm = await p.evaluate(() => ({ cards: document.querySelectorAll('.jv-materias a.sem-acesso').length, tr: document.querySelectorAll('.jv .trancado').length, ling: !!document.querySelector('.jv-linguas') }));
   conf(adm.cards === 0 && adm.tr === 0 && adm.ling, 'ADM: nada trancado e barrinha de idiomas', JSON.stringify(adm));
   for (const h of ['#/inicio', '#/experimental', '#/matematica-olimpiada', '#/quimica-experimentos', '#/russo-leitura', '#/alemao', '#/sanscrito']) conf(!(await bloqueada(h)), `ADM: ${h} abre`);
@@ -121,7 +122,7 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
 
   // β 4.3: ADM pula com Esc também; figura "buraco negro" e título dourado: ADM vê, mais ninguém
   await zera(); await digita('adm', COD.adm); await p.waitForTimeout(1500); await p.keyboard.press('Escape'); await p.waitForTimeout(600);
-  conf(await p.evaluate(() => !document.querySelector('.anim-acesso') && location.hash === '#/home' && /\.ADM$/.test(document.querySelector('.jv-ver').textContent)), 'ADM: Esc pula o buraco negro e já aplica o .ADM');
+  conf(await p.evaluate(() => !document.querySelector('.anim-acesso') && location.hash === '#/home' && /\.ADM$/.test(document.querySelector('.jv-ver').textContent) && JARVIS.figuraCfg().id === 'buraconegro' && document.querySelector('.jv-ilu').style.visibility !== 'hidden'), 'ADM: Esc pula o buraco negro e já aplica o .ADM e a figura');
   await p.click('.jv-engrenagem'); await p.waitForTimeout(300);
   conf((await p.evaluate(() => [...document.querySelectorAll('.jv-painel-figbt')].map((b) => b.dataset.fig).join(','))) === 'planeta,galaxia,buraconegro', 'ADM: as 3 figuras no painel, com o buraco negro');
   await p.click('.jv-painel-figbt[data-fig=buraconegro]'); await p.waitForTimeout(200); await p.keyboard.press('Escape');

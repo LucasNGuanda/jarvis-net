@@ -21,7 +21,7 @@
     let id = F ? F.porId(o.id).id : "planeta"; if (window.ACESSO && !window.ACESSO.figura(id)) id = "planeta"; /* β 4.3: o buraco negro é só do ADM (salvo antes por um ADM que voltou a visitante → planeta) */
     return { id, hue: typeof o.hue === "number" ? o.hue : null, vel: typeof o.vel === "number" ? Math.max(0, Math.min(2, o.vel)) : 1 }; };
   const tons = (h) => [`hsl(${h - 12}, 85%, 66%)`, `hsl(${h}, 80%, 60%)`, `hsl(${h + 14}, 88%, 56%)`]; /* os mesmos três tons do título */
-  J.corFigura = (el, hue) => { if (hue === null) ["--fg1", "--fg2", "--fg3"].forEach((v) => el.style.removeProperty(v)); else tons(hue).forEach((c, k) => el.style.setProperty(`--fg${k + 1}`, c)); };
+  J.corFigura = (el, hue) => { if (hue === null) ["--fg1", "--fg2", "--fg3", "--fg-hue"].forEach((v) => el.style.removeProperty(v)); else { tons(hue).forEach((c, k) => el.style.setProperty(`--fg${k + 1}`, c)); el.style.setProperty("--fg-hue", hue); } }; /* --fg-hue: o buraco negro (cores fixas) gira o matiz */
   let est = null, velAtual = 1;
   const reduz = () => { try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } };
   function laco(agora) {
@@ -113,7 +113,7 @@
     const P = window.PROJETO || { nome: "Jarvis" }, ling = J.lingua(), mats = (window.MATERIAS || []).filter((m) => !m.idioma || m.id === ling), suf = AC() ? AC().sufixo() : "";
     const seletor = IDIOMAS().length > 1 && pode("idiomas") ? `<div class="jv-linguas" role="group" aria-label="Idioma da matéria de línguas">${IDIOMAS().map((m) => `<button type="button" data-lingua="${esc(m.id)}" aria-pressed="${m.id === ling}" title="${esc(m.nome)}${pode("materia", m.id) ? "" : " (trancado)"}"${pode("materia", m.id) ? "" : ` class="tranca"`} style="--cor:var(${esc(m.cor)})">${esc(m.letra || m.nome[0])}</button>`).join("")}</div>` : "";
     el.innerHTML = `<div class="jv">
-      <header class="jv-cab"><div class="jv-titulo" tabindex="-1"><h1 title="Passe o mouse para mudar a cor">${esc(P.nome)}${window.VERSAO ? `<span class="jv-ver">${esc(window.VERSAO)}<span class="jv-suf">${esc(suf)}</span></span>` : ""}</h1>
+      <header class="jv-cab"><div class="jv-titulo" tabindex="-1"><h1 title="Passe o mouse para mudar a cor">${esc(P.nome)}${window.VERSAO ? `<span class="jv-ver">${esc(window.VERSAO)}<span class="jv-suf${suf === ".ADM" ? " adm" : ""}">${esc(suf)}</span></span>` : ""}</h1>
         <div class="jv-cor" role="group" aria-label="Cor do ${esc(P.nome)}"><label>cor<input type="range" min="0" max="${MATIZ_MAX}" step="1" value="50" aria-label="Cor, do vermelho ao lilás"></label><button type="button">voltar à cor original</button></div></div></header>
       <nav class="jv-materias" aria-label="Matérias">${mats.map((m) => (m.idioma ? `<div class="jv-mat-idioma">${cartao(m)}${seletor}</div>` : cartao(m))).join("")}</nav>
       <div class="jv-ilu"></div>

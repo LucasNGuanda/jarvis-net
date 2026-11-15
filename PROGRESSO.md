@@ -1,6 +1,6 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado atual (15/11/2026, depois da β 4.3)
+## Estado atual (15/11/2026, depois da β 4.4; a β 4.3 + 4.4 está na branch `adm-buraco-negro`, esperando o Lucas testar)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
 
 ### Física — 96 de 96 temas escritos
@@ -453,13 +453,19 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Projeto futuro registrado no CLAUDE.md (não implementado): conversa de verdade exigiria API paga e um programa à parte com servidor.
   - Testes: `tests/tbusca.js` novo (60 conferências); `tests/tacesso.js` ampliado (alemão, sânscrito, Jarvis, "código já usado", barrinha com idiomas trancados); `thome` e `tadesivos`: o campo do Jarvis agora é ativo para o ADM. Capturas: `tests/capturas/anim-42-quadros.png`, `busca-*.png`, `pag42-*.png`, `fontes42.png`.
   - Regressão: a mesma de cima, sem FALHA; tbusca 60 conferências, tacesso 130. O Lucas testou o ZIP e aprovou; juntado ao `main`.
-- **β 4.3** — **ADM mais forte: buraco negro, figura e título dourado exclusivos** (pedido de 15/11/2026, depois de o Lucas aprovar a β 4.1 + 4.2, que foram para o `main`).
+- **β 4.3** — **ADM mais forte: buraco negro, figura e título dourado exclusivos** (pedido de 15/11/2026, depois de o Lucas aprovar a β 4.1 + 4.2, que foram para o `main`). O voo até a versão descrito abaixo foi trocado na β 4.4.
   - Animação nova do ADM (9,1 s, pulável com Esc ou "pular"; com movimento reduzido, pula sozinha): a tela escurece e aparece um buraco negro com disco de acreção girando (anéis na velocidade de Kepler, ∝ r^-1,5), anel de fótons, o arco do disco de trás curvado por cima da sombra e as estrelas em volta desviadas pela lente gravitacional (imagem principal empurrada para fora, a secundária do outro lado: d = (d₀ ± √(d₀² + 4θ_E²))/2). 220 símbolos (cirílico, ∫ ∑ ∮, fórmulas de física e de química, devanágari, números e grego) chegam de todos os lados, espiralando (θ = θ₀ + 2,6·ln(R₀/r)) e esticando na direção do movimento quanto mais perto; cada um engolido deixa o buraco maior e mais brilhante. No auge, clarão e tela do Jarvis; o buraco negro voa pelo caminho de antes (embaixo à esquerda → entre Química e Matemática → versão), com rastro de poeira dourada, e colide: clarão de impacto, raios e ".ADM". O livro ficou só para o tester.
   - Desempenho conferido: 122 quadros em 2 s no começo e 115 no auge (Playwright, Chromium headless).
   - Nome do X01 (bônus da Física) trocado de "A função gam fresco do Lucas" para "Função gama fresco" (pedido do Lucas). Dentro do tema, o símbolo continua se chamando "gam fresco".
   - Figura central "buraco negro" e título dourado: só ADM, travados no motor (`SO_ADM` em `assets/acesso.js`), fora do arquivo de configuração. Para quem não é ADM, a opção nem aparece; se um ADM tinha escolhido e depois voltou a visitante, vale o planeta e a cor original.
   - Título dourado: degradê dourado que anda devagar pelas letras (CSS, 10 s por volta) e, de dentro de "Jarvis", símbolos de 9 a 12 px que sobem ~40 px e somem (um a cada 0,45 s, no máximo 7 de cada vez, param quando a tela inicial sai ou a aba fica escondida; com movimento reduzido, sem símbolos e sem movimento).
   - Testes: `tests/tacesso.js` ganhou 9 conferências (buraco negro no lugar do livro, quadros no começo e no auge, Esc, as 3 figuras do ADM, dourado salvo e discreto, e tester, config, todos os avulsos e todos os avulsos + tester sem buraco negro e sem dourado). Capturas: `tests/capturas/anim-adm-buraco-quadros.png`, `ouro-quadros.png`.
+  - Regressão da β 4.3: interrompida no meio (tacesso, tbusca e tgeral sem falha) porque o Lucas pediu mudanças; refeita na β 4.4.
+- **β 4.4** — **O buraco negro do ADM vai para o meio e explode** (pedido de 15/11/2026, depois de testar o ZIP da β 4.3).
+  - Depois do clarão, o buraco negro não voa mais até a versão: desce até o meio da tela do Jarvis e toma o lugar da figura central (a figura passa a ser o buraco negro e fica salva em `jarvis:figura`; dá para trocar na engrenagem). Lá ele EXPLODE: clarão, três ondas de choque, 40 faíscas, 46 cacos de símbolos voando para fora e a tela tremendo meio segundo. Quando a onda passa pela versão, o ".ADM" acende, dourado (degradê dourado andando, como o título), com um brilho de impacto. Pular (Esc ou botão) aplica tudo de uma vez.
+  - ".ADM" dourado sempre que o acesso é de ADM (classe `adm` no sufixo).
+  - A figura central "buraco negro" agora é o MESMO desenho da animação: `window.BURACO` em `assets/figuras.js`, usado pelas duas (disco de acreção com faixa de gás e riscos na velocidade de Kepler, anel de fótons, arco da lente por cima). Cores quentes fixas; a "cor própria" do painel gira o matiz inteiro (hue-rotate). Na figura, só os riscos se mexem a cada quadro (barato).
+  - Testes: `tests/tacesso.js` confere que, depois da animação (inteira ou pulada), a figura é o buraco negro, o ".ADM" é dourado e nada fica escondido ou tremendo. Capturas: `tests/capturas/anim-adm-buraco-quadros.png` (refeita), `ouro-quadros.png`.
   - Regressão: em andamento (atualizo aqui quando terminar).
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
