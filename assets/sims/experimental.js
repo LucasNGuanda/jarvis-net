@@ -1,4 +1,4 @@
-/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; */
+/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -66,6 +66,40 @@
       const m = medidas.length ? media(medidas) : NaN, s = medidas.length >= 2 ? dp(medidas) : NaN;
       q("[data-v=lt]").innerHTML = vis("medidas feitas", String(medidas.length)) + vis("atraso médio (sistemático)", medidas.length ? n2(m, 3) + " s" : "—") + vis("espalhamento: desvio padrão (tipo A)", medidas.length >= 2 ? n2(s, 3) + " s" : "—") + vis("resolução do cronômetro (tipo B)", "0,01 s");
       q("[data-v=fb]").textContent = msg;
+    });
+  };
+
+  /* ---------- FE03 · medidas repetidas: histograma, média, desvio padrão e desvio da média ---------- */
+  SIM.repetidas = (el, F) => {
+    const W = 680, H = 280, VERD = 10;
+    let dados = [], exps = 0, acertos = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("espalhamento de cada medida σ", "s", 0.05, 1, 0.05, 0.4)}${sl("medidas por experimento N", "N", 2, 100, 1, 10)}
+      <div class="bts"><button class="bt pri" data-a="um">Fazer um experimento</button><button class="bt" data-a="cem">Fazer 100 experimentos</button><button class="bt" data-a="zera">Zerar</button></div></div>
+      <div class="status">O valor verdadeiro (que na vida real você não conhece) é 10,00. Cada medida sai espalhada em volta dele, com desvio padrão σ. Num experimento, você faz N medidas, calcula a média e o desvio padrão da média, σ/√N. O histograma mostra as medidas do último experimento. O contador embaixo mostra em quantos experimentos o intervalo "média ± σ da média" conteve o valor verdadeiro: deve dar perto de 68% (um pouco menos com N pequeno, porque o próprio σ também é uma estimativa; com N = 2, uns 50%).</div>`);
+    const q = (s) => el.querySelector(s);
+    const gauss = () => { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+    const estat = (a) => { const n = a.length, m = a.reduce((s, x) => s + x, 0) / n, s = Math.sqrt(a.reduce((t, x) => t + (x - m) ** 2, 0) / (n - 1)); return { m, s, sm: s / Math.sqrt(n) }; };
+    SIM.repetidas._estat = estat;
+    const exp = () => { const N = val(el, "N"), s = val(el, "s"); dados = Array.from({ length: N }, () => VERD + s * gauss()); const e = estat(dados); exps++; if (Math.abs(e.m - VERD) <= e.sm) acertos++; };
+    q("[data-a=um]").addEventListener("click", exp); q("[data-a=cem]").addEventListener("click", () => { for (let i = 0; i < 100; i++) exp(); });
+    q("[data-a=zera]").addEventListener("click", () => { dados = []; exps = 0; acertos = 0; });
+    ["s", "N"].forEach((k) => q(`[data-c=${k}]`).addEventListener("input", () => { exps = 0; acertos = 0; }));
+    exp(); exps = 0; acertos = 0;
+    anima(el, F, () => {
+      const s = val(el, "s"); mostra(el, ["s"], 2); mostra(el, ["N"], 0);
+      const e = dados.length > 1 ? estat(dados) : null, a = VERD - 4 * s, b = VERD + 4 * s, gx = 60, gw = 560, gy = 220, X = (v) => gx + ((v - a) / (b - a)) * gw;
+      const nb = 24, bins = new Array(nb).fill(0); dados.forEach((x) => { const k = Math.floor(((x - a) / (b - a)) * nb); if (k >= 0 && k < nb) bins[k]++; });
+      const mx = Math.max(1, ...bins), esc = 150 / Math.max(mx, (dados.length * (b - a)) / nb / (s * Math.sqrt(2 * Math.PI)));
+      let sv = D.seta(gx, gy, gx + gw + 10, gy, "var(--ink2)", 1.4);
+      bins.forEach((c, k) => (sv += `<rect x="${gx + (k * gw) / nb + 1}" y="${gy - c * esc}" width="${gw / nb - 2}" height="${c * esc}" style="fill:color-mix(in srgb,var(--mN) 45%,transparent)"/>`));
+      let d = ""; for (let i = 0; i <= 80; i++) { const v = a + ((b - a) * i) / 80, fx = (dados.length * ((b - a) / nb) * Math.exp(-((v - VERD) ** 2) / (2 * s * s))) / (s * Math.sqrt(2 * Math.PI)); d += (i ? "L" : "M") + X(v).toFixed(1) + " " + (gy - fx * esc).toFixed(1); }
+      sv += `<path d="${d}" style="fill:none;stroke:var(--ink3);stroke-dasharray:4 4"/>`;
+      [-3, -2, -1, 0, 1, 2, 3].forEach((k) => (sv += `<line x1="${X(VERD + k * s)}" x2="${X(VERD + k * s)}" y1="${gy}" y2="${gy + 5}" style="stroke:var(--ink3)"/>` + D.txt(X(VERD + k * s), gy + 18, n2(VERD + k * s, 2), "tx2")));
+      sv += `<line x1="${X(VERD)}" x2="${X(VERD)}" y1="40" y2="${gy}" style="stroke:var(--ok);stroke-width:2"/>` + D.txt(X(VERD), 34, "verdadeiro", "tx2");
+      if (e) sv += `<rect x="${X(e.m - e.sm)}" y="244" width="${Math.max(2, X(e.m + e.sm) - X(e.m - e.sm))}" height="14" style="fill:color-mix(in srgb,var(--warn) 40%,transparent);stroke:var(--warn)"/><line x1="${X(e.m - e.s)}" x2="${X(e.m + e.s)}" y1="270" y2="270" style="stroke:var(--mN);stroke-width:2"/><circle cx="${X(e.m)}" cy="251" r="4" style="fill:var(--warn)"/>` + D.txt(X(e.m + e.s) + 6, 274, "média ± σ", "tx2", "start") + D.txt(X(e.m + e.sm) + 6, 256, "média ± σ/√N", "tx2", "start");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("média", e ? n2(e.m, 3) : "—") + vis("desvio padrão σ (espalhamento)", e ? n2(e.s, 3) : "—") + vis("desvio da média σ/√N (incerteza)", e ? n2(e.sm, 3) : "—") + vis("intervalos que contêm o verdadeiro", exps ? acertos + " de " + exps + " (" + n2((100 * acertos) / exps, 0) + "%)" : "—");
     });
   };
 })();
