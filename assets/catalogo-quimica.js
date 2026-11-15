@@ -31,7 +31,7 @@ window.CATALOGO.push(
   { id:"QC", area:"qui", letra:"C", cor:"--mC", nome:"Ligações químicas", desc:"Iônica, covalente, metálica, geometria e forças intermoleculares.", temas:[
     ["C01","Ligação iônica",[],true],
     ["C02","Ligação covalente e ressonância",[],true],
-    ["C03","Ligação metálica e ligas",[]],
+    ["C03","Ligação metálica e ligas",[],true],
     ["C04","Geometria molecular (VSEPR)",[]],
     ["C05","Polaridade",[]],
     ["C06","Forças intermoleculares",[]],

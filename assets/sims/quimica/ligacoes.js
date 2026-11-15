@@ -75,7 +75,7 @@
     return s;
   };
   SIM.ressonancia = (el, F) => {
-    const W = 680, H = 250, M = [["H2O", "H₂O", "água", "96 pm"], ["CO2", "CO₂", "dióxido de carbono", "116 pm"], ["N2", "N₂", "nitrogênio", "110 pm"], ["O3", "O₃", "ozônio", "128 pm"], ["NO3", "NO₃⁻", "íon nitrato", "124 pm"], ["CO3", "CO₃²⁻", "íon carbonato", "129 pm"], ["C6H6", "C₆H₆", "benzeno", "139 pm (C–C)"]];
+    const W = 680, H = 250, M = [["H2O", "H₂O", "água", "96 pm"], ["CO2", "CO₂", "dióxido de carbono", "116 pm"], ["N2", "N₂", "nitrogênio", "110 pm"], ["O3", "O₃", "ozônio", "128 pm"], ["NO3", "NO₃⁻", "íon nitrato", "124 pm"], ["CO3", "CO₃²⁻", "íon carbonato", "129 pm"], ["C6H6", "C₆H₆", "benzeno", "140 pm (C–C)"]];
     let m = "O3", k = 0;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
       <div class="ctrls"><div><div class="bts">${botoes(M.map((x) => [x[0], x[1]]), "m", "O3")}</div></div><div><div class="bts" data-v="fs"></div></div></div>
