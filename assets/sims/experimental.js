@@ -1,4 +1,4 @@
-/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; FE06 barras de erro; FE07 linearização; FE08 log-log; FE09 mínimos quadrados; FE10 erros sistemáticos; */
+/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; FE06 barras de erro; FE07 linearização; FE08 log-log; FE09 mínimos quadrados; FE10 erros sistemáticos; FE11 relatório; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -355,5 +355,72 @@
       if (cal && e.N > 1) { const mc = e.m - cal.b, uc = e.u + cal.u, nc = Math.abs(mc - VR) / uc; corr = n2(mc, 3) + " ± " + n2(uc, 3) + " (" + n2(nc, 1) + "Δ)"; }
       q("[data-v=lt]").innerHTML = vis("N medidas", e.N) + vis("média ± σ/√N (cm)", e.N > 1 ? n2(e.m, 3) + " ± " + n2(e.u, 3) : "—") + vis("distância de 50,00", isFinite(n) ? n2(n, 1) + " Δ: " + ver : "—") + vis("deslocamento medido no padrão", cal ? n2(cal.b, 3) + " ± " + n2(cal.u, 3) : "—") + vis("resultado corrigido", corr);
     });
+  };
+
+  /* ---------- FE11 · corretor de resultado: escreva "grandeza = (valor ± incerteza) unidade" e receba a correção ---------- */
+  SIM.relatorio = (el, F) => {
+    const casos = [
+      { g: "g", v: 9.78342, u: 0.04718, un: "m/s²", ctx: "aceleração da gravidade pelo pêndulo" },
+      { g: "v", v: 343.817, u: 12.6, un: "m/s", ctx: "velocidade do som num tubo" },
+      { g: "k", v: 24.4987, u: 0.6012, un: "N/m", ctx: "constante elástica pela inclinação" },
+      { g: "T", v: 1.41927, u: 0.00284, un: "s", ctx: "período médio de 20 medidas" },
+      { g: "ρ", v: 7861.3, u: 152.7, un: "kg/m³", ctx: "densidade de um cilindro de metal" },
+      { g: "λ", v: 6.8349e-7, u: 2.13e-9, un: "m", ctx: "comprimento de onda de um laser" },
+    ];
+    let i = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" style="padding:14px 18px;text-align:left;display:block"><div data-v="cx" style="margin-bottom:10px"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><input data-v="in" type="text" spellcheck="false" style="flex:1;min-width:260px;font:inherit;font-size:1.05em;padding:8px 10px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);color:var(--ink)" placeholder="ex.: g = (9,8 ± 0,1) m/s²"><button class="bt" data-a="ok">Corrigir</button><button class="bt" data-a="ins">±</button></div>
+      <ul data-v="fb" style="margin:12px 0 0;padding-left:20px;line-height:1.7"></ul></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="bts" style="grid-column:1/-1"><button class="bt" data-a="ant">Caso anterior</button><button class="bt" data-a="prox">Próximo caso</button><button class="bt" data-a="ver">Mostrar a forma certa</button></div></div>
+      <div class="status">A calculadora deu muitos dígitos; o relatório não pode. Regras usadas na correção: a incerteza fica com 1 algarismo significativo (ou 2, se o primeiro for 1); o valor é arredondado na mesma casa decimal da incerteza; parênteses e unidade no fim; potência de 10 em comum, se precisar. Dá para escrever com vírgula ou ponto, e "+-" no lugar de "±".</div>`);
+    const q = (s) => el.querySelector(s);
+    /* forma certa de um caso: casa decimal da incerteza (pode ser negativa) */
+    SIM.relatorio._certo = (v, u) => { const e = Math.floor(Math.log10(u)), lead = Math.floor(u / 10 ** e + 1e-9), cs = lead === 1 ? e - 1 : e; const ur = Math.round(u / 10 ** cs) * 10 ** cs, vr = Math.round(v / 10 ** cs) * 10 ** cs; return { cs, ur, vr, lead }; };
+    /* lê "g = (9,78 ± 0,05) m/s²", "(6,83 ± 0,02) × 10^-7 m", "9.78 +- 0.05 m/s²"... */
+    SIM.relatorio._le = (txt) => {
+      const t = txt.replace(/\+-|\+\/-/g, "±").replace(/−/g, "-").replace(/\s+/g, " ").trim();
+      const m = t.match(/^(?:([^=]+?)\s*=\s*)?(\()?\s*(-?[\d.,]+)\s*±\s*([\d.,]+)\s*(\))?\s*(?:(?:x|×|\*|·)\s*10\s*\^?\s*\(?\s*([-+]?\d+)\s*\)?)?\s*(.*)$/);
+      if (!m) return null;
+      const num = (s) => { const d = s.replace(",", "."); return { x: parseFloat(d), dec: d.includes(".") ? d.split(".")[1].length : 0, txt: d }; };
+      const sup = { "⁻": "-", "⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4", "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9" };
+      let resto = m[7] || "", exp = m[6] ? +m[6] : 0;
+      const ms = resto.match(/^(?:x|×|\*|·)\s*10([⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)\s*(.*)$/);
+      if (ms) { exp = +ms[1].split("").map((c) => sup[c]).join(""); resto = ms[2]; }
+      return { nome: (m[1] || "").trim(), par: !!(m[2] && m[5]), v: num(m[3]), u: num(m[4]), exp, un: resto.trim() };
+    };
+    const sig = (s) => s.replace(".", "").replace(/^0+/, "").length;
+    SIM.relatorio._corrige = (c, txt) => {
+      const r = SIM.relatorio._le(txt), fb = [];
+      if (!r) return { ok: false, fb: ["Não entendi o formato. Use algo como: " + c.g + " = (valor ± incerteza) " + c.un] };
+      const k = SIM.relatorio._certo(c.v, c.u), fat = 10 ** r.exp, V = r.v.x * fat, U = r.u.x * fat;
+      /* casa (potência de 10) do último algarismo significativo escrito; num inteiro, zeros finais não contam */
+      const casa = (n) => (n.dec > 0 ? -n.dec : (n.txt.match(/0+$/) || [""])[0].length) + r.exp;
+      const dig = (n) => { const d = n.txt.replace(".", "").replace(/^0+/, ""); return n.dec > 0 ? d : d.replace(/0+$/, "") || "0"; };
+      const cU = casa(r.u), cV = casa(r.v), dU = dig(r.u), e = Math.floor(Math.log10(c.u));
+      const dif = (x, y) => Math.abs(x - y) > 1e-6 * Math.abs(y);
+      if (dU.length > 2 || (dU.length === 2 && dU[0] !== "1")) fb.push("A incerteza tem algarismos demais: ela mesma é incerta. Fique com 1 algarismo significativo (2 se o primeiro for 1).");
+      else if (cU > e) fb.push("A incerteza foi arredondada demais: ela deve guardar o primeiro algarismo significativo (aqui, na casa de 10^" + e + ").");
+      else if (dif(U, Math.round(c.u / 10 ** cU) * 10 ** cU) && dif(U, Math.ceil(c.u / 10 ** cU - 1e-9) * 10 ** cU)) fb.push("A incerteza não está bem arredondada (a da calculadora é " + n2(c.u, 8) + ").");
+      if (cV !== cU) fb.push("O valor e a incerteza devem terminar na mesma casa decimal.");
+      if (Math.abs(V - c.v) > 0.5 * 10 ** cV * (1 + 1e-9) + 1e-12 * Math.abs(c.v)) fb.push("O valor não está bem arredondado (o da calculadora é " + String(c.v).replace(".", ",") + ").");
+      if (!r.un) fb.push("Faltou a unidade.");
+      else if (r.un.replace(/\s/g, "").replace("^2", "²").replace("^3", "³").replace("2", "²").replace("3", "³") !== c.un.replace(/\s/g, "")) fb.push("A unidade esperada é " + c.un + ".");
+      if (r.un && !r.par) fb.push("Use parênteses: (valor ± incerteza) unidade. Sem eles, a unidade parece só da incerteza.");
+      if (r.nome && r.nome !== c.g) fb.push("O nome da grandeza aqui é " + c.g + ".");
+      const ok = !fb.length;
+      if (ok && k.lead === 1 && dU.length === 1) fb.push("Certo! (Como a incerteza começa com 1, também valeria usar 2 algarismos.)");
+      return { ok, fb: ok && !fb.length ? ["Certo! Pronto para ir para o relatório."] : fb };
+    };
+    const formaCerta = (c) => { const k = SIM.relatorio._certo(c.v, c.u), sc = Math.abs(Math.floor(Math.log10(Math.abs(c.v)))) >= 4 ? Math.floor(Math.log10(Math.abs(c.v))) : 0, d = Math.max(0, -(k.cs - sc)); const f = (x) => (x / 10 ** sc).toFixed(d).replace(".", ","); return `${c.g} = (${f(k.vr)} ± ${f(k.ur)})${sc ? " × 10" + String(sc).split("").map((ch) => "⁻⁰¹²³⁴⁵⁶⁷⁸⁹"["-0123456789".indexOf(ch)]).join("") : ""} ${c.un}`; };
+    const sobr = (n) => String(n).split("").map((ch) => "⁻⁰¹²³⁴⁵⁶⁷⁸⁹"["-0123456789".indexOf(ch)]).join(""), tela = (x) => { const e = Math.floor(Math.log10(Math.abs(x))); return Math.abs(e) >= 4 ? String(+(x / 10 ** e).toPrecision(6)).replace(".", ",") + " × 10" + sobr(e) : String(x).replace(".", ","); };
+    const mostraCaso = () => { const c = casos[i]; q("[data-v=cx]").innerHTML = `<span class="tx2">Caso ${i + 1} de ${casos.length}: ${c.ctx}.</span><br>A calculadora deu: <b>${c.g} = ${tela(c.v)}</b> com incerteza <b>${tela(c.u)}</b> (em ${c.un}).`; q("[data-v=in]").value = ""; q("[data-v=fb]").innerHTML = ""; q("[data-v=lt]").innerHTML = vis("algarismos da incerteza", "1 (ou 2 se começar com 1)") + vis("forma certa", "tente antes de ver"); };
+    q("[data-a=ok]").addEventListener("click", () => { const r = SIM.relatorio._corrige(casos[i], q("[data-v=in]").value); q("[data-v=fb]").innerHTML = r.fb.map((t) => `<li style="color:${r.ok ? "var(--ok)" : "var(--ink)"}">${t}</li>`).join(""); });
+    q("[data-v=in]").addEventListener("keydown", (e) => { if (e.key === "Enter") q("[data-a=ok]").click(); });
+    q("[data-a=ins]").addEventListener("click", () => { const inp = q("[data-v=in]"), p = inp.selectionStart ?? inp.value.length; inp.value = inp.value.slice(0, p) + " ± " + inp.value.slice(p); inp.focus(); });
+    q("[data-a=prox]").addEventListener("click", () => { i = (i + 1) % casos.length; mostraCaso(); });
+    q("[data-a=ant]").addEventListener("click", () => { i = (i + casos.length - 1) % casos.length; mostraCaso(); });
+    q("[data-a=ver]").addEventListener("click", () => { q("[data-v=lt]").innerHTML = vis("algarismos da incerteza", "1 (ou 2 se começar com 1)") + vis("forma certa", formaCerta(casos[i])); });
+    SIM.relatorio._forma = formaCerta; SIM.relatorio._casos = casos;
+    mostraCaso();
   };
 })();
