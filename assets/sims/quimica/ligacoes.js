@@ -203,4 +203,40 @@
     q("[data-b=e]").addEventListener("click", (e) => { ext = !ext; e.target.setAttribute("aria-pressed", ext); desenha(); });
     desenha();
   };
+  /* ---------- C07 · diagramas de orbitais moleculares de diatômicas ----------
+     SIM.OM[espécie] = [rótulo, camada de valência (1 ou 2), elétrons de valência, ordem dos níveis ("A": π2p abaixo de σ2p, até o N₂; "B": σ2p abaixo de π2p, O₂ e F₂), comprimento (pm) ou null, energia de dissociação (kJ/mol) ou null].
+     Comprimentos e energias conferidos em fonte (NIST CCCBDB, CRC): H₂ 74 e 436; Li₂ 267 e 105; B₂ 159 e 290; C₂ 124 e 620; N₂ 110 e 945; O₂ 121 e 498; F₂ 142 e 159; N₂⁺ 112; O₂⁺ 112; O₂⁻ 135; O₂²⁻ 149.
+     SIM.contaOM preenche os níveis em ordem de energia (Pauli e Hund) e devolve ordem de ligação = (ligantes − antiligantes)/2 e elétrons desemparelhados.
+     Conferido em Node: H₂ 1; H₂⁺ 0,5; He₂⁺ 0,5; He₂ 0; Li₂ 1; Be₂ 0; B₂ 1 (2 desemparelhados); C₂ 2 (0); N₂ 3 (0); N₂⁺ 2,5 (1); O₂ 2 (2); O₂⁺ 2,5 (1); O₂⁻ 1,5 (1); O₂²⁻ 1 (0); F₂ 1 (0); Ne₂ 0. */
+  SIM.OM = { "H2+": ["H₂⁺", 1, 1, "A", null, null], H2: ["H₂", 1, 2, "A", 74, 436], "He2+": ["He₂⁺", 1, 3, "A", null, null], He2: ["He₂", 1, 4, "A", null, null], Li2: ["Li₂", 2, 2, "A", 267, 105], Be2: ["Be₂", 2, 4, "A", null, null], B2: ["B₂", 2, 6, "A", 159, 290], C2: ["C₂", 2, 8, "A", 124, 620], "N2+": ["N₂⁺", 2, 9, "A", 112, null], N2: ["N₂", 2, 10, "A", 110, 945],
+    "O2+": ["O₂⁺", 2, 11, "B", 112, null], O2: ["O₂", 2, 12, "B", 121, 498], "O2-": ["O₂⁻", 2, 13, "B", 135, null], "O2--": ["O₂²⁻", 2, 14, "B", 149, null], F2: ["F₂", 2, 14, "B", 142, 159], Ne2: ["Ne₂", 2, 16, "B", null, null] };
+  /* níveis: [nome, capacidade, ligante (+1) ou antiligante (−1), altura no desenho (0 = mais baixo, 1 = mais alto)] */
+  SIM.niveisOM = (cam, ord) => cam === 1 ? [["σ1s", 2, 1, 0.25], ["σ*1s", 2, -1, 0.75]] : ord === "A" ? [["σ2s", 2, 1, 0.04], ["σ*2s", 2, -1, 0.24], ["π2p", 4, 1, 0.5], ["σ2p", 2, 1, 0.62], ["π*2p", 4, -1, 0.82], ["σ*2p", 2, -1, 0.97]] : [["σ2s", 2, 1, 0.04], ["σ*2s", 2, -1, 0.24], ["σ2p", 2, 1, 0.5], ["π2p", 4, 1, 0.62], ["π*2p", 4, -1, 0.82], ["σ*2p", 2, -1, 0.97]];
+  SIM.contaOM = (k, nmax) => { const e = SIM.OM[k], niv = SIM.niveisOM(e[1], e[3]); let r = Math.min(e[2], nmax === undefined ? 99 : nmax), lig = 0, anti = 0, des = 0; const occ = niv.map((n) => { const q = Math.min(r, n[1]); r -= q; if (n[2] > 0) lig += q; else anti += q; des += n[1] === 4 ? (q <= 2 ? q : 4 - q) : q === 1 ? 1 : 0; return q; });
+    return { occ, lig, anti, ordem: (lig - anti) / 2, des, conf: niv.map((n, i) => (occ[i] ? "(" + n[0] + ")" + sup(occ[i]) : "")).filter(Boolean).join(" ") }; };
+  const sup = (n) => String(n).split("").map((c) => "⁰¹²³⁴⁵⁶⁷⁸⁹"[+c]).join("");
+  SIM.desOM = (k, o = {}) => {
+    const { x = 0, y = 0, w = 300, h = 200, n, eletrons = true, nomes = true } = o, e = SIM.OM[k], niv = SIM.niveisOM(e[1], e[3]), c = SIM.contaOM(k, eletrons ? n : 0), cx = x + w / 2, Y = (f) => y + h - 14 - f * (h - 34), xa = x + 28, xb = x + w - 28, la = 34; let s = "";
+    const seta = (px, py, cima) => `<path d="M${px} ${py + 9} L${px} ${py - 9} M${px - 3.5} ${py + (cima ? -4 : 4)} L${px} ${py + (cima ? -9 : 9)} L${px + 3.5} ${py + (cima ? -4 : 4)}" style="fill:none;stroke:var(--warn);stroke-width:1.8"/>`;
+    const AO = e[1] === 1 ? [["1s", 0.5, [0, 1]]] : [["2s", 0.14, [0, 1]], ["2p", 0.72, [2, 3, 4, 5]]];
+    AO.forEach(([nm, f, quem]) => { [xa, xb].forEach((px, lado) => { const np = nm === "2p" ? 3 : 1; for (let q = 0; q < np; q++) s += `<line x1="${px - 13 + (q - (np - 1) / 2) * 10 - (np > 1 ? 0 : 0)}" x2="${px + 13 + (q - (np - 1) / 2) * 10}" y1="${Y(f) + (q - (np - 1) / 2) * 0}" y2="${Y(f)}" style="stroke:var(--ink2);stroke-width:${np > 1 ? 1.2 : 2}"/>`; if (nomes) s += D.txt(lado ? px + 24 : px - 24, Y(f) + 4, nm, "tx2", lado ? "start" : "end"); quem.forEach((i) => (s += `<line x1="${lado ? px - 22 : px + 22}" y1="${Y(f)}" x2="${lado ? cx + la + (niv[i][1] === 4 ? 22 : 0) : cx - la - (niv[i][1] === 4 ? 22 : 0)}" y2="${Y(niv[i][3])}" style="stroke:var(--ink3);stroke-width:1;stroke-dasharray:3 3"/>`)); }); });
+    niv.forEach((nv, i) => { const yy = Y(nv[3]), cor = nv[2] > 0 ? "var(--mA)" : "var(--bad)", q = c.occ[i];
+      if (nv[1] === 2) { s += `<line x1="${cx - 20}" x2="${cx + 20}" y1="${yy}" y2="${yy}" style="stroke:${cor};stroke-width:2.4"/>`; if (q > 0) s += seta(cx - (q > 1 ? 6 : 0), yy, true); if (q > 1) s += seta(cx + 6, yy, false); }
+      else { [-28, 28].forEach((dx, j) => { s += `<line x1="${cx + dx - 20}" x2="${cx + dx + 20}" y1="${yy}" y2="${yy}" style="stroke:${cor};stroke-width:2.4"/>`; const a = q > j ? 1 : 0, b = q > 2 + j ? 1 : 0; if (a) s += seta(cx + dx - (b ? 6 : 0), yy, true); if (b) s += seta(cx + dx + 6, yy, false); }); }
+      if (nomes) s += D.txt(cx + (nv[1] === 4 ? 56 : 28), yy - 5, nv[0], "tx2", "start", `style="fill:${cor};font-size:11px;font-weight:700"`); });
+    return s + (nomes ? D.txt(xa, y + h + 6, "átomo", "tx2") + D.txt(cx, y + h + 6, "molécula", "tx2") + D.txt(xb, y + h + 6, "átomo", "tx2") : "");
+  };
+  SIM.orbmol = (el, F) => {
+    const W = 680, H = 300, K = Object.keys(SIM.OM); let k = "O2", n = 12;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><div class="bts">${botoes(K.map((q) => [q, SIM.OM[q][0]]), "k", k)}</div></div><div><div class="bts"><button class="bt peq" data-b="z">esvaziar</button><button class="bt peq" data-b="m">+ 1 elétron</button><button class="bt peq" data-b="t">preencher tudo</button></div></div></div>
+      <div class="status">Escolha a espécie e coloque os elétrons de valência um a um, do nível mais baixo para o mais alto (dois por orbital, com spins opostos; em orbitais de mesma energia, primeiro um em cada). Azul: orbitais <b>ligantes</b>, que seguram os núcleos. Vermelho, com asterisco: <b>antiligantes</b>, que desfazem a ligação. Ordem de ligação = (elétrons ligantes − antiligantes) ÷ 2. Elétron desemparelhado: a espécie é atraída por ímã (paramagnética). Repare que a ordem dos níveis σ2p e π2p troca entre o N₂ e o O₂. Comprimentos e energias são valores medidos.</div>`);
+    const q = (s) => el.querySelector(s);
+    const desenha = () => { const e = SIM.OM[k], c = SIM.contaOM(k, n);
+      q("[data-v=sv]").innerHTML = D.txt(340, 22, e[0] + " · " + n + " de " + e[2] + " elétrons de valência", "tx2") + SIM.desOM(k, { x: 150, y: 30, w: 380, h: 245, n }) ;
+      q("[data-v=lt]").innerHTML = vis("ligantes − antiligantes", c.lig + " − " + c.anti) + vis("ordem de ligação", n2(c.ordem, 1)) + vis("desemparelhados", c.des + (c.des ? " (paramagnética)" : " (diamagnética)")) + vis("comprimento", e[4] ? e[4] + " pm" : c.ordem === 0 && n === e[2] ? "não se forma" : "—") + vis("energia de ligação", e[5] ? e[5] + " kJ/mol" : "—"); };
+    liga(el, "k", (v) => { k = v; n = SIM.OM[k][2]; desenha(); });
+    q("[data-b=z]").addEventListener("click", () => { n = 0; desenha(); }); q("[data-b=m]").addEventListener("click", () => { n = Math.min(SIM.OM[k][2], n + 1); desenha(); }); q("[data-b=t]").addEventListener("click", () => { n = SIM.OM[k][2]; desenha(); });
+    desenha();
+  };
 })();

@@ -35,7 +35,7 @@ window.CATALOGO.push(
     ["C04","Geometria molecular (VSEPR)",[],true],
     ["C05","Polaridade",[],true],
     ["C06","Forças intermoleculares",[],true],
-    ["C07","Teoria dos orbitais moleculares",[]],
+    ["C07","Teoria dos orbitais moleculares",[],true],
   ] },
   { id:"QD", area:"qui", letra:"D", cor:"--mO", nome:"Reações e estequiometria", desc:"Balanceamento, mol, rendimento e reagente limitante.", temas:[
     ["D01","Funções inorgânicas e nomenclatura",[]],
