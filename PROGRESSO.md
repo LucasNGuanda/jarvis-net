@@ -356,6 +356,10 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
     - EP16: a reação em cadeia é por gerações (não simula a geometria nem a velocidade dos nêutrons); a curva de energia de ligação é a fórmula semiempírica, que erra os núcleos leves (os pontos medidos estão no gráfico para comparar).
     - EP18: é 2D, então acima de Re ≈ 190 não vira turbulência de verdade (só uma esteira mais irregular); o Strouhal medido sai ~20% acima do de laboratório (canal estreito e grade grossa). Tudo isso está escrito na página do experimento.
     - Os códigos pedidos como EP07–EP14 viraram EP11–EP18, porque EP07–EP10 já existiam.
+- **β 3.5** — **Aba Experimental completa** (FE01–FE11), no padrão completo do CLAUDE.md.
+  - Kit de desenho: `D.graf` aceita barras de erro (`erros`, opcional); peças novas `D.regua`, `D.lupaRegua` e `D.alvo`. Simulações em `assets/sims/experimental.js`.
+  - Temas prontos:
+    - FE01 O que é medir: unidades e algarismos significativos (16 exercícios com figura, chute; lab: ler uma barra com réguas de 1 cm, 0,5 cm e 1 mm, com lupa e correção da leitura; chefão: massa de um grão de arroz pela técnica das medidas múltiplas).
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.

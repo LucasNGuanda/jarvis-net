@@ -167,7 +167,7 @@ window.CATALOGO = [
 
   /* ===================== ÁREA EXPERIMENTAL (medidas, incertezas, gráficos) — temas a definir com o Lucas ===================== */
   { id:"FEm", area:"lab", letra:"±", cor:"--mN", nome:"Medidas e incertezas", desc:"O que é medir, o que é incerteza e como ela se propaga nas contas.", temas:[
-    ["FE01","O que é medir: unidades e algarismos significativos"],
+    ["FE01","O que é medir: unidades e algarismos significativos",[],true],
     ["FE02","O que é incerteza (tipo A e tipo B)"],
     ["FE03","Média, desvio padrão e incerteza da média"],
     ["FE04","Propagação de incertezas",["∫","★"]],

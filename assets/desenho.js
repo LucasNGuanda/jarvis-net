@@ -99,6 +99,8 @@
       if (c.area) s += `<path d="${d} L${f(X(c.pts[c.pts.length - 1][0]))} ${f(y0)} L${f(X(c.pts[0][0]))} ${f(y0)} Z" style="fill:color-mix(in srgb,${c.cor || "var(--mod)"} 22%,transparent);stroke:none"/>`;
       s += `<path d="${d}" style="fill:none;stroke:${c.cor || "var(--mod)"};stroke-width:2.4${c.trac ? ";stroke-dasharray:6 4" : ""}"/>`;
     });
+    /* barras de erro (opcional, β 3.5): erros = [[x, y, dy, dx?]] */
+    (o.erros || []).forEach(([x, y, dy, dx]) => { s += `<line x1="${f(X(x))}" x2="${f(X(x))}" y1="${f(Y(y - dy))}" y2="${f(Y(y + dy))}" style="stroke:var(--ink2);stroke-width:1.4"/><line x1="${f(X(x) - 4)}" x2="${f(X(x) + 4)}" y1="${f(Y(y - dy))}" y2="${f(Y(y - dy))}" style="stroke:var(--ink2);stroke-width:1.4"/><line x1="${f(X(x) - 4)}" x2="${f(X(x) + 4)}" y1="${f(Y(y + dy))}" y2="${f(Y(y + dy))}" style="stroke:var(--ink2);stroke-width:1.4"/>` + (dx ? `<line x1="${f(X(x - dx))}" x2="${f(X(x + dx))}" y1="${f(Y(y))}" y2="${f(Y(y))}" style="stroke:var(--ink2);stroke-width:1.4"/>` : "") + `<circle cx="${f(X(x))}" cy="${f(Y(y))}" r="3.2" style="fill:var(--warn)"/>`; });
     (o.pontos || []).forEach(([x, y, r]) => (s += `<circle cx="${f(X(x))}" cy="${f(Y(y))}" r="3.5" style="fill:var(--ink)"/>` + (r ? D.txt(X(x) + 6, Y(y) - 7, r, "tx2", "start") : "")));
     s += (o.xlab ? D.txt(o.x0 + o.w + 14, y0 + 17, o.xlab, "txm", "end") : "") + (o.ylab ? D.txt(o.x0 + 8, o.y0 - o.h - 6, o.ylab, "txm", "start") : "");
     return s;
@@ -117,6 +119,24 @@
   };
   /* recipiente aberto com líquido até a fração fr */
   D.copo = (x, y, w, h, fr, cor = "var(--mA)") => `<rect x="${f(x)}" y="${f(y + h - h * fr)}" width="${f(w)}" height="${f(h * fr)}" style="fill:color-mix(in srgb,${cor} 25%,transparent)"/><path d="M${f(x)} ${f(y)} L${f(x)} ${f(y + h)} L${f(x + w)} ${f(y + h)} L${f(x + w)} ${f(y)}" style="fill:none;stroke:var(--ink2);stroke-width:2"/>`;
+  /* ---- peças da física experimental (β 3.5) ---- */
+  /* régua horizontal: começa em (x, y), "cm" centímetros de comprimento, esc px por cm, menor divisão div (em cm: 1, 0.5 ou 0.1) */
+  D.regua = (x, y, cm, esc, div = 0.1, rot = "cm") => {
+    let s = `<rect x="${f(x - 6)}" y="${f(y - 4)}" width="${f(cm * esc + 12)}" height="30" rx="3" style="fill:color-mix(in srgb,var(--warn) 18%,transparent);stroke:var(--warn)"/>`;
+    const n = Math.round(cm / div);
+    for (let i = 0; i <= n; i++) { const v = i * div, xx = x + v * esc, int = Math.abs(v - Math.round(v)) < 1e-9, meio = !int && Math.abs(v * 2 - Math.round(v * 2)) < 1e-9; s += `<line x1="${f(xx)}" x2="${f(xx)}" y1="${f(y - 4)}" y2="${f(y - 4 + (int ? 14 : meio ? 10 : 6))}" style="stroke:var(--ink2);stroke-width:${int ? 1.4 : 0.8}"/>`; if (int) s += D.txt(xx, y + 22, String(Math.round(v)), "tx2"); }
+    return s + D.txt(x + cm * esc + 14, y + 22, rot, "tx2", "start");
+  };
+  /* lupa de régua: mostra ampliado o trecho [fim − 0,6 cm, fim + 0,6 cm] com a ponta da barra; centro em (cx, y), largura w */
+  D.lupaRegua = (cx, y, w, fim, div = 0.1) => {
+    const a = fim - 0.6, esc = w / 1.2, X = (v) => cx - w / 2 + (v - a) * esc;
+    let s = `<rect x="${f(cx - w / 2 - 6)}" y="${f(y - 30)}" width="${f(w + 12)}" height="70" rx="8" style="fill:var(--bg);stroke:var(--ink3);stroke-width:1.5"/>`;
+    s += `<rect x="${f(cx - w / 2)}" y="${f(y - 24)}" width="${f(Math.max(0, X(fim) - (cx - w / 2)))}" height="18" style="fill:color-mix(in srgb,var(--mA) 40%,transparent);stroke:var(--mA)"/>`;
+    for (let i = Math.ceil(a / div - 1e-9); i * div <= fim + 0.6 + 1e-9; i++) { const v = i * div, xx = X(v), int = Math.abs(v - Math.round(v)) < 1e-9, meio = !int && Math.abs(v * 2 - Math.round(v * 2)) < 1e-9; s += `<line x1="${f(xx)}" x2="${f(xx)}" y1="${f(y)}" y2="${f(y + (int ? 18 : meio ? 13 : 8))}" style="stroke:var(--ink2);stroke-width:${int ? 1.6 : 1}"/>`; if (int || (meio && div < 0.5)) s += D.txt(xx, y + 32, String(+v.toFixed(1)).replace(".", ","), "tx2"); }
+    return s + `<line x1="${f(cx - w / 2)}" x2="${f(cx + w / 2)}" y1="${f(y)}" y2="${f(y)}" style="stroke:var(--ink2)"/>` + D.txt(cx + w / 2 + 12, y - 12, "lupa", "tx2", "start");
+  };
+  /* alvo com tiros: cx, cy, raio; tiros = [[dx, dy]] em unidades do raio */
+  D.alvo = (cx, cy, r, tiros = [], cor = "var(--bad)") => [1, 0.66, 0.33].map((k) => `<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(r * k)}" style="fill:none;stroke:var(--ink3);stroke-width:1.5"/>`).join("") + `<circle cx="${f(cx)}" cy="${f(cy)}" r="3" style="fill:var(--ink3)"/>` + tiros.map(([a, b]) => `<circle cx="${f(cx + a * r)}" cy="${f(cy + b * r)}" r="4" style="fill:${cor}"/>`).join("");
   /* função amostrada para D.graf: pts de f no intervalo [a, b] */
   D.amostra = (fn, a, b, n = 60) => Array.from({ length: n + 1 }, (_, i) => { const x = a + ((b - a) * i) / n; return [x, fn(x)]; });
 })();
