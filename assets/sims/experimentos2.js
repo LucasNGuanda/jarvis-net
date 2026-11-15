@@ -1,4 +1,4 @@
-/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; EP13 van der Waals; EP14 fenda dupla; */
+/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; EP13 van der Waals; EP14 fenda dupla; EP15 corpo negro; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -236,6 +236,53 @@
       for (let m = -40; m <= 40; m++) { const ym = m * dy; if (Math.abs(ym) > YJ) continue; const py = Y(ym); cx.beginPath(); cx.moveTo(xs - 10, py); cx.lineTo(xs - 2, py); cx.stroke(); }
       cx.fillStyle = css("--ink2"); cx.font = "11px Inter, sans-serif"; cx.fillText("tela", xs + 16, 14); cx.fillText("±15 mm", xs + 8, 314); cx.fillText("intensidade", gx + 6, 14); cx.fillText("fendas", xb - 18, 14);
       q("[data-v=lt]").innerHTML = vis("espaçamento previsto λL/d", n2(dy, 3) + " mm") + vis("máximos previstos na janela de ±15 mm", String(2 * Math.floor(YJ / dy) + 1)) + vis("diferença de caminho na 1ª franja", n2(lam, 0) + " nm = 1λ") + vis(modo === "foton" ? "fótons que chegaram" : "modo", modo === "foton" ? String(fotons.length) : "onda clássica");
+    });
+  };
+
+  /* ---------- EP15 · radiação de corpo negro: Planck, Wien, Stefan–Boltzmann e a catástrofe do ultravioleta ---------- */
+  SIM.corpoNegro = (el, F) => {
+    const W = 680, H = 320, h = 6.62607e-34, c = 2.99792e8, k = 1.380649e-23, sig = 5.670374e-8, bW = 2.897772e-3;
+    let rj = true;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("temperatura T (K)", "T", 300, 12000, 50, 5800)}
+      <div class="bts"><button class="bt" data-a="rj" aria-pressed="true">Curva de Rayleigh–Jeans</button>${botoes([["800", "brasa"], ["3000", "lâmpada"], ["5800", "Sol"], ["10000", "estrela azul"]], "pre", "5800")}</div></div>
+      <div class="status">A curva de Planck dá quanta luz um corpo negro emite em cada comprimento de onda. O pico anda para a esquerda quando a temperatura sobe (lei de Wien, λ·T = 2,898 mm·K), e a área embaixo cresce com T⁴ (Stefan–Boltzmann). A curva clássica de Rayleigh–Jeans (física do século XIX) acerta nos comprimentos de onda longos, mas explode nos curtos: preveria energia infinita no ultravioleta. Planck resolveu supondo que a energia vem em pacotes E = hf.</div>`);
+    const q = (s) => el.querySelector(s);
+    q("[data-a=rj]").addEventListener("click", (e) => { rj = !rj; e.target.setAttribute("aria-pressed", rj); });
+    liga(el, "pre", (kk) => (q("[data-c=T]").value = kk));
+    const B = (lam, T) => { const x = (h * c) / (lam * k * T); return x > 700 ? 0 : (2 * h * c * c) / Math.pow(lam, 5) / Math.expm1(x); };
+    const BRJ = (lam, T) => (2 * c * k * T) / Math.pow(lam, 4);
+    /* integral numérica de B em λ (regra do trapézio em grade logarítmica), vezes π: emitância total */
+    const total = (T) => { let s = 0, l0 = 1e-8, f0 = B(l0, T); const n = 4000; for (let i = 1; i <= n; i++) { const l1 = 1e-8 * Math.pow(1e5, i / n), f1 = B(l1, T); s += 0.5 * (f0 + f1) * (l1 - l0); l0 = l1; f0 = f1; } return Math.PI * s; };
+    SIM.corpoNegro._B = B; SIM.corpoNegro._total = total;
+    let cacheT = -1, cacheTot = 0, fots = [], acum = 0;
+    anima(el, F, (dt) => {
+      const T = val(el, "T"); q("[data-o=T]").textContent = n2(T, 0) + " K";
+      if (T !== cacheT) { cacheT = T; cacheTot = total(T); }
+      const lmax = bW / T, janela = Math.min(60e-6, Math.max(3e-6, 4.5 * lmax)), Bmax = B(lmax, T);
+      const gx = 60, gy = 270, gw = 440, gh = 220, X = (l) => gx + (l / janela) * gw, Y = (b) => gy - (b / (Bmax * 1.25)) * gh;
+      let sv = "";
+      /* faixa do visível no eixo */
+      if (janela < 20e-6) for (let l = 380; l < 750; l += 5) { const cor = `hsl(${Math.max(0, 270 - ((l - 380) / 370) * 270)},90%,55%)`; sv += `<rect x="${X(l * 1e-9)}" y="${gy + 2}" width="${Math.max(1, X(5e-9) - X(0))}" height="8" style="fill:${cor}"/>`; }
+      let d = "", a = `M${gx} ${gy}`;
+      for (let i = 1; i <= 300; i++) { const l = (janela * i) / 300, yy = Y(B(l, T)); d += (i > 1 ? "L" : "M") + X(l).toFixed(1) + " " + yy.toFixed(1); a += "L" + X(l).toFixed(1) + " " + yy.toFixed(1); }
+      sv += `<path d="${a}L${X(janela)} ${gy}Z" style="fill:color-mix(in srgb,var(--warn) 18%,transparent)"/><path d="${d}" style="fill:none;stroke:var(--warn);stroke-width:2.5"/>`;
+      if (rj) { let r = ""; for (let i = 1; i <= 300; i++) { const l = (janela * i) / 300, b = BRJ(l, T); if (b > Bmax * 1.3) continue; r += (r ? "L" : "M") + X(l).toFixed(1) + " " + Y(b).toFixed(1); } sv += `<path d="${r}" style="fill:none;stroke:var(--bad);stroke-width:2;stroke-dasharray:6 4"/>`; const lc = Math.pow((2 * c * k * T) / (Bmax * 1.25), 0.25); sv += D.seta(X(lc) + 4, Y(Bmax * 1.1), X(lc) - 14, gy - gh - 6, "var(--bad)", 1.6) + D.txt(X(lc) + 10, gy - gh + 10, "Rayleigh–Jeans → ∞ (catástrofe do ultravioleta)", "tx2", "start"); }
+      sv += `<line x1="${X(lmax)}" x2="${X(lmax)}" y1="${gy}" y2="${Y(Bmax)}" style="stroke:var(--ink2);stroke-dasharray:4 3"/><circle cx="${X(lmax)}" cy="${Y(Bmax)}" r="4" style="fill:var(--ink)"/>` + D.txt(X(lmax) + 6, Y(Bmax) - 8, "pico (Wien)", "tx2", "start");
+      sv += D.seta(gx, gy, gx + gw + 10, gy, "var(--ink2)", 1.4) + D.seta(gx, gy, gx, gy - gh - 12, "var(--ink2)", 1.4) + D.txt(gx + gw + 10, gy + 26, "λ (μm)", "tx2", "end") + D.txt(gx + 6, gy - gh - 4, "intensidade por comprimento de onda", "tx2", "start");
+      const passo = janela > 20e-6 ? 10e-6 : janela > 6e-6 ? 2e-6 : 0.5e-6; for (let l = passo; l < janela; l += passo) sv += `<line x1="${X(l)}" x2="${X(l)}" y1="${gy}" y2="${gy + 4}" style="stroke:var(--ink3)"/>` + D.txt(X(l), gy + 22, n2(l * 1e6, 1), "tx2");
+      /* cor aparente do corpo: pesos de B nas faixas do vermelho, verde e azul */
+      const faixa = (l1, l2) => { let s = 0; for (let l = l1; l <= l2; l += 5e-9) s += B(l, T); return s; };
+      const rr = faixa(600e-9, 700e-9), gg = faixa(500e-9, 600e-9), bb = faixa(400e-9, 500e-9), m = Math.max(rr, gg, bb), br = Math.min(1, Math.log10(1 + cacheTot / 1e5));
+      const rgb = [rr, gg, bb].map((v) => Math.round(255 * Math.pow(v / m, 0.6) * br));
+      sv += `<circle cx="590" cy="110" r="${44}" style="fill:rgb(${rgb.join(",")});filter:drop-shadow(0 0 ${Math.round(br * 18)}px rgb(${rgb.join(",")}))"/>` + D.txt(590, 176, "cor aparente", "tx2") + D.txt(590, 192, T < 900 ? "(quase só infravermelho)" : "", "tx2");
+      /* fótons saindo do corpo: a taxa cresce com a emitância (em escala log) e a cor de cada um é sorteada pelo espectro de Planck */
+      acum += dt * 6 * Math.log10(1 + cacheTot / 50); const nov = Math.floor(acum); acum -= nov;
+      for (let i = 0; i < nov && fots.length < 120; i++) { for (let t2 = 0; t2 < 50; t2++) { const l = 200e-9 + Math.random() * Math.max(2e-6, 6 * lmax); if (Math.random() < B(l, T) / Bmax) { const ang = Math.random() * 6.283, nm = l * 1e9; fots.push({ x: 590 + 46 * Math.cos(ang), y: 110 + 46 * Math.sin(ang), vx: Math.cos(ang) * 60, vy: Math.sin(ang) * 60, cor: nm < 380 ? "var(--mO)" : nm > 750 ? "rgba(160,40,40,.5)" : `hsl(${Math.max(0, 270 - ((nm - 380) / 370) * 270)},90%,60%)`, v: 0 }); break; } } }
+      fots = fots.filter((f) => { f.x += f.vx * dt; f.y += f.vy * dt; f.v += dt; return f.v < 1.2; });
+      fots.forEach((f) => (sv += `<circle cx="${f.x.toFixed(1)}" cy="${f.y.toFixed(1)}" r="2" style="fill:${f.cor};opacity:${(1 - f.v / 1.2).toFixed(2)}"/>`));
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("pico (Wien) λ = b/T", n2(lmax * 1e9, 0) + " nm") + vis("σT⁴ (Stefan–Boltzmann)", n2(sig * T ** 4 / 1e6, 3) + " MW/m²") + vis("área da curva × π (integral numérica)", n2(cacheTot / 1e6, 3) + " MW/m²") + vis("razão área ÷ σT⁴", n2(cacheTot / (sig * T ** 4), 4));
     });
   };
 })();

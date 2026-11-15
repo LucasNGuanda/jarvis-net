@@ -212,7 +212,7 @@ window.CATALOGO = [
   ]},
   { id:"EQu", area:"exp", letra:"ψ", cor:"--mO", nome:"Ondas e quântica", desc:"Luz, fótons e o gato mais famoso da física.", temas:[
     ["EP14","Fenda dupla",["★"],true],
-    ["EP15","Radiação de corpo negro",["!"]],
+    ["EP15","Radiação de corpo negro",["!"],true],
     ["EP17","O gato de Schrödinger",[]],
   ]},
   { id:"ENu", area:"exp", letra:"☢", cor:"--mN", nome:"Nuclear", desc:"Reação em cadeia e energia de ligação.", temas:[
