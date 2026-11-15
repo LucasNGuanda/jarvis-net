@@ -13,6 +13,7 @@
   const carro = (x, y, cor, dir) => window.D ? D.carro(x, y, cor, dir) : "";
 
   /* ---------- A01 · vai e volta ---------- */
+  /* nome: "Vai e volta: deslocamento × distância" · matéria: Física · tema: A01 */
   SIM.vaiVolta = (el, F) => {
     const W = 680, H = 230;
     let t = 0, rodando = true;
@@ -42,6 +43,7 @@
   };
 
   /* ---------- A02 · encontro de dois móveis em MRU ---------- */
+  /* nome: "Encontro de dois carros" · matéria: Física · tema: A02 */
   SIM.encontro = (el, F) => {
     const W = 680, H = 360;
     let t = 0;
@@ -74,6 +76,7 @@
   };
 
   /* ---------- A03 · MUV com gráficos e freada ---------- */
+  /* nome: "MUV: gráficos e freada" · matéria: Física · tema: A03 */
   SIM.muv = (el, F) => {
     const W = 680, H = 400;
     let t = 0, modo = "livre";
@@ -114,6 +117,7 @@
   };
 
   /* ---------- A04 · gráficos: v × t → s × t (área) e a × t (inclinação) ---------- */
+  /* nome: "Do gráfico v × t para s × t e a × t" · matéria: Física · tema: A04 */
   SIM.graficos = (el, F) => {
     const W = 680, H = 470, TS = [0, 2, 4, 6, 8, 10];
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -141,6 +145,7 @@
     });
   };
   /* ---------- A05 · barco atravessando o rio (composição de velocidades) ---------- */
+  /* nome: "Barco atravessando o rio" · matéria: Física · tema: A05 */
   SIM.barcoRio = (el, F) => {
     const W = 680, H = 360, Lrio = 100;
     let t = 0;
@@ -171,6 +176,7 @@
   };
 
   /* ---------- A06 · lançamento oblíquo ---------- */
+  /* nome: "Lançamento oblíquo" · matéria: Física · tema: A06 */
   SIM.lancamento = (el, F) => {
     const W = 680, H = 360, g = 10;
     let t = 0, rastros = [];
@@ -205,6 +211,7 @@
     q("[data-a=env]").addEventListener("click", (e) => { env = !env; e.currentTarget.textContent = env ? "Esconder parábola de segurança" : "Mostrar parábola de segurança"; });
   };
   /* ---------- A07 · MCU e transmissão por engrenagens ---------- */
+  /* nome: "MCU e engrenagens" · matéria: Física · tema: A07 */
   SIM.circular = (el, F) => {
     const W = 680, H = 330;
     let modo = "mcu", ang = 0, ang2 = 0;
@@ -239,6 +246,7 @@
     liga(el, "m", (v) => (modo = v));
   };
   /* ---------- A08 · máquina de Atwood e elevador (peso aparente) ---------- */
+  /* nome: "Máquina de Atwood e elevador" · matéria: Física · tema: A08 */
   SIM.atwood = (el, F) => {
     const W = 680, H = 360, g = 10;
     let modo = "atwood", y = 0, v = 0, t = 0;
@@ -279,6 +287,7 @@
     liga(el, "m", (k) => { modo = k; y = 0; v = 0; });
   };
   /* ---------- A09 · plano inclinado com atrito ---------- */
+  /* nome: "Plano inclinado com atrito" · matéria: Física · tema: A09 */
   SIM.planoAtrito = (el, F) => {
     const W = 680, H = 330, g = 10;
     let x = 0, v = 0;
@@ -309,6 +318,7 @@
     ["th", "me"].forEach((c) => q(`[data-c=${c}]`).addEventListener("input", () => { if (!SIM.planoAtrito._conta(val(el, "th"), val(el, "me"), val(el, "mc")).desliza) { x = 0; v = 0; } }));
   };
   /* ---------- A10 · carro na curva (plana ou inclinada, com atrito) ---------- */
+  /* nome: "Carro na curva" · matéria: Física · tema: A10 */
   SIM.curva = (el, F) => {
     const W = 680, H = 330, g = 10;
     let ang = 0, sai = 0;
@@ -339,6 +349,7 @@
     q("[data-a=re]").addEventListener("click", () => { sai = 0; ang = 0; });
   };
   /* ---------- A11 · pista de skate: energia cinética, potencial e dissipada ---------- */
+  /* nome: "Pista de skate: energia" · matéria: Física · tema: A11 */
   SIM.pista = (el, F) => {
     const W = 680, H = 340, g = 10, m = 50;
     const yDe = (x) => 3.2 + 2.8 * Math.cos((Math.PI * x) / 10) * (1 - 0.15 * Math.abs(x - 10) / 10) - 0.9 * Math.exp(-((x - 13) ** 2) / 2) + 0.8 * Math.exp(-((x - 6) ** 2) / 1.5);
@@ -376,6 +387,7 @@
   };
 
   /* ---------- A12 · impulso: a mesma Δp com tempos de contato diferentes ---------- */
+  /* nome: "Impulso: força × tempo de contato" · matéria: Física · tema: A12 */
   SIM.impulso = (el, F) => {
     const W = 680, H = 320;
     let t = 0;
@@ -417,6 +429,7 @@
   };
 
   /* ---------- A12b · pessoa andando num barco: o centro de massa não sai do lugar ---------- */
+  /* nome: "Andando num barco: o CM não se move" · matéria: Física · tema: A12b */
   SIM.barcoCM = (el, F) => {
     const W = 680, H = 280;
     let s = 0, ind = 1;
@@ -448,6 +461,7 @@
   };
 
   /* ---------- A13 · colisão em 1D com coeficiente de restituição ---------- */
+  /* nome: "Colisões em 1D" · matéria: Física · tema: A13 */
   SIM.colisao = (el, F) => {
     const W = 680, H = 250;
     let x1, x2, u1, u2, bateu, t;
@@ -487,6 +501,7 @@
   };
 
   /* ---------- A14a · corrida de rolamento num plano inclinado ---------- */
+  /* nome: "Corrida de rolamento" · matéria: Física · tema: A14a */
   SIM.rolamento = (el, F) => {
     const W = 680, H = 350, g = 10;
     const corpos = [["esfera maciça", 2 / 5, "var(--mA)"], ["disco (cilindro maciço)", 1 / 2, "var(--mC)"], ["esfera oca", 2 / 3, "var(--warn)"], ["anel (cilindro oco)", 1, "var(--bad)"]];
@@ -520,6 +535,7 @@
   };
 
   /* ---------- A14 · gangorra: torques dos dois lados ---------- */
+  /* nome: "Gangorra: torques" · matéria: Física · tema: A14 */
   SIM.gangorra = (el, F) => {
     const W = 680, H = 290, g = 10;
     let ang = 0, w = 0;
@@ -549,6 +565,7 @@
   };
 
   /* ---------- A15 · órbita de Kepler: elipse, áreas iguais e 3ª lei ---------- */
+  /* nome: "Órbita de Kepler" · matéria: Física · tema: A15 */
   SIM.orbita = (el, F) => {
     const W = 680, H = 330;
     let t = 0;
@@ -581,6 +598,7 @@
   };
 
   /* ---------- A16 · canhão de Newton: queda, órbita e escape ---------- */
+  /* nome: "O canhão de Newton" · matéria: Física · tema: A16 */
   SIM.canhao = (el, F) => {
     const W = 680, H = 340, GM = 398600, RT = 6371;
     let r, v, rastros = [], atual = "", t = 0, fim = false;
@@ -622,6 +640,7 @@
   };
 
   /* ---------- A17 · empuxo: bloco pendurado num dinamômetro e mergulhado ---------- */
+  /* nome: "Empuxo no dinamômetro" · matéria: Física · tema: A17 */
   SIM.empuxo = (el, F) => {
     const W = 680, H = 340, g = 10, V = 0.001, a = 0.1;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -652,6 +671,7 @@
   };
 
   /* ---------- A18 · Torricelli: o jato que sai de um furo na caixa d'água ---------- */
+  /* nome: "O jato da caixa d'água" · matéria: Física · tema: A18 */
   SIM.torricelli = (el, F) => {
     const W = 680, H = 330, g = 10;
     let t = 0;
@@ -687,6 +707,7 @@
   };
 
   /* ---------- A20 · massa–mola com amortecimento e o gráfico x × t ---------- */
+  /* nome: "Massa–mola: MHS e amortecimento" · matéria: Física · tema: A20 */
   SIM.mhs = (el, F) => {
     const W = 680, H = 320;
     let x, v, t, hist;

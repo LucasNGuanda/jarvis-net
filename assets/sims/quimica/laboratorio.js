@@ -19,6 +19,7 @@
   const anima = (el, F, fn) => { let vivo = true, ult = null; const laco = (ts) => { if (!vivo) return; const dt = ult === null ? 0 : Math.min(0.05, (ts - ult) / 1000); ult = ts; fn(dt); requestAnimationFrame(laco); }; requestAnimationFrame(laco); F.aoSair(() => (vivo = false)); };
 
   /* ---------- A06 · físico ou químico? as partículas antes e depois ---------- */
+  /* nome: "Físico ou químico? Siga as partículas" · matéria: Química · tema: A06 */
   SIM.fenomenos = (el, F) => {
     const W = 680, H = 250, C = { H: "#e8edf5", O: "#ef5350", Fe: "#8d99ae", Na: "#b48cf5", Cl: "#3fbf8a", I: "#a06bd6", Cu: "#5b8def", S: "#ecd04a" };
     /* glifos: lista de átomos [dx, dy, elemento, raio] */
@@ -55,6 +56,7 @@
   };
 
   /* ---------- A07 · curva de solubilidade ---------- */
+  /* nome: "Curva de solubilidade: dissolver, saturar e cristalizar" · matéria: Química · tema: A07 */
   SIM.solubilidade = (el, F) => {
     const W = 680, H = 300, TS = [0, 20, 40, 60, 80, 100], SAL = { kno3: ["nitrato de potássio", [13.3, 31.6, 63.9, 110, 169, 246], "var(--mod)"], kcl: ["cloreto de potássio", [27.6, 34.0, 40.0, 45.5, 51.1, 56.7], "var(--ok)"], nacl: ["cloreto de sódio", [35.7, 36.0, 36.6, 37.3, 38.4, 39.8], "var(--warn)"] };
     let sal = "kno3";
@@ -84,6 +86,7 @@
   };
 
   /* ---------- A08 · leia o menisco: o erro de paralaxe ---------- */
+  /* nome: "Leia o menisco: o erro de paralaxe" · matéria: Química · tema: A08 */
   SIM.menisco = (el, F) => {
     const W = 680, H = 300;
     let nivel = 46.0;
@@ -113,6 +116,7 @@
   };
 
   /* ---------- A09 · exato ou preciso? cinco medidas de uma densidade ---------- */
+  /* nome: "Exato ou preciso? Cinco medidas de uma densidade" · matéria: Química · tema: A09 */
   SIM.exatidao = (el, F) => {
     const W = 680, H = 240, REAL = 2.7;
     let vals = [], z = [0.3, -1.1, 0.8, -0.2, 1.4];

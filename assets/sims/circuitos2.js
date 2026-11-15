@@ -25,6 +25,7 @@
   }
 
   /* ---------- 1. Capacitor plano com dielétrico ---------- */
+  /* nome: "Capacitor plano com dielétrico" · matéria: Física · tema: C11 */
   SIM.capacitor = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 640 300" width="640" aria-label="capacitor"><g class="g"></g></svg></div>
       <div class="leitor" data-v="l"></div>
@@ -68,6 +69,7 @@
   };
 
   /* ---------- 2. Deriva dos elétrons (modelo de Drude) ---------- */
+  /* nome: "Deriva dos elétrons (modelo de Drude)" · matéria: Física · tema: C06 */
   SIM.deriva = (el, F) => {
     const W = 760, H = 240;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><canvas width="${W * 2}" height="${H * 2}" style="width:${W}px;height:${H}px;border-radius:8px;background:var(--bg)"></canvas></div>
@@ -119,6 +121,7 @@
   };
 
   /* ---------- 3. Associação de resistores animada ---------- */
+  /* nome: "Associação de resistores" · matéria: Física · tema: C08 */
   SIM.associacao = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 600 320" width="600" aria-label="associação"><g class="fios"></g><g class="dots"></g><g class="comps"></g></svg></div>
       <div class="leitor" data-v="l"></div>
@@ -180,6 +183,7 @@
 
   /* ---------- 4. Medidores ligados certo e errado ----------
      Circuito: bateria E = 9 V (r = 1 Ω), R1 = 220 Ω, R2 = 680 Ω. Valores verdadeiros: i = 9/901, U2 = 680 i. */
+  /* nome: "Multímetro: ligações certas e erradas" · matéria: Física · tema: C09 */
   SIM.medidores = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 580 300" width="580" aria-label="medidores"><g class="g"></g></svg></div>
       <div class="leitor" data-v="l"></div>
@@ -227,6 +231,7 @@
   };
 
   /* ---------- 5. Gerador real: potência útil e rendimento ---------- */
+  /* nome: "Gerador real: potência útil e rendimento" · matéria: Física · tema: C10 */
   SIM.gerador = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 320 240" width="320" class="p1"></svg><svg viewBox="0 0 320 240" width="320" class="p2"></svg></div>
       <div class="leitor" data-v="l"></div>
@@ -253,6 +258,7 @@
   };
 
   /* ---------- 6. Circuito RC com gráfico ao vivo ---------- */
+  /* nome: "Circuito RC: carga e descarga" · matéria: Física · tema: C10b */
   SIM.rc = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 300 220" width="300" class="c"><g class="fios"></g><g class="dots"></g><g class="comps"></g></svg><svg viewBox="0 0 340 220" width="340" class="gr"></svg></div>
       <div class="leitor" data-v="l"></div>

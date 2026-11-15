@@ -16,6 +16,7 @@
   const NOMES = { 1: "inteiro", 2: "2 pedaços", 4: "4 pedaços", 8: "8 pedaços", 64: "pó" };
 
   /* ---------- A01 · experimento controlado: o que manda no tempo de dissolução de um comprimido efervescente ---------- */
+  /* nome: "Experimento controlado: o comprimido efervescente" · matéria: Química · tema: A01 */
   SIM.efervescente = (el, F) => {
     const W = 680, H = 300, GAS = 0.5, COPO = 150, COMP = 4;
     let N = 1, fechado = false, vel = 4, eixo = "T", rod = null, cad = [], ultimo = null, fase = 0, fim = false;

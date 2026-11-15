@@ -53,11 +53,14 @@
     q("[data-b=resp]").addEventListener("click", () => { const g = SIM.balanceia(lista[k].r, lista[k].p); if (g) { coef = g; viu = true; desenha(); } });
     if (redox) { q("[data-v=sel]").value = "1"; nova(1); } else nova(0);
   };
+  /* nome: "Balanceador visual: iguale os átomos" · matéria: Química · tema: D05 */
   SIM.balanceador = (el, F) => balanco(el, F, SIM.EQS, false);
+  /* nome: "Acerto de elétrons: balanceador de oxirredução" · matéria: Química · tema: D07 */
   SIM.qRedox = (el, F) => balanco(el, F, SIM.REDOX, true);
 
   /* ---------- D06 · reagente limitante ---------- */
   SIM.LIM = [{ r: ["H2", "O2"], p: ["H2O"] }, { r: ["N2", "H2"], p: ["NH3"] }, { r: ["Mg", "HCl"], p: ["MgCl2", "H2"] }, { r: ["Al", "O2"], p: ["Al2O3"] }, { r: ["CH4", "O2"], p: ["CO2", "H2O"] }, { r: ["Fe2O3", "CO"], p: ["Fe", "CO2"] }];
+  /* nome: "Reagente limitante: quem acaba primeiro?" · matéria: Química · tema: D06 */
   SIM.limitante = (el, F) => {
     const W = 680, H = 230; let k = 0, a = 4, b = 3;
     /* devolve tudo em mol: avanço x, limitante (0, 1 ou −1 se proporção exata), produtos, sobras */

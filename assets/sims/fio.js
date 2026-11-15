@@ -12,6 +12,7 @@
   };
   SIM.MATERIAIS = MAT;
   const fmtR = (F, R) => { const [v, u] = R >= 1e3 ? [R / 1e3, " kΩ"] : R >= 1 ? [R, " Ω"] : [R * 1e3, " mΩ"]; return F.t(v, Math.max(0, 2 - Math.floor(Math.log10(Math.abs(v) || 1)))) + u; }; /* 3 algarismos significativos */
+  /* nome: "Bancada do fio: R = ρL/A" · matéria: Física · tema: C07 */
   SIM.fio = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 640 190" width="640" aria-label="fio"><g class="g"></g></svg></div>
       <div class="leitor"><div class="vis"><small>ρ (a θ)</small><b data-v="rho"></b></div><div class="vis"><small>Área A</small><b data-v="A"></b></div><div class="vis"><small>Resistência R</small><b data-v="R"></b></div><div class="vis"><small>i com 1,5 V</small><b data-v="i"></b></div></div>

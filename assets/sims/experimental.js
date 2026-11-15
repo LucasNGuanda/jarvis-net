@@ -11,6 +11,7 @@
   const anima = (el, F, fn) => { let vivo = true, ult = null; const laco = (ts) => { if (!vivo) return; const dt = ult === null ? 0 : Math.min(0.05, (ts - ult) / 1000); ult = ts; fn(dt); requestAnimationFrame(laco); }; requestAnimationFrame(laco); F.aoSair(() => (vivo = false)); };
 
   /* ---------- FE01 · medir uma barra com réguas de resoluções diferentes ---------- */
+  /* nome: "Lendo uma régua" · matéria: Física · tema: FE01 */
   SIM.reguaLeitura = (el, F) => {
     const W = 680, H = 240;
     let real = 0, div = 0.1, resp = "";
@@ -38,6 +39,7 @@
   };
 
   /* ---------- FE02 · cronômetro manual: atraso (sistemático), espalhamento (tipo A) e resolução (tipo B) ---------- */
+  /* nome: "Cronômetro na mão" · matéria: Física · tema: FE02 */
   SIM.reflexo = (el, F) => {
     const W = 680, H = 220;
     let estado = "pronto", t = 0, tAlvo = 0, medidas = [], msg = "Clique em Começar. Quando a bolinha cruzar a linha, aperte Agora! (ou a tecla espaço).";
@@ -70,6 +72,7 @@
   };
 
   /* ---------- FE03 · medidas repetidas: histograma, média, desvio padrão e desvio da média ---------- */
+  /* nome: "Medidas repetidas" · matéria: Física · tema: FE03 */
   SIM.repetidas = (el, F) => {
     const W = 680, H = 280, VERD = 10;
     let dados = [], exps = 0, acertos = 0;
@@ -104,6 +107,7 @@
   };
 
   /* ---------- FE04 · propagação de incertezas pela derivada logarítmica: quem contribui quanto ---------- */
+  /* nome: "Propagação: quem contribui quanto" · matéria: Física · tema: FE04 */
   SIM.propaga = (el, F) => {
     const W = 680, H = 250;
     /* cada fórmula: f = k · Π x_i^a_i; variáveis com valor e incerteza (sliders) */
@@ -139,6 +143,7 @@
   };
 
   /* ---------- FE05 · resultado × valor de referência (e × outra medida): compatibilidade em unidades de Δ ---------- */
+  /* nome: "Compatível ou não?" · matéria: Física · tema: FE05 */
   SIM.compara = (el, F) => {
     const W = 680, H = 250;
     let ref = 9.81, dois = false;
@@ -168,6 +173,7 @@
   };
 
   /* ---------- FE06 · gráfico com barras de erro: ajuste a reta à mão e veja as retas extremas ---------- */
+  /* nome: "Ajuste a reta" · matéria: Física · tema: FE06 */
   SIM.barras = (el, F) => {
     const W = 680, H = 420, xs = [0.5, 1, 1.5, 2, 2.5, 3];
     let ruido = [0.12, -0.18, 0.05, 0.2, -0.1, -0.04], ext = false;
@@ -206,6 +212,7 @@
   };
 
   /* ---------- FE07 · linearização: escolha o que pôr em cada eixo até a curva virar reta ---------- */
+  /* nome: "Endireite a curva" · matéria: Física · tema: FE07 */
   SIM.lineariza = (el, F) => {
     const W = 680, H = 300, ruido = [0.002, -0.003, 0.001, 0.003, -0.002, 0, -0.001, 0.002];
     /* cada fenômeno é uma lei de potência y = C·x^n; o parâmetro físico sai de C */
@@ -243,6 +250,7 @@
   };
 
   /* ---------- FE08 · escalas: linear, mono-log e log-log; quem vira reta revela a lei ---------- */
+  /* nome: "Qual escala endireita?" · matéria: Física · tema: FE08 */
   SIM.loglog = (el, F) => {
     const W = 680, H = 310, rn = [0.02, -0.015, 0.01, 0.018, -0.02, 0.005, -0.01, 0.015, -0.005, 0.01, -0.018];
     const sets = {
@@ -283,6 +291,7 @@
   };
 
   /* ---------- FE09 · mínimos quadrados: os quadrados dos resíduos aparecem desenhados ---------- */
+  /* nome: "Quadrados de verdade" · matéria: Física · tema: FE09 */
   SIM.minquad = (el, F) => {
     const W = 680, H = 320, ts = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4], rn = [0.04, -0.05, 0.02, 0.06, -0.03, -0.06, 0.03, -0.01];
     let mq = false, fora = false;
@@ -316,6 +325,7 @@
   };
 
   /* ---------- FE10 · erro aleatório × sistemático: mais medidas encolhem um, não o outro; calibrar corrige o outro ---------- */
+  /* nome: "Mais medidas não salvam" · matéria: Física · tema: FE10 */
   SIM.sistematico = (el, F) => {
     const W = 680, H = 280, VR = 50;
     let med = [], cal = null;
@@ -358,6 +368,7 @@
   };
 
   /* ---------- FE11 · corretor de resultado: escreva "grandeza = (valor ± incerteza) unidade" e receba a correção ---------- */
+  /* nome: "Corretor de resultados" · matéria: Física · tema: FE11 */
   SIM.relatorio = (el, F) => {
     const casos = [
       { g: "g", v: 9.78342, u: 0.04718, un: "m/s²", ctx: "aceleração da gravidade pelo pêndulo" },

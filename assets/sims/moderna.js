@@ -17,6 +17,7 @@
   const liga = (el, attr, fn) => el.querySelectorAll(`[data-${attr}]`).forEach((b) => b.addEventListener("click", () => { el.querySelectorAll(`[data-${attr}]`).forEach((x) => x.setAttribute("aria-pressed", x === b)); fn(b.dataset[attr]); }));
 
   /* ---------- C18 · relógio de luz ---------- */
+  /* nome: "O relógio de luz" · matéria: Física · tema: C18 */
   SIM.relogio = (el, F) => {
     const W = 760, H = 330;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -57,6 +58,7 @@
   };
 
   /* ---------- C17 · efeito fotoelétrico ---------- */
+  /* nome: "Efeito fotoelétrico" · matéria: Física · tema: C17 */
   SIM.fotoeletrico = (el, F) => {
     const METAIS = { cs: ["césio", 2.1], na: ["sódio", 2.3], zn: ["zinco", 4.3] };
     let m = "na", ult = null, vivo = true, eletrons = [], acum = 0;
@@ -109,6 +111,7 @@
   };
 
   /* ---------- C17b · níveis de Bohr e espectro do hidrogênio ---------- */
+  /* nome: "Níveis de energia e espectro do hidrogênio" · matéria: Física · tema: C17b */
   SIM.bohr = (el, F) => {
     const W = 760, H = 380, E = (n) => -13.6 / (n * n);
     let ni = 3, nf = 2;
@@ -165,6 +168,7 @@
   const numPt = (v, d = 2) => String(+(+v).toFixed(d)).replace(".", ",");
 
   /* ---------- C16 · corpo negro: Planck × Rayleigh–Jeans ---------- */
+  /* nome: "Corpo negro: Planck × catástrofe do ultravioleta" · matéria: Física · tema: C16 */
   SIM.corponegro = (el, F) => {
     const h = 6.626e-34, c = 2.998e8, k = 1.381e-23, b = 2.898e-3;
     const o = { W: 640, H: 340, l: 50, r: 26, t: 12, b: 32, x0: 0, x1: 3000 };
@@ -197,6 +201,7 @@
   };
 
   /* ---------- C19 · decaimento radioativo (aleatório) ---------- */
+  /* nome: "Decaimento radioativo: acaso individual, lei coletiva" · matéria: Física · tema: C19 */
   SIM.decaimento = (el, F) => {
     const N0 = 400, cols = 25;
     let vivos, t, hist, vivo = true, rodando = false, ult = null;
@@ -234,6 +239,7 @@
   };
 
   /* ---------- C19 · curva de energia de ligação (fórmula semiempírica) ---------- */
+  /* nome: "Curva da energia de ligação" · matéria: Física · tema: C19 */
   SIM.ligacao = (el, F) => {
     /* Weizsäcker (MeV): volume, superfície, Coulomb, assimetria; Z do vale de estabilidade */
     const BA = (A) => { const Z = A / (1.98 + 0.0155 * Math.pow(A, 2 / 3)); const B = 15.75 * A - 17.8 * Math.pow(A, 2 / 3) - (0.711 * Z * (Z - 1)) / Math.pow(A, 1 / 3) - (23.7 * (A - 2 * Z) ** 2) / A; return [B / A, Z]; };
@@ -260,6 +266,7 @@
   };
 
   /* ---------- C19b · reação em cadeia ---------- */
+  /* nome: "Reação em cadeia: o fator k" · matéria: Física · tema: C19b */
   SIM.reacaoCadeia = (el, F) => {
     const o = { W: 640, H: 300, l: 54, r: 14, t: 12, b: 32, x0: 0, x1: 60 };
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${o.W} ${o.H}" width="${o.W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -283,6 +290,7 @@
   };
 
   /* ---------- C20 · bandas de energia ---------- */
+  /* nome: "Bandas: metal, semicondutor, isolante e dopagem" · matéria: Física · tema: C20 */
   SIM.bandas = (el, F) => {
     const MAT = { metal: ["metal (cobre)", 0], si: ["semicondutor (silício)", 1.12], ge: ["semicondutor (germânio)", 0.67], iso: ["isolante (diamante)", 5.5] };
     let m = "si", dop = "nenhuma";
@@ -321,6 +329,7 @@
   };
 
   /* ---------- C21 · montador de hádrons com quarks ---------- */
+  /* nome: "Monte hádrons com quarks" · matéria: Física · tema: C21 */
   SIM.quarks = (el, F) => {
     const Q = { u: ["u", 2 / 3, 0, "#e8706a"], d: ["d", -1 / 3, 0, "#7ab8e6"], s: ["s", -1 / 3, -1, "#7ad08f"] };
     const NOMES = { uud: "próton (p)", udd: "nêutron (n)", uuu: "Δ⁺⁺", ddd: "Δ⁻", uds: "Λ⁰ ou Σ⁰", uus: "Σ⁺", dds: "Σ⁻", uss: "Ξ⁰", dss: "Ξ⁻", sss: "Ω⁻ (previsto por Gell-Mann em 1962, achado em 1964)",

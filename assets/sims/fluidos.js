@@ -10,6 +10,7 @@
   const seta = (x1, y1, x2, y2, cor, w = 1.2) => { const a = Math.atan2(y2 - y1, x2 - x1), L = Math.hypot(x2 - x1, y2 - y1), c = Math.min(5, L * 0.45); return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${cor};stroke-width:${w}"/><path d="M${x2 - c * Math.cos(a - 0.45)} ${y2 - c * Math.sin(a - 0.45)} L${x2} ${y2} L${x2 - c * Math.cos(a + 0.45)} ${y2 - c * Math.sin(a + 0.45)}" style="fill:none;stroke:${cor};stroke-width:${w}"/>`; };
 
   /* ---------- N01 · Euler × Lagrange: a derivada material ---------- */
+  /* nome: "Seguir a partícula ou ficar parado?" · matéria: Física · tema: N01 */
   SIM.euleriano = (el, F) => {
     const FL = {
       estag: { nome: "ponto de estagnação (kx, −ky)", v: (x, y, t) => [x, -y], dvdt: () => [0, 0], ini: [-1.9, 1.9] },
@@ -52,6 +53,7 @@
   };
 
   /* ---------- N02 · continuidade num bocal ---------- */
+  /* nome: "Água num estreitamento" · matéria: Física · tema: N02 */
   SIM.bocal = (el, F) => {
     const W = 680, H = 260, N = 160;
     let pts = [], vivo = true, ult = null, cont = [0, 0], tCont = 0, taxa = ["—", "—"];
@@ -98,6 +100,7 @@
   };
 
   /* ---------- N03 · Bernoulli: Torricelli e Venturi ---------- */
+  /* nome: "Torricelli e Venturi" · matéria: Física · tema: N03 */
   SIM.bernoulli = (el, F) => {
     const g = 9.81, W = 680, H = 330;
     let modo = "tanque", h = 1, t = 0, vivo = true, ult = null, rodando = false;
@@ -147,6 +150,7 @@
   };
 
   /* ---------- N04 · o elemento de fluido: rotação, deformação e tensão viscosa ---------- */
+  /* nome: "Um pedacinho de fluido sendo deformado" · matéria: Física · tema: N04 */
   SIM.elemento = (el, F) => {
     const FL = { cis: ["cisalhamento u = (γ̇y, 0)", [[0, 1], [0, 0]]], def: ["deformação pura (εx, −εy)", [[1, 0], [0, -1]]], rot: ["rotação (−Ωy, Ωx)", [[0, -1], [1, 0]]] };
     const VISC = { agua: ["água", 1.0e-3], mel: ["mel", 10], ar: ["ar", 1.8e-5] };
@@ -183,6 +187,7 @@
   };
   /* ---------- N05 · o termo viscoso é difusão de momento: placa posta em movimento de repente (1º problema de Stokes) ---------- */
   const erfc = (x) => { /* Abramowitz–Stegun 7.1.26, erro < 1,5e-7 */ const s = x < 0 ? -1 : 1, z = Math.abs(x), t = 1 / (1 + 0.3275911 * z); const y = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429)))) * Math.exp(-z * z); return s > 0 ? y : 2 - y; };
+  /* nome: "O movimento se espalhando a partir de uma placa" · matéria: Física · tema: N05 */
   SIM.stokes1 = (el, F) => {
     const FL = { agua: ["água", 1.0e-6], oleo: ["óleo de motor", 1.1e-4], mel: ["mel", 7e-3] };
     let fl = "agua", t = 0, vivo = true, ult = null, rodando = true;
@@ -224,6 +229,7 @@
   };
 
   /* ---------- N06 · Couette, Poiseuille plano e Hagen–Poiseuille ---------- */
+  /* nome: "Perfis de velocidade entre placas e num cano" · matéria: Física · tema: N06 */
   SIM.canal = (el, F) => {
     let modo = "canal", vivo = true, ult = null, fase = 0;
     const W = 640, H = 320, mu = 1.0e-3, rho = 1000; /* água */
@@ -270,6 +276,7 @@
   };
 
   /* ---------- N07 · o experimento de Reynolds (1883): filete de corante num cano ---------- */
+  /* nome: "O experimento de Reynolds" · matéria: Física · tema: N07 */
   SIM.reynolds = (el, F) => {
     const FL = { agua: ["água", 1000, 1.0e-3], ar: ["ar", 1.2, 1.8e-5], oleo: ["óleo de motor", 900, 0.1], glic: ["glicerina", 1260, 1.4] };
     let fl = "agua", vivo = true, ult = null, tt = 0;

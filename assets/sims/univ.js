@@ -10,6 +10,7 @@
   const n2 = (v, d = 2) => (Math.abs(v) < 5e-13 ? "0" : String(+(+v).toFixed(d)).replace(".", ",").replace("-", "−"));
 
   /* ---------- U01 · divergente e rotacional locais ---------- */
+  /* nome: "Rodinha de pás num campo" · matéria: Física · tema: U01 */
   SIM.campoVetorial = (el, F) => {
     const CAMPOS = {
       fonte: { nome: "(x, y): fonte", f: (x, y) => [x, y] },
@@ -48,6 +49,7 @@
   };
 
   /* ---------- U02 · Gauss em 2D: fluxo por uma curva fechada ---------- */
+  /* nome: "Fluxo por uma curva fechada" · matéria: Física · tema: U02 */
   SIM.fluxoCargas = (el, F) => {
     const CARGAS = [[-1.0, 0.5, 2], [0.9, 0.2, -1], [0.1, -1.0, 1]];
     const W = 460, H = 460, S = 2.3, X = (x) => W / 2 + (x * (W / 2 - 15)) / S, Y = (y) => H / 2 - (y * (H / 2 - 15)) / S;
@@ -75,6 +77,7 @@
   };
 
   /* ---------- U03 · conta num aro que gira (lagrangiana) ---------- */
+  /* nome: "Conta no aro girando" · matéria: Física · tema: U03 */
   SIM.aro = (el, F) => {
     const g = 9.81, R = 0.1;
     let th = 0.3, om = 0, vivo = true, ult = null;
@@ -118,6 +121,7 @@
   };
 
   /* ---------- U04 · princípio da mínima ação ---------- */
+  /* nome: "Caminhos e ação" · matéria: Física · tema: U04 */
   SIM.acao = (el, F) => {
     const g = 9.81, T = 2, m = 1, xr = (t) => (g / 2) * t * (T - t);
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:start"><div><b>Caminhos x(t)</b><svg viewBox="0 0 360 280" width="360" data-v="s1"></svg></div><div><b>Ação S(ε)</b><svg viewBox="0 0 330 280" width="330" data-v="s2"></svg></div></div><div class="leitor" data-v="lt"></div>
@@ -151,6 +155,7 @@
   };
 
   /* ---------- U05 · onda eletromagnética 1D (FDTD de Yee) ---------- */
+  /* nome: "Maxwell numa grade (FDTD)" · matéria: Física · tema: U05 */
   SIM.fdtd = (el, F) => {
     const N = 500, W = 700, H = 300;
     let Ez, Hy, t, vivo = true, n = 1.5, fim = "aberto", rodando = true;
@@ -195,6 +200,7 @@
   };
 
   /* ---------- U06 · poço infinito: estados e superposição ---------- */
+  /* nome: "Poço infinito e superposição" · matéria: Física · tema: U06 */
   SIM.poco = (el, F) => {
     const W = 700, H = 330;
     let n1 = 1, n2s = 2, modo = "um", vivo = true, t0 = performance.now();

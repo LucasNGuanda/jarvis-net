@@ -11,6 +11,7 @@
   const anima = (el, F, fn) => { let vivo = true, ult = null; const laco = (ts) => { if (!vivo) return; const dt = ult === null ? 0 : Math.min(0.05, (ts - ult) / 1000); ult = ts; fn(dt); requestAnimationFrame(laco); }; requestAnimationFrame(laco); F.aoSair(() => (vivo = false)); };
 
   /* ---------- T01 · quatro termômetros: Celsius, Fahrenheit, Kelvin e uma escala inventada ---------- */
+  /* nome: "Quatro termômetros" · matéria: Física · tema: T01 */
   SIM.escalas = (el, F) => {
     const W = 680, H = 300;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
@@ -36,6 +37,7 @@
   };
 
   /* ---------- T02 · parede de duas camadas: fluxo de calor e perfil de temperatura ---------- */
+  /* nome: "Parede de duas camadas" · matéria: Física · tema: T02 */
   SIM.parede = (el, F) => {
     const W = 680, H = 300;
     let fase = 0;
@@ -60,6 +62,7 @@
   };
 
   /* ---------- T03 · chapa com furo e lâmina bimetálica aquecidas (dilatação exagerada no desenho) ---------- */
+  /* nome: "Chapa com furo e lâmina bimetálica" · matéria: Física · tema: T03 */
   SIM.dilatacao = (el, F) => {
     const W = 680, H = 300, alfas = { aco: 12e-6, aluminio: 23e-6, cobre: 17e-6, vidro: 9e-6, invar: 1.2e-6 };
     let mat = "aco";
@@ -91,6 +94,7 @@
   };
 
   /* ---------- T04 · calorímetro: água quente + gelo a 0 °C ---------- */
+  /* nome: "Calorímetro: água e gelo" · matéria: Física · tema: T04 */
   SIM.calorimetro = (el, F) => {
     const W = 680, H = 300;
     let t = 0;
@@ -122,6 +126,7 @@
   };
 
   /* ---------- T04b · curva de aquecimento com potência constante e perdas (Newton) ---------- */
+  /* nome: "Curva de aquecimento com perdas" · matéria: Física · tema: T04b */
   SIM.aquecimento = (el, F) => {
     const W = 680, H = 300;
     let t, Q, hist;
@@ -156,6 +161,7 @@
   };
 
   /* ---------- T05 · gás ideal no cilindro e no diagrama p × V ---------- */
+  /* nome: "Gás ideal: cilindro e diagrama p × V" · matéria: Física · tema: T05 */
   SIM.gas = (el, F) => {
     const W = 680, H = 320, R = 0.082;
     let modo = "T", rastro = [];
@@ -200,6 +206,7 @@
   };
 
   /* ---------- T05b · gás de discos em 2D: colisões, histograma de velocidades e pressão nas paredes ---------- */
+  /* nome: "Gás de moléculas em 2D" · matéria: Física · tema: T05b */
   SIM.moleculas = (el, F) => {
     const W = 680, H = 320, L = 260, r = 4;
     let ps = [], imp = 0, tAc = 0, pMed = 0;
@@ -240,6 +247,7 @@
   };
 
   /* ---------- T06 · dois corpos em contato térmico caminhando para o equilíbrio ---------- */
+  /* nome: "Dois corpos em contato" · matéria: Física · tema: T06 */
   SIM.contato = (el, F) => {
     const W = 680, H = 300;
     let T1, T2, t, hist;
@@ -276,6 +284,7 @@
   };
 
   /* ---------- T07 · os quatro processos no diagrama p × V: trabalho, calor e energia interna ---------- */
+  /* nome: "Os quatro processos" · matéria: Física · tema: T07 */
   SIM.processos = (el, F) => {
     const W = 680, H = 320, R = 8.314, Ra = 0.082, VA = 24.6, TA = 300, pA = (Ra * TA) / VA;
     let proc = "p", f = 3;
@@ -318,6 +327,7 @@
   };
 
   /* ---------- T08 · ciclo de Carnot de 1 mol de gás monoatômico ---------- */
+  /* nome: "Ciclo de Carnot" · matéria: Física · tema: T08 */
   SIM.carnot = (el, F) => {
     const W = 680, H = 320, R = 8.314, g = 5 / 3;
     let s = 0;
@@ -355,6 +365,7 @@
   };
 
   /* ---------- T08b · partículas espalhando numa caixa: microestados e entropia de Boltzmann ---------- */
+  /* nome: "Microestados e entropia" · matéria: Física · tema: T08b */
   SIM.boltzmann = (el, F) => {
     const W = 680, H = 300;
     let ps = [], parede = true, hist = [];

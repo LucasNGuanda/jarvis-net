@@ -79,6 +79,7 @@
     "sais": [["NaCl", "cloreto de sódio"], ["KBr", "brometo de potássio"], ["CaCl2", "cloreto de cálcio"], ["AgNO3", "nitrato de prata"], ["KNO3", "nitrato de potássio"], ["NaNO2", "nitrito de sódio"], ["CaCO3", "carbonato de cálcio"], ["Na2CO3", "carbonato de sódio"], ["NaHCO3", "hidrogenocarbonato de sódio (bicarbonato de sódio)"], ["Na2SO4", "sulfato de sódio"], ["CaSO4", "sulfato de cálcio"], ["Na2SO3", "sulfito de sódio"], ["Na2S", "sulfeto de sódio"], ["FeS", "sulfeto de ferro(II)"], ["FeCl3", "cloreto de ferro(III)"], ["FeSO4", "sulfato de ferro(II)"], ["Fe2(SO4)3", "sulfato de ferro(III)"], ["CuSO4", "sulfato de cobre(II)"], ["Al2(SO4)3", "sulfato de alumínio"], ["Ca3(PO4)2", "fosfato de cálcio"], ["NH4Cl", "cloreto de amônio"], ["NH4NO3", "nitrato de amônio"], ["NaClO", "hipoclorito de sódio"], ["KClO3", "clorato de potássio"], ["KMnO4", "permanganato de potássio"], ["K2Cr2O7", "dicromato de potássio"], ["BaSO4", "sulfato de bário"]],
     "óxidos": [["Na2O", "óxido de sódio"], ["CaO", "óxido de cálcio"], ["MgO", "óxido de magnésio"], ["Al2O3", "óxido de alumínio"], ["FeO", "óxido de ferro(II)"], ["Fe2O3", "óxido de ferro(III)"], ["Cu2O", "óxido de cobre(I)"], ["CuO", "óxido de cobre(II)"], ["ZnO", "óxido de zinco"], ["CO", "monóxido de carbono"], ["CO2", "dióxido de carbono"], ["SO2", "dióxido de enxofre"], ["SO3", "trióxido de enxofre"], ["NO", "monóxido de nitrogênio"], ["NO2", "dióxido de nitrogênio"], ["N2O", "monóxido de dinitrogênio"], ["N2O5", "pentóxido de dinitrogênio"], ["P2O5", "pentóxido de difósforo"], ["H2O2", "peróxido de hidrogênio"], ["Na2O2", "peróxido de sódio"]],
   };
+  /* nome: "Treino rápido de nomenclatura" · matéria: Química · tema: D01 */
   SIM.nomenclatura = (el, F) => {
     const FUN = Object.keys(SIM.NOMES); let fun = "todas", modo = "fn", atual = null, certas = 0, feitas = 0, seq = 0, travado = false;
     el.insertAdjacentHTML("beforeend", `<div class="palco" style="padding:18px 16px"><div data-v="perg" style="font:700 30px var(--f-text);text-align:center;min-height:44px"></div><div data-v="sub" style="text-align:center;color:var(--ink2);font-size:14px;margin:4px 0 12px"></div><div class="bts" data-v="ops" style="justify-content:center;gap:8px"></div><div data-v="fb" style="text-align:center;min-height:24px;margin-top:10px;font-size:14px"></div></div><div class="leitor" data-v="lt"></div>
@@ -106,6 +107,7 @@
   const CAT = { Na: ["Na", 1], K: ["K", 1], NH4: ["NH4", 1], Ag: ["Ag", 1], Ca: ["Ca", 2], Ba: ["Ba", 2], Mg: ["Mg", 2], Pb: ["Pb", 2], Cu: ["Cu", 2], Fe3: ["Fe", 3], Al: ["Al", 3] }, ANI = { NO3: ["NO3", 1], Cl: ["Cl", 1], OH: ["OH", 1], SO4: ["SO4", 2], CO3: ["CO3", 2], S: ["S", 2], PO4: ["PO4", 3] };
   SIM.soluvel = (c, a) => { if (a === "NO3" || ["Na", "K", "NH4"].includes(c)) return true; if (a === "Cl") return !["Ag", "Pb"].includes(c); if (a === "SO4") return !["Ba", "Ca", "Pb"].includes(c); if (a === "OH") return ["Ba", "Ca"].includes(c); return false; };
   SIM.sal = (c, a) => { const [sc, qc] = CAT[c], [sa, qa] = ANI[a], g = mdc(qc, qa), nc = qa / g, na = qc / g, par = (s, n) => (n === 1 ? s : /[A-Z].*[A-Z]|\d/.test(s) ? "(" + s + ")" + n : s + n); return par(sc, nc) + par(sa, na); };
+  /* nome: "Vai reagir? Fila de reatividade e solubilidade" · matéria: Química · tema: D02 */
   SIM.prever = (el, F) => {
     let aba = "st", m = "Zn", o = "Cu", c1 = "Ag", a1 = "NO3", c2 = "Na", a2 = "Cl";
     el.insertAdjacentHTML("beforeend", `<div class="palco" style="padding:16px"><div data-v="res" style="text-align:center;font-size:15px;line-height:1.7"></div></div><div class="leitor" data-v="lt"></div>
@@ -129,6 +131,7 @@
      2 H₂ + O₂ → 2 H₂O (4 : 32 : 36 = 1 : 8 : 9); Fe + S → FeS (56 : 32 : 88 = 7 : 4 : 11); C + O₂ → CO₂ (12 : 32 : 44 = 3 : 8 : 11).
      Dadas as massas dos dois reagentes: reage o que a proporção permite; produto = soma do que reagiu (Lavoisier); o que sobra fica sem reagir (Proust). */
   SIM.PROP = { MgO: ["Mg", "O₂", "MgO", 3, 2, "magnésio", "oxigênio", "óxido de magnésio"], H2O: ["H₂", "O₂", "H₂O", 1, 8, "hidrogênio", "oxigênio", "água"], FeS: ["Fe", "S", "FeS", 7, 4, "ferro", "enxofre", "sulfeto de ferro(II)"], CO2: ["C", "O₂", "CO₂", 3, 8, "carbono", "oxigênio", "dióxido de carbono"] };
+  /* nome: "Lavoisier e Proust na balança" · matéria: Química · tema: D03 */
   SIM.proporcoes = (el, F) => {
     const W = 680, H = 230; let k = "MgO", a = 12, b = 12;
     SIM.proporcoes._conta = (k, a, b) => { const p = SIM.PROP[k], ra = p[3], rb = p[4], t = Math.min(a / ra, b / rb), ua = t * ra, ub = t * rb; return { usaA: ua, usaB: ub, prod: ua + ub, sobraA: a - ua, sobraB: b - ub, limit: a / ra < b / rb - 1e-12 ? 0 : b / rb < a / ra - 1e-12 ? 1 : -1 }; };
@@ -148,6 +151,7 @@
      n = m/M;  N = n·N_A (N_A = 6,02·10²³);  V = n·22,4 L (só para gás, a 0 °C e 1 atm). O usuário digita QUALQUER um dos campos e os outros se ajustam.
      Conferido em Python: 18 g de H₂O = 1 mol = 6,02·10²³ moléculas (1,806·10²⁴ átomos); 88 g de CO₂ = 2 mol = 44,8 L; 5,85 g de NaCl = 0,1 mol. */
   SIM.SUBS = [["H2O", "água", false, "moléculas"], ["CO2", "dióxido de carbono", true, "moléculas"], ["O2", "oxigênio", true, "moléculas"], ["NH3", "amônia", true, "moléculas"], ["CH4", "metano", true, "moléculas"], ["NaCl", "cloreto de sódio", false, "fórmulas unitárias"], ["CaCO3", "carbonato de cálcio", false, "fórmulas unitárias"], ["C6H12O6", "glicose", false, "moléculas"], ["H2SO4", "ácido sulfúrico", false, "moléculas"], ["Fe", "ferro", false, "átomos"]];
+  /* nome: "O mol como ponte: massa, partículas e volume" · matéria: Química · tema: D04 */
   SIM.ponteMol = (el, F) => {
     let k = "H2O", n = 1;
     SIM.ponteMol._conta = (f, n) => { const a = SIM.atomos(f), at = Object.values(a).reduce((x, y) => x + y, 0); return { M: SIM.mm(f), m: n * SIM.mm(f), N: n * SIM.NA, V: n * SIM.VM, atomos: n * SIM.NA * at, porUn: at }; };

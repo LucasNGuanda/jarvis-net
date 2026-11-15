@@ -9,6 +9,7 @@
      Bastão com carga −Qb. Fração induzida p = 1/(1+(d/d0)^2).
      Isolado: esfera +pQb + Qe/2, folhas −pQb + Qe/2.  Aterrado: as folhas ficam neutras e a esfera fica com +pQb (Qe = +pQb).
      Folhas abrem com ângulo ~ sqrt(|carga nas folhas|). */
+  /* nome: "Eletroscópio e indução" · matéria: Física · tema: C01 */
   SIM.eletroscopio = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 640 330" width="640" aria-label="eletroscópio"><g class="g"></g></svg></div>
       <div class="ctrls"><div class="ctrl"><label>Distância do bastão</label><input type="range" min="0" max="100" step="1" value="100" data-c="d"><output></output></div>
@@ -57,6 +58,7 @@
 
   /* ---------- 2. Dipolo em campo uniforme ----------
      I θ'' = −p E sen θ − b θ'.  τ = p × E,  U = −p·E = −pE cos θ. */
+  /* nome: "Dipolo girando num campo uniforme" · matéria: Física · tema: C03 */
   SIM.dipolo = (el, F) => {
     el.insertAdjacentHTML("beforeend", `<div class="palco grade2" style="align-items:center"><svg viewBox="0 0 360 260" width="360" class="d1"></svg><svg viewBox="0 0 360 260" width="360" class="d2"></svg></div>
       <div class="leitor" data-v="l"></div>
@@ -104,6 +106,7 @@
   /* ---------- 3. Lei de Gauss: fluxo numérico por uma esfera ----------
      Cargas pontuais (nC) no plano z = 0; esfera gaussiana de centro arrastável.
      Φ calculado somando E·n̂ dA em 4000 pontos (espiral de Fibonacci) e comparado com q_int/ε0. */
+  /* nome: "Lei de Gauss: fluxo numérico" · matéria: Física · tema: C03b */
   SIM.gauss = (el, F) => {
     const W = 760, H = 380, PX = 10;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" style="background:var(--bg);border-radius:8px;cursor:grab" aria-label="superfície gaussiana"><g class="g"></g></svg></div>
@@ -147,6 +150,7 @@
   /* ---------- 4. Placa condutora fina (vista de cima) ----------
      N cargas iguais presas a uma placa plana fina, repulsão 1/r² (3D). Elas relaxam até o equilíbrio:
      a componente do campo ao longo da placa vai a zero e a densidade cresce nas bordas e pontas. */
+  /* nome: "Placa condutora: onde as cargas param" · matéria: Física · tema: C05 */
   SIM.placa = (el, F) => {
     const W = 760, H = 380;
     el.insertAdjacentHTML("beforeend", `<div class="palco"><canvas width="${W * 2}" height="${H * 2}" style="width:${W}px;height:${H}px;border-radius:8px;background:var(--bg)"></canvas></div>

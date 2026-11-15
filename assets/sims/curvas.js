@@ -11,6 +11,7 @@
     lampada: { nome: "Lâmpada de filamento", U: (i) => 12 * Math.pow(i / 0.03, 1 / 0.6), r: (i) => (12 * Math.pow(i / 0.03, 1 / 0.6)) / (0.6 * i) },
     led: { nome: "LED vermelho", U: (i) => A * Math.log1p(i / IS), r: (i) => A / (i + IS) },
   };
+  /* nome: "Curva característica U × i" · matéria: Física · tema: C07 */
   SIM.curvas = (el, F) => {
     const W = 620, H = 340, x0 = 60, y0 = 300, w = 520, h = 270, IMAX = 0.035, UMAX = 16;
     const sx = (i) => x0 + (i / IMAX) * w, sy = (U) => y0 - (U / UMAX) * h;

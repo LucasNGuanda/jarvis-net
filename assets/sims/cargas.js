@@ -6,6 +6,7 @@
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const K = 8.99e9, PX = 10; // 10 px por cm
+  /* nome: "Lei de Coulomb com cargas arrastáveis" · matéria: Física · tema: C02, C03, C04 */
   SIM.cargas = (el, F, cfg = {}) => {
     const W = 760, H = 420;
     const modos = Object.assign({ forcas: false, linhas: true, vetores: false, equi: false }, cfg.modos || {});
