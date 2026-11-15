@@ -15,7 +15,7 @@ window.CATALOGO.push(
     ["A05","Separação de misturas e grau de pureza",[],true],
     ["A06","Fenômenos físicos e químicos",[],true],
     ["A07","Densidade, fusão, ebulição e solubilidade",[],true],
-    ["A08","Laboratório: segurança, vidrarias e técnicas",[]],
+    ["A08","Laboratório: segurança, vidrarias e técnicas",[],true],
     ["A09","Algarismos significativos e erros de medida",[]],
   ] },
   { id:"QB", area:"qui", letra:"B", cor:"--mA", nome:"Atomística", desc:"Modelos atômicos, distribuição eletrônica e tabela periódica.", temas:[
