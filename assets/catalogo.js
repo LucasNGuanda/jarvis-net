@@ -180,7 +180,7 @@ window.CATALOGO = [
     ["FE09","Mínimos quadrados (regressão linear)",["∫"],true],
   ]},
   { id:"FEr", area:"lab", letra:"R", cor:"--mM", nome:"Relatório e erros", desc:"Erros sistemáticos, como corrigir e como escrever um relatório.", temas:[
-    ["FE10","Erros sistemáticos e como corrigi-los"],
+    ["FE10","Erros sistemáticos e como corrigi-los",[],true],
     ["FE11","Como escrever um relatório"],
   ]},
 

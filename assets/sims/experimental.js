@@ -1,4 +1,4 @@
-/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; FE06 barras de erro; FE07 linearização; FE08 log-log; FE09 mínimos quadrados; */
+/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; FE06 barras de erro; FE07 linearização; FE08 log-log; FE09 mínimos quadrados; FE10 erros sistemáticos; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -312,6 +312,48 @@
       sv += D.txt(530, 60, "S da sua reta", "tx2", "start") + `<rect x="530" y="68" width="${(S / sm) * bw}" height="18" style="fill:color-mix(in srgb,var(--bad) 45%,transparent)"/>` + D.txt(530, 110, "S mínimo", "tx2", "start") + `<rect x="530" y="118" width="${(m.S / sm) * bw}" height="18" style="fill:color-mix(in srgb,var(--ok) 45%,transparent)"/>`;
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("S da sua reta (m²/s²)", n2(S, 4)) + vis("S mínimo", n2(m.S, 4)) + (mq ? vis("mínimos quadrados: a ± σa", n2(m.a, 3) + " ± " + n2(m.sa, 3) + " m/s²") + vis("b ± σb", n2(m.b, 3) + " ± " + n2(m.sb, 3) + " m/s") : vis("a sua reta", "a = " + n2(a, 3) + ", b = " + n2(b, 3)));
+    });
+  };
+
+  /* ---------- FE10 · erro aleatório × sistemático: mais medidas encolhem um, não o outro; calibrar corrige o outro ---------- */
+  SIM.sistematico = (el, F) => {
+    const W = 680, H = 280, VR = 50;
+    let med = [], cal = null;
+    const gauss = () => { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("erro aleatório σ (cm)", "sg", 0.02, 0.3, 0.01, 0.1)}${sl("erro sistemático: zero deslocado (cm)", "vi", 0, 0.5, 0.01, 0.05)}
+      <div class="bts" style="grid-column:1/-1"><button class="bt" data-a="m1">Medir 1 vez</button><button class="bt" data-a="m10">Medir mais 10</button><button class="bt" data-a="m100">Medir mais 100</button><button class="bt" data-a="cal">Calibrar com um padrão de 10,00 cm (20 medidas)</button><button class="bt" data-a="z">Recomeçar</button></div></div>
+      <div class="status">Uma barra de exatamente 50,00 cm é medida com uma régua cuja ponta está gasta (o zero está deslocado). O alvo mostra a ideia: o espalhamento é o erro aleatório, e o deslocamento do centro, o sistemático. No histograma, a faixa verde é a média ± 2σ/√N. Medindo mais, ela encolhe, mas fica parada no lugar errado: com N grande, o resultado fica incompatível com 50,00. Calibrar (medir algo conhecido com a mesma régua) mede o deslocamento e permite corrigi-lo, mas a correção também tem incerteza.</div>`);
+    const q = (s) => el.querySelector(s);
+    const mede = (n) => { const sg = val(el, "sg"), vi = val(el, "vi"); for (let i = 0; i < n; i++) med.push(VR + vi + sg * gauss()); };
+    q("[data-a=m1]").addEventListener("click", () => mede(1)); q("[data-a=m10]").addEventListener("click", () => mede(10)); q("[data-a=m100]").addEventListener("click", () => mede(100));
+    q("[data-a=z]").addEventListener("click", () => { med = []; cal = null; });
+    q("[data-a=cal]").addEventListener("click", () => { const sg = val(el, "sg"), vi = val(el, "vi"), p = Array.from({ length: 20 }, () => 10 + vi + sg * gauss()), m = p.reduce((s, v) => s + v, 0) / 20, s = Math.sqrt(p.reduce((t, v) => t + (v - m) ** 2, 0) / 19); cal = { b: m - 10, u: s / Math.sqrt(20) }; });
+    el.querySelectorAll("[data-c]").forEach((i) => i.addEventListener("input", () => { med = []; cal = null; }));
+    mede(10);
+    SIM.sistematico._est = (xs) => { const N = xs.length, m = xs.reduce((s, v) => s + v, 0) / N, s = N > 1 ? Math.sqrt(xs.reduce((t, v) => t + (v - m) ** 2, 0) / (N - 1)) : NaN; return { N, m, s, u: s / Math.sqrt(N) }; };
+    anima(el, F, () => {
+      const sg = val(el, "sg"), vi = val(el, "vi"); mostra(el, ["sg", "vi"], 2);
+      /* alvo: o mesmo sorteio usado em x, e um y próprio, só para ilustrar */
+      let sv = [1, 0.66, 0.33].map((k) => `<circle cx="130" cy="140" r="${100 * k}" style="fill:none;stroke:var(--ink3);stroke-width:1.5"/>`).join("") + `<circle cx="130" cy="140" r="3" style="fill:var(--ink3)"/>` + D.txt(130, 270, "alvo: o centro é 50,00 cm", "tx2");
+      const k = 100 / 0.8;
+      med.slice(-150).forEach((x, i) => { const yy = Math.sin(i * 12.9898 + x * 78.233) * 43758.5453; const gy = (yy - Math.floor(yy) - 0.5) * 2.2 * sg; sv += `<circle cx="${130 + Math.max(-100, Math.min(100, (x - VR) * k))}" cy="${140 + Math.max(-100, Math.min(100, gy * k))}" r="2.6" style="fill:var(--warn);opacity:.75"/>`; });
+      /* histograma */
+      const a = 49.2, b = 51.0, X = (v) => 270 + ((v - a) / (b - a)) * 390, nb = 36, cont = Array(nb).fill(0);
+      med.forEach((x) => { const j = Math.floor(((x - a) / (b - a)) * nb); if (j >= 0 && j < nb) cont[j]++; });
+      const cm = Math.max(1, ...cont), e = SIM.sistematico._est(med);
+      sv += `<line x1="270" x2="660" y1="230" y2="230" style="stroke:var(--ink2)"/>`;
+      for (let v = 49.4; v <= 50.85; v += 0.2) sv += `<line x1="${X(v)}" x2="${X(v)}" y1="226" y2="234" style="stroke:var(--ink3)"/>` + D.txt(X(v), 250, n2(v, 1), "tx2");
+      if (e.N > 1) sv += `<rect x="${X(e.m - 2 * e.u)}" y="40" width="${Math.max(2, X(e.m + 2 * e.u) - X(e.m - 2 * e.u))}" height="190" style="fill:color-mix(in srgb,var(--ok) 22%,transparent)"/>`;
+      cont.forEach((c, j) => { if (c) sv += `<rect x="${X(a + ((b - a) * j) / nb) + 1}" y="${230 - (c / cm) * 170}" width="${390 / nb - 2}" height="${(c / cm) * 170}" style="fill:color-mix(in srgb,var(--mN) 55%,transparent)"/>`; });
+      sv += `<line x1="${X(VR)}" x2="${X(VR)}" y1="30" y2="230" style="stroke:var(--ok);stroke-width:2;stroke-dasharray:5 4"/>` + D.txt(X(VR), 24, "valor verdadeiro 50,00", "tx2");
+      if (e.N > 1) sv += `<line x1="${X(e.m)}" x2="${X(e.m)}" y1="40" y2="230" style="stroke:var(--mN);stroke-width:2"/>` + D.txt(X(e.m) + 4, 44, "média", "tx2", "start");
+      if (cal && e.N > 1) { const mc = e.m - cal.b; sv += `<line x1="${X(mc)}" x2="${X(mc)}" y1="60" y2="230" style="stroke:var(--warn);stroke-width:2"/>` + D.txt(X(mc) - 4, 64, "corrigido", "tx2", "end"); }
+      q("[data-v=sv]").innerHTML = sv;
+      const n = e.N > 1 ? Math.abs(e.m - VR) / e.u : NaN, ver = !isFinite(n) ? "—" : n <= 2 ? "compatível" : n <= 3 ? "inconclusivo" : "incompatível";
+      let corr = "calibre para corrigir";
+      if (cal && e.N > 1) { const mc = e.m - cal.b, uc = e.u + cal.u, nc = Math.abs(mc - VR) / uc; corr = n2(mc, 3) + " ± " + n2(uc, 3) + " (" + n2(nc, 1) + "Δ)"; }
+      q("[data-v=lt]").innerHTML = vis("N medidas", e.N) + vis("média ± σ/√N (cm)", e.N > 1 ? n2(e.m, 3) + " ± " + n2(e.u, 3) : "—") + vis("distância de 50,00", isFinite(n) ? n2(n, 1) + " Δ: " + ver : "—") + vis("deslocamento medido no padrão", cal ? n2(cal.b, 3) + " ± " + n2(cal.u, 3) : "—") + vis("resultado corrigido", corr);
     });
   };
 })();
