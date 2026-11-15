@@ -1,23 +1,44 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado final (15/11/2026, β 4.6, fim do chat; tudo no `main`)
+## Estado final (15/11/2026, β 4.6, fim do chat; tudo no `main`, aprovado pelo Lucas)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md`. Aqui fica o estado do trabalho. Números contados automaticamente
 abrindo o conteúdo de cada tema (script de contagem com Playwright), não de memória.
 
 ### Física — 3 abas: Física, Experimentos, Experimental
 **Aba Física: 96 de 96 temas escritos, 913 exercícios** (todos os temas com chefão, menos o X01 e os simulados).
-| Módulo | Temas | Exercícios por tema | Total | Sem figura | `F.chute` |
-|---|---|---|---|---|---|
-| F Fundamentos e a matemática do físico (F01–F05, A19) | 6/6 | 7 | 42 | 42 | nenhum |
-| A Mecânica (A01–A20, com A12b e A14a) | 21/21 | 12 a 14 | 264 | 178 | nenhum |
-| T Termodinâmica (T01–T08b) | 11/11 | 16 | 176 | 0 | todos |
-| O Ondas e Óptica (O01–O10b) | 11/11 | 7 | 77 | 77 | nenhum |
-| C Eletricidade e Magnetismo (C01–C15d) | 20/20 | 7 a 16 | 189 | 49 | todos |
-| M Física Moderna | 8/8 | 7 | 56 | 56 | nenhum |
-| U Universitária | 6/6 | 7 | 42 | 42 | nenhum |
-| N Fluidos até Navier–Stokes | 7/7 | 7 | 49 | 49 | nenhum |
-| X Bônus (X01 Função gama fresco) | 1/1 | 3 | 3 | 3 | nenhum (sem chefão) |
-| S Simulados (S00–S04) | 5/5 | S02: 15 questões do IME; os outros só a página de entrada | 15 | 2 | — |
+**Tabela completa (todas as abas com conteúdo escrito):**
+
+| Aba | Módulo | Temas | Exercícios (mín–máx) | Total | Sem figura | Com `F.chute` | Com chefão | Laboratórios |
+|---|---|---|---|---|---|---|---|---|
+| Física | F Fundamentos e a matemática do físico | 6/6 | 7–7 | 42 | 42 | 0 | 6 | 6 |
+| Física | A Mecânica | 21/21 | 12–14 | 264 | 178 | 0 | 21 | 21 |
+| Física | T Termodinâmica | 11/11 | 16–16 | 176 | 0 | 11 | 11 | 11 |
+| Física | O Ondas e Óptica | 11/11 | 7–7 | 77 | 77 | 0 | 11 | 12 |
+| Física | C Eletricidade e Magnetismo | 20/20 | 7–16 | 189 | 49 | 20 | 20 | 24 |
+| Física | M Física Moderna | 8/8 | 7–7 | 56 | 56 | 0 | 8 | 9 |
+| Física | U Universitária | 6/6 | 7–7 | 42 | 42 | 0 | 6 | 6 |
+| Física | N Fluidos até Navier–Stokes | 7/7 | 7–7 | 49 | 49 | 0 | 7 | 7 |
+| Física | X Bônus | 1/1 | 3–3 | 3 | 3 | 0 | 0 | 5 |
+| Física | S Simulados | 5/5 | 0–15 | 15 | 2 | 0 | 0 | 0 |
+| Experimental | FEm Medidas e incertezas | 5/5 | 16–16 | 80 | 0 | 5 | 5 | 5 |
+| Experimental | FEg Gráficos e ajustes | 4/4 | 16–16 | 64 | 0 | 4 | 4 | 4 |
+| Experimental | FEr Relatório e erros | 2/2 | 16–16 | 32 | 0 | 2 | 2 | 2 |
+| Experimentos | EPd Pêndulos | 3/3 | 0–2 | 4 | 4 | 0 | 0 | 3 |
+| Experimentos | EEm Eletromagnetismo | 3/3 | 0–0 | 0 | 0 | 0 | 0 | 3 |
+| Experimentos | EAt Força de atração | 1/1 | 0–0 | 0 | 0 | 0 | 0 | 1 |
+| Experimentos | EMo Mola | 2/2 | 1–1 | 2 | 1 | 0 | 0 | 2 |
+| Experimentos | EMi Mistos | 1/1 | 0–0 | 0 | 0 | 0 | 0 | 1 |
+| Experimentos | ETe Termodinâmica | 3/3 | 0–0 | 0 | 0 | 0 | 0 | 3 |
+| Experimentos | EQu Ondas e quântica | 3/3 | 0–0 | 0 | 0 | 0 | 0 | 3 |
+| Experimentos | ENu Nuclear | 1/1 | 0–0 | 0 | 0 | 0 | 0 | 1 |
+| Experimentos | EFl Fluidos | 1/1 | 0–0 | 0 | 0 | 0 | 0 | 1 |
+| Cálculo (Matemática) | K1 Cálculo 1 | 9/9 | 7–7 | 63 | 63 | 0 | 9 | 10 |
+| Cálculo (Matemática) | K2 Cálculo 2 | 8/8 | 7–7 | 56 | 56 | 0 | 8 | 9 |
+| Cálculo (Matemática) | K3 Funções especiais e integrais | 3/3 | 7–7 | 21 | 21 | 0 | 3 | 3 |
+| Cálculo (Matemática) | K4 Teoremas | 5/5 | 7–7 | 35 | 35 | 0 | 5 | 5 |
+| Cálculo (Matemática) | K5 Simulados de Cálculo | 2/2 | 20–20 | 40 | 40 | 0 | 0 | 0 |
+
+- S Simulados: S02 tem 15 questões do IME; S00, S01, S03 e S04 só a página de entrada. X01: 5 laboratórios, sem chefão. Experimentos: cada um é uma simulação (laboratório), sem exercícios por decisão (EP01, EP02 e EP08/EP10 guardam 1 ou 2 perguntas antigas).
 - Mecânica, tema a tema: A01 12, A02 13, A03 14, A04 12, A05 12, A06 13, A07 13, A08 14, A09 12, A10 12, A11 12, A12 13, A12b 12, A13 13, A14a 13, A14 12, A15 12, A16 13, A17 13, A18 12, A20 12 (todos com correção automática e nível).
 - Eletricidade, tema a tema: C01 10, C02 10, C03 10, C03b 10, C04 11, C05 9, C06 9, C07 16, C08 9, C09 7, C10 8, C10b 9, C11 10, C12 8, C13 9, C14 10, C15 9, C15b 9, C15c 8, C15d 8.
 
@@ -78,7 +99,7 @@ Química (módulos QA–QJ: introdução, atomística, ligações, reações e e
 
 ### Testes (`tests/`) e última regressão
 tgeral, tfunc, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE, thome, tcor, texp, tsegredo, tsegredo2, tadesivos, tmaterias, tfiguras, tmudacalculo, tacesso, tbusca, mais tmec, tchaves e texemp por código. Todos rodam como ADM via `tests/adm.js` (menos o tacesso). Capturas em `tests/capturas/` (fora do git).
-- Última regressão: em andamento (atualizo aqui quando terminar).
+- **Última regressão (15/11/2026, sobre a β 4.6 final): 23 execuções, todas com código 0 e nenhuma linha de FALHA** (21 testes + tchaves A01 T03 C07 FE03 + tmec A01 FE03; 772 conferências "ok"). tgeral: 437 páginas, 152 temas escritos, 1970 links, 1310 exercícios, 157 laboratórios, **0 fórmulas quebradas (katex-error)**, nenhum tema vazio, nenhum link quebrado; **0 erros de JavaScript** (16 testes com "sem erros JS" e o tfunc "sem erros no console"). Calculadora 1: 103 de 103; calculadora 2: 41 de 41; tacesso, tbusca, surpresas (tsegredo e tsegredo2), mudança do Cálculo e todos os da física sem falha. Avisos informativos do tgeral (não são falha): S00, S01, S03 e S04 com conteúdo curto (só a página de entrada).
 
 ### Dívida técnica (o que ficou abaixo do padrão do CLAUDE.md)
 - [ ] **Exercícios por tema (meta: 15 a 20):**
@@ -100,6 +121,119 @@ tgeral, tfunc, tcalc, tcalc2, tfis, tfisA, tfisF, tfisN2, tfisON, tfisTE, thome,
 - [ ] **Defeitos conhecidos, esperando o Lucas:**
   - a simulação do N02 tem uma contagem que falha às vezes no tfisON, porque começa fora do regime permanente; a correção mexe na física e precisa de autorização;
   - números com `{,}` vazando no texto comum do CI02, CII03, TE01 e TE04.
+
+**Tabela tema por tema** (só os temas com alguma dívida; meta de 15 exercícios; Experimentos e Simulados ficam fora porque têm formato próprio):
+
+| Tema | Exercícios | Faltam para 15 | Sem figura | `F.chute` |
+|---|---|---|---|---|
+| F01 | 7 | 8 | 7 | falta |
+| F02 | 7 | 8 | 7 | falta |
+| F03 | 7 | 8 | 7 | falta |
+| F04 | 7 | 8 | 7 | falta |
+| F05 | 7 | 8 | 7 | falta |
+| A19 | 7 | 8 | 7 | falta |
+| A01 | 12 | 3 | 10 | falta |
+| A02 | 13 | 2 | 2 | falta |
+| A03 | 14 | 1 | 8 | falta |
+| A04 | 12 | 3 | 3 | falta |
+| A05 | 12 | 3 | 7 | falta |
+| A06 | 13 | 2 | 6 | falta |
+| A07 | 13 | 2 | 7 | falta |
+| A08 | 14 | 1 | 8 | falta |
+| A09 | 12 | 3 | 8 | falta |
+| A10 | 12 | 3 | 9 | falta |
+| A11 | 12 | 3 | 10 | falta |
+| A12 | 13 | 2 | 9 | falta |
+| A12b | 12 | 3 | 7 | falta |
+| A13 | 13 | 2 | 10 | falta |
+| A14a | 13 | 2 | 11 | falta |
+| A14 | 12 | 3 | 10 | falta |
+| A15 | 12 | 3 | 11 | falta |
+| A16 | 13 | 2 | 13 | falta |
+| A17 | 13 | 2 | 9 | falta |
+| A18 | 12 | 3 | 10 | falta |
+| A20 | 12 | 3 | 10 | falta |
+| O01 | 7 | 8 | 7 | falta |
+| O02 | 7 | 8 | 7 | falta |
+| O03 | 7 | 8 | 7 | falta |
+| O04 | 7 | 8 | 7 | falta |
+| O05 | 7 | 8 | 7 | falta |
+| O06 | 7 | 8 | 7 | falta |
+| O07 | 7 | 8 | 7 | falta |
+| O08 | 7 | 8 | 7 | falta |
+| O09 | 7 | 8 | 7 | falta |
+| O10 | 7 | 8 | 7 | falta |
+| O10b | 7 | 8 | 7 | falta |
+| C01 | 10 | 5 | — | tem |
+| C02 | 10 | 5 | — | tem |
+| C03 | 10 | 5 | — | tem |
+| C03b | 10 | 5 | — | tem |
+| C04 | 11 | 4 | — | tem |
+| C05 | 9 | 6 | — | tem |
+| C11 | 10 | 5 | — | tem |
+| C06 | 9 | 6 | 3 | tem |
+| C08 | 9 | 6 | 4 | tem |
+| C09 | 7 | 8 | 3 | tem |
+| C10 | 8 | 7 | 4 | tem |
+| C10b | 9 | 6 | 3 | tem |
+| C12 | 8 | 7 | 4 | tem |
+| C13 | 9 | 6 | 4 | tem |
+| C14 | 10 | 5 | 5 | tem |
+| C15 | 9 | 6 | 5 | tem |
+| C15b | 9 | 6 | 4 | tem |
+| C15c | 8 | 7 | 3 | tem |
+| C15d | 8 | 7 | 7 | tem |
+| C16 | 7 | 8 | 7 | falta |
+| C17 | 7 | 8 | 7 | falta |
+| C17b | 7 | 8 | 7 | falta |
+| C18 | 7 | 8 | 7 | falta |
+| C19 | 7 | 8 | 7 | falta |
+| C19b | 7 | 8 | 7 | falta |
+| C20 | 7 | 8 | 7 | falta |
+| C21 | 7 | 8 | 7 | falta |
+| U01 | 7 | 8 | 7 | falta |
+| U02 | 7 | 8 | 7 | falta |
+| U03 | 7 | 8 | 7 | falta |
+| U04 | 7 | 8 | 7 | falta |
+| U05 | 7 | 8 | 7 | falta |
+| U06 | 7 | 8 | 7 | falta |
+| N01 | 7 | 8 | 7 | falta |
+| N02 | 7 | 8 | 7 | falta |
+| N03 | 7 | 8 | 7 | falta |
+| N04 | 7 | 8 | 7 | falta |
+| N05 | 7 | 8 | 7 | falta |
+| N06 | 7 | 8 | 7 | falta |
+| N07 | 7 | 8 | 7 | falta |
+| X01 | 3 | 12 | 3 | falta |
+| matematica/CI01 | 7 | 8 | 7 | falta |
+| matematica/CI02 | 7 | 8 | 7 | falta |
+| matematica/CI03 | 7 | 8 | 7 | falta |
+| matematica/CI04 | 7 | 8 | 7 | falta |
+| matematica/CI05 | 7 | 8 | 7 | falta |
+| matematica/CI06 | 7 | 8 | 7 | falta |
+| matematica/CI07 | 7 | 8 | 7 | falta |
+| matematica/CI08 | 7 | 8 | 7 | falta |
+| matematica/CI09 | 7 | 8 | 7 | falta |
+| matematica/CII01 | 7 | 8 | 7 | falta |
+| matematica/CII02 | 7 | 8 | 7 | falta |
+| matematica/CII03 | 7 | 8 | 7 | falta |
+| matematica/CII04 | 7 | 8 | 7 | falta |
+| matematica/CII05 | 7 | 8 | 7 | falta |
+| matematica/CII06 | 7 | 8 | 7 | falta |
+| matematica/CII07 | 7 | 8 | 7 | falta |
+| matematica/CII08 | 7 | 8 | 7 | falta |
+| matematica/CE01 | 7 | 8 | 7 | falta |
+| matematica/CE02 | 7 | 8 | 7 | falta |
+| matematica/CE03 | 7 | 8 | 7 | falta |
+| matematica/TE01 | 7 | 8 | 7 | falta |
+| matematica/TE02 | 7 | 8 | 7 | falta |
+| matematica/TE03 | 7 | 8 | 7 | falta |
+| matematica/TE04 | 7 | 8 | 7 | falta |
+| matematica/TE05 | 7 | 8 | 7 | falta |
+| **Total (104 temas com alguma dívida)** | **881** | **679** (em 104 temas) | **671** | **85 sem** |
+
+Totais: 104 temas abaixo do padrão; faltam 679 exercícios para todos chegarem a 15; 671 exercícios sem figura; 85 temas sem `F.chute`.
+
 - Regra: tema novo já nasce no padrão completo (15–20 exercícios, figura em todo exercício, `F.chute`, chefão, as 4 caixas).
 
 ### Pendências combinadas
