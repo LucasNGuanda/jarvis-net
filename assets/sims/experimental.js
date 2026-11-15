@@ -1,4 +1,4 @@
-/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; FE06 barras de erro; FE07 linearização; */
+/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; FE06 barras de erro; FE07 linearização; FE08 log-log; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -239,6 +239,46 @@
       q("[data-v=sv]").innerHTML = sv;
       const par = f.par(Math.pow(Math.abs(aj.a), 1 / p_)), certo = Math.abs(q_ - p_ * f.n) < 1e-9;
       q("[data-v=lt]").innerHTML = vis("curvatura (maior desvio / altura)", n2(aj.curv * 100, 1) + "%") + vis("parece reta?", reta ? "sim!" : "não: ainda é curva") + vis("inclinação", n2(aj.a, 4)) + (reta && certo ? vis(par[0], n2(par[1], 3) + " " + par[2]) : vis("parâmetro", "acerte a reta primeiro"));
+    });
+  };
+
+  /* ---------- FE08 · escalas: linear, mono-log e log-log; quem vira reta revela a lei ---------- */
+  SIM.loglog = (el, F) => {
+    const W = 680, H = 310, rn = [0.02, -0.015, 0.01, 0.018, -0.02, 0.005, -0.01, 0.015, -0.005, 0.01, -0.018];
+    const sets = {
+      kepler: { nome: "planetas (Kepler)", xl: "raio da órbita a (UA)", yl: "período T (anos)", x: [0.387, 0.723, 1, 1.524, 5.203, 9.537, 19.19, 30.07], y: [0.241, 0.615, 1, 1.881, 11.86, 29.46, 84.01, 164.8], nota: "dados reais do Sistema Solar" },
+      decai: { nome: "fonte radioativa", xl: "tempo t (min)", yl: "contagens por minuto", x: rn.map((_, i) => 2 + 2 * i), f: (t) => 1000 * Math.pow(2, -t / 5) },
+      resfria: { nome: "café esfriando", xl: "tempo t (min)", yl: "T − T_ambiente (°C)", x: rn.map((_, i) => 3 + 3 * i), f: (t) => 60 * Math.exp(-t / 12) },
+      luz: { nome: "lâmpada pontual", xl: "distância d (m)", yl: "intensidade (W/m²)", x: rn.slice(0, 8).map((_, i) => 0.2 + (0.8 * i) / 7), f: (d) => 0.32 / (d * d) },
+    };
+    let sk = "kepler", esc = "lin";
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div class="bts" style="grid-column:1/-1">${botoes(Object.entries(sets).map(([k, s]) => [k, s.nome]), "s", "kepler")}</div>
+      <div class="bts" style="grid-column:1/-1">${botoes([["lin", "escala linear"], ["mono", "mono-log (só o eixo y em log)"], ["log", "log-log (os dois eixos em log)"]], "e", "lin")}</div></div>
+      <div class="status">Na escala log, distâncias iguais significam multiplicar pelo mesmo fator (1 → 10 → 100). Uma lei de potência y = C·xⁿ vira reta no log-log, com inclinação n. Uma exponencial y = A·e^(kx) vira reta no mono-log, e a inclinação (com log na base 10) vale k/ln 10. Os pontos têm ~1,5% de flutuação (os dos planetas são medidas reais).</div>`);
+    const q = (s) => el.querySelector(s);
+    liga(el, "s", (k) => (sk = k)); liga(el, "e", (k) => (esc = k));
+    const L = Math.log10;
+    SIM.loglog._ajuste = (X, Y) => { const n = X.length, mx = X.reduce((s, v) => s + v, 0) / n, my = Y.reduce((s, v) => s + v, 0) / n; let sxy = 0, sxx = 0; X.forEach((x, i) => { sxy += (x - mx) * (Y[i] - my); sxx += (x - mx) ** 2; }); const a = sxy / sxx, b = my - a * mx; return { a, b, curv: Math.max(...Y.map((y, i) => Math.abs(y - (a * X[i] + b)))) / (Math.max(...Y) - Math.min(...Y)) }; };
+    const fmt = (v) => (v >= 1 ? n2(v, 0) : n2(v, Math.ceil(-L(v))));
+    const eixo = (lo, hi, log) => { const t = []; if (log) { for (let k = Math.floor(lo); k <= Math.ceil(hi); k++) for (let m = 1; m < 10; m++) { const v = k + L(m); if (v >= lo - 1e-9 && v <= hi + 1e-9) t.push([v, m === 1 || (hi - lo < 2.5 && (m === 2 || m === 5)) ? fmt(m * Math.pow(10, k)) : ""]); } } else { const p = Math.pow(10, Math.floor(L((hi - lo) / 4))), st = [1, 2, 5, 10].map((m) => m * p).find((s) => (hi - lo) / s <= 6); for (let v = Math.ceil(lo / st) * st; v <= hi + 1e-9; v += st) t.push([v, n2(v, st < 1 ? Math.ceil(-L(st)) : 0)]); } return t; };
+    anima(el, F, () => {
+      const s = sets[sk], ys = s.y || s.x.map((x, i) => s.f(x) * (1 + rn[i])), lx = esc === "log", ly = esc !== "lin";
+      const X = s.x.map((x) => (lx ? L(x) : x)), Y = ys.map((y) => (ly ? L(y) : y)), aj = SIM.loglog._ajuste(X, Y), reta = aj.curv < 0.02;
+      const pad = (a, b, z) => { const d = b - a; return z && a >= 0 ? [0, b + 0.08 * d] : [a - 0.08 * d, b + 0.08 * d]; };
+      const [x0, x1] = pad(Math.min(...X), Math.max(...X), !lx), [y0, y1] = pad(Math.min(...Y), Math.max(...Y), !ly);
+      const PX = (v) => 90 + ((v - x0) / (x1 - x0)) * 540, PY = (v) => 260 - ((v - y0) / (y1 - y0)) * 220;
+      let sv = `<rect x="90" y="40" width="540" height="220" style="fill:none;stroke:var(--line2)"/>`;
+      eixo(x0, x1, lx).forEach(([v, r]) => (sv += `<line x1="${PX(v)}" x2="${PX(v)}" y1="40" y2="260" style="stroke:var(--line2);${r ? "" : "opacity:.45;"}stroke-dasharray:${r ? "3 4" : "1 4"}"/>` + (r ? D.txt(PX(v), 278, r, "tx2") : "")));
+      eixo(y0, y1, ly).forEach(([v, r]) => (sv += `<line x1="90" x2="630" y1="${PY(v)}" y2="${PY(v)}" style="stroke:var(--line2);${r ? "" : "opacity:.45;"}stroke-dasharray:${r ? "3 4" : "1 4"}"/>` + (r ? D.txt(84, PY(v) + 4, r, "tx2", "end") : "")));
+      sv += `<line x1="${PX(x0)}" y1="${PY(aj.a * x0 + aj.b)}" x2="${PX(x1)}" y2="${PY(aj.a * x1 + aj.b)}" clip-path="url(#clp-ll)" style="stroke:${reta ? "var(--ok)" : "var(--ink3)"};stroke-width:2;stroke-dasharray:6 4"/>`;
+      X.forEach((x, i) => (sv += `<circle cx="${PX(x)}" cy="${PY(Y[i])}" r="4.5" style="fill:var(--warn)"/>`));
+      sv += D.txt(630, 300, s.xl + (lx ? " · log" : ""), "tx2", "end") + D.txt(90, 30, s.yl + (ly ? " · log" : ""), "tx2", "start") + (s.nota ? D.txt(630, 30, s.nota, "tx2", "end") : "");
+      q("[data-v=sv]").innerHTML = `<defs><clipPath id="clp-ll"><rect x="90" y="40" width="540" height="220"/></clipPath></defs>` + sv;
+      let lei = "—";
+      if (reta && esc === "log") lei = "potência: n = " + n2(aj.a, 3) + ", C = " + n2(Math.pow(10, aj.b), 3);
+      else if (reta && esc === "mono") { const k = aj.a * Math.LN10; lei = "exponencial: k = " + n2(k, 4) + (k < 0 ? " min⁻¹ → meia-vida " + n2(Math.LN2 / -k, 2) + " min, τ = " + n2(-1 / k, 2) + " min" : ""); }
+      q("[data-v=lt]").innerHTML = vis("curvatura", n2(aj.curv * 100, 1) + "%") + vis("parece reta?", reta ? "sim!" : "não") + vis("inclinação", n2(aj.a, 4)) + vis("lei encontrada", lei);
     });
   };
 })();
