@@ -1,4 +1,4 @@
-/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; */
+/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; EP13 van der Waals; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -121,6 +121,73 @@
       sv += D.txt(gx + 75, 22, "variação de entropia (em k)", "tx2");
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=lt]").innerHTML = vis("temperatura: esquerda | direita", n2(E.e.T, 0) + " | " + n2(E.d.T, 0)) + vis("ΔS do gás (em k)", n2(dSg, 2)) + vis("bits de decisão | custo k·ln 2 cada", bits + " | " + n2(custo, 2)) + vis("ΔS total com a memória (≥ 0?)", n2(dSg + custo, 2));
+    });
+  };
+
+  /* ---------- EP13 · gás de van der Waals: isotermas, construção de Maxwell, ponto crítico e condensação ---------- */
+  SIM.vanDerWaals = (el, F) => {
+    const W = 680, H = 330, R = 0.08314; /* L·bar/(mol·K) */
+    const gases = { co2: [3.64, 0.04267], h2o: [5.536, 0.03049], n2: [1.37, 0.0387], he: [0.0346, 0.0238] };
+    let ideal = false, fase = 0, cache = { k: "" };
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("a: atração entre moléculas (L²·bar/mol²)", "a", 0.03, 6, 0.01, 3.64)}${sl("b: volume próprio das moléculas (L/mol)", "b", 0.02, 0.06, 0.0005, 0.0427)}${sl("temperatura T / T_c", "tr", 0.75, 1.4, 0.01, 0.9)}
+      <div class="bts">${botoes([["co2", "CO₂"], ["h2o", "água"], ["n2", "N₂"], ["he", "hélio"]], "gas", "co2")}<button class="bt" data-a="ideal" aria-pressed="false">Sobrepor o gás ideal</button></div></div>
+      <div class="status">Van der Waals corrigiu o gás ideal com duas ideias: as moléculas ocupam volume (b) e se atraem (a): (p + a/v²)(v − b) = RT. Abaixo da temperatura crítica, a isoterma faz uma "onda" que não acontece de verdade: no trecho em que a pressão subiria ao comprimir, o gás se divide em líquido e vapor, a pressão fica constante (a reta da construção de Maxwell, que corta a onda em duas áreas iguais) e o pistão desce condensando o gás. Acima de T_c, não há condensação: só existe um fluido.</div>`);
+    const q = (s) => el.querySelector(s);
+    liga(el, "gas", (k) => { q("[data-c=a]").value = gases[k][0]; q("[data-c=b]").value = gases[k][1]; });
+    q("[data-a=ideal]").addEventListener("click", (e) => { ideal = !ideal; e.target.setAttribute("aria-pressed", ideal); });
+    const pv = (v, T, a, b) => (R * T) / (v - b) - a / (v * v);
+    /* raízes de p_vdW(v) = P (a cúbica P v³ − (Pb + RT) v² + a v − ab = 0), por varredura e bisseção */
+    const raizes = (P, T, a, b) => { const out = []; let v0 = b * 1.0005, f0 = pv(v0, T, a, b) - P; for (let i = 1; i <= 600; i++) { const v1 = b * 1.0005 * Math.pow(400, i / 600), f1 = pv(v1, T, a, b) - P; if (f0 * f1 < 0) { let lo = v0, hi = v1; for (let k = 0; k < 60; k++) { const m = (lo + hi) / 2, fm = pv(m, T, a, b) - P; if ((fm < 0) === (f0 < 0)) lo = m; else hi = m; } out.push((lo + hi) / 2); } v0 = v1; f0 = f1; } return out; };
+    const maxwell = (T, a, b) => {
+      const vs = [], ps = []; for (let i = 0; i <= 1500; i++) { const v = b * 1.002 * Math.pow(300, i / 1500); vs.push(v); ps.push(pv(v, T, a, b)); }
+      const ext = []; for (let i = 1; i < ps.length - 1; i++) if ((ps[i] - ps[i - 1]) * (ps[i + 1] - ps[i]) < 0) ext.push(ps[i]);
+      if (ext.length < 2) return null;
+      let lo = Math.max(ext[0], 1e-6), hi = ext[1], P = 0, vl = 0, vg = 0;
+      for (let k = 0; k < 80; k++) { P = (lo + hi) / 2; const r = raizes(P, T, a, b); if (r.length < 3) { if (r.length && r[0] > 3 * b) hi = P; else lo = P; continue; } vl = r[0]; vg = r[r.length - 1]; const f = R * T * Math.log((vg - b) / (vl - b)) + a / vg - a / vl - P * (vg - vl); if (f > 0) lo = P; else hi = P; }
+      return { P, vl, vg };
+    };
+    SIM.vanDerWaals._maxwell = maxwell; SIM.vanDerWaals._pv = pv;
+    anima(el, F, (dt) => {
+      const a = val(el, "a"), b = val(el, "b"), tr = val(el, "tr"), Tc = (8 * a) / (27 * R * b), pc = a / (27 * b * b), vc = 3 * b, T = tr * Tc;
+      mostra(el, ["a"], 2); mostra(el, ["b"], 4); mostra(el, ["tr"], 2);
+      const chave = a + "|" + b + "|" + tr;
+      if (cache.k !== chave) { /* as contas pesadas (Maxwell e o domo) só são refeitas quando um controle muda */
+        const dom = []; for (let t = 0.76; t < 0.995; t += 0.012) { const m = maxwell(t * Tc, a, b); if (m && m.vl) dom.push(m); }
+        cache = { k: chave, mx: tr < 1 ? maxwell(T, a, b) : null, dom };
+      }
+      const mx = cache.mx;
+      /* pistão: o volume vai e volta (escala log) entre 0,45 v_c e 12 v_c */
+      fase = (fase + dt / 14) % 1; const ida = fase < 0.5 ? fase * 2 : 2 - fase * 2, vAt = vc * 0.45 * Math.pow(12 / 0.45, 1 - ida);
+      let pAt, xl = 0, estado;
+      if (mx && vAt > mx.vl && vAt < mx.vg) { pAt = mx.P; xl = (mx.vg - vAt) / (mx.vg - mx.vl); estado = "mistura: " + n2(xl * 100, 0) + "% líquido"; }
+      else { pAt = pv(vAt, T, a, b); estado = mx && vAt <= mx.vl ? "líquido" : tr >= 1 ? "fluido supercrítico / gás" : "gás"; }
+      /* diagrama p × v (v em escala log) */
+      const gx = 60, gy = 290, gw = 380, gh = 250, lv0 = Math.log(vc * 0.4), lv1 = Math.log(vc * 14), pmax = 2 * pc;
+      const X = (v) => gx + ((Math.log(v) - lv0) / (lv1 - lv0)) * gw, Y = (p) => gy - (Math.max(-0.15 * pc, Math.min(p, pmax)) / pmax) * gh;
+      let sv = D.seta(gx, gy, gx + gw + 10, gy, "var(--ink2)", 1.4) + D.seta(gx, gy + 30, gx, gy - gh - 10, "var(--ink2)", 1.4) + D.txt(gx + gw + 10, gy + 16, "v (log)", "tx2", "end") + D.txt(gx + 6, gy - gh - 2, "p", "txm", "start");
+      sv += `<line x1="${gx}" x2="${gx + gw}" y1="${Y(pc)}" y2="${Y(pc)}" style="stroke:var(--line2);stroke-dasharray:2 4"/>` + D.txt(gx - 4, Y(pc) + 4, "p_c", "tx2", "end");
+      const curva = (TT) => { let d = ""; for (let i = 0; i <= 200; i++) { const v = Math.exp(lv0 + ((lv1 - lv0) * i) / 200); if (v <= b * 1.01) continue; d += (d ? "L" : "M") + X(v).toFixed(1) + " " + Y(pv(v, TT, a, b)).toFixed(1); } return d; };
+      [0.8, 0.9, 1, 1.1, 1.25].forEach((t) => (sv += `<path d="${curva(t * Tc)}" style="fill:none;stroke:var(--line2);stroke-width:1"/>`));
+      /* domo de coexistência (pontos de Maxwell de várias temperaturas) */
+      let dl = "", dg = ""; for (const m of cache.dom) { dl += (dl ? "L" : "M") + X(m.vl).toFixed(1) + " " + Y(m.P).toFixed(1); dg = "L" + X(m.vg).toFixed(1) + " " + Y(m.P).toFixed(1) + dg; }
+      sv += `<path d="${dl}L${X(vc).toFixed(1)} ${Y(pc).toFixed(1)}${dg}" style="fill:color-mix(in srgb,var(--mA) 10%,transparent);stroke:var(--mA);stroke-dasharray:4 3"/>`;
+      if (ideal) { let d = ""; for (let i = 0; i <= 200; i++) { const v = Math.exp(lv0 + ((lv1 - lv0) * i) / 200); d += (i ? "L" : "M") + X(v).toFixed(1) + " " + Y((R * T) / v).toFixed(1); } sv += `<path d="${d}" style="fill:none;stroke:var(--ok);stroke-width:2;stroke-dasharray:6 4"/>` + D.txt(X(vc * 0.5), Y((R * T) / (vc * 0.5)) - 8, "gás ideal", "tx2", "start"); }
+      sv += `<path d="${curva(T)}" style="fill:none;stroke:var(--mF);stroke-width:2.5"/>`;
+      if (mx && mx.vl) {
+        let a1 = `M${X(mx.vl)} ${Y(mx.P)}`, a2 = ""; for (let i = 0; i <= 80; i++) { const v = mx.vl * Math.pow(mx.vg / mx.vl, i / 80), pp = pv(v, T, a, b); a1 += "L" + X(v).toFixed(1) + " " + Y(pp).toFixed(1); }
+        sv += `<path d="${a1}Z" style="fill:color-mix(in srgb,var(--warn) 25%,transparent);stroke:none"/><line x1="${X(mx.vl)}" x2="${X(mx.vg)}" y1="${Y(mx.P)}" y2="${Y(mx.P)}" style="stroke:var(--warn);stroke-width:3"/>` + D.txt(X(mx.vg) + 6, Y(mx.P) - 6, "áreas iguais", "tx2", "start"); void a2;
+      }
+      sv += `<circle cx="${X(vc)}" cy="${Y(pc)}" r="5" style="fill:var(--bad)"/>` + D.txt(X(vc) + 8, Y(pc) - 8, "ponto crítico", "tx2", "start") + `<circle cx="${X(vAt)}" cy="${Y(pAt)}" r="6" style="fill:var(--ink)"/>`;
+      /* cilindro: altura proporcional a log v; líquido embaixo com a fração em volume */
+      const cx = 500, cw = 110, base = 290, hmax = 230, hmin = 30, hh = hmin + ((Math.log(vAt) - lv0) / (lv1 - lv0)) * (hmax - hmin);
+      const fracVolLiq = mx && xl > 0 ? Math.min(1, (xl * mx.vl) / vAt) : estado === "líquido" ? 1 : 0;
+      sv += `<path d="M${cx} ${base - hmax - 20} L${cx} ${base} L${cx + cw} ${base} L${cx + cw} ${base - hmax - 20}" style="fill:none;stroke:var(--ink2);stroke-width:3"/>`;
+      sv += `<rect x="${cx + 2}" y="${base - hh}" width="${cw - 4}" height="${hh - 1}" style="fill:color-mix(in srgb,var(--mF) 15%,transparent)"/><rect x="${cx + 2}" y="${base - hh * fracVolLiq}" width="${cw - 4}" height="${hh * fracVolLiq}" style="fill:color-mix(in srgb,var(--mA) 55%,transparent)"/>`;
+      if (xl > 0 && xl < 1) for (let i = 0; i < 6; i++) { const yy = base - hh * fracVolLiq - 8 - ((fase * 40 + i * 17) % Math.max(10, hh * (1 - fracVolLiq) - 10)); sv += `<circle cx="${cx + 15 + i * 16}" cy="${yy}" r="2.5" style="fill:var(--mA)"/>`; }
+      sv += `<rect x="${cx + 2}" y="${base - hh - 10}" width="${cw - 4}" height="10" style="fill:var(--ink3)"/><line x1="${cx + cw / 2}" x2="${cx + cw / 2}" y1="${base - hh - 10}" y2="${base - hh - 34}" style="stroke:var(--ink3);stroke-width:4"/>` + D.txt(cx + cw / 2, base + 18, estado, "tx2");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("ponto crítico: T_c | p_c | v_c", n2(Tc, 0) + " K | " + n2(pc, 1) + " bar | " + n2(vc, 3) + " L/mol") + vis("temperatura agora", n2(T, 0) + " K") + vis("pressão de vapor (Maxwell)", mx && mx.vl ? n2(mx.P, 1) + " bar" : "não há (T ≥ T_c)") + vis("p real ÷ p do gás ideal agora", n2(pAt / ((R * T) / vAt), 2));
     });
   };
 })();
