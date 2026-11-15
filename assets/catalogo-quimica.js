@@ -5,6 +5,8 @@
 window.AREAS.push(
   { id:"qui", materia:"quimica", nome:"Química", inicio:"quimica", titulo:"Química", anim:"benzeno", icone:`<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 4h8M13.5 4v8L6 25.5A2 2 0 0 0 7.8 28.5h16.4a2 2 0 0 0 1.8-3L18.5 12V4"/><path d="M9.5 20h13" style="stroke:var(--mN)"/><circle cx="14" cy="23.5" r="1.3" style="fill:var(--mN);stroke:none"/><circle cx="18.5" cy="24.5" r="1" style="fill:var(--mN);stroke:none"/></svg>` },
   { id:"quiexp", materia:"quimica", nome:"Experimentos", inicio:"quimica-experimentos", titulo:"Experimentos de química", anim:"bequer", icone:`<svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 6h18M9 6v19a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V6" style="stroke:currentColor" stroke-width="1.8"/><path d="M9.5 16h13v9a2.5 2.5 0 0 1-2.5 2.5h-8A2.5 2.5 0 0 1 9.5 25z" style="fill:color-mix(in srgb,var(--mN) 30%,transparent)"/><circle cx="14" cy="21" r="1.6" style="stroke:var(--mN)" stroke-width="1.3"/><circle cx="18.5" cy="18.5" r="1.1" style="stroke:var(--mN)" stroke-width="1.2"/><circle cx="16.5" cy="12" r="1" style="stroke:var(--mN)" stroke-width="1.1"/></svg>` },
+  /* aba Moléculas (pedido do Lucas, 15/11/2026): à direita de Experimentos. Visualizador 3D (catálogo em assets/moleculas-dados.js, gerado com RDKit fora do site) e construtor VSEPR. */
+  { id:"quimol", materia:"quimica", nome:"Moléculas", inicio:"quimica-moleculas", titulo:"Moléculas em 3D", anim:"molecula", icone:`<svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 13 8.5 22M16 13l7.5 9" style="stroke:currentColor" stroke-width="1.8"/><circle cx="16" cy="11.5" r="5" style="fill:color-mix(in srgb,var(--mN) 30%,transparent);stroke:var(--mN)" stroke-width="1.8"/><circle cx="7.5" cy="23" r="3.2" style="stroke:currentColor" stroke-width="1.8"/><circle cx="24.5" cy="23" r="3.2" style="stroke:currentColor" stroke-width="1.8"/></svg>` },
 );
 window.CATALOGO.push(
   { id:"QA", area:"qui", letra:"A", cor:"--mF", nome:"Introdução à química", desc:"Matéria, substâncias, misturas e separação.", temas:[
@@ -152,5 +154,10 @@ window.CATALOGO.push(
   { id:"EQs", area:"quiexp", letra:"QS", cor:"--mS", nome:"Soluções e indicadores", desc:"Cristalização e o indicador de repolho roxo.", temas:[
     ["EQ24","Cristalização: aquecer, dissolver, esfriar e ver crescer",[]],
     ["EQ25","Indicador de repolho roxo",[]],
+  ] },
+  /* aba Moléculas */
+  { id:"QMV", area:"quimol", letra:"3D", cor:"--mT", nome:"Moléculas em 3D", desc:"Visualizador com busca por nome, fórmula ou SMILES e construtor de geometrias (VSEPR).", temas:[
+    ["MV01","Visualizador de moléculas em 3D",[],true],
+    ["MV02","Construtor VSEPR: geometria e dipolo",[],true],
   ] },
 );
