@@ -211,8 +211,8 @@
       sel = +q("[data-c=Z]").value; q("[data-o=Z]").textContent = sel + " (" + SIMB[sel - 1] + ")";
       const [rot, dados, ymax] = PR[k], x0 = 70, y0 = 250, w = 570, h = 200, X = (Z) => x0 + ((Z - 0.5) / 36.5) * w, Y = (v) => y0 - (v / ymax) * h;
       let sv = "";
-      [[1, 2], [3, 10], [11, 18], [19, 36]].forEach(([a, b], i) => (sv += `<rect x="${X(a - 0.5)}" y="${y0 - h}" width="${X(b + 0.5) - X(a - 0.5)}" height="${h}" style="fill:${i % 2 ? "color-mix(in srgb,var(--ink) 5%,transparent)" : "color-mix(in srgb,var(--mod) 7%,transparent)"}"/>` + D.txt((X(a) + X(b)) / 2, y0 - h - 6, (i + 1) + "º período", "tx2")));
-      sv += D.seta(x0, y0, x0 + w + 12, y0, "var(--ink2)", 1.4) + D.seta(x0, y0, x0, y0 - h - 14, "var(--ink2)", 1.4) + D.txt(x0 + w / 2, y0 + 38, "número atômico Z", "tx2") + D.txt(x0 + 8, y0 - h - 22, rot, "tx2", "start");
+      [[1, 2], [3, 10], [11, 18], [19, 36]].forEach(([a, b], i) => (sv += `<rect x="${X(a - 0.5)}" y="${y0 - h}" width="${X(b + 0.5) - X(a - 0.5)}" height="${h}" style="fill:${i % 2 ? "color-mix(in srgb,var(--ink) 5%,transparent)" : "color-mix(in srgb,var(--mod) 7%,transparent)"}"/>` + D.txt((X(a) + X(b)) / 2, y0 - h - 6, (i + 1) + "º" + (i > 1 ? " período" : ""), "tx2")));
+      sv += D.seta(x0, y0, x0 + w + 12, y0, "var(--ink2)", 1.4) + D.seta(x0, y0, x0, y0 - h - 14, "var(--ink2)", 1.4) + D.txt(x0 + w / 2, y0 + 38, "número atômico Z", "tx2") + D.txt(x0 + w, y0 - h - 22, rot, "tx2", "end");
       [0.25, 0.5, 0.75, 1].forEach((f) => (sv += `<line x1="${x0}" x2="${x0 + w}" y1="${Y(ymax * f)}" y2="${Y(ymax * f)}" style="stroke:var(--line2);stroke-dasharray:3 4"/>` + D.txt(x0 - 6, Y(ymax * f) + 4, n2(ymax * f, ymax < 10 ? 1 : 0), "tx2", "end")));
       let d = "", ant = false; dados.forEach((v, i) => { if (v === null) { ant = false; return; } d += (ant ? "L" : "M") + X(i + 1).toFixed(1) + " " + Y(v).toFixed(1) + " "; ant = true; });
       sv += `<path d="${d}" style="fill:none;stroke:var(--mod);stroke-width:2"/>`;
