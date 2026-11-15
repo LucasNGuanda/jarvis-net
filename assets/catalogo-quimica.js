@@ -1,6 +1,6 @@
 /* Química (β 3.7): áreas (abas do topo) e módulos. Mesmo formato do assets/catalogo.js: acrescentar módulo ou tema é só editar aqui.
    Os ids dos módulos levam um Q na frente (QA … QJ) para não colidir com os da Física (A, C, F, T…); a letra mostrada é A … J.
-   Temas cadastrados na β 3.8, todos "em breve". Os da aba Experimentos usam ids internos EQg, EQr, EQe, EQn, EQt (a letra mostrada é QG, QR, QE, QN, QT)
+   Temas cadastrados na β 3.8, todos "em breve". Os da aba Experimentos usam ids internos EQg, EQr, EQe, EQn, EQt, EQs (a letra mostrada é QG, QR, QE, QN, QT, QS)
    para não colidir com os módulos QE e QG da aba Química. Códigos de tema são únicos dentro da química; a rota é #/quimica/<COD>. Fórmulas químicas com \ce{} (mhchem já carregado). */
 window.AREAS.push(
   { id:"qui", materia:"quimica", nome:"Química", inicio:"quimica", titulo:"Química", anim:"benzeno", icone:`<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 4h8M13.5 4v8L6 25.5A2 2 0 0 0 7.8 28.5h16.4a2 2 0 0 0 1.8-3L18.5 12V4"/><path d="M9.5 20h13" style="stroke:var(--mN)"/><circle cx="14" cy="23.5" r="1.3" style="fill:var(--mN);stroke:none"/><circle cx="18.5" cy="24.5" r="1" style="fill:var(--mN);stroke:none"/></svg>` },
@@ -8,7 +8,7 @@ window.AREAS.push(
 );
 window.CATALOGO.push(
   { id:"QA", area:"qui", letra:"A", cor:"--mF", nome:"Introdução à química", desc:"Matéria, substâncias, misturas e separação.", temas:[
-    ["A01","Objetivos e ramos da química; método científico",[]],
+    ["A01","Objetivos e ramos da química; método científico",[],true],
     ["A02","Matéria, energia e propriedades da matéria",[]],
     ["A03","Estados físicos e mudanças de estado",[]],
     ["A04","Substâncias puras e misturas; alotropia",[]],
@@ -113,11 +113,14 @@ window.CATALOGO.push(
     ["EQ03","Distribuição de Maxwell-Boltzmann",[]],
     ["EQ04","Gás real × gás ideal",[]],
   ] },
-  { id:"EQr", area:"quiexp", letra:"QR", cor:"--mO", nome:"Reações", desc:"Colisões, catalisador, Le Chatelier e titulação.", temas:[
+  { id:"EQr", area:"quiexp", letra:"QR", cor:"--mO", nome:"Reações", desc:"Colisões, catalisador, Le Chatelier, titulação na bureta e balanceamento.", temas:[
     ["EQ05","Colisões e energia de ativação",[]],
     ["EQ06","Catalisador mudando o caminho",[]],
     ["EQ07","Le Chatelier ao vivo",[]],
-    ["EQ08","Titulação com curva de pH",[]],
+    /* EQ08 (pedido de 15/11/2026): bureta de verdade. Abre-se a torneira, as gotas caem uma a uma, a cor vira no ponto de viragem e a curva de pH se desenha junto; tem de dar para passar do ponto de propósito. */
+    ["EQ08","Titulação na bureta: gota a gota, viragem e curva de pH",[]],
+    /* EQ21: os dois lados da equação com os átomos contados em bolinhas; mexe-se nos coeficientes até os lados se igualarem. */
+    ["EQ21","Balanceador visual de equações",[]],
   ] },
   { id:"EQe", area:"quiexp", letra:"QE", cor:"--mK1", nome:"Eletroquímica", desc:"Pilha de Daniell, eletrólise e corrosão.", temas:[
     ["EQ09","Pilha de Daniell",[]],
@@ -129,10 +132,25 @@ window.CATALOGO.push(
     ["EQ13","Decaimento e meia-vida",[]],
     ["EQ14","Fusão nuclear",[]],
   ] },
-  { id:"EQt", area:"quiexp", letra:"QT", cor:"--mC", nome:"Átomos e ligações", desc:"Orbitais, geometria molecular, forças e cristais.", temas:[
+  { id:"EQt", area:"quiexp", letra:"QT", cor:"--mC", nome:"Átomos e ligações", desc:"Orbitais, tabela periódica, moléculas, chama, espectros e cristais.", temas:[
     ["EQ15","Orbitais atômicos em 3D",[]],
     ["EQ16","Geometria molecular girando",[]],
     ["EQ17","Forças intermoleculares",[]],
-    ["EQ18","Cristais e retículo iônico",[]],
+    /* EQ18 (pedido de 15/11/2026): monte o retículo. Empilham-se os íons e o cristal se forma, mostrando o número de coordenação. */
+    ["EQ18","Monte o retículo: cristais iônicos e número de coordenação",[]],
+    /* EQ19: escolhe-se uma propriedade (raio, eletronegatividade, energia de ionização) e a tabela vira mapa de calor, com as tendências aparecendo sozinhas. */
+    ["EQ19","Tabela periódica que acende",[]],
+    /* EQ20: arrastam-se átomos, ligam-se, e o site aplica VSEPR, mostra a geometria girando em 3D, calcula a polaridade e desenha o vetor momento dipolar. */
+    ["EQ20","Construtor de moléculas: VSEPR, 3D e momento dipolar",[]],
+    /* EQ22: joga-se o sal na chama e vê-se a cor do cátion. */
+    ["EQ22","Teste de chama",[]],
+    /* EQ23: aquece-se o elemento, aparecem as linhas e, ao lado, os saltos de nível do átomo de Bohr que geraram cada uma. */
+    ["EQ23","Espectro de emissão e os saltos do átomo de Bohr",[]],
+  ] },
+  /* módulo novo (15/11/2026). EQ24: aquece-se a solução, dissolve-se mais, esfria-se devagar e os cristais crescem, com o tempo acelerável.
+     EQ25: pinga-se o indicador nas substâncias de casa (vinagre, bicarbonato, sabão) e vê-se a escala de cor. */
+  { id:"EQs", area:"quiexp", letra:"QS", cor:"--mS", nome:"Soluções e indicadores", desc:"Cristalização e o indicador de repolho roxo.", temas:[
+    ["EQ24","Cristalização: aquecer, dissolver, esfriar e ver crescer",[]],
+    ["EQ25","Indicador de repolho roxo",[]],
   ] },
 );

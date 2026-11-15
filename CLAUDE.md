@@ -22,12 +22,12 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - **Estado de cada matéria (fim do chat, β 4.6):**
   - Física: a única com conteúdo escrito. Aba Física com 96 de 96 temas e 913 exercícios; Experimentos com 18 (EP01–EP18; próximo código EP19); Experimental com 11 de 11 no padrão completo.
   - Matemática: só o Cálculo escrito (27 temas); 114 temas "em breve".
-  - Química: 97 temas, todos "em breve".
+  - Química: 104 temas cadastrados; escrito só o A01 (β 4.8, na branch `quimica-a01` até o Lucas aprovar).
   - Russo, Alemão e Sânscrito: só cadastrados, todos "em breve".
   - Números detalhados e dívida técnica no PROGRESSO.md, em "Estado final".
 - **Física**: 3 abas, Física, Experimentos e Experimental (o Cálculo foi para a matemática na β 4.0). Módulos F, A, T, O, C, M, U, N, X (bônus) e S (simulados).
 - **Matemática**: abas Matemática (MB, AR, GE, AL), Cálculo (Cálculo 1 e 2, Cálculo 3 e 4 "em breve", Funções especiais e integrais, Teoremas, Simulados de Cálculo: os 27 temas escritos vieram da física na β 4.0, com os mesmos módulos K1–K5, ordem e códigos) e Olimpíada e demonstrações (DM, TNO, DES, CBO, GEO, FUN, PRI). 141 temas (27 escritos; os outros 114 "em breve").
-- **Química**: abas Química (módulos A–J: introdução, atomística, ligações, reações e estequiometria, físico-química I e II, eletroquímica, orgânica, bioquímica e ambiental, analítica; 79 temas) e Experimentos (módulos QG, QR, QE, QN, QT; EQ01–EQ18, simulações no padrão dos de física). Todos "em breve" (β 3.8).
+- **Química**: abas Química (módulos A–J: introdução, atomística, ligações, reações e estequiometria, físico-química I e II, eletroquímica, orgânica, bioquímica e ambiental, analítica; 79 temas) e Experimentos (módulos QG, QR, QE, QN, QT, QS; EQ01–EQ25, simulações no padrão dos de física; próximo código EQ26). "Em breve", menos o A01 (β 4.8).
 - **Idiomas** (β 4.1, completados na β 4.2): Russo, Alemão e Sânscrito dividem um cartão na tela inicial, com a barrinha Я / DE / सं à direita (troca nome, cor e desenho; salvo em `jarvis:lingua`; idioma trancado aparece com borda tracejada e o cartão com cadeado). Cada idioma tem as abas Gramática e Leitura e tradução. Cadastro: `idioma: true` em `assets/materias.js`; abas e módulos do alemão (DG01–DG18, DL01–DL08) e do sânscrito (SG01–SG15, SL01–SL07; objetivo: ler a Bhagavad Gita) em `assets/catalogo-idiomas.js`, todos "em breve". Cores `--mDE` (dourado) e `--mSA` (açafrão), escolhidas em Python longe da paleta e do russo; prefixos `rus:`, `ale:`, `san:`.
 - **Alemão e sânscrito são só do Lucas**: abrem só com o código próprio de cada um ou com o ADM. O código do russo libera o russo e a barrinha, não os outros dois; o tester também não vê.
 - Fontes no próprio site (nada depende do computador): Inter (latim, latin-ext para ā ī ṛ ṣ ṇ ś, cirílico, grego), Noto Sans Devanagari e UnifrakturMaguntia (letras góticas da animação do alemão), todas OFL, licenças em `assets/fonts/`.
@@ -104,6 +104,16 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Sempre que eu decidir algo novo, atualize o CLAUDE.md na mesma hora. Sempre que terminar um tema ou tarefa, atualize o PROGRESSO.md. Nunca termine uma sessão sem os dois atualizados.
 - Entregas grandes (pedido de 15/11/2026, como na mudança do Cálculo e no acesso/Jarvis): trabalhar numa branch, mandar o ZIP com a lista do que testar e só juntar ao `main` depois que o Lucas aprovar.
 - Versão: cada entrega soma 0,1 (`VERSAO` em `assets/catalogo.js`, título do `index.html`, `README.md`). Commit e push no `main` de LucasNGuanda/site-fisica.
+
+## Sessão de química (regras combinadas em 15/11/2026)
+- Ordem: módulos A → B → C → D → E → F (Modalidade A da OBQ, a do Lucas este ano); depois eletroquímica, orgânica, analítica e os experimentos. Um tema por vez.
+- **Nas 5 primeiras versões nada vai direto para o `main`**: branch, parar, mandar o que foi feito, o resultado dos testes, capturas e o ZIP; só juntar com o "aprovado" escrito do Lucas. Depois de 5 aprovadas em sequência, afrouxa.
+- Território: `temas/quimica/`, `assets/sims/quimica/` e `assets/catalogo-quimica.js`. Também pode: `assets/indice-busca.js` (gerado) e **uma linha de `<script>` no `index.html` por arquivo de laboratório**. Fora da química também pode, sem perguntar: (a) consertar teste que ficou desatualizado por causa de uma mudança que o Lucas pediu (em commit separado e marcado; regressão sem falha é o padrão) e (b) registrar decisão no CLAUDE.md ou no PROGRESSO.md. Para qualquer outra coisa fora da química, perguntar antes. Não criar componente novo; estender com campo opcional.
+- "Pense como químico" = `F.caixa("fisico", html, "Pense como químico")`; segurança = `F.caixa("pegadinha", html, "Segurança e descarte")`, dizendo se pode em casa ou só no laboratório da escola. Tema da física citado de dentro da química: `F.ret("fisica/FE03")`.
+- Modelo de tema: o T02 (não os da Mecânica). Exercícios já nascem com 15 a 20, todos com figura.
+- Caixas "Nível olimpíada": descrever o estilo de cobrança; **nunca citar questão de memória**. Questão real só de prova que o Lucas mandar.
+- **Tudo para computador (1280 px)**: Playwright sempre em 1280 px. Antes de fazer diferente do que a física faz, perguntar.
+- Laboratórios prioritários da aba Experimentos: EQ19 tabela periódica que acende, EQ20 construtor de moléculas, EQ21 balanceador visual (especificação de cada um em comentário no catálogo).
 
 ## Para quem continuar daqui
 *(Passagem de bastão escrita no fim do chat de 15/11/2026, β 4.7. Tudo o que foi aprendido nesse chat está aqui ou no PROGRESSO.md.)*
