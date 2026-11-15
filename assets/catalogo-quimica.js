@@ -29,7 +29,7 @@ window.CATALOGO.push(
     ["B08","Radioatividade e química nuclear",[],true],
   ] },
   { id:"QC", area:"qui", letra:"C", cor:"--mC", nome:"Ligações químicas", desc:"Iônica, covalente, metálica, geometria e forças intermoleculares.", temas:[
-    ["C01","Ligação iônica",[]],
+    ["C01","Ligação iônica",[],true],
     ["C02","Ligação covalente e ressonância",[]],
     ["C03","Ligação metálica e ligas",[]],
     ["C04","Geometria molecular (VSEPR)",[]],
