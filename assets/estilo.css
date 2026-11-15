@@ -710,3 +710,37 @@ a.jv-mat:focus-visible{outline:2px solid var(--cor);outline-offset:3px}
 .ex .ex-fb.certo{color:var(--ok)}.ex .ex-fb.errado{color:var(--bad)}
 .ex .ex-prim{font-size:12px;color:var(--ink3)}
 .ex .ex-prim:empty,.ex .ex-fb:empty{display:none}
+/* ---------- adesivos da tela inicial (β 3.6): camada atrás da interface, sem nenhuma animação ---------- */
+body.modo-home .principal{min-height:100vh;box-sizing:border-box}
+body.modo-home #pagina{position:relative;min-height:calc(100vh - 104px)}
+.jv{position:relative;z-index:1}
+.jv-adesivos{position:absolute;left:-24px;right:-24px;top:-40px;bottom:-64px;z-index:0;pointer-events:none;overflow:hidden}
+.jv-adesivos.editando{z-index:2}
+.jv-ad{position:absolute;pointer-events:none;transform-origin:50% 50%}
+.jv-ad>svg{width:100%;height:100%;display:block;overflow:visible}
+.jv-adesivos.editando .jv-ad{pointer-events:auto;cursor:grab;outline:1px dashed color-mix(in srgb,var(--ink3) 45%,transparent);outline-offset:2px}
+.jv-adesivos.editando .jv-ad.sel{outline:1.5px dashed var(--ink2)}
+.jv-adesivos.arrastando .jv-ad{cursor:grabbing}
+.jv-ad-h{position:absolute;width:16px;height:16px;border-radius:50%;background:var(--card);border:1.5px solid var(--ink2);pointer-events:auto;padding:0}
+.jv-ad-h.giro{left:50%;top:-26px;margin-left:-8px;cursor:alias}
+.jv-ad-h.giro::after{content:"";position:absolute;left:6px;top:14px;width:1.5px;height:10px;background:var(--ink2)}
+.jv-ad-h.tam{right:-10px;bottom:-10px;border-radius:3px;cursor:nwse-resize}
+.jv-ad-h.x{right:-12px;top:-12px;width:20px;height:20px;line-height:16px;font:700 14px/16px var(--f-text);color:var(--bad);text-align:center;cursor:pointer}
+.jv-proibida{position:absolute;background:color-mix(in srgb,var(--bad) 10%,transparent);border:1px dashed color-mix(in srgb,var(--bad) 45%,transparent);border-radius:10px;pointer-events:none}
+.jv-linha{display:flex;align-items:center;gap:10px;width:min(100%,734px)}
+.jv-linha .jv-pergunta{flex:1;width:auto}
+.jv-engrenagem{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink2);display:grid;place-items:center;cursor:pointer}
+.jv-engrenagem svg{width:22px;height:22px}
+.jv-engrenagem:hover,.jv-engrenagem[aria-pressed=true]{color:var(--ink);border-color:var(--ink3)}
+.jv-engrenagem:focus-visible{outline:2px solid var(--jv2);outline-offset:3px}
+.jv-painel{position:fixed;top:16px;bottom:16px;width:330px;z-index:30;overflow:auto;padding:14px 14px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);box-shadow:0 16px 40px rgba(0,0,0,.35)}
+.jv-painel.dir{right:16px}.jv-painel.esq{left:16px}
+.jv-painel-cab{display:flex;align-items:center;gap:6px;position:sticky;top:-14px;background:var(--card);padding:4px 0 8px;z-index:1}
+.jv-painel-cab b{font:700 16px var(--f-text)}.jv-painel-cab .bt{white-space:nowrap}.jv-painel-cab .esp{flex:1}
+.jv-painel-dica{font-size:12.5px;color:var(--ink2);line-height:1.45;margin:2px 0 10px}
+.jv-painel-tit{font:700 12.5px var(--f-text);text-transform:uppercase;letter-spacing:.06em;margin:12px 0 6px}
+.jv-painel-grade{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.jv-painel-ad{aspect-ratio:1;padding:6px;border-radius:10px;border:1px solid var(--line);background:var(--bg);cursor:grab;touch-action:none}
+.jv-painel-ad:hover,.jv-painel-ad:focus-visible{border-color:var(--ink3)}
+.jv-painel-ad svg{width:100%;height:100%;display:block;pointer-events:none}
+.jv-adesivos.editando .jv-ad.invalido{opacity:.45;outline:1.5px dashed var(--bad)}

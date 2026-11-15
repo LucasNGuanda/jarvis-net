@@ -1,6 +1,6 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado atual (15/11/2026, depois da β 3.5)
+## Estado atual (15/11/2026, depois da β 3.6)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
 
 ### Física — 96 de 96 temas escritos
@@ -17,7 +17,7 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 - **Cálculo** (vai para Matemática): 27/27 temas, 7 exercícios cada; Simulados de Cálculo SC01 e SC02 com 20 questões cada.
 - **Experimentos**: 18 experimentos (EP01–EP18) em 9 módulos (novos na β 3.4: Termodinâmica, Ondas e quântica, Nuclear, Fluidos).
 - **Experimental**: 11 de 11 (FE01–FE11), todos no padrão completo: 16 exercícios com figura, correção automática e nível; `F.chute`, laboratório, 3 demonstrações, 3 exemplos, as 4 caixas, folha de fórmulas e chefão (β 3.5).
-- Tela inicial (Jarvis) em `#/home`: Física pronta; Química, Matemática e Russo "em breve".
+- Tela inicial (Jarvis) em `#/home`: Física pronta; Química, Matemática e Russo "em breve". Adesivos (β 3.6): engrenagem ao lado do campo do Jarvis abre o painel com 25 adesivos em 5 categorias.
 - Calculadoras 1 (estilo fx-991ES PLUS) e 2 (estilo fx-82LA CW), uma de cada vez.
 - Testes automáticos agora no repositório, em `tests/` (antes ficavam só na pasta temporária da sessão); capturas em `tests/capturas/` (fora do git).
 
@@ -374,6 +374,18 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Dados: os do Lucas (pêndulo do itinerário) não foram usados nem alterados; os dados dos exemplos e chefões são sintéticos, exceto os planetas do FE08 (valores reais do Sistema Solar).
   - Simplificações honestas: as retas extremas dos exercícios usam o atalho das diagonais do primeiro e do último ponto (conferi, em cada caso, que elas coincidem com as extremas exatas que cruzam todas as barras); o critério de "reta" dos labs do FE07 e FE08 é a curvatura (maior resíduo/altura) abaixo de 1,5% e 2%, escolhido porque separa bem os casos com ~0,3% e ~1,5% de ruído; o corretor do FE11 aceita a incerteza arredondada para cima (convenção conservadora) e, com incerteza começando em 1, aceita 1 ou 2 algarismos.
   - Testes antes de cada commit: `tmec` e `tchaves` em cada FE e `tgeral` completo (152 páginas, 152 escritas, 0 erro de KaTeX).
+- **β 3.6** — **Adesivos da tela inicial** (pedido de 15/11/2026).
+  - Engrenagem ao lado do campo "Perguntar algo ao Jarvis" (o campo continua "em breve") abre o painel de adesivos, que é o modo de edição. Esc ou "Concluir" fecha.
+  - 25 adesivos, todos disponíveis e estáticos (nenhuma animação, conferido no teste), desenhados do zero em SVG, na cor da categoria: Física 6 (maçã, pêndulo, foguete, ímã, buraco negro, átomo), Química 5 (béquer, benzeno, bico de Bunsen, cristal, tabela periódica), Matemática 6 (π, integral, espiral áurea, floco de Koch, icosaedro, W de Lambert), Russo e Olimpíadas 5 (matrioska, Я, medalha, Soyuz, urso de cachecol), Meus 3 (o gato do EP17, vórtices de von Kármán, primo 7 com coroa).
+  - Conferido em Python: espiral áurea com quadrados de Fibonacci 55, 34, 21, … (razão 89/55 = 1,618); W de Lambert desenhada pela inversa x = w·eʷ, igual ao scipy (erro ~10⁻¹³ nos dois ramos, ponto de ramificação em −1/e); icosaedro com 12 vértices e 30 arestas; Koch de nível 3 (192 vértices).
+  - No modo de edição: arrastar do painel (ou clicar/Enter, que põe no lugar livre mais próximo), mover, girar (Shift: de 15° em 15°), redimensionar (36 a 280 px), remover (× ou Delete) e "Limpar tudo" (pede confirmação). O painel pode trocar de lado (⇄).
+  - Áreas proibidas: título (cor), seletor de cor, botões das matérias, campo do Jarvis, engrenagem, painel e qualquer outro elemento clicável visível. Aparecem em vermelho claro durante o arraste; o adesivo fica apagado com contorno vermelho em cima delas; soltando ali, volta para a última posição válida (um adesivo novo que nunca passou por área válida não é criado).
+  - Camada atrás da interface (z-index 0) com pointer-events: none; só no modo de edição ela sobe e só os adesivos recebem o mouse.
+  - Mudou o tamanho da janela: quem ficar em cima de algo clicável é mostrado na área válida mais próxima (busca em círculos de 6 px), sem alterar a posição salva; com a janela grande de novo, volta ao lugar escolhido.
+  - Cadastro em `assets/adesivos.js` (acrescentar adesivo = acrescentar um objeto; campo `trava` preparado para destravar no futuro, hoje sempre null e ignorado); código em `assets/home-adesivos.js`. Salvo em `jarvis:adesivos`; o exportar progresso agora leva também as chaves `jarvis:` (cor e adesivos), e o importar as aceita sem passar pela migração de códigos.
+  - Teste novo `tests/tadesivos.js` (29 conferências: catálogo, painel, arrastar válido e proibido, girar, redimensionar, remover, limpar, pointer-events, botão Física clicável, janela de 900 px, persistência, exportação).
+  - Limitações honestas: a colisão usa a caixa do adesivo girado (90% do lado, porque os desenhos têm margem), não o contorno exato do desenho; o painel cobre parte da tela enquanto está aberto (por isso o botão de trocar de lado); dois adesivos empurrados pela janela menor podem ficar um sobre o outro (nunca sobre um botão); adesivos entre si podem se sobrepor se você quiser.
+  - Limpeza: as capturas que os testes antigos gravam na raiz (`home-*.png`, `fisica-com-home.png`, `calc-*.png`, `cor-*.png`) saíram do git e foram para o `.gitignore`.
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.

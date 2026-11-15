@@ -703,7 +703,9 @@
   /* ---------- exportar / importar progresso ---------- */
   function backup() {
     $("#bt-exp").addEventListener("click", () => {
-      const blob = new Blob([JSON.stringify(F.store.tudo(), null, 1)], { type: "application/json" });
+      const tudo = F.store.tudo(); /* + a tela inicial (prefixo jarvis:, ex.: cor e adesivos) */
+      try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith("jarvis:")) tudo[k] = localStorage.getItem(k); } } catch (e) {}
+      const blob = new Blob([JSON.stringify(tudo, null, 1)], { type: "application/json" });
       const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
       a.download = "progresso-fisica-" + new Date().toISOString().slice(0, 10) + ".json"; a.click();
     });
@@ -712,8 +714,10 @@
       const f = ev.target.files[0]; if (!f) return;
       try {
         let o = JSON.parse(await f.text());
-        if (!o || typeof o !== "object" || !Object.keys(o).some((k) => k.startsWith(PFX))) throw new Error("formato");
-        if (+(o[PFX + "codigos"] || 1) < VERSAO_CODIGOS) o = F.migraDados(o); /* backup feito antes da troca de códigos */
+        if (!o || typeof o !== "object" || !Object.keys(o).some((k) => k.startsWith(PFX) || k.startsWith("jarvis:"))) throw new Error("formato");
+        const jv = {}; Object.keys(o).forEach((k) => { if (k.startsWith("jarvis:")) { jv[k] = o[k]; delete o[k]; } }); /* tela inicial: fora da migração de códigos */
+        if (Object.keys(o).some((k) => k.startsWith(PFX)) && +(o[PFX + "codigos"] || 1) < VERSAO_CODIGOS) o = F.migraDados(o); /* backup feito antes da troca de códigos */
+        Object.entries(jv).forEach(([k, v]) => localStorage.setItem(k, typeof v === "string" ? v : JSON.stringify(v)));
         Object.entries(o).forEach(([k, v]) => {
           if (!k.startsWith(PFX)) return;
           v = typeof v === "string" ? v : JSON.stringify(v);

@@ -36,7 +36,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Conteúdo separado do código: temas em `temas/<COD>.js` (`F.registrar`), simulações em `assets/sims/*.js` (`window.SIM`), motor em `assets/app.js`, catálogo em `assets/catalogo.js`, matérias da tela inicial em `assets/materias.js`.
 - Componentes reutilizáveis: `F.secao`, `F.formula`, `F.caixa`, `F.demo`, `F.exemplo`, `F.exercicio`, `F.chefao`, `F.lab`, `F.revela`, `F.chute`, `F.ret`. **Nunca criar componente novo sem necessidade**: estender o que existe com campos opcionais (ex.: `F.exercicio` aceita `certa`, `num: {v, tol, un}`, `nivel`).
 - KaTeX só dentro de `$…$`; número em texto comum com `F.nt`, dentro de fórmula com `F.n`.
-- Progresso no `localStorage` (prefixo `fisica:`; tela inicial `jarvis:`), com exportar e importar.
+- Progresso no `localStorage` (prefixo `fisica:`; tela inicial `jarvis:`), com exportar e importar (os dois prefixos entram no arquivo exportado).
 - Cada matéria se registra num arquivo de configuração: acrescentar matéria, aba, módulo ou tema é só editar esse arquivo.
 - Cada matéria e cada aba tem o seu desenho animado na página inicial, leve, em SVG ou CSS.
 
@@ -52,6 +52,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Experimentos novos ganham o próximo código livre (EP11, EP12, ...): códigos antigos nunca são reaproveitados, para não quebrar o progresso salvo. Cada experimento fica no módulo do assunto; se não houver módulo, cria-se um.
 - Experimento = simulação interativa que se mexe, com controles, uma explicação curta e sem exercícios.
 - Existe uma surpresa escondida na página inicial dos Experimentos. Ela NUNCA pode ser mencionada em nenhum texto do site (detalhes só no PROGRESSO.md, β 3.4).
+- Adesivos da tela inicial (pedido de 15/11/2026): engrenagem ao lado do campo "Perguntar algo ao Jarvis" abre o painel (modo de edição). Todos os adesivos já vêm disponíveis (nada destravável, nada bloqueado) e são estáticos, sem animação. Desenhos originais em SVG, na cor da categoria (Física, Química, Matemática, Russo e Olimpíadas, Meus). Nunca ficam por cima de nada clicável; a camada fica atrás da interface com pointer-events: none. Cadastro em `assets/adesivos.js` (campo `trava` preparado para o futuro, hoje sempre null); salvos em `jarvis:adesivos`, que entra no exportar/importar.
 - Tema novo já nasce no padrão completo; os temas antigos que não estão no padrão estão listados como dívida técnica no PROGRESSO.md.
 
 ## O que eu já decidi que não quero

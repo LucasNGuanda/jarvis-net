@@ -83,14 +83,15 @@
         <div class="jv-cor" role="group" aria-label="Cor do ${esc(P.nome)}"><label>cor<input type="range" min="0" max="${MATIZ_MAX}" step="1" value="50" aria-label="Cor, do vermelho ao lilás"></label><button type="button">voltar à cor original</button></div></div></header>
       <nav class="jv-materias" aria-label="Matérias">${mats.map(cartao).join("")}</nav>
       <div class="jv-ilu">${globo()}</div>
-      <form class="jv-pergunta" onsubmit="return false" aria-label="Perguntar ao ${esc(P.nome)} (em breve)">
+      <div class="jv-linha">${J.botaoAdesivos ? J.botaoAdesivos() : ""}<form class="jv-pergunta" onsubmit="return false" aria-label="Perguntar ao ${esc(P.nome)} (em breve)">
         <input type="text" disabled placeholder="Perguntar algo ao ${esc(P.nome)}…" aria-label="Pergunta (em breve)">
         <button type="submit" disabled aria-label="Enviar (em breve)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
         <span class="jv-breve">em breve</span>
-      </form>
+      </form></div>
     </div>`;
     seletorCor(el.querySelector(".jv"));
     anima(el.querySelector(".jv-globo"));
+    if (J.adesivos) J.adesivos(el); /* adesivos (β 3.6): camada atrás da interface + painel da engrenagem */
   };
   /* rota de uma matéria registrada que ainda não existe (ex.: #/quimica/inicio): nunca tela em branco */
   J.emBreve = (el, m) => {
