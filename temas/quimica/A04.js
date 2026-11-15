@@ -159,5 +159,5 @@ F.registrar("quimica/A04", {
       F.secao("desafios", "Exercícios", exs.join("") + chefao),
     ].join("");
   },
-  montar(F) { const e = document.getElementById("lab-curvas"); e.outerHTML = F.lab("A curva denuncia: pura, comum, eutética ou azeotrópica?", "lab-curvas"); SIM.curvas(document.getElementById("lab-curvas"), F); },
+  montar(F) { const e = document.getElementById("lab-curvas"); e.outerHTML = F.lab("A curva denuncia: pura, comum, eutética ou azeotrópica?", "lab-curvas"); SIM.qCurvas(document.getElementById("lab-curvas"), F); },
 });

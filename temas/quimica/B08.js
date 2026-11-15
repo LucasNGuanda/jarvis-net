@@ -159,5 +159,5 @@ F.registrar("quimica/B08", {
       F.secao("desafios", "Exercícios", exs.join("") + chefao),
     ].join("");
   },
-  montar(F) { const e = document.getElementById("lab-dec"); e.outerHTML = F.lab("Caminhe pela série radioativa: α e β até o chumbo", "lab-dec"); SIM.decaimento(document.getElementById("lab-dec"), F); },
+  montar(F) { const e = document.getElementById("lab-dec"); e.outerHTML = F.lab("Caminhe pela série radioativa: α e β até o chumbo", "lab-dec"); SIM.qDecaimento(document.getElementById("lab-dec"), F); },
 });

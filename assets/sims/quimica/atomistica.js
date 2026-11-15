@@ -10,7 +10,7 @@
    B06 SIM.tabela: tabela periódica clicável (118 elementos): grupo, período, bloco, tipo e estado físico a 25 °C.
    B07 SIM.tendencias: raio atômico (pm), eletronegatividade de Pauling e 1ª energia de ionização (kJ/mol) contra Z, de 1 a 36 (valores de tabela; o raio só
        para os elementos representativos, e varia com a definição usada).
-   B08 SIM.decaimento: caminhe pela série de decaimento com emissões α (Z − 2, A − 4) e β⁻ (Z + 1, A igual). U-238 → Pb-206: 8 α e 6 β. */
+   B08 SIM.qDecaimento: caminhe pela série de decaimento com emissões α (Z − 2, A − 4) e β⁻ (Z + 1, A igual). U-238 → Pb-206: 8 α e 6 β. */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -225,11 +225,11 @@
   };
 
   /* ---------- B08 · caminhe pela série de decaimento ---------- */
-  SIM.decaimento = (el, F) => {
+  SIM.qDecaimento = (el, F) => {
     const W = 680, H = 300, INI = { u238: [92, 238, [82, 206]], th232: [90, 232, [82, 208]], u235: [92, 235, [82, 207]] };
     let k = "u238", cam = [], msg = "";
-    SIM.decaimento._alfa = ([Z, A]) => [Z - 2, A - 4]; SIM.decaimento._beta = ([Z, A]) => [Z + 1, A];
-    SIM.decaimento._conta = (Z0, A0, Z1, A1) => { const a = (A0 - A1) / 4; return { alfa: a, beta: Z1 - (Z0 - 2 * a) }; };
+    SIM.qDecaimento._alfa = ([Z, A]) => [Z - 2, A - 4]; SIM.qDecaimento._beta = ([Z, A]) => [Z + 1, A];
+    SIM.qDecaimento._conta = (Z0, A0, Z1, A1) => { const a = (A0 - A1) / 4; return { alfa: a, beta: Z1 - (Z0 - 2 * a) }; };
     const nome = ([Z, A]) => sob(A) + sub(Z) + SIMB[Z - 1];
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
       <div class="ctrls"><div style="grid-column:1/-1"><div class="bts">${botoes([["u238", "começar no urânio-238"], ["th232", "tório-232"], ["u235", "urânio-235"]], "ini", "u238")}</div></div>
@@ -248,17 +248,17 @@
       cam.forEach((c) => (sv += `<circle cx="${X(c[1] - c[0])}" cy="${Y(c[0])}" r="4" style="fill:var(--ink)"/>`));
       sv += `<circle cx="${X(at[1] - at[0])}" cy="${Y(at[0])}" r="7" style="fill:var(--bad)"/>` + D.txt(X(at[1] - at[0]) + 10, Y(at[0]) - 8, nome(at), "tx", "start", 'style="font-weight:700"');
       q("[data-v=sv]").innerHTML = sv;
-      const prev = SIM.decaimento._conta(Z0, A0, alvo[0], alvo[1]);
+      const prev = SIM.qDecaimento._conta(Z0, A0, alvo[0], alvo[1]);
       q("[data-v=lt]").innerHTML = vis("núcleo atual", nome(at) + " (" + NOME[at[0] - 1] + ")") + vis("emissões α até aqui", String(na)) + vis("emissões β⁻ até aqui", String(nb)) + vis("prótons · nêutrons", at[0] + " · " + (at[1] - at[0]));
       q("[data-v=msg]").innerHTML = (msg ? msg + " " : "") + (fim ? `<b class="ok">Chegou ao chumbo estável com ${na} emissões α e ${nb} emissões β⁻.</b> Confira com a conta: α = (${A0} − ${alvo[1]}) ÷ 4 = ${prev.alfa}; β = ${alvo[0]} − (${Z0} − 2·${prev.alfa}) = ${prev.beta}. A ordem das emissões pode mudar o caminho, mas não esses dois números. ` : "") + "Cada <b>α</b> (seta amarela) tira 2 prótons e 2 nêutrons: Z cai 2 e A cai 4. Cada <b>β⁻</b> (seta azul) transforma um nêutron em próton: Z sobe 1 e A não muda. Tente chegar ao círculo verde. O laboratório aceita qualquer ordem; a natureza segue uma ordem definida para cada série, que não é mostrada aqui.";
     };
     const comeca = (x) => { k = x; cam = [[INI[k][0], INI[k][1]]]; msg = ""; desenha(); };
     liga(el, "ini", comeca);
     const passo = (fn, rot) => { const at = cam[cam.length - 1], nv = fn(at), N = nv[1] - nv[0]; if (nv[0] < 78 || nv[0] > 94 || N < 120 || N > 148) { msg = `<b class="warn">Esse passo sairia da carta.</b>`; desenha(); return; } cam.push(nv); msg = rot + ": " + nome(at) + " → " + nome(nv) + "."; desenha(); };
-    q("[data-a=alfa]").addEventListener("click", () => passo(SIM.decaimento._alfa, "Emissão α"));
-    q("[data-a=beta]").addEventListener("click", () => passo(SIM.decaimento._beta, "Emissão β⁻"));
+    q("[data-a=alfa]").addEventListener("click", () => passo(SIM.qDecaimento._alfa, "Emissão α"));
+    q("[data-a=beta]").addEventListener("click", () => passo(SIM.qDecaimento._beta, "Emissão β⁻"));
     q("[data-a=volta]").addEventListener("click", () => { if (cam.length > 1) cam.pop(); msg = ""; desenha(); });
-    SIM.decaimento._estado = () => ({ cam: cam.map((c) => c.slice()) });
+    SIM.qDecaimento._estado = () => ({ cam: cam.map((c) => c.slice()) });
     comeca("u238");
   };
 })();

@@ -114,6 +114,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Caixas "Nível olimpíada": descrever o estilo de cobrança; **nunca citar questão de memória**. Questão real só de prova que o Lucas mandar.
 - **Tudo para computador (1280 px)**: Playwright sempre em 1280 px. Antes de fazer diferente do que a física faz, perguntar.
 - **Tabela periódica = ferramenta de rodapé, não aba** (decisão do Lucas, 15/11/2026): interruptor ao lado do título da matéria; barrinha no rodapé que sobe e vira a tabela inteira; depois da primeira vez, interruptor também na engrenagem; vale em todas as matérias; só uma ferramenta de rodapé por vez (tabela ou calculadora). Dados dos elementos em arquivo próprio, conferidos em fonte, com os brancos listados. Especificação completa no PROGRESSO.md, em "Em andamento na sessão de química".
+- **Nomes de simulação são globais** (`window.SIM`, todos os arquivos carregados juntos): um nome repetido apaga o outro sem aviso (aconteceu com `SIM.curvas`, `SIM.decaimento` e `SIM.dipolo`, corrigido na β 5.2). Antes de criar um laboratório, conferir com `node tests/tsim.js`; na dúvida, prefixo `q` nos da Química.
 - Laboratórios prioritários da aba Experimentos: EQ19 tabela periódica que acende, EQ20 construtor de moléculas, EQ21 balanceador visual (especificação de cada um em comentário no catálogo).
 
 ## Para quem continuar daqui

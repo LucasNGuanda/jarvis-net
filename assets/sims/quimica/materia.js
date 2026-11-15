@@ -4,7 +4,7 @@
    A03 SIM.estados: em que estado está cada substância numa temperatura (1 atm). PF e PE em °C: oxigênio −218,8 e −183,0; nitrogênio −210,0 e −195,8;
      etanol −114,1 e 78,4; mercúrio −38,8 e 356,7; água 0 e 100; naftaleno 80,3 e 218; enxofre 115,2 e 444,6; chumbo 327,5 e 1749; ferro 1538 e 2862.
      Regra: T < PF sólido; PF < T < PE líquido; T > PE gás. Escala do eixo: x = asinh(T/100) (só para caber de −250 a 3000 °C).
-   A04 SIM.curvas: curvas de aquecimento ESQUEMÁTICAS (sem números reais) dos quatro casos: substância pura (dois patamares), mistura comum (duas faixas),
+   A04 SIM.qCurvas: curvas de aquecimento ESQUEMÁTICAS (sem números reais) dos quatro casos: substância pura (dois patamares), mistura comum (duas faixas),
      mistura eutética (fusão em patamar, ebulição em faixa), mistura azeotrópica (fusão em faixa, ebulição em patamar).
    A05 SIM.separacao: monte a separação. Regras conferidas à mão para os três desafios (areia + sal + ferro; água + óleo + sal; água + álcool + areia). */
 (function () {
@@ -96,14 +96,14 @@
   };
 
   /* ---------- A04 · a curva denuncia: substância pura, mistura comum, eutética ou azeotrópica (curvas esquemáticas) ---------- */
-  SIM.curvas = (el, F) => {
+  SIM.qCurvas = (el, F) => {
     const W = 680, H = 300, TIPOS = { pura: ["substância pura", 0, 0], comum: ["mistura comum", 9, 9], eut: ["mistura eutética", 0, 9], aze: ["mistura azeotrópica", 9, 0] };
     const ordem = ["pura", "comum", "eut", "aze"].sort(() => Math.random() - 0.5), LET = ["A", "B", "C", "D"];
     let am = 0, t = 0, quente = false, resp = {}, msg = "Escolha uma amostra, aqueça e olhe a curva. Depois diga o que ela é.";
     /* curva: sólido 0–15, fusão 15–35, líquido 35–55, ebulição 55–85, gás 85–100 (tempo em unidades arbitrárias) */
-    SIM.curvas._curva = (tipo, x) => { const [, df, de] = TIPOS[tipo], Tf = 30, Te = 64; if (x < 15) return 8 + ((Tf - 8) * x) / 15; if (x < 35) return Tf + (df * (x - 15)) / 20; if (x < 55) return Tf + df + ((Te - Tf - df) * (x - 35)) / 20; if (x < 85) return Te + (de * (x - 55)) / 30; return Te + de + ((92 - Te - de) * (x - 85)) / 15; };
-    SIM.curvas._fase = (x) => (x < 15 ? "sólido" : x < 35 ? "fundindo" : x < 55 ? "líquido" : x < 85 ? "fervendo" : "gás");
-    SIM.curvas._ordem = () => ordem.slice();
+    SIM.qCurvas._curva = (tipo, x) => { const [, df, de] = TIPOS[tipo], Tf = 30, Te = 64; if (x < 15) return 8 + ((Tf - 8) * x) / 15; if (x < 35) return Tf + (df * (x - 15)) / 20; if (x < 55) return Tf + df + ((Te - Tf - df) * (x - 35)) / 20; if (x < 85) return Te + (de * (x - 55)) / 30; return Te + de + ((92 - Te - de) * (x - 85)) / 15; };
+    SIM.qCurvas._fase = (x) => (x < 15 ? "sólido" : x < 35 ? "fundindo" : x < 55 ? "líquido" : x < 85 ? "fervendo" : "gás");
+    SIM.qCurvas._ordem = () => ordem.slice();
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
       <div class="ctrls"><div><div class="bts">${botoes(LET.map((l, i) => [i, "amostra " + l]), "am", 0)}</div></div>
         <div class="bts"><button class="bt pri" data-a="aq">Aquecer</button><button class="bt" data-a="zera">Esfriar e recomeçar</button></div>
@@ -121,12 +121,12 @@
     }));
     anima(el, F, (dt) => {
       if (quente) t = Math.min(100, t + dt * 9);
-      const tipo = ordem[am], T = SIM.curvas._curva(tipo, t), fase = SIM.curvas._fase(t);
+      const tipo = ordem[am], T = SIM.qCurvas._curva(tipo, t), fase = SIM.qCurvas._fase(t);
       /* béquer na chama */
       let sv = D.copo(70, 110, 110, 110, 0.5, fase === "sólido" ? "var(--ink3)" : fase === "gás" ? "var(--warn)" : "var(--mA)") + `<line x1="50" x2="200" y1="222" y2="222" style="stroke:var(--ink2);stroke-width:3"/>` + (quente && t < 100 ? D.chama(125, 262, 1.2) : "") + D.termo(210, 200, 130, T / 100, "", "var(--bad)") + D.txt(125, 96, "amostra " + LET[am], "tx2") + D.txt(125, 286, fase, "tx", "middle", 'style="font-weight:700"');
       if (fase === "fervendo" || fase === "fundindo") for (let i = 0; i < 6; i++) { const s = (t * 0.8 + i / 6) % 1; sv += `<circle cx="${85 + i * 16}" cy="${214 - s * 46}" r="2.6" style="fill:none;stroke:var(--ink);stroke-width:1.1;opacity:${fase === "fervendo" ? 0.8 : 0.25}"/>`; }
       /* gráfico */
-      const o = { x0: 300, y0: 250, w: 330, h: 200, xmax: 100, ymin: 0, ymax: 100, xlab: "", ylab: "temperatura", xt: [], yt: [], curvas: [{ pts: D.amostra((x) => SIM.curvas._curva(tipo, x), 0, Math.max(0.01, t), 120), cor: "var(--mod)" }] };
+      const o = { x0: 300, y0: 250, w: 330, h: 200, xmax: 100, ymin: 0, ymax: 100, xlab: "", ylab: "temperatura", xt: [], yt: [], curvas: [{ pts: D.amostra((x) => SIM.qCurvas._curva(tipo, x), 0, Math.max(0.01, t), 120), cor: "var(--mod)" }] };
       sv += D.graf(o) + D.txt(o.x0 + o.w / 2, o.y0 + 22, "tempo de aquecimento (escala esquemática, sem números)", "tx2") + `<circle cx="${o.x0 + (t / 100) * o.w}" cy="${o.y0 - (T / 100) * o.h}" r="5" style="fill:var(--warn)"/>`;
       if (t >= 35) sv += D.txt(o.x0 + 0.25 * o.w, o.y0 - 0.2 * o.h, "fusão", "tx2"); if (t >= 85) sv += D.txt(o.x0 + 0.7 * o.w, o.y0 - 0.54 * o.h, "ebulição", "tx2");
       q("[data-v=sv]").innerHTML = sv;

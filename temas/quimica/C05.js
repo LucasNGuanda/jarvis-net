@@ -137,5 +137,5 @@ F.registrar("quimica/C05", {
       F.secao("desafios", "Exercícios", exs.join("") + chefao),
     ].join("");
   },
-  montar(F) { const e = document.getElementById("lab-dip"); e.outerHTML = F.lab("Soma de dipolos: do ângulo ao momento da molécula", "lab-dip"); SIM.dipolo(document.getElementById("lab-dip"), F); },
+  montar(F) { const e = document.getElementById("lab-dip"); e.outerHTML = F.lab("Soma de dipolos: do ângulo ao momento da molécula", "lab-dip"); SIM.qDipolo(document.getElementById("lab-dip"), F); },
 });
