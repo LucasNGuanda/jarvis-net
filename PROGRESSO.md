@@ -1,6 +1,6 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado atual (15/11/2026, depois da β 4.2; β 4.1 e 4.2 na branch `acesso-codigos`, esperando a aprovação do Lucas para ir ao `main`)
+## Estado atual (15/11/2026, depois da β 4.2, aprovada pelo Lucas e no `main`)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
 
 ### Física — 96 de 96 temas escritos
@@ -438,8 +438,8 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - A cor do título (seletor da tela inicial) também ficou atrás do código de configurações (`engrenagem.corTitulo`), porque é personalização; sem acesso, o título usa a cor original. Dá para liberar trocando para "visitante".
   - Idiomas: barrinha vertical à direita do cartão (Я / DE / सं), liberada pelo código do russo; troca nome, cor e desenho do cartão. Alemão: cor `--mDE`, ß girando (Gramática) e portão de Brandemburgo em traço (Leitura). Sânscrito: cor `--mSA`, सं girando e ॐ pulsando. Cores escolhidas em Python como as mais distantes da paleta (distância mínima em Lab 26,1 e 24,1). Prefixos `ale:` e `san:`.
   - Testes: `tests/tacesso.js` novo (visitante, códigos errados, os 5 avulsos e o de física sem acento, tester, ADM sem pular e sem congelar a página, troca de idioma, recarregar, exportar, voltar a visitante, movimento reduzido); `tests/adm.js` injeta ADM nos testes antigos. Capturas: `tests/capturas/anim-adm-quadros.png`, `anim-avulsos-quadros.png`, `anim-tester-*.png`, `lingua-*.png`.
-  - Regressão: em andamento (atualizo aqui quando terminar).
-- **β 4.2** — **Alemão e sânscrito completos, e o Jarvis como busca** (pedido de 15/11/2026; na branch `acesso-codigos`, junto com a β 4.1, esperando aprovação).
+  - Regressão (feita sobre a β 4.1 + 4.2 juntas): todos os testes sem nenhuma FALHA (tgeral: 437 páginas, 152 escritas, 1970 links, 0 KaTeX; tfunc, calculadoras, física, thome, tcor, texp, surpresas, adesivos, matérias, figuras, mudança do Cálculo, tchaves e tmec por código). Achado no caminho: gravar no localStorage no instante em que o documento nasce (no addInitScript do teste) fazia o Chromium perder às vezes o que o teste tinha gravado antes de recarregar; era do teste, não do site, e o `tests/adm.js` agora espera o documento ficar "interactive".
+- **β 4.2** — **Alemão e sânscrito completos, e o Jarvis como busca** (pedido de 15/11/2026; feita na branch `acesso-codigos` junto com a β 4.1; o Lucas testou o ZIP e aprovou).
   - Regra nova dos códigos: cada código vale uma vez; repetir mostra "código já usado", sem animação e sem mudar nada (até "voltar a visitante").
   - Alemão (`ich-will_deutsch4471`) e sânscrito (`om_samskrta8840`): só com o código próprio ou o ADM; o código do russo agora libera só o russo e a barrinha (que mostra alemão e sânscrito com borda tracejada e, ao escolher, o cartão com cadeado). Temas cadastrados: DG01–DG18, DL01–DL08, SG01–SG15, SL01–SL07 (módulos renomeados de DEG/DEL/SAG/SAL para DG/DL/SG/SL, como no pedido; nenhum progresso usava os nomes antigos).
   - Cores trocadas: na β 4.1 alemão e sânscrito ficaram rosados e parecidos. Agora alemão `#ddd188` (dourado) e sânscrito `#e4a281` (açafrão), escolhidas em Python na faixa de claridade e saturação da paleta (distância mínima 27,3 em Lab; 77 e 85 do russo); tema claro `#6f721d` e `#e04b00`.
@@ -452,7 +452,7 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - Índice: `tools/gera-indice.js` abre o site no Chromium, chama o `html(F)` de cada tema sem desenhar e grava `assets/indice-busca.js` (805 KB, carregado só quando a busca é usada; gera em ~2 s). Dicas, resoluções e a explicação do "chuta antes de ver" ficam fora, para o trechinho não entregar resposta. Cada tema guarda a impressão digital do arquivo; o tbusca acusa índice velho.
   - Projeto futuro registrado no CLAUDE.md (não implementado): conversa de verdade exigiria API paga e um programa à parte com servidor.
   - Testes: `tests/tbusca.js` novo (60 conferências); `tests/tacesso.js` ampliado (alemão, sânscrito, Jarvis, "código já usado", barrinha com idiomas trancados); `thome` e `tadesivos`: o campo do Jarvis agora é ativo para o ADM. Capturas: `tests/capturas/anim-42-quadros.png`, `busca-*.png`, `pag42-*.png`, `fontes42.png`.
-  - Regressão: em andamento (atualizo aqui quando terminar).
+  - Regressão: a mesma de cima, sem FALHA; tbusca 60 conferências, tacesso 130. O Lucas testou o ZIP e aprovou; juntado ao `main`.
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.
@@ -542,7 +542,6 @@ O histórico acima usa os códigos antigos.
 ## Falta
 - Dívida técnica da Física e do Cálculo (exercícios, figuras e `F.chute`), ver "Estado atual".
 - Pendências combinadas (modelo de dados, GitHub Pages) e as outras matérias (Química, Matemática, Russo), ver "Estado atual".
-- **Esperando o Lucas testar o ZIP da β 4.1 + 4.2 (branch `acesso-codigos`) e aprovar antes de ir para o `main`.**
 - Botão "Exportar para o Anki" (russo) continua só previsto. Campo `easterEggs` (surpresa → código) continua só previsto.
 - Pendências antigas, esperando o Lucas: correção da simulação do N02 (física, precisa de autorização) e os "{,}" vazando no texto do CI02, CII03, TE01 e TE04.
 - Noites 1–11 do briefing (todos os outros temas), unidades e constantes (CODATA), simulados por módulo, formulário com busca, mapa de pré-requisitos.
