@@ -47,6 +47,15 @@
   /* equação em TeX (mhchem): coeficiente 1 omitido; coef null → só as espécies */
   SIM.eqTex = (reag, prod, coef, seta = "->") => { const t = (f, j) => (coef && coef[j] !== 1 ? coef[j] + " " : "") + f.replace(/\^(\d*)([+-])/g, (_, n, sg) => (n ? "^" + n + sg : sg)).replace("·", "."); return "\\ce{" + reag.map(t).join(" + ") + " " + seta + " " + prod.map((f, j) => t(f, j + reag.length)).join(" + ") + "}"; };
 
+  /* ---------- sorteio para os exercícios (campo gerar do F.exercicio) ----------
+     p = true na versão que abre com a página: escolha FIXA (para o mapa de erros ser sempre da mesma questão); p = false: sorteio.
+     SIM.pega(lista, p, i): item i (fixo) ou um ao acaso. SIM.alt5(certo, outros, p): cinco alternativas sem repetição; na versão fixa a posição da certa
+     sai do próprio texto (soma dos códigos das letras), para o gabarito não cair sempre na mesma letra. */
+  SIM.emb = (a) => a.map((v) => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map((x) => x[1]);
+  SIM.pega = (lista, p, i = 0) => (p ? lista[i % lista.length] : lista[Math.floor(Math.random() * lista.length)]);
+  SIM.alt5 = (certo, outros, p) => { const o = [...new Set(outros.filter((x) => x !== certo))], d = (p ? o : SIM.emb(o)).slice(0, 4); let todos; if (p) { const pos = [...String(certo)].reduce((t, c) => t + c.charCodeAt(0), 0) % (d.length + 1); todos = d.slice(0, pos).concat([certo], d.slice(pos)); } else todos = SIM.emb(d.concat([certo])); return { alts: todos, certa: "ABCDE"[todos.indexOf(certo)] }; };
+  SIM.vg = (v, d = 2) => String(+(+v).toFixed(d)).replace(".", ",").replace("-", "−"); /* número em texto comum, sem zeros à direita */
+
   /* ---------- desenhos reutilizados nas figuras do módulo D ---------- */
   const dq = (SIM.dq = {});
   dq.tab = (x, y, larg, linhas) => linhas.map((l, i) => l.map((c, j) => D.txt(x + larg.slice(0, j).reduce((a, b) => a + b, 0) + larg[j] / 2, y + i * 22, c, "tx2", "middle", i ? "" : 'style="font-weight:700;fill:var(--ink)"')).join("")).join("") + `<line x1="${x}" x2="${x + larg.reduce((a, b) => a + b, 0)}" y1="${y + 7}" y2="${y + 7}" style="stroke:var(--ink3)"/>`;

@@ -1,7 +1,7 @@
 /* Núcleo de contas do módulo D da Química (assets/sims/quimica/reacoes.js), sem navegador. Uso: node tests/tnucleo.js
    Confere massas molares e o balanceador automático contra gabaritos conhecidos (os mesmos números foram refeitos em Python na sessão da β 5.3). */
 global.window = {}; global.D = { txt: () => "", seta: () => "" };
-require('../assets/sims/quimica/reacoes.js'); const S = window.SIM; let f = 0; const ok = (c, m) => { if (!c) f++; console.log((c ? 'ok ' : 'FALHA ') + m); };
+require('../assets/sims/quimica/reacoes.js'); require('../assets/sims/quimica/reacoes2.js'); const S = window.SIM; let f = 0; const ok = (c, m) => { if (!c) f++; console.log((c ? 'ok ' : 'FALHA ') + m); };
 const MM = { H2O: 18, CO2: 44, NaCl: 58.5, H2SO4: 98, CaCO3: 100, "Ca(OH)2": 74, "Al2(SO4)3": 342, C6H12O6: 180, NH3: 17, Fe2O3: 160, "CuSO4·5H2O": 249.5, KMnO4: 158, HNO3: 63, NaOH: 40, "Ca3(PO4)2": 310, C2H6O: 46, K2Cr2O7: 294, AgNO3: 170, "Mg(OH)2": 58, O2: 32, N2: 28, H3PO4: 98, C8H18: 114, Al2O3: 102, "(NH4)2SO4": 132, "Fe2(SO4)3": 400 };
 const ruins = Object.entries(MM).filter(([k, v]) => Math.abs(S.mm(k) - v) > 1e-9).map(([k, v]) => k + ': ' + S.mm(k) + ' ≠ ' + v);
 ok(!ruins.length, Object.keys(MM).length + ' massas molares → ' + ruins.join('; '));
@@ -19,4 +19,9 @@ ok(S.desloca("Zn", "Cu") && !S.desloca("Cu", "Zn") && S.desloca("Fe", "H") && !S
 ok(!S.soluvel("Ag", "Cl") && !S.soluvel("Ba", "SO4") && S.soluvel("Na", "CO3") && !S.soluvel("Ca", "CO3") && S.soluvel("Pb", "NO3") && !S.soluvel("Cu", "OH") && S.soluvel("K", "S"), 'solubilidade: AgCl, BaSO4, CaCO3 e Cu(OH)2 insolúveis; sais de Na, K e nitratos solúveis');
 ok(S.sal("Al", "SO4") === "Al2(SO4)3" && S.sal("Ca", "PO4") === "Ca3(PO4)2" && S.sal("NH4", "SO4") === "(NH4)2SO4" && S.sal("Na", "Cl") === "NaCl" && S.sal("Ca", "CO3") === "CaCO3" && S.sal("Fe3", "OH") === "Fe(OH)3", 'fórmula do sal pela neutralidade');
 ok(Object.values(S.NOMES).reduce((a, l) => a + l.length, 0) >= 70 && Object.values(S.NOMES).every((l) => new Set(l.map((x) => x[0])).size === l.length && new Set(l.map((x) => x[1])).size === l.length && l.every((x) => S.atomos(x[0]))), 'banco de nomenclatura: fórmulas válidas, sem fórmula nem nome repetido → ' + Object.values(S.NOMES).reduce((a, l) => a + l.length, 0));
+const semGab = S.EQS.concat(S.REDOX, S.LIM).filter((e) => !S.balanceia(e.r, e.p)).map((e) => e.r.join('+'));
+ok(!semGab.length, (S.EQS.length + S.REDOX.length + S.LIM.length) + ' equações dos laboratórios têm gabarito único → ' + semGab.join(' '));
+const eRuins = S.REDOX.filter((e) => { const c = S.balanceia(e.r, e.p); return c[e.ox[0]] * e.ox[1] !== c[e.red[0]] * e.red[1]; }).map((e) => e.r.join('+'));
+ok(!eRuins.length, S.REDOX.length + ' equações redox: com os coeficientes do gabarito, elétrons cedidos = recebidos → ' + eRuins.join(' '));
+ok(S.REDOX.every((e) => Object.values(S.confere(e.r, e.p, S.balanceia(e.r, e.p))).every(([a, b]) => a === b)), 'redox: átomos e carga iguais dos dois lados no gabarito');
 console.log('FALHAS (' + f + ')' + (f ? '' : ':')); process.exit(f ? 1 : 0);

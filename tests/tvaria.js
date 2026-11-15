@@ -18,7 +18,7 @@ for (let i = 0; i < args.length; i++) { if (args[i] === '--n') opt.n = +args[++i
     for (const i of comPar) for (let k = 0; k < opt.n; k++) {
       const r = await p.evaluate(([i, k]) => { const el = document.querySelectorAll('.ex')[i]; if (k > 0) el.querySelector('.ex-par').click(); const d = el._d, fb = () => el.querySelector('.ex-fb').textContent, o = { n: el.querySelector('.num').textContent, k, py: d.py || null, v: d.num ? d.num.v : null, certa: d.certa || null, prob: [] };
         const txt = el.cloneNode(true); txt.querySelectorAll('.katex').forEach(x => x.remove()); txt.querySelectorAll('.rev-painel').forEach(x => (x.hidden = false));
-        if (/undefined|NaN|\{,\}|\\frac|\\cdot/.test(txt.textContent)) o.prob.push('texto cru: ' + (txt.textContent.match(/.{0,20}(undefined|NaN|\{,\}|\\frac|\\cdot).{0,20}/) || [''])[0]);
+        if (/undefined|NaN(?!O)|\{,\}|\\frac|\\cdot/.test(txt.textContent)) o.prob.push('texto cru: ' + (txt.textContent.match(/.{0,20}(undefined|NaN(?!O)|\{,\}|\\frac|\\cdot).{0,20}/) || [''])[0]);
         if (el.querySelector('.katex-error')) o.prob.push('katex-error');
         if (d.num) { const inp = el.querySelector('.ex-num input'), bt = el.querySelector('.ex-num button'); if (!isFinite(d.num.v)) o.prob.push('gabarito não numérico');
           inp.value = String(d.num.v).replace('.', ','); bt.click(); if (!/Certo/.test(fb())) o.prob.push('gabarito recusado: ' + d.num.v);

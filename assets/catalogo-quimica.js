@@ -38,12 +38,12 @@ window.CATALOGO.push(
     ["C07","Teoria dos orbitais moleculares",[],true],
   ] },
   { id:"QD", area:"qui", letra:"D", cor:"--mO", nome:"Reações e estequiometria", desc:"Balanceamento, mol, rendimento e reagente limitante.", temas:[
-    ["D01","Funções inorgânicas e nomenclatura",[]],
+    ["D01","Funções inorgânicas e nomenclatura",[],true],
     ["D02","Tipos de reação e previsão de produtos",[]],
     ["D03","Leis ponderais",[]],
-    ["D04","Mol, massa molar e Avogadro",[]],
+    ["D04","Mol, massa molar e constante de Avogadro",[]],
     ["D05","Balanceamento de equações",[]],
-    ["D06","Cálculo estequiométrico",[]],
+    ["D06","Cálculo estequiométrico: limitante, excesso, pureza e rendimento",[]],
     ["D07","Oxirredução e balanceamento redox",[]],
   ] },
   { id:"QE", area:"qui", letra:"E", cor:"--mS", nome:"Físico-química I", desc:"Soluções, propriedades coligativas e termoquímica.", temas:[
