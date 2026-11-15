@@ -663,11 +663,13 @@ a.jv-mat:focus-visible{outline:2px solid var(--cor);outline-offset:3px}
 .jv-breve{display:inline-block;padding:2px 10px;border-radius:999px;border:1px dashed var(--ink3);color:var(--ink2);font:600 12px var(--f-text);letter-spacing:.02em;margin-top:4px}
 .jv-ilu{width:min(100%,420px)}
 .jv-globo{width:100%;height:auto;display:block}
-.jv-globo .jv-borda{stroke:var(--jv2);stroke-width:1.6}
-.jv-globo .jv-mer{fill:none;stroke:var(--jv2);stroke-width:1.1;opacity:.75}
-.jv-globo .jv-lat{fill:none;stroke:var(--jv1);stroke-width:1;opacity:.6}
-.jv-globo .jv-anel{fill:none;stroke:var(--jv3);stroke-width:2;opacity:.85}
-.jv-globo .jv-lua{fill:var(--jv3);transition:opacity .3s}
+.jv-ilu{--fg1:var(--jv1);--fg2:var(--jv2);--fg3:var(--jv3)} /* figura central: acompanha a cor do tema, a não ser que o painel escolha outra (β 3.9) */
+.jv-fig{width:100%;height:auto;display:block}
+.jv-globo .jv-borda{stroke:var(--fg2);stroke-width:1.6}
+.jv-globo .jv-mer{fill:none;stroke:var(--fg2);stroke-width:1.1;opacity:.75}
+.jv-globo .jv-lat{fill:none;stroke:var(--fg1);stroke-width:1;opacity:.6}
+.jv-globo .jv-anel{fill:none;stroke:var(--fg3);stroke-width:2;opacity:.85}
+.jv-globo .jv-lua{fill:var(--fg3);transition:opacity .3s}
 .jv-pergunta{position:relative;display:flex;align-items:center;gap:8px;width:min(100%,680px);padding:8px 8px 8px 18px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
 .jv-pergunta input{flex:1;min-width:0;border:0;background:none;color:var(--ink);font:16px var(--f-text);padding:8px 0}
 .jv-pergunta input:disabled{cursor:not-allowed}
@@ -753,3 +755,30 @@ body.area-vazia #menu-mods:not(.buscando) .mod.vazio:not(.outra-area){display:bl
 .modc .letra.longa{font-size:13px}
 /* β 3.8: tela de efeito por cima de tudo, sem receber clique (some sozinha em ~2 s) */
 .falha-tela{position:fixed;inset:0;width:100vw;height:100vh;z-index:1000;pointer-events:none;image-rendering:pixelated}
+.jv-galaxia .jv-braco{fill:none;stroke:var(--fg2);stroke-width:1.6;opacity:.85}
+.jv-galaxia .jv-braco2{fill:none;stroke:var(--fg1);stroke-width:1;opacity:.45}
+.jv-galaxia .jv-estrela{fill:var(--fg3);opacity:.7}
+.jv-galaxia .jv-nucleo{fill:#fff;opacity:.85}
+.jv-bn .jv-bn-anel{fill:none;stroke:var(--fg2);stroke-dasharray:22 7;stroke-linecap:round}
+.jv-bn .jv-bn-centro{fill:#000;stroke:none}
+.jv-bn .jv-bn-foton{fill:none;stroke:var(--fg3);stroke-width:1.6;opacity:.95}
+.jv-bn .jv-bn-lente{fill:none;stroke:var(--fg2);stroke-width:2.6;opacity:.9}
+.jv-bn .jv-bn-lente3{fill:none;stroke:var(--fg1);stroke-width:1.2;opacity:.55}
+.jv-bn .jv-bn-lente2{fill:none;stroke:var(--fg2);stroke-width:1.5;opacity:.6}
+.jv-painel-tit{color:var(--ink2)}
+.jv-painel-figs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.jv-painel-figbt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 4px 7px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink2);cursor:pointer;font:600 11.5px/1.25 var(--f-text);text-align:center}
+.jv-painel-figbt:hover,.jv-painel-figbt:focus-visible{border-color:var(--ink3)}
+.jv-painel-figbt[aria-pressed=true]{border-color:var(--fg2,var(--ink2));color:var(--ink);box-shadow:inset 0 0 0 1px var(--fg2,var(--ink2))}
+.jv-painel-mini{width:100%;aspect-ratio:320/260;display:block}
+.jv-painel-mini svg{width:100%;height:100%;display:block;pointer-events:none}
+.jv-painel-linha{display:flex;align-items:center;gap:8px;margin-top:9px;font:600 12.5px var(--f-text);color:var(--ink2)}
+.jv-painel-linha>span{min-width:66px}
+.jv-painel-linha input[type=range]{flex:1;min-width:0}
+.jv-painel-cor input[type=range]{-webkit-appearance:none;appearance:none;height:10px;border-radius:999px;cursor:pointer;background:linear-gradient(90deg,hsl(0,85%,58%),hsl(30,85%,58%),hsl(55,85%,55%),hsl(110,70%,50%),hsl(170,70%,48%),hsl(210,80%,58%),hsl(250,80%,64%),hsl(285,75%,66%))}
+.jv-painel-cor input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--ink2)}
+.jv-painel-cor input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--ink2)}
+.jv-painel-linha input[type=range]:disabled{opacity:.35;cursor:not-allowed}
+.jv-painel-linha output{min-width:46px;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+.jv-painel-secao{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+.jv-painel-secao .jv-painel-tit{margin:0}

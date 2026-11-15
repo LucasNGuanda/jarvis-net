@@ -1,5 +1,5 @@
 /* Testes dos adesivos da tela inicial (β 3.6). Uso: node tests/tadesivos.js
-   Confere: catálogo (25, 5 categorias, ids únicos, SVG sem animação), engrenagem, painel, arrastar (válido e proibido),
+   Confere: catálogo (28, 5 categorias, ids únicos, SVG sem animação), engrenagem, painel, arrastar (válido e proibido),
    girar, redimensionar, remover, limpar tudo, pointer-events fora do modo de edição, empurrão ao mudar a janela,
    persistência e exportação. Capturas em tests/capturas/ad-*.png */
 const { chromium } = require('playwright');
@@ -10,11 +10,11 @@ const URL = 'file:///home/user/site-fisica/index.html#/home';
   const falhas = []; const ok = (cond, msg) => { if (!cond) falhas.push(msg); console.log((cond ? 'ok   ' : 'FALHA ') + msg); };
   await p.goto(URL); await p.evaluate(() => localStorage.removeItem('jarvis:adesivos')); await p.reload(); await p.waitForTimeout(900);
   const cat = await p.evaluate(() => { const A = window.ADESIVOS, ids = A.lista.map((a) => a.id); const svgs = A.lista.map((a) => A.svg(a)); return { n: A.lista.length, cats: A.categorias.length, unicos: new Set(ids).size === ids.length, porCat: A.categorias.map((k) => A.lista.filter((a) => a.cat === k.id).length), anim: svgs.filter((s) => /<animate|@keyframes|animation/.test(s)).length, vazios: A.lista.filter((a) => A.svg(a).length < 120).map((a) => a.id), trava: A.lista.every((a) => 'trava' in a && a.trava === null) }; });
-  ok(cat.n === 25, 'catálogo com 25 adesivos (' + cat.n + ')'); ok(cat.cats === 5 && cat.porCat.join() === '6,5,6,5,3', 'categorias 6/5/6/5/3 (' + cat.porCat.join('/') + ')');
+  ok(cat.n === 28, 'catálogo com 28 adesivos (' + cat.n + ')'); ok(cat.cats === 6 && cat.porCat.join() === '6,5,6,5,3,3', 'categorias 6/5/6/5/3/3 (com Cientistas) (' + cat.porCat.join('/') + ')');
   ok(cat.unicos, 'ids únicos'); ok(cat.anim === 0, 'nenhuma animação nos SVG'); ok(!cat.vazios.length, 'nenhum desenho vazio ' + cat.vazios.join()); ok(cat.trava, 'campo trava preparado (null) em todos');
   ok(await p.$('.jv-engrenagem') !== null, 'engrenagem existe'); ok(await p.$eval('.jv-pergunta input', (i) => i.disabled), 'campo do Jarvis continua "em breve" (desativado)');
   await p.click('.jv-engrenagem'); await p.waitForTimeout(200);
-  ok(await p.$('.jv-painel') !== null, 'painel abre'); ok((await p.$$('.jv-painel-ad')).length === 25, 'painel mostra os 25');
+  ok(await p.$('.jv-painel') !== null, 'painel abre'); ok((await p.$$('.jv-painel-ad')).length === 28, 'painel mostra os 28');
   await p.screenshot({ path: 'tests/capturas/ad-painel.png' });
   /* arrastar a maçã para um lugar livre (à esquerda do globo) */
   const arrasta = async (de, para) => { await p.mouse.move(de.x, de.y); await p.mouse.down(); await p.mouse.move(de.x + 10, de.y + 10, { steps: 3 }); await p.mouse.move(para.x, para.y, { steps: 12 }); await p.mouse.up(); await p.waitForTimeout(100); };
@@ -41,10 +41,10 @@ const URL = 'file:///home/user/site-fisica/index.html#/home';
   const it1 = await p.evaluate(() => JARVIS._ad.itens().find((i) => i.id === 'buraconegro')); ok(Math.abs(it1.r - 90) <= 3 || it1.r === it0.r, 'girar: ' + it0.r + '° → ' + it1.r + '°');
   h = await centro('.jv-ad.sel .tam'); cc = await centro('.jv-ad.sel'); await arrasta(h, { x: cc.x + 30, y: cc.y + 30 });
   const it2 = await p.evaluate(() => JARVIS._ad.itens().find((i) => i.id === 'buraconegro')); ok(it2.s < it1.s, 'redimensionar: ' + it1.s + ' → ' + it2.s + ' px');
-  /* todos os 25 na tela, para a captura */
+  /* todos os 28 na tela, para a captura */
   for (const id of await p.evaluate(() => ADESIVOS.lista.map((a) => a.id))) { if (!(await p.evaluate((i) => JARVIS._ad.itens().some((x) => x.id === i), id))) { await p.click(`.jv-painel-ad[data-id=${id}]`); } }
   await p.evaluate(() => JARVIS._ad.itens().forEach((it) => (it.s = 70))); await p.evaluate(() => JARVIS._ad.desenha());
-  const nTodos = await p.evaluate(() => JARVIS._ad.itens().length); ok(nTodos >= 25, 'cabem os 25 (' + nTodos + ')');
+  const nTodos = await p.evaluate(() => JARVIS._ad.itens().length); ok(nTodos >= 28, 'cabem os 28 (' + nTodos + ')');
   await p.screenshot({ path: 'tests/capturas/ad-editando.png' });
   /* remover pelo × */
   const antes = nTodos; await p.click('.jv-ad.sel .x'); ok((await p.evaluate(() => JARVIS._ad.itens().length)) === antes - 1, 'remover pelo ×');

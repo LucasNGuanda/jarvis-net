@@ -45,7 +45,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Toda conta de exemplo, exercício e solução conferida rodando em Python (anotar os números no comentário do topo do tema).
 - A física de cada simulação conferida, inclusive casos limite.
 - Nenhuma fórmula quebrada (procurar `katex-error`). Nenhum tema escrito pode abrir vazio.
-- Rodar os testes de `tests/` antes de cada commit (`node tests/tgeral.js`, `tests/tmec.js <códigos>`, `tests/tchaves.js <códigos>`, `tests/tadesivos.js` para a tela inicial, `tests/tmaterias.js` para a base das matérias, `tests/tsegredo.js` e `tests/tsegredo2.js` para as surpresas etc.); não commitar com teste quebrado. Conferir também as linhas FALHA, não só o código de saída. Capturas de teste ficam fora do git.
+- Rodar os testes de `tests/` antes de cada commit (`node tests/tgeral.js`, `tests/tmec.js <códigos>`, `tests/tchaves.js <códigos>`, `tests/tadesivos.js` para a tela inicial, `tests/tmaterias.js` para a base das matérias, `tests/tsegredo.js` e `tests/tsegredo2.js` para as surpresas, `tests/tfiguras.js` para a figura central etc.); não commitar com teste quebrado. Conferir também as linhas FALHA, não só o código de saída. Capturas de teste ficam fora do git.
 - Testar o site de verdade com Playwright e olhar as capturas (`node tests/shotmec.js <COD> "<seletor>@0"` → `tests/capturas/`).
 
 ## Decisões de projeto já tomadas
@@ -54,6 +54,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Experimento = simulação interativa que se mexe, com controles, uma explicação curta e sem exercícios.
 - Existe uma surpresa escondida na página inicial dos Experimentos e outra na página inicial da Matemática. Elas NUNCA podem ser mencionadas em nenhum texto do site (detalhes só no PROGRESSO.md, β 3.4 e β 3.8).
 - Adesivos da tela inicial (pedido de 15/11/2026): engrenagem ao lado do campo "Perguntar algo ao Jarvis" abre o painel (modo de edição). Todos os adesivos já vêm disponíveis (nada destravável, nada bloqueado) e são estáticos, sem animação. Desenhos originais em SVG, na cor da categoria (Física, Química, Matemática, Russo e Olimpíadas, Meus). Nunca ficam por cima de nada clicável; a camada fica atrás da interface com pointer-events: none. Cadastro em `assets/adesivos.js` (campo `trava` preparado para o futuro, hoje sempre null); salvos em `jarvis:adesivos`, que entra no exportar/importar.
+- Painel da engrenagem (β 3.9) = "Personalizar": seção "Figura central" (miniaturas para escolher a figura do meio da tela inicial; cor própria ou "acompanhar a cor do tema"; velocidade com posição "parado"), cadastro em `assets/figuras.js` (acrescentar figura = acrescentar um objeto; cores sempre com `--fg1..3`), salva em `jarvis:figura`; e a seção Adesivos, que ganhou a categoria Cientistas (Newton, Einstein, Marie Curie). Figuras em arame luminoso, leves; o planeta com anel continua sendo a padrão.
 - Tema novo já nasce no padrão completo; os temas antigos que não estão no padrão estão listados como dívida técnica no PROGRESSO.md.
 
 ## O que eu já decidi que não quero
