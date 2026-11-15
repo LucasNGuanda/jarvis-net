@@ -23,7 +23,7 @@ window.CATALOGO.push(
     ["B02","Isótopos, isóbaros e isótonos",[],true],
     ["B03","Modelos atômicos clássicos",[],true],
     ["B04","Modelo quântico e distribuição eletrônica",[],true],
-    ["B05","Orbitais híbridos",[]],
+    ["B05","Orbitais híbridos",[],true],
     ["B06","Tabela periódica: grupos e períodos",[]],
     ["B07","Propriedades periódicas",[]],
     ["B08","Radioatividade e química nuclear",[]],
