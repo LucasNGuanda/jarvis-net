@@ -681,6 +681,8 @@ a.jv-mat:focus-visible{outline:2px solid var(--cor);outline-offset:3px}
 .aba-home svg{width:22px;height:22px}
 @media (max-width:860px){.jv-materias{grid-template-columns:repeat(2,1fr)}}
 .jv-titulo{position:relative;display:inline-block;padding-bottom:6px;outline:none}
+/* versão ao lado do nome (β 3.3): fica dentro do h1, então herda o degradê e muda de cor junto; o conjunto inteiro é que fica centralizado */
+.jv-ver{font-size:.36em;font-weight:700;letter-spacing:.01em;margin-left:.3em;vertical-align:.95em;white-space:nowrap}
 .jv-cor{position:absolute;left:50%;top:100%;transform:translate(-50%,-4px);display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:0 12px 30px rgba(0,0,0,.25);white-space:nowrap;opacity:0;visibility:hidden;transition:opacity .18s,transform .18s,visibility .18s;z-index:5}
 .jv-titulo:hover .jv-cor,.jv-titulo:focus-within .jv-cor,.jv-titulo.aberto .jv-cor{opacity:1;visibility:visible;transform:translate(-50%,0)}
 .jv-cor label{display:flex;align-items:center;gap:8px;font:600 13px var(--f-text);color:var(--ink2)}

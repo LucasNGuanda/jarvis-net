@@ -79,7 +79,7 @@
   J.home = (el) => {
     const P = window.PROJETO || { nome: "Jarvis" }, mats = window.MATERIAS || [];
     el.innerHTML = `<div class="jv">
-      <header class="jv-cab"><div class="jv-titulo" tabindex="-1"><h1 title="Passe o mouse para mudar a cor">${esc(P.nome)}</h1>
+      <header class="jv-cab"><div class="jv-titulo" tabindex="-1"><h1 title="Passe o mouse para mudar a cor">${esc(P.nome)}${window.VERSAO ? `<span class="jv-ver">${esc(window.VERSAO)}</span>` : ""}</h1>
         <div class="jv-cor" role="group" aria-label="Cor do ${esc(P.nome)}"><label>cor<input type="range" min="0" max="${MATIZ_MAX}" step="1" value="50" aria-label="Cor, do vermelho ao lilás"></label><button type="button">voltar à cor original</button></div></div></header>
       <nav class="jv-materias" aria-label="Matérias">${mats.map(cartao).join("")}</nav>
       <div class="jv-ilu">${globo()}</div>
