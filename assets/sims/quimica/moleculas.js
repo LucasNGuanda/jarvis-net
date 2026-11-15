@@ -25,7 +25,7 @@
   const mm = (A, B) => A.map((l) => [0, 1, 2].map((j) => l[0] * B[0][j] + l[1] * B[1][j] + l[2] * B[2][j]));
   const mv = (A, v) => A.map((l) => l[0] * v[0] + l[1] * v[1] + l[2] * v[2]);
   const rotX = (a) => [[1, 0, 0], [0, Math.cos(a), -Math.sin(a)], [0, Math.sin(a), Math.cos(a)]], rotY = (a) => [[Math.cos(a), 0, Math.sin(a)], [0, 1, 0], [-Math.sin(a), 0, Math.cos(a)]];
-  const R0 = () => mm(rotX(-0.35), rotY(0.6));
+  const R0 = () => mm(rotX(0.22), rotY(-0.3));
   const escuro = (hex, k) => { const n = parseInt(hex.slice(1), 16); return `rgb(${Math.round(((n >> 16) & 255) * k)},${Math.round(((n >> 8) & 255) * k)},${Math.round((n & 255) * k)})`; };
   const SUB = "₀₁₂₃₄₅₆₇₈₉", SUP = { "+": "⁺", "-": "⁻", 1: "", 2: "²", 3: "³", 4: "⁴" };
   const fBonita = (f) => { const m = f.match(/^(.*?)(?:\^(\d))?([+-])?$/); return m[1].replace(/\d/g, (d) => SUB[+d]) + (m[3] ? (m[2] ? SUP[m[2]] : "") + SUP[m[3]] : ""); };
@@ -59,24 +59,32 @@
     return out;
   };
   SIM.qMolPares = (reg) => pares(modelo(reg)).length;
+  /* eixos principais (autovetores da matriz de covariância das posições, por rotações de Jacobi): a molécula chega "deitada" de frente para quem olha,
+     com a direção mais comprida na horizontal e a mais fina apontando para fora da tela. Só muda a orientação inicial; ângulos e distâncias não mudam. */
+  const eixos = (pts) => { const n = pts.length, c = pts.reduce(soma, [0, 0, 0]).map((x) => x / n), A = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]; pts.forEach((p) => { const d = dif(p, c); for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) A[i][j] += d[i] * d[j]; });
+    let V = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+    for (let v = 0; v < 24; v++) for (const [a, b] of [[0, 1], [0, 2], [1, 2]]) { if (Math.abs(A[a][b]) < 1e-12) continue; const th = 0.5 * Math.atan2(2 * A[a][b], A[a][a] - A[b][b]), co = Math.cos(th), si = Math.sin(th), G = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]; G[a][a] = co; G[b][b] = co; G[a][b] = -si; G[b][a] = si;
+      const Gt = G[0].map((_, i) => G.map((l) => l[i])); A.splice(0, 3, ...mm(mm(Gt, A), G)); V = mm(V, G); }
+    const ord = [0, 1, 2].sort((i, j) => A[j][j] - A[i][i]), ex = ord.map((k) => [V[0][k], V[1][k], V[2][k]]); if (pe(pv(ex[0], ex[1]), ex[2]) < 0) ex[2] = esc(ex[2], -1); return { c, ex }; };
   function modelo(reg) {
-    const m = { reg, atomos: reg.atomos.map((a) => ({ el: a[0], p: [a[1], a[2], a[3]], q: a[4] || 0 })), ligs: reg.ligs.map((l) => l.slice()), pares: reg.pares, rotulo: reg.nome };
+    const { c, ex } = eixos(reg.atomos.map((a) => [a[1], a[2], a[3]])), gira = (v) => [pe(v, ex[0]), pe(v, ex[1]), pe(v, ex[2])];
+    const m = { reg, atomos: reg.atomos.map((a) => ({ el: a[0], p: gira(dif([a[1], a[2], a[3]], c)), q: a[4] || 0 })), ligs: reg.ligs.map((l) => l.slice()), pares: reg.pares && reg.pares.map((p) => [p[0], ...gira([p[1], p[2], p[3]])]), rotulo: reg.nome };
     m.lp = pares(m); m.nH = m.atomos.filter((a) => a.el === "H").length; m.pesados = m.atomos.length - m.nH; return m;
   }
   /* composto iônico: os íons separados (em escala, pelos raios iônicos) e um pedaço 3 × 3 × 3 do retículo do tipo NaCl */
   function modelosIonicos(reg) {
     const [c, a] = reg.ions, d = reg.reticulo.d, sep = c[2] + a[2] + 1.6;
-    const par = { reg, ionico: true, atomos: [{ el: c[0], p: [-sep / 2, 0, 0], q: c[1], r: c[2] }, { el: a[0], p: [sep / 2, 0, 0], q: a[1], r: a[2] }], ligs: [], lp: [], rotulo: "os íons, separados (raios iônicos em escala)", nH: 0, pesados: 2 };
+    const par = { reg, ionico: true, atomos: [{ el: c[0], p: [-sep / 2, 0, 0], q: c[1], r: c[2] }, { el: a[0], p: [sep / 2, 0, 0], q: a[1], r: a[2] }], ligs: [], lp: [], rotulo: "os íons, separados", nH: 0, pesados: 2 };
     const at = [], id = {}, ligs = [];
     for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (let k = -1; k <= 1; k++) { const cat = (i + j + k) % 2 === 0; id[[i, j, k]] = at.length; at.push({ el: cat ? c[0] : a[0], p: [i * d, j * d, k * d], q: cat ? c[1] : a[1], r: (cat ? c[2] : a[2]) * 0.45 }); }
     for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (let k = -1; k <= 1; k++) [[1, 0, 0], [0, 1, 0], [0, 0, 1]].forEach((v) => { const o = id[[i + v[0], j + v[1], k + v[2]]]; if (o !== undefined) ligs.push([id[[i, j, k]], o, 0.5]); });
-    return [par, { reg, ionico: true, atomos: at, ligs, lp: [], rotulo: "pedaço do retículo cristalino (27 íons)", nH: 0, pesados: 27 }];
+    return [par, { reg, ionico: true, atomos: at, ligs, lp: [], rotulo: "pedaço do retículo", nH: 0, pesados: 27 }];
   }
 
   /* ---------- desenho ---------- */
   function cena(ctx, x0, y0, w, h, m, R, zoom, op, tinta) {
     const vis = m.atomos.map((a, i) => !(op.semH && a.el === "H" && m.pesados > 1) && !(op.esq && a.el === "H" && vizinhos(m, i).every((j) => m.atomos[j].el === "C") && m.pesados > 1));
-    const rmax = Math.max(1.2, ...m.atomos.map((a) => mod(a.p) + (a.r || 0.5))) + (op.seta ? 0.4 : 0), s0 = (0.44 * Math.min(w, h) / rmax) * zoom, cx = x0 + w / 2, cy = y0 + h / 2 + 8;
+    const rmax = Math.max(2.3, ...m.atomos.map((a) => mod(a.p) + (a.r || 0.5))) + (op.seta ? 0.4 : 0), s0 = (0.44 * Math.min(w, h) / rmax) * zoom, cx = x0 + w / 2, cy = y0 + h / 2 + 8;
     const P = m.atomos.map((a) => { const v = mv(R, a.p), f = 1 + v[2] * 0.035; return { x: cx + v[0] * s0 * f, y: cy - v[1] * s0 * f, z: v[2], s: s0 * f }; });
     const pt = (p) => { const v = mv(R, p), f = 1 + v[2] * 0.035; return { x: cx + v[0] * s0 * f, y: cy - v[1] * s0 * f, z: v[2], s: s0 * f }; };
     const itens = [];
@@ -235,7 +243,8 @@
       <div class="leitor" data-v="lt"></div>
       <div class="status">O construtor monta o que você pedir, mesmo que a molécula não exista: ele mostra a geometria que o modelo VSEPR prevê para aquele número de regiões de elétrons, com os ângulos <b>ideais</b>. A seta μ é a soma dos dipolos das ligações (cada um do tamanho da diferença de eletronegatividade, apontando para o átomo mais eletronegativo): se ela some, os dipolos se cancelam e a molécula é apolar. É uma conta <b>qualitativa</b>: os pares isolados também contribuem para o dipolo real (por isso NH₃ é bem mais polar que NF₃), e isso a seta não mostra.</div>`);
     const q = (s) => el.querySelector(s), pal = palco(q("canvas"), F, null); let verSeta = true;
-    const monta = () => { const r = SIM.qVseprConta(central, ligs, E, raios), m = { reg: {}, atomos: r.atomos, ligs: r.ligs, pares: r.pares, rotulo: "" }; m.lp = pares(m); m.nH = 0; m.pesados = 9;
+    const monta = () => { const r = SIM.qVseprConta(central, ligs, E, raios), ex = eixos([[0, 0, 0], ...GEO[X + E].slice(E)]).ex, gira = (v) => [pe(v, ex[0]), pe(v, ex[1]), pe(v, ex[2])]; /* orientação inicial só pela geometria (não muda ao trocar um ligante) */
+      const m = { reg: {}, atomos: r.atomos.map((a) => ({ el: a.el, p: gira(a.p), q: 0 })), ligs: r.ligs, pares: r.pares.map((p) => [0, ...gira([p[1], p[2], p[3]])]), rotulo: "" }; if (r.mu) r.mu = gira(r.mu); m.lp = pares(m); m.nH = 0; m.pesados = 9;
       const max = 1.8; m.seta = verSeta && r.mu && r.modMu > 0.02 ? esc(uni(r.mu), Math.min(2.6, 0.9 + (r.modMu / max) * 1.4)) : null; pal.mostra([m]); pal.op({ pares: verPares, letras: true });
       q("[data-v=cen]").innerHTML = CENTRAIS.map((c) => `<button class="bt peq" data-c="${c}" aria-pressed="${c === central}" title="${NOMEEL[c]}">${c}</button>`).join("");
       q("[data-v=nx]").innerHTML = [2, 3, 4, 5, 6].map((n) => `<button class="bt peq" data-x="${n}" aria-pressed="${n === X}">${n}</button>`).join("");
