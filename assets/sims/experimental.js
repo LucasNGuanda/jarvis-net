@@ -1,4 +1,4 @@
-/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; */
+/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -135,6 +135,35 @@
       q("[data-v=sv]").innerHTML = sv;
       const dv = valor * r.lin;
       q("[data-v=lt]").innerHTML = vis("resultado", n2(valor, 4) + " " + f.un) + vis("incerteza (soma das relativas)", "± " + n2(dv, 4) + " " + f.un) + vis("incerteza relativa", n2(r.lin * 100, 2) + "%") + vis("quem mais contribui", f.vs[r.termos.indexOf(Math.max(...r.termos))][0]);
+    });
+  };
+
+  /* ---------- FE05 · resultado × valor de referência (e × outra medida): compatibilidade em unidades de Δ ---------- */
+  SIM.compara = (el, F) => {
+    const W = 680, H = 250;
+    let ref = 9.81, dois = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("seu resultado x", "x", 9.3, 10.3, 0.01, 9.72)}${sl("sua incerteza Δx", "dx", 0.01, 0.5, 0.01, 0.06)}${sl("segunda medida y", "y", 9.3, 10.3, 0.01, 9.85)}${sl("incerteza Δy", "dy", 0.01, 0.5, 0.01, 0.05)}
+      <div class="bts">${botoes([["9.81", "g padrão (9,81)"], ["9.786", "g em São Paulo (9,786)"]], "ref", "9.81")}<button class="bt" data-a="dois" aria-pressed="false">Comparar com a segunda medida</button></div></div>
+      <div class="status">A pergunta não é "o resultado deu igual?", porque nunca dá. É: a diferença é grande ou pequena <b>comparada com a incerteza</b>? Critério usado aqui: até 2Δ, compatível; entre 2Δ e 3Δ, inconclusivo; acima de 3Δ, incompatível (alguma coisa está errada: um erro sistemático, ou a incerteza foi subestimada). Comparando duas medidas, a incerteza da diferença é Δx + Δy.</div>`);
+    const q = (s) => el.querySelector(s);
+    liga(el, "ref", (k) => (ref = +k));
+    q("[data-a=dois]").addEventListener("click", (e) => { dois = !dois; e.target.setAttribute("aria-pressed", dois); });
+    const veredito = (n) => (n <= 2 ? ["compatível", "var(--ok)"] : n <= 3 ? ["inconclusivo", "var(--warn)"] : ["incompatível", "var(--bad)"]);
+    SIM.compara._n = (a, b, d) => Math.abs(a - b) / d; SIM.compara._media = (a, da, b, db) => { const w1 = 1 / (da * da), w2 = 1 / (db * db); return { m: (w1 * a + w2 * b) / (w1 + w2), u: 1 / Math.sqrt(w1 + w2) }; };
+    anima(el, F, () => {
+      const x = val(el, "x"), dx = val(el, "dx"), y = val(el, "y"), dy = val(el, "dy"); mostra(el, ["x", "dx", "y", "dy"], 2);
+      const a = 9.3, b = 10.3, X = (v) => 40 + ((v - a) / (b - a)) * 600;
+      let sv = `<line x1="40" x2="640" y1="200" y2="200" style="stroke:var(--ink2)"/>`;
+      for (let v = 9.4; v <= 10.25; v += 0.1) sv += `<line x1="${X(v)}" x2="${X(v)}" y1="196" y2="204" style="stroke:var(--ink3)"/>` + D.txt(X(v), 220, n2(v, 1), "tx2");
+      [[3, "var(--bad)"], [2, "var(--warn)"], [1, "var(--ok)"]].forEach(([k, c]) => (sv += `<rect x="${X(x - k * dx)}" y="70" width="${X(x + k * dx) - X(x - k * dx)}" height="40" style="fill:color-mix(in srgb,${c} 14%,transparent)"/>`));
+      sv += D.txt(X(x), 62, "x ± Δx, 2Δx, 3Δx", "tx2") + `<line x1="${X(x - dx)}" x2="${X(x + dx)}" y1="90" y2="90" style="stroke:var(--mN);stroke-width:3"/><circle cx="${X(x)}" cy="90" r="6" style="fill:var(--mN)"/>`;
+      sv += `<line x1="${X(ref)}" x2="${X(ref)}" y1="40" y2="200" style="stroke:var(--ok);stroke-width:2;stroke-dasharray:5 4"/>` + D.txt(X(ref), 34, "referência " + n2(ref, 3), "tx2");
+      const nR = SIM.compara._n(x, ref, dx), vR = veredito(nR);
+      if (dois) { sv += `<line x1="${X(y - dy)}" x2="${X(y + dy)}" y1="150" y2="150" style="stroke:var(--warn);stroke-width:3"/><circle cx="${X(y)}" cy="150" r="6" style="fill:var(--warn)"/>` + D.txt(X(y), 138, "y ± Δy", "tx2"); const mm = SIM.compara._media(x, dx, y, dy); sv += `<line x1="${X(mm.m - mm.u)}" x2="${X(mm.m + mm.u)}" y1="178" y2="178" style="stroke:var(--ink);stroke-width:3"/><circle cx="${X(mm.m)}" cy="178" r="5" style="fill:var(--ink)"/>` + D.txt(X(mm.m + mm.u) + 6, 182, "média ponderada", "tx2", "start"); }
+      q("[data-v=sv]").innerHTML = sv;
+      const nXY = SIM.compara._n(x, y, dx + dy), vXY = veredito(nXY), mm = SIM.compara._media(x, dx, y, dy);
+      q("[data-v=lt]").innerHTML = vis("desvio percentual |x − ref|/ref", n2((100 * Math.abs(x - ref)) / ref, 2) + "%") + vis("discrepância em unidades de Δx", n2(nR, 2) + " Δx: " + vR[0]) + (dois ? vis("x × y: |x − y|/(Δx + Δy)", n2(nXY, 2) + ": " + vXY[0]) + vis("média ponderada (1/Δ²)", n2(mm.m, 3) + " ± " + n2(mm.u, 3)) : "");
     });
   };
 })();
