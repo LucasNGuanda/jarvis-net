@@ -44,7 +44,7 @@ window.CATALOGO.push(
     ["D04","Mol, massa molar e constante de Avogadro",[],true],
     ["D05","Balanceamento de equações",[],true],
     ["D06","Cálculo estequiométrico: limitante, excesso, pureza e rendimento",[],true],
-    ["D07","Oxirredução e balanceamento redox",[]],
+    ["D07","Oxirredução e balanceamento redox",[],true],
   ] },
   { id:"QE", area:"qui", letra:"E", cor:"--mS", nome:"Físico-química I", desc:"Soluções, propriedades coligativas e termoquímica.", temas:[
     ["E01","Leis dos gases",[]],
