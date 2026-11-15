@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "β 3.4";
+window.VERSAO = "β 3.5";
 window.AREAS = [
   { id:"fisica", nome:"Física", inicio:"inicio", titulo:"Física" },
   { id:"calculo", nome:"Cálculo", inicio:"calculo", titulo:"Cálculo" },

@@ -1,6 +1,6 @@
 # PROGRESSO — Jarvis (sistema de estudo do Lucas)
 
-## Estado atual (15/11/2026, depois da β 3.4)
+## Estado atual (15/11/2026, depois da β 3.5)
 As regras, o perfil do Lucas e as decisões fixas estão no `CLAUDE.md` (criado hoje). Aqui fica só o estado do trabalho.
 
 ### Física — 96 de 96 temas escritos
@@ -16,14 +16,14 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 ### Outras abas
 - **Cálculo** (vai para Matemática): 27/27 temas, 7 exercícios cada; Simulados de Cálculo SC01 e SC02 com 20 questões cada.
 - **Experimentos**: 18 experimentos (EP01–EP18) em 9 módulos (novos na β 3.4: Termodinâmica, Ondas e quântica, Nuclear, Fluidos).
-- **Experimental**: 0 de 11 (módulos FE criados, sem conteúdo).
+- **Experimental**: 11 de 11 (FE01–FE11), todos no padrão completo: 16 exercícios com figura, correção automática e nível; `F.chute`, laboratório, 3 demonstrações, 3 exemplos, as 4 caixas, folha de fórmulas e chefão (β 3.5).
 - Tela inicial (Jarvis) em `#/home`: Física pronta; Química, Matemática e Russo "em breve".
 - Calculadoras 1 (estilo fx-991ES PLUS) e 2 (estilo fx-82LA CW), uma de cada vez.
 - Testes automáticos agora no repositório, em `tests/` (antes ficavam só na pasta temporária da sessão); capturas em `tests/capturas/` (fora do git).
 
 ### Diferenças em relação ao padrão do CLAUDE.md (honesto)
 - Exercícios: o padrão pede 15 a 20. A Mecânica tem 12 a 14; os módulos antigos, 7 (o C, de 7 a 16).
-- "Chuta antes de ver" (`F.chute`): os módulos C e T usam. A Mecânica e os outros ainda não têm.
+- "Chuta antes de ver" (`F.chute`): os módulos C, T e FE usam. A Mecânica e os outros ainda não têm.
 - Figuras: nem todo exercício da Mecânica tem figura (todos os exemplos têm).
 
 ### Dívida técnica (pedido do Lucas em 14/11/2026: resolver depois da Termodinâmica)
@@ -34,7 +34,7 @@ Contagem real, feita abrindo cada tema no navegador (exercícios por tema; "auto
 ### O que ainda falta na Física (ordem de prioridade do Lucas)
 1. [x] **Mecânica**: temas escritos (A01–A20). Falta completar até o padrão (ver dívida técnica).
 2. [x] **Termodinâmica**: T01–T08b escritos no padrão completo (β 3.3).
-3. **Aba Experimental**: o capítulo de teoria da física experimental inteiro: medida e erro, algarismos significativos, precisão × acurácia, erro estatístico × sistemático, desvio padrão e desvio da média, propagação de incerteza pela derivada logarítmica (o método do professor do Lucas), ajuste de reta e mínimos quadrados, linearização de gráficos, como escrever um relatório e como comparar um resultado com o valor de referência.
+3. [x] **Aba Experimental**: feita na β 3.5 (FE01–FE11). O capítulo de teoria da física experimental inteiro: medida e erro, algarismos significativos, precisão × acurácia, erro estatístico × sistemático, desvio padrão e desvio da média, propagação de incerteza pela derivada logarítmica (o método do professor do Lucas), ajuste de reta e mínimos quadrados, linearização de gráficos, como escrever um relatório e como comparar um resultado com o valor de referência.
 4. [x] **Experimentos físicos**: os 8 que faltavam foram feitos na β 3.4 (EP11–EP18), mais a surpresa escondida.
 
 ### Pendências combinadas (fora da Física)
@@ -363,13 +363,17 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
     - FE02 O que é incerteza, tipo A e tipo B (16 exercícios com figura, chute; lab: jogo do cronômetro na mão, que separa o atraso médio, o espalhamento (tipo A) e a resolução (tipo B); chefão: medir g com cronômetro manual, quanto cada melhoria ajuda).
     - FE03 Média, desvio padrão e incerteza da média (16 exercícios com figura, chute; lab: experimentos com N medidas sorteadas, histograma, média, σ e σ/√N, e contador de quantos intervalos contêm o valor verdadeiro, conferido por simulação: 50% com N = 2, 66% com N = 10, 68% com N grande; chefão: até quando vale a pena repetir, com o piso da incerteza tipo B).
     - FE04 Propagação de incertezas (16 exercícios com figura, chute; método principal: derivada logarítmica somando as relativas com o módulo dos expoentes, como o professor do Lucas; quadratura como alternativa; lab: barras de contribuição de cada medida para g = 4π²L/T², densidade de esfera e velocidade média; chefão: orçamento de incerteza do pêndulo e o erro sistemático de medir L até o gancho).
-    - - FE05 Comparando resultados: desvio percentual × discrepância em unidades de Δ, critério 2Δ/3Δ, diferença de duas medidas (Δa + Δb), média ponderada 1/u² (3 teoremas); lab "Compatível ou não?" (faixas 1Δ/2Δ/3Δ, g padrão × g de SP, segunda medida e média ponderada); 16 exercícios; chefão "O g de São Paulo".
-    - - FE06 Gráficos com barras de erro: o que a barra significa, ~2/3 das barras cruzadas, retas extremas e Δa = (Δy₁ + Δyₙ)/(xₙ − x₁), barra horizontal convertida (3 teoremas); lab "Ajuste a reta" (mola, reta à mão, retas extremas exatas por programação linear, painel de resíduos ampliado, caso sem reta possível); 16 exercícios; chefão "O carrinho na rampa".
-    - - FE07 Linearização: lei de potência vira reta (y^p × x^q reta ⇔ q = pn), Δ(xⁿ) = |n|xⁿ⁻¹Δx, erro constante só mexe no coeficiente linear (3 teoremas); lab "Endireite a curva" (queda, pêndulo, Boyle, lâmpada; 5 × 2 transformações; curvatura < 1,5% = reta; parâmetro físico sai da inclinação); 16 exercícios; chefão "O atraso escondido" (t × √h com atraso do eletroímã).
-    - - FE08 Gráficos log-log e mono-log: inclinação no log-log = expoente, mono-log dá k, meia-vida e τ, no log a incerteza relativa vira absoluta (3 teoremas); lab "Qual escala endireita?" (planetas com dados reais, fonte radioativa, café esfriando, lâmpada; 3 escalas; n = 1,4997 para Kepler); 16 exercícios; chefão "A fonte e o fundo" (radiação de fundo entortando o mono-log).
-    - - FE09 Mínimos quadrados: dedução por derivadas parciais (a = Sxy/Sxx, reta passa por (x̄, ȳ)), reta pela origem, σa = s/√Sxx com s = √(S/(N − 2)) (3 teoremas); lab "Quadrados de verdade" (resíduos desenhados como quadrados, S da sua reta × S mínimo, ponto estragado); 16 exercícios; chefão "A mola pelos mínimos quadrados" (σa = metade das retas extremas).
-    - - FE10 Erros sistemáticos: média elimina o aleatório e não o sistemático, aditivo muda o coeficiente linear e escala muda a inclinação (calibração em dois pontos), paralaxe d·tg α (3 teoremas); lab "Mais medidas não salvam" (alvo + histograma, 1/10/100 medidas, calibração com padrão); 16 exercícios; chefão "O tubo que vaza" (correção de extremidade e método das diferenças).
-    - - FE11 Como escrever um relatório: incerteza com 1 algarismo (2 se começar com 1) porque Δσ/σ ≈ 1/√(2(N − 1)) (conferido por simulação: 23,9% com N = 10), algarismos de um cálculo vêm da propagação, mudar de unidade não muda algarismos (3 teoremas); as 7 partes do relatório; lab "Corretor de resultados" (6 casos da calculadora, lê vírgula/ponto, +-, potência de 10, aponta cada erro); 16 exercícios; chefão "O mini-relatório" (massa-mola sintético: k = 19,6 ± 0,3 N/m, m_ef = 9 ± 3 g).
+    - FE05 Comparando resultados: desvio percentual × discrepância em unidades de Δ, critério 2Δ/3Δ, diferença de duas medidas (Δa + Δb), média ponderada 1/u² (3 teoremas); lab "Compatível ou não?" (faixas 1Δ/2Δ/3Δ, g padrão × g de SP, segunda medida e média ponderada); 16 exercícios; chefão "O g de São Paulo".
+    - FE06 Gráficos com barras de erro: o que a barra significa, ~2/3 das barras cruzadas, retas extremas e Δa = (Δy₁ + Δyₙ)/(xₙ − x₁), barra horizontal convertida (3 teoremas); lab "Ajuste a reta" (mola, reta à mão, retas extremas exatas por programação linear, painel de resíduos ampliado, caso sem reta possível); 16 exercícios; chefão "O carrinho na rampa".
+    - FE07 Linearização: lei de potência vira reta (y^p × x^q reta ⇔ q = pn), Δ(xⁿ) = |n|xⁿ⁻¹Δx, erro constante só mexe no coeficiente linear (3 teoremas); lab "Endireite a curva" (queda, pêndulo, Boyle, lâmpada; 5 × 2 transformações; curvatura < 1,5% = reta; parâmetro físico sai da inclinação); 16 exercícios; chefão "O atraso escondido" (t × √h com atraso do eletroímã).
+    - FE08 Gráficos log-log e mono-log: inclinação no log-log = expoente, mono-log dá k, meia-vida e τ, no log a incerteza relativa vira absoluta (3 teoremas); lab "Qual escala endireita?" (planetas com dados reais, fonte radioativa, café esfriando, lâmpada; 3 escalas; n = 1,4997 para Kepler); 16 exercícios; chefão "A fonte e o fundo" (radiação de fundo entortando o mono-log).
+    - FE09 Mínimos quadrados: dedução por derivadas parciais (a = Sxy/Sxx, reta passa por (x̄, ȳ)), reta pela origem, σa = s/√Sxx com s = √(S/(N − 2)) (3 teoremas); lab "Quadrados de verdade" (resíduos desenhados como quadrados, S da sua reta × S mínimo, ponto estragado); 16 exercícios; chefão "A mola pelos mínimos quadrados" (σa = metade das retas extremas).
+    - FE10 Erros sistemáticos: média elimina o aleatório e não o sistemático, aditivo muda o coeficiente linear e escala muda a inclinação (calibração em dois pontos), paralaxe d·tg α (3 teoremas); lab "Mais medidas não salvam" (alvo + histograma, 1/10/100 medidas, calibração com padrão); 16 exercícios; chefão "O tubo que vaza" (correção de extremidade e método das diferenças).
+    - FE11 Como escrever um relatório: incerteza com 1 algarismo (2 se começar com 1) porque Δσ/σ ≈ 1/√(2(N − 1)) (conferido por simulação: 23,9% com N = 10), algarismos de um cálculo vêm da propagação, mudar de unidade não muda algarismos (3 teoremas); as 7 partes do relatório; lab "Corretor de resultados" (6 casos da calculadora, lê vírgula/ponto, +-, potência de 10, aponta cada erro); 16 exercícios; chefão "O mini-relatório" (massa-mola sintético: k = 19,6 ± 0,3 N/m, m_ef = 9 ± 3 g).
+  - Todas as contas conferidas em Python (anotadas no comentário do topo de cada tema); os laboratórios conferidos contra o Python (mesmos números nas capturas), inclusive casos limite (barras pequenas demais sem reta possível, viés zero compatível, transformações erradas com curvatura alta).
+  - Dados: os do Lucas (pêndulo do itinerário) não foram usados nem alterados; os dados dos exemplos e chefões são sintéticos, exceto os planetas do FE08 (valores reais do Sistema Solar).
+  - Simplificações honestas: as retas extremas dos exercícios usam o atalho das diagonais do primeiro e do último ponto (conferi, em cada caso, que elas coincidem com as extremas exatas que cruzam todas as barras); o critério de "reta" dos labs do FE07 e FE08 é a curvatura (maior resíduo/altura) abaixo de 1,5% e 2%, escolhido porque separa bem os casos com ~0,3% e ~1,5% de ruído; o corretor do FE11 aceita a incerteza arredondada para cima (convenção conservadora) e, com incerteza começando em 1, aceita 1 ou 2 algarismos.
+  - Testes antes de cada commit: `tmec` e `tchaves` em cada FE e `tgeral` completo (152 páginas, 152 escritas, 0 erro de KaTeX).
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.
