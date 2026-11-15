@@ -207,7 +207,7 @@ window.CATALOGO = [
   ]},
   { id:"ETe", area:"exp", letra:"T", cor:"--mF", nome:"Termodinâmica", desc:"Motores, demônios e gases reais.", temas:[
     ["EP11","Máquina de Carnot",["★"],true],
-    ["EP12","O demônio de Maxwell",["!"]],
+    ["EP12","O demônio de Maxwell",["!"],true],
     ["EP13","Gás de van der Waals",["!","∫"]],
   ]},
   { id:"EQu", area:"exp", letra:"ψ", cor:"--mO", nome:"Ondas e quântica", desc:"Luz, fótons e o gato mais famoso da física.", temas:[

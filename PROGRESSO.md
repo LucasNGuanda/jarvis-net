@@ -342,6 +342,7 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
   - `tests/texp.js`: teste rápido das páginas de experimento (fórmulas, erros de JS, laboratório montado e animando).
   - Experimentos prontos:
     - EP11 Máquina de Carnot: ciclo se desenhando no diagrama p × V (eixos em escala log, cada etapa de uma cor), pistão com a cor da temperatura do gás, fonte quente/fria/isolante embaixo, setas de calor, barras de rendimento. O "motor real" é o modelo endorreversível de Curzon–Ahlborn (troca de calor com condutância finita, na potência máxima) com 10% de atrito: rende sempre menos que 1 − T_f/T_q e mostra a entropia gerada por ciclo.
+    - EP12 Demônio de Maxwell: duas caixas com partículas rápidas (vermelhas) e lentas (azuis), portinha que se abre segurando um botão (ou espaço) e modo demônio automático; temperatura de cada lado, ΔS do gás (gás ideal 2D), custo de informação k·ln 2 por bit (1 por partícula deixada passar + 1 por abertura inútil) e barra do total, que fica ≥ 0. Conferido numa simulação sem tela. Simplificação: as partículas não colidem entre si.
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
 O progresso (temas feitos, marcações ● X /, chefões destravados) fica no navegador; use "Exportar progresso" no menu para guardar um .json.

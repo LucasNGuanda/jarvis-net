@@ -1,4 +1,4 @@
-/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; */
+/* Simulações dos experimentos da β 3.4 (EP11–EP18). EP11 máquina de Carnot; EP12 demônio de Maxwell; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -60,6 +60,67 @@
       q("[data-v=sv]").innerHTML = sv;
       q("[data-v=st]").innerHTML = `<b>Agora:</b> ${fases[fase]}. ${real ? `Motor real: o calor só passa com uma diferença de temperatura, então o gás trabalha entre ${n2(c.Tqi, 0)} K e ${n2(c.Tfi, 0)} K (e perde 10% do trabalho em atrito). Rende ${n2(c.etar * 100, 1)}% e gera ${n2(c.Sger, 2)} J/K de entropia por ciclo.` : "Ciclo ideal e reversível: rendimento máximo possível entre essas duas fontes."} Ciclos completos: ${ciclos}.`;
       q("[data-v=lt]").innerHTML = vis("calor que entra Q_q", n2(real ? c.Qqr : c.Qq, 0) + " J") + vis("calor que sai Q_f", n2(real ? c.Qfr : c.Qf, 0) + " J") + vis("trabalho por ciclo W", n2(real ? c.Wr : c.W, 0) + " J") + vis("rendimento W/Q_q (limite 1 − T_f/T_q)", n2((real ? c.etar : c.eta) * 100, 1) + "% ≤ " + n2(c.eta * 100, 1) + "%");
+    });
+  };
+
+  /* ---------- EP12 · demônio de Maxwell: portinha controlada, temperatura e entropia de cada lado, custo de informação ---------- */
+  SIM.demonio = (el, F) => {
+    const W = 680, H = 300, bx = 20, by = 20, bw = 440, bh = 240, meio = bx + bw / 2, porta = 56, r = 4;
+    let ps = [], aberta = false, segurando = false, auto = false, bits = 0, S0 = 0, vmed = 0, ultAberta = false, passou = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv" style="touch-action:none"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("número de partículas", "N", 20, 120, 2, 60)}
+      <div class="bts"><button class="bt pri" data-a="abre">Segure para abrir a portinha</button><button class="bt" data-a="auto" aria-pressed="false">Demônio automático</button><button class="bt" data-a="re">Misturar de novo</button></div></div>
+      <div class="status">Vermelhas: mais rápidas que a mediana; azuis: mais lentas. Abra a portinha (segurando o botão, ou a tecla espaço com o laboratório em foco) só quando uma vermelha vier da esquerda ou uma azul vier da direita: o lado direito esquenta, o esquerdo esfria, e a entropia do gás diminui, sem gastar energia (a porta não empurra nada). Parece violar a 2ª lei. O que salva a lei é o custo de informação do demônio: cada decisão é 1 bit de memória, e apagar 1 bit gera pelo menos k·ln 2 de entropia (princípio de Landauer).</div>`);
+    const q = (s) => el.querySelector(s);
+    const raiz2 = Math.sqrt(2);
+    const reinicia = () => {
+      const N = val(el, "N"); ps = [];
+      for (let i = 0; i < N; i++) { const v = 60 * Math.sqrt(-2 * Math.log(1 - Math.random() * 0.999)), a = Math.random() * 2 * Math.PI, esq = i % 2 === 0; ps.push({ x: (esq ? bx + 10 : meio + 10) + Math.random() * (bw / 2 - 20), y: by + 10 + Math.random() * (bh - 20), vx: v * Math.cos(a), vy: v * Math.sin(a) }); }
+      const vs = ps.map((p) => Math.hypot(p.vx, p.vy)).sort((a, b) => a - b); vmed = vs[Math.floor(vs.length / 2)];
+      bits = 0; S0 = ent().S; void raiz2;
+    };
+    /* gás ideal 2D (m = 1, k = 1): kT = ⟨v²⟩/2 por partícula; S/k = N[ln(A/N) + ln T] + constante, para cada lado */
+    const lado = (f) => { const l = ps.filter(f), N = l.length; if (!N) return { N: 0, T: 0, S: 0 }; const T = l.reduce((s, p) => s + p.vx * p.vx + p.vy * p.vy, 0) / (2 * N); return { N, T, S: N * (Math.log((bw / 2) * bh / N) + Math.log(T)) }; };
+    const ent = () => { const e = lado((p) => p.x < meio), d = lado((p) => p.x >= meio); return { e, d, S: e.S + d.S }; };
+    SIM.demonio._ent = ent;
+    reinicia();
+    const bA = q("[data-a=abre]");
+    const on = () => (segurando = true), off = () => (segurando = false);
+    bA.addEventListener("pointerdown", on); bA.addEventListener("pointerup", off); bA.addEventListener("pointerleave", off);
+    el.tabIndex = 0; el.addEventListener("keydown", (e) => { if (e.code === "Space") { e.preventDefault(); segurando = true; } }); el.addEventListener("keyup", (e) => { if (e.code === "Space") segurando = false; });
+    q("[data-a=auto]").addEventListener("click", (e) => { auto = !auto; e.target.setAttribute("aria-pressed", auto); });
+    q("[data-a=re]").addEventListener("click", reinicia); q("[data-c=N]").addEventListener("input", reinicia);
+    anima(el, F, (dt) => {
+      mostra(el, ["N"], 0);
+      const y0 = by + bh / 2 - porta / 2, y1 = y0 + porta;
+      if (auto) { aberta = ps.some((p) => p.y > y0 + r && p.y < y1 - r && ((p.x < meio && p.x > meio - 22 && p.vx > 0 && Math.hypot(p.vx, p.vy) > vmed) || (p.x >= meio && p.x < meio + 22 && p.vx < 0 && Math.hypot(p.vx, p.vy) <= vmed))); }
+      else aberta = segurando;
+      /* bits: 1 por partícula que o demônio deixa passar (ele teve de medi-la) e 1 por abertura em que nenhuma passou (decidiu à toa) */
+      if (!aberta && ultAberta && !passou) bits++; if (aberta && !ultAberta) passou = false; ultAberta = aberta;
+      const n = 4, h = dt / n;
+      for (let k = 0; k < n; k++) for (const p of ps) {
+        const xa = p.x; p.x += p.vx * h; p.y += p.vy * h;
+        if (p.y < by + r) { p.y = 2 * (by + r) - p.y; p.vy = -p.vy; } if (p.y > by + bh - r) { p.y = 2 * (by + bh - r) - p.y; p.vy = -p.vy; }
+        if (p.x < bx + r) { p.x = 2 * (bx + r) - p.x; p.vx = -p.vx; } if (p.x > bx + bw - r) { p.x = 2 * (bx + bw - r) - p.x; p.vx = -p.vx; }
+        const cruzou = (xa < meio) !== (p.x < meio);
+        if (cruzou) { if (aberta && p.y > y0 && p.y < y1) { bits++; passou = true; } else { p.x = 2 * meio - p.x; p.vx = -p.vx; } }
+      }
+      const E = ent(), dSg = E.S - S0, custo = bits * Math.LN2;
+      let sv = `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" style="fill:none;stroke:var(--ink2);stroke-width:2"/>`;
+      sv += `<rect x="${bx}" y="${by}" width="${bw / 2}" height="${bh}" style="fill:color-mix(in srgb,var(--mA) ${Math.round(Math.min(30, 4 + 200 / Math.max(E.e.T, 1)))}%,transparent)"/><rect x="${meio}" y="${by}" width="${bw / 2}" height="${bh}" style="fill:color-mix(in srgb,var(--bad) ${Math.round(Math.min(30, E.d.T / 400))}%,transparent)"/>`;
+      sv += `<line x1="${meio}" x2="${meio}" y1="${by}" y2="${y0}" style="stroke:var(--ink2);stroke-width:4"/><line x1="${meio}" x2="${meio}" y1="${y1}" y2="${by + bh}" style="stroke:var(--ink2);stroke-width:4"/>`;
+      sv += aberta ? `<line x1="${meio}" x2="${meio + 22}" y1="${y0}" y2="${y0 - 14}" style="stroke:var(--warn);stroke-width:4"/>` : `<line x1="${meio}" x2="${meio}" y1="${y0}" y2="${y1}" style="stroke:var(--warn);stroke-width:4"/>`;
+      ps.forEach((p) => (sv += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" style="fill:${Math.hypot(p.vx, p.vy) > vmed ? "var(--bad)" : "var(--mA)"}"/>`));
+      /* o demônio: um bonequinho com olhinhos em cima da porta */
+      sv += `<g transform="translate(${meio} ${by + bh + 18})"><circle r="9" style="fill:color-mix(in srgb,var(--mF) 60%,transparent);stroke:var(--mF)"/><circle cx="-3" cy="-2" r="1.6" style="fill:var(--ink)"/><circle cx="3" cy="-2" r="1.6" style="fill:var(--ink)"/><path d="M-6 -8 l-3 -6 M6 -8 l3 -6" style="stroke:var(--mF);stroke-width:2"/></g>`;
+      /* barras de entropia: gás (pode cair) + memória do demônio (sempre sobe) */
+      const gx = 500, gy = 150, esc = 6;
+      sv += `<line x1="${gx - 6}" x2="${gx + 160}" y1="${gy}" y2="${gy}" style="stroke:var(--ink3)"/>` + D.txt(gx - 10, gy + 4, "0", "tx2", "end");
+      const barra = (x, v, cor, rot) => { const hh = Math.max(-120, Math.min(120, v * esc)); return `<rect x="${x}" y="${hh >= 0 ? gy - hh : gy}" width="36" height="${Math.abs(hh)}" style="fill:color-mix(in srgb,${cor} 50%,transparent);stroke:${cor}"/>` + D.txt(x + 18, hh >= 0 ? gy + 16 : gy - 6, rot, "tx2"); };
+      sv += barra(gx, dSg, "var(--mA)", "gás") + barra(gx + 56, custo, "var(--warn)", "memória") + barra(gx + 112, dSg + custo, "var(--ok)", "total");
+      sv += D.txt(gx + 75, 22, "variação de entropia (em k)", "tx2");
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("temperatura: esquerda | direita", n2(E.e.T, 0) + " | " + n2(E.d.T, 0)) + vis("ΔS do gás (em k)", n2(dSg, 2)) + vis("bits de decisão | custo k·ln 2 cada", bits + " | " + n2(custo, 2)) + vis("ΔS total com a memória (≥ 0?)", n2(dSg + custo, 2));
     });
   };
 })();

@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
   let falhas = 0;
   for (const c of cods) {
     await p.goto(RAIZ + '#/' + c); await p.waitForTimeout(1500);
-    const foto = () => p.evaluate(() => { const l = document.querySelector('.lab'); if (!l) return ''; const s = l.querySelector('svg, canvas'); if (!s) return ''; return s.tagName === 'CANVAS' ? s.toDataURL().slice(-200) : s.innerHTML.length + ':' + s.innerHTML.slice(0, 400); });
+    const foto = () => p.evaluate(() => { const l = document.querySelector('.lab'); if (!l) return ''; const s = l.querySelector('svg, canvas'); if (!s) return ''; return s.tagName === 'CANVAS' ? s.toDataURL().slice(-200) : s.innerHTML; });
     const a = await foto(); await p.waitForTimeout(700); const z = await foto();
     const r = await p.evaluate(() => ({ katex: document.querySelectorAll('.katex-error').length, lab: document.querySelectorAll('.lab').length, vis: document.querySelectorAll('.lab .vis').length, texto: document.querySelector('#pagina').innerText.length }));
     const ok = r.katex === 0 && r.lab > 0 && !!a && r.texto > 800; /* "anima" é informativo: jogos como o EP04 só se mexem depois de um clique */
