@@ -1,4 +1,4 @@
-/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; FE06 barras de erro; FE07 linearização; FE08 log-log; */
+/* Simulações da aba Experimental (módulos FEm, FEg, FEr). FE01 lendo uma régua; FE02 cronômetro na mão; FE03 medidas repetidas; FE04 propagação; FE05 comparando resultados; FE06 barras de erro; FE07 linearização; FE08 log-log; FE09 mínimos quadrados; */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
@@ -279,6 +279,39 @@
       if (reta && esc === "log") lei = "potência: n = " + n2(aj.a, 3) + ", C = " + n2(Math.pow(10, aj.b), 3);
       else if (reta && esc === "mono") { const k = aj.a * Math.LN10; lei = "exponencial: k = " + n2(k, 4) + (k < 0 ? " min⁻¹ → meia-vida " + n2(Math.LN2 / -k, 2) + " min, τ = " + n2(-1 / k, 2) + " min" : ""); }
       q("[data-v=lt]").innerHTML = vis("curvatura", n2(aj.curv * 100, 1) + "%") + vis("parece reta?", reta ? "sim!" : "não") + vis("inclinação", n2(aj.a, 4)) + vis("lei encontrada", lei);
+    });
+  };
+
+  /* ---------- FE09 · mínimos quadrados: os quadrados dos resíduos aparecem desenhados ---------- */
+  SIM.minquad = (el, F) => {
+    const W = 680, H = 320, ts = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4], rn = [0.04, -0.05, 0.02, 0.06, -0.03, -0.06, 0.03, -0.01];
+    let mq = false, fora = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls">${sl("inclinação a (m/s²)", "a", 0.5, 1.2, 0.005, 0.7)}${sl("coeficiente linear b (m/s)", "b", -0.2, 0.8, 0.005, 0.55)}
+      <div class="bts" style="grid-column:1/-1"><button class="bt" data-a="mq" aria-pressed="false">Mostrar a reta dos mínimos quadrados</button><button class="bt" data-a="fora" aria-pressed="false">Estragar um ponto (+0,4 m/s)</button></div></div>
+      <div class="status">Velocidade de um carrinho acelerando, medida a cada 0,5 s. Cada quadrado tem lado igual ao resíduo (a distância vertical do ponto até a sua reta), e S é a soma das áreas. A reta dos mínimos quadrados é a única que deixa S mínima; ela passa pelo ponto médio (x̄, ȳ), marcado com a cruz. Tente bater S mínimo à mão. Depois estrague um ponto e veja como os quadrados deixam um ponto ruim puxar a reta.</div>`);
+    const q = (s) => el.querySelector(s);
+    q("[data-a=mq]").addEventListener("click", (e) => { mq = !mq; e.target.setAttribute("aria-pressed", mq); });
+    q("[data-a=fora]").addEventListener("click", (e) => { fora = !fora; e.target.setAttribute("aria-pressed", fora); });
+    SIM.minquad._mq = (X, Y) => { const N = X.length, xm = X.reduce((s, v) => s + v, 0) / N, ym = Y.reduce((s, v) => s + v, 0) / N; let sxx = 0, sxy = 0, sx2 = 0; X.forEach((x, i) => { sxx += (x - xm) ** 2; sxy += (x - xm) * (Y[i] - ym); sx2 += x * x; }); const a = sxy / sxx, b = ym - a * xm, S = Y.reduce((s, y, i) => s + (y - a * X[i] - b) ** 2, 0), sr = Math.sqrt(S / (N - 2)), sa = sr / Math.sqrt(sxx); return { a, b, S, xm, ym, sa, sb: sa * Math.sqrt(sx2 / N) }; };
+    anima(el, F, () => {
+      const a = val(el, "a"), b = val(el, "b"); mostra(el, ["a", "b"], 3);
+      const vs = ts.map((t, i) => 0.3 + 0.85 * t + rn[i] + (fora && i === 5 ? 0.4 : 0)), m = SIM.minquad._mq(ts, vs);
+      const X = (t) => 80 + (t / 4.5) * 400, sy = 250 / 4.3, Y = (v) => 280 - v * sy; /* o lado de cada quadrado é medido na escala vertical: a área é proporcional a r² */
+      let sv = `<line x1="80" x2="500" y1="280" y2="280" style="stroke:var(--ink2)"/><line x1="80" x2="80" y1="285" y2="20" style="stroke:var(--ink2)"/>`;
+      [1, 2, 3, 4].forEach((t) => (sv += `<line x1="${X(t)}" x2="${X(t)}" y1="276" y2="284" style="stroke:var(--ink3)"/>` + D.txt(X(t), 300, String(t), "tx2")));
+      [1, 2, 3, 4].forEach((v) => (sv += `<line x1="76" x2="500" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--line2);stroke-dasharray:3 4"/>` + D.txt(70, Y(v) + 4, String(v), "tx2", "end")));
+      sv += D.txt(500, 300, "t (s)", "tx2", "end") + D.txt(86, 20, "v (m/s)", "tx2", "start");
+      let S = 0;
+      ts.forEach((t, i) => { const r = vs[i] - (a * t + b), lado = Math.abs(r) * sy; S += r * r; sv += `<rect x="${X(t)}" y="${Math.min(Y(vs[i]), Y(a * t + b))}" width="${lado}" height="${lado}" style="fill:color-mix(in srgb,var(--bad) 25%,transparent);stroke:var(--bad);stroke-width:1"/>`; });
+      if (mq) sv += `<line x1="${X(0)}" y1="${Y(m.b)}" x2="${X(4.5)}" y2="${Y(m.a * 4.5 + m.b)}" style="stroke:var(--ok);stroke-width:2;stroke-dasharray:6 4"/>` + `<path d="M${X(m.xm) - 7} ${Y(m.ym)}h14M${X(m.xm)} ${Y(m.ym) - 7}v14" style="stroke:var(--ok);stroke-width:2.5"/>`;
+      sv += `<line x1="${X(0)}" y1="${Y(b)}" x2="${X(4.5)}" y2="${Y(a * 4.5 + b)}" style="stroke:var(--mN);stroke-width:2.2"/>`;
+      ts.forEach((t, i) => (sv += `<circle cx="${X(t)}" cy="${Y(vs[i])}" r="4.5" style="fill:${fora && i === 5 ? "var(--bad)" : "var(--warn)"}"/>`));
+      /* barra de S: a sua × a mínima */
+      const sm = Math.max(S, m.S, 1e-9), bw = 130;
+      sv += D.txt(530, 60, "S da sua reta", "tx2", "start") + `<rect x="530" y="68" width="${(S / sm) * bw}" height="18" style="fill:color-mix(in srgb,var(--bad) 45%,transparent)"/>` + D.txt(530, 110, "S mínimo", "tx2", "start") + `<rect x="530" y="118" width="${(m.S / sm) * bw}" height="18" style="fill:color-mix(in srgb,var(--ok) 45%,transparent)"/>`;
+      q("[data-v=sv]").innerHTML = sv;
+      q("[data-v=lt]").innerHTML = vis("S da sua reta (m²/s²)", n2(S, 4)) + vis("S mínimo", n2(m.S, 4)) + (mq ? vis("mínimos quadrados: a ± σa", n2(m.a, 3) + " ± " + n2(m.sa, 3) + " m/s²") + vis("b ± σb", n2(m.b, 3) + " ± " + n2(m.sb, 3) + " m/s") : vis("a sua reta", "a = " + n2(a, 3) + ", b = " + n2(b, 3)));
     });
   };
 })();

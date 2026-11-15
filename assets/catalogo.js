@@ -177,7 +177,7 @@ window.CATALOGO = [
     ["FE06","Gráficos com barras de erro",[],true],
     ["FE07","Linearização: transformando curvas em retas",[],true],
     ["FE08","Gráficos log-log e mono-log",["★"],true],
-    ["FE09","Mínimos quadrados (regressão linear)",["∫"]],
+    ["FE09","Mínimos quadrados (regressão linear)",["∫"],true],
   ]},
   { id:"FEr", area:"lab", letra:"R", cor:"--mM", nome:"Relatório e erros", desc:"Erros sistemáticos, como corrigir e como escrever um relatório.", temas:[
     ["FE10","Erros sistemáticos e como corrigi-los"],
