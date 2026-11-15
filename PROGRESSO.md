@@ -52,12 +52,13 @@ EP01 Pêndulo simples pela lagrangiana, EP02 Pêndulo duplo e caos, EP03 Pêndul
 - **Matemática** (MB, AR, GE, AL) e **Olimpíada e demonstrações** (DM, TNO, DES, CBO, GEO, FUN, PRI): 114 temas cadastrados, todos "em breve".
 - Rota `#/matematica/<COD>`; progresso em `mat:`.
 
-### Química — 2 abas, 104 temas cadastrados, 9 escritos: módulo A completo (A01 β 4.8; A02–A05 β 4.9; A06–A09 β 5.0), tudo no `main`
+### Química — 2 abas, 104 temas cadastrados, 17 escritos: módulos A (β 4.8 a 5.0) e B (β 5.1) completos, tudo no `main`
 Química (módulos QA–QJ: introdução, atomística, ligações, reações e estequiometria, físico-química I e II, eletroquímica, orgânica, bioquímica e ambiental, analítica; 79 temas) e Experimentos (EQ01–EQ25, todos "em breve"; módulo novo EQs "Soluções e indicadores"). mhchem carregado e testado. Progresso em `qui:`.
 
 | Aba | Módulo | Temas | Exercícios (mín–máx) | Total | Sem figura | Com `F.chute` | Com chefão | Laboratórios |
 |---|---|---|---|---|---|---|---|---|
 | Química | QA Introdução à química | 9/9 | 12–18 | 114 | 0 | 9 | 9 | 9 |
+| Química | QB Atomística | 8/8 | 12–12 | 96 | 0 | 8 | 8 | 8 |
 
 - **A01 Objetivos e ramos da química; método científico** (`temas/quimica/A01.js`): 18 exercícios (8 Físico, 10 Máximo), todos com figura e correção automática, 2 `F.chute`, 3 exemplos com figura e variações, 3 demonstrações, caixas Pense como químico (2), Pegadinha (2), Segurança e descarte, Nível olimpíada e Ponte, folha com 6 fórmulas, chefão "O frasco que mede quanto do ar serve para queimar". Laboratório "Experimento controlado: o comprimido efervescente" em `assets/sims/quimica/introducao.js` (`SIM.efervescente`).
 - **A02 Matéria, energia e propriedades da matéria**: 12 exercícios (6 Físico, 6 Máximo), 3 demonstrações (1 m³ = 10⁶ cm³; razão de duas extensivas é intensiva; densidade de mistura), laboratório "A amostra misteriosa" (`SIM.densidade`), chefão "O volume que some" (água + etanol: 96,4 mL).
@@ -72,7 +73,17 @@ Química (módulos QA–QJ: introdução, atomística, ligações, reações e e
 - **A09 Algarismos significativos e erros de medida**: 12 exercícios, 2 demonstrações (por que a soma olha casas decimais e o produto olha significativos), laboratório "Exato ou preciso?" (`SIM.exatidao`), chefão "Dois alunos, um bloco de alumínio".
 - Os laboratórios de A06 a A09 estão em `assets/sims/quimica/laboratorio.js`.
 - **Desde a β 5.0 a química vai direto para o `main`** (permissão do Lucas ao aprovar o lote A02–A05, 15/11/2026), sempre com os testes do tema antes de cada commit e a regressão completa por lote.
-- **Ordem combinada:** módulos A → B → C → D → E → F (Modalidade A da OBQ), depois G, H, J e os experimentos. Próximo: **módulo B (B01 a B08)**, pedido pelo Lucas.
+- **Módulo B, Atomística (β 5.1)**, 12 exercícios por tema, todos com figura e correção automática; laboratórios em `assets/sims/quimica/atomistica.js`:
+  - **B01 Partículas fundamentais e íons**: laboratório "Monte o átomo" (`SIM.atomo`); chefão "Dois íons sem nome e um cubo impossível" (densidade nuclear).
+  - **B02 Isótopos, isóbaros e isótonos**: média ponderada e regra da gangorra; laboratório `SIM.isotopos`; chefão "O espectrômetro de massas não mente".
+  - **B03 Modelos atômicos clássicos**: Rutherford (máxima aproximação) e Bohr (linhas do hidrogênio) com contas; laboratório `SIM.rutherford` (trajetórias integradas numericamente); chefão "Uma em trinta mil".
+  - **B04 Modelo quântico e distribuição eletrônica**: números quânticos, Pauling, Hund, exceções Cr e Cu, íons; laboratório `SIM.orbitais` (Z de 1 a 36); chefão "O elétron 26".
+  - **B05 Orbitais híbridos**: sigma e pi, sp, sp², sp³, dedução de cos θ = −1/(n − 1); fórmulas estruturais em SVG (função `mol`); laboratório `SIM.hibridos` (3D girando); chefão "Duas moléculas tortas de propósito".
+  - **B06 Tabela periódica: grupos e períodos**: da distribuição ao endereço; laboratório `SIM.tabela` (118 elementos clicáveis); chefão "O elemento 119 e as trocas de Mendeleiev".
+  - **B07 Propriedades periódicas**: carga nuclear efetiva, raios, energias de ionização sucessivas; laboratório `SIM.tendencias` (Z de 1 a 36); chefão "Quatro desconhecidos do terceiro período".
+  - **B08 Radioatividade e química nuclear**: equações nucleares, séries, meia-vida, fissão e fusão; laboratório `SIM.decaimento` (carta N × Z); chefão "O relógio de urânio".
+- **Fora do padrão ou a saber no módulo B:** todos os dados de tabela (raios, energias de ionização, eletronegatividades, abundâncias isotópicas, meias-vidas, datas e nomes da história) foram escritos de memória, sem fonte consultada na hora; as contas feitas com eles estão conferidas em Python. O raio atômico do B07 e do laboratório só existe para os elementos representativos e depende da definição. O B05 ensina o mínimo de ligação covalente (sigma e pi) antes do módulo C, porque a ordem do catálogo põe hibridização antes de ligações. A revisão visual das capturas do módulo B foi feita depois do commit (ver β 5.1 no histórico).
+- **Ordem combinada:** módulos A → B → C → D → E → F (Modalidade A da OBQ), depois G, H, J e os experimentos. Próximo: **módulo C (C01 a C07), com 15 a 20 exercícios por tema**, e a **aba Tabela periódica** (pedidos do Lucas em 15/11/2026).
 - **Fora do padrão ou a saber em A06–A09:** tolerâncias de vidraria do A08 são "típicas" (variam com fabricante e classe) e os pictogramas são desenhos simplificados, não os oficiais; a tabela de solubilidade do A07 e os dados do A06 (massas molares arredondadas) estão de memória; o A09 remete à Física Experimental (FE03, FE04) para incerteza e propagação, sem repetir.
 - **Fora do padrão ou a saber em A02–A05:** teoria de 6 a 8 páginas (temas pequenos); A03 tem só 1 demonstração e o A04 e o A05 têm 2 (o A01 e o A02 têm 3); dados de tabela (densidades, PF, PE, calores latentes, composição do eutético e do azeótropo, faixas do petróleo, ebulição em altitude) escritos de memória e arredondados, sem fonte consultada nesta sessão; a história (Franklin e a mancha de óleo; a queima do diamante no fim do século XVIII) também; as curvas do laboratório do A04 são esquemáticas, sem números; o `texemp` lista zeros finais e temperaturas negativas como "suspeitos", e são de propósito.
 - **Fora do padrão ou a saber no A01:** as caixas "Nível olimpíada" descrevem o estilo de cobrança, sem questão real citada (o Lucas vai mandar provas da OBQ); o laboratório usa um MODELO inventado (dobra a cada 10 °C, tempo ∝ N^(−1/3), volume sem efeito), avisado no próprio laboratório; o `tests/texemp.js` lista os números com zeros finais (254,00 g) como "suspeitos", e eles são de propósito (leitura de balança com centésimo de grama).
@@ -694,6 +705,9 @@ Cada versão soma 0,1 (`VERSAO` em `assets/catalogo.js`; tag git `beta-0.X`).
 - **β 5.0** — **Química A06, A07, A08 e A09: módulo A completo** (15/11/2026, direto no `main`, com permissão do Lucas). A β 4.9 (A02–A05) foi aprovada e juntada; na regressão dela, a única falha foi o `tbusca` desatualizado ("Bernoulli" com acesso só à Química passou a achar temas da Química pelo sinônimo "fluido"), corrigido em commit separado e rodado de novo sem falha.
   - Quatro temas no padrão completo, 12 exercícios cada, e quatro laboratórios em `assets/sims/quimica/laboratorio.js` (linha de `<script>` no `index.html`).
   - Testes em 1280 × 900: tmec nos quatro (0 katex-error, 12 exercícios, 0 sem figura, laboratório, chefão, folha, sem erros de JS), tchaves ok, laboratórios conferidos contra as contas (9 conferências ok).
+- **β 5.1** — **Química, módulo B completo: B01 a B08** (15/11/2026, direto no `main`). A regressão da β 5.0 teve uma única falha, o `tacesso` desatualizado (esperava versão "β 4.x"), corrigido em commit separado e rodado de novo sem falha.
+  - Oito temas no padrão completo, 12 exercícios cada, e oito laboratórios em `assets/sims/quimica/atomistica.js` (linha de `<script>` no `index.html`); o arquivo também expõe `SIM.ELEM`, `SIM.posTabela`, `SIM.infoElemento` e `SIM.desenhaTabela`, usados pelo B06 e pelo B08.
+  - Testes em 1280 × 900: tmec nos oito (0 katex-error, 12 exercícios, 0 sem figura, laboratório, chefão, folha, sem erros de JS), tchaves ok nos oito, texemp (só expoentes ^{1} de distribuição eletrônica, de propósito).
 
 ## Como abrir
 Dar dois cliques em `index.html` (Chrome/Edge/Firefox). Funciona offline: KaTeX e fontes estão em `assets/`.
