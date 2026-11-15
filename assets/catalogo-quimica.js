@@ -12,7 +12,7 @@ window.CATALOGO.push(
     ["A02","Matéria, energia e propriedades da matéria",[],true],
     ["A03","Estados físicos e mudanças de estado",[],true],
     ["A04","Substâncias puras e misturas; alotropia",[],true],
-    ["A05","Separação de misturas e grau de pureza",[]],
+    ["A05","Separação de misturas e grau de pureza",[],true],
     ["A06","Fenômenos físicos e químicos",[]],
     ["A07","Densidade, fusão, ebulição e solubilidade",[]],
     ["A08","Laboratório: segurança, vidrarias e técnicas",[]],
