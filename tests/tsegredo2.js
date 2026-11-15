@@ -2,7 +2,7 @@
 const { chromium } = require('playwright');
 const BASE = 'file:///home/user/site-fisica/index.html#/';
 (async () => {
-  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 860 } });
+  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 860 } }); await require('./adm')(p);
   const errs = []; p.on('pageerror', (e) => errs.push(e.message));
   const res = []; const ok = (c, m) => { res.push([c, m]); };
   await p.goto(BASE + 'matematica'); await p.evaluate(() => { localStorage.removeItem('mat:segredo:t'); localStorage.removeItem('fisica:segredo:x'); }); await p.reload(); await p.waitForTimeout(800);

@@ -370,9 +370,11 @@
   let materiaAbas = null;
   const materiaDe = (areaId) => AREA(areaId).materia || "fisica";
   function abasTopo() {
-    const mid = materiaDe(F.area); if (mid === materiaAbas) return; materiaAbas = mid;
+    const mid = materiaDe(F.area); materiaAbas = mid; /* β 4.1: refeitas sempre, porque o acesso pode ter mudado */
     const box = $(".topo .abas-materia"); if (box) box.innerHTML = AREAS.filter((a) => (a.materia || "fisica") === mid).map((a) => `<a class="aba" data-area="${a.id}" href="#/${a.inicio}" aria-label="${a.nome}">${a.icone || ""}<span class="aba-txt">${a.nome}</span></a>`).join("");
     const mat = (window.MATERIAS || []).find((m) => m.id === mid); document.body.style.setProperty("--materia", mat ? `var(${mat.cor})` : "var(--mA)"); document.body.dataset.materia = mid;
+    if (window.ACESSO && box) box.querySelectorAll(".aba").forEach((a) => { if (!ACESSO.area(a.dataset.area)) ACESSO.trancar(a); });
+    if (window.JARVIS && JARVIS.pintaVersao) JARVIS.pintaVersao();
   }
   function pintaMenu() {
     abasTopo();
@@ -706,23 +708,51 @@
     requestAnimationFrame(q); F.aoSair(() => (vivo = false));
   }
   /* Russo · Leitura: a letra Я girando em torno do eixo vertical (de costas ela vira um R) e letras cirílicas subindo */
-  function animLetraYa(el) {
-    el.innerHTML = `<svg viewBox="0 0 340 300" aria-label="letra cirílica girando"><g class="g"></g></svg>`;
-    const g = el.querySelector(".g"), L = "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮ", bolhas = Array.from({ length: 12 }, (_, i) => ({ x: 30 + ((i * 53) % 280), f: (i * 0.37) % 1, c: L[(i * 7) % L.length], v: 0.08 + ((i * 3) % 5) * 0.015 }));
+  /* letra girando em torno do eixo vertical, com letras do alfabeto subindo (β 4.1: generalizada para russo, alemão e sânscrito) */
+  const DEVA = "'Noto Sans Devanagari','Nirmala UI','Mangal','FreeSans',sans-serif";
+  function animLetra(el, letra, alfabeto, cor, fonte = "var(--f-text)", tam = 170) {
+    el.innerHTML = `<svg viewBox="0 0 340 300" aria-label="letra girando"><g class="g"></g></svg>`;
+    const g = el.querySelector(".g"), L = [...alfabeto], bolhas = Array.from({ length: 12 }, (_, i) => ({ x: 30 + ((i * 53) % 280), f: (i * 0.37) % 1, c: L[(i * 7) % L.length], v: 0.08 + ((i * 3) % 5) * 0.015 }));
     let vivo = true; const t0 = performance.now(), reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
     function q(t) {
       if (!vivo) return;
       const s = reduz ? 0.4 : (t - t0) / 1000, k = Math.cos(0.9 * s);
-      let h = bolhas.map((b) => { const u = (s * b.v + b.f) % 1; return `<text x="${b.x}" y="${(280 - u * 250).toFixed(1)}" text-anchor="middle" style="font:600 18px var(--f-text);fill:var(--mR);opacity:${(0.35 * Math.sin(Math.PI * u)).toFixed(2)}">${b.c}</text>`; }).join("");
+      let h = bolhas.map((b) => { const u = (s * b.v + b.f) % 1; return `<text x="${b.x}" y="${(280 - u * 250).toFixed(1)}" text-anchor="middle" style="font:600 18px ${fonte};fill:var(${cor});opacity:${(0.35 * Math.sin(Math.PI * u)).toFixed(2)}">${b.c}</text>`; }).join("");
       h += `<ellipse cx="170" cy="250" rx="${(70 * Math.max(0.25, Math.abs(k))).toFixed(1)}" ry="8" style="fill:var(--materia);opacity:.15"/>`;
-      h += `<g transform="translate(170 150) scale(${k.toFixed(3)} 1)"><text x="0" y="62" text-anchor="middle" style="font:800 170px var(--f-text);fill:color-mix(in srgb,var(--mR) ${Math.round(55 + 35 * Math.abs(k))}%,var(--card));stroke:var(--mR);stroke-width:2">Я</text></g>`;
+      h += `<g transform="translate(170 150) scale(${k.toFixed(3)} 1)"><text x="0" y="62" text-anchor="middle" style="font:800 ${tam}px ${fonte};fill:color-mix(in srgb,var(${cor}) ${Math.round(55 + 35 * Math.abs(k))}%,var(--card));stroke:var(${cor});stroke-width:2">${letra}</text></g>`;
       g.innerHTML = h;
       if (!reduz) requestAnimationFrame(q);
     }
     requestAnimationFrame(q); F.aoSair(() => (vivo = false));
   }
+  const animLetraYa = (el) => animLetra(el, "Я", "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮ", "--mR");
+  /* Alemão · Leitura: portão de Brandemburgo em traço simples, com a luz passando entre as colunas */
+  function animPortao(el) {
+    el.innerHTML = `<svg viewBox="0 0 340 300" aria-label="portão em traço simples"><g class="g"></g></svg>`;
+    const g = el.querySelector(".g"); let vivo = true; const t0 = performance.now(), reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const cols = [62, 104, 146, 194, 236, 278];
+    function q(t) {
+      if (!vivo) return; const s = reduz ? 1 : (t - t0) / 1000;
+      let h = `<path d="M40 250H300M48 112H292M56 96H284L262 70H78Z" style="fill:none;stroke:var(--mDE);stroke-width:3;stroke-linejoin:round"/>`;
+      cols.forEach((x, k) => { h += `<path d="M${x - 7} 112V250M${x + 7} 112V250" style="stroke:var(--ink2);stroke-width:2.4"/>`; if (k < 5) { const cx = (x + cols[k + 1]) / 2, a = 0.12 + 0.18 * Math.max(0, Math.sin(s * 1.4 - k * 0.7)); h += `<rect x="${cx - 12}" y="116" width="24" height="130" style="fill:var(--mDE);opacity:${a.toFixed(2)}"/>`; } });
+      h += `<path d="M150 70L158 48L170 58L182 48L190 70" style="fill:none;stroke:var(--mDE);stroke-width:2.6;stroke-linejoin:round"/><circle cx="170" cy="40" r="5" style="fill:var(--mO)"/>`;
+      g.innerHTML = h; if (!reduz) requestAnimationFrame(q);
+    }
+    requestAnimationFrame(q); F.aoSair(() => (vivo = false));
+  }
+  /* Sânscrito · Leitura: ॐ pulsando devagar, com um anel de luz */
+  function animOm(el) {
+    el.innerHTML = `<svg viewBox="0 0 340 300" aria-label="sílaba om pulsando"><g class="g"></g></svg>`;
+    const g = el.querySelector(".g"); let vivo = true; const t0 = performance.now(), reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function q(t) {
+      if (!vivo) return; const s = reduz ? 1 : (t - t0) / 1000, p = 0.5 + 0.5 * Math.sin(s * 1.3);
+      g.innerHTML = `<circle cx="170" cy="150" r="${(98 + 8 * p).toFixed(1)}" style="fill:none;stroke:var(--mSA);stroke-width:2;opacity:${(0.35 + 0.4 * p).toFixed(2)}"/><circle cx="170" cy="150" r="${(118 + 14 * p).toFixed(1)}" style="fill:none;stroke:var(--mO);stroke-width:1.2;stroke-dasharray:3 9;opacity:${(0.3 + 0.3 * p).toFixed(2)}" transform="rotate(${(s * 12).toFixed(1)} 170 150)"/><text x="170" y="196" text-anchor="middle" style="font:700 140px ${DEVA};fill:color-mix(in srgb,var(--mSA) ${Math.round(60 + 30 * p)}%,var(--card));stroke:var(--mSA);stroke-width:1.5">ॐ</text>`;
+      if (!reduz) requestAnimationFrame(q);
+    }
+    requestAnimationFrame(q); F.aoSair(() => (vivo = false));
+  }
   /* desenho de cada página inicial: o nome vem do campo anim da área (AREAS) */
-  F.ANIM = { atomo: animAtomo, calculo: animCalculo, pendulo: animPendulo, calculadora: animCalculadora, solido: animSolido, impares: animImpares, benzeno: animBenzeno, bequer: animBequer, matrioska: animMatrioska, letraYa: animLetraYa };
+  F.ANIM = { atomo: animAtomo, calculo: animCalculo, pendulo: animPendulo, calculadora: animCalculadora, solido: animSolido, impares: animImpares, benzeno: animBenzeno, bequer: animBequer, matrioska: animMatrioska, letraYa: animLetraYa, letraEszett: (el) => animLetra(el, "ß", "ÄÖÜẞABCDEFGHIJKLMNOPRSTUVWZ", "--mDE"), letraSam: (el) => animLetra(el, "सं", "अआइईउऊऋएऐओऔकखगघचजटडतदनपबमयरलवशसह", "--mSA", DEVA, 150), portao: animPortao, om: animOm };
   const J_SEGREDO = (F._seg = F._seg || {});
 
   function pgSumario(el) {
@@ -821,7 +851,8 @@
     document.documentElement.style.removeProperty("--mod");
     /* tela inicial do projeto e matérias registradas em assets/materias.js (docs/MODELO_DE_DADOS.md) */
     const J = window.JARVIS, mat = J ? J.materia(cod) : null;
-    document.body.classList.toggle("modo-home", !!J && (cod === "home" || (!!mat && !mat.pronta)));
+    document.body.classList.toggle("modo-home", !!J && (cod === "home" || cod === "codigos" || (!!mat && !mat.pronta)));
+    if (J && cod === "codigos" && J.codigos) { J.codigos(pag); window.scrollTo(0, 0); return; } /* β 4.1: página de códigos de acesso */
     if (J && cod === "home") { J.home(pag); window.scrollTo(0, 0); return; }
     if (mat && !mat.pronta) { J.emBreve(pag, mat); window.scrollTo(0, 0); return; }
     if (mat && mat.pronta && (!h[1] || h[1] === "inicio") && mat.rota !== "#/" + (h[1] ? cod + "/" + h[1] : cod)) { location.replace(mat.rota); return; } /* só o id da matéria: #/fisica → #/inicio; link antigo #/quimica/inicio → #/quimica */
@@ -830,6 +861,11 @@
     if (mid === "fisica" && cod === "calculo") { location.replace("#/matematica-calculo"); return; } /* β 4.0: a aba Cálculo foi para a matemática */
     if (mid === "fisica" && CALCULO.has(cod)) { location.replace("#/matematica/" + cod + (anc ? "/" + anc : "")); return; } /* link antigo #/CI07 → #/matematica/CI07 */
     const arIni = mid === "fisica" ? AREAS.find((a) => a.inicio === cod) : null;
+    /* β 4.1: acesso por código. Página de matéria ou aba trancada → "sem acesso" (com o caminho para os códigos) */
+    if (window.ACESSO && J && J.bloqueado) {
+      const infoAc = arIni ? null : cod === "sumario" || cod === "legenda" ? null : F.achar(cod, mid), aid = arIni ? arIni.id : infoAc ? areaDe(infoAc.mod) : cod === "sumario" ? F.area : null;
+      if (aid && !ACESSO.area(aid)) { const ar = AREA(aid), m = (window.MATERIAS || []).find((x) => x.id === (ar.materia || "fisica")); document.body.classList.add("modo-home"); J.bloqueado(pag, m ? m.nome : ar.titulo); window.scrollTo(0, 0); return; }
+    }
     if (arIni) { F.area = arIni.id; pgInicio(pag, F.area); }
     else if (cod === "legenda") { location.replace("#/" + AREA(F.area).inicio); setTimeout(() => { const d = $("#detalhes"); if (d) d.classList.add("aberto"); }, 50); return; } /* a legenda agora fica só no painel do topo */
     else if (cod === "sumario") pgSumario(pag);

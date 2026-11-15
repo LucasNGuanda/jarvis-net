@@ -3,7 +3,7 @@ const RAIZ = 'file://' + require('path').resolve(__dirname, '..', 'index.html');
 const { chromium } = require('playwright');
 const U = RAIZ;
 (async () => {
-  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
+  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 800 } }); await require('./adm')(p);
   let errs = []; p.on('pageerror', e => errs.push('pageerror: ' + e.message)); p.on('console', m => { if (m.type() === 'error') errs.push('console: ' + m.text()); });
   await p.goto(U + '#/inicio'); await p.waitForTimeout(800);
   /* β 3.8: cada tema com a rota da sua matéria (física #/A01; outras #/quimica/A01) */

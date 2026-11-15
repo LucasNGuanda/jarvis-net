@@ -3,7 +3,7 @@ const RAIZ = 'file://' + require('path').resolve(__dirname, '..', 'index.html');
 const { chromium } = require('playwright');
 const res = [];
 (async () => {
-  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
+  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 800 } }); await require('./adm')(p);
   const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
   await p.goto(RAIZ + '#/inicio'); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForTimeout(600);
   // liga pelo interruptor das configurações

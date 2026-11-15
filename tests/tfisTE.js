@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
 const res = [];
 const num = (t) => parseFloat(String(t).replace(/−/g, '-').replace(',', '.'));
 (async () => {
-  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
+  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 800 } }); await require('./adm')(p);
   const errs = []; p.on('pageerror', e => errs.push(e.message));
   const vai = async (c) => { await p.goto(RAIZ + '#/' + c); await p.waitForTimeout(1200); };
   const set = (id, o, cliques = []) => p.evaluate(([id, o, cl]) => { cl.forEach(s => document.querySelector(`#${id} ${s}`).click()); for (const [k, v] of Object.entries(o)) { const i = document.querySelector(`#${id} input[data-c="${k}"]`); i.value = v; i.dispatchEvent(new Event('input', { bubbles: true })); } return Object.fromEntries([...document.querySelectorAll(`#${id} .vis`)].map(v => [v.querySelector('small').textContent.trim(), v.querySelector('b').textContent.trim()])); }, [id, o, cliques]);

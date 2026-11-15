@@ -1,6 +1,6 @@
 const RAIZ = 'file://' + require('path').resolve(__dirname, '..', 'index.html'); /* site na pasta acima de tests/ */
 const { chromium } = require('playwright');
-(async () => { const b = await chromium.launch(); const p = await b.newPage();
+(async () => { const b = await chromium.launch(); const p = await b.newPage(); await require('./adm')(p);
   const temas = process.argv.slice(2); const sus = /\+ ?[-−]|[-−] ?[-−]|(^|[^0-9,.])1x|\^\{?1\}?(?![0-9])|\{,\}0+(?![0-9])|\( ?\+|= ?\+/;
   for (const t of temas) {
     await p.goto(RAIZ + '#/'+t); await p.waitForTimeout(1000);

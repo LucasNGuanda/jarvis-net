@@ -1,7 +1,7 @@
 const RAIZ = 'file://' + require('path').resolve(__dirname, '..', 'index.html'); /* site na pasta acima de tests/ */
 const { chromium } = require('playwright');
 const cods = process.argv.slice(2);
-(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
+(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } }); await require('./adm')(p);
   for (const c of cods) {
     await p.goto(RAIZ + '#/' + c); await p.waitForTimeout(1400);
     const achados = new Set();

@@ -2,7 +2,7 @@ const RAIZ = 'file://' + require('path').resolve(__dirname, '..', 'index.html');
 const { chromium } = require('playwright');
 const res = [];
 (async () => {
-  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 950 } });
+  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 950 } }); await require('./adm')(p);
   const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
   await p.goto(RAIZ + '#/inicio'); await p.waitForTimeout(1200);
   await p.evaluate(() => { localStorage.clear(); CALC2.ligaSalvo(true); CALC2.abre(true); });

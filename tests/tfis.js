@@ -16,7 +16,7 @@ function numU(t) { const v = num(t); if (t == null) return v; const m = String(t
 const res = [];
 const perto = (a, b, tol = 0.01) => Math.abs(a - b) <= tol * Math.max(Math.abs(b), 1e-12) || Math.abs(a - b) < 1e-9;
 (async () => {
-  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
+  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 800 } }); await require('./adm')(p);
   const errs = []; p.on('pageerror', e => errs.push(e.message));
   let atual = null;
   async function vai(cod) { if (atual !== cod) { await p.goto(U + '#/' + cod); await p.waitForTimeout(1100); atual = cod; } }

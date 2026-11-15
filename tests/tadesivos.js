@@ -5,7 +5,7 @@
 const { chromium } = require('playwright');
 const URL = 'file:///home/user/site-fisica/index.html#/home';
 (async () => {
-  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
+  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 800 } }); await require('./adm')(p);
   const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
   const falhas = []; const ok = (cond, msg) => { if (!cond) falhas.push(msg); console.log((cond ? 'ok   ' : 'FALHA ') + msg); };
   await p.goto(URL); await p.evaluate(() => localStorage.removeItem('jarvis:adesivos')); await p.reload(); await p.waitForTimeout(900);

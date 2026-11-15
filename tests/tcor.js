@@ -1,7 +1,7 @@
 const RAIZ = 'file://' + require('path').resolve(__dirname, '..', 'index.html'); /* site na pasta acima de tests/ */
 const { chromium } = require('playwright');
 const res = []; const ok = (c, m) => res.push([c, m]);
-(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
+(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } }); await require('./adm')(p);
   const errs = []; p.on('pageerror', e => errs.push(e.message));
   const base = RAIZ;
   const gira = () => p.evaluate(async () => { const pega = () => { const e = document.querySelector('.jv-globo .jv-mer'), l = document.querySelector('.jv-globo .jv-lua'); return [+e.getAttribute('rx'), +l.getAttribute('cx')]; }; const a = pega(); await new Promise(r => setTimeout(r, 700)); const c = pega(); return Math.abs(a[0] - c[0]) > 0.5 && Math.abs(a[1] - c[1]) > 0.5; });
@@ -12,7 +12,7 @@ const res = []; const ok = (c, m) => res.push([c, m]);
   ok(await gira(), 'gira depois de ir na Física e voltar pelo Home');
   await p.goto(base + '#/C01'); await p.waitForTimeout(1200); await p.goBack(); await p.waitForTimeout(1200);
   ok(await gira(), 'gira depois de abrir um tema e voltar pelo botão voltar');
-  const p2 = await b.newPage(); await p2.goto('about:blank'); await p2.bringToFront(); await p.waitForTimeout(1500); await p.bringToFront(); await p.waitForTimeout(1200);
+  const p2 = await b.newPage(); await require('./adm')(p2); await p2.goto('about:blank'); await p2.bringToFront(); await p.waitForTimeout(1500); await p.bringToFront(); await p.waitForTimeout(1200);
   ok(await gira(), 'gira depois de trocar de aba do navegador e voltar');
   ok(await p.evaluate(() => !document.querySelector('.jv-cab p') && !document.body.textContent.includes('meu sistema de estudo')), 'sem o texto "meu sistema de estudo"');
   // seletor de cor aparece ao passar o mouse
@@ -40,7 +40,7 @@ const res = []; const ok = (c, m) => res.push([c, m]);
   const cO = await cores();
   ok(cO.titulo === c0.titulo && cO.mer === c0.mer && cO.anel === c0.anel && await p.evaluate(() => localStorage.getItem('jarvis:cor') === null), 'botão "voltar à cor original" volta ao degradê original');
   // celular: tocar no título abre o seletor
-  const m = await b.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true }); await m.goto(base + '#/home'); await m.waitForTimeout(1000);
+  const m = await b.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true }); await require('./adm')(m); await m.goto(base + '#/home'); await m.waitForTimeout(1000);
   await m.tap('.jv-cab h1'); await m.waitForTimeout(300);
   ok(await m.evaluate(() => getComputedStyle(document.querySelector('.jv-cor')).visibility === 'visible'), 'no celular, tocar no Jarvis abre o seletor');
   await m.tap('.jv-ilu'); await m.waitForTimeout(300);
