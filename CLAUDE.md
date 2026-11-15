@@ -22,7 +22,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - **Estado de cada matéria (fim do chat, β 4.6):**
   - Física: a única com conteúdo escrito. Aba Física com 96 de 96 temas e 913 exercícios; Experimentos com 18 (EP01–EP18; próximo código EP19); Experimental com 11 de 11 no padrão completo.
   - Matemática: só o Cálculo escrito (27 temas); 114 temas "em breve".
-  - Química: 104 temas cadastrados; módulos A (A01–A09) e B (B01–B08) completos, no `main` (β 5.1). Detalhes no PROGRESSO.md.
+  - Química: 104 temas cadastrados; módulos A (A01–A09), B (B01–B08) e C (C01–C07) completos, no `main` (β 5.2). Detalhes no PROGRESSO.md.
   - Russo, Alemão e Sânscrito: só cadastrados, todos "em breve".
   - Números detalhados e dívida técnica no PROGRESSO.md, em "Estado final".
 - **Física**: 3 abas, Física, Experimentos e Experimental (o Cálculo foi para a matemática na β 4.0). Módulos F, A, T, O, C, M, U, N, X (bônus) e S (simulados).
