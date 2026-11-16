@@ -226,7 +226,7 @@
   SIM.org.CORF = CORF;
   /* nome: "Caça às funções: ache os grupos funcionais da molécula" · matéria: Química · tema: H03 */
   SIM.qFuncoes = (el, F, o = {}) => {
-    const MOL = o.mol || ["etanol", "fenol", "etoxietano", "propanal", "propanona", "ácido etanoico", "etanoato de etila", "ácido 2-hidroxipropanoico", "ácido acetilsalicílico", "vanilina", "ácido salicílico", "propano-1,2,3-triol"], OPC = o.opc || ["álcool", "fenol", "éter", "aldeído", "cetona", "ácido carboxílico", "éster"];
+    const MOL = o.mol || ["etanol", "fenol", "etoxietano", "propanal", "propanona", "ácido etanoico", "etanoato de etila", "ácido 2-hidroxipropanoico", "vanilina", "ácido salicílico", "propano-1,2,3-triol"], OPC = o.opc || ["álcool", "fenol", "éter", "aldeído", "cetona", "ácido carboxílico", "éster"];
     let k = 0, marc = new Set(), visto = false;
     el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="min-height:200px;display:flex;align-items:center;justify-content:center"></div><div class="leitor" data-v="lt"></div>
       <div class="ctrls"><div><p style="margin:0 0 6px;font-size:13.5px;color:var(--ink2)">Molécula (o nome aparece depois de conferir):</p><div class="bts">${botoes(MOL.map((m, i) => [i, String(i + 1)]), "k", k)}</div></div><div><p style="margin:0 0 6px;font-size:13.5px;color:var(--ink2)">Marque as funções que você vê e confira:</p><div class="bts">${OPC.map((f) => `<button class="bt peq" data-f="${f}" aria-pressed="false">${f}</button>`).join("")}</div><div class="bts" style="margin-top:8px"><button class="bt" data-a="confere">conferir</button><button class="bt peq" data-a="mostra">mostrar os grupos</button></div></div></div>

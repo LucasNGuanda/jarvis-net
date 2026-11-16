@@ -1,0 +1,207 @@
+{
+ "ethylene": {
+  "cid": 6325,
+  "smiles": "C=C",
+  "formula": "C2H4"
+ },
+ "propene": {
+  "cid": 8252,
+  "smiles": "CC=C",
+  "formula": "C3H6"
+ },
+ "vinyl chloride": {
+  "cid": 6338,
+  "smiles": "C=CCl",
+  "formula": "C2H3Cl"
+ },
+ "styrene": {
+  "cid": 7501,
+  "smiles": "C=CC1=CC=CC=C1",
+  "formula": "C8H8"
+ },
+ "tetrafluoroethylene": {
+  "cid": 8301,
+  "smiles": "C(=C(F)F)(F)F",
+  "formula": "C2F4"
+ },
+ "acrylonitrile": {
+  "cid": 7855,
+  "smiles": "C=CC#N",
+  "formula": "C3H3N"
+ },
+ "methyl methacrylate": {
+  "cid": 6658,
+  "smiles": "CC(=C)C(=O)OC",
+  "formula": "C5H8O2"
+ },
+ "isoprene": {
+  "cid": 6557,
+  "smiles": "CC(=C)C=C",
+  "formula": "C5H8"
+ },
+ "chloroprene": {
+  "cid": 31369,
+  "smiles": "C=CC(=C)Cl",
+  "formula": "C4H5Cl"
+ },
+ "terephthalic acid": {
+  "cid": 7489,
+  "smiles": "C1=CC(=CC=C1C(=O)O)C(=O)O",
+  "formula": "C8H6O4"
+ },
+ "ethylene glycol": {
+  "cid": 174,
+  "smiles": "C(CO)O",
+  "formula": "C2H6O2"
+ },
+ "adipic acid": {
+  "cid": 196,
+  "smiles": "C(CCC(=O)O)CC(=O)O",
+  "formula": "C6H10O4"
+ },
+ "hexamethylenediamine": {
+  "cid": 16402,
+  "smiles": "C(CCCN)CCN",
+  "formula": "C6H16N2"
+ },
+ "p-phenylenediamine": {
+  "cid": 7814,
+  "smiles": "C1=CC(=CC=C1N)N",
+  "formula": "C6H8N2"
+ },
+ "lactic acid": {
+  "cid": 612,
+  "smiles": "CC(C(=O)O)O",
+  "formula": "C3H6O3"
+ },
+ "Glycine": {
+  "cid": 750,
+  "smiles": "C(C(=O)O)N",
+  "formula": "C2H5NO2"
+ },
+ "Alanine": {
+  "cid": 5950,
+  "smiles": "CC(C(=O)O)N",
+  "formula": "C3H7NO2"
+ },
+ "Valine": {
+  "cid": 6287,
+  "smiles": "CC(C)C(C(=O)O)N",
+  "formula": "C5H11NO2"
+ },
+ "Leucine": {
+  "cid": 6106,
+  "smiles": "CC(C)CC(C(=O)O)N",
+  "formula": "C6H13NO2"
+ },
+ "Isoleucine": {
+  "cid": 6306,
+  "smiles": "CCC(C)C(C(=O)O)N",
+  "formula": "C6H13NO2"
+ },
+ "Proline": {
+  "cid": 145742,
+  "smiles": "C1CC(NC1)C(=O)O",
+  "formula": "C5H9NO2"
+ },
+ "Phenylalanine": {
+  "cid": 6140,
+  "smiles": "C1=CC=C(C=C1)CC(C(=O)O)N",
+  "formula": "C9H11NO2"
+ },
+ "Tryptophan": {
+  "cid": 6305,
+  "smiles": "C1=CC=C2C(=C1)C(=CN2)CC(C(=O)O)N",
+  "formula": "C11H12N2O2"
+ },
+ "Methionine": {
+  "cid": 6137,
+  "smiles": "CSCCC(C(=O)O)N",
+  "formula": "C5H11NO2S"
+ },
+ "Serine": {
+  "cid": 5951,
+  "smiles": "C(C(C(=O)O)N)O",
+  "formula": "C3H7NO3"
+ },
+ "Threonine": {
+  "cid": 6288,
+  "smiles": "CC(C(C(=O)O)N)O",
+  "formula": "C4H9NO3"
+ },
+ "Cysteine": {
+  "cid": 5862,
+  "smiles": "C(C(C(=O)O)N)S",
+  "formula": "C3H7NO2S"
+ },
+ "Tyrosine": {
+  "cid": 6057,
+  "smiles": "C1=CC(=CC=C1CC(C(=O)O)N)O",
+  "formula": "C9H11NO3"
+ },
+ "Asparagine": {
+  "cid": 6267,
+  "smiles": "C(C(C(=O)O)N)C(=O)N",
+  "formula": "C4H8N2O3"
+ },
+ "Glutamine": {
+  "cid": 5961,
+  "smiles": "C(CC(=O)N)C(C(=O)O)N",
+  "formula": "C5H10N2O3"
+ },
+ "Aspartic acid": {
+  "cid": 5960,
+  "smiles": "C(C(C(=O)O)N)C(=O)O",
+  "formula": "C4H7NO4"
+ },
+ "Glutamic acid": {
+  "cid": 33032,
+  "smiles": "C(CC(=O)O)C(C(=O)O)N",
+  "formula": "C5H9NO4"
+ },
+ "Lysine": {
+  "cid": 5962,
+  "smiles": "C(CCN)CC(C(=O)O)N",
+  "formula": "C6H14N2O2"
+ },
+ "Arginine": {
+  "cid": 6322,
+  "smiles": "C(CC(C(=O)O)N)CN=C(N)N",
+  "formula": "C6H14N4O2"
+ },
+ "Histidine": {
+  "cid": 6274,
+  "smiles": "C1=C(NC=N1)CC(C(=O)O)N",
+  "formula": "C6H9N3O2"
+ },
+ "adenine": {
+  "cid": 190,
+  "smiles": "C1=NC2=NC=NC(=C2N1)N",
+  "formula": "C5H5N5"
+ },
+ "guanine": {
+  "cid": 135398634,
+  "smiles": "C1=NC2=C(N1)C(=O)NC(=N2)N",
+  "formula": "C5H5N5O"
+ },
+ "cytosine": {
+  "cid": 597,
+  "smiles": "C1=C(NC(=O)N=C1)N",
+  "formula": "C4H5N3O"
+ },
+ "thymine": {
+  "cid": 1135,
+  "smiles": "CC1=CNC(=O)NC1=O",
+  "formula": "C5H6N2O2"
+ },
+ "uracil": {
+  "cid": 1174,
+  "smiles": "C1=CNC(=O)NC1=O",
+  "formula": "C4H4N2O2"
+ },
+ "sodium dodecyl sulfate": {
+  "cid": 3423265,
+  "smiles": "CCCCCCCCCCCCOS(=O)(=O)[O-].[Na+]",
+  "formula": "C12H25NaO4S"
+ }
+}
