@@ -75,6 +75,14 @@
       {"k": "arginina", "nome": "arginina", "a3": "Arg", "a1": "R", "f": "C6H14N4O2", "m": 174, "mfonte": 174.204, "pk1": 2.17, "pk2": 9.04, "pkr": 12.48, "tr": "basica", "pi": 10.76, "pic": 10.76, "div": false, "piw": 10.76, "cls": "básico", "ess": "condicional", "smi": "NC(CCCNC(N)=N)C(=O)O"},
       {"k": "histidina", "nome": "histidina", "a3": "His", "a1": "H", "f": "C6H9N3O2", "m": 155, "mfonte": 155.157, "pk1": 1.82, "pk2": 9.17, "pkr": 6.0, "tr": "basica", "pi": 7.59, "pic": 7.59, "div": false, "piw": 7.6, "cls": "básico", "ess": "sim", "smi": "NC(Cc1c[nH]cn1)C(=O)O"},
     ],
+    DNA: {"hAT": 2, "hGC": 3, "largura": 20, "paresVolta": 10, "passo": 34, "codons": 64, "sentido": 61, "parada": 3, "atpDG": 30.5, "atpF": "C10H16N5O13P3", "atpM": 507.18},
+    BASES: [
+      {"nome": "adenina", "l": "A", "f": "C5H5N5", "m": 135, "mfonte": 135.13, "tipo": "purina", "onde": "DNA e RNA", "smi": "Nc1ncnc2[nH]cnc12"},
+      {"nome": "guanina", "l": "G", "f": "C5H5N5O", "m": 151, "mfonte": 151.13, "tipo": "purina", "onde": "DNA e RNA", "smi": "Nc1nc2[nH]cnc2c(=O)[nH]1"},
+      {"nome": "citosina", "l": "C", "f": "C4H5N3O", "m": 111, "mfonte": 111.1, "tipo": "pirimidina", "onde": "DNA e RNA", "smi": "Nc1cc[nH]c(=O)n1"},
+      {"nome": "timina", "l": "T", "f": "C5H6N2O2", "m": 126, "mfonte": 126.115, "tipo": "pirimidina", "onde": "só DNA", "smi": "Cc1c[nH]c(=O)[nH]c1=O"},
+      {"nome": "uracila", "l": "U", "f": "C4H4N2O2", "m": 112, "mfonte": 112.08676, "tipo": "pirimidina", "onde": "só RNA", "smi": "O=c1cc[nH]c(=O)[nH]1"},
+    ],
   };
   /*BIO-FIM*/
 
@@ -151,6 +159,37 @@
     q("[data-v=sel]").value = String(i); q("[data-v=sel]").addEventListener("change", (ev) => { i = +ev.target.value; desenha(); });
     q("[data-v=rg]").addEventListener("input", (ev) => { ph = +ev.target.value; desenha(); });
     SIM.qAminoacido._ult = { poe: (k, p) => { i = AA.findIndex((a) => a.k === k); ph = p; q("[data-v=sel]").value = String(i); q("[data-v=rg]").value = String(p); desenha(); }, est }; desenha(); };
+
+  /* ---------- I04: ácidos nucleicos ---------- */
+  /* contas com uma fita de DNA escrita de 5' para 3' */
+  SIM.dna = { par: { A: "T", T: "A", G: "C", C: "G" },
+    comp: (s) => s.split("").map((b) => SIM.dna.par[b]).join(""),                       /* fita complementar, alinhada base a base (lida de 3' para 5') */
+    compInv: (s) => SIM.dna.comp(s).split("").reverse().join(""),                        /* a mesma fita, escrita de 5' para 3' */
+    rna: (molde) => SIM.dna.comp(molde).replace(/T/g, "U"),                              /* RNA transcrito a partir da fita molde (alinhado base a base) */
+    hb: (s) => s.split("").reduce((t, b) => t + (b === "A" || b === "T" ? SIM.BIO.DNA.hAT : SIM.BIO.DNA.hGC), 0),
+    gc: (s) => (100 * s.split("").filter((b) => b === "G" || b === "C").length) / s.length,
+    compr: (n) => (n * SIM.BIO.DNA.passo) / SIM.BIO.DNA.paresVolta,                      /* comprimento em Å */
+    voltas: (n) => n / SIM.BIO.DNA.paresVolta,
+    escada: (s, o = {}) => { const n = s.length, dx = o.dx || 34, x0 = 54, W = x0 * 2 + dx * (n - 1), c = SIM.dna.comp(s), COR = { A: "#e0a13a", T: "#4a9fe8", G: "#3fae7a", C: "#d94f9b", "?": "var(--warn)" }; let h = "";
+      const L = (x, y, t, cor) => `<text x="${x}" y="${y}" text-anchor="middle" style="font:700 17px Inter,system-ui,sans-serif;fill:${cor}">${t}</text>`, r = (x, y, t) => `<text x="${x}" y="${y}" text-anchor="middle" class="tx2" style="font-size:11px">${t}</text>`;
+      h += `<line x1="${x0 - 14}" y1="26" x2="${x0 + dx * (n - 1) + 14}" y2="26" style="stroke:var(--ink2);stroke-width:2"/><line x1="${x0 - 14}" y1="104" x2="${x0 + dx * (n - 1) + 14}" y2="104" style="stroke:var(--ink2);stroke-width:2"/>` + r(18, 46, "5′") + r(W - 18, 46, "3′") + r(18, 96, "3′") + r(W - 18, 96, "5′");
+      s.split("").forEach((b, k) => { const x = x0 + dx * k, m = b === "A" || b === "T" ? 2 : 3, bx = o.oculta ? "?" : c[k]; h += L(x, 46, b, COR[b]) + L(x, 96, bx, COR[bx]); if (!o.oculta) for (let j = 0; j < m; j++) { const xx = x + (j - (m - 1) / 2) * 6; h += `<line x1="${xx}" y1="54" x2="${xx}" y2="76" style="stroke:var(--ink2);stroke-width:1.6;stroke-dasharray:3 3"/>`; } });
+      return { svg: h, w: W, h: 124 }; } };
+  /* nome: "DNA: pareamento, pontes de hidrogênio e transcrição" · matéria: Química · tema: I04 */
+  SIM.qDNA = (el, F) => { let s = "ATGCGTA", ver = false; const MAX = 16;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;min-height:170px;overflow-x:auto"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">acrescentar base à fita de cima</p><div class="bts">${["A", "T", "G", "C"].map((b) => `<button class="bt peq" data-b="${b}">${b}</button>`).join("")}<button class="bt peq" data-b="x">apagar</button><button class="bt peq" data-b="r">sortear</button></div></div>
+      <div><div class="bts"><button class="bt peq" data-v="ver" aria-pressed="false">mostrar a fita complementar</button></div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (x) => el.querySelector(x), DN = SIM.BIO.DNA;
+    const est = () => ({ s, n: s.length, comp: SIM.dna.comp(s), compInv: SIM.dna.compInv(s), hb: SIM.dna.hb(s), gc: SIM.dna.gc(s), compr: SIM.dna.compr(s.length), voltas: SIM.dna.voltas(s.length), rna: SIM.dna.rna(SIM.dna.comp(s)), ver });
+    const desenha = () => { const e = est(), d = SIM.dna.escada(s, { oculta: !ver });
+      q("[data-v=sv]").innerHTML = `<svg viewBox="0 0 ${d.w} ${d.h}" width="${d.w}" role="img" aria-label="trecho de dupla fita">${d.svg}</svg>`;
+      q("[data-v=lt]").innerHTML = vis("pares de bases", String(e.n)) + vis("ligações de hidrogênio", ver ? String(e.hb) : "?") + vis("G + C", nt(e.gc, 1) + "%") + vis("comprimento", nt(e.compr, 1) + " Å") + vis("voltas da hélice", nt(e.voltas, 2)) + vis("RNA transcrito (da fita de baixo)", ver ? e.rna : "?");
+      q("[data-v=st]").innerHTML = !ver ? "Antes de clicar em <b>mostrar</b>: escreva a fita de baixo (A com T, G com C) e conte as ligações de hidrogênio (2 em cada par A·T, 3 em cada par G·C)." : `Fita complementar, lida de 5′ para 3′: <b>${e.compInv}</b> (as fitas são antiparalelas). ${e.n - Math.round(e.gc * e.n / 100)} pares A·T × 2 + ${Math.round(e.gc * e.n / 100)} pares G·C × 3 = <b>${e.hb}</b> ligações de hidrogênio. Na hélice, ${DN.paresVolta} pares por volta e ${DN.passo} Å por volta: ${nt(DN.passo / DN.paresVolta, 1)} Å por par. O RNA copiado da fita de baixo tem a sequência da de cima, com U no lugar de T.`; };
+    el.querySelectorAll("[data-b]").forEach((b) => b.addEventListener("click", () => { const k = b.dataset.b; if (k === "x") s = s.length > 1 ? s.slice(0, -1) : s; else if (k === "r") { const n = 6 + Math.floor(Math.random() * 7); s = Array.from({ length: n }, () => "ATGC"[Math.floor(Math.random() * 4)]).join(""); ver = false; } else if (s.length < MAX) s += k; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); }));
+    q("[data-v=ver]").addEventListener("click", () => { ver = !ver; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); });
+    SIM.qDNA._ult = { poe: (x, v = true) => { s = x; ver = v; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); }, est }; desenha(); };
 
   //MAIS-LABS
 })();

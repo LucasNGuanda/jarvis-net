@@ -95,7 +95,7 @@ window.CATALOGO.push(
     ["I01","Polímeros: adição, condensação e reciclagem",[],true],
     ["I02","Carboidratos e lipídeos: açúcares, gorduras e sabões",[],true],
     ["I03","Aminoácidos, proteínas e enzimas: pKa, ponto isoelétrico e ligação peptídica",[],true],
-    ["I04","Ácidos nucleicos",[]],
+    ["I04","Ácidos nucleicos: DNA, RNA e o código genético",[],true],
     ["I05","Biocombustíveis",[]],
     ["I06","Ciclos biogeoquímicos",[]],
     ["I07","Poluição da água e do ar",[]],

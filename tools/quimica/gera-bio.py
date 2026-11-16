@@ -209,6 +209,40 @@ for ch, (nome, smi, tr) in AA_L.items():
 if sorted(pi_div) != ["isoleucina", "triptofano"]: erros.append(("pI calculado ≠ pI da tabela em linhas inesperadas", pi_div))
 if sum(1 for x in aa if x["ess"] == "sim") != 9: erros.append(("aminoácidos essenciais ≠ 9",))
 BIO["AA"] = aa
+
+# ---------- I04: ácidos nucleicos ----------
+AN = D["acidos_nucleicos"]
+def trecho_com(lista, padrao):
+    """primeiro trecho de fonte do item que casa com o padrão (regex); devolve o match"""
+    for e in (lista or []):
+        if isinstance(e, dict):
+            m = re.search(padrao, str(e.get("trecho") or ""))
+            if m: return m
+    return None
+# base: nome, letra, SMILES (conferido com a fórmula da fonte e com o PubChem), purina/pirimidina (conferido com a frase da fonte), onde aparece
+BASES_L = [["adenina", "A", "Nc1ncnc2[nH]cnc12", "purina", "purine", "DNA e RNA"], ["guanina", "G", "Nc1nc2[nH]cnc2c(=O)[nH]1", "purina", "purine", "DNA e RNA"],
+           ["citosina", "C", "Nc1cc[nH]c(=O)n1", "pirimidina", "pyrimidine", "DNA e RNA"], ["timina", "T", "Cc1c[nH]c(=O)[nH]c1=O", "pirimidina", "pyrimidine", "só DNA"],
+           ["uracila", "U", "O=c1cc[nH]c(=O)[nH]1", "pirimidina", "pyrimidine", "só RNA"]]
+EN_B = {"adenina": "adenine", "guanina": "guanine", "citosina": "cytosine", "timina": "thymine", "uracila": "uracil"}
+bases = []
+for nome, letra, smi, tipo, pal, onde in BASES_L:
+    b = AN["bases"][nome]; f = val(b["formula"])
+    if hill(conta_smi(smi)) != f: erros.append(("base: SMILES ≠ fórmula da fonte", nome, hill(conta_smi(smi)), f))
+    confere_nome(nome, EN_B[nome], smi)
+    if not tem(b["purina_ou_pirimidina"], pal): erros.append(("base: purina/pirimidina sem apoio", nome))
+    c = conta_smi(smi)
+    bases.append({"nome": nome, "l": letra, "f": f, "m": c["C"] * 12 + c["H"] + c["N"] * 14 + c.get("O", 0) * 16, "mfonte": val(b["massa_molar"]), "tipo": tipo, "onde": onde, "smi": smi})
+PB = AN["pares_de_bases"]; DF = AN["definicoes"]
+at = trecho_com(PB["ligacoes_de_hidrogenio"], r"A•T base pair with (two) hydrogen bonds"); gc = trecho_com(PB["ligacoes_de_hidrogenio"], r"G•C base pair with (three) hydrogen bonds")
+hel = trecho_com(DF["pares_por_volta"], r"helix is (\d+) Å wide, there are (\d+) base pairs per turn, and each turn is (\d+) Å in length")
+cod = trecho_com(DF["numero_de_codons"], r"(\d+) possible triplets of the four bases in RNA, (\d+) code for specific amino acids and (\d+) code for chain termination")
+atp = trecho_com(AN["ATP"]["energia_livre_de_hidrolise"], r"ΔG°' = −([\d.]+) kJ/mol")
+if not (at and gc and hel and cod and atp): erros.append(("ácidos nucleicos: frase de fonte não achada", bool(at), bool(gc), bool(hel), bool(cod), bool(atp)))
+else:
+    BIO["DNA"] = {"hAT": 2, "hGC": 3, "largura": int(hel.group(1)), "paresVolta": int(hel.group(2)), "passo": int(hel.group(3)), "codons": int(cod.group(1)), "sentido": int(cod.group(2)), "parada": int(cod.group(3)),
+                  "atpDG": float(atp.group(1)), "atpF": val(AN["ATP"]["formula"]), "atpM": val(AN["ATP"]["massa_molar"])}
+    if BIO["DNA"]["codons"] != 64: erros.append(("códons", BIO["DNA"]))
+BIO["BASES"] = bases
 #MAIS-SECOES
 
 J = lambda o: json.dumps(o, ensure_ascii=False)
