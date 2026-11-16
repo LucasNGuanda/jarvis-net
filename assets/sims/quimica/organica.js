@@ -446,6 +446,39 @@
       return { ...b, est: { ...b.est, na, nd }, vis: (v) => [...b.vis(v).slice(0, 3), ["nox do carbono funcional", na === null ? "—" : v && nd !== null ? `${sg(na)} → ${sg(nd)}` : sg(na) + " → ?"]], txt: b.txt + (na !== null && nd !== null ? ` O carbono funcional vai de ${sg(na)} para ${sg(nd)}: ${nd > na ? "oxidou" : "reduziu"}.` : "") }; };
     SIM.qOxidacao._ult = labRx(el, { lista: () => rxDe(["ox"]).map(it), pergunta: "Antes de clicar em <b>mostrar</b>: o carbono do grupo funcional tem H para perder? Até onde a oxidação vai?" }); };
 
+  /* ---------- mecanismos (H13): perfil de energia e lei de velocidade ---------- */
+  /* dados de cada mecanismo: etapas, intermediário, ordens (substrato, reagente), estereoquímica e quando acontece (OpenStax Organic Chemistry, cap. 11 e resumo 11.12) */
+  const MEC = {
+    SN2: { nome: "SN2 (substituição nucleofílica bimolecular)", etapas: 1, inter: "nenhum (só um estado de transição)", os: 1, or: 1, reag: "nucleófilo", lei: "v = k·[haleto]·[nucleófilo]", estereo: "inversão da configuração", quando: "haleto de metila ou primário, nucleófilo forte; o nucleófilo ataca pelo lado oposto ao do grupo de saída, numa etapa só" },
+    SN1: { nome: "SN1 (substituição nucleofílica unimolecular)", etapas: 2, inter: "carbocátion", os: 1, or: 0, reag: "nucleófilo", lei: "v = k·[haleto]", estereo: "racemização (mistura das duas configurações)", quando: "haleto terciário em meio neutro (água, álcool); o grupo de saída sai primeiro, na etapa lenta, e o nucleófilo entra depois" },
+    E2: { nome: "E2 (eliminação bimolecular)", etapas: 1, inter: "nenhum (só um estado de transição)", os: 1, or: 1, reag: "base", lei: "v = k·[haleto]·[base]", estereo: "forma-se o alceno (Zaitsev)", quando: "haleto secundário ou terciário com base forte; a base arranca o H enquanto o grupo de saída sai" },
+    E1: { nome: "E1 (eliminação unimolecular)", etapas: 2, inter: "carbocátion", os: 1, or: 0, reag: "base", lei: "v = k·[substrato]", estereo: "forma-se o alceno (Zaitsev)", quando: "substrato terciário em meio neutro ou ácido (desidratação de álcoois); o carbocátion se forma e depois perde um H do carbono vizinho" },
+    AdE: { nome: "adição eletrofílica (HX a alceno)", etapas: 2, inter: "carbocátion", os: 1, or: 1, reag: "HX", lei: "v = k·[alceno]·[HX]", estereo: "orientação de Markovnikov", quando: "alceno com HX: na etapa lenta, a dupla ataca o H⁺ e forma o carbocátion mais estável; depois o haleto entra" },
+  };
+  /* perfil de energia (esboço, sem escala): n = 1 (um máximo) ou 2 (dois máximos com um vale: o intermediário) */
+  const perfil = (n, o = {}) => { const W = o.w || 260, H = o.h || 150, x0 = 34, x1 = W - 14, yb = H - 26, yr = yb - 30, yp = yb - 8 - (o.exo === false ? 44 : 0), top = 22, X = (t) => x0 + (x1 - x0) * t;
+    const pts = n === 1 ? [[0, yr], [0.12, yr], [0.5, top], [0.88, yp], [1, yp]] : [[0, yr], [0.1, yr], [0.34, top], [0.55, top + 62], [0.74, top + 34], [0.92, yp], [1, yp]];
+    let d = `M${X(pts[0][0]).toFixed(1)},${pts[0][1]}`; for (let i = 1; i < pts.length; i++) { const a = pts[i - 1], b = pts[i], mx = (X(a[0]) + X(b[0])) / 2; d += ` C${mx.toFixed(1)},${a[1]} ${mx.toFixed(1)},${b[1]} ${X(b[0]).toFixed(1)},${b[1]}`; }
+    const t2 = (x, y, t, anc = "middle") => `<text x="${x.toFixed(1)}" y="${y}" text-anchor="${anc}" class="tx2" style="font-size:10.5px">${t}</text>`;
+    let s = `<line x1="${x0}" y1="${yb + 8}" x2="${x1}" y2="${yb + 8}" style="stroke:var(--ink2);stroke-width:1.2"/><line x1="${x0}" y1="${yb + 8}" x2="${x0}" y2="8" style="stroke:var(--ink2);stroke-width:1.2"/><path d="${d}" style="fill:none;stroke:var(--mod);stroke-width:2.4"/>` + t2(x0 - 22, 14, "E", "start") + t2((x0 + x1) / 2, H - 4, "caminho da reação");
+    if (o.rot !== false) { s += t2(X(0.06), yr + 14, "reag.") + t2(X(0.95), yp + 14, "prod."); if (n === 2) s += t2(X(0.55), top + 78, "intermediário"); }
+    return { svg: s, w: W, h: H }; };
+  Object.assign(SIM.org, { MEC, perfil });
+  /* nome: "Mecanismos: etapas, energia e velocidade" · matéria: Química · tema: H13 */
+  SIM.qMecanismo = (el, F) => { let m = "SN2", a = 1, b = 1;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;justify-content:center;padding:12px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><div class="bts">${botoes([["SN2", "SN2"], ["SN1", "SN1"], ["E2", "E2"], ["E1", "E1"], ["AdE", "adição de HX"]], "m", m)}</div></div>
+      <div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">concentração do substrato</p><div class="bts">${botoes([[1, "×1"], [2, "×2"], [3, "×3"]], "a", a)}</div></div>
+      <div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)" data-v="rb">concentração do nucleófilo</p><div class="bts">${botoes([[1, "×1"], [2, "×2"], [3, "×3"]], "b", b)}</div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), est = () => { const e = MEC[m]; return { m, a, b, etapas: e.etapas, inter: e.inter, fator: Math.pow(a, e.os) * Math.pow(b, e.or), ordem: e.os + e.or, lei: e.lei }; };
+    const desenha = () => { const e = MEC[m], s = est(), d = perfil(e.etapas, { w: 420, h: 210 });
+      q("[data-v=sv]").innerHTML = `<svg viewBox="0 0 ${d.w} ${d.h}" width="${d.w}" role="img" aria-label="perfil de energia, esboço">${d.svg}</svg>`; q("[data-v=rb]").textContent = "concentração de: " + e.reag;
+      q("[data-v=lt]").innerHTML = vis("etapas", String(e.etapas)) + vis("intermediário", e.inter) + vis("lei de velocidade", e.lei) + vis("ordem total", String(s.ordem)) + vis("velocidade", "×" + s.fator) + vis("resultado", e.estereo);
+      q("[data-v=st]").innerHTML = `<b>${e.nome}</b>: ${e.quando}. ${e.or ? `A etapa lenta envolve as duas espécies: multiplicar as duas concentrações multiplica a velocidade pelo <b>produto</b> dos fatores.` : `Só o substrato entra na etapa lenta: mudar a concentração de ${e.reag} <b>não altera</b> a velocidade.`} O gráfico é um esboço, sem escala.`; };
+    liga(el, "m", (v) => { m = v; desenha(); }); liga(el, "a", (v) => { a = +v; desenha(); }); liga(el, "b", (v) => { b = +v; desenha(); });
+    SIM.qMecanismo._ult = { poe: (mm, aa = 1, bb = 1) => { m = mm; a = aa; b = bb; [["m", m], ["a", a], ["b", b]].forEach(([k, v]) => el.querySelectorAll(`[data-${k}]`).forEach((x) => x.setAttribute("aria-pressed", String(x.dataset[k]) === String(v)))); desenha(); }, est }; desenha(); };
+
   /*EST-INI*/ /* GERADO por tools/quimica/gera-estereo.py (RDKit): não editar à mão. c: carbonos quirais (índices dos átomos no SMILES); d: duplas com cis/trans; n: estereoisômeros diferentes; meso; quirais */
   SIM.org.EST = {
     "butan-2-ol": { smi: "CCC(C)O", c: [2], d: [], n: 2, meso: 0, quirais: 2 },
