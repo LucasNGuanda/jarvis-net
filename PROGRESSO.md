@@ -52,7 +52,7 @@ EP01 Pêndulo simples pela lagrangiana, EP02 Pêndulo duplo e caos, EP03 Pêndul
 - **Matemática** (MB, AR, GE, AL) e **Olimpíada e demonstrações** (DM, TNO, DES, CBO, GEO, FUN, PRI): 114 temas cadastrados, todos "em breve".
 - Rota `#/matematica/<COD>`; progresso em `mat:`.
 
-### Química — 3 abas, 75 temas escritos na aba Química: módulos A (β 4.8 a 5.0), B (β 5.1), C (β 5.2), D (β 5.4), E (β 5.6), F (β 5.7), G (β 5.8), H (β 5.9) e I (β 6.0), todos no `main`; aba Moléculas (β 5.5)
+### Química — 3 abas, 79 de 79 temas escritos na aba Química: módulos A (β 4.8 a 5.0), B (β 5.1), C (β 5.2), D (β 5.4), E (β 5.6), F (β 5.7), G (β 5.8), H (β 5.9) e I (β 6.0), todos no `main`; módulo J (β 6.1) na branch `quimica-modulo-j`, esperando aprovação; aba Moléculas (β 5.5)
 Química (módulos QA–QJ: introdução, atomística, ligações, reações e estequiometria, físico-química I e II, eletroquímica, orgânica, bioquímica e ambiental, analítica; 79 temas) e Experimentos (EQ01–EQ25, todos "em breve"; módulo novo EQs "Soluções e indicadores"). mhchem carregado e testado. Progresso em `qui:`.
 
 | Aba | Módulo | Temas | Exercícios (mín–máx) | Total | Sem figura | Com `F.chute` | Com chefão | Laboratórios |
