@@ -77,7 +77,7 @@ window.CATALOGO.push(
     ["G04","Corrosão e proteção de metais",[],true],
   ] },
   { id:"QH", area:"qui", letra:"H", cor:"--mU", nome:"Química orgânica", desc:"Funções, isomeria e reações orgânicas.", temas:[
-    ["H01","Átomo de carbono e cadeias",[]],
+    ["H01","O átomo de carbono e as cadeias carbônicas",[],true],
     ["H02","Hidrocarbonetos",[]],
     ["H03","Funções oxigenadas",[]],
     ["H04","Funções nitrogenadas",[]],

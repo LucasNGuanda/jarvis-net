@@ -33,8 +33,8 @@
   const massa = (smi) => { const c = conta(parse(smi)), m = MA(); return Object.keys(c).reduce((t, k) => t + c[k] * m[k], 0); };
   /* índice de deficiência de hidrogênio: (2C + 2 + N − H − X) / 2 */
   const idh = (smi) => { const c = conta(parse(smi)), X = (c.F || 0) + (c.Cl || 0) + (c.Br || 0) + (c.I || 0); return (2 * (c.C || 0) + 2 + (c.N || 0) - (c.H || 0) - X) / 2; };
-  /* classificação de cada carbono: primário, secundário, terciário, quaternário (número de carbonos vizinhos) */
-  const classes = (smi) => { const g = parse(smi); return g.at.map((a) => (a.el === "C" ? a.viz.filter(([v]) => g.at[v].el === "C").length : null)); };
+  /* classificação de cada carbono: 1 primário (ligado a um carbono ou a nenhum, como nos livros brasileiros), 2 secundário, 3 terciário, 4 quaternário */
+  const classes = (smi) => { const g = parse(smi); return g.at.map((a) => (a.el === "C" ? Math.max(1, a.viz.filter(([v]) => g.at[v].el === "C").length) : null)); };
 
   /* ---------- disposição em 2D ---------- */
   const layout = (g, L = 38) => { const n = g.at.length, pos = Array(n).fill(null), feito = Array(n).fill(false);
@@ -70,9 +70,53 @@
       if (o.nums && o.nums[k] !== undefined) s += `<text x="${X(k).toFixed(1)}" y="${(Y(k) - 13).toFixed(1)}" text-anchor="middle" style="font:500 11px Inter,system-ui,sans-serif;fill:var(--ink2)">${o.nums[k]}</text>`; });
     return { svg: s, w: W, h: H }; };
   /* figura pronta, centralizada numa caixa de largura fixa; várias moléculas lado a lado com legenda embaixo de cada uma */
-  const fig = (lista, o = {}) => { const itens = (Array.isArray(lista) ? lista : [lista]).map((x) => (typeof x === "string" ? { smi: x } : x)), des = itens.map((it) => svg(it.smi, { ...o, ...it })), gap = 34, tot = des.reduce((t, d) => t + d.w, 0) + gap * (des.length - 1), hmax = Math.max(...des.map((d) => d.h)), temLeg = itens.some((it) => it.leg), Wf = o.W || 560, Hf = hmax + (temLeg ? 22 : 0) + 8, esc = Math.min(1, (Wf - 20) / tot);
-    let x = (Wf - tot * esc) / 2, s = ""; des.forEach((d, k) => { s += `<g transform="translate(${x.toFixed(1)},${(4 + (hmax - d.h) / 2).toFixed(1)}) scale(${esc.toFixed(3)})">${d.svg}</g>`; if (itens[k].leg) s += `<text x="${(x + (d.w * esc) / 2).toFixed(1)}" y="${(hmax * esc + 20).toFixed(1)}" text-anchor="middle" class="tx2">${itens[k].leg}</text>`; x += (d.w + gap) * esc; });
-    return `<svg class="figura" viewBox="0 0 ${Wf} ${(Hf * (esc < 1 ? Math.max(esc, 0.6) : 1) + (temLeg ? 6 : 0)).toFixed(0)}" width="${Wf}" role="img" aria-label="fórmula estrutural">${s}</svg>`; };
+  const fig = (lista, o = {}) => { const itens = (Array.isArray(lista) ? lista : [lista]).map((x) => (typeof x === "string" ? { smi: x } : x)), des = itens.map((it) => svg(it.smi, { ...o, ...it })), gap = 30, temLeg = itens.some((it) => it.leg), Wf = o.W || 560;
+    /* cada molécula ocupa uma faixa da largura dela ou da legenda, a que for maior */
+    const faixa = des.map((d, k) => Math.max(d.w, itens[k].leg ? itens[k].leg.length * 6.6 + 8 : 0)), tot = faixa.reduce((t, f) => t + f, 0) + gap * (des.length - 1), hmax = Math.max(...des.map((d) => d.h)), esc = Math.min(1, (Wf - 16) / tot), fonte = Math.max(10, 13 * esc);
+    let x = (Wf - tot * esc) / 2, s = ""; des.forEach((d, k) => { const cx = x + (faixa[k] * esc) / 2; s += `<g transform="translate(${(cx - (d.w * esc) / 2).toFixed(1)},${(4 + ((hmax - d.h) * esc) / 2).toFixed(1)}) scale(${esc.toFixed(3)})">${d.svg}</g>`; if (itens[k].leg) s += `<text x="${cx.toFixed(1)}" y="${(hmax * esc + 20).toFixed(1)}" text-anchor="middle" class="tx2" style="font-size:${fonte.toFixed(1)}px">${itens[k].leg}</text>`; x += (faixa[k] + gap) * esc; });
+    return `<svg class="figura" viewBox="0 0 ${Wf} ${(hmax * esc + (temLeg ? 30 : 8)).toFixed(0)}" width="${Wf}" role="img" aria-label="fórmula estrutural">${s}</svg>`; };
 
-  SIM.org = { parse, conta, formula, massa, idh, classes, layout, svg, fig };
+  /* hibridização de cada carbono: sp3 (só simples), sp2 (uma dupla ou aromático), sp (uma tripla ou duas duplas) */
+  const hib = (smi) => { const g = parse(smi); return g.at.map((a) => { if (a.el !== "C") return null; const os = a.viz.map(([, k]) => g.bd[k].o), d = os.filter((o) => o === 2).length, t = os.filter((o) => o === 3).length; return t || d === 2 ? "sp" : d === 1 || a.arom ? "sp2" : "sp3"; }); };
+  /* ligações sigma e pi da molécula inteira (contando as C–H e as outras com H) */
+  const sigmapi = (smi) => { const g = parse(smi), nh = g.at.reduce((t, a) => t + a.h, 0); let sg = nh, pi = 0, ar = 0; g.bd.forEach((b) => { sg += 1; if (b.o === 2) pi += 1; if (b.o === 3) pi += 2; if (b.o === 1.5) ar += 1; }); return { sigma: sg, pi: pi + Math.round(ar / 2) }; };
+  /* classificação da cadeia carbônica, como nos livros brasileiros */
+  const cadeia = (smi) => { const g = parse(smi), C = g.at.map((a, k) => (a.el === "C" ? k : -1)).filter((k) => k >= 0), nC = C.length, lig = g.bd.filter((b) => g.at[b.a].el === "C" && g.at[b.b].el === "C");
+    /* ciclos: ligações − átomos + componentes, no grafo inteiro (anel com heteroátomo também fecha a cadeia) */
+    const comp = (() => { const v = new Set(); let c = 0; g.at.forEach((_, k) => { if (v.has(k)) return; c++; const f = [k]; while (f.length) { const u = f.pop(); if (v.has(u)) continue; v.add(u); g.at[u].viz.forEach(([x]) => f.push(x)); } }); return c; })(), ciclos = g.bd.length - g.at.length + comp;
+    const emAnel = (() => { const r = new Set(); if (!ciclos) return r; g.bd.forEach((b, kb) => { /* a ligação está num anel se, tirando-a, as pontas continuam ligadas */ const v = new Set(), f = [b.a]; while (f.length) { const u = f.pop(); if (v.has(u)) continue; v.add(u); g.at[u].viz.forEach(([x, k2]) => { if (k2 !== kb) f.push(x); }); } if (v.has(b.b)) { r.add(b.a); r.add(b.b); } }); return r; })();
+    const arom = g.at.some((a) => a.arom), insat = lig.some((b) => b.o !== 1);
+    /* heteroátomo ENTRE carbonos (ligado a pelo menos dois carbonos) */
+    const hetero = g.at.some((a) => a.el !== "C" && a.viz.filter(([v]) => g.at[v].el === "C").length >= 2);
+    /* ramificada: cadeia aberta com carbono terciário ou quaternário; cadeia fechada com carbono fora do anel */
+    const ram = ciclos ? C.some((k) => !emAnel.has(k)) : C.some((k) => g.at[k].viz.filter(([v]) => g.at[v].el === "C").length >= 3);
+    return { nC, aberta: !ciclos, ciclos, aromatica: arom, saturada: !insat, homogenea: !hetero, ramificada: ram, mista: ciclos > 0 && C.some((k) => !emAnel.has(k)) }; };
+  SIM.org = { parse, conta, formula, massa, idh, classes, hib, sigmapi, cadeia, layout, svg, fig };
+
+  /* ---------- H01 · leitor de cadeias ---------- */
+  const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
+  const botoes = (lista, attr, ativo) => lista.map(([k, nome]) => `<button class="bt peq" data-${attr}="${k}" aria-pressed="${String(k) === String(ativo)}">${nome}</button>`).join("");
+  const liga = (el, attr, fn) => el.querySelectorAll(`[data-${attr}]`).forEach((b) => b.addEventListener("click", () => { el.querySelectorAll(`[data-${attr}]`).forEach((x) => x.setAttribute("aria-pressed", x === b)); fn(b.dataset[attr]); }));
+  SIM.org.ui = { vis, botoes, liga };
+  /* nome: "Leitor de cadeias: classifique cada carbono e a cadeia inteira" · matéria: Química · tema: H01 */
+  SIM.qCadeia = (el, F) => {
+    const MOL = [["butano", "CCCC"], ["metilpropano", "CC(C)C"], ["2,2,4-trimetilpentano", "CC(C)CC(C)(C)C"], ["propeno", "C=CC"], ["but-2-ino", "CC#CC"], ["buta-1,3-dieno", "C=CC=C"], ["cicloexano", "C1CCCCC1"], ["benzeno", "c1ccccc1"], ["metilbenzeno", "Cc1ccccc1"], ["etanol", "CCO"], ["etoxietano", "CCOCC"], ["ácido etanoico", "CC(=O)O"], ["dimetilamina", "CNC"], ["metilciclopentano", "CC1CCCC1"]];
+    let k = 0, modo = "classe";
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="min-height:190px;display:flex;align-items:center;justify-content:center"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><div class="bts">${botoes(MOL.map((m, i) => [i, m[0]]), "k", k)}</div></div><div><div class="bts">${botoes([["classe", "tipo de carbono"], ["hib", "hibridização"], ["nada", "só a estrutura"]], "m", modo)}</div><div class="bts" style="margin-top:8px">${botoes([["cond", "com os carbonos escritos"], ["bastao", "em bastão"]], "d", "cond")}</div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s); let des = "cond";
+    const CL = ["metila (0)", "primário", "secundário", "terciário", "quaternário"], COR = ["#8b95a3", "#4a9fe8", "#3fae7a", "#e0a13a", "#e5604d"], CH = { sp3: "#4a9fe8", sp2: "#e0a13a", sp: "#e5604d" };
+    const est = () => { const smi = MOL[k][1], c = SIM.org.cadeia(smi), cls = SIM.org.classes(smi), hb = SIM.org.hib(smi), sp = SIM.org.sigmapi(smi), cnt = [0, 1, 2, 3, 4].map((n) => cls.filter((x) => x === n).length); return { nome: MOL[k][0], smi, ...c, cls, hb, cnt, formula: SIM.org.formula(smi), idh: SIM.org.idh(smi), ...sp }; };
+    const desenha = () => { const e = est(), g = SIM.org.parse(e.smi), d = SIM.org.svg(g, { modo: des, L: 46 });
+      /* bolinhas coloridas atrás de cada carbono, pela classe ou pela hibridização */
+      const P = SIM.org.layout(g, 46), xs = P.map((p) => p[0]), ys = P.map((p) => p[1]), minx = Math.min(...xs) - 26, miny = Math.min(...ys) - 26;
+      const halos = modo === "nada" ? "" : g.at.map((a, i) => (a.el !== "C" ? "" : `<circle cx="${(P[i][0] - minx).toFixed(1)}" cy="${(P[i][1] - miny).toFixed(1)}" r="17" style="fill:${modo === "classe" ? COR[e.cls[i]] : CH[e.hb[i]]};opacity:.38"/>`)).join("");
+      q("[data-v=sv]").innerHTML = `<svg viewBox="0 0 ${d.w.toFixed(0)} ${d.h.toFixed(0)}" width="${Math.min(640, d.w * 1.5).toFixed(0)}" role="img" aria-label="fórmula estrutural">${halos}${d.svg}</svg>`;
+      const leg = modo === "classe" ? [1, 2, 3, 4].filter((n) => e.cnt[n]).map((n) => `<span style="color:${COR[n]}">●</span> ${CL[n]}: ${e.cnt[n]}`).join(" &nbsp; ")  : modo === "hib" ? ["sp3", "sp2", "sp"].filter((h) => e.hb.includes(h)).map((h) => `<span style="color:${CH[h]}">●</span> ${h.replace("3", "³").replace("2", "²")}: ${e.hb.filter((x) => x === h).length}`).join(" &nbsp; ") : "";
+      q("[data-v=lt]").innerHTML = vis("fórmula molecular", e.formula) + vis("insaturações (IDH)", String(e.idh).replace(".", ",")) + vis("ligações σ", String(e.sigma)) + vis("ligações π", String(e.pi)) + vis("cadeia", [e.aberta ? "aberta" : e.aromatica ? "aromática" : "fechada", e.ramificada ? "ramificada" : "normal", e.saturada ? "saturada" : "insaturada", e.homogenea ? "homogênea" : "heterogênea"].join(", "));
+      q("[data-v=st]").innerHTML = (leg ? leg + "<br>" : "") + (modo === "classe" ? "Carbono <b>primário</b> está ligado a um só carbono (ou a nenhum); <b>secundário</b>, a dois; <b>terciário</b>, a três; <b>quaternário</b>, a quatro. Conta-se só carbono vizinho: oxigênio, nitrogênio e hidrogênio não entram." : modo === "hib" ? "Só ligações simples: <b>sp³</b> (tetraédrico, 109,5°). Uma dupla, ou carbono de anel aromático: <b>sp²</b> (trigonal plano, 120°). Uma tripla ou duas duplas: <b>sp</b> (linear, 180°)." : "Cada traço é um par de elétrons compartilhado. Na fórmula em bastão, cada ponta e cada vértice é um carbono, com os hidrogênios subentendidos.") + (e.homogenea ? "" : " Esta cadeia é <b>heterogênea</b>: há um átomo diferente de carbono <b>entre</b> dois carbonos."); };
+    liga(el, "k", (v) => { k = +v; desenha(); }); liga(el, "m", (v) => { modo = v; desenha(); }); liga(el, "d", (v) => { des = v; desenha(); });
+    SIM.qCadeia._ult = { poe: (i, m) => { k = i; modo = m || modo; desenha(); }, est, MOL }; desenha(); };
+
 })();
