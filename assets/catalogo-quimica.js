@@ -50,7 +50,7 @@ window.CATALOGO.push(
   ] },
   { id:"QE", area:"qui", letra:"E", cor:"--mS", nome:"Físico-química I", desc:"Soluções, propriedades coligativas e termoquímica.", temas:[
     ["E01","Leis dos gases e equação dos gases ideais",[],true],
-    ["E02","Teoria cinética dos gases; gases reais",[]],
+    ["E02","Teoria cinética dos gases; gases reais",[],true],
     ["E03","Misturas gasosas: pressão parcial e volume molar",[]],
     ["E04","Diagramas de fases",[]],
     ["E05","Soluções e curvas de solubilidade",[]],

@@ -1,0 +1,1691 @@
+{
+ "_meta": {
+  "nota": "Todo valor foi extraido por script (dadosE-scripts/build.py) do texto das paginas baixadas em dadosE-bruto/ em 2026-11-16. \"valor_texto\" e a grafia literal da fonte; \"trecho\" e literal (HTML convertido em texto, celulas separadas por |). null = a fonte baixada nao traz."
+ },
+ "fases": {
+  "H2O": {
+   "ponto_triplo": {
+    "T": [
+     {
+      "valor": 273.16,
+      "valor_texto": "273.16",
+      "unidade": "K",
+      "fonte": "Wikipedia (en): Triple point",
+      "url": "https://en.wikipedia.org/wiki/Triple_point",
+      "trecho": "| Water[5][6] | 273.16 K (0.01 °C) | 0.611657 kPa (0.00603659 atm)"
+     },
+     {
+      "valor": 273.16,
+      "valor_texto": "273.16",
+      "unidade": "K",
+      "fonte": "Wikipedia (en): Triple point",
+      "url": "https://en.wikipedia.org/wiki/Triple_point",
+      "trecho": "t: the unique combination of pressure and temperature at which liquid water, solid ice, and water vapour coexist in a stable equilibrium is approximately 273.16±0.0001 K[4] and a vapour pressure of 611.657 pascals (6.11657 mbar; 0.00603659 atm).[5][6]",
+      "obs": "incerteza ±0.0001 K na fonte"
+     }
+    ],
+    "P": [
+     {
+      "valor": 0.611657,
+      "valor_texto": "0.611657",
+      "unidade": "kPa",
+      "fonte": "Wikipedia (en): Triple point",
+      "url": "https://en.wikipedia.org/wiki/Triple_point",
+      "trecho": "| Water[5][6] | 273.16 K (0.01 °C) | 0.611657 kPa (0.00603659 atm)",
+      "obs": "mesma linha: (0.00603659 atm)"
+     },
+     {
+      "valor": 611.657,
+      "valor_texto": "611.657",
+      "unidade": "Pa",
+      "fonte": "Wikipedia (en): Triple point",
+      "url": "https://en.wikipedia.org/wiki/Triple_point",
+      "trecho": "| liquid water, ice Ih, and water vapor | 611.657 Pa[8] | 273.16 K (0.0001 °C)[4]"
+     },
+     {
+      "valor": 0.0061,
+      "valor_texto": "0.0061",
+      "unidade": "bar",
+      "fonte": "NIST Chemistry WebBook",
+      "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=4",
+      "trecho": "| Ptriple | 0.0061 | bar | N/A | Sato, Watanabe, et al., 1991 | Uncertainty assigned by TRC = 1.×10-7 bar; TRC"
+     }
+    ]
+   },
+   "ponto_critico": {
+    "T": [
+     {
+      "valor": 647.096,
+      "valor_texto": "647.096",
+      "unidade": "K",
+      "fonte": "Wikipedia (en): Critical point (thermodynamics)",
+      "url": "https://en.wikipedia.org/wiki/Critical_point_(thermodynamics)",
+      "trecho": "The critical point of water occurs at 647.096 K (373.946 °C; 705.103 °F) and 22.064 megapascals (3,200.1 psi; 217.75 atm; 220.64 bar).[3]"
+     },
+     {
+      "valor": 647.0,
+      "valor_texto": "647.",
+      "unidade": "K",
+      "fonte": "NIST Chemistry WebBook",
+      "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=4",
+      "trecho": "| Tc | 647. ± 2. | K | AVG | N/A | Average of 7 values; Individual data points",
+      "obs": "NIST: media de 7 valores, ± 2 K"
+     },
+     {
+      "valor": 647,
+      "valor_texto": "647",
+      "unidade": "K",
+      "fonte": "Wikipedia (en): Properties of water",
+      "url": "https://en.wikipedia.org/wiki/Properties_of_water",
+      "trecho": "Water also forms a supercritical fluid. The critical point is at a temperature of 647 K and a pressure of 22.064 MPa. In nature, this only rarely occurs in extremely hostile conditions. A likely example of naturally occurring s"
+     }
+    ],
+    "P": [
+     {
+      "valor": 22.064,
+      "valor_texto": "22.064",
+      "unidade": "MPa",
+      "fonte": "Wikipedia (en): Critical point (thermodynamics)",
+      "url": "https://en.wikipedia.org/wiki/Critical_point_(thermodynamics)",
+      "trecho": "The critical point of water occurs at 647.096 K (373.946 °C; 705.103 °F) and 22.064 megapascals (3,200.1 psi; 217.75 atm; 220.64 bar).[3]",
+      "obs": "mesma frase: 217.75 atm; 220.64 bar"
+     },
+     {
+      "valor": 217.7,
+      "valor_texto": "217.7",
+      "unidade": "atm",
+      "fonte": "Wikipedia (en): Critical point (thermodynamics)",
+      "url": "https://en.wikipedia.org/wiki/Critical_point_(thermodynamics)",
+      "trecho": "| Water (H2O)[3][21] | 373.946 °C (647.096 K) | 217.7 atm (22,060 kPa)",
+      "obs": "tabela do mesmo artigo: 217.7 atm (22,060 kPa)"
+     },
+     {
+      "valor": 220.64,
+      "valor_texto": "220.64",
+      "unidade": "bar",
+      "fonte": "NIST Chemistry WebBook",
+      "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=4",
+      "trecho": "| Pc | 220.64 | bar | N/A | Sato, Watanabe, et al., 1991 | Uncertainty assigned by TRC = 0.05 bar; TRC",
+      "obs": "NIST lista 5 medidas: 220.64, 220.60, 220.46, 220.64, 220.64 bar"
+     }
+    ]
+   },
+   "fusao_normal": [
+    {
+     "valor": 0.0,
+     "valor_texto": "0.00",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Properties of water",
+     "url": "https://en.wikipedia.org/wiki/Properties_of_water",
+     "trecho": "| Melting point | 0.00 °C (32.00 °F; 273.15 K) [a]",
+     "obs": "mesma linha: 273.15 K"
+    },
+    {
+     "valor": 0.0,
+     "valor_texto": "0.00",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Water | | 100.00 | | 0.512 | 0.00 | –1.86 | Kb & Kf[2]"
+    }
+   ],
+   "ebulicao_normal": [
+    {
+     "valor": 99.98,
+     "valor_texto": "99.98",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Properties of water",
+     "url": "https://en.wikipedia.org/wiki/Properties_of_water",
+     "trecho": "| Boiling point | 99.98 °C (211.96 °F; 373.13 K)[8][a]",
+     "obs": "mesma linha: 373.13 K"
+    },
+    {
+     "valor": 373.17,
+     "valor_texto": "373.17",
+     "unidade": "K",
+     "fonte": "NIST Chemistry WebBook",
+     "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=4",
+     "trecho": "| Tboil | 373.17 ± 0.04 | K | AVG | N/A | Average of 7 values; Individual data points",
+     "obs": "NIST: media de 7 valores, ± 0.04 K"
+    },
+    {
+     "valor": 100,
+     "valor_texto": "100",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Boiling-point elevation",
+     "url": "https://en.wikipedia.org/wiki/Boiling-point_elevation",
+     "trecho": "| Water | 100 | 0.512"
+    },
+    {
+     "valor": 100.0,
+     "valor_texto": "100.00",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Water | | 100.00 | | 0.512 | 0.00 | –1.86 | Kb & Kf[2]"
+    }
+   ]
+  },
+  "CO2": {
+   "ponto_triplo": {
+    "T": [
+     {
+      "valor": 216.592,
+      "valor_texto": "216.592",
+      "unidade": "K",
+      "fonte": "Wikipedia (en): Carbon dioxide",
+      "url": "https://en.wikipedia.org/wiki/Carbon_dioxide",
+      "trecho": "Liquid carbon dioxide forms only at pressures above 0.51795(10) MPa[2] (5.11177(99) atm); the triple point of carbon dioxide is 216.592(3) K[2] (−56.558(3) °C) at 0.51795(10) MPa[2] (5.11177(99) atm) (see phase diagram). The critical point is 304.128(15) K[2] (30.978(15) °C) at 7",
+      "obs": "incerteza (3) no ultimo digito"
+     },
+     {
+      "valor": 216.58,
+      "valor_texto": "216.58",
+      "unidade": "K",
+      "fonte": "NIST Chemistry WebBook",
+      "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=4",
+      "trecho": "| Ttriple | 216.58 | K | N/A | Marsh, 1987 | Uncertainty assigned by TRC = 0.008 K; recommended as fixed point for thermometery; TRC"
+     },
+     {
+      "valor": 216.55,
+      "valor_texto": "216.55",
+      "unidade": "K",
+      "fonte": "Wikipedia (en): Triple point",
+      "url": "https://en.wikipedia.org/wiki/Triple_point",
+      "trecho": "| Carbon dioxide | 216.55 K (−56.60 °C) | 517 kPa (5.10 atm)"
+     }
+    ],
+    "P": [
+     {
+      "valor": 0.51795,
+      "valor_texto": "0.51795",
+      "unidade": "MPa",
+      "fonte": "Wikipedia (en): Carbon dioxide",
+      "url": "https://en.wikipedia.org/wiki/Carbon_dioxide",
+      "trecho": "e forms only at pressures above 0.51795(10) MPa[2] (5.11177(99) atm); the triple point of carbon dioxide is 216.592(3) K[2] (−56.558(3) °C) at 0.51795(10) MPa[2] (5.11177(99) atm) (see phase diagram). The critical point is 304.128(15) K[2] (30.978(15) °C) at 7.3773(30) MPa[2] (72.808(30) atm). Ano",
+      "obs": "mesma frase: 5.11177(99) atm"
+     },
+     {
+      "valor": 5.185,
+      "valor_texto": "5.185",
+      "unidade": "bar",
+      "fonte": "NIST Chemistry WebBook",
+      "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=4",
+      "trecho": "| Ptriple | 5.185 | bar | N/A | Angus, Armstrong, et al., 1976 | Uncertainty assigned by TRC = 0.005 bar; TRC"
+     },
+     {
+      "valor": 517,
+      "valor_texto": "517",
+      "unidade": "kPa",
+      "fonte": "Wikipedia (en): Triple point",
+      "url": "https://en.wikipedia.org/wiki/Triple_point",
+      "trecho": "| Carbon dioxide | 216.55 K (−56.60 °C) | 517 kPa (5.10 atm)",
+      "obs": "mesma linha: (5.10 atm)"
+     }
+    ]
+   },
+   "ponto_critico": {
+    "T": [
+     {
+      "valor": 304.128,
+      "valor_texto": "304.128",
+      "unidade": "K",
+      "fonte": "Wikipedia (en): Carbon dioxide",
+      "url": "https://en.wikipedia.org/wiki/Carbon_dioxide",
+      "trecho": "| Critical point (T, P) | 304.128(15) K[2] (30.978(15) °C), 7.3773(30) MPa[2] (72.808(30) atm)",
+      "obs": "mesma linha: 30.978(15) °C"
+     },
+     {
+      "valor": 304.18,
+      "valor_texto": "304.18",
+      "unidade": "K",
+      "fonte": "NIST Chemistry WebBook",
+      "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=4",
+      "trecho": "| Tc | 304.18 | K | N/A | Suehiro, Nakajima, et al., 1996 | Uncertainty assigned by TRC = 0.04 K; TRC",
+      "obs": "NIST lista 5 medidas: 304.18, 304.1, 304.35, 304.200, 304.23 K"
+     },
+     {
+      "valor": 304.19,
+      "valor_texto": "304.19",
+      "unidade": "K",
+      "fonte": "Wikipedia (en): Critical point (thermodynamics)",
+      "url": "https://en.wikipedia.org/wiki/Critical_point_(thermodynamics)",
+      "trecho": "| Carbon dioxide (CO2) | 31.04 °C (304.19 K) | 72.8 atm (7,380 kPa)",
+      "obs": "mesma linha: 31.04 °C"
+     }
+    ],
+    "P": [
+     {
+      "valor": 7.3773,
+      "valor_texto": "7.3773",
+      "unidade": "MPa",
+      "fonte": "Wikipedia (en): Carbon dioxide",
+      "url": "https://en.wikipedia.org/wiki/Carbon_dioxide",
+      "trecho": "| Critical point (T, P) | 304.128(15) K[2] (30.978(15) °C), 7.3773(30) MPa[2] (72.808(30) atm)",
+      "obs": "mesma linha: 72.808(30) atm"
+     },
+     {
+      "valor": 73.8,
+      "valor_texto": "73.80",
+      "unidade": "bar",
+      "fonte": "NIST Chemistry WebBook",
+      "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=4",
+      "trecho": "| Pc | 73.80 | bar | N/A | Suehiro, Nakajima, et al., 1996 | Uncertainty assigned by TRC = 0.15 bar; TRC",
+      "obs": "NIST lista 3 medidas: 73.80, 73.40, 73.825 bar"
+     },
+     {
+      "valor": 72.8,
+      "valor_texto": "72.8",
+      "unidade": "atm",
+      "fonte": "Wikipedia (en): Critical point (thermodynamics)",
+      "url": "https://en.wikipedia.org/wiki/Critical_point_(thermodynamics)",
+      "trecho": "| Carbon dioxide (CO2) | 31.04 °C (304.19 K) | 72.8 atm (7,380 kPa)",
+      "obs": "mesma linha: (7,380 kPa)"
+     }
+    ]
+   },
+   "sublimacao_1atm": [
+    {
+     "valor": 194.6855,
+     "valor_texto": "194.6855",
+     "unidade": "K",
+     "fonte": "Wikipedia (en): Carbon dioxide",
+     "url": "https://en.wikipedia.org/wiki/Carbon_dioxide",
+     "trecho": "conditions | 194.6855(30) K (−78.4645(30) °C) at 1 atm (0.101325 MPa)",
+     "obs": "mesma linha: −78.4645(30) °C at 1 atm (0.101325 MPa)"
+    },
+    {
+     "valor": -78.4645,
+     "valor_texto": "−78.4645",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Carbon dioxide",
+     "url": "https://en.wikipedia.org/wiki/Carbon_dioxide",
+     "trecho": "conditions | 194.6855(30) K (−78.4645(30) °C) at 1 atm (0.101325 MPa)"
+    }
+   ],
+   "fusao_normal": null,
+   "ebulicao_normal": null,
+   "obs": "CO2 nao tem fusao nem ebulicao a 1 atm (sublima); a pagina do NIST baixada (Mask=4) nao traz Tsub."
+  }
+ },
+ "vdw": {
+  "unidades": {
+   "a": "L^2·bar/mol^2",
+   "b": "L/mol",
+   "trecho_cabecalho": "| Chemical | a (L2bar/mol2) | b (L/mol)"
+  },
+  "fonte": "Wikipedia (en): Van der Waals constants (data page)",
+  "url": "https://en.wikipedia.org/wiki/Van_der_Waals_constants_(data_page)",
+  "gases": {
+   "He": {
+    "a": 0.0346,
+    "a_texto": "0.0346",
+    "b": 0.0238,
+    "b_texto": "0.0238",
+    "fonte": "Wikipedia (en): Van der Waals constants (data page)",
+    "url": "https://en.wikipedia.org/wiki/Van_der_Waals_constants_(data_page)",
+    "trecho": "| Helium | 0.0346 | 0.0238"
+   },
+   "H2": {
+    "a": 0.2476,
+    "a_texto": "0.2476",
+    "b": 0.02661,
+    "b_texto": "0.02661",
+    "fonte": "Wikipedia (en): Van der Waals constants (data page)",
+    "url": "https://en.wikipedia.org/wiki/Van_der_Waals_constants_(data_page)",
+    "trecho": "| Hydrogen | 0.2476 | 0.02661"
+   },
+   "N2": {
+    "a": 1.37,
+    "a_texto": "1.370",
+    "b": 0.0387,
+    "b_texto": "0.0387",
+    "fonte": "Wikipedia (en): Van der Waals constants (data page)",
+    "url": "https://en.wikipedia.org/wiki/Van_der_Waals_constants_(data_page)",
+    "trecho": "| Nitrogen | 1.370 | 0.0387"
+   },
+   "O2": {
+    "a": 1.382,
+    "a_texto": "1.382",
+    "b": 0.03186,
+    "b_texto": "0.03186",
+    "fonte": "Wikipedia (en): Van der Waals constants (data page)",
+    "url": "https://en.wikipedia.org/wiki/Van_der_Waals_constants_(data_page)",
+    "trecho": "| Oxygen | 1.382 | 0.03186"
+   },
+   "CO2": {
+    "a": 3.6,
+    "a_texto": "3.6",
+    "b": 0.04267,
+    "b_texto": "0.04267",
+    "fonte": "Wikipedia (en): Van der Waals constants (data page)",
+    "url": "https://en.wikipedia.org/wiki/Van_der_Waals_constants_(data_page)",
+    "trecho": "| Carbon dioxide | 3.6 | 0.04267"
+   },
+   "NH3": {
+    "a": 4.225,
+    "a_texto": "4.225",
+    "b": 0.0371,
+    "b_texto": "0.0371",
+    "fonte": "Wikipedia (en): Van der Waals constants (data page)",
+    "url": "https://en.wikipedia.org/wiki/Van_der_Waals_constants_(data_page)",
+    "trecho": "| Ammonia | 4.225 | 0.0371"
+   },
+   "H2O": {
+    "a": 5.536,
+    "a_texto": "5.536",
+    "b": 0.03049,
+    "b_texto": "0.03049",
+    "fonte": "Wikipedia (en): Van der Waals constants (data page)",
+    "url": "https://en.wikipedia.org/wiki/Van_der_Waals_constants_(data_page)",
+    "trecho": "| Water | 5.536 | 0.03049"
+   },
+   "CH4": {
+    "a": 2.283,
+    "a_texto": "2.283",
+    "b": 0.04278,
+    "b_texto": "0.04278",
+    "fonte": "Wikipedia (en): Van der Waals constants (data page)",
+    "url": "https://en.wikipedia.org/wiki/Van_der_Waals_constants_(data_page)",
+    "trecho": "| Methane | 2.283 | 0.04278"
+   }
+  }
+ },
+ "coligativas": {
+  "_cabecalhos": {
+   "Freezing-point_depression": "| Compound | Freezing point (°C) | Kf in K⋅kg/mol",
+   "Boiling-point_elevation": "| Compound | Boiling point in °C | Ebullioscopic constant Kb in units of [(°C·kg)/mol] or [°C/molal]",
+   "Ebullioscopic_constant": "| Solvent[3] | Kb (in K⋅kg/mol)",
+   "List_boiling_freezing_solvents": "| Solvent | Density (g cm-3) | Boiling point (°C) | Flash point (°C) | Kb (°C⋅kg/mol) | Freezing point (°C) | Kf (°C⋅kg/mol) | Data source"
+  },
+  "_obs": "Na \"List of boiling and freezing information of solvents\" o Kf aparece com sinal negativo (convencao da pagina); o modulo e o Kf. Listas de valores: cada fonte que traz o dado.",
+  "agua": {
+   "Kf": [
+    {
+     "valor": 1.86,
+     "valor_texto": "1.86[12]",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Water | 0 | 1.86[12]"
+    },
+    {
+     "valor": -1.86,
+     "valor_texto": "–1.86",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Water | | 100.00 | | 0.512 | 0.00 | –1.86 | Kb & Kf[2]",
+     "obs": "sinal negativo na fonte"
+    },
+    {
+     "valor": 1.853,
+     "valor_texto": "1.853",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Cryoscopic constant",
+     "url": "https://en.wikipedia.org/wiki/Cryoscopic_constant",
+     "trecho": "The Kf for water is 1.853 K kg mol−1.[1]"
+    }
+   ],
+   "Kb": [
+    {
+     "valor": 0.512,
+     "valor_texto": "0.512",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Ebullioscopic constant",
+     "url": "https://en.wikipedia.org/wiki/Ebullioscopic_constant",
+     "trecho": "| Water | 0.512"
+    },
+    {
+     "valor": 0.512,
+     "valor_texto": "0.512",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): Boiling-point elevation",
+     "url": "https://en.wikipedia.org/wiki/Boiling-point_elevation",
+     "trecho": "| Water | 100 | 0.512"
+    },
+    {
+     "valor": 0.512,
+     "valor_texto": "0.512",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Water | | 100.00 | | 0.512 | 0.00 | –1.86 | Kb & Kf[2]"
+    }
+   ],
+   "fusao": [
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Water | 0 | 1.86[12]"
+    },
+    {
+     "valor": 0.0,
+     "valor_texto": "0.00",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Water | | 100.00 | | 0.512 | 0.00 | –1.86 | Kb & Kf[2]"
+    }
+   ],
+   "ebulicao": [
+    {
+     "valor": 100,
+     "valor_texto": "100",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Boiling-point elevation",
+     "url": "https://en.wikipedia.org/wiki/Boiling-point_elevation",
+     "trecho": "| Water | 100 | 0.512"
+    },
+    {
+     "valor": 100.0,
+     "valor_texto": "100.00",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Water | | 100.00 | | 0.512 | 0.00 | –1.86 | Kb & Kf[2]"
+    }
+   ]
+  },
+  "benzeno": {
+   "Kf": [
+    {
+     "valor": 5.12,
+     "valor_texto": "5.12",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Benzene | 5.5 | 5.12"
+    },
+    {
+     "valor": -5.12,
+     "valor_texto": "–5.12",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Benzene | 0.87 | 80.1 | | 2.65 | 5.5 | –5.12 | Kb & Kf[2]",
+     "obs": "sinal negativo na fonte"
+    }
+   ],
+   "Kb": [
+    {
+     "valor": 2.53,
+     "valor_texto": "2.53",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Ebullioscopic constant",
+     "url": "https://en.wikipedia.org/wiki/Ebullioscopic_constant",
+     "trecho": "| Benzene | 2.53"
+    },
+    {
+     "valor": 2.53,
+     "valor_texto": "2.53",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): Boiling-point elevation",
+     "url": "https://en.wikipedia.org/wiki/Boiling-point_elevation",
+     "trecho": "| Benzene | 80.1 | 2.53"
+    },
+    {
+     "valor": 2.65,
+     "valor_texto": "2.65",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Benzene | 0.87 | 80.1 | | 2.65 | 5.5 | –5.12 | Kb & Kf[2]"
+    }
+   ],
+   "fusao": [
+    {
+     "valor": 5.5,
+     "valor_texto": "5.5",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Benzene | 5.5 | 5.12"
+    },
+    {
+     "valor": 5.5,
+     "valor_texto": "5.5",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Benzene | 0.87 | 80.1 | | 2.65 | 5.5 | –5.12 | Kb & Kf[2]"
+    }
+   ],
+   "ebulicao": [
+    {
+     "valor": 80.1,
+     "valor_texto": "80.1",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Boiling-point elevation",
+     "url": "https://en.wikipedia.org/wiki/Boiling-point_elevation",
+     "trecho": "| Benzene | 80.1 | 2.53"
+    },
+    {
+     "valor": 80.1,
+     "valor_texto": "80.1",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Benzene | 0.87 | 80.1 | | 2.65 | 5.5 | –5.12 | Kb & Kf[2]"
+    }
+   ]
+  },
+  "ciclo-hexano": {
+   "Kf": [
+    {
+     "valor": 20.2,
+     "valor_texto": "20.2",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Cyclohexane | 6.4 | 20.2"
+    },
+    {
+     "valor": -20.2,
+     "valor_texto": "–20.2",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Cyclohexane | | 80.74 | | 2.79 | 6.55 | –20.2 |",
+     "obs": "sinal negativo na fonte"
+    }
+   ],
+   "Kb": [
+    {
+     "valor": 2.79,
+     "valor_texto": "2.79",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Ebullioscopic constant",
+     "url": "https://en.wikipedia.org/wiki/Ebullioscopic_constant",
+     "trecho": "| Cyclohexane | 2.79"
+    },
+    {
+     "valor": 2.79,
+     "valor_texto": "2.79",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Cyclohexane | | 80.74 | | 2.79 | 6.55 | –20.2 |"
+    }
+   ],
+   "fusao": [
+    {
+     "valor": 6.4,
+     "valor_texto": "6.4",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Cyclohexane | 6.4 | 20.2"
+    },
+    {
+     "valor": 6.55,
+     "valor_texto": "6.55",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Cyclohexane | | 80.74 | | 2.79 | 6.55 | –20.2 |"
+    }
+   ],
+   "ebulicao": [
+    {
+     "valor": 80.74,
+     "valor_texto": "80.74",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Cyclohexane | | 80.74 | | 2.79 | 6.55 | –20.2 |"
+    }
+   ]
+  },
+  "acido_acetico": {
+   "Kf": [
+    {
+     "valor": 3.9,
+     "valor_texto": "3.90",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Acetic acid | 16.6 | 3.90"
+    },
+    {
+     "valor": -3.9,
+     "valor_texto": "–3.90",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Acetic acid | 1.04 | 117.9 | | 3.14 | 16.6 | –3.90 | Kb[1] Kf[2]",
+     "obs": "sinal negativo na fonte"
+    }
+   ],
+   "Kb": [
+    {
+     "valor": 3.08,
+     "valor_texto": "3.08",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Ebullioscopic constant",
+     "url": "https://en.wikipedia.org/wiki/Ebullioscopic_constant",
+     "trecho": "| Acetic acid | 3.08"
+    },
+    {
+     "valor": 3.07,
+     "valor_texto": "3.07",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): Boiling-point elevation",
+     "url": "https://en.wikipedia.org/wiki/Boiling-point_elevation",
+     "trecho": "| Acetic acid | 118.1 | 3.07"
+    },
+    {
+     "valor": 3.14,
+     "valor_texto": "3.14",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Acetic acid | 1.04 | 117.9 | | 3.14 | 16.6 | –3.90 | Kb[1] Kf[2]"
+    }
+   ],
+   "fusao": [
+    {
+     "valor": 16.6,
+     "valor_texto": "16.6",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Acetic acid | 16.6 | 3.90"
+    },
+    {
+     "valor": 16.6,
+     "valor_texto": "16.6",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Acetic acid | 1.04 | 117.9 | | 3.14 | 16.6 | –3.90 | Kb[1] Kf[2]"
+    }
+   ],
+   "ebulicao": [
+    {
+     "valor": 118.1,
+     "valor_texto": "118.1",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Boiling-point elevation",
+     "url": "https://en.wikipedia.org/wiki/Boiling-point_elevation",
+     "trecho": "| Acetic acid | 118.1 | 3.07"
+    },
+    {
+     "valor": 117.9,
+     "valor_texto": "117.9",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Acetic acid | 1.04 | 117.9 | | 3.14 | 16.6 | –3.90 | Kb[1] Kf[2]"
+    }
+   ]
+  },
+  "cloroformio": {
+   "Kf": [
+    {
+     "valor": 4.68,
+     "valor_texto": "4.68",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Chloroform | −63.5 | 4.68"
+    },
+    {
+     "valor": -4.9,
+     "valor_texto": "–4.90",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Chloroform | 1.48 | 61.2 | | 3.88 | –63.5 | –4.90 | Kb & Kf[1]",
+     "obs": "sinal negativo na fonte"
+    }
+   ],
+   "Kb": [
+    {
+     "valor": 3.63,
+     "valor_texto": "3.63",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Ebullioscopic constant",
+     "url": "https://en.wikipedia.org/wiki/Ebullioscopic_constant",
+     "trecho": "| Chloroform | 3.63"
+    },
+    {
+     "valor": 3.88,
+     "valor_texto": "3.88",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Chloroform | 1.48 | 61.2 | | 3.88 | –63.5 | –4.90 | Kb & Kf[1]"
+    }
+   ],
+   "fusao": [
+    {
+     "valor": -63.5,
+     "valor_texto": "−63.5",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Chloroform | −63.5 | 4.68"
+    },
+    {
+     "valor": -63.5,
+     "valor_texto": "–63.5",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Chloroform | 1.48 | 61.2 | | 3.88 | –63.5 | –4.90 | Kb & Kf[1]"
+    }
+   ],
+   "ebulicao": [
+    {
+     "valor": 61.2,
+     "valor_texto": "61.2",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Chloroform | 1.48 | 61.2 | | 3.88 | –63.5 | –4.90 | Kb & Kf[1]"
+    }
+   ]
+  },
+  "etanol": {
+   "Kf": [
+    {
+     "valor": 1.99,
+     "valor_texto": "1.99",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Ethanol | −114.6 | 1.99"
+    },
+    {
+     "valor": -1.99,
+     "valor_texto": "–1.99",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Ethanol | 0.78 | 78.4 | | 1.22 | –114.6 | –1.99 | Kb[2]",
+     "obs": "sinal negativo na fonte"
+    }
+   ],
+   "Kb": [
+    {
+     "valor": 1.07,
+     "valor_texto": "1.07",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Ebullioscopic constant",
+     "url": "https://en.wikipedia.org/wiki/Ebullioscopic_constant",
+     "trecho": "| Ethanol | 1.07"
+    },
+    {
+     "valor": 1.22,
+     "valor_texto": "1.22",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Ethanol | 0.78 | 78.4 | | 1.22 | –114.6 | –1.99 | Kb[2]"
+    }
+   ],
+   "fusao": [
+    {
+     "valor": -114.6,
+     "valor_texto": "−114.6",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Ethanol | −114.6 | 1.99"
+    },
+    {
+     "valor": -114.6,
+     "valor_texto": "–114.6",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Ethanol | 0.78 | 78.4 | | 1.22 | –114.6 | –1.99 | Kb[2]"
+    }
+   ],
+   "ebulicao": [
+    {
+     "valor": 78.4,
+     "valor_texto": "78.4",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Ethanol | 0.78 | 78.4 | | 1.22 | –114.6 | –1.99 | Kb[2]"
+    }
+   ]
+  },
+  "canfora": {
+   "Kf": [
+    {
+     "valor": 39.7,
+     "valor_texto": "39.7",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Camphor | 179.8 | 39.7"
+    },
+    {
+     "valor": -40,
+     "valor_texto": "–40",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Camphor | 0.992 | 204.0 | | 5.95 | 179 | –40 | Kf[2]",
+     "obs": "sinal negativo na fonte"
+    }
+   ],
+   "Kb": [
+    {
+     "valor": 5.95,
+     "valor_texto": "5.95",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Ebullioscopic constant",
+     "url": "https://en.wikipedia.org/wiki/Ebullioscopic_constant",
+     "trecho": "| Camphor | 5.95"
+    },
+    {
+     "valor": 5.95,
+     "valor_texto": "5.95",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Camphor | 0.992 | 204.0 | | 5.95 | 179 | –40 | Kf[2]"
+    }
+   ],
+   "fusao": [
+    {
+     "valor": 179.8,
+     "valor_texto": "179.8",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Camphor | 179.8 | 39.7"
+    },
+    {
+     "valor": 179,
+     "valor_texto": "179",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Camphor | 0.992 | 204.0 | | 5.95 | 179 | –40 | Kf[2]"
+    }
+   ],
+   "ebulicao": [
+    {
+     "valor": 204.0,
+     "valor_texto": "204.0",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Camphor | 0.992 | 204.0 | | 5.95 | 179 | –40 | Kf[2]"
+    }
+   ]
+  },
+  "naftaleno": {
+   "Kf": [
+    {
+     "valor": 6.9,
+     "valor_texto": "6.9",
+     "unidade": "K·kg/mol",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Naphthalene | 80.2 | 6.9"
+    },
+    {
+     "valor": -6.8,
+     "valor_texto": "–6.80",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Naphthalene | | 217.9 | | | 78.2 | –6.80 |",
+     "obs": "sinal negativo na fonte"
+    }
+   ],
+   "Kb": [
+    {
+     "valor": 5.8,
+     "valor_texto": "5.8",
+     "unidade": "°C·kg/mol",
+     "fonte": "Wikipedia (en): Boiling-point elevation",
+     "url": "https://en.wikipedia.org/wiki/Boiling-point_elevation",
+     "trecho": "| Naphthalene | 217.9 | 5.8"
+    }
+   ],
+   "fusao": [
+    {
+     "valor": 80.2,
+     "valor_texto": "80.2",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Freezing-point depression",
+     "url": "https://en.wikipedia.org/wiki/Freezing-point_depression",
+     "trecho": "| Naphthalene | 80.2 | 6.9"
+    },
+    {
+     "valor": 78.2,
+     "valor_texto": "78.2",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Naphthalene | | 217.9 | | | 78.2 | –6.80 |"
+    }
+   ],
+   "ebulicao": [
+    {
+     "valor": 217.9,
+     "valor_texto": "217.9",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Boiling-point elevation",
+     "url": "https://en.wikipedia.org/wiki/Boiling-point_elevation",
+     "trecho": "| Naphthalene | 217.9 | 5.8"
+    },
+    {
+     "valor": 217.9,
+     "valor_texto": "217.9",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): List of boiling and freezing information of solvents",
+     "url": "https://en.wikipedia.org/wiki/List_of_boiling_and_freezing_information_of_solvents",
+     "trecho": "| Naphthalene | | 217.9 | | | 78.2 | –6.80 |"
+    }
+   ]
+  }
+ },
+ "solubilidade": {
+  "unidade": "g de substancia por 100 mL de agua (g/100 ml), segundo a fonte",
+  "trecho_unidade": "Units of solubility are given in grams of substance per 100 millilitres of water (g/100 ml), unless shown otherwise.",
+  "fonte": "Wikipedia (en): Solubility table",
+  "url": "https://en.wikipedia.org/wiki/Solubility_table",
+  "sais": {
+   "KNO3": {
+    "formula_na_fonte": "KNO3",
+    "g_por_100mL": {
+     "0": 13.3,
+     "10": 20.9,
+     "20": 31.6,
+     "30": 45.8,
+     "40": 63.9,
+     "50": 85.5,
+     "60": 110.0,
+     "70": 138,
+     "80": 169,
+     "90": 202,
+     "100": 246
+    },
+    "fonte": "Wikipedia (en): Solubility table",
+    "url": "https://en.wikipedia.org/wiki/Solubility_table",
+    "trecho": "| Potassium nitrate | KNO3 | 13.3 | 20.9 | 31.6 | 45.8 | 63.9 | 85.5 | 110.0 | 138 | 169 | 202 | 246",
+    "trecho_cabecalho": "| Substance | Formula | 0 °C | 10 °C | 20 °C | 30 °C | 40 °C | 50 °C | 60 °C | 70 °C | 80 °C | 90 °C | 100 °C"
+   },
+   "NaCl": {
+    "formula_na_fonte": "NaCl",
+    "g_por_100mL": {
+     "0": 35.65,
+     "10": 35.72,
+     "20": 35.89,
+     "30": 36.09,
+     "40": 36.37,
+     "50": 36.69,
+     "60": 37.04,
+     "70": 37.46,
+     "80": 37.93,
+     "90": 38.47,
+     "100": 38.99
+    },
+    "fonte": "Wikipedia (en): Solubility table",
+    "url": "https://en.wikipedia.org/wiki/Solubility_table",
+    "trecho": "| Sodium chloride | NaCl | 35.65 | 35.72 | 35.89 | 36.09 | 36.37 | 36.69 | 37.04 | 37.46 | 37.93 | 38.47 | 38.99",
+    "trecho_cabecalho": "| Substance | Formula | 0 °C | 10 °C | 20 °C | 30 °C | 40 °C | 50 °C | 60 °C | 70 °C | 80 °C | 90 °C | 100 °C"
+   },
+   "KCl": {
+    "formula_na_fonte": "KCl",
+    "g_por_100mL": {
+     "0": 28,
+     "10": 31.2,
+     "20": 34.2,
+     "30": 37.2,
+     "40": 40.1,
+     "50": 42.6,
+     "60": 45.8,
+     "70": null,
+     "80": 51.3,
+     "90": 53.9,
+     "100": 56.3
+    },
+    "fonte": "Wikipedia (en): Solubility table",
+    "url": "https://en.wikipedia.org/wiki/Solubility_table",
+    "trecho": "| Potassium chloride | KCl | 28 | 31.2 | 34.2 | 37.2 | 40.1 | 42.6 | 45.8 | | 51.3 | 53.9 | 56.3",
+    "trecho_cabecalho": "| Substance | Formula | 0 °C | 10 °C | 20 °C | 30 °C | 40 °C | 50 °C | 60 °C | 70 °C | 80 °C | 90 °C | 100 °C"
+   },
+   "NaNO3": {
+    "formula_na_fonte": "NaNO3",
+    "g_por_100mL": {
+     "0": 73,
+     "10": 80.8,
+     "20": 87.6,
+     "30": 94.9,
+     "40": 102,
+     "50": null,
+     "60": 122,
+     "70": null,
+     "80": 148,
+     "90": null,
+     "100": 180
+    },
+    "fonte": "Wikipedia (en): Solubility table",
+    "url": "https://en.wikipedia.org/wiki/Solubility_table",
+    "trecho": "| Sodium nitrate | NaNO3 | 73 | 80.8 | 87.6 | 94.9 | 102 | | 122 | | 148 | | 180",
+    "trecho_cabecalho": "| Substance | Formula | 0 °C | 10 °C | 20 °C | 30 °C | 40 °C | 50 °C | 60 °C | 70 °C | 80 °C | 90 °C | 100 °C"
+   },
+   "KClO3": {
+    "formula_na_fonte": "KClO3",
+    "g_por_100mL": {
+     "0": 3.3,
+     "10": 5.2,
+     "20": 7.3,
+     "30": 10.1,
+     "40": 13.9,
+     "50": null,
+     "60": 23.8,
+     "70": null,
+     "80": 37.5,
+     "90": 46,
+     "100": 56.3
+    },
+    "fonte": "Wikipedia (en): Solubility table",
+    "url": "https://en.wikipedia.org/wiki/Solubility_table",
+    "trecho": "| Potassium chlorate | KClO3 | 3.3 | 5.2 | 7.3 | 10.1 | 13.9 | | 23.8 | | 37.5 | 46 | 56.3",
+    "trecho_cabecalho": "| Substance | Formula | 0 °C | 10 °C | 20 °C | 30 °C | 40 °C | 50 °C | 60 °C | 70 °C | 80 °C | 90 °C | 100 °C"
+   },
+   "Ce2(SO4)3": {
+    "formula_na_fonte": "Ce2(SO4)3·2H2O",
+    "g_por_100mL": {
+     "0": 21.4,
+     "10": null,
+     "20": 9.84,
+     "30": 7.24,
+     "40": 5.63,
+     "50": null,
+     "60": 3.87,
+     "70": null,
+     "80": null,
+     "90": null,
+     "100": null
+    },
+    "fonte": "Wikipedia (en): Solubility table",
+    "url": "https://en.wikipedia.org/wiki/Solubility_table",
+    "trecho": "| Cerium(III) sulfate | Ce2(SO4)3·2H2O | 21.4 | | 9.84 | 7.24 | 5.63 | | 3.87 | | | |",
+    "trecho_cabecalho": "| Substance | Formula | 0 °C | 10 °C | 20 °C | 30 °C | 40 °C | 50 °C | 60 °C | 70 °C | 80 °C | 90 °C | 100 °C"
+   },
+   "NH4Cl": {
+    "formula_na_fonte": "NH4Cl",
+    "g_por_100mL": {
+     "0": 29.4,
+     "10": 33.2,
+     "20": 37.2,
+     "30": 41.4,
+     "40": 45.8,
+     "50": 50.4,
+     "60": 55.3,
+     "70": 60.2,
+     "80": 65.6,
+     "90": 71.2,
+     "100": 77.3
+    },
+    "fonte": "Wikipedia (en): Solubility table",
+    "url": "https://en.wikipedia.org/wiki/Solubility_table",
+    "trecho": "| Ammonium chloride | NH4Cl | 29.4 | 33.2 | | 37.2 | 41.4 | 45.8 | 50.4 | 55.3 | 60.2 | 65.6 | 71.2 | 77.3",
+    "trecho_cabecalho": "| Substance | Formula | 0 °C | 10 °C | 15 °C | 20 °C | 30 °C | 40 °C | 50 °C | 60 °C | 70 °C | 80 °C | 90 °C | 100 °C"
+   },
+   "Pb(NO3)2": {
+    "formula_na_fonte": "Pb(NO3)2",
+    "g_por_100mL": {
+     "0": 37.5,
+     "10": 46.2,
+     "20": 54.3,
+     "30": 63.4,
+     "40": 72.1,
+     "50": null,
+     "60": 91.6,
+     "70": null,
+     "80": 111,
+     "90": null,
+     "100": 133
+    },
+    "fonte": "Wikipedia (en): Solubility table",
+    "url": "https://en.wikipedia.org/wiki/Solubility_table",
+    "trecho": "| Lead(II) nitrate | Pb(NO3)2 | 37.5 | 46.2 | 54.3 | 63.4 | 72.1 | | 91.6 | | 111 | | 133",
+    "trecho_cabecalho": "| Substance | Formula | 0 °C | 10 °C | 20 °C | 30 °C | 40 °C | 50 °C | 60 °C | 70 °C | 80 °C | 90 °C | 100 °C"
+   },
+   "K2Cr2O7": {
+    "formula_na_fonte": "K2Cr2O7",
+    "g_por_100mL": {
+     "0": 4.7,
+     "10": 7,
+     "20": 12.3,
+     "30": 18.1,
+     "40": 26.3,
+     "50": 34,
+     "60": 45.6,
+     "70": null,
+     "80": 73,
+     "90": null,
+     "100": null
+    },
+    "fonte": "Wikipedia (en): Solubility table",
+    "url": "https://en.wikipedia.org/wiki/Solubility_table",
+    "trecho": "| Potassium dichromate | K2Cr2O7 | 4.7 | 7 | 12.3 | 18.1 | 26.3 | 34 | 45.6 | | 73 | |",
+    "trecho_cabecalho": "| Substance | Formula | 0 °C | 10 °C | 20 °C | 30 °C | 40 °C | 50 °C | 60 °C | 70 °C | 80 °C | 90 °C | 100 °C"
+   },
+   "sacarose": {
+    "formula_na_fonte": "C12H22O11",
+    "g_por_100mL": {
+     "0": 181.9,
+     "10": 190.6,
+     "20": 201.9,
+     "30": 216.7,
+     "40": 235.6,
+     "50": 259.6,
+     "60": 288.8,
+     "70": 323.7,
+     "80": 365.1,
+     "90": 414.9,
+     "100": 476.0
+    },
+    "fonte": "Wikipedia (en): Solubility table",
+    "url": "https://en.wikipedia.org/wiki/Solubility_table",
+    "trecho": "| Sucrose | C12H22O11 | 181.9 | 190.6 | 201.9 | 216.7 | 235.6 | 259.6 | 288.8 | 323.7 | 365.1 | 414.9 | 476.0",
+    "trecho_cabecalho": "| Substance | Formula | 0 °C | 10 °C | 20 °C | 30 °C | 40 °C | 50 °C | 60 °C | 70 °C | 80 °C | 90 °C | 100 °C"
+   }
+  }
+ },
+ "pressao_vapor_agua": {
+  "unidades": "kPa, Torr e atm (as tres colunas da fonte)",
+  "trecho_cabecalho": "| T, °C | T, °F | P, kPa | P, Torr | P, atm",
+  "fonte": "Wikipedia (en): Vapour pressure of water",
+  "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+  "tabela": {
+   "0": {
+    "kPa": 0.6113,
+    "Torr": null,
+    "atm": null,
+    "fonte": "Wikipedia (en): Vapour pressure of water (segunda tabela, coluna \"P (Lide Table)\", em kPa)",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 0 | 0.6113 | 0.6593 (+7.85%) | 0.6056 (-0.93%) | 0.6109 (-",
+    "trecho_cabecalho": "| T (°C) | P (Lide Table) | P (Eq 1) | P",
+    "obs": "a tabela principal nao tem 0 °C, so 0.01 °C (linha abaixo); este 0.6113 kPa vem da tabela de comparacao de formulas do mesmo artigo"
+   },
+   "10": {
+    "kPa": 1.2282,
+    "Torr": 9.21225,
+    "atm": 0.0121214,
+    "textos": [
+     "1.22820",
+     "9.21225",
+     "0.0121214"
+    ],
+    "fonte": "Wikipedia (en): Vapour pressure of water",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 10 | 50 | 1.22820 | 9.21225 | 0.0121214"
+   },
+   "20": {
+    "kPa": 2.33932,
+    "Torr": 17.5463,
+    "atm": 0.0230873,
+    "textos": [
+     "2.33932",
+     "17.5463",
+     "0.0230873"
+    ],
+    "fonte": "Wikipedia (en): Vapour pressure of water",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 20 | 68 | 2.33932 | 17.5463 | 0.0230873"
+   },
+   "25": {
+    "kPa": 3.16993,
+    "Torr": 23.7764,
+    "atm": 0.0312848,
+    "textos": [
+     "3.16993",
+     "23.7764",
+     "0.0312848"
+    ],
+    "fonte": "Wikipedia (en): Vapour pressure of water",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 25 | 77 | 3.16993 | 23.7764 | 0.0312848"
+   },
+   "30": {
+    "kPa": 4.24697,
+    "Torr": 31.8549,
+    "atm": 0.0419143,
+    "textos": [
+     "4.24697",
+     "31.8549",
+     "0.0419143"
+    ],
+    "fonte": "Wikipedia (en): Vapour pressure of water",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 30 | 86 | 4.24697 | 31.8549 | 0.0419143"
+   },
+   "40": {
+    "kPa": 7.38494,
+    "Torr": 55.3916,
+    "atm": 0.0728837,
+    "textos": [
+     "7.38494",
+     "55.3916",
+     "0.0728837"
+    ],
+    "fonte": "Wikipedia (en): Vapour pressure of water",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 40 | 104 | 7.38494 | 55.3916 | 0.0728837"
+   },
+   "50": {
+    "kPa": 12.3519,
+    "Torr": 92.6472,
+    "atm": 0.121904,
+    "textos": [
+     "12.3519",
+     "92.6472",
+     "0.121904"
+    ],
+    "fonte": "Wikipedia (en): Vapour pressure of water",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 50 | 122 | 12.3519 | 92.6472 | 0.121904"
+   },
+   "60": {
+    "kPa": 19.9464,
+    "Torr": 149.611,
+    "atm": 0.196856,
+    "textos": [
+     "19.9464",
+     "149.611",
+     "0.196856"
+    ],
+    "fonte": "Wikipedia (en): Vapour pressure of water",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 60 | 140 | 19.9464 | 149.611 | 0.196856"
+   },
+   "70": {
+    "kPa": 31.2009,
+    "Torr": 234.026,
+    "atm": 0.307929,
+    "textos": [
+     "31.2009",
+     "234.026",
+     "0.307929"
+    ],
+    "fonte": "Wikipedia (en): Vapour pressure of water",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 70 | 158 | 31.2009 | 234.026 | 0.307929"
+   },
+   "80": {
+    "kPa": 47.4145,
+    "Torr": 355.638,
+    "atm": 0.467944,
+    "textos": [
+     "47.4145",
+     "355.638",
+     "0.467944"
+    ],
+    "fonte": "Wikipedia (en): Vapour pressure of water",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 80 | 176 | 47.4145 | 355.638 | 0.467944"
+   },
+   "90": {
+    "kPa": 70.1818,
+    "Torr": 526.407,
+    "atm": 0.69264,
+    "textos": [
+     "70.1818",
+     "526.407",
+     "0.692640"
+    ],
+    "fonte": "Wikipedia (en): Vapour pressure of water",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 90 | 194 | 70.1818 | 526.407 | 0.692640"
+   },
+   "100": {
+    "kPa": 101.418,
+    "Torr": 760.698,
+    "atm": 1.00092,
+    "textos": [
+     "101.418",
+     "760.698",
+     "1.00092"
+    ],
+    "fonte": "Wikipedia (en): Vapour pressure of water",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 100 | 212 | 101.418 | 760.698 | 1.00092"
+   },
+   "0.01": {
+    "kPa": 0.611655,
+    "Torr": 4.58779,
+    "atm": 0.00603656,
+    "fonte": "Wikipedia (en): Vapour pressure of water",
+    "url": "https://en.wikipedia.org/wiki/Vapour_pressure_of_water",
+    "trecho": "| 0.01 | 32.018 | 0.611655 | 4.58779 | 0.00603656"
+   }
+  },
+  "lide_comparacao": {
+   "0": {
+    "kPa": 0.6113,
+    "trecho": "| 0 | 0.6113 | 0.6593 (+7.85%) | 0.6056 "
+   },
+   "20": {
+    "kPa": 2.3388,
+    "trecho": "| 20 | 2.3388 | 2.3755 (+1.57%) | 2.3296"
+   },
+   "35": {
+    "kPa": 5.6267,
+    "trecho": "| 35 | 5.6267 | 5.5696 (-1.01%) | 5.6090"
+   },
+   "50": {
+    "kPa": 12.344,
+    "trecho": "| 50 | 12.344 | 12.065 (-2.26%) | 12.306"
+   },
+   "75": {
+    "kPa": 38.563,
+    "trecho": "| 75 | 38.563 | 37.738 (-2.14%) | 38.463"
+   },
+   "100": {
+    "kPa": 101.32,
+    "trecho": "| 100 | 101.32 | 101.31 (-0.01%) | 101.3"
+   },
+   "_obs": "coluna \"P (Lide Table)\" da segunda tabela do artigo, kPa; difere levemente da tabela principal (ex.: 20 °C: 2.3388 vs 2.33932)"
+  }
+ },
+ "acido_base": {
+  "pKa_acido_acetico": [
+   {
+    "valor": 4.756,
+    "valor_texto": "4.756",
+    "unidade": "adimensional",
+    "fonte": "Wikipedia (en): Acetic acid",
+    "url": "https://en.wikipedia.org/wiki/Acetic_acid",
+    "trecho": "| Acidity (pKa) | 4.756",
+    "obs": "caixa de dados; a linha nao repete a temperatura"
+   },
+   {
+    "valor": 4.76,
+    "valor_texto": "4.76",
+    "unidade": "adimensional",
+    "fonte": "Wikipedia (en): Acetic acid",
+    "url": "https://en.wikipedia.org/wiki/Acetic_acid",
+    "trecho": "Because of this release of the proton (H+), acetic acid has acidic character. In aqueous solution, it has a pKa value of 4.76.[24] Its conjugate base is acetate (CH3COO−). The acidity of vinegar varies from 4-18% (volume fraction) in the UK.[25] Traditional vinegar",
+    "obs": "texto: \"In aqueous solution\"; temperatura nao dita na frase"
+   }
+  ],
+  "Kw_agua": [
+   {
+    "valor": "1.0×10−14",
+    "valor_texto": "1.0×10−14",
+    "unidade": "adimensional",
+    "fonte": "Wikipedia (en): Self-ionization of water",
+    "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+    "trecho": "At 24.87 °C and zero ionic strength, Kw is equal to 1.0×10−14. Note that as with all equilibrium constants, the result is dimensionless because the concentration is in fact a concentration relative to ",
+    "obs": "a fonte diz 24.87 °C, nao 25 °C"
+   },
+   {
+    "valor": 13.997,
+    "valor_texto": "13.997",
+    "unidade": "pKw a 25 °C",
+    "fonte": "Wikipedia (en): Self-ionization of water",
+    "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+    "trecho": "| H2O | 14.535 | 14.167 | 13.997 | 13.830 | 13.535 | 13.262",
+    "obs": "cabecalho da tabela: | T/°C | 10 | 20 | 25 | 30 | 40 | 50"
+   },
+   {
+    "valor": 13.99,
+    "valor_texto": "13.99",
+    "unidade": "pKw a 25 °C e 0.10 MPa",
+    "fonte": "Wikipedia (en): Self-ionization of water",
+    "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+    "trecho": "| 25 °C | 0.10 MPa | 13.99"
+   },
+   {
+    "valor": 13.995,
+    "valor_texto": "13.995",
+    "unidade": "\"Acidity (pKa)\" da agua na caixa de dados de Properties of water",
+    "fonte": "Wikipedia (en): Properties of water",
+    "url": "https://en.wikipedia.org/wiki/Properties_of_water",
+    "trecho": "| Acidity (pKa) | 13.995[11][12][b]",
+    "obs": "e o pKa/pKw da caixa de dados; linha sem temperatura"
+   }
+  ],
+  "indicadores": {
+   "alaranjado_de_metila": {
+    "cor_pH_baixo": "red",
+    "pH_inicio": 3.1,
+    "pH_fim": 4.4,
+    "cor_pH_alto": "yellow",
+    "textos": [
+     "3.1",
+     "4.4"
+    ],
+    "fonte": "Wikipedia (en): PH indicator",
+    "url": "https://en.wikipedia.org/wiki/PH_indicator",
+    "trecho": "| Methyl orange | red | 3.1 | 4.4 | yellow",
+    "trecho_cabecalho": "| Indicator | Low pH color | Transition low end | Transition high end | High pH color"
+   },
+   "vermelho_de_metila": {
+    "cor_pH_baixo": "red",
+    "pH_inicio": 4.4,
+    "pH_fim": 6.2,
+    "cor_pH_alto": "yellow",
+    "textos": [
+     "4.4",
+     "6.2"
+    ],
+    "fonte": "Wikipedia (en): PH indicator",
+    "url": "https://en.wikipedia.org/wiki/PH_indicator",
+    "trecho": "| Methyl red | red | 4.4 | 6.2 | yellow",
+    "trecho_cabecalho": "| Indicator | Low pH color | Transition low end | Transition high end | High pH color"
+   },
+   "azul_de_bromotimol": {
+    "cor_pH_baixo": "yellow",
+    "pH_inicio": 6.0,
+    "pH_fim": 7.6,
+    "cor_pH_alto": "blue",
+    "textos": [
+     "6.0",
+     "7.6"
+    ],
+    "fonte": "Wikipedia (en): PH indicator",
+    "url": "https://en.wikipedia.org/wiki/PH_indicator",
+    "trecho": "| Bromothymol blue | yellow | 6.0 | 7.6 | blue",
+    "trecho_cabecalho": "| Indicator | Low pH color | Transition low end | Transition high end | High pH color"
+   },
+   "fenolftaleina": {
+    "cor_pH_baixo": "colorless",
+    "pH_inicio": 8.3,
+    "pH_fim": 10.0,
+    "cor_pH_alto": "purple-pink",
+    "textos": [
+     "8.3",
+     "10.0"
+    ],
+    "fonte": "Wikipedia (en): PH indicator",
+    "url": "https://en.wikipedia.org/wiki/PH_indicator",
+    "trecho": "| Phenolphthalein (first transition) | colorless | 8.3 | 10.0 | purple-pink",
+    "trecho_cabecalho": "| Indicator | Low pH color | Transition low end | Transition high end | High pH color"
+   },
+   "fenolftaleina_segunda_viragem": {
+    "cor_pH_baixo": "purple-pink",
+    "pH_inicio": 12.0,
+    "pH_fim": 13.0,
+    "cor_pH_alto": "colorless",
+    "textos": [
+     "12.0",
+     "13.0"
+    ],
+    "fonte": "Wikipedia (en): PH indicator",
+    "url": "https://en.wikipedia.org/wiki/PH_indicator",
+    "trecho": "| Phenolphthalein (second transition) | purple-pink | 12.0 | 13.0 | colorless",
+    "trecho_cabecalho": "| Indicator | Low pH color | Transition low end | Transition high end | High pH color"
+   }
+  }
+ },
+ "constantes": {
+  "R_J": {
+   "valor": 8.31446261815324,
+   "valor_texto": "8.31446261815324",
+   "unidade": "J/(mol·K)",
+   "fonte": "Wikipedia (en): Gas constant",
+   "url": "https://en.wikipedia.org/wiki/Gas_constant",
+   "trecho": "| 8.31446261815324 | J⋅K−1⋅mol−1"
+  },
+  "R_atmL": {
+   "valor": 0.08205736608096,
+   "valor_texto": "0.082057366080960",
+   "unidade": "L·atm/(mol·K)",
+   "fonte": "Wikipedia (en): Gas constant",
+   "url": "https://en.wikipedia.org/wiki/Gas_constant",
+   "trecho": "| 0.082057366080960 | L⋅atm⋅K−1⋅mol−1"
+  },
+  "Vm_0C_1atm": {
+   "valor": 0.022413969545014,
+   "valor_texto": "0.022413969545014",
+   "unidade": "m^3/mol",
+   "fonte": "Wikipedia (en): Molar volume",
+   "url": "https://en.wikipedia.org/wiki/Molar_volume",
+   "trecho": "0.022413969545014... m3/mol at 0 °C,",
+   "obs": "linha anterior na fonte: \"The molar volume of an ideal gas at 1 atmosphere of pressure is\"; = 22.413969545014... L/mol"
+  },
+  "Vm_0C_1bar": {
+   "valor": 0.022710954641485,
+   "valor_texto": "0.022710954641485",
+   "unidade": "m^3/mol",
+   "fonte": "Wikipedia (en): Molar volume",
+   "url": "https://en.wikipedia.org/wiki/Molar_volume",
+   "trecho": "0.022710954641485... m3/mol at 0 °C,",
+   "obs": "linha anterior na fonte: \"The molar volume of an ideal gas at 100 kPa (1 bar) is\"; = 22.710954641485... L/mol"
+  },
+  "Vm_25C_1atm": {
+   "valor": 0.024465403697038,
+   "valor_texto": "0.024465403697038",
+   "unidade": "m^3/mol",
+   "fonte": "Wikipedia (en): Molar volume",
+   "url": "https://en.wikipedia.org/wiki/Molar_volume",
+   "trecho": "0.024465403697038... m3/mol at 25 °C."
+  },
+  "Vm_25C_1bar": {
+   "valor": 0.024789570296023,
+   "valor_texto": "0.024789570296023",
+   "unidade": "m^3/mol",
+   "fonte": "Wikipedia (en): Molar volume",
+   "url": "https://en.wikipedia.org/wiki/Molar_volume",
+   "trecho": "0.024789570296023... m3/mol at 25 °C."
+  }
+ },
+ "henry": {
+  "temperatura": "298.15 K",
+  "trecho_titulo": "Henry's law constants (gases in water at 298.15 K)",
+  "trecho_cabecalho": "| Gas | Hvpc=pcaq | Hscp=caqp | Hvpx=px | Hscc=caqcgas // | (L⋅atmmol) | (molL⋅atm) | (atm) | (dimensionless)",
+  "colunas": {
+   "Hv_pc": "p/c_aq, em L·atm/mol",
+   "Hs_cp": "c_aq/p, em mol/(L·atm)",
+   "Hv_px": "p/x, em atm",
+   "Hs_cc": "c_aq/c_gas, adimensional"
+  },
+  "obs": "As unidades vem em fracao no HTML e saem coladas no texto (\"L⋅atmmol\" = L·atm/mol; \"molL⋅atm\" = mol/(L·atm)). Valores com 2 algarismos na fonte.",
+  "fonte": "Wikipedia (en): Henry's law",
+  "url": "https://en.wikipedia.org/wiki/Henry's_law",
+  "O2": {
+   "Hv_pc": 770,
+   "Hs_cp": 0.0013,
+   "Hv_px": 43000.0,
+   "Hs_cc": 0.032,
+   "textos": [
+    "770",
+    "1.3×10−3",
+    "4.3×104",
+    "3.2×10−2"
+   ],
+   "fonte": "Wikipedia (en): Henry's law",
+   "url": "https://en.wikipedia.org/wiki/Henry's_law",
+   "trecho": "| O2 | 770 | 1.3×10−3 | 4.3×104 | 3.2×10−2"
+  },
+  "CO2": {
+   "Hv_pc": 29,
+   "Hs_cp": 0.034,
+   "Hv_px": 1600.0,
+   "Hs_cc": 0.83,
+   "textos": [
+    "29",
+    "3.4×10−2",
+    "1.6×103",
+    "8.3×10−1"
+   ],
+   "fonte": "Wikipedia (en): Henry's law",
+   "url": "https://en.wikipedia.org/wiki/Henry's_law",
+   "trecho": "| CO2 | 29 | 3.4×10−2 | 1.6×103 | 8.3×10−1"
+  }
+ },
+ "osmose": {
+  "soro_fisiologico": {
+   "concentracao_pct": {
+    "valor": 0.9,
+    "valor_texto": "0.90",
+    "unidade": "% m/V (w/v) de NaCl",
+    "fonte": "Wikipedia (en): Saline (medicine)",
+    "url": "https://en.wikipedia.org/wiki/Saline_(medicine)",
+    "trecho": "Normal saline (NSS, NS or N/S) is the commonly used phrase for a solution of 0.90% w/v of NaCl, 308 mOsm/L or 9.0 g/L. Less commonly, this solution is referred to as physiological saline or isotonic saline (because it is appro"
+   },
+   "concentracao_g_L": {
+    "valor": 9.0,
+    "valor_texto": "9.0",
+    "unidade": "g/L",
+    "fonte": "Wikipedia (en): Saline (medicine)",
+    "url": "https://en.wikipedia.org/wiki/Saline_(medicine)",
+    "trecho": "Normal saline (NSS, NS or N/S) is the commonly used phrase for a solution of 0.90% w/v of NaCl, 308 mOsm/L or 9.0 g/L. Less commonly, this solution is referred to as physiological saline or isotonic saline (because it is approximately isotonic to blood seru"
+   },
+   "osmolaridade": {
+    "valor": 308,
+    "valor_texto": "308",
+    "unidade": "mOsm/L",
+    "fonte": "Wikipedia (en): Saline (medicine)",
+    "url": "https://en.wikipedia.org/wiki/Saline_(medicine)",
+    "trecho": "Normal saline (NSS, NS or N/S) is the commonly used phrase for a solution of 0.90% w/v of NaCl, 308 mOsm/L or 9.0 g/L. Less commonly, this solution is referred to as physiological saline or isotonic saline (because it is approximately isotonic to"
+   },
+   "mmol_L": {
+    "valor": 154,
+    "valor_texto": "154",
+    "unidade": "mmol/L de NaCl",
+    "fonte": "Wikipedia (en): Saline (medicine)",
+    "url": "https://en.wikipedia.org/wiki/Saline_(medicine)",
+    "trecho": "lution is 9 grams of sodium chloride (NaCl) dissolved in water, to a total volume of 1000 mL. The mass of 1 mL of normal saline is 1.0046 grams at 22 °C.[12][13] The molar mass of sodium chloride is approximately 58.4 g/mol. A concentration of 9 g/L therefore gives 154 mmol/L. Since NaCl dissociates into two ions (sodium and chloride), 1 molar NaCl is 2 osmolar. Thus, normal saline contains 154 mEq/L of Na+ and the same amount of Cl−. This gives an osmolarity of 154 + 154 = 308, which is higher (i.e. more solute per litre) than th"
+   },
+   "resumo": {
+    "valor": 9,
+    "valor_texto": "9",
+    "unidade": "g/L",
+    "fonte": "Wikipedia (en): Saline (medicine)",
+    "url": "https://en.wikipedia.org/wiki/Saline_(medicine)",
+    "trecho": "Saline is in the crystalloid family of medications.[3] It is most commonly used as a sterile 9 g of salt per litre (0.9%) solution, known as normal saline.[1] Higher and lower concentrations may also occasionally be used.[4][5] Saline is acidic, with a p",
+    "obs": "\"(0.9%) solution, known as normal saline\""
+   }
+  },
+  "plasma": {
+   "osmolalidade_min": {
+    "valor": 275,
+    "valor_texto": "275",
+    "unidade": "mOsm/kg",
+    "fonte": "Wikipedia (en): Plasma osmolality",
+    "url": "https://en.wikipedia.org/wiki/Plasma_osmolality",
+    "trecho": "Normal human reference range of osmolality in plasma is about 275-299 milli-osmoles per kilogram.[3]"
+   },
+   "osmolalidade_max": {
+    "valor": 299,
+    "valor_texto": "299",
+    "unidade": "mOsm/kg",
+    "fonte": "Wikipedia (en): Plasma osmolality",
+    "url": "https://en.wikipedia.org/wiki/Plasma_osmolality",
+    "trecho": "Normal human reference range of osmolality in plasma is about 275-299 milli-osmoles per kilogram.[3]"
+   },
+   "obs": "a fonte da OSMOLALIDADE (por kg), faixa 275-299; nao da um valor unico de osmolaridade (por litro) do plasma humano -> osmolaridade do plasma: null",
+   "osmolaridade_mOsm_L": null
+  }
+ }
+}
