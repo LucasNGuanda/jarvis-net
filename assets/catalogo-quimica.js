@@ -98,7 +98,7 @@ window.CATALOGO.push(
     ["I04","Ácidos nucleicos: DNA, RNA e o código genético",[],true],
     ["I05","Biocombustíveis: etanol, biodiesel, biogás e o balanço de carbono",[],true],
     ["I06","Ciclos biogeoquímicos: carbono, nitrogênio e o processo Haber-Bosch",[],true],
-    ["I07","Poluição da água e do ar",[]],
+    ["I07","Poluição do ar e da água: chuva ácida, efeito estufa, ozônio e oxigênio dissolvido",[],true],
     ["I08","Química verde e cotidiano",[]],
     ["I09","Tratamento de água e resíduos",[]],
   ] },
