@@ -188,6 +188,9 @@
     ["etanonitrila", "ethanenitrile", "CC#N"], ["propanonitrila", "propanenitrile", "CCC#N"], ["nitrometano", "nitromethane", "C[N+](=O)[O-]"], ["nitrobenzeno", "nitrobenzene", "O=[N+]([O-])c1ccccc1"],
     ["clorometano", "chloromethane", "CCl"], ["diclorometano", "dichloromethane", "ClCCl"], ["triclorometano", "trichloromethane", "ClC(Cl)Cl"], ["tetraclorometano", "tetrachloromethane", "ClC(Cl)(Cl)Cl"], ["cloroetano", "chloroethane", "CCCl"], ["bromoetano", "bromoethane", "CCBr"], ["2-cloropropano", "2-chloropropane", "CC(C)Cl"], ["2-bromo-2-metilpropano", "2-bromo-2-methylpropane", "CC(C)(C)Br"], ["clorobenzeno", "chlorobenzene", "Clc1ccccc1"], ["cloreto de etanoíla", "ethanoyl chloride", "CC(Cl)=O"],
     ["ácido acetilsalicílico", "aspirin", "CC(=O)Oc1ccccc1C(=O)O"], ["paracetamol", "paracetamol", "CC(=O)Nc1ccc(O)cc1"], ["vanilina", "vanillin", "COc1cc(C=O)ccc1O"], ["ácido salicílico", "salicylic acid", "OC(=O)c1ccccc1O"], ["alanina", "alanine", "CC(N)C(=O)O"], ["glicina", "glycine", "NCC(=O)O"], ["anidrido etanoico", "ethanoic anhydride", "CC(=O)OC(C)=O"],
+    ["1-metoxipropano", "1-methoxypropane", "CCCOC"], ["2-metoxipropano", "2-methoxypropane", "COC(C)C"], ["propan-1-amina", "propan-1-amine", "CCCN"], ["N-metiletanamina", "N-methylethanamine", "CCNC"], ["1-cloropropano", "1-chloropropane", "CCCCl"], ["1-clorobutano", "1-chlorobutane", "CCCCCl"], ["2-clorobutano", "2-chlorobutane", "CCC(C)Cl"], ["1-cloro-2-metilpropano", "1-chloro-2-methylpropane", "CC(C)CCl"], ["2-cloro-2-metilpropano", "2-chloro-2-methylpropane", "CC(C)(C)Cl"],
+    ["prop-2-en-1-ol", "prop-2-en-1-ol", "C=CCO"], ["metoxieteno", "methoxyethene", "C=COC"], ["oxetano", "oxetane", "C1COC1"], ["2-metiloxirano", "2-methyloxirane", "CC1CO1"], ["ciclopropanol", "cyclopropanol", "OC1CC1"],
+    ["ciclobutano", "cyclobutane", "C1CCC1"], ["metilciclopropano", "methylcyclopropane", "CC1CC1"], ["ciclopentano", "cyclopentane", "C1CCCC1"], ["metilciclobutano", "methylcyclobutane", "CC1CCC1"], ["etilciclopropano", "ethylcyclopropane", "CCC1CC1"], ["1,1-dimetilciclopropano", "1,1-dimethylcyclopropane", "CC1(C)CC1"], ["1,2-dimetilciclopropano", "1,2-dimethylcyclopropane", "CC1CC1C"], ["cicloexano", "cyclohexane", "C1CCCCC1"], ["benzeno", "benzene", "c1ccccc1"], ["metilbenzeno", "toluene", "Cc1ccccc1"],
     ["ácido cloroetanoico", "chloroacetic acid", "OC(=O)CCl"], ["ácido tricloroetanoico", "trichloroacetic acid", "OC(=O)C(Cl)(Cl)Cl"], ["ácido trifluoroetanoico", "trifluoroacetic acid", "OC(=O)C(F)(F)F"],
   ];
   SIM.org.smi = (nomePt) => { const c = SIM.org.COMP.find((x) => x[0] === nomePt); if (!c) throw new Error("composto fora da tabela: " + nomePt); return c[2]; };
@@ -304,6 +307,30 @@
     el.addEventListener("click", (ev) => { const b = ev.target.closest("[data-n]"); if (!b) return; if (slot === "A") A = b.dataset.n; else B = b.dataset.n; lista(); desenha(); });
     SIM.qAcidez._ult = { poe: (a, b, p) => { A = a; B = b; pH = p; q("[data-c=ph]").value = p; lista(); desenha(); }, est }; lista(); desenha(); };
 
+  /* ---------- H07 · isomeria constitucional ---------- */
+  /* tipo de isomeria plana entre dois isômeros da tabela SIM.org.ISO (cada um [SMILES, esqueleto de carbonos, nome]):
+     funções diferentes → função; mesma função, com heteroátomo entre carbonos e pedaços de carbono diferentes → compensação (metameria);
+     mesma função e esqueletos de carbono diferentes → cadeia; mesmo esqueleto → posição. */
+  SIM.org.tipoIso = (a, b) => { const fa = [...new Set(funcoes(a[0]).map((x) => x.f))].sort().join("+"), fb2 = [...new Set(funcoes(b[0]).map((x) => x.f))].sort().join("+"); if (a[0] === b[0]) return "mesma";
+    if (fa !== fb2) return "função"; const ca = cadeia(a[0]), cb = cadeia(b[0]); if (a[1] !== b[1]) return !ca.homogenea && !cb.homogenea && ca.ciclos === cb.ciclos ? "compensação" : "cadeia"; return "posição"; };
+  /* nome: "Isômeros: todas as estruturas de uma fórmula" · matéria: Química · tema: H07 */
+  SIM.qIsomeros = (el, F) => {
+    const FS = ["C4H10", "C5H12", "C6H14", "C4H8", "C5H10", "C2H6O", "C3H8O", "C4H10O", "C3H6O", "C3H7Cl", "C4H9Cl", "C3H9N"], subf = (f) => f.replace(/(\d+)/g, (x) => x.split("").map((c) => "₀₁₂₃₄₅₆₇₈₉"[+c]).join(""));
+    let f = "C4H10O", sel = [];
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><div class="bts">${botoes(FS.map((x) => [x, subf(x)]), "f", f)}</div></div><div><p style="margin:0;font-size:13.5px;color:var(--ink2)">Clique em duas estruturas para saber que tipo de isomeria existe entre elas.</p></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const L = SIM.org.ISO[f], a = sel.length === 2 ? L[sel[0]] : null, b = sel.length === 2 ? L[sel[1]] : null; return { f, n: L.length, sel: [...sel], tipo: a ? SIM.org.tipoIso(a, b) : null, nomes: a ? [a[2], b[2]] : [], idh: SIM.org.idh(L[0][0]) }; };
+    const TX = { "função": "Os átomos estão ligados de modo a formar <b>grupos funcionais diferentes</b>: isomeria de <b>função</b>. São substâncias de famílias diferentes, com propriedades bem distintas.", cadeia: "A função é a mesma, mas o <b>esqueleto de carbonos</b> muda (reta × ramificada, ou aberta × fechada): isomeria de <b>cadeia</b>.", "posição": "Mesma função e mesmo esqueleto; muda o <b>lugar</b> do grupo funcional, da insaturação ou da ramificação: isomeria de <b>posição</b>.", "compensação": "Mesma função, com um heteroátomo no meio da cadeia; muda o <b>tamanho dos pedaços</b> de cada lado dele: isomeria de <b>compensação</b> (metameria)." };
+    const desenha = () => { const L = SIM.org.ISO[f], e = est();
+      q("[data-v=sv]").innerHTML = L.map((it, i) => { const d = SIM.org.svg(it[0], { L: 34 }), on = sel.includes(i); return `<button type="button" data-i="${i}" aria-pressed="${on}" style="background:${on ? "color-mix(in srgb,var(--mod) 22%,transparent)" : "transparent"};border:1.5px solid ${on ? "var(--mod)" : "var(--line,#2a3140)"};border-radius:10px;padding:6px 4px;cursor:pointer;color:inherit;font:inherit"><svg viewBox="0 0 ${d.w.toFixed(0)} ${d.h.toFixed(0)}" style="max-width:100%;height:84px" role="img" aria-label="${it[2] || "isômero"}">${d.svg}</svg><div style="font-size:12.5px;color:var(--ink2);margin-top:2px">${it[2] || ""}</div></button>`; }).join("");
+      q("[data-v=lt]").innerHTML = vis("fórmula molecular", subf(f)) + vis("isômeros constitucionais", String(e.n)) + vis("insaturações (IDH)", String(e.idh)) + vis("isomeria entre os dois", e.tipo ? (e.tipo === "mesma" ? "é a mesma" : "de " + e.tipo) : "escolha dois");
+      q("[data-v=st]").innerHTML = e.tipo && e.tipo !== "mesma" ? `<b>${e.nomes[0]}</b> e <b>${e.nomes[1]}</b>: ${TX[e.tipo]}` : `São <b>todas</b> as estruturas possíveis com essa fórmula (geradas por computador e conferidas; ficam de fora só as instáveis, como enóis e peróxidos). Isômeros de posição cis e trans contam como um só aqui: isso é assunto da estereoisomeria.`; };
+    liga(el, "f", (v) => { f = v; sel = []; desenha(); });
+    el.addEventListener("click", (ev) => { const b = ev.target.closest("[data-i]"); if (!b) return; const i = +b.dataset.i; if (sel.includes(i)) sel = sel.filter((x) => x !== i); else { sel.push(i); if (sel.length > 2) sel.shift(); } desenha(); });
+    SIM.qIsomeros._ult = { poe: (ff, a, b) => { f = ff; const L = SIM.org.ISO[f]; sel = a ? [L.findIndex((x) => x[2] === a), L.findIndex((x) => x[2] === b)] : []; el.querySelectorAll("[data-f]").forEach((x) => x.setAttribute("aria-pressed", x.dataset.f === f)); desenha(); }, est }; desenha(); };
+
   /*PROP-INI*/ /* GERADO por tools/quimica/gera-prop-organica.py a partir de dadosH.json: não editar à mão. eb em °C (1 atm); sol em g/L de água, ou "miscível", ou "imiscível" (palavra da fonte), ou null (sem dado conversível) */
   SIM.org.PROP = {
     "metano": { eb: -161.49, sol: 0.0227 },
@@ -385,4 +412,21 @@
     "íon trimetilamônio": 9.81,
   };
   /*PROP-FIM*/
+
+  /*ISO-INI*/ /* GERADO por tools/quimica/gera-isomeros.py (RDKit): não editar à mão. Cada isômero: [SMILES, esqueleto de carbonos, nome ou null] */
+  SIM.org.ISO = {
+    "C4H10": [["CC(C)C", "CC(C)C", "metilpropano"], ["CCCC", "CCCC", "butano"]],
+    "C5H12": [["CC(C)(C)C", "CC(C)(C)C", "dimetilpropano"], ["CCC(C)C", "CCC(C)C", "2-metilbutano"], ["CCCCC", "CCCCC", "pentano"]],
+    "C6H14": [["CC(C)C(C)C", "CC(C)C(C)C", "2,3-dimetilbutano"], ["CCC(C)(C)C", "CCC(C)(C)C", "2,2-dimetilbutano"], ["CCC(C)CC", "CCC(C)CC", "3-metilpentano"], ["CCCC(C)C", "CCCC(C)C", "2-metilpentano"], ["CCCCCC", "CCCCCC", "hexano"]],
+    "C4H8": [["C1CCC1", "C1CCC1", "ciclobutano"], ["C=C(C)C", "CC(C)C", "metilpropeno"], ["C=CCC", "CCCC", "but-1-eno"], ["CC1CC1", "CC1CC1", "metilciclopropano"], ["CC=CC", "CCCC", "but-2-eno"]],
+    "C5H10": [["C1CCCC1", "C1CCCC1", "ciclopentano"], ["C=C(C)CC", "CCC(C)C", "2-metilbut-1-eno"], ["C=CC(C)C", "CCC(C)C", "3-metilbut-1-eno"], ["C=CCCC", "CCCCC", "pent-1-eno"], ["CC1(C)CC1", "CC1(C)CC1", "1,1-dimetilciclopropano"], ["CC1CC1C", "CC1CC1C", "1,2-dimetilciclopropano"], ["CC1CCC1", "CC1CCC1", "metilciclobutano"], ["CC=C(C)C", "CCC(C)C", "2-metilbut-2-eno"], ["CC=CCC", "CCCCC", "pent-2-eno"], ["CCC1CC1", "CCC1CC1", "etilciclopropano"]],
+    "C2H6O": [["CCO", "CC", "etanol"], ["COC", "C.C", "metoximetano"]],
+    "C3H8O": [["CC(C)O", "CCC", "propan-2-ol"], ["CCCO", "CCC", "propan-1-ol"], ["CCOC", "C.CC", "metoxietano"]],
+    "C4H10O": [["CC(C)(C)O", "CC(C)C", "2-metilpropan-2-ol"], ["CC(C)CO", "CC(C)C", "2-metilpropan-1-ol"], ["CCC(C)O", "CCCC", "butan-2-ol"], ["CCCCO", "CCCC", "butan-1-ol"], ["CCCOC", "C.CCC", "1-metoxipropano"], ["CCOCC", "CC.CC", "etoxietano"], ["COC(C)C", "C.CCC", "2-metoxipropano"]],
+    "C3H6O": [["C1COC1", "CCC", "oxetano"], ["C=CCO", "CCC", "prop-2-en-1-ol"], ["C=COC", "C.CC", "metoxieteno"], ["CC(C)=O", "CCC", "propanona"], ["CC1CO1", "CCC", "2-metiloxirano"], ["CCC=O", "CCC", "propanal"], ["OC1CC1", "C1CC1", "ciclopropanol"]],
+    "C3H7Cl": [["CC(C)Cl", "CCC", "2-cloropropano"], ["CCCCl", "CCC", "1-cloropropano"]],
+    "C4H9Cl": [["CC(C)(C)Cl", "CC(C)C", "2-cloro-2-metilpropano"], ["CC(C)CCl", "CC(C)C", "1-cloro-2-metilpropano"], ["CCC(C)Cl", "CCCC", "2-clorobutano"], ["CCCCCl", "CCCC", "1-clorobutano"]],
+    "C3H9N": [["CC(C)N", "CCC", "propan-2-amina"], ["CCCN", "CCC", "propan-1-amina"], ["CCNC", "C.CC", "N-metiletanamina"], ["CN(C)C", "C.C.C", "N,N-dimetilmetanamina"]],
+  };
+  /*ISO-FIM*/
 })();

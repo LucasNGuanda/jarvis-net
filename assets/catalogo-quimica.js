@@ -83,7 +83,7 @@ window.CATALOGO.push(
     ["H04","Funções nitrogenadas e haletos orgânicos",[],true],
     ["H05","Propriedades físicas: forças intermoleculares, ebulição e solubilidade",[],true],
     ["H06","Acidez e basicidade dos compostos orgânicos",[],true],
-    ["H07","Isomeria constitucional",[]],
+    ["H07","Isomeria constitucional: cadeia, posição, função e compensação",[],true],
     ["H08","Estereoisomeria",[]],
     ["H09","Substituição",[]],
     ["H10","Adição",[]],
