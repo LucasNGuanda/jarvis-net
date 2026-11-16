@@ -104,6 +104,7 @@
       {"nome": "saponificação do etanoato de etila", "tipo": "substituição", "r": [[1, "C4H8O2"], [1, "NaOH"]], "p": [[1, "C2H3O2Na"], [1, "C2H6O"]], "k": 0, "mr": 128, "mp": 82, "ea": 64.0625},
     ],
     QV: {"ano": 1998, "cmcSDS": 0.008, "mSDS": 288, "principios": 12},
+    AGUA: {"pkaHOCl": 7.53, "mHOCl": 52.46, "fluorEUA": 0.7, "fluorOMS": [0.5, 1.5], "ph": [6.5, 8.5], "dureza": {"mole": [0, 60], "moderadamente_dura": [61, 120], "dura": [121, 180]}},
   };
   /*BIO-FIM*/
 
@@ -131,6 +132,8 @@
   /* contas de um triglicerídeo feito de três ácidos graxos (índices na tabela AG): glicerol (92) + 3 ácidos − 3 águas */
   SIM.triglicerideo = (ks) => { const A = ks.map((k) => SIM.BIO.AG.find((a) => a.k === k)), c = 3 + A.reduce((t, a) => t + a.c, 0), d = A.reduce((t, a) => t + a.d, 0), h = 8 + A.reduce((t, a) => t + 2 * a.c - 2 * a.d, 0) - 6, m = 92 + A.reduce((t, a) => t + a.m, 0) - 54;
     return { A, c, h, o: 6, d, m, f: `C${c}H${h}O6`, iodo: (100 * d * 254) / m, naoh: (100 / m) * 3 * 40, h2: d }; };
+  /* açúcares em cadeia aberta, em fórmula condensada (o desenhista enrola cadeias longas cheias de OH e o resultado parece um anel: por isso, texto). O teste confere os átomos com a fórmula da fonte. */
+  SIM.ACUCAR = { glicose: "HOCH₂–CHOH–CHOH–CHOH–CHOH–CHO", frutose: "HOCH₂–CHOH–CHOH–CHOH–CO–CH₂OH", galactose: "HOCH₂–CHOH–CHOH–CHOH–CHOH–CHO", ribose: "HOCH₂–CHOH–CHOH–CHOH–CHO", desoxirribose: "HOCH₂–CHOH–CHOH–CH₂–CHO" };
   /* cadeia de n unidades de glicose: n C6H12O6 − (n − 1) H2O */
   SIM.poliglicose = (n) => ({ n, c: 6 * n, h: 12 * n - 2 * (n - 1), o: 6 * n - (n - 1), m: 180 * n - 18 * (n - 1), aguas: n - 1 });
   /* nome: "Açúcares e gorduras: montar e fazer a conta" · matéria: Química · tema: I02 */
@@ -149,7 +152,7 @@
         q("[data-v=lt]").innerHTML = vis("fórmula", sb(t.f)) + vis("massa molar", nt(t.m, 0) + " g/mol") + vis("duplas C=C", String(t.d)) + vis("H₂ para saturar 1 mol", t.d + " mol") + vis("índice de iodo", nt(t.iodo, 1)) + vis("NaOH para 100 g", nt(t.naoh, 1) + " g");
         q("[data-v=st]").innerHTML = `Glicerol (92) + três ácidos − três águas (54): <b>${nt(t.m, 0)} g/mol</b>. ${t.d ? `As ${t.d} duplas consomem ${t.d} mol de H₂ (ou de I₂) por mol: daí o índice de iodo, gramas de I₂ por 100 g.` : "Sem duplas: gordura saturada, índice de iodo zero."} Pontos de fusão dos ácidos (fonte): ${t.A.map((a, j) => nt(pf[j], 1) + " °C").join("; ")}. Quanto mais duplas, mais baixo. Massas com H = 1, C = 12, O = 16, I = 127, Na = 23.`; }
       else { const g = SIM.poliglicose(n), f = `C${g.c}H${g.h}O${g.o}`;
-        q("[data-v=sv]").innerHTML = O.fig([{ smi: "OCC(O)C(O)C(O)C(O)C=O", leg: "glicose (cadeia aberta), C₆H₁₂O₆" }], { L: 36, W: 700 }) + `<div style="font:700 20px Inter,system-ui,sans-serif">${n === 1 ? "1 glicose" : n + " glicoses − " + (n - 1) + " H₂O"}</div>`;
+        q("[data-v=sv]").innerHTML = `<div style="font:700 19px Inter,system-ui,sans-serif;letter-spacing:.3px;padding-top:14px">${SIM.ACUCAR.glicose}</div><div style="font-size:12.5px;color:var(--ink2);margin-bottom:10px">glicose em cadeia aberta, C₆H₁₂O₆ (fórmula condensada)</div>` + `<div style="font:700 20px Inter,system-ui,sans-serif">${n === 1 ? "1 glicose" : n + " glicoses − " + (n - 1) + " H₂O"}</div>`;
         q("[data-v=lt]").innerHTML = vis("unidades", String(n)) + vis("fórmula", sb(f)) + vis("massa molar", nt(g.m, 0) + " g/mol") + vis("ligações glicosídicas", String(g.aguas)) + vis("água liberada", g.aguas + " moléculas") + vis("classe", n === 1 ? "monossacarídeo" : n === 2 ? "dissacarídeo" : n < 10 ? "oligossacarídeo" : "polissacarídeo");
         q("[data-v=st]").innerHTML = `Cada ligação glicosídica une duas unidades e libera uma água: n glicoses dão <b>n − 1</b> águas. ${n === 2 ? "Com duas, a fórmula é C₁₂H₂₂O₁₁: a da maltose, da sacarose e da lactose." : n >= 100 ? "Para n grande, a fórmula tende a (C₆H₁₀O₅)ₙ, a do amido e da celulose (162 g/mol por unidade)." : ""} A hidrólise faz o caminho de volta: consome uma água por ligação. Massas com H = 1, C = 12, O = 16.`; } };
     liga(el, "modo", (v) => { modo = v; desenha(); }); liga(el, "n", (v) => { n = +v; desenha(); });
@@ -307,6 +310,37 @@
     q("[data-v=sel]").value = String(i); q("[data-v=sel]").addEventListener("change", (ev) => { i = +ev.target.value; ver = false; q("[data-v=ver]").setAttribute("aria-pressed", "false"); desenha(); });
     q("[data-v=ver]").addEventListener("click", () => { ver = !ver; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); }); liga(el, "rd", (v) => { rd = +v; desenha(); });
     SIM.qVerde._ult = { poe: (nome, r = 100, v = true) => { i = V.findIndex((x) => x.nome === nome); rd = r; ver = v; q("[data-v=sel]").value = String(i); q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); el.querySelectorAll("[data-rd]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.rd === rd))); desenha(); }, est }; desenha(); };
+
+  /* ---------- I09: tratamento de água ---------- */
+  /* fração do cloro livre que está como HOCl (a forma que mais desinfeta) num pH: 1 / (1 + 10^(pH − pKa)) */
+  SIM.fHOCl = (ph) => 1 / (1 + Math.pow(10, ph - SIM.BIO.AGUA.pkaHOCl));
+  /* dureza total em mg de CaCO₃ por litro, a partir de Ca²⁺ e Mg²⁺ em mg/L (Ca 40, Mg 24, CaCO₃ 100) */
+  SIM.dureza = (ca, mg) => { const mmol = ca / 40 + mg / 24, d = 100 * mmol, C = SIM.BIO.AGUA.dureza; return { mmol, d, classe: d <= C.mole[1] ? "mole" : d <= C.moderadamente_dura[1] ? "moderadamente dura" : d <= C.dura[1] ? "dura" : "muito dura" }; };
+  /* nome: "Água tratada: cloro, pH e dureza" · matéria: Química · tema: I09 */
+  SIM.qAgua = (el, F) => { const A = SIM.BIO.AGUA; let modo = "cloro", ph = 7.5, ca = 40, mg = 12;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;justify-content:center;padding:12px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><div class="bts">${botoes([["cloro", "cloro e pH"], ["dureza", "dureza"]], "modo", modo)}</div></div>
+      <div data-v="cc" style="min-width:300px"><label style="font-size:13.5px;color:var(--ink2)">pH da água: <b data-v="ph"></b><br><input type="range" data-v="rg" min="5" max="10" step="0.1" value="7.5" style="width:100%"></label></div>
+      <div data-v="cd" hidden><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">Ca²⁺ (mg/L)</p><div class="bts">${botoes([[10, "10"], [40, "40"], [80, "80"], [120, "120"]], "ca", ca)}</div><p style="margin:6px 0 4px;font-size:13px;color:var(--ink2)">Mg²⁺ (mg/L)</p><div class="bts">${botoes([[0, "0"], [12, "12"], [24, "24"], [48, "48"]], "mg", mg)}</div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), est = () => (modo === "cloro" ? { modo, ph, f: SIM.fHOCl(ph), dentro: ph >= A.ph[0] && ph <= A.ph[1] } : { modo, ca, mg, ...SIM.dureza(ca, mg) });
+    const desenha = () => { q("[data-v=cc]").hidden = modo !== "cloro"; q("[data-v=cd]").hidden = modo === "cloro"; const e = est(), W = 620;
+      if (modo === "cloro") { const X = (p) => 60 + ((p - 5) * 500) / 5, Y = (f) => 20 + 130 * (1 - f); let d1 = "", d2 = ""; for (let p = 5; p <= 10.001; p += 0.1) { const f = SIM.fHOCl(p); d1 += `${d1 ? "L" : "M"}${X(p).toFixed(1)},${Y(f).toFixed(1)} `; d2 += `${d2 ? "L" : "M"}${X(p).toFixed(1)},${Y(1 - f).toFixed(1)} `; }
+        let s = `<rect x="${X(A.ph[0])}" y="20" width="${X(A.ph[1]) - X(A.ph[0])}" height="130" style="fill:var(--mod);opacity:.10"/><line x1="60" y1="150" x2="560" y2="150" style="stroke:var(--ink2);stroke-width:1.3"/><line x1="60" y1="150" x2="60" y2="16" style="stroke:var(--ink2);stroke-width:1.3"/>`;
+        for (let p = 5; p <= 10; p++) s += `<text x="${X(p)}" y="168" text-anchor="middle" class="tx2" style="font-size:12px">${p}</text>`;
+        s += `<text x="52" y="24" text-anchor="end" class="tx2" style="font-size:11px">100%</text><text x="52" y="153" text-anchor="end" class="tx2" style="font-size:11px">0</text><path d="${d1}" style="fill:none;stroke:var(--mod);stroke-width:2.4"/><path d="${d2}" style="fill:none;stroke:#e5604d;stroke-width:2.4"/><text x="80" y="36" class="tx2" style="font-size:12px;fill:var(--mod)">HOCl</text><text x="540" y="36" text-anchor="end" class="tx2" style="font-size:12px;fill:#e5604d">OCl⁻</text><line x1="${X(ph)}" y1="20" x2="${X(ph)}" y2="150" style="stroke:var(--ink);stroke-width:1.4;stroke-dasharray:4 3"/><circle cx="${X(ph)}" cy="${Y(e.f)}" r="6" style="fill:var(--mod)"/><text x="${W / 2}" y="186" text-anchor="middle" class="tx2" style="font-size:12px">pH · faixa sombreada: ${nt(A.ph[0], 1)} a ${nt(A.ph[1], 1)}</text>`;
+        q("[data-v=ph]").textContent = nt(ph, 1); q("[data-v=sv]").innerHTML = `<svg viewBox="0 0 ${W} 192" width="${W}" role="img" aria-label="distribuição do cloro livre com o pH">${s}</svg>`;
+        q("[data-v=lt]").innerHTML = vis("pH", nt(ph, 1)) + vis("pKa do HOCl", nt(A.pkaHOCl, 2)) + vis("como HOCl", nt(100 * e.f, 1) + "%") + vis("como OCl⁻", nt(100 * (1 - e.f), 1) + "%") + vis("[OCl⁻]/[HOCl]", nt(Math.pow(10, ph - A.pkaHOCl), 2));
+        q("[data-v=st]").innerHTML = `O cloro na água vira ácido hipocloroso, HOCl, um ácido fraco (pKa ${nt(A.pkaHOCl, 2)}). Em pH ${nt(ph, 1)}, <b>${nt(100 * e.f, 1)}%</b> do cloro livre está como HOCl, a forma neutra, que atravessa a parede dos microrganismos, e o resto como íon OCl⁻. Com pH = pKa, metade de cada. Por isso o pH é corrigido antes da cloração: água muito alcalina desperdiça cloro. (Cálculo pela equação de Henderson-Hasselbalch; pKa e faixa de pH: dados de fonte.)`; }
+      else { const C = A.dureza, mx = 400, X = (d) => 60 + (Math.min(d, mx) * 500) / mx, cor = { mole: "#3fae7a", "moderadamente dura": "#e0a13a", dura: "#e07a3a", "muito dura": "#e5604d" }; let s = "";
+        [["mole", 0, C.mole[1]], ["moderadamente dura", C.mole[1], C.moderadamente_dura[1]], ["dura", C.moderadamente_dura[1], C.dura[1]], ["muito dura", C.dura[1], mx]].forEach(([n, a, b]) => { s += `<rect x="${X(a)}" y="40" width="${X(b) - X(a)}" height="22" style="fill:${cor[n]};opacity:${n === e.classe ? 0.95 : 0.3}"/><text x="${(X(a) + X(b)) / 2}" y="82" text-anchor="middle" class="tx2" style="font-size:11px">${n.replace("moderadamente", "moder.")}</text>`; });
+        s += `<line x1="${X(e.d)}" y1="26" x2="${X(e.d)}" y2="66" style="stroke:var(--ink);stroke-width:2.4"/><text x="${X(e.d)}" y="20" text-anchor="middle" style="font:700 13px Inter,system-ui,sans-serif;fill:var(--ink)">${nt(e.d, 0)}</text><text x="${W / 2}" y="104" text-anchor="middle" class="tx2" style="font-size:12px">dureza total, em mg de CaCO₃ por litro</text>`;
+        q("[data-v=sv]").innerHTML = `<svg viewBox="0 0 ${W} 112" width="${W}" role="img" aria-label="escala de dureza">${s}</svg>`;
+        q("[data-v=lt]").innerHTML = vis("Ca²⁺", ca + " mg/L") + vis("Mg²⁺", mg + " mg/L") + vis("íons 2+", nt(e.mmol, 2) + " mmol/L") + vis("dureza", nt(e.d, 0) + " mg CaCO₃/L") + vis("classificação", e.classe);
+        q("[data-v=st]").innerHTML = `Dureza é a soma dos íons Ca²⁺ e Mg²⁺, expressa como se tudo fosse carbonato de cálcio: ${ca}/40 + ${mg}/24 = ${nt(e.mmol, 2)} mmol/L, vezes 100 g/mol = <b>${nt(e.d, 0)} mg de CaCO₃ por litro</b>: água <b>${e.classe}</b>. Faixas da fonte: até 60, mole; 61 a 120, moderadamente dura; 121 a 180, dura; acima, muito dura. Massas: Ca 40, Mg 24, CaCO₃ 100.`; } };
+    liga(el, "modo", (v) => { modo = v; desenha(); }); liga(el, "ca", (v) => { ca = +v; desenha(); }); liga(el, "mg", (v) => { mg = +v; desenha(); });
+    q("[data-v=rg]").addEventListener("input", (ev) => { ph = +ev.target.value; desenha(); });
+    SIM.qAgua._ult = { poe: (mo, a, b) => { modo = mo; if (mo === "cloro") { ph = a; q("[data-v=rg]").value = String(a); } else { ca = a; mg = b; } [["modo", modo], ["ca", ca], ["mg", mg]].forEach(([k, v]) => el.querySelectorAll(`[data-${k}]`).forEach((x) => x.setAttribute("aria-pressed", String(x.dataset[k]) === String(v)))); desenha(); }, est }; desenha(); };
 
   //MAIS-LABS
 })();

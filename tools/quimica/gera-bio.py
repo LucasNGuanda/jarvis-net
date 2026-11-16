@@ -333,6 +333,21 @@ if not cmc or not sds or hill(conta_f(sds["formula"])) != hill(conta_f("C12H25Na
 BIO["VERDE"] = verde
 BIO["QV"] = {"ano": 1998, "cmcSDS": 8e-3, "mSDS": 12 * 12 + 25 + 23 + 64 + 32, "principios": len(QV["doze_principios"])}
 if not tem(QV["autores_e_ano"], "1998", "Anastas") or BIO["QV"]["principios"] != 12: erros.append(("química verde: autores, ano ou nº de princípios",))
+
+# ---------- I09: tratamento de água ----------
+TA = D["tratamento_de_agua"]
+cls = TA["dureza"]["classificacao"]
+dur = {k: val(v) for k, v in cls.items() if isinstance(val(v), list)}
+AGUA = {
+ "pkaHOCl": val(TA["cloracao"]["pKa_HOCl"]), "mHOCl": val(TA["cloracao"]["HOCl_massa_molar"]),
+ "fluorEUA": rx(TA["fluoretacao"]["concentracao_recomendada"], r"recommended level has been ([\d.]+) mg/L"), "fluorOMS": [rx(TA["fluoretacao"]["concentracao_recomendada"], r"fluoride levels of ([\d.]+)–([\d.]+) mg/L", 1), rx(TA["fluoretacao"]["concentracao_recomendada"], r"fluoride levels of ([\d.]+)–([\d.]+) mg/L", 2)],
+ "ph": [rx(TA["pH_agua_potavel"], r"([\d.]+) to ([\d.]+)", 1), rx(TA["pH_agua_potavel"], r"([\d.]+) to ([\d.]+)", 2)],
+ "dureza": dur,
+}
+if not tem(TA["cloracao"]["equacao"], "Cl2 + H2O ⇌ HOCl + HCl"): erros.append(("cloração: equação da fonte",))
+if not (7 < AGUA["pkaHOCl"] < 8) or not dur: erros.append(("água: pKa do HOCl ou classes de dureza", AGUA["pkaHOCl"], list(cls.keys())))
+if not tem(TA["dureza"]["temporaria"], "bicarbonate"): erros.append(("dureza temporária: frase",))
+BIO["AGUA"] = AGUA
 #MAIS-SECOES
 
 json.dump(cache, open(ARQ, "w"), ensure_ascii=False, indent=1)   # todas as consultas ao PubChem, de todas as seções

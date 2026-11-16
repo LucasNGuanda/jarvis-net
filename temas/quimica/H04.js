@@ -22,7 +22,7 @@ F.registrar("quimica/H04", {
     const AMI = ["metanamina", "etanamina", "propan-2-amina", "N-metilmetanamina", "N,N-dimetilmetanamina", "anilina"];
     const MAS = { C: 12, H: 1, N: 14, O: 16, Cl: 35.5, Br: 80 };
     const pym = (c) => Object.keys(c).map((k) => `${MAS[k]} * ${c[k]}`).join(" + ");
-    const tabCl = () => fig(SIM.dq.tab(70, 14, [150, 110, 110, 130], [["composto", "fórmula", "ebulição (°C)", "momento dipolar (D)"], ["clorometano", "CH₃Cl", "−23,8", "1,9"], ["diclorometano", "CH₂Cl₂", "39,6", "1,6"], ["triclorometano", "CHCl₃", "61,2", "1,15"], ["tetraclorometano", "CCl₄", "76,7", "0"]]), 140);
+    const tabCl = () => fig(SIM.dq.tab(70, 14, [150, 110, 110, 130], [["composto", "fórmula", "ebulição (°C)", "dipolo (D)"], ["clorometano", "CH₃Cl", "−23,8", "1,9"], ["diclorometano", "CH₂Cl₂", "39,6", "1,6"], ["triclorometano", "CHCl₃", "61,2", "1,15"], ["tetraclorometano", "CCl₄", "76,7", "0"]]), 140);
 
     const exemplos = F.exemplo({
       titulo: "Reconhecer, classificar e dar nome",

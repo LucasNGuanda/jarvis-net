@@ -100,7 +100,7 @@ window.CATALOGO.push(
     ["I06","Ciclos biogeoquímicos: carbono, nitrogênio e o processo Haber-Bosch",[],true],
     ["I07","Poluição do ar e da água: chuva ácida, efeito estufa, ozônio e oxigênio dissolvido",[],true],
     ["I08","Química verde e cotidiano: economia atômica, fator E e os doze princípios",[],true],
-    ["I09","Tratamento de água e resíduos",[]],
+    ["I09","Tratamento de água e resíduos: cloração, pH, dureza e esgoto",[],true],
   ] },
   { id:"QJ", area:"qui", letra:"J", cor:"--mM", nome:"Química analítica", desc:"Titulação, análise qualitativa e quantitativa.", temas:[
     ["J01","Análise qualitativa e marcha de íons",[]],
