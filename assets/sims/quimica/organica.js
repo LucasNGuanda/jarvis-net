@@ -437,11 +437,11 @@
     txt: `Cada H diferente do ${r.r} leva a um produto: ${r.p.map((p) => `<b>${p[0]}</b> (${p[1]} H equivalentes, carbono ${CL[p[2]]})`).join("; ")}. A contagem diz <b>quantos</b> produtos existem; a proporção real de cada um depende também de quão depressa cada tipo de H reage (valores que não estão nas fontes conferidas). Produtos gerados por computador.` }; };
   /* nome: "Reações de substituição: quem sai, quem entra" · matéria: Química · tema: H09 */
   SIM.qSubstituicao = (el, F) => { SIM.qSubstituicao._ult = labRx(el, { lista: () => [...SIM.org.RAD.map(itemRad), ...rxDe(["sn", "sear", "ester", "sapon"]).map(itemRx)] }); };
-  /* nome: "(nenhum tema usa este laboratório)" · matéria: Química · tema: — */
+  /* nome: "Reações de adição: o que entra na dupla" · matéria: Química · tema: H10 */
   SIM.qAdicao = (el, F) => { SIM.qAdicao._ult = labRx(el, { lista: () => rxDe(["ad"]).map(itemRx) }); };
-  /* nome: "(nenhum tema usa este laboratório)" · matéria: Química · tema: — */
+  /* nome: "Reações de eliminação: de onde sai o H" · matéria: Química · tema: H11 */
   SIM.qEliminacao = (el, F) => { SIM.qEliminacao._ult = labRx(el, { lista: () => rxDe(["el"]).map(itemRx), pergunta: "Antes de clicar em <b>mostrar</b>: de que carbono vizinho sai o H? Dá para formar mais de um alceno?" }); };
-  /* nome: "(nenhum tema usa este laboratório)" · matéria: Química · tema: — */
+  /* nome: "Oxidação e redução: a escada do carbono" · matéria: Química · tema: H12 */
   SIM.qOxidacao = (el, F) => { const it = (x) => { const b = itemRx(x), g = parse(smiN(x.r[0])), ia = g.at.findIndex((a, k) => a.el === "C" && a.viz.some(([v]) => g.at[v].el === "O")), antes = x.t === "ozon" ? null : nox(smiN(x.r[0])), dep = x.p && x.t !== "ozon" ? nox(smiN(x.p)) : null, kc = antes ? g.at.slice(0, ia + 1).filter((a) => a.el === "C").length - 1 : -1, gp = dep ? parse(smiN(x.p)) : null, kp = gp ? gp.at.slice(0, gp.at.findIndex((a, k) => a.el === "C" && a.viz.some(([v]) => gp.at[v].el === "O")) + 1).filter((a) => a.el === "C").length - 1 : -1, na = antes && kc >= 0 ? antes[kc] : null, nd = dep && kp >= 0 ? dep[kp] : null, sg = (v) => (v > 0 ? "+" + v : String(v).replace("-", "−"));
       return { ...b, est: { ...b.est, na, nd }, vis: (v) => [...b.vis(v).slice(0, 3), ["nox do carbono funcional", na === null ? "—" : v && nd !== null ? `${sg(na)} → ${sg(nd)}` : sg(na) + " → ?"]], txt: b.txt + (na !== null && nd !== null ? ` O carbono funcional vai de ${sg(na)} para ${sg(nd)}: ${nd > na ? "oxidou" : "reduziu"}.` : "") }; };
     SIM.qOxidacao._ult = labRx(el, { lista: () => rxDe(["ox"]).map(it), pergunta: "Antes de clicar em <b>mostrar</b>: o carbono do grupo funcional tem H para perder? Até onde a oxidação vai?" }); };

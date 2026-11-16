@@ -88,7 +88,7 @@ window.CATALOGO.push(
     ["H09","Reações de substituição: alcanos, haletos, benzeno e ésteres",[],true],
     ["H10","Reações de adição: hidrogenação, halogenação e regra de Markovnikov",[],true],
     ["H11","Reações de eliminação: desidratação, desidro-halogenação e regra de Zaitsev",[],true],
-    ["H12","Oxidação e redução",[]],
+    ["H12","Oxidação e redução: nox do carbono, álcoois, ozonólise e combustão",[],true],
     ["H13","Mecanismos de reação",[]],
   ] },
   { id:"QI", area:"qui", letra:"I", cor:"--mX", nome:"Bioquímica e ambiental", desc:"Biomoléculas, polímeros e química do ambiente.", temas:[
