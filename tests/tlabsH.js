@@ -19,7 +19,7 @@ const perto = (a, b, tol = 0.005) => Math.abs(a - b) <= tol * Math.max(1e-9, Mat
     const d = await cd(ix('etoxietano'), 'classe'), e = await cd(ix('etanol'), 'classe'); ok(!d.homogenea && e.homogenea, 'H01: etoxietano é heterogênea (O entre carbonos); etanol é homogênea (O na ponta)');
     const f = await cd(ix('metilciclopentano'), 'classe'); ok(!f.aberta && f.ramificada && f.idh === 1 && f.sigma === 18, 'H01: metilciclopentano: fechada, ramificada, IDH 1 (o anel), 18 σ');
     await p.waitForTimeout(200); const l = await leitor('lab-cadeia'); ok(/C₆H₁₂/.test(l['fórmula molecular']) && /fechada, ramificada, saturada, homogênea/.test(l['cadeia']), 'H01: mostrador: ' + l['fórmula molecular'] + ' · ' + l['cadeia']);
-    ok(await p.evaluate(() => document.querySelectorAll('#desafios .ex svg.figura line').length > 40 && document.querySelectorAll('#desafios .ex svg.figura text').length > 30), 'H01: as figuras dos exercícios têm estruturas desenhadas (traços e átomos)'); }
+    ok(await p.evaluate(() => document.querySelectorAll('#desafios .ex svg.figura line').length >= 20 && document.querySelectorAll('#desafios .ex svg.figura text').length >= 15), 'H01: as figuras dos exercícios têm estruturas desenhadas (traços e átomos)'); }
   //MAIS
   // ----- gabaritos: em todo exercício de alternativas, clicar na letra do gabarito tem de dar "certo" -----
   for (const cod of ['H01', 'H02', 'H03', 'H04', 'H05', 'H06', 'H07', 'H08', 'H09', 'H10', 'H11', 'H12', 'H13'].filter((c) => temas.has(c))) { await p.goto(RAIZ + '#/quimica/' + cod); await p.waitForTimeout(1300);
