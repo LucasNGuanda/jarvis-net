@@ -85,7 +85,7 @@ window.CATALOGO.push(
     ["H06","Acidez e basicidade dos compostos orgânicos",[],true],
     ["H07","Isomeria constitucional: cadeia, posição, função e compensação",[],true],
     ["H08","Estereoisomeria: cis e trans, carbono quiral e atividade óptica",[],true],
-    ["H09","Substituição",[]],
+    ["H09","Reações de substituição: alcanos, haletos, benzeno e ésteres",[],true],
     ["H10","Adição",[]],
     ["H11","Eliminação",[]],
     ["H12","Oxidação e redução",[]],

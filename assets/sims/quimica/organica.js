@@ -383,6 +383,69 @@
     q("[data-v=ver]").addEventListener("click", () => { ver = !ver; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); });
     SIM.qEstereo._ult = { poe: (nome, v = true) => { i = NOMES.indexOf(nome); ver = v; q("[data-v=sel]").value = String(i); q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); }, est, NOMES }; desenha(); };
 
+  /* ---------- reações (H09 a H12): equação desenhada e laboratório comum ---------- */
+  const INO = (s) => (s || "").replace(/(\d)/g, (c) => SUB(c)).replace(/\+/g, " + ");
+  const TIPO = { sn: "substituição nucleofílica", "sn-agua": "substituição nucleofílica", "sn-cn": "substituição nucleofílica", "sn-nh3": "substituição nucleofílica", "sn-eter": "substituição nucleofílica", "sear-cl": "substituição eletrofílica aromática (halogenação)", "sear-br": "substituição eletrofílica aromática (halogenação)", "sear-no2": "substituição eletrofílica aromática (nitração)", "sear-me": "substituição eletrofílica aromática (alquilação de Friedel-Crafts)", ester: "esterificação (substituição no grupo acila)", sapon: "hidrólise básica de éster (saponificação)", rad: "substituição radicalar (halogenação de alcano)",
+    "ad-h2": "adição de H₂ (hidrogenação)", "ad-2h2": "adição de H₂ (hidrogenação total)", "ad-x2": "adição de halogênio", "ad-hx": "adição de HX", "ad-hx-anti": "adição de HBr com peróxido", "ad-h2o": "adição de água (hidratação)", "el-h2o": "eliminação de água (desidratação intramolecular)", "el-hx": "eliminação de HX (desidro-halogenação)", "el-eter": "desidratação intermolecular",
+    "ox-parcial": "oxidação parcial de álcool primário", "ox-total": "oxidação total de álcool primário", "ox-sec": "oxidação de álcool secundário", "ox-nao": "álcool terciário diante de oxidante", "ox-ald": "oxidação de aldeído", ozon: "ozonólise", red: "redução de carbonila" };
+  const REGRA = (x) => ({ "ad-hx": x.s ? "Markovnikov: o H vai para o carbono da dupla que já tem mais H; o halogênio, para o outro" : "alceno simétrico: os dois carbonos da dupla são equivalentes, e há um produto só", "ad-h2o": x.s ? "Markovnikov: o H vai para o carbono da dupla que já tem mais H; o OH, para o outro" : "alceno simétrico: há um produto só", "ad-hx-anti": "anti-Markovnikov (efeito Kharasch): com peróxido, o mecanismo é radicalar e o Br vai para o carbono com mais H",
+    "el-h2o": x.s ? "Zaitsev: forma-se de preferência o alceno mais substituído (o H sai do carbono vizinho que tem menos H)" : "só há um alceno possível", "el-hx": x.s ? "Zaitsev: forma-se de preferência o alceno mais substituído (o H sai do carbono vizinho que tem menos H)" : "só há um alceno possível",
+    sn: "o nucleófilo (OH⁻) entra no lugar do halogênio, que sai como haleto", "sn-agua": "haleto terciário: o halogênio sai primeiro (carbocátion terciário) e a água entra depois", "sn-cn": "o nucleófilo (CN⁻) entra no lugar do halogênio: a cadeia ganha um carbono", "sn-nh3": "o nucleófilo (NH₃) entra no lugar do halogênio", "sn-eter": "o nucleófilo (CH₃O⁻) entra no lugar do halogênio e forma um éter",
+    "sear-cl": "um H do anel é trocado; o anel aromático se mantém", "sear-br": x.s ? "o grupo CH₃ dirige o eletrófilo para orto e para" : "um H do anel é trocado; o anel aromático se mantém", "sear-no2": x.s ? "o grupo CH₃ dirige o eletrófilo para orto e para" : /nitro/.test(x.r[0]) ? "o grupo NO₂ dirige o segundo grupo para meta" : "um H do anel é trocado por NO₂; o anel aromático se mantém", "sear-me": "um H do anel é trocado pelo grupo alquila",
+    ester: "o OH sai do ácido e o H sai do álcool: ácido + álcool ⇌ éster + água", sapon: "a base quebra o éster em sal do ácido e álcool", "ad-h2": "os dois H entram, um em cada carbono da dupla", "ad-2h2": "a tripla recebe dois H₂: vira dupla e depois simples", "ad-x2": "os dois halogênios entram, um em cada carbono da dupla (carbonos vizinhos)", "el-eter": "duas moléculas de álcool perdem uma de água e viram um éter",
+    "ox-parcial": "álcool primário → aldeído (o carbono perde 2 H)", "ox-total": "álcool primário → aldeído → ácido carboxílico", "ox-sec": "álcool secundário → cetona (e para aí)", "ox-nao": "álcool terciário: o carbono do OH não tem H para perder; não reage", "ox-ald": "aldeído → ácido carboxílico (o H da carbonila vira OH)", ozon: "a dupla se parte: cada carbono dela vira um C=O", red: x.p && /ona$/.test(x.r[0]) ? "cetona → álcool secundário (o inverso da oxidação)" : "aldeído → álcool primário (o inverso da oxidação)" }[x.t] || "");
+  const smiN = (n) => SIM.org.NOMES[n];
+  /* equação desenhada. o.oculta: põe "?" no lugar dos produtos orgânicos; o.nomes: escreve o nome embaixo de cada estrutura */
+  const reacao = (x, o = {}) => { const L = o.L || 34, W = o.W || 560, T = (t, cor) => ({ txt: t, w: t.length * 9.2 + 6, cor }), E = (n) => ({ d: svg(smiN(n), { L }), leg: o.nomes === false ? "" : n }), it = [];
+    x.r.forEach((n, k) => { if (k && x.r[k - 1] === n) return; if (k) it.push(T("+")); if (x.r.filter((y) => y === n).length === 2) it.push(T("2")); it.push(E(n)); });
+    if (x.i) it.push(T("+"), T((x.k > 1 ? x.k + " " : "") + INO(x.i)));
+    it.push({ seta: true, cond: x.cond || "", w: Math.max(74, Math.min(190, (x.cond || "").length * 6.4 + 16)) });
+    if (!x.p) it.push(T("não reage")); else if (o.oculta) it.push(T("?", "var(--warn)")); else { const dois = x.s && x.s === x.p; if (dois) it.push(T("2")); it.push(E(x.p)); if (x.s && !dois) it.push(T(/sapon|ozon/.test(x.t) ? "+" : /sear/.test(x.t) ? "e" : "ou"), E(x.s)); }
+    if (x.co && x.p) it.push(T("+"), T(INO(x.co)));
+    it.forEach((e) => { if (e.d) e.w = Math.max(e.d.w, e.leg ? e.leg.length * 6.3 + 6 : 0); });
+    const gap = 8, tot = it.reduce((t, e) => t + e.w, 0) + gap * (it.length - 1), hmax = Math.max(60, ...it.filter((e) => e.d).map((e) => e.d.h)), esc = Math.min(1, (W - 12) / tot), cy = 4 + (hmax * esc) / 2, temLeg = it.some((e) => e.leg);
+    let px = (W - tot * esc) / 2, s = "";
+    it.forEach((e) => { const w = e.w * esc, cx = px + w / 2;
+      if (e.d) { s += `<g transform="translate(${(cx - (e.d.w * esc) / 2).toFixed(1)},${(cy - (e.d.h * esc) / 2).toFixed(1)}) scale(${esc.toFixed(3)})">${e.d.svg}</g>`; if (e.leg) s += `<text x="${cx.toFixed(1)}" y="${(hmax * esc + 20).toFixed(1)}" text-anchor="middle" class="tx2" style="font-size:${Math.max(9.5, 12 * esc).toFixed(1)}px">${e.leg}</text>`; }
+      else if (e.seta) { s += `<line x1="${(px + 4).toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(px + w - 6).toFixed(1)}" y2="${cy.toFixed(1)}" style="stroke:var(--ink);stroke-width:1.8"/><polygon points="${(px + w - 2).toFixed(1)},${cy.toFixed(1)} ${(px + w - 11).toFixed(1)},${(cy - 4.5).toFixed(1)} ${(px + w - 11).toFixed(1)},${(cy + 4.5).toFixed(1)}" style="fill:var(--ink)"/>`; if (e.cond) s += `<text x="${cx.toFixed(1)}" y="${(cy - 8).toFixed(1)}" text-anchor="middle" class="tx2" style="font-size:${Math.max(8.5, Math.min(11.5, (w - 8) / (e.cond.length * 0.56))).toFixed(1)}px">${e.cond}</text>`; }
+      else s += `<text x="${cx.toFixed(1)}" y="${(cy + 5).toFixed(1)}" text-anchor="middle" style="font:600 ${Math.max(10, 15 * esc).toFixed(1)}px Inter,system-ui,sans-serif;fill:${e.cor || "var(--ink)"}">${e.txt}</text>`;
+      px += w + gap * esc; });
+    return `<svg class="figura" viewBox="0 0 ${W} ${(hmax * esc + (temLeg ? 30 : 10)).toFixed(0)}" width="${W}" role="img" aria-label="equação da reação">${s}</svg>`; };
+  /* equação em texto, com nomes */
+  const reacaoTxt = (x, oculta) => { const r = x.r[0] === x.r[1] ? "2 " + x.r[0] : x.r.join(" + "); return r + (x.i ? " + " + (x.k > 1 ? x.k + " " : "") + INO(x.i) : "") + " → " + (!x.p ? "não reage" : oculta ? "?" : (x.s && x.s === x.p ? "2 " + x.p : x.p + (x.s && /sapon|ozon/.test(x.t) ? " + " + x.s : "")) + (x.co ? " + " + INO(x.co) : "")); };
+  const rxDe = (tipos) => SIM.org.RX.filter((x) => tipos.some((t) => x.t === t || x.t.startsWith(t + "-") && t !== "ad" && t !== "el" || (t === "ad" && x.t.startsWith("ad-")) || (t === "el" && x.t.startsWith("el-")) || (t === "ox" && (x.t.startsWith("ox-") || x.t === "ozon" || x.t === "red"))));
+  /* número de oxidação de cada carbono: −1 por H, +1 por ordem de ligação com O, N ou halogênio, 0 por C; mais a carga */
+  const nox = (smi) => { const g = parse(smi); return g.at.map((a) => (a.el !== "C" ? null : -a.h + a.carga + a.viz.reduce((t, [v, k]) => t + (g.at[v].el === "C" ? 0 : Math.round(g.bd[k].o)), 0))).filter((v) => v !== null); };
+  Object.assign(SIM.org, { reacao, reacaoTxt, rxDe, nox, smiN, TIPO, REGRA, INO });
+
+  const labRx = (el, cfg) => { const L = cfg.lista(); let i = 0, ver = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;min-height:210px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><label style="font-size:13.5px;color:var(--ink2)">reação <select data-v="sel" style="font:inherit;padding:5px 8px;border-radius:8px;background:var(--card,#161b24);color:inherit;border:1px solid var(--line,#2a3140);max-width:460px">${L.map((x, k) => `<option value="${k}">${x.rot}</option>`).join("")}</select></label></div>
+      <div><div class="bts"><button class="bt peq" data-v="ver" aria-pressed="false">mostrar o produto</button></div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const e = L[i]; return { ...e.est, rot: e.rot, ver }; };
+    const desenha = () => { const e = L[i]; q("[data-v=sv]").innerHTML = e.fig(ver); q("[data-v=lt]").innerHTML = e.vis(ver).map(([r, v]) => vis(r, v)).join(""); q("[data-v=st]").innerHTML = ver ? e.txt : cfg.pergunta || "Antes de clicar em <b>mostrar</b>: qual é o produto principal? Há um segundo produto possível?"; };
+    q("[data-v=sel]").addEventListener("change", (ev) => { i = +ev.target.value; ver = false; q("[data-v=ver]").setAttribute("aria-pressed", "false"); desenha(); });
+    q("[data-v=ver]").addEventListener("click", () => { ver = !ver; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); });
+    desenha(); return { poe: (rot, v = true) => { i = L.findIndex((x) => x.rot === rot || x.rot.startsWith(rot)); ver = v; q("[data-v=sel]").value = String(i); q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); }, est, rots: L.map((x) => x.rot) }; };
+  const itemRx = (x) => ({ rot: reacaoTxt(x, true).replace(" → ?", "") + (x.cond && /peróxido|em excesso|seletivo/.test(x.cond) ? " (" + x.cond.replace(/^.*?(com peróxido|em excesso|oxidante seletivo).*$/, "$1") + ")" : ""), est: { t: x.t, p: x.p, s: x.s, co: x.co, r: x.r },
+    fig: (v) => reacao(x, { oculta: !v, W: 760, L: 40 }), vis: (v) => [["tipo", TIPO[x.t]], [/sear/.test(x.t) && x.s ? "produto (orto)" : "produto principal", v ? x.p || "nenhum" : "?"], [/sapon|ozon/.test(x.t) ? "outro produto" : /sear/.test(x.t) && x.s ? "produto (para)" : "produto secundário", v ? x.s || "não há" : "?"], ["também se forma", v ? INO(x.co) || "nada" : "?"]], txt: `<b>${reacaoTxt(x)}</b>. ${REGRA(x)[0].toUpperCase() + REGRA(x).slice(1)}.` });
+  const itemRad = (r) => { const tot = r.p.reduce((t, p) => t + p[1], 0), CL = ["metila", "primário", "secundário", "terciário"]; return { rot: r.r + " + Cl₂ (luz)", est: { t: "rad", r: [r.r], prods: r.p.map((p) => p[0]), hs: r.p.map((p) => p[1]), n: r.p.length },
+    fig: (v) => v ? fig([{ smi: smiN(r.r), leg: r.r }, ...r.p.map((p) => ({ smi: smiN(p[0]), leg: `${p[0]} (${p[1]} H)` }))], { L: 34, W: 760 }) : reacao({ r: [r.r], i: "Cl2", cond: "luz (UV)", p: "x", t: "rad" }, { oculta: true, W: 760, L: 40 }),
+    vis: (v) => [["tipo", TIPO.rad], ["produtos monoclorados diferentes", v ? String(r.p.length) : "?"], ["hidrogênios do alcano", String(tot)], ["também se forma", v ? "HCl" : "?"]],
+    txt: `Cada H diferente do ${r.r} leva a um produto: ${r.p.map((p) => `<b>${p[0]}</b> (${p[1]} H equivalentes, carbono ${CL[p[2]]})`).join("; ")}. A contagem diz <b>quantos</b> produtos existem; a proporção real de cada um depende também de quão depressa cada tipo de H reage (valores que não estão nas fontes conferidas). Produtos gerados por computador.` }; };
+  /* nome: "Reações de substituição: quem sai, quem entra" · matéria: Química · tema: H09 */
+  SIM.qSubstituicao = (el, F) => { SIM.qSubstituicao._ult = labRx(el, { lista: () => [...SIM.org.RAD.map(itemRad), ...rxDe(["sn", "sear", "ester", "sapon"]).map(itemRx)] }); };
+  /* nome: "(nenhum tema usa este laboratório)" · matéria: Química · tema: — */
+  SIM.qAdicao = (el, F) => { SIM.qAdicao._ult = labRx(el, { lista: () => rxDe(["ad"]).map(itemRx) }); };
+  /* nome: "(nenhum tema usa este laboratório)" · matéria: Química · tema: — */
+  SIM.qEliminacao = (el, F) => { SIM.qEliminacao._ult = labRx(el, { lista: () => rxDe(["el"]).map(itemRx), pergunta: "Antes de clicar em <b>mostrar</b>: de que carbono vizinho sai o H? Dá para formar mais de um alceno?" }); };
+  /* nome: "(nenhum tema usa este laboratório)" · matéria: Química · tema: — */
+  SIM.qOxidacao = (el, F) => { const it = (x) => { const b = itemRx(x), g = parse(smiN(x.r[0])), ia = g.at.findIndex((a, k) => a.el === "C" && a.viz.some(([v]) => g.at[v].el === "O")), antes = x.t === "ozon" ? null : nox(smiN(x.r[0])), dep = x.p && x.t !== "ozon" ? nox(smiN(x.p)) : null, kc = antes ? g.at.slice(0, ia + 1).filter((a) => a.el === "C").length - 1 : -1, gp = dep ? parse(smiN(x.p)) : null, kp = gp ? gp.at.slice(0, gp.at.findIndex((a, k) => a.el === "C" && a.viz.some(([v]) => gp.at[v].el === "O")) + 1).filter((a) => a.el === "C").length - 1 : -1, na = antes && kc >= 0 ? antes[kc] : null, nd = dep && kp >= 0 ? dep[kp] : null, sg = (v) => (v > 0 ? "+" + v : String(v).replace("-", "−"));
+      return { ...b, est: { ...b.est, na, nd }, vis: (v) => [...b.vis(v).slice(0, 3), ["nox do carbono funcional", na === null ? "—" : v && nd !== null ? `${sg(na)} → ${sg(nd)}` : sg(na) + " → ?"]], txt: b.txt + (na !== null && nd !== null ? ` O carbono funcional vai de ${sg(na)} para ${sg(nd)}: ${nd > na ? "oxidou" : "reduziu"}.` : "") }; };
+    SIM.qOxidacao._ult = labRx(el, { lista: () => rxDe(["ox"]).map(it), pergunta: "Antes de clicar em <b>mostrar</b>: o carbono do grupo funcional tem H para perder? Até onde a oxidação vai?" }); };
+
   /*EST-INI*/ /* GERADO por tools/quimica/gera-estereo.py (RDKit): não editar à mão. c: carbonos quirais (índices dos átomos no SMILES); d: duplas com cis/trans; n: estereoisômeros diferentes; meso; quirais */
   SIM.org.EST = {
     "butan-2-ol": { smi: "CCC(C)O", c: [2], d: [], n: 2, meso: 0, quirais: 2 },
@@ -436,6 +499,254 @@
     "but-3-en-2-ol": { smi: "C=CC(C)O", c: [2], d: [], n: 2, meso: 0, quirais: 2 },
   };
   /*EST-FIM*/
+
+  /*RX-INI*/ /* GERADO por tools/quimica/gera-reacoes.py (RDKit): não editar à mão. NOMES: nome → SMILES. RX: t tipo, r reagentes orgânicos, i reagente inorgânico, cond, p produto principal, s secundário (ou segundo produto), co coproduto, k coeficiente de i. RAD: produtos monoclorados [nome, nº de H que levam a ele, classe do carbono]. NOX: nº de oxidação de cada carbono, na ordem do SMILES */
+  SIM.org.NOMES = {
+    "metano": "C",
+    "etano": "CC",
+    "propano": "CCC",
+    "butano": "CCCC",
+    "metilpropano": "CC(C)C",
+    "pentano": "CCCCC",
+    "2-metilbutano": "CCC(C)C",
+    "dimetilpropano": "CC(C)(C)C",
+    "cicloexano": "C1CCCCC1",
+    "clorometano": "CCl",
+    "cloroetano": "CCCl",
+    "1-cloropropano": "CCCCl",
+    "2-cloropropano": "CC(C)Cl",
+    "1-clorobutano": "CCCCCl",
+    "2-clorobutano": "CCC(C)Cl",
+    "1-cloro-2-metilpropano": "CC(C)CCl",
+    "2-cloro-2-metilpropano": "CC(C)(C)Cl",
+    "1-cloropentano": "CCCCCCl",
+    "2-cloropentano": "CCCC(C)Cl",
+    "3-cloropentano": "CCC(Cl)CC",
+    "1-cloro-2-metilbutano": "CCC(C)CCl",
+    "2-cloro-2-metilbutano": "CCC(C)(C)Cl",
+    "2-cloro-3-metilbutano": "CC(Cl)C(C)C",
+    "1-cloro-3-metilbutano": "ClCCC(C)C",
+    "1-cloro-2,2-dimetilpropano": "CC(C)(C)CCl",
+    "clorocicloexano": "ClC1CCCCC1",
+    "bromometano": "CBr",
+    "bromoetano": "CCBr",
+    "1-bromopropano": "CCCBr",
+    "2-bromopropano": "CC(C)Br",
+    "1-bromobutano": "CCCCBr",
+    "2-bromobutano": "CCC(C)Br",
+    "2-bromo-2-metilpropano": "CC(C)(C)Br",
+    "1-bromo-2-metilpropano": "CC(C)CBr",
+    "2-bromo-2-metilbutano": "CCC(C)(C)Br",
+    "2-bromo-3-metilbutano": "CC(Br)C(C)C",
+    "metanol": "CO",
+    "etanol": "CCO",
+    "propan-1-ol": "CCCO",
+    "propan-2-ol": "CC(C)O",
+    "butan-1-ol": "CCCCO",
+    "butan-2-ol": "CCC(C)O",
+    "2-metilpropan-2-ol": "CC(C)(C)O",
+    "2-metilbutan-2-ol": "CCC(C)(C)O",
+    "2-metilpropan-1-ol": "CC(C)CO",
+    "3-metilbutan-2-ol": "CC(O)C(C)C",
+    "cicloexanol": "OC1CCCCC1",
+    "propanonitrila": "CCC#N",
+    "etanamina": "CCN",
+    "metoxietano": "CCOC",
+    "etoxietano": "CCOCC",
+    "benzeno": "c1ccccc1",
+    "clorobenzeno": "Clc1ccccc1",
+    "bromobenzeno": "Brc1ccccc1",
+    "nitrobenzeno": "[O-][N+](=O)c1ccccc1",
+    "metilbenzeno": "Cc1ccccc1",
+    "etilbenzeno": "CCc1ccccc1",
+    "1-metil-2-nitrobenzeno": "Cc1ccccc1[N+](=O)[O-]",
+    "1-metil-4-nitrobenzeno": "Cc1ccc(cc1)[N+](=O)[O-]",
+    "1-metil-3-nitrobenzeno": "Cc1cccc(c1)[N+](=O)[O-]",
+    "1,3-dinitrobenzeno": "[O-][N+](=O)c1cccc(c1)[N+](=O)[O-]",
+    "1,2-dinitrobenzeno": "[O-][N+](=O)c1ccccc1[N+](=O)[O-]",
+    "1,4-dinitrobenzeno": "[O-][N+](=O)c1ccc(cc1)[N+](=O)[O-]",
+    "1-bromo-2-metilbenzeno": "Cc1ccccc1Br",
+    "1-bromo-4-metilbenzeno": "Cc1ccc(Br)cc1",
+    "1-bromo-3-metilbenzeno": "Cc1cccc(Br)c1",
+    "eteno": "C=C",
+    "propeno": "C=CC",
+    "but-1-eno": "C=CCC",
+    "but-2-eno": "CC=CC",
+    "2-metilpropeno": "C=C(C)C",
+    "2-metilbut-2-eno": "CC=C(C)C",
+    "2-metilbut-1-eno": "C=C(C)CC",
+    "3-metilbut-1-eno": "C=CC(C)C",
+    "pent-1-eno": "C=CCCC",
+    "pent-2-eno": "CC=CCC",
+    "2,3-dimetilbut-2-eno": "CC(C)=C(C)C",
+    "cicloexeno": "C1=CCCCC1",
+    "etino": "C#C",
+    "propino": "C#CC",
+    "1,2-dibromoetano": "BrCCBr",
+    "1,2-dicloroetano": "ClCCCl",
+    "1,2-dibromopropano": "CC(Br)CBr",
+    "2,3-dibromobutano": "CC(Br)C(C)Br",
+    "1,2-dibromobutano": "CCC(Br)CBr",
+    "1,2-dibromocicloexano": "BrC1CCCCC1Br",
+    "metanal": "C=O",
+    "etanal": "CC=O",
+    "propanal": "CCC=O",
+    "butanal": "CCCC=O",
+    "2-metilpropanal": "CC(C)C=O",
+    "propanona": "CC(C)=O",
+    "butanona": "CCC(C)=O",
+    "3-metilbutan-2-ona": "CC(=O)C(C)C",
+    "cicloexanona": "O=C1CCCCC1",
+    "ácido metanoico": "OC=O",
+    "ácido etanoico": "CC(=O)O",
+    "ácido propanoico": "CCC(=O)O",
+    "ácido butanoico": "CCCC(=O)O",
+    "ácido 2-metilpropanoico": "CC(C)C(=O)O",
+    "etanoato de etila": "CCOC(C)=O",
+    "etanoato de metila": "COC(C)=O",
+    "metanoato de etila": "CCOC=O",
+    "propanoato de metila": "CCC(=O)OC",
+    "etanoato de propila": "CCCOC(C)=O",
+    "metanoato de metila": "COC=O",
+    "butanoato de etila": "CCCC(=O)OCC",
+    "etanoato de sódio": "CC(=O)[O-]",
+    "metanoato de sódio": "[O-]C=O",
+    "propanoato de sódio": "CCC(=O)[O-]",
+    "butanoato de sódio": "CCCC(=O)[O-]",
+  };
+  SIM.org.RX = [
+    {"t": "sn", "r": ["bromoetano"], "i": "NaOH", "cond": "em água", "p": "etanol", "s": null, "co": "NaBr", "k": 1},
+    {"t": "sn", "r": ["clorometano"], "i": "NaOH", "cond": "em água", "p": "metanol", "s": null, "co": "NaCl", "k": 1},
+    {"t": "sn", "r": ["1-bromopropano"], "i": "NaOH", "cond": "em água", "p": "propan-1-ol", "s": null, "co": "NaBr", "k": 1},
+    {"t": "sn", "r": ["1-clorobutano"], "i": "NaOH", "cond": "em água", "p": "butan-1-ol", "s": null, "co": "NaCl", "k": 1},
+    {"t": "sn", "r": ["1-bromobutano"], "i": "NaOH", "cond": "em água", "p": "butan-1-ol", "s": null, "co": "NaBr", "k": 1},
+    {"t": "sn", "r": ["bromometano"], "i": "NaOH", "cond": "em água", "p": "metanol", "s": null, "co": "NaBr", "k": 1},
+    {"t": "sn-agua", "r": ["2-bromo-2-metilpropano"], "i": "H2O", "cond": "só água (meio neutro)", "p": "2-metilpropan-2-ol", "s": null, "co": "HBr", "k": 1},
+    {"t": "sn-agua", "r": ["2-cloro-2-metilpropano"], "i": "H2O", "cond": "só água (meio neutro)", "p": "2-metilpropan-2-ol", "s": null, "co": "HCl", "k": 1},
+    {"t": "sn-agua", "r": ["2-bromo-2-metilbutano"], "i": "H2O", "cond": "só água (meio neutro)", "p": "2-metilbutan-2-ol", "s": null, "co": "HBr", "k": 1},
+    {"t": "sn-cn", "r": ["bromoetano"], "i": "NaCN", "cond": "", "p": "propanonitrila", "s": null, "co": "NaBr", "k": 1},
+    {"t": "sn-nh3", "r": ["bromoetano"], "i": "NH3", "cond": "", "p": "etanamina", "s": null, "co": "HBr", "k": 1},
+    {"t": "sn-eter", "r": ["bromoetano"], "i": "CH3ONa", "cond": "", "p": "metoxietano", "s": null, "co": "NaBr", "k": 1},
+    {"t": "sear-cl", "r": ["benzeno"], "i": "Cl2", "cond": "FeCl₃", "p": "clorobenzeno", "s": null, "co": "HCl", "k": 1},
+    {"t": "sear-br", "r": ["benzeno"], "i": "Br2", "cond": "FeBr₃", "p": "bromobenzeno", "s": null, "co": "HBr", "k": 1},
+    {"t": "sear-no2", "r": ["benzeno"], "i": "HNO3", "cond": "H₂SO₄ concentrado", "p": "nitrobenzeno", "s": null, "co": "H2O", "k": 1},
+    {"t": "sear-me", "r": ["benzeno"], "i": "CH3Cl", "cond": "AlCl₃", "p": "metilbenzeno", "s": null, "co": "HCl", "k": 1},
+    {"t": "sear-no2", "r": ["metilbenzeno"], "i": "HNO3", "cond": "H₂SO₄ concentrado", "p": "1-metil-2-nitrobenzeno", "s": "1-metil-4-nitrobenzeno", "co": "H2O", "k": 1},
+    {"t": "sear-br", "r": ["metilbenzeno"], "i": "Br2", "cond": "FeBr₃", "p": "1-bromo-2-metilbenzeno", "s": "1-bromo-4-metilbenzeno", "co": "HBr", "k": 1},
+    {"t": "sear-no2", "r": ["nitrobenzeno"], "i": "HNO3", "cond": "H₂SO₄ concentrado", "p": "1,3-dinitrobenzeno", "s": null, "co": "H2O", "k": 1},
+    {"t": "ester", "r": ["ácido etanoico", "etanol"], "i": null, "cond": "H⁺ (catalisador ácido), aquecimento", "p": "etanoato de etila", "s": null, "co": "H2O", "k": 1},
+    {"t": "ester", "r": ["ácido etanoico", "metanol"], "i": null, "cond": "H⁺ (catalisador ácido), aquecimento", "p": "etanoato de metila", "s": null, "co": "H2O", "k": 1},
+    {"t": "ester", "r": ["ácido metanoico", "etanol"], "i": null, "cond": "H⁺ (catalisador ácido), aquecimento", "p": "metanoato de etila", "s": null, "co": "H2O", "k": 1},
+    {"t": "ester", "r": ["ácido propanoico", "metanol"], "i": null, "cond": "H⁺ (catalisador ácido), aquecimento", "p": "propanoato de metila", "s": null, "co": "H2O", "k": 1},
+    {"t": "ester", "r": ["ácido etanoico", "propan-1-ol"], "i": null, "cond": "H⁺ (catalisador ácido), aquecimento", "p": "etanoato de propila", "s": null, "co": "H2O", "k": 1},
+    {"t": "ester", "r": ["ácido metanoico", "metanol"], "i": null, "cond": "H⁺ (catalisador ácido), aquecimento", "p": "metanoato de metila", "s": null, "co": "H2O", "k": 1},
+    {"t": "ester", "r": ["ácido butanoico", "etanol"], "i": null, "cond": "H⁺ (catalisador ácido), aquecimento", "p": "butanoato de etila", "s": null, "co": "H2O", "k": 1},
+    {"t": "sapon", "r": ["etanoato de etila"], "i": "NaOH", "cond": "em água", "p": "etanoato de sódio", "s": "etanol", "co": null, "k": 1},
+    {"t": "sapon", "r": ["etanoato de metila"], "i": "NaOH", "cond": "em água", "p": "etanoato de sódio", "s": "metanol", "co": null, "k": 1},
+    {"t": "sapon", "r": ["metanoato de etila"], "i": "NaOH", "cond": "em água", "p": "metanoato de sódio", "s": "etanol", "co": null, "k": 1},
+    {"t": "sapon", "r": ["propanoato de metila"], "i": "NaOH", "cond": "em água", "p": "propanoato de sódio", "s": "metanol", "co": null, "k": 1},
+    {"t": "sapon", "r": ["butanoato de etila"], "i": "NaOH", "cond": "em água", "p": "butanoato de sódio", "s": "etanol", "co": null, "k": 1},
+    {"t": "ad-h2", "r": ["eteno"], "i": "H2", "cond": "catalisador metálico (Pt, Pd ou Ni)", "p": "etano", "s": null, "co": null, "k": 1},
+    {"t": "ad-h2", "r": ["propeno"], "i": "H2", "cond": "catalisador metálico (Pt, Pd ou Ni)", "p": "propano", "s": null, "co": null, "k": 1},
+    {"t": "ad-h2", "r": ["but-1-eno"], "i": "H2", "cond": "catalisador metálico (Pt, Pd ou Ni)", "p": "butano", "s": null, "co": null, "k": 1},
+    {"t": "ad-h2", "r": ["but-2-eno"], "i": "H2", "cond": "catalisador metálico (Pt, Pd ou Ni)", "p": "butano", "s": null, "co": null, "k": 1},
+    {"t": "ad-h2", "r": ["2-metilpropeno"], "i": "H2", "cond": "catalisador metálico (Pt, Pd ou Ni)", "p": "metilpropano", "s": null, "co": null, "k": 1},
+    {"t": "ad-h2", "r": ["cicloexeno"], "i": "H2", "cond": "catalisador metálico (Pt, Pd ou Ni)", "p": "cicloexano", "s": null, "co": null, "k": 1},
+    {"t": "ad-h2", "r": ["2-metilbut-2-eno"], "i": "H2", "cond": "catalisador metálico (Pt, Pd ou Ni)", "p": "2-metilbutano", "s": null, "co": null, "k": 1},
+    {"t": "ad-2h2", "r": ["etino"], "i": "H2", "cond": "catalisador metálico (Pt, Pd ou Ni), H₂ em excesso", "p": "etano", "s": null, "co": null, "k": 2},
+    {"t": "ad-2h2", "r": ["propino"], "i": "H2", "cond": "catalisador metálico (Pt, Pd ou Ni), H₂ em excesso", "p": "propano", "s": null, "co": null, "k": 2},
+    {"t": "ad-x2", "r": ["eteno"], "i": "Br2", "cond": "", "p": "1,2-dibromoetano", "s": null, "co": null, "k": 1},
+    {"t": "ad-x2", "r": ["eteno"], "i": "Cl2", "cond": "", "p": "1,2-dicloroetano", "s": null, "co": null, "k": 1},
+    {"t": "ad-x2", "r": ["propeno"], "i": "Br2", "cond": "", "p": "1,2-dibromopropano", "s": null, "co": null, "k": 1},
+    {"t": "ad-x2", "r": ["but-2-eno"], "i": "Br2", "cond": "", "p": "2,3-dibromobutano", "s": null, "co": null, "k": 1},
+    {"t": "ad-x2", "r": ["but-1-eno"], "i": "Br2", "cond": "", "p": "1,2-dibromobutano", "s": null, "co": null, "k": 1},
+    {"t": "ad-x2", "r": ["cicloexeno"], "i": "Br2", "cond": "", "p": "1,2-dibromocicloexano", "s": null, "co": null, "k": 1},
+    {"t": "ad-hx", "r": ["propeno"], "i": "HBr", "cond": "", "p": "2-bromopropano", "s": "1-bromopropano", "co": null, "k": 1},
+    {"t": "ad-hx", "r": ["propeno"], "i": "HCl", "cond": "", "p": "2-cloropropano", "s": "1-cloropropano", "co": null, "k": 1},
+    {"t": "ad-hx", "r": ["but-1-eno"], "i": "HBr", "cond": "", "p": "2-bromobutano", "s": "1-bromobutano", "co": null, "k": 1},
+    {"t": "ad-hx", "r": ["2-metilpropeno"], "i": "HBr", "cond": "", "p": "2-bromo-2-metilpropano", "s": "1-bromo-2-metilpropano", "co": null, "k": 1},
+    {"t": "ad-hx", "r": ["2-metilpropeno"], "i": "HCl", "cond": "", "p": "2-cloro-2-metilpropano", "s": "1-cloro-2-metilpropano", "co": null, "k": 1},
+    {"t": "ad-hx", "r": ["2-metilbut-2-eno"], "i": "HCl", "cond": "", "p": "2-cloro-2-metilbutano", "s": "2-cloro-3-metilbutano", "co": null, "k": 1},
+    {"t": "ad-hx", "r": ["2-metilbut-2-eno"], "i": "HBr", "cond": "", "p": "2-bromo-2-metilbutano", "s": "2-bromo-3-metilbutano", "co": null, "k": 1},
+    {"t": "ad-hx", "r": ["eteno"], "i": "HCl", "cond": "", "p": "cloroetano", "s": null, "co": null, "k": 1},
+    {"t": "ad-hx", "r": ["eteno"], "i": "HBr", "cond": "", "p": "bromoetano", "s": null, "co": null, "k": 1},
+    {"t": "ad-hx", "r": ["but-2-eno"], "i": "HBr", "cond": "", "p": "2-bromobutano", "s": null, "co": null, "k": 1},
+    {"t": "ad-hx", "r": ["but-1-eno"], "i": "HCl", "cond": "", "p": "2-clorobutano", "s": "1-clorobutano", "co": null, "k": 1},
+    {"t": "ad-hx-anti", "r": ["propeno"], "i": "HBr", "cond": "com peróxido", "p": "1-bromopropano", "s": "2-bromopropano", "co": null, "k": 1},
+    {"t": "ad-hx-anti", "r": ["but-1-eno"], "i": "HBr", "cond": "com peróxido", "p": "1-bromobutano", "s": "2-bromobutano", "co": null, "k": 1},
+    {"t": "ad-hx-anti", "r": ["2-metilpropeno"], "i": "HBr", "cond": "com peróxido", "p": "1-bromo-2-metilpropano", "s": "2-bromo-2-metilpropano", "co": null, "k": 1},
+    {"t": "ad-h2o", "r": ["eteno"], "i": "H2O", "cond": "H⁺ (catalisador ácido)", "p": "etanol", "s": null, "co": null, "k": 1},
+    {"t": "ad-h2o", "r": ["propeno"], "i": "H2O", "cond": "H⁺ (catalisador ácido)", "p": "propan-2-ol", "s": "propan-1-ol", "co": null, "k": 1},
+    {"t": "ad-h2o", "r": ["but-1-eno"], "i": "H2O", "cond": "H⁺ (catalisador ácido)", "p": "butan-2-ol", "s": "butan-1-ol", "co": null, "k": 1},
+    {"t": "ad-h2o", "r": ["2-metilpropeno"], "i": "H2O", "cond": "H⁺ (catalisador ácido)", "p": "2-metilpropan-2-ol", "s": "2-metilpropan-1-ol", "co": null, "k": 1},
+    {"t": "ad-h2o", "r": ["but-2-eno"], "i": "H2O", "cond": "H⁺ (catalisador ácido)", "p": "butan-2-ol", "s": null, "co": null, "k": 1},
+    {"t": "ad-h2o", "r": ["2-metilbut-2-eno"], "i": "H2O", "cond": "H⁺ (catalisador ácido)", "p": "2-metilbutan-2-ol", "s": "3-metilbutan-2-ol", "co": null, "k": 1},
+    {"t": "ad-h2o", "r": ["cicloexeno"], "i": "H2O", "cond": "H⁺ (catalisador ácido)", "p": "cicloexanol", "s": null, "co": null, "k": 1},
+    {"t": "el-h2o", "r": ["etanol"], "i": null, "cond": "H₂SO₄ concentrado, aquecimento forte", "p": "eteno", "s": null, "co": "H2O", "k": 1},
+    {"t": "el-h2o", "r": ["propan-2-ol"], "i": null, "cond": "H₂SO₄ concentrado, aquecimento forte", "p": "propeno", "s": null, "co": "H2O", "k": 1},
+    {"t": "el-h2o", "r": ["propan-1-ol"], "i": null, "cond": "H₂SO₄ concentrado, aquecimento forte", "p": "propeno", "s": null, "co": "H2O", "k": 1},
+    {"t": "el-h2o", "r": ["butan-2-ol"], "i": null, "cond": "H₂SO₄ concentrado, aquecimento forte", "p": "but-2-eno", "s": "but-1-eno", "co": "H2O", "k": 1},
+    {"t": "el-h2o", "r": ["2-metilbutan-2-ol"], "i": null, "cond": "H₂SO₄ concentrado, aquecimento forte", "p": "2-metilbut-2-eno", "s": "2-metilbut-1-eno", "co": "H2O", "k": 1},
+    {"t": "el-h2o", "r": ["2-metilpropan-2-ol"], "i": null, "cond": "H₂SO₄ concentrado, aquecimento forte", "p": "2-metilpropeno", "s": null, "co": "H2O", "k": 1},
+    {"t": "el-h2o", "r": ["3-metilbutan-2-ol"], "i": null, "cond": "H₂SO₄ concentrado, aquecimento forte", "p": "2-metilbut-2-eno", "s": "3-metilbut-1-eno", "co": "H2O", "k": 1},
+    {"t": "el-h2o", "r": ["cicloexanol"], "i": null, "cond": "H₂SO₄ concentrado, aquecimento forte", "p": "cicloexeno", "s": null, "co": "H2O", "k": 1},
+    {"t": "el-hx", "r": ["bromoetano"], "i": "NaOH", "cond": "base forte, aquecimento", "p": "eteno", "s": null, "co": "NaBr+H2O", "k": 1},
+    {"t": "el-hx", "r": ["2-bromopropano"], "i": "NaOH", "cond": "base forte, aquecimento", "p": "propeno", "s": null, "co": "NaBr+H2O", "k": 1},
+    {"t": "el-hx", "r": ["2-bromobutano"], "i": "NaOH", "cond": "base forte, aquecimento", "p": "but-2-eno", "s": "but-1-eno", "co": "NaBr+H2O", "k": 1},
+    {"t": "el-hx", "r": ["2-clorobutano"], "i": "NaOH", "cond": "base forte, aquecimento", "p": "but-2-eno", "s": "but-1-eno", "co": "NaCl+H2O", "k": 1},
+    {"t": "el-hx", "r": ["2-bromo-2-metilbutano"], "i": "NaOH", "cond": "base forte, aquecimento", "p": "2-metilbut-2-eno", "s": "2-metilbut-1-eno", "co": "NaBr+H2O", "k": 1},
+    {"t": "el-hx", "r": ["2-bromo-2-metilpropano"], "i": "NaOH", "cond": "base forte, aquecimento", "p": "2-metilpropeno", "s": null, "co": "NaBr+H2O", "k": 1},
+    {"t": "el-hx", "r": ["2-cloro-2-metilbutano"], "i": "NaOH", "cond": "base forte, aquecimento", "p": "2-metilbut-2-eno", "s": "2-metilbut-1-eno", "co": "NaCl+H2O", "k": 1},
+    {"t": "el-hx", "r": ["2-bromo-3-metilbutano"], "i": "NaOH", "cond": "base forte, aquecimento", "p": "2-metilbut-2-eno", "s": "3-metilbut-1-eno", "co": "NaBr+H2O", "k": 1},
+    {"t": "el-eter", "r": ["etanol", "etanol"], "i": null, "cond": "H₂SO₄, 140 °C", "p": "etoxietano", "s": null, "co": "H2O", "k": 1},
+    {"t": "ox-parcial", "r": ["etanol"], "i": "[O]", "cond": "oxidante seletivo, que para no aldeído", "p": "etanal", "s": null, "co": "H2O", "k": 1},
+    {"t": "ox-parcial", "r": ["propan-1-ol"], "i": "[O]", "cond": "oxidante seletivo, que para no aldeído", "p": "propanal", "s": null, "co": "H2O", "k": 1},
+    {"t": "ox-parcial", "r": ["metanol"], "i": "[O]", "cond": "oxidante seletivo, que para no aldeído", "p": "metanal", "s": null, "co": "H2O", "k": 1},
+    {"t": "ox-parcial", "r": ["butan-1-ol"], "i": "[O]", "cond": "oxidante seletivo, que para no aldeído", "p": "butanal", "s": null, "co": "H2O", "k": 1},
+    {"t": "ox-parcial", "r": ["2-metilpropan-1-ol"], "i": "[O]", "cond": "oxidante seletivo, que para no aldeído", "p": "2-metilpropanal", "s": null, "co": "H2O", "k": 1},
+    {"t": "ox-total", "r": ["etanol"], "i": "[O]", "cond": "KMnO₄ ou reagente de Cr(VI), em excesso", "p": "ácido etanoico", "s": null, "co": "H2O", "k": 2},
+    {"t": "ox-total", "r": ["propan-1-ol"], "i": "[O]", "cond": "KMnO₄ ou reagente de Cr(VI), em excesso", "p": "ácido propanoico", "s": null, "co": "H2O", "k": 2},
+    {"t": "ox-total", "r": ["butan-1-ol"], "i": "[O]", "cond": "KMnO₄ ou reagente de Cr(VI), em excesso", "p": "ácido butanoico", "s": null, "co": "H2O", "k": 2},
+    {"t": "ox-total", "r": ["metanol"], "i": "[O]", "cond": "KMnO₄ ou reagente de Cr(VI), em excesso", "p": "ácido metanoico", "s": null, "co": "H2O", "k": 2},
+    {"t": "ox-total", "r": ["2-metilpropan-1-ol"], "i": "[O]", "cond": "KMnO₄ ou reagente de Cr(VI), em excesso", "p": "ácido 2-metilpropanoico", "s": null, "co": "H2O", "k": 2},
+    {"t": "ox-sec", "r": ["propan-2-ol"], "i": "[O]", "cond": "KMnO₄ ou reagente de Cr(VI)", "p": "propanona", "s": null, "co": "H2O", "k": 1},
+    {"t": "ox-sec", "r": ["butan-2-ol"], "i": "[O]", "cond": "KMnO₄ ou reagente de Cr(VI)", "p": "butanona", "s": null, "co": "H2O", "k": 1},
+    {"t": "ox-sec", "r": ["3-metilbutan-2-ol"], "i": "[O]", "cond": "KMnO₄ ou reagente de Cr(VI)", "p": "3-metilbutan-2-ona", "s": null, "co": "H2O", "k": 1},
+    {"t": "ox-sec", "r": ["cicloexanol"], "i": "[O]", "cond": "KMnO₄ ou reagente de Cr(VI)", "p": "cicloexanona", "s": null, "co": "H2O", "k": 1},
+    {"t": "ox-nao", "r": ["2-metilpropan-2-ol"], "i": "[O]", "cond": "KMnO₄ ou reagente de Cr(VI)", "p": null, "s": null, "co": null, "k": 1},
+    {"t": "ox-nao", "r": ["2-metilbutan-2-ol"], "i": "[O]", "cond": "KMnO₄ ou reagente de Cr(VI)", "p": null, "s": null, "co": null, "k": 1},
+    {"t": "ox-ald", "r": ["etanal"], "i": "[O]", "cond": "oxidante (até os fracos, como o reagente de Tollens)", "p": "ácido etanoico", "s": null, "co": null, "k": 1},
+    {"t": "ox-ald", "r": ["propanal"], "i": "[O]", "cond": "oxidante (até os fracos, como o reagente de Tollens)", "p": "ácido propanoico", "s": null, "co": null, "k": 1},
+    {"t": "ox-ald", "r": ["metanal"], "i": "[O]", "cond": "oxidante (até os fracos, como o reagente de Tollens)", "p": "ácido metanoico", "s": null, "co": null, "k": 1},
+    {"t": "ox-ald", "r": ["butanal"], "i": "[O]", "cond": "oxidante (até os fracos, como o reagente de Tollens)", "p": "ácido butanoico", "s": null, "co": null, "k": 1},
+    {"t": "ozon", "r": ["but-2-eno"], "i": "O3", "cond": "O₃, depois Zn", "p": "etanal", "s": "etanal", "co": null, "k": 1},
+    {"t": "ozon", "r": ["2-metilbut-2-eno"], "i": "O3", "cond": "O₃, depois Zn", "p": "propanona", "s": "etanal", "co": null, "k": 1},
+    {"t": "ozon", "r": ["propeno"], "i": "O3", "cond": "O₃, depois Zn", "p": "etanal", "s": "metanal", "co": null, "k": 1},
+    {"t": "ozon", "r": ["2,3-dimetilbut-2-eno"], "i": "O3", "cond": "O₃, depois Zn", "p": "propanona", "s": "propanona", "co": null, "k": 1},
+    {"t": "ozon", "r": ["but-1-eno"], "i": "O3", "cond": "O₃, depois Zn", "p": "propanal", "s": "metanal", "co": null, "k": 1},
+    {"t": "ozon", "r": ["2-metilpropeno"], "i": "O3", "cond": "O₃, depois Zn", "p": "propanona", "s": "metanal", "co": null, "k": 1},
+    {"t": "ozon", "r": ["pent-2-eno"], "i": "O3", "cond": "O₃, depois Zn", "p": "propanal", "s": "etanal", "co": null, "k": 1},
+    {"t": "ozon", "r": ["eteno"], "i": "O3", "cond": "O₃, depois Zn", "p": "metanal", "s": "metanal", "co": null, "k": 1},
+    {"t": "red", "r": ["etanal"], "i": "H2", "cond": "catalisador metálico ou hidreto", "p": "etanol", "s": null, "co": null, "k": 1},
+    {"t": "red", "r": ["propanal"], "i": "H2", "cond": "catalisador metálico ou hidreto", "p": "propan-1-ol", "s": null, "co": null, "k": 1},
+    {"t": "red", "r": ["propanona"], "i": "H2", "cond": "catalisador metálico ou hidreto", "p": "propan-2-ol", "s": null, "co": null, "k": 1},
+    {"t": "red", "r": ["butanona"], "i": "H2", "cond": "catalisador metálico ou hidreto", "p": "butan-2-ol", "s": null, "co": null, "k": 1},
+    {"t": "red", "r": ["metanal"], "i": "H2", "cond": "catalisador metálico ou hidreto", "p": "metanol", "s": null, "co": null, "k": 1},
+    {"t": "red", "r": ["cicloexanona"], "i": "H2", "cond": "catalisador metálico ou hidreto", "p": "cicloexanol", "s": null, "co": null, "k": 1},
+  ];
+  SIM.org.RAD = [
+    {"r": "metano", "p": [["clorometano", 4, 0]]},
+    {"r": "etano", "p": [["cloroetano", 6, 1]]},
+    {"r": "propano", "p": [["1-cloropropano", 6, 1], ["2-cloropropano", 2, 2]]},
+    {"r": "butano", "p": [["1-clorobutano", 6, 1], ["2-clorobutano", 4, 2]]},
+    {"r": "metilpropano", "p": [["1-cloro-2-metilpropano", 9, 1], ["2-cloro-2-metilpropano", 1, 3]]},
+    {"r": "pentano", "p": [["1-cloropentano", 6, 1], ["2-cloropentano", 4, 2], ["3-cloropentano", 2, 2]]},
+    {"r": "2-metilbutano", "p": [["1-cloro-2-metilbutano", 6, 1], ["1-cloro-3-metilbutano", 3, 1], ["2-cloro-3-metilbutano", 2, 2], ["2-cloro-2-metilbutano", 1, 3]]},
+    {"r": "dimetilpropano", "p": [["1-cloro-2,2-dimetilpropano", 12, 1]]},
+    {"r": "cicloexano", "p": [["clorocicloexano", 12, 2]]},
+  ];
+  SIM.org.NOX = {"metano": [-4], "clorometano": [-2], "metanol": [-2], "metanal": [0], "ácido metanoico": [2], "etano": [-3, -3], "eteno": [-2, -2], "etino": [-1, -1], "etanol": [-3, -1], "etanal": [-3, 1], "ácido etanoico": [-3, 3], "propan-2-ol": [-3, 0, -3], "propanona": [-3, 2, -3], "propan-1-ol": [-3, -2, -1], "propanal": [-3, -2, 1], "ácido propanoico": [-3, -2, 3], "cloroetano": [-3, -1], "etanoato de etila": [-3, -1, 3, -3], "butan-2-ol": [-3, -2, 0, -3], "butanona": [-3, -2, 2, -3], "2-metilpropan-2-ol": [-3, 1, -3, -3], "benzeno": [-1, -1, -1, -1, -1, -1], "propeno": [-2, -1, -3], "1,2-dibromoetano": [-1, -1], "etanamina": [-3, -1]};
+  /*RX-FIM*/
 
   /*PROP-INI*/ /* GERADO por tools/quimica/gera-prop-organica.py a partir de dadosH.json: não editar à mão. eb em °C (1 atm); sol em g/L de água, ou "miscível", ou "imiscível" (palavra da fonte), ou null (sem dado conversível) */
   SIM.org.PROP = {
