@@ -67,7 +67,7 @@
       /* o H vai do lado oposto à média dos vizinhos */
       const vx = a.viz.reduce((t, [v]) => t + (P[v][0] - P[k][0]), 0), esq = vx > 2 && r.h > 0, txtH = r.h ? "H" + (r.h > 1 ? SUB(r.h) : "") : "", txt = esq ? txtH + r.el + r.cg : r.el + txtH + r.cg, larg = 9.5 * (r.el.length + (r.h ? 1 : 0) + (r.h > 1 ? 0.6 : 0) + (r.cg ? 0.6 : 0)) + 4, lel = 9.5 * r.el.length, desl = r.h ? (esq ? -(larg - lel) / 2 + 1 : (larg - lel) / 2 - 1) : 0;
       s += `<rect x="${(X(k) + desl - larg / 2).toFixed(1)}" y="${(Y(k) - 9).toFixed(1)}" width="${larg.toFixed(1)}" height="18" rx="4" style="fill:${dest ? "var(--warn)" : "var(--card, var(--bg))"}"/><text x="${(X(k) + desl).toFixed(1)}" y="${(Y(k) + 5).toFixed(1)}" text-anchor="middle" style="font:600 14px Inter,system-ui,sans-serif;fill:${dest ? "#10151c" : a.el === "O" ? "#e5604d" : a.el === "N" ? "#5b8dee" : a.el === "C" ? "var(--ink)" : "#3fae7a"}">${txt}</text>`;
-      if (o.nums && o.nums[k] !== undefined) s += `<text x="${X(k).toFixed(1)}" y="${(Y(k) - 13).toFixed(1)}" text-anchor="middle" style="font:500 11px Inter,system-ui,sans-serif;fill:var(--ink2)">${o.nums[k]}</text>`; });
+      if (o.nums && o.nums[k] !== undefined) s += `<text x="${(X(k) - 17).toFixed(1)}" y="${(Y(k) - 11).toFixed(1)}" text-anchor="middle" style="font:600 11px Inter,system-ui,sans-serif;fill:var(--warn)">${o.nums[k]}</text>`; });
     return { svg: s, w: W, h: H }; };
   /* figura pronta, centralizada numa caixa de largura fixa; várias moléculas lado a lado com legenda embaixo de cada uma */
   const fig = (lista, o = {}) => { const itens = (Array.isArray(lista) ? lista : [lista]).map((x) => (typeof x === "string" ? { smi: x } : x)), des = itens.map((it) => svg(it.smi, { ...o, ...it })), gap = 30, temLeg = itens.some((it) => it.leg), Wf = o.W || 560;
@@ -154,4 +154,30 @@
     liga(el, "k", (v) => { k = +v; desenha(); }); liga(el, "m", (v) => { modo = v; desenha(); }); liga(el, "d", (v) => { des = v; desenha(); });
     SIM.qCadeia._ult = { poe: (i, m) => { k = i; modo = m || modo; desenha(); }, est, MOL }; desenha(); };
 
+
+  /* pontos de ebulição a 1 atm, em °C (tools/quimica/dadosH.json): alcanos lineares da Tabela 20.1 do OpenStax Chemistry 2e; os outros, das caixas de dados da Wikipedia */
+  SIM.org.PE = { metano: -161.5, etano: -88.6, propano: -42.1, butano: -0.5, pentano: 36.1, hexano: 68.7, heptano: 98.4, octano: 125.7, decano: 174.0, metilpropano: -11.8, "2-metilbutano": 28, dimetilpropano: 9.5, "2,2,4-trimetilpentano": 99.3, cicloexano: 80.7, eteno: -103.7, propeno: -47.6, "but-1-eno": -6.5, "cis-but-2-eno": 3.7, "trans-but-2-eno": 0.8, benzeno: 80.1, metilbenzeno: 110.6, naftaleno: 218.0 };
+
+  /* ---------- H02 · monte o nome ---------- */
+  /* nome: "Nomenclatura: monte a cadeia e confira o nome" · matéria: Química · tema: H02 */
+  SIM.qNomenclatura = (el, F) => {
+    const sl = (rot, c, min, max, val) => `<div class="ctrl"><label>${rot}</label><input type="range" min="${min}" max="${max}" step="1" value="${val}" data-c="${c}"><output data-o="${c}"></output></div>`;
+    let n = 5, tipo = 0, pi = 1, subs = [[2, "metil"]], ps = 2;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="min-height:190px;display:flex;align-items:center;justify-content:center"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div>${sl("Carbonos na cadeia", "n", 1, 8, n)}<div class="bts" style="margin:6px 0">${botoes([[0, "só simples"], [2, "uma dupla"], [3, "uma tripla"]], "t", tipo)}</div>${sl("Insaturação no carbono", "pi", 1, 7, pi)}</div>
+        <div>${sl("Ramificação no carbono", "ps", 1, 8, ps)}<div class="bts" style="margin-top:6px"><button class="bt peq" data-a="metil">+ metil</button><button class="bt peq" data-a="etil">+ etil</button><button class="bt peq" data-a="tira">tirar a última</button><button class="bt peq" data-a="limpa">limpar</button></div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const ins = tipo && n >= 2 ? [[Math.min(pi, n - 1), tipo]] : [], sb = subs.filter((x) => x[0] <= n), smi = SIM.org.monta(n, ins, sb), g = SIM.org.parse(smi), val = g.at.map((a) => a.viz.reduce((t, [, k]) => t + g.bd[k].o, 0)), imp = val.some((v) => v > 4);
+      const seu = SIM.org.formata({ n, ins, subs: [...sb].sort((x, y) => x[0] - y[0]) }), an = imp ? null : SIM.org.analisa(g), iupac = an ? SIM.org.formata(an) : null;
+      let motivo = ""; if (imp) motivo = "impossivel"; else if (iupac !== seu) motivo = an.n > n ? "cadeia" : an.n === n ? "numeracao" : "cadeia";
+      return { n, ins, subs: sb, smi, seu, iupac, igual: iupac === seu, motivo, nPrinc: an ? an.n : null, formula: imp ? "—" : SIM.org.formula(smi), imp }; };
+    const desenha = () => { const e = est(); q("[data-o=n]").textContent = n; q("[data-o=pi]").textContent = tipo ? Math.min(pi, Math.max(1, n - 1)) : "—"; q("[data-o=ps]").textContent = Math.min(ps, n);
+      const g = SIM.org.parse(e.smi), nums = {}; let k = 0; for (let i = 1; i <= n; i++) { nums[k] = i; k += 1 + e.subs.filter((x) => x[0] === i).reduce((t, x) => t + (x[1] === "etil" ? 2 : 1), 0); }
+      const d = SIM.org.svg(g, { L: 46, nums }); q("[data-v=sv]").innerHTML = `<svg viewBox="0 0 ${d.w.toFixed(0)} ${d.h.toFixed(0)}" width="${Math.min(640, d.w * 1.45).toFixed(0)}" role="img" aria-label="fórmula estrutural">${d.svg}</svg>`;
+      q("[data-v=lt]").innerHTML = vis("o nome que você montou", e.seu) + vis("nome IUPAC desta molécula", e.imp ? "não existe" : e.iupac) + vis("fórmula molecular", e.formula) + vis("confere?", e.imp ? "impossível" : e.igual ? "sim ✓" : "não");
+      q("[data-v=st]").innerHTML = e.motivo === "impossivel" ? "Algum carbono ficou com <b>mais de quatro ligações</b>: essa molécula não existe. Carbono de tripla não aceita ramificação; carbono de dupla aceita uma só." : e.igual ? "O nome que você montou é o nome oficial. A cadeia escolhida é a mais longa (e contém a insaturação), e a numeração dá os menores números possíveis." : e.motivo === "cadeia" ? `A molécula existe, mas o nome está errado: a <b>cadeia principal</b> não é a de ${n} carbonos que você numerou. Contando pelo caminho mais longo (que contenha a insaturação), ela tem <b>${e.nPrinc}</b> carbonos. Uma ramificação na ponta, ou um etil no carbono 2, só estica a cadeia.` : "A cadeia está certa, mas a <b>numeração</b> não: começando pela outra ponta, a insaturação (ou, sem ela, as ramificações) recebe números menores. O nome oficial usa sempre os menores números."; };
+    liga(el, "t", (v) => { tipo = +v; desenha(); }); [["n", (v) => (n = v)], ["pi", (v) => (pi = v)], ["ps", (v) => (ps = v)]].forEach(([c, fn]) => q(`[data-c=${c}]`).addEventListener("input", (e) => { fn(+e.target.value); desenha(); }));
+    el.addEventListener("click", (e) => { const b = e.target.closest("[data-a]"); if (!b) return; const a = b.dataset.a; if (a === "limpa") subs = []; else if (a === "tira") subs.pop(); else if (subs.length < 5) subs.push([Math.min(ps, n), a]); desenha(); });
+    SIM.qNomenclatura._ult = { poe: (nn, t, p, sb) => { n = nn; tipo = t; pi = p; subs = sb.map((x) => [...x]); q("[data-c=n]").value = nn; q("[data-c=pi]").value = p; el.querySelectorAll("[data-t]").forEach((x) => x.setAttribute("aria-pressed", +x.dataset.t === tipo)); desenha(); }, est }; desenha(); };
 })();

@@ -20,6 +20,17 @@ const perto = (a, b, tol = 0.005) => Math.abs(a - b) <= tol * Math.max(1e-9, Mat
     const f = await cd(ix('metilciclopentano'), 'classe'); ok(!f.aberta && f.ramificada && f.idh === 1 && f.sigma === 18, 'H01: metilciclopentano: fechada, ramificada, IDH 1 (o anel), 18 σ');
     await p.waitForTimeout(200); const l = await leitor('lab-cadeia'); ok(/C₆H₁₂/.test(l['fórmula molecular']) && /fechada, ramificada, saturada, homogênea/.test(l['cadeia']), 'H01: mostrador: ' + l['fórmula molecular'] + ' · ' + l['cadeia']);
     ok(await p.evaluate(() => document.querySelectorAll('#desafios .ex svg.figura line').length >= 20 && document.querySelectorAll('#desafios .ex svg.figura text').length >= 15), 'H01: as figuras dos exercícios têm estruturas desenhadas (traços e átomos)'); }
+  // ----- H02: nomenclatura -----
+  if (temas.has('H02')) { await abre('H02');
+    const nm = (n, t, pi, sb) => p.evaluate(([n, t, pi, sb]) => { SIM.qNomenclatura._ult.poe(n, t, pi, sb); return SIM.qNomenclatura._ult.est(); }, [n, t, pi, sb]);
+    const a = await nm(5, 0, 1, [[2, 'metil']]); ok(a.seu === '2-metilpentano' && a.igual && a.formula === 'C₆H₁₄', 'H02: pentano com metil no 2 → 2-metilpentano, nome oficial');
+    const b2 = await nm(5, 0, 1, [[4, 'metil']]); ok(b2.seu === '4-metilpentano' && b2.iupac === '2-metilpentano' && b2.motivo === 'numeracao', 'H02: "4-metilpentano" é acusado: numeração pela outra ponta → 2-metilpentano');
+    const c = await nm(4, 0, 1, [[2, 'etil']]); ok(c.seu === '2-etilbutano' && c.iupac === '3-metilpentano' && c.motivo === 'cadeia' && c.nPrinc === 5, 'H02: "2-etilbutano" é acusado: a cadeia principal tem 5 carbonos → 3-metilpentano');
+    const d = await nm(4, 2, 3, []); ok(d.seu === 'but-3-eno' && d.iupac === 'but-1-eno', 'H02: "but-3-eno" → but-1-eno');
+    const e = await nm(4, 3, 2, [[2, 'metil']]); ok(e.imp && e.motivo === 'impossivel', 'H02: metil em carbono de tripla → o laboratório avisa que a molécula não existe (cinco ligações)');
+    const f = await nm(5, 2, 2, [[4, 'metil']]), g2 = await nm(4, 2, 1, [[3, 'metil']]); ok(f.iupac === '4-metilpent-2-eno' && f.igual && g2.iupac === '3-metilbut-1-eno' && g2.igual, 'H02: a insaturação manda na numeração: 4-metilpent-2-eno e 3-metilbut-1-eno');
+    const h = await nm(1, 0, 1, []), i2 = await nm(8, 0, 1, []); ok(h.iupac === 'metano' && i2.iupac === 'octano', 'H02: extremos do controle: metano e octano');
+    ok(await p.evaluate(() => { const o = SIM.org; return ['CC(C)CC(C)(C)C', 'CCC(CC)C(C)C', 'C=CC=C', 'C=CCC#C', 'CC(C)C#CC'].map((s) => o.nome(s)).join('|'); }) === '2,2,4-trimetilpentano|3-etil-2-metilpentano|buta-1,3-dieno|pent-1-en-4-ino|4-metilpent-2-ino', 'H02: nomes de conferência: 2,2,4-trimetilpentano; 3-etil-2-metilpentano; buta-1,3-dieno; pent-1-en-4-ino; 4-metilpent-2-ino'); await nm(5, 0, 1, [[2, 'metil']]); }
   //MAIS
   // ----- gabaritos: em todo exercício de alternativas, clicar na letra do gabarito tem de dar "certo" -----
   for (const cod of ['H01', 'H02', 'H03', 'H04', 'H05', 'H06', 'H07', 'H08', 'H09', 'H10', 'H11', 'H12', 'H13'].filter((c) => temas.has(c))) { await p.goto(RAIZ + '#/quimica/' + cod); await p.waitForTimeout(1300);
