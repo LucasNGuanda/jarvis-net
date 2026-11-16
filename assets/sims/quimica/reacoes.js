@@ -24,7 +24,7 @@
   SIM.ce = (s) => "\\ce{" + s.replace(/\^(\d*)([+-])/g, (_, n, sg) => (n ? "^" + n + sg : sg)).replace("·", ".") + "}";
 
   /* ---------- núcleo ---------- */
-  SIM.MA = { H: 1, C: 12, N: 14, O: 16, F: 19, Na: 23, Mg: 24, Al: 27, Si: 28, P: 31, S: 32, Cl: 35.5, K: 39, Ca: 40, Cr: 52, Mn: 55, Fe: 56, Cu: 63.5, Zn: 65, Br: 80, Ag: 108, I: 127, Ba: 137, Hg: 200.5, Pb: 207 };
+  SIM.MA = { H: 1, C: 12, N: 14, O: 16, F: 19, Na: 23, Mg: 24, Al: 27, Si: 28, P: 31, S: 32, Cl: 35.5, K: 39, Ca: 40, Cr: 52, Mn: 55, Fe: 56, Ni: 58.7, Cu: 63.5, Zn: 65, Br: 80, Ag: 108, I: 127, Ba: 137, Hg: 200.5, Pb: 207 };
   SIM.NA = 6.02e23; SIM.VM = 22.4;
   SIM.atomos = (formula) => { const tot = {}; let carga = 0, f = formula; const c = f.match(/\^(\d*)([+-])$/); if (c) { carga = (c[1] ? +c[1] : 1) * (c[2] === "+" ? 1 : -1); f = f.slice(0, c.index); }
     for (const parte of f.split("·")) { const m = parte.match(/^(\d+)(.*)$/), mult = m ? +m[1] : 1, s = m ? m[2] : parte; let i = 0;

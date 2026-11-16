@@ -58,6 +58,15 @@
       {"n": 5, "oq": "carbonatos insolúveis", "reag": "(NH₄)₂CO₃", "cats": ["Ba2+", "Ca2+", "Sr2+"]},
       {"n": 6, "oq": "ficam em solução", "reag": "nenhum (teste de chama)", "cats": ["Mg2+", "Li+", "Na+", "K+"]},
     ],
+    GRAV: [
+      {"id": "cl", "nome": "cloreto", "fa": "Cl", "fp": "AgCl", "n": 1, "reag": "AgNO₃ em excesso", "cor": "branco", "M": 143.32},
+      {"id": "ag", "nome": "prata", "fa": "Ag", "fp": "AgCl", "n": 1, "reag": "cloreto em excesso", "cor": "branco", "M": 143.32},
+      {"id": "so4", "nome": "sulfato", "fa": "SO4", "fp": "BaSO4", "n": 1, "reag": "BaCl₂ em excesso", "cor": "branco", "M": 233.39},
+      {"id": "ni", "nome": "níquel", "fa": "Ni", "fp": "Ni(C4H7N2O2)2", "n": 1, "reag": "dimetilglioxima", "cor": "vermelho vivo", "M": 288.91},
+      {"id": "ca", "nome": "cálcio", "fa": "Ca", "fp": "CaO", "n": 1, "reag": "ácido oxálico; depois, calcinação", "cor": null, "M": 56.08},
+    ],
+    HIDRATO: {"f": "BaCl2", "x": 2, "Manidro": 208.23, "Mhidrato": 244.26},
+    OPENSTAX: {"e415": {"amostra": 0.455, "BaSO4": 0.6168, "MgSO4": 0.3181, "pct": 69.91, "M_BaSO4": 233.43, "M_MgSO4": 120.37}, "e416": {"amostra": 0.00126, "CO2": 0.00394, "H2O": 0.00161, "formula": "CH2"}},
   };
   /*ANA-FIM*/
 
@@ -87,6 +96,37 @@
     liga(el, "c", (v) => { c = v; ver = false; q("[data-v=ver]").setAttribute("aria-pressed", "false"); desenha(); }); liga(el, "a", (v) => { a = v; ver = false; q("[data-v=ver]").setAttribute("aria-pressed", "false"); desenha(); });
     q("[data-v=ver]").addEventListener("click", () => { ver = !ver; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); });
     SIM.qPrecipita._ult = { poe: (cc, aa, v = true) => { c = cc; a = aa; ver = v; [["c", c], ["a", a]].forEach(([k, x]) => el.querySelectorAll(`[data-${k}]`).forEach((b) => b.setAttribute("aria-pressed", String(b.dataset[k] === x)))); q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); }, est }; desenha(); };
+
+  /* ---------- J02: gravimetria ---------- */
+  const fsub = (f) => f.replace(/(\d)/g, (d) => "₀₁₂₃₄₅₆₇₈₉"[+d]);
+  SIM.fsub = fsub;
+  const sci3 = (v) => { const e = Math.floor(Math.log10(v)), m = +(v / Math.pow(10, e)).toFixed(2); return nt(m, 2) + "·10" + String(e).replace("-", "⁻").replace(/\d/g, (c) => "⁰¹²³⁴⁵⁶⁷⁸⁹"[+c]); };
+  /* conta gravimétrica com as massas arredondadas do site: amostra de massa m (g) com fração em massa "teor" do analito → sólido pesado (balança de 0,0001 g) e o caminho de volta */
+  SIM.grav = (id, m, teor) => { const g = SIM.ANA.GRAV.find((x) => x.id === id), Mp = SIM.mm(g.fp), Ma = SIM.mm(g.fa), mp = +(m * teor / Ma / g.n * Mp).toFixed(4), ns = mp / Mp, ma = ns * g.n * Ma; return { ...g, Mp, Ma, m, mp, ns, ma, teor: ma / m }; };
+  /* nome: "Gravimetria: do sólido na balança ao teor da amostra" · matéria: Química · tema: J02 */
+  SIM.qGravimetria = (el, F) => { const G = SIM.ANA.GRAV, TEOR = { A: 0.15, B: 0.24, C: 0.36 }; let id = "cl", m = 0.5, am = "A", ver = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;justify-content:center;padding:12px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">o que se quer medir</p><div class="bts">${botoes(G.map((g) => [g.id, g.nome + " → " + fsub(g.fp)]), "g", id)}</div></div>
+      <div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">amostra desconhecida</p><div class="bts">${botoes([["A", "amostra A"], ["B", "amostra B"], ["C", "amostra C"]], "am", am)}</div></div>
+      <div><label style="font-size:13px;color:var(--ink2)">massa de amostra pesada: <b data-v="mm"></b><input type="range" data-v="rg" min="0.2" max="2" step="0.05" value="0.5" style="width:100%"></label></div>
+      <div><div class="bts"><button class="bt peq" data-v="ver" aria-pressed="false">mostrar a conta</button></div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), est = () => ({ ...SIM.grav(id, m, TEOR[am]), am, ver });
+    const COR = { branco: "#e8e8e8", "vermelho vivo": "#d8343a" };
+    const desenha = () => { const e = est(), W = 640, cs = COR[e.cor] || "#c9ced6", T = (x, y, s, c = "tx2", t = 12) => `<text x="${x}" y="${y}" text-anchor="middle" class="${c}" style="font-size:${t}px">${s}</text>`;
+      const beq = (x, pp) => `<path d="M${x},40 v84 h70 v-84" style="fill:none;stroke:var(--ink2);stroke-width:2"/><rect x="${x + 2}" y="64" width="66" height="58" style="fill:#6fa8dc;opacity:.3"/>${pp ? `<rect x="${x + 2}" y="110" width="66" height="12" style="fill:${cs};stroke:var(--ink2);stroke-width:.6"/>` : ""}`;
+      const seta = (x) => `<line x1="${x}" y1="84" x2="${x + 34}" y2="84" style="stroke:var(--ink);stroke-width:2"/><polygon points="${x + 42},84 ${x + 32},79 ${x + 32},89" style="fill:var(--ink)"/>`;
+      const funil = (x) => `<path d="M${x},44 l35,50 v30 M${x + 70},44 l-35,50" style="fill:none;stroke:var(--ink2);stroke-width:2"/><path d="M${x + 14},64 l21,30 l21,-30 z" style="fill:${cs};stroke:var(--ink2);stroke-width:.6"/>`;
+      const bal = (x) => `<rect x="${x}" y="100" width="110" height="26" rx="5" style="fill:none;stroke:var(--ink2);stroke-width:2"/><rect x="${x + 16}" y="88" width="78" height="6" rx="2" style="fill:var(--ink2)"/><path d="M${x + 36},88 q19,-22 38,0 z" style="fill:${cs};stroke:var(--ink2);stroke-width:.6"/><text x="${x + 55}" y="118" text-anchor="middle" style="font:700 13px Inter,system-ui,sans-serif;fill:var(--ink)">${nt(e.mp, 4)} g</text>`;
+      q("[data-v=sv]").innerHTML = `<svg viewBox="0 0 ${W} 170" width="${W}" role="img" aria-label="etapas da gravimetria">${beq(20, false)}${T(55, 146, "amostra dissolvida")}${T(55, 162, nt(e.m, 2) + " g")}${seta(104)}${beq(160, true)}${T(195, 146, "precipitar")}${T(195, 162, "(" + e.reag.split(";")[0] + ")")}${seta(244)}${funil(300)}${T(335, 146, "filtrar")}${T(335, 162, e.id === "ca" ? "e calcinar" : "e secar")}${seta(384)}${bal(440)}${T(495, 146, "pesar")}${T(495, 162, fsub(e.fp))}</svg>`;
+      q("[data-v=mm]").textContent = nt(e.m, 2) + " g";
+      q("[data-v=lt]").innerHTML = vis("sólido pesado", fsub(e.fp)) + vis("massa molar do sólido", nt(e.Mp, 1) + " g/mol") + vis("massa do sólido seco", nt(e.mp, 4) + " g") + vis("mol do sólido", ver ? sci3(e.ns) + " mol" : "?") + vis("massa de " + e.nome, ver ? nt(e.ma, 4) + " g" : "?") + vis("teor na amostra", ver ? nt(100 * e.teor, 1) + " %" : "?");
+      q("[data-v=st]").innerHTML = (!ver ? `Antes de clicar: quantos mols de ${fsub(e.fp)} estão no prato da balança? Quanto de ${e.nome} esses mols carregam? ` : `${nt(e.mp, 4)} g ÷ ${nt(e.Mp, 1)} g/mol = ${sci3(e.ns)} mol de ${fsub(e.fp)}; cada mol tem ${e.n} mol de ${e.nome} (${nt(e.Ma, 1)} g). Massa de ${e.nome}: ${nt(e.ma, 4)} g em ${nt(e.m, 2)} g de amostra, ou <b>${nt(100 * e.teor, 1)} %</b>. `) + (e.id === "ca" ? "O cálcio precipita como oxalato; aquecido ao rubro, o oxalato vira CaO, que é o que se pesa. " : "") + `Massas atômicas arredondadas (${SIM.dadosMA([e.fp]).replace("Massas atômicas (g/mol): ", "").replace(/\.$/, "")}); a massa molar do sólido no PubChem é ${nt(e.M, 2)} g/mol. As amostras A, B e C são hipotéticas.`; };
+    const sinc = () => { el.querySelectorAll("[data-g]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.g === id))); el.querySelectorAll("[data-am]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.am === am))); q("[data-v=rg]").value = m; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); };
+    liga(el, "g", (v) => { id = v; ver = false; sinc(); }); liga(el, "am", (v) => { am = v; ver = false; sinc(); });
+    q("[data-v=rg]").addEventListener("input", (ev) => { m = +ev.target.value; desenha(); });
+    q("[data-v=ver]").addEventListener("click", () => { ver = !ver; sinc(); });
+    SIM.qGravimetria._ult = { poe: (i, mm, a, v = true) => { id = i; m = mm; am = a; ver = v; sinc(); }, est }; sinc(); };
 
   //MAIS-LABS
 })();

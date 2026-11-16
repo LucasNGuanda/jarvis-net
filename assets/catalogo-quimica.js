@@ -104,7 +104,7 @@ window.CATALOGO.push(
   ] },
   { id:"QJ", area:"qui", letra:"J", cor:"--mM", nome:"Química analítica", desc:"Titulação, análise qualitativa e quantitativa.", temas:[
     ["J01","Análise qualitativa: solubilidade, precipitados, chama e marcha de cátions",[],true],
-    ["J02","Métodos gravimétricos",[]],
+    ["J02","Métodos gravimétricos: precipitação, volatilização e análise por combustão",[],true],
     ["J03","Métodos volumétricos",[]],
     ["J04","Química de coordenação",[]],
   ] },
