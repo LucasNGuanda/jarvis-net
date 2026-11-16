@@ -19,6 +19,15 @@ const perto = (a, b, tol = 0.005) => Math.abs(a - b) <= tol * Math.max(1e-9, Mat
     const r3 = await col(600, 2.5, false, 140); ok(r3.fr > r2.fr * 2, 'F04: dobrar a temperatura com a mesma barreira → fração ' + r3.fr.toFixed(3) + ' (mais que o dobro)');
     const r4 = await col(300, 2.5, true, 140); ok(perto(r4.teor, Math.exp(-1.25), 1e-6) && r4.fr > r2.fr * 2, 'F04: catalisador (barreira pela metade) a 300 K → fração ' + r4.fr.toFixed(3) + ', sem mudar a temperatura');
     ok(perto(await p.evaluate(() => SIM.arrhenius(50, 300, 310)), 1.909, 0.002) && perto(await p.evaluate(() => SIM.arrhenius(100, 300, 310)), 3.64, 0.003), 'F04: Arrhenius, 300 → 310 K: 1,91 vez com 50 kJ/mol e 3,64 com 100 kJ/mol'); }
+  // ----- F05: ordem de reação -----
+  if (temas.has('F05')) { await abre('F05');
+    const od = (n, a, k) => p.evaluate(([n, a, k]) => { SIM.qOrdem._ult.poe(n, a, k); return SIM.qOrdem._ult.est(); }, [n, a, k]);
+    const o0 = await od(0, 1, 0.1), o1 = await od(1, 1, 0.1), o2 = await od(2, 1, 0.1);
+    ok(perto(o0.meia, 5) && perto(o1.meia, 6.931, 0.001) && perto(o2.meia, 10), 'F05: [A]₀ = 1,00 e k = 0,100 → meias-vidas 5,00 s (ordem 0), 6,93 s (ordem 1), 10,0 s (ordem 2)');
+    ok(o0.c10 === 0 && perto(o1.c10, 0.3679, 0.001) && perto(o2.c10, 0.5), 'F05: em t = 10 s restam 0 (ordem 0: acabou), 0,368 (ordem 1) e 0,500 mol/L (ordem 2)');
+    const d1 = await od(1, 2, 0.1), d0 = await od(0, 2, 0.1), d2 = await od(2, 2, 0.1);
+    ok(perto(d1.meia, o1.meia) && perto(d0.meia, 2 * o0.meia) && perto(d2.meia, o2.meia / 2), 'F05: dobrando [A]₀, a meia-vida não muda na ordem 1, dobra na ordem 0 e cai pela metade na ordem 2');
+    await p.waitForTimeout(200); const l5 = await leitor('lab-ordem'); ok(/\[A\]²/.test(l5['lei de velocidade']) && /L\/\(mol·s\)/.test(l5['unidade de k']), 'F05: o mostrador dá a lei e a unidade de k da ordem escolhida → ' + l5['lei de velocidade'] + ' · ' + l5['unidade de k']); }
   //MAIS
   // ----- gabaritos: em todo exercício de alternativas, clicar na letra do gabarito tem de dar "certo" -----
   for (const cod of ['F01', 'F02', 'F03', 'F04', 'F05', 'F06', 'F07', 'F08', 'F09', 'F10'].filter((c) => temas.has(c))) { await p.goto(RAIZ + '#/quimica/' + cod); await p.waitForTimeout(1300);

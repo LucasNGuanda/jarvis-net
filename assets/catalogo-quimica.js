@@ -63,7 +63,7 @@ window.CATALOGO.push(
     ["F02","Lei de Hess e energia de ligação",[]],
     ["F03","Entropia e energia livre de Gibbs",[]],
     ["F04","Cinética: velocidade de reação e energia de ativação",[],true],
-    ["F05","Leis de velocidade",[]],
+    ["F05","Leis de velocidade: ordem, mecanismo e meia-vida",[],true],
     ["F06","Equilíbrio químico",[]],
     ["F07","Le Chatelier",[]],
     ["F08","pH e pOH",[]],

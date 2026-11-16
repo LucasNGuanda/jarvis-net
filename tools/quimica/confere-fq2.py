@@ -8,3 +8,10 @@ print("  Ea 50 kJ/mol, 300 -> 310 K: %.3f (R = 8,31) e %.3f (R = 8,314); Ea 100:
 print("  dobrar de 300 a 310 K: Ea = %.1f kJ/mol; triplicar: %.1f" % (R * math.log(2) / (1 / 300 - 1 / 310) / 1000, R * math.log(3) / (1 / 300 - 1 / 310) / 1000))
 print("  choques: raiz(310/300) = %.4f" % math.sqrt(310 / 300))
 print("  chefão: 298 -> 278 K: %.2f; dura %.0f dias; 298 -> 255 K: %.1f; dura %.0f dias; catalisador 60 -> 40 a 298 K: %.0f; a 300 K com 20 kJ: %.0f" % (kk(60, 278, 298), 3 * kk(60, 278, 298), kk(60, 255, 298), 3 * kk(60, 255, 298), math.exp(20000 / (R * 298)), math.exp(20000 / (R * 300))))
+print("F05 leis de velocidade")
+print("  tabela: k = %.2f L²/(mol²·s)" % (2.0e-3 / (0.10 * 0.10**2)))
+print("  k = 0,0231: meia-vida %.1f s; 20%%: %.1f s" % (math.log(2) / 0.0231, math.log(5) / (math.log(2) / 30)))
+print("  laboratório ([A]0 = 1, k = 0,1): meias-vidas %.2f; %.2f; %.2f; em 10 s: %.3f; %.3f; %.3f" % (1 / 0.2, math.log(2) / 0.1, 1 / 0.1, max(0, 1 - 1), math.exp(-1), 1 / 2))
+q = 0; seq = []
+for _ in range(4): q = q / 4 + 400; seq.append(q)
+print("  chefão: k %.3f; 8 h: %.0f mg; 50 mg em %.0f h; depois das doses: %s; limite %.1f; antes %.1f; meia-vida 8 h: %.0f; 16 em 16 h: %.1f" % (math.log(2) / 4, 400 / 4, 4 * math.log2(8), seq, 400 / (1 - 1 / 4), 400 / (1 - 1 / 4) / 4, 400 / (1 - 1 / 2), 400 / (1 - 1 / 4)))

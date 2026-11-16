@@ -69,4 +69,35 @@
       q("[data-o=T]").textContent = T + " K"; q("[data-o=Ea]").textContent = n2(Ea, 1) + (cat ? " → " + n2(Ea * 0.5, 2) : ""); q("[data-o=N]").textContent = N;
     });
   };
+
+  /* ---------- F05 · ordem de reação: três gráficos, uma reta ----------
+     A → produtos, com v = k[A]^n. Leis integradas: n = 0: [A] = [A]₀ − kt; n = 1: [A] = [A]₀·e^(−kt); n = 2: 1/[A] = 1/[A]₀ + kt.
+     Meia-vida: n = 0: [A]₀/(2k); n = 1: ln2/k (não depende de [A]₀); n = 2: 1/(k[A]₀).
+     Conferido em Python (tools/quimica/confere-fq2.py), com [A]₀ = 1,00 mol/L e k = 0,100: meias-vidas 5,00 s; 6,93 s; 10,0 s; em t = 10 s: 0; 0,368; 0,500 mol/L. */
+  SIM.ordem = { conc: (n, A0, k, t) => (n === 0 ? Math.max(0, A0 - k * t) : n === 1 ? A0 * Math.exp(-k * t) : 1 / (1 / A0 + k * t)), meia: (n, A0, k) => (n === 0 ? A0 / (2 * k) : n === 1 ? Math.LN2 / k : 1 / (k * A0)), un: ["mol/(L·s)", "1/s", "L/(mol·s)"] };
+  /* nome: "Ordem de reação: qual gráfico vira reta?" · matéria: Química · tema: F05 */
+  SIM.qOrdem = (el, F) => {
+    const W = 700, H = 250; let n = 1, A0 = 1, k = 0.1;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><div class="bts">${botoes([[0, "ordem zero"], [1, "primeira ordem"], [2, "segunda ordem"]], "n", n)}</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink2)">Os três gráficos mostram os <b>mesmos</b> dados. Só um deles é uma reta: é assim que se descobre a ordem.</p></div><div>${sl("Concentração inicial (mol/L)", "A0", 0.2, 2, 0.05, A0)}${sl("Constante de velocidade k", "k", 0.02, 0.3, 0.01, k)}</div></div>
+      <div class="status">A reação é A → produtos, com velocidade v = k[A]ⁿ. Troque a ordem e veja qual dos três gráficos fica reto: [A] contra o tempo (ordem zero), ln [A] contra o tempo (primeira ordem) ou 1/[A] contra o tempo (segunda ordem). As linhas tracejadas marcam as <b>meias-vidas</b> sucessivas. Na primeira ordem elas são todas iguais; mude a concentração inicial e confira que a meia-vida não se mexe. Nas outras ordens, mexe.</div>`);
+    const q = (s) => el.querySelector(s);
+    liga(el, "n", (v) => (n = +v)); q("[data-c=A0]").addEventListener("input", (e) => (A0 = +e.target.value)); q("[data-c=k]").addEventListener("input", (e) => (k = +e.target.value));
+    SIM.qOrdem._ult = { poe: (nn, a, kk) => { n = nn; A0 = a; k = kk; }, est: () => ({ n, A0, k, meia: SIM.ordem.meia(n, A0, k), c10: SIM.ordem.conc(n, A0, k, 10) }) };
+    anima(el, F, () => {
+      const tmax = 40, c = (t) => SIM.ordem.conc(n, A0, k, t), fim = n === 0 ? A0 / k : tmax;
+      const painel = (x0, tit, fy, ymin, ymax, reta) => { const y0 = 205, w = 185, h = 150, X = (t) => x0 + (t / tmax) * w, Y = (v) => y0 - ((v - ymin) / (ymax - ymin)) * h; let d = "";
+        for (let t = 0; t <= Math.min(tmax, fim * 0.985); t += 0.5) { const v = fy(c(t)); if (!isFinite(v) || v < ymin - 1e-9 || v > ymax + 1e-9) continue; d += (d ? "L" : "M") + f1(X(t)) + " " + f1(Y(v)); }
+        let s2 = `<rect x="${x0 - 8}" y="${y0 - h - 26}" width="${w + 20}" height="${h + 52}" rx="8" style="fill:${reta ? "color-mix(in srgb,var(--ok) 9%,transparent)" : "none"};stroke:${reta ? "var(--ok)" : "var(--line2)"}"/>` + D.seta(x0, y0, x0 + w + 6, y0, "var(--ink2)", 1.2) + D.seta(x0, y0, x0, y0 - h - 6, "var(--ink2)", 1.2) + D.txt(x0 + w / 2, y0 - h - 10, tit + (reta ? ": reta" : ""), "tx2", "middle", `style="fill:${reta ? "var(--ok)" : "var(--ink)"};font-weight:700"`) + D.txt(x0 + w, y0 + 16, "tempo", "tx2", "end") + `<path d="${d}" style="fill:none;stroke:var(--mod);stroke-width:2.3"/>`;
+        return s2; };
+      const lmin = Math.log(Math.max(1e-3, c(tmax) || 1e-3)), imax = 1 / Math.max(c(Math.min(tmax, fim * 0.98)), 0.02);
+      let h = painel(40, "[A]", (v) => v, 0, A0 * 1.05, n === 0) + painel(265, "ln [A]", (v) => Math.log(v), Math.min(lmin, Math.log(A0) - 0.5), Math.log(A0) + 0.1, n === 1) + painel(490, "1 / [A]", (v) => 1 / v, 0, Math.min(imax, 60) * 1.05, n === 2);
+      /* meias-vidas no primeiro painel */
+      let t = 0, a = A0; for (let j = 0; j < 4; j++) { const m = SIM.ordem.meia(n, a, k); t += m; a /= 2; if (t > tmax) break; const X = 40 + (t / tmax) * 185, Y = 205 - (a / (A0 * 1.05)) * 150; h += `<line x1="${f1(X)}" y1="205" x2="${f1(X)}" y2="${f1(Y)}" style="stroke:var(--warn);stroke-dasharray:3 3"/><circle cx="${f1(X)}" cy="${f1(Y)}" r="3.5" style="fill:var(--warn)"/>`; }
+      q("[data-v=sv]").innerHTML = h;
+      const m1 = SIM.ordem.meia(n, A0, k), m2 = SIM.ordem.meia(n, A0 / 2, k);
+      q("[data-v=lt]").innerHTML = vis("lei de velocidade", "v = k" + ["", "[A]", "[A]²"][n]) + vis("unidade de k", SIM.ordem.un[n]) + vis("1ª meia-vida", n2(m1, 2) + " s") + vis("2ª meia-vida", n2(m2, 2) + " s") + vis("[A] em t = 10 s", n2(c(10), 3) + " mol/L");
+      q("[data-o=A0]").textContent = n2(A0, 2) + " mol/L"; q("[data-o=k]").textContent = n2(k, 2) + " " + SIM.ordem.un[n];
+    });
+  };
 })();
