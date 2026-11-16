@@ -71,10 +71,10 @@ window.CATALOGO.push(
     ["F10","Produto de solubilidade (Kps)",[],true],
   ] },
   { id:"QG", area:"qui", letra:"G", cor:"--mK1", nome:"Eletroquímica", desc:"Pilhas, potenciais e eletrólise.", temas:[
-    ["G01","Pilhas e potenciais",[]],
-    ["G02","Equação de Nernst",[]],
-    ["G03","Eletrólise e leis de Faraday",[]],
-    ["G04","Corrosão e proteção",[]],
+    ["G01","Pilhas e potenciais padrão",[],true],
+    ["G02","Equação de Nernst",[],true],
+    ["G03","Eletrólise e leis de Faraday",[],true],
+    ["G04","Corrosão e proteção de metais",[],true],
   ] },
   { id:"QH", area:"qui", letra:"H", cor:"--mU", nome:"Química orgânica", desc:"Funções, isomeria e reações orgânicas.", temas:[
     ["H01","Átomo de carbono e cadeias",[]],

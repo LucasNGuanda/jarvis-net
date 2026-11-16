@@ -1,0 +1,2936 @@
+{
+ "_meta": {
+  "gerado_por": "dadosG-scripts/extrai.py a partir dos HTML em dadosG-bruto/ (baixados em 2026-11-16 com curl; texto extraído por dadosG-scripts/totext.py)",
+  "regra": "todo \"valor\" é o grupo capturado por regex no texto da página; \"trecho\" é o casamento literal (espaços e quebras de linha colapsados). Nada de memória. Onde há lista, são fontes diferentes (podem divergir). Valor não achado = null, com o motivo em \"obs\".",
+  "aviso_openstax": "No texto extraído do OpenStax as fórmulas em MathML aparecem duplicadas (ex.: \"Li++e−⟶LiLi++e−⟶Li\"); é artefato da extração, o trecho foi mantido literal. O apêndice L do OpenStax escreve H3O+ em algumas semirreações (ex.: 2H3O+ + 2e− ⟶ H2 + 2H2O); é a mesma semirreação da chave, com a água a mais dos dois lados.",
+  "aviso_wikipedia": "Nas páginas Lithium-ion battery e Proton-exchange membrane fuel cell as fórmulas vêm de \\ce{} renderizado e o texto extraído traz um \"A\" espúrio depois de cada símbolo (ex.: \"HA2\" = H2, \"LiCoOA2\" = LiCoO2); trecho mantido literal. Índices e cargas aparecem na mesma linha, sem sobrescrito (ex.: \"Hg22+\" = Hg2 2+, \"SO42−\" = SO4 2−).",
+  "potenciais": "E° de REDUÇÃO, em volts, contra o eletrodo padrão de hidrogênio, a 25 °C (cabeçalho das duas tabelas). A data page da Wikipedia usa 1 atm (101,325 kPa) para gases.",
+  "campo_arquivo": "\"arquivo\" = nome do HTML bruto em dadosG-bruto/ de onde saiu o trecho (para a checagem).",
+  "divergencias": "lista gerada pelo script: potenciais que diferem em mais de 0,01 V entre duas entradas da mesma chave; outros dados numéricos de mesma unidade que diferem em mais de 1%."
+ },
+ "potenciais": {
+  "Li+ + e- -> Li": [
+   {
+    "valor": -3.0401,
+    "valor_texto": "−3.0401",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Li | Li+ + e– | ⇌ | Li(s) | −3.0401 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -3.04,
+    "valor_texto": "−3.04",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Li++e−⟶LiLi++e−⟶Li | −3.04",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "K+ + e- -> K": [
+   {
+    "valor": -2.931,
+    "valor_texto": "−2.931",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| K | K+ + e– | ⇌ | K(s) | −2.931 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -2.931,
+    "valor_texto": "−2.931",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| K++e−⟶KK++e−⟶K | −2.931",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Ca2+ + 2e- -> Ca": [
+   {
+    "valor": -2.868,
+    "valor_texto": "−2.868",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Ca | Ca2+ + 2 e– | ⇌ | Ca(s) | −2.868 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -2.868,
+    "valor_texto": "−2.868",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Ca2++2e−⟶CaCa2++2e−⟶Ca | −2.868",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Na+ + e- -> Na": [
+   {
+    "valor": -2.71,
+    "valor_texto": "−2.71",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Na | Na+ + e– | ⇌ | Na(s) | −2.71 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -2.71,
+    "valor_texto": "−2.71",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Na++e−⟶NaNa++e−⟶Na | −2.71",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Mg2+ + 2e- -> Mg": [
+   {
+    "valor": -2.372,
+    "valor_texto": "−2.372",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Mg | Mg2+ + 2 e– | ⇌ | Mg(s) | −2.372 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -2.372,
+    "valor_texto": "−2.372",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Mg2++2e−⟶MgMg2++2e−⟶Mg | −2.372",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Al3+ + 3e- -> Al": [
+   {
+    "valor": -1.662,
+    "valor_texto": "−1.662",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Al | Al3+ + 3 e– | ⇌ | Al(s) | −1.662 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -1.662,
+    "valor_texto": "−1.662",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Al3++3e−⟶AlAl3++3e−⟶Al | −1.662",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Mn2+ + 2e- -> Mn": [
+   {
+    "valor": -1.185,
+    "valor_texto": "−1.185",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Mn | Mn2+ + 2 e– | ⇌ | Mn(s) | −1.185 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -1.185,
+    "valor_texto": "−1.185",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Mn2++2e−⟶MnMn2++2e−⟶Mn | −1.185",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Zn2+ + 2e- -> Zn": [
+   {
+    "valor": -0.7618,
+    "valor_texto": "−0.7618",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Zn | Zn2+ + 2 e– | ⇌ | Zn(s) | −0.7618 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -0.7618,
+    "valor_texto": "−0.7618",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Zn2++2e−⟶ZnZn2++2e−⟶Zn | −0.7618",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   },
+   {
+    "valor": -0.7618,
+    "valor_texto": "−0.7618",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Daniell cell",
+    "url": "https://en.wikipedia.org/wiki/Daniell_cell",
+    "trecho": "Zn (s) → Zn2+ (aq) + 2e− . . (Standard electrode reduction potential −0.7618 V )",
+    "arquivo": "Daniell_cell.html",
+    "obs": "página da pilha de Daniell"
+   }
+  ],
+  "Cr3+ + 3e- -> Cr": [
+   {
+    "valor": -0.74,
+    "valor_texto": "−0.74",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Cr | Cr3+ + 3 e– | ⇌ | Cr(s) | −0.74 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -0.744,
+    "valor_texto": "−0.744",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Cr3+3e−⟶CrCr3+3e−⟶Cr | −0.744",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html",
+    "obs": "o OpenStax escreve \"Cr3+3e−\" (falta um \"+\" na fonte)"
+   }
+  ],
+  "Fe2+ + 2e- -> Fe": [
+   {
+    "valor": -0.44,
+    "valor_texto": "−0.44",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Fe | Fe2+ + 2 e– | ⇌ | Fe(s) | −0.44 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -0.447,
+    "valor_texto": "−0.447",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Fe2++2e−⟶FeFe2++2e−⟶Fe | −0.447",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   },
+   {
+    "valor": -0.44,
+    "valor_texto": "−0.44",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+    "trecho": "anode:Fe(s)⟶Fe2+(aq)+2e−EFe2+/Fe°=−0.44 V",
+    "arquivo": "openstax_17-6-corrosion.html",
+    "obs": "valor arredondado usado no texto do cap. 17.6"
+   }
+  ],
+  "Cd2+ + 2e- -> Cd": [
+   {
+    "valor": -0.4,
+    "valor_texto": "−0.4",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Cd | Cd2+ + 2 e– | ⇌ | Cd(s) | −0.4 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -0.403,
+    "valor_texto": "−0.4030",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Cd2++2e−⟶CdCd2++2e−⟶Cd | −0.4030",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Co2+ + 2e- -> Co": [
+   {
+    "valor": -0.28,
+    "valor_texto": "−0.28",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Co | Co2+ + 2 e– | ⇌ | Co(s) | −0.28 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -0.28,
+    "valor_texto": "−0.28",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Co2++2e−⟶CoCo2++2e−⟶Co | −0.28",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Ni2+ + 2e- -> Ni": [
+   {
+    "valor": -0.257,
+    "valor_texto": "−0.257",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Ni | Ni2+ + 2 e– | ⇌ | Ni(s) | −0.257 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -0.257,
+    "valor_texto": "−0.257",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Ni2++2e−⟶NiNi2++2e−⟶Ni | −0.257",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Sn2+ + 2e- -> Sn": [
+   {
+    "valor": -0.13,
+    "valor_texto": "−0.13",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Sn | Sn2+ + 2 e− | ⇌ | Sn(s) | −0.13 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -0.1375,
+    "valor_texto": "−0.1375",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Sn2++2e−⟶SnSn2++2e−⟶Sn | −0.1375",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Pb2+ + 2e- -> Pb": [
+   {
+    "valor": -0.126,
+    "valor_texto": "−0.126",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Pb | Pb2+ + 2 e– | ⇌ | Pb(s) | −0.126 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -0.1262,
+    "valor_texto": "−0.1262",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Pb2++2e−⟶PbPb2++2e−⟶Pb | −0.1262",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Fe3+ + 3e- -> Fe": [
+   {
+    "valor": -0.04,
+    "valor_texto": "−0.04",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Fe | Fe3+ + 3 e– | ⇌ | Fe(s) | −0.04 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": null,
+    "valor_texto": null,
+    "unidade": "V",
+    "fonte": "OpenStax (apêndice L)",
+    "url": null,
+    "trecho": null,
+    "obs": "a semirreação não consta na tabela baixada desta fonte"
+   }
+  ],
+  "2H+ + 2e- -> H2": [
+   {
+    "valor": 0,
+    "valor_texto": "0",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| H | 2 H+ + 2 e– | ⇌ | H2(g) | 0 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 0.0,
+    "valor_texto": "0.00",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| 2H3O++2e−⟶H2+2H2O2H3O++2e−⟶H2+2H2O | 0.00",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html",
+    "obs": "o OpenStax escreve com H3O+ (mesma semirreação, com água a mais dos dois lados)"
+   }
+  ],
+  "Sn4+ + 2e- -> Sn2+": [
+   {
+    "valor": 0.151,
+    "valor_texto": "0.151",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Sn | Sn4+ + 2 e– | ⇌ | Sn2+ | 0.151 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 0.151,
+    "valor_texto": "+0.151",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Sn4++2e−⟶Sn2+Sn4++2e−⟶Sn2+ | +0.151",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Cu2+ + e- -> Cu+": [
+   {
+    "valor": 0.159,
+    "valor_texto": "0.159",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Cu | Cu2+ + e– | ⇌ | Cu+ | 0.159 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 0.153,
+    "valor_texto": "+0.153",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Cu2++e−⟶Cu+Cu2++e−⟶Cu+ | +0.153",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Cu2+ + 2e- -> Cu": [
+   {
+    "valor": 0.337,
+    "valor_texto": "0.337",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Cu | Cu2+ + 2 e– | ⇌ | Cu(s) | 0.337 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 0.337,
+    "valor_texto": "+0.337",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Cu2++2e−⟶CuCu2++2e−⟶Cu | +0.337",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   },
+   {
+    "valor": 0.34,
+    "valor_texto": "+0.340",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Daniell cell",
+    "url": "https://en.wikipedia.org/wiki/Daniell_cell",
+    "trecho": "Cu2+ (aq) + 2e− → Cu (s) . . (Standard electrode reduction potential +0.340 V )",
+    "arquivo": "Daniell_cell.html",
+    "obs": "página da pilha de Daniell (difere da data page)"
+   }
+  ],
+  "Cu+ + e- -> Cu": [
+   {
+    "valor": 0.52,
+    "valor_texto": "0.52",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Cu | Cu+ + e– | ⇌ | Cu(s) | 0.52 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 0.521,
+    "valor_texto": "+0.521",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Cu++e−⟶CuCu++e−⟶Cu | +0.521",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "I2 + 2e- -> 2I-": [
+   {
+    "valor": 0.54,
+    "valor_texto": "0.54",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| I | I2(s) + 2 e– | ⇌ | 2 I− | 0.54 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 0.5355,
+    "valor_texto": "+0.5355",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| I2+2e−⟶2I−I2+2e−⟶2I− | +0.5355",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Fe3+ + e- -> Fe2+": [
+   {
+    "valor": 0.771,
+    "valor_texto": "0.771",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Fe | Fe3+ + e– | ⇌ | Fe2+ | 0.771 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 0.771,
+    "valor_texto": "+0.771",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Fe3++e−⟶Fe2+Fe3++e−⟶Fe2+ | +0.771",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Hg2 2+ + 2e- -> 2Hg": [
+   {
+    "valor": 0.7973,
+    "valor_texto": "0.7973",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Hg | Hg22+ + 2 e– | ⇌ | 2 Hg(l) | 0.7973 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 0.7973,
+    "valor_texto": "+0.7973",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Hg22++2e−⟶2HgHg22++2e−⟶2Hg | +0.7973",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Ag+ + e- -> Ag": [
+   {
+    "valor": 0.7996,
+    "valor_texto": "0.7996",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Ag | Ag+ + e– | ⇌ | Ag(s) | 0.7996 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 0.7996,
+    "valor_texto": "+0.7996",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Ag++e−⟶AgAg++e−⟶Ag | +0.7996",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Hg2+ + 2e- -> Hg": [
+   {
+    "valor": 0.85,
+    "valor_texto": "0.85",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Hg | Hg2+ + 2 e– | ⇌ | Hg(l) | 0.85 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 0.851,
+    "valor_texto": "+0.851",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Hg2++2e−⟶HgHg2++2e−⟶Hg | +0.851",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Br2 + 2e- -> 2Br-": [
+   {
+    "valor": 1.066,
+    "valor_texto": "1.066",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Br | Br2(l) + 2 e– | ⇌ | 2 Br− | 1.066 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html",
+    "obs": "Br2 LÍQUIDO (estado padrão do bromo)"
+   },
+   {
+    "valor": 1.0873,
+    "valor_texto": "1.0873",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Br | Br2(aq) + 2 e– | ⇌ | 2 Br− | 1.0873 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html",
+    "obs": "Br2 AQUOSO"
+   },
+   {
+    "valor": 1.0873,
+    "valor_texto": "+1.0873",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Br2(aq)+2e−⟶2Br−Br2(aq)+2e−⟶2Br− | +1.0873",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html",
+    "obs": "o OpenStax dá o Br2(aq), não o líquido"
+   }
+  ],
+  "Pt2+ + 2e- -> Pt": [
+   {
+    "valor": 1.188,
+    "valor_texto": "1.188",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Pt | Pt2+ + 2 e– | ⇌ | Pt(s) | 1.188 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 1.2,
+    "valor_texto": "+1.20",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Pt2++2e−⟶PtPt2++2e−⟶Pt | +1.20",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "O2 + 4H+ + 4e- -> 2H2O": [
+   {
+    "valor": 1.229,
+    "valor_texto": "1.229",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| O | O2(g) + 4 H+ + 4 e– | ⇌ | 2 H2O | 1.229 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 1.229,
+    "valor_texto": "+1.229",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| O2+4H++4e−⟶2H2OO2+4H++4e−⟶2H2O | +1.229",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   },
+   {
+    "valor": 1.23,
+    "valor_texto": "+1.23",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Electrolysis of water",
+    "url": "https://en.wikipedia.org/wiki/Electrolysis_of_water",
+    "trecho": "2 H2O → O2 (g) + 4 H+(aq) + 4 e− (E⦵ = +1.23 V)",
+    "arquivo": "Electrolysis_of_water.html",
+    "obs": "escrita como oxidação; o E é o de redução"
+   }
+  ],
+  "Cl2 + 2e- -> 2Cl-": [
+   {
+    "valor": 1.36,
+    "valor_texto": "1.36",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Cl | Cl2(g) + 2 e– | ⇌ | 2 Cl− | 1.36 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 1.35827,
+    "valor_texto": "+1.35827",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Cl2+2e−⟶2Cl−Cl2+2e−⟶2Cl− | +1.35827",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "Cr2O7 2- + 14H+ + 6e- -> 2Cr3+ + 7H2O": [
+   {
+    "valor": 1.33,
+    "valor_texto": "1.33",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Cr | Cr2O72− + 14 H+ + 6 e– | ⇌ | 2 Cr3+ + 7 H2O | 1.33 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 1.232,
+    "valor_texto": "+1.232",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Cr2O72−+14H3O++6e−⟶2Cr3++21H2OCr2O72−+14H3O++6e−⟶2Cr3++21H2O | +1.232",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html",
+    "obs": "o OpenStax escreve com H3O+ (mesma semirreação, com água a mais dos dois lados)"
+   }
+  ],
+  "Au3+ + 3e- -> Au": [
+   {
+    "valor": 1.52,
+    "valor_texto": "1.52",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Au | Au3+ + 3 e– | ⇌ | Au(s) | 1.52 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 1.498,
+    "valor_texto": "+1.498",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| Au3++3e−⟶AuAu3++3e−⟶Au | +1.498",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "MnO4- + 8H+ + 5e- -> Mn2+ + 4H2O": [
+   {
+    "valor": 1.51,
+    "valor_texto": "1.51",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Mn | MnO4− + 8 H+ + 5 e– | ⇌ | Mn2+ + 4 H2O | 1.51 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 1.507,
+    "valor_texto": "+1.507",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| MnO4−+8H++5e−⟶Mn2++4H2OMnO4−+8H++5e−⟶Mn2++4H2O | +1.507",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "H2O2 + 2H+ + 2e- -> 2H2O": [
+   {
+    "valor": 1.78,
+    "valor_texto": "1.78",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| O | H2O2(aq) + 2 H+ + 2 e– | ⇌ | 2 H2O | 1.78 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 1.776,
+    "valor_texto": "+1.776",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| H2O2+2H3O++2e−⟶4H2OH2O2+2H3O++2e−⟶4H2O | +1.776",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html",
+    "obs": "o OpenStax escreve com H3O+ (mesma semirreação, com água a mais dos dois lados)"
+   }
+  ],
+  "F2 + 2e- -> 2F-": [
+   {
+    "valor": 2.87,
+    "valor_texto": "2.87",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| F | F2(g) + 2 e– | ⇌ | 2 F− | 2.87 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 2.866,
+    "valor_texto": "+2.866",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| F2+2e−⟶2F−F2+2e−⟶2F− | +2.866",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "2H2O + 2e- -> H2 + 2OH-": [
+   {
+    "valor": -0.8277,
+    "valor_texto": "−0.8277",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| H | 2 H2O + 2 e– | ⇌ | H2(g) + 2 OH− | −0.8277 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": -0.8277,
+    "valor_texto": "−0.8277",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| 2H2O+2e−⟶H2+2OH−2H2O+2e−⟶H2+2OH− | −0.8277",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   },
+   {
+    "valor": -0.83,
+    "valor_texto": "−0.83",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Electrolysis of water",
+    "url": "https://en.wikipedia.org/wiki/Electrolysis_of_water",
+    "trecho": "2 H2O + 2 e– → H2 (g) + 2 OH–(aq) (E⦵ = −0.83 V)",
+    "arquivo": "Electrolysis_of_water.html"
+   }
+  ],
+  "O2 + 2H2O + 4e- -> 4OH-": [
+   {
+    "valor": 0.401,
+    "valor_texto": "0.401",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| O | O2(g) + 2 H2O + 4 e– | ⇌ | 4 OH− | 0.401 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 0.401,
+    "valor_texto": "+0.401",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| O2+2H2O+4e−⟶4OH−O2+2H2O+4e−⟶4OH− | +0.401",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   },
+   {
+    "valor": 0.4,
+    "valor_texto": "+0.40",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Electrolysis of water",
+    "url": "https://en.wikipedia.org/wiki/Electrolysis_of_water",
+    "trecho": "4 OH–(aq) → O2 (g) + 2 H2O + 4 e− (E⦵ = +0.40 V)",
+    "arquivo": "Electrolysis_of_water.html",
+    "obs": "escrita como oxidação; o E é o de redução"
+   }
+  ],
+  "PbO2 + SO4 2- + 4H+ + 2e- -> PbSO4 + 2H2O": [
+   {
+    "valor": 1.69,
+    "valor_texto": "+1.69",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| PbO2+SO42−+4H++2e−⟶PbSO4+2H2OPbO2+SO42−+4H++2e−⟶PbSO4+2H2O | +1.69",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   },
+   {
+    "valor": null,
+    "valor_texto": null,
+    "unidade": "V",
+    "fonte": "Wikipedia (data page)",
+    "url": null,
+    "trecho": null,
+    "obs": "a semirreação não consta na tabela baixada desta fonte"
+   }
+  ],
+  "PbSO4 + 2e- -> Pb + SO4 2-": [
+   {
+    "valor": -0.3588,
+    "valor_texto": "−0.3588",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Pb | PbSO4(s) + 2 e– | ⇌ | Pb(s) + SO42− | −0.3588 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html",
+    "obs": "eletrodo de chumbo sólido"
+   },
+   {
+    "valor": -0.3505,
+    "valor_texto": "−0.3505",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Pb | PbSO4(s) + 2 e– | ⇌ | Pb(Hg) + SO42− | −0.3505 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html",
+    "obs": "ATENÇÃO: chumbo em AMÁLGAMA, Pb(Hg); é este o valor que coincide com o do OpenStax"
+   },
+   {
+    "valor": -0.3505,
+    "valor_texto": "−0.3505",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| PbSO4+2e−⟶Pb+SO42−PbSO4+2e−⟶Pb+SO42− | −0.3505",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "AgCl + e- -> Ag + Cl-": [
+   {
+    "valor": 0.22233,
+    "valor_texto": "0.22233",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Ag | AgCl(s) + e– | ⇌ | Ag(s) + Cl− | 0.22233 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 0.22233,
+    "valor_texto": "+0.22233",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| AgCl+e−⟶Ag+Cl−AgCl+e−⟶Ag+Cl− | +0.22233",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "MnO2 + 4H+ + 2e- -> Mn2+ + 2H2O": [
+   {
+    "valor": 1.224,
+    "valor_texto": "1.224",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| Mn | MnO2(s) + 4 H+ + 2 e– | ⇌ | Mn2+ + 2 H2O | 1.224 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": 1.23,
+    "valor_texto": "+1.23",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+    "url": "https://openstax.org/books/chemistry-2e/pages/l-standard-electrode-half-cell-potentials",
+    "trecho": "| MnO2+4H++2e−⟶Mn2++2H2OMnO2+4H++2e−⟶Mn2++2H2O | +1.23",
+    "arquivo": "openstax_l-standard-electrode-half-cell-potentials.html"
+   }
+  ],
+  "S2O8 2- + 2e- -> 2SO4 2-": [
+   {
+    "valor": 2.01,
+    "valor_texto": "2.01",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+    "url": "https://en.wikipedia.org/wiki/Standard_electrode_potential_(data_page)",
+    "trecho": "| O | S2O82− + 2 e– | ⇌ | 2 SO42− | 2.01 |",
+    "arquivo": "Standard_electrode_potential__data_page_.html"
+   },
+   {
+    "valor": null,
+    "valor_texto": null,
+    "unidade": "V",
+    "fonte": "OpenStax (apêndice L)",
+    "url": null,
+    "trecho": null,
+    "obs": "a semirreação não consta na tabela baixada desta fonte"
+   }
+  ]
+ },
+ "constantes": {
+  "Faraday": [
+   {
+    "valor": 96485.33212,
+    "valor_texto": "96485.33212",
+    "unidade": "C/mol",
+    "fonte": "Wikipedia (en): Faraday constant",
+    "url": "https://en.wikipedia.org/wiki/Faraday_constant",
+    "trecho": "| Value | 96485.33212 C/mol",
+    "arquivo": "Faraday_constant.html"
+   },
+   {
+    "valor": 96485,
+    "valor_texto": "96,485",
+    "unidade": "C/mol",
+    "fonte": "OpenStax Chemistry 2e: 17-4-potential-free-energy-and-equilibrium",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-4-potential-free-energy-and-equilibrium",
+    "trecho": "F = 96,485 C/mol e–",
+    "arquivo": "openstax_17-4-potential-free-energy-and-equilibrium.html",
+    "obs": "arredondado"
+   }
+  ],
+  "carga_elementar": [
+   {
+    "valor": 1.602176634e-19,
+    "valor_texto": "1.602176634×10−19",
+    "unidade": "C",
+    "fonte": "Wikipedia (en): Elementary charge",
+    "url": "https://en.wikipedia.org/wiki/Elementary_charge",
+    "trecho": "defined to be exactly e = 1.602176634×10−19 C",
+    "arquivo": "Elementary_charge.html",
+    "obs": "valor exato (SI 2019)"
+   },
+   {
+    "valor": 1.602176634e-19,
+    "valor_texto": "1.602176634×10−19",
+    "unidade": "C",
+    "fonte": "Wikipedia (en): Faraday constant",
+    "url": "https://en.wikipedia.org/wiki/Faraday_constant",
+    "trecho": "elementary charge is exactly 1.602176634×10−19 C",
+    "arquivo": "Faraday_constant.html"
+   }
+  ],
+  "Avogadro": [
+   {
+    "valor": 6.02214076e+23,
+    "valor_texto": "6.02214076×1023",
+    "unidade": "1/mol",
+    "fonte": "Wikipedia (en): Faraday constant",
+    "url": "https://en.wikipedia.org/wiki/Faraday_constant",
+    "trecho": "exactly NA = 6.02214076×1023 entities per mole",
+    "arquivo": "Faraday_constant.html"
+   }
+  ],
+  "R": [
+   {
+    "valor": 8.31446261815324,
+    "valor_texto": "8.31446261815324",
+    "unidade": "J/(mol·K)",
+    "fonte": "Wikipedia (en): Gas constant",
+    "url": "https://en.wikipedia.org/wiki/Gas_constant",
+    "trecho": "| 8.31446261815324 | J⋅K−1⋅mol−1",
+    "arquivo": "Gas_constant.html"
+   }
+  ],
+  "RT_sobre_F_25C": [
+   {
+    "valor": 25.693,
+    "valor_texto": "25.693",
+    "unidade": "mV",
+    "fonte": "Wikipedia (en): Nernst equation",
+    "url": "https://en.wikipedia.org/wiki/Nernst_equation",
+    "trecho": "At room temperature (25 °C), the thermal voltage VT=RTF is approximately 25.693 mV",
+    "arquivo": "Nernst_equation.html"
+   },
+   {
+    "valor": 0.0257,
+    "valor_texto": "0.0257",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: 17-key-equations",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-key-equations",
+    "trecho": "Ecell°=0.0257 VnlnK",
+    "arquivo": "openstax_17-key-equations.html",
+    "obs": "fator de ln K a 298,15 K (= RT/F)"
+   }
+  ],
+  "fator_nernst_log10_25C": [
+   {
+    "valor": 0.05916,
+    "valor_texto": "0.05916",
+    "unidade": "V",
+    "fonte": "Wikipedia (en): Nernst equation",
+    "url": "https://en.wikipedia.org/wiki/Nernst_equation",
+    "trecho": "where λ = ln(10) ≈ 2.3026 and λVT ≈ 0.05916 Volt",
+    "arquivo": "Nernst_equation.html"
+   },
+   {
+    "valor": 0.0592,
+    "valor_texto": "0.0592",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: 17-key-equations",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-key-equations",
+    "trecho": "Ecell=E°cell−0.0592 VnlogQ(at 298.15K)",
+    "arquivo": "openstax_17-key-equations.html"
+   },
+   {
+    "valor": 0.0592,
+    "valor_texto": "0.0592",
+    "unidade": "V",
+    "fonte": "OpenStax Chemistry 2e: 17-4-potential-free-energy-and-equilibrium",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-4-potential-free-energy-and-equilibrium",
+    "trecho": "Ecell=Ecell°−0.0592VnlogQ",
+    "arquivo": "openstax_17-4-potential-free-energy-and-equilibrium.html"
+   }
+  ],
+  "ln10": [
+   {
+    "valor": 2.3026,
+    "valor_texto": "2.3026",
+    "unidade": "adimensional",
+    "fonte": "Wikipedia (en): Nernst equation",
+    "url": "https://en.wikipedia.org/wiki/Nernst_equation",
+    "trecho": "where λ = ln(10) ≈ 2.3026",
+    "arquivo": "Nernst_equation.html"
+   }
+  ],
+  "inclinacao_por_pH": [
+   {
+    "valor": -59.16,
+    "valor_texto": "−59.16",
+    "unidade": "mV por unidade de pH",
+    "fonte": "Wikipedia (en): Nernst equation",
+    "url": "https://en.wikipedia.org/wiki/Nernst_equation",
+    "trecho": "(−59.16 mV/pH unit)",
+    "arquivo": "Nernst_equation.html",
+    "obs": "inclinação das retas da água no diagrama de Pourbaix"
+   }
+  ]
+ },
+ "massas": {
+  "H": [
+   {
+    "valor": 1.008,
+    "valor_texto": "1.0080",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 1 | H | hydrogen | [1.00784, 1.00811] | 1.0080±0.0002 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "O": [
+   {
+    "valor": 15.999,
+    "valor_texto": "15.999",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 8 | O | oxygen | [15.99903, 15.99977] | 15.999±0.001 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Na": [
+   {
+    "valor": 22.99,
+    "valor_texto": "22.990",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 11 | Na | sodium | 22.98976928±0.00000002 | 22.990±0.001 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Mg": [
+   {
+    "valor": 24.305,
+    "valor_texto": "24.305",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 12 | Mg | magnesium | [24.304, 24.307] | 24.305±0.002 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Al": [
+   {
+    "valor": 26.982,
+    "valor_texto": "26.982",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 13 | Al | aluminium | 26.9815384±0.0000003 | 26.982±0.001 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Cl": [
+   {
+    "valor": 35.45,
+    "valor_texto": "35.45",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 17 | Cl | chlorine | [35.446, 35.457] | 35.45±0.01 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Cr": [
+   {
+    "valor": 51.996,
+    "valor_texto": "51.996",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 24 | Cr | chromium | 51.9961±0.0006 | 51.996±0.001 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Fe": [
+   {
+    "valor": 55.845,
+    "valor_texto": "55.845",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 26 | Fe | iron | 55.845±0.002 | 55.845±0.002 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Ni": [
+   {
+    "valor": 58.693,
+    "valor_texto": "58.693",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 28 | Ni | nickel | 58.6934±0.0004 | 58.693±0.001 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Cu": [
+   {
+    "valor": 63.546,
+    "valor_texto": "63.546",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 29 | Cu | copper | 63.546±0.003 | 63.546±0.003 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Zn": [
+   {
+    "valor": 65.38,
+    "valor_texto": "65.38",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 30 | Zn | zinc | 65.38±0.02 | 65.38±0.02 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Ag": [
+   {
+    "valor": 107.87,
+    "valor_texto": "107.87",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 47 | Ag | silver | 107.8682±0.0002 | 107.87±0.01 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Sn": [
+   {
+    "valor": 118.71,
+    "valor_texto": "118.71",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 50 | Sn | tin | 118.710±0.007 | 118.71±0.01 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Au": [
+   {
+    "valor": 196.97,
+    "valor_texto": "196.97",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 79 | Au | gold | 196.966570±0.000004 | 196.97±0.01 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ],
+  "Pb": [
+   {
+    "valor": 207.2,
+    "valor_texto": "207.2",
+    "unidade": "g/mol",
+    "fonte": "Wikipedia (en): Standard atomic weight",
+    "url": "https://en.wikipedia.org/wiki/Standard_atomic_weight",
+    "trecho": "| 82 | Pb | lead | [206.14, 207.94] | 207.2±1.1 |",
+    "arquivo": "Standard_atomic_weight.html",
+    "obs": "coluna \"abridged\" (valor abreviado ± incerteza) da tabela da IUPAC reproduzida na página; a coluna anterior do trecho é o valor completo ou o intervalo"
+   }
+  ]
+ },
+ "pilhas": {
+  "daniell": {
+   "tensao": [
+    {
+     "valor": 1.1,
+     "valor_texto": "1.10",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Daniell cell",
+     "url": "https://en.wikipedia.org/wiki/Daniell_cell",
+     "trecho": "the standard potential of the Daniell cell at 25 °C (77°F) is actually 1.10 V",
+     "arquivo": "Daniell_cell.html"
+    },
+    {
+     "valor": 1.1018,
+     "valor_texto": "1.1018",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Daniell cell",
+     "url": "https://en.wikipedia.org/wiki/Daniell_cell",
+     "trecho": "(Open-circuit voltage 1.1018 V )",
+     "arquivo": "Daniell_cell.html",
+     "obs": "tensão de circuito aberto, escrita ao lado da reação global"
+    },
+    {
+     "valor": 1.1,
+     "valor_texto": "1.1",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Daniell cell",
+     "url": "https://en.wikipedia.org/wiki/Daniell_cell",
+     "trecho": "With an operating voltage of roughly 1.1 volts",
+     "arquivo": "Daniell_cell.html",
+     "obs": "tensão de operação"
+    }
+   ],
+   "anodo": [
+    {
+     "valor": "Zn (s) → Zn2+ (aq) + 2e−",
+     "valor_texto": "Zn (s) → Zn2+ (aq) + 2e−",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Daniell cell",
+     "url": "https://en.wikipedia.org/wiki/Daniell_cell",
+     "trecho": "At the anode (negative electrode), zinc is oxidized as per the following half reaction: Zn (s) → Zn2+ (aq) + 2e−",
+     "arquivo": "Daniell_cell.html"
+    }
+   ],
+   "catodo": [
+    {
+     "valor": "Cu2+ (aq) + 2e− → Cu (s)",
+     "valor_texto": "Cu2+ (aq) + 2e− → Cu (s)",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Daniell cell",
+     "url": "https://en.wikipedia.org/wiki/Daniell_cell",
+     "trecho": "At the cathode (positive electrode), copper is reduced as per the following reaction: Cu2+ (aq) + 2e− → Cu (s)",
+     "arquivo": "Daniell_cell.html"
+    }
+   ],
+   "global": [
+    {
+     "valor": "Zn (s) + Cu2+ (aq) → Zn2+ (aq) + Cu (s)",
+     "valor_texto": "Zn (s) + Cu2+ (aq) → Zn2+ (aq) + Cu (s)",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Daniell cell",
+     "url": "https://en.wikipedia.org/wiki/Daniell_cell",
+     "trecho": "The total reaction is: Zn (s) + Cu2+ (aq) → Zn2+ (aq) + Cu (s)",
+     "arquivo": "Daniell_cell.html"
+    },
+    {
+     "valor": "Zn(s)+Cu2+(aq)⟶Zn2+(aq)+Cu(s)",
+     "valor_texto": "Zn(s)+Cu2+(aq)⟶Zn2+(aq)+Cu(s)",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "Zn(s)+Cu2+(aq)⟶Zn2+(aq)+Cu(s)",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html",
+     "obs": "reação citada no cap. 17.5"
+    }
+   ]
+  },
+  "alcalina": {
+   "tensao": [
+    {
+     "valor": 1.5,
+     "valor_texto": "1.5",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Alkaline battery",
+     "url": "https://en.wikipedia.org/wiki/Alkaline_battery",
+     "trecho": "| Nominal cell voltage | 1.5 V",
+     "arquivo": "Alkaline_battery.html",
+     "obs": "nominal"
+    },
+    {
+     "valor": 1.5,
+     "valor_texto": "1.5",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Alkaline battery",
+     "url": "https://en.wikipedia.org/wiki/Alkaline_battery",
+     "trecho": "The nominal voltage of a fresh alkaline cell as established by manufacturer standards is 1.5 V",
+     "arquivo": "Alkaline_battery.html",
+     "obs": "nominal"
+    },
+    {
+     "valor": 1.43,
+     "valor_texto": "+1.43",
+     "unidade": "V",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "cell:Zn(s)+2MnO2(s)⟶ZnO(s)+Mn2O3(s)Ecell=+1.43 V",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html",
+     "obs": "E da célula escrito pelo OpenStax (não é a tensão nominal)"
+    }
+   ],
+   "tensao_sem_carga": [
+    {
+     "valor": "1.50 to 1.65",
+     "valor_texto": "1.50 to 1.65",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Alkaline battery",
+     "url": "https://en.wikipedia.org/wiki/Alkaline_battery",
+     "trecho": "actual zero-load voltage of a new alkaline battery ranges from 1.50 to 1.65 V",
+     "arquivo": "Alkaline_battery.html"
+    }
+   ],
+   "anodo": [
+    {
+     "valor": "Zn(s) + 2OH−(aq) → Zn(OH)2(s) + 2e− → ZnO(s) + H2O(l) + 2e−",
+     "valor_texto": "Zn(s) + 2OH−(aq) → Zn(OH)2(s) + 2e− → ZnO(s) + H2O(l) + 2e−",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Alkaline battery",
+     "url": "https://en.wikipedia.org/wiki/Alkaline_battery",
+     "trecho": "Zn(s) + 2OH−(aq) → Zn(OH)2(s) + 2e− → ZnO(s) + H2O(l) + 2e− (E°ox = +1.28 V)",
+     "arquivo": "Alkaline_battery.html"
+    },
+    {
+     "valor": "Zn(s)+2OH−(aq)⟶ZnO(s)+H2O(l)+2e−",
+     "valor_texto": "Zn(s)+2OH−(aq)⟶ZnO(s)+H2O(l)+2e−",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "anode:Zn(s)+2OH−(aq)⟶ZnO(s)+H2O(l)+2e−cathode",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ],
+   "anodo_E_oxidacao": [
+    {
+     "valor": 1.28,
+     "valor_texto": "+1.28",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Alkaline battery",
+     "url": "https://en.wikipedia.org/wiki/Alkaline_battery",
+     "trecho": "2e− (E°ox = +1.28 V)",
+     "arquivo": "Alkaline_battery.html",
+     "obs": "potencial de OXIDAÇÃO do zinco em meio básico, como a página escreve"
+    }
+   ],
+   "catodo": [
+    {
+     "valor": "2MnO2(s) + 2H2O(l) + 2e− → 2MnO(OH)(s) + 2OH−(aq)",
+     "valor_texto": "2MnO2(s) + 2H2O(l) + 2e− → 2MnO(OH)(s) + 2OH−(aq)",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Alkaline battery",
+     "url": "https://en.wikipedia.org/wiki/Alkaline_battery",
+     "trecho": "2MnO2(s) + 2H2O(l) + 2e− → 2MnO(OH)(s) + 2OH−(aq)",
+     "arquivo": "Alkaline_battery.html",
+     "obs": "produto MnO(OH)"
+    },
+    {
+     "valor": "2MnO2(s)+H2O(l)+2e−⟶Mn2O3(s)+2OH−(aq)",
+     "valor_texto": "2MnO2(s)+H2O(l)+2e−⟶Mn2O3(s)+2OH−(aq)",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "cathode:2MnO2(s)+H2O(l)+2e−⟶Mn2O3(s)+2OH−(aq)",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html",
+     "obs": "produto Mn2O3 (as duas fontes escrevem o produto de formas diferentes)"
+    }
+   ],
+   "global": [
+    {
+     "valor": "Zn(s) + 2MnO2(s) + H2O(l) ⇄ ZnO(s) + 2MnO(OH)(s)",
+     "valor_texto": "Zn(s) + 2MnO2(s) + H2O(l) ⇄ ZnO(s) + 2MnO(OH)(s)",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Alkaline battery",
+     "url": "https://en.wikipedia.org/wiki/Alkaline_battery",
+     "trecho": "Zn(s) + 2MnO2(s) + H2O(l) ⇄ ZnO(s) + 2MnO(OH)(s) (E°cell",
+     "arquivo": "Alkaline_battery.html"
+    },
+    {
+     "valor": "Zn(s)+2MnO2(s)⟶ZnO(s)+Mn2O3(s)",
+     "valor_texto": "Zn(s)+2MnO2(s)⟶ZnO(s)+Mn2O3(s)",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "cell:Zn(s)+2MnO2(s)⟶ZnO(s)+Mn2O3(s)Ecell",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ],
+   "eletrolito": [
+    {
+     "valor": "The alkaline electrolyte of potassium hydroxide (KOH) is not consumed during the reaction",
+     "valor_texto": "The alkaline electrolyte of potassium hydroxide (KOH) is not consumed during the reaction",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Alkaline battery",
+     "url": "https://en.wikipedia.org/wiki/Alkaline_battery",
+     "trecho": "The alkaline electrolyte of potassium hydroxide (KOH) is not consumed during the reaction",
+     "arquivo": "Alkaline_battery.html"
+    }
+   ]
+  },
+  "pilha_seca_zinco_carbono": {
+   "tensao": [
+    {
+     "valor": 1.5,
+     "valor_texto": "1.5",
+     "unidade": "V",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "The voltage (cell potential) of a dry cell is approximately 1.5 V",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ],
+   "anodo": [
+    {
+     "valor": "Zn(s)⟶Zn2+(aq)+2e−",
+     "valor_texto": "Zn(s)⟶Zn2+(aq)+2e−",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "anode reaction:Zn(s)⟶Zn2+(aq)+2e−",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ],
+   "catodo": [
+    {
+     "valor": "2MnO2(s)+2NH4Cl(aq)+2e−⟶Mn2O3(s)+2NH3(aq)+H2O(l)+2Cl−",
+     "valor_texto": "2MnO2(s)+2NH4Cl(aq)+2e−⟶Mn2O3(s)+2NH3(aq)+H2O(l)+2Cl−",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "reduction reaction:2MnO2(s)+2NH4Cl(aq)+2e−⟶Mn2O3(s)+2NH3(aq)+H2O(l)+2Cl−",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ]
+  },
+  "chumbo_acido": {
+   "tensao_por_celula": [
+    {
+     "valor": 2.1,
+     "valor_texto": "2.1",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Lead–acid battery",
+     "url": "https://en.wikipedia.org/wiki/Lead–acid_battery",
+     "trecho": "| Nominal cell voltage | 2.1 V",
+     "arquivo": "Lead–acid_battery.html",
+     "obs": "nominal"
+    },
+    {
+     "valor": 2.1,
+     "valor_texto": "2.1",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Lead–acid battery",
+     "url": "https://en.wikipedia.org/wiki/Lead–acid_battery",
+     "trecho": "A lead–acid battery's nominal voltage is 2.1 V for each cell",
+     "arquivo": "Lead–acid_battery.html",
+     "obs": "nominal"
+    },
+    {
+     "valor": 2.05,
+     "valor_texto": "2.05",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Lead–acid battery",
+     "url": "https://en.wikipedia.org/wiki/Lead–acid_battery",
+     "trecho": "Ecell∘=2.05 V",
+     "arquivo": "Lead–acid_battery.html",
+     "obs": "E° da reação global, não a nominal"
+    },
+    {
+     "valor": 2,
+     "valor_texto": "2",
+     "unidade": "V",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "Each cell produces 2 V, so six cells are connected in series",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html",
+     "obs": "arredondado"
+    }
+   ],
+   "tensao_6_celulas": [
+    {
+     "valor": 12,
+     "valor_texto": "12",
+     "unidade": "V",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "so six cells are connected in series to produce a 12-V car battery",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ],
+   "numero_de_celulas": [
+    {
+     "valor": "six",
+     "valor_texto": "six",
+     "unidade": "células",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "so six cells are connected in series to produce a 12-V car battery",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ],
+   "faixa_por_celula": [
+    {
+     "valor": "1.8 V loaded at full discharge, to 2.10 V in an open circuit at full charge",
+     "valor_texto": "1.8 V loaded at full discharge, to 2.10 V in an open circuit at full charge",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Lead–acid battery",
+     "url": "https://en.wikipedia.org/wiki/Lead–acid_battery",
+     "trecho": "the voltage can range from 1.8 V loaded at full discharge, to 2.10 V in an open circuit at full charge",
+     "arquivo": "Lead–acid_battery.html"
+    }
+   ],
+   "anodo": [
+    {
+     "valor": "Pb(s) + H2SO4(aq) → PbSO4(s) + 2H+(aq) + 2e-",
+     "valor_texto": "Pb(s) + H2SO4(aq) → PbSO4(s) + 2H+(aq) + 2e-",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Lead–acid battery",
+     "url": "https://en.wikipedia.org/wiki/Lead–acid_battery",
+     "trecho": "Negative plate Pb(s) + H2SO4(aq) → PbSO4(s) + 2H+(aq) + 2e-",
+     "arquivo": "Lead–acid_battery.html",
+     "obs": "forma com H2SO4"
+    },
+    {
+     "valor": "Pb ( s ) + HSO 4 − ( a q ) ⟶ PbSO 4 ( s ) + H + ( a q ) + 2e −",
+     "valor_texto": "Pb ( s ) + HSO 4 − ( a q ) ⟶ PbSO 4 ( s ) + H + ( a q ) + 2e −",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "anode: Pb ( s ) + HSO 4 − ( a q ) ⟶ PbSO 4 ( s ) + H + ( a q ) + 2e − cathode",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html",
+     "obs": "forma com HSO4−"
+    }
+   ],
+   "catodo": [
+    {
+     "valor": "PbO2(s) + H2SO4(aq) + 2H+(aq) + 2e- → PbSO4(s) + 2H2O(l)",
+     "valor_texto": "PbO2(s) + H2SO4(aq) + 2H+(aq) + 2e- → PbSO4(s) + 2H2O(l)",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Lead–acid battery",
+     "url": "https://en.wikipedia.org/wiki/Lead–acid_battery",
+     "trecho": "Positive plate PbO2(s) + H2SO4(aq) + 2H+(aq) + 2e- → PbSO4(s) + 2H2O(l)",
+     "arquivo": "Lead–acid_battery.html",
+     "obs": "forma com H2SO4"
+    },
+    {
+     "valor": "PbO 2 ( s ) + HSO 4 − ( a q ) + 3H + ( a q ) + 2e − ⟶ PbSO 4 ( s ) + 2 H 2 O ( l )",
+     "valor_texto": "PbO 2 ( s ) + HSO 4 − ( a q ) + 3H + ( a q ) + 2e − ⟶ PbSO 4 ( s ) + 2 H 2 O ( l )",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "cathode: PbO 2 ( s ) + HSO 4 − ( a q ) + 3H + ( a q ) + 2e − ⟶ PbSO 4 ( s ) + 2 H 2 O ( l )",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html",
+     "obs": "forma com HSO4−"
+    }
+   ],
+   "global": [
+    {
+     "valor": "Pb(s) + PbO 2(s) + 2H 2SO 4(aq) → 2PbSO 4(s) + 2H 2O(l)",
+     "valor_texto": "Pb(s) + PbO 2(s) + 2H 2SO 4(aq) → 2PbSO 4(s) + 2H 2O(l)",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Lead–acid battery",
+     "url": "https://en.wikipedia.org/wiki/Lead–acid_battery",
+     "trecho": "The total reaction can be written as Pb(s) + PbO 2(s) + 2H 2SO 4(aq) → 2PbSO 4(s) + 2H 2O(l)",
+     "arquivo": "Lead–acid_battery.html"
+    },
+    {
+     "valor": "Pb ( s ) + PbO 2 ( s ) + 2 H 2 SO 4 ( a q ) ⟶ 2PbSO 4 ( s ) + 2 H 2 O ( l )",
+     "valor_texto": "Pb ( s ) + PbO 2 ( s ) + 2 H 2 SO 4 ( a q ) ⟶ 2PbSO 4 ( s ) + 2 H 2 O ( l )",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "cell: Pb ( s ) + PbO 2 ( s ) + 2 H 2 SO 4 ( a q ) ⟶ 2PbSO 4 ( s ) + 2 H 2 O ( l )",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ]
+  },
+  "ion_litio": {
+   "tensao_nominal": [
+    {
+     "valor": "3.6 or 3.7",
+     "valor_texto": "3.6 or 3.7",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Lithium-ion battery",
+     "url": "https://en.wikipedia.org/wiki/Lithium-ion_battery",
+     "trecho": "They typically have a nominal voltage of 3.6 or 3.7 V",
+     "arquivo": "Lithium-ion_battery.html"
+    },
+    {
+     "valor": "3.6 / 3.7 / 3.8 / 3.85",
+     "valor_texto": "3.6 / 3.7 / 3.8 / 3.85",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Lithium-ion battery",
+     "url": "https://en.wikipedia.org/wiki/Lithium-ion_battery",
+     "trecho": "| Nominal cell voltage | 3.6 / 3.7 / 3.8 / 3.85 V",
+     "arquivo": "Lithium-ion_battery.html",
+     "obs": "infobox"
+    },
+    {
+     "valor": 3.7,
+     "valor_texto": "3.7",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Lithium-ion battery",
+     "url": "https://en.wikipedia.org/wiki/Lithium-ion_battery",
+     "trecho": "Lithium nickel manganese cobalt (NMC) oxide positives with graphite negatives have a 3.7 V nominal voltage",
+     "arquivo": "Lithium-ion_battery.html",
+     "obs": "NMC/grafite"
+    },
+    {
+     "valor": 3.7,
+     "valor_texto": "3.7",
+     "unidade": "V",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "the cell voltage is approximately 3.7 V",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ],
+   "tensao_LiFePO4": [
+    {
+     "valor": 3.2,
+     "valor_texto": "3.2",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Lithium-ion battery",
+     "url": "https://en.wikipedia.org/wiki/Lithium-ion_battery",
+     "trecho": "lithium iron phosphate positive and graphite negative electrodes have a nominal open-circuit voltage of 3.2 V",
+     "arquivo": "Lithium-ion_battery.html"
+    }
+   ],
+   "anodo": [
+    {
+     "valor": "LiCA6↽−−⇀CA6+LiA++eA−",
+     "valor_texto": "LiCA6↽−−⇀CA6+LiA++eA−",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Lithium-ion battery",
+     "url": "https://en.wikipedia.org/wiki/Lithium-ion_battery",
+     "trecho": "The negative electrode half-reaction for the graphite is[67][68] LiCA6↽−−⇀CA6+LiA++eA−",
+     "arquivo": "Lithium-ion_battery.html",
+     "obs": "ler sem os \"A\" (artefato): LiC6 ⇌ C6 + Li+ + e−"
+    },
+    {
+     "valor": "xLiC6⇌xLi++xe−+xC6",
+     "valor_texto": "xLiC6⇌xLi++xe−+xC6",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "anode:xLiC6⇌xLi++xe−+xC6",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ],
+   "catodo": [
+    {
+     "valor": "CoOA2+LiA++eA−↽−−⇀LiCoOA2",
+     "valor_texto": "CoOA2+LiA++eA−↽−−⇀LiCoOA2",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Lithium-ion battery",
+     "url": "https://en.wikipedia.org/wiki/Lithium-ion_battery",
+     "trecho": "The positive electrode half-reaction in the lithium-doped cobalt oxide substrate is CoOA2+LiA++eA−↽−−⇀LiCoOA2",
+     "arquivo": "Lithium-ion_battery.html",
+     "obs": "ler sem os \"A\" (artefato): CoO2 + Li+ + e− ⇌ LiCoO2"
+    },
+    {
+     "valor": "Li1−xCoO2+xLi++xe−⇌LiCoO2",
+     "valor_texto": "Li1−xCoO2+xLi++xe−⇌LiCoO2",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "cathode:Li1−xCoO2+xLi++xe−⇌LiCoO2",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ],
+   "global": [
+    {
+     "valor": "LiCA6+CoOA2↽−−⇀CA6+LiCoOA2",
+     "valor_texto": "LiCA6+CoOA2↽−−⇀CA6+LiCoOA2",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Lithium-ion battery",
+     "url": "https://en.wikipedia.org/wiki/Lithium-ion_battery",
+     "trecho": "The full reaction being LiCA6+CoOA2↽−−⇀CA6+LiCoOA2",
+     "arquivo": "Lithium-ion_battery.html",
+     "obs": "ler sem os \"A\" (artefato)"
+    },
+    {
+     "valor": "Li1−xCoO2+xLiC6⇌LiCoO2+xC6",
+     "valor_texto": "Li1−xCoO2+xLiC6⇌LiCoO2+xC6",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "cell:Li1−xCoO2+xLiC6⇌LiCoO2+xC6Ecell",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ]
+  },
+  "celula_combustivel_H2": {
+   "tensao": [
+    {
+     "valor": 1.2291,
+     "valor_texto": "1.2291",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Proton-exchange membrane fuel cell",
+     "url": "https://en.wikipedia.org/wiki/Proton-exchange_membrane_fuel_cell",
+     "trecho": "HA2+12OA2⟶HA2O E∘=1.2291V",
+     "arquivo": "Proton-exchange_membrane_fuel_cell.html",
+     "obs": "E° teórico da reação global (célula PEM); ler sem os \"A\" (artefato)"
+    },
+    {
+     "valor": 1.2,
+     "valor_texto": "1.2",
+     "unidade": "V",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "These types of fuel cells generally produce voltages of approximately 1.2 V",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html",
+     "obs": "tensão produzida (aproximada)"
+    },
+    {
+     "valor": 1.2,
+     "valor_texto": "1.2",
+     "unidade": "V",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "Cell:2H2(g)+O2(g)⟶2H2O(g)Ecell~1.2V",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ],
+   "anodo": [
+    {
+     "valor": "2H2(g)⟶4H+(aq)+4e−",
+     "valor_texto": "2H2(g)⟶4H+(aq)+4e−",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "Anode:2H2(g)⟶4H+(aq)+4e−Cathode",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    },
+    {
+     "valor": "HA2⟶2HA++2eA−",
+     "valor_texto": "HA2⟶2HA++2eA−",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Proton-exchange membrane fuel cell",
+     "url": "https://en.wikipedia.org/wiki/Proton-exchange_membrane_fuel_cell",
+     "trecho": "At the anode: | HA2⟶2HA++2eA− E∘=0V",
+     "arquivo": "Proton-exchange_membrane_fuel_cell.html",
+     "obs": "ler sem os \"A\" (artefato)"
+    }
+   ],
+   "catodo": [
+    {
+     "valor": "O2(g)+4H+(aq)+4e−⟶2H2O(g)",
+     "valor_texto": "O2(g)+4H+(aq)+4e−⟶2H2O(g)",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "Cathode:O2(g)+4H+(aq)+4e−⟶2H2O(g)",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    },
+    {
+     "valor": "12OA2+2HA++2eA−⟶HA2O",
+     "valor_texto": "12OA2+2HA++2eA−⟶HA2O",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Proton-exchange membrane fuel cell",
+     "url": "https://en.wikipedia.org/wiki/Proton-exchange_membrane_fuel_cell",
+     "trecho": "At the cathode: | 12OA2+2HA++2eA−⟶HA2O E∘=1.2291V",
+     "arquivo": "Proton-exchange_membrane_fuel_cell.html",
+     "obs": "ler sem os \"A\" (artefato); o \"12\" é a fração 1/2"
+    }
+   ],
+   "global": [
+    {
+     "valor": "2H2(g)+O2(g)⟶2H2O(g)",
+     "valor_texto": "2H2(g)+O2(g)⟶2H2O(g)",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-5-batteries-and-fuel-cells",
+     "trecho": "Cell:2H2(g)+O2(g)⟶2H2O(g)Ecell",
+     "arquivo": "openstax_17-5-batteries-and-fuel-cells.html"
+    }
+   ]
+  }
+ },
+ "eletrolise": {
+  "agua": {
+   "tensao_minima": [
+    {
+     "valor": 1.229,
+     "valor_texto": "+1.229",
+     "unidade": "V",
+     "fonte": "OpenStax Chemistry 2e: 17-7-electrolysis",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-7-electrolysis",
+     "trecho": "must be driven by imposing a cell voltage greater than +1.229 V",
+     "arquivo": "openstax_17-7-electrolysis.html"
+    },
+    {
+     "valor": 1.23,
+     "valor_texto": "1.23",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Electrolysis of water",
+     "url": "https://en.wikipedia.org/wiki/Electrolysis_of_water",
+     "trecho": "it follows that the minimum voltage necessary for electrolysis is about 1.23 V",
+     "arquivo": "Electrolysis_of_water.html"
+    }
+   ],
+   "E_celula_padrao": [
+    {
+     "valor": -1.229,
+     "valor_texto": "−1.229",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Electrolysis of water",
+     "url": "https://en.wikipedia.org/wiki/Electrolysis_of_water",
+     "trecho": "(Eocell = Eocathode − Eoanode) is −1.229 V at 25 °C at pH 0",
+     "arquivo": "Electrolysis_of_water.html",
+     "obs": "E° da célula (negativo = não espontânea)"
+    },
+    {
+     "valor": -1.229,
+     "valor_texto": "−1.229",
+     "unidade": "V",
+     "fonte": "OpenStax Chemistry 2e: 17-7-electrolysis",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-7-electrolysis",
+     "trecho": "cell:2H2O(l)⟶2H2(g)+O2(g)Ecell°=−1.229 V",
+     "arquivo": "openstax_17-7-electrolysis.html"
+    }
+   ],
+   "tensao_termoneutra": [
+    {
+     "valor": 1.48,
+     "valor_texto": "1.48",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Electrolysis of water",
+     "url": "https://en.wikipedia.org/wiki/Electrolysis_of_water",
+     "trecho": "voltages over 1.48 V are required for the reaction to proceed at practical current densities (the thermoneutral voltage)",
+     "arquivo": "Electrolysis_of_water.html"
+    }
+   ],
+   "proporcao_H2_O2": [
+    {
+     "valor": "the amount of hydrogen generated is twice the amount of oxygen",
+     "valor_texto": "the amount of hydrogen generated is twice the amount of oxygen",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Electrolysis of water",
+     "url": "https://en.wikipedia.org/wiki/Electrolysis_of_water",
+     "trecho": "the amount of hydrogen generated is twice the amount of oxygen",
+     "arquivo": "Electrolysis_of_water.html",
+     "obs": "a página diz \"amount\" (quantidade), não \"volume\"; nenhuma página baixada escreve a proporção de volumes 2:1"
+    },
+    {
+     "valor": "2 H2O → 2 H2 (g) + O2 (g)",
+     "valor_texto": "2 H2O → 2 H2 (g) + O2 (g)",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Electrolysis of water",
+     "url": "https://en.wikipedia.org/wiki/Electrolysis_of_water",
+     "trecho": "2 H2O → 2 H2 (g) + O2 (g)",
+     "arquivo": "Electrolysis_of_water.html",
+     "obs": "reação global: 2 H2 para 1 O2"
+    },
+    {
+     "valor": "2H2O(l)⟶2H2(g)+O2(g)",
+     "valor_texto": "2H2O(l)⟶2H2(g)+O2(g)",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-7-electrolysis",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-7-electrolysis",
+     "trecho": "cell:2H2O(l)⟶2H2(g)+O2(g)Ecell°",
+     "arquivo": "openstax_17-7-electrolysis.html",
+     "obs": "reação global: 2 H2 para 1 O2"
+    }
+   ],
+   "proporcao_volumes_H2_O2": [
+    {
+     "valor": null,
+     "valor_texto": null,
+     "unidade": null,
+     "fonte": null,
+     "url": null,
+     "trecho": null,
+     "obs": "nenhuma página baixada (Electrolysis of water, Electrolysis, OpenStax 17.7) escreve literalmente a proporção de VOLUMES 2:1; ver \"proporcao_H2_O2\" (quantidade e equação global)"
+    }
+   ],
+   "anodo": [
+    {
+     "valor": "2H2O(l)⟶O2(g)+4H+(aq)+4e−",
+     "valor_texto": "2H2O(l)⟶O2(g)+4H+(aq)+4e−",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-7-electrolysis",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-7-electrolysis",
+     "trecho": "anode:2H2O(l)⟶O2(g)+4H+(aq)+4e−Eanode°",
+     "arquivo": "openstax_17-7-electrolysis.html"
+    },
+    {
+     "valor": "2 H2O → O2 (g) + 4 H+(aq) + 4 e−",
+     "valor_texto": "2 H2O → O2 (g) + 4 H+(aq) + 4 e−",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Electrolysis of water",
+     "url": "https://en.wikipedia.org/wiki/Electrolysis_of_water",
+     "trecho": "2 H2O → O2 (g) + 4 H+(aq) + 4 e− (E",
+     "arquivo": "Electrolysis_of_water.html",
+     "obs": "meio ácido"
+    }
+   ],
+   "catodo": [
+    {
+     "valor": "2H+(aq)+2e−⟶H2(g)",
+     "valor_texto": "2H+(aq)+2e−⟶H2(g)",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-7-electrolysis",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-7-electrolysis",
+     "trecho": "cathode:2H+(aq)+2e−⟶H2(g)Ecathode°=0 V",
+     "arquivo": "openstax_17-7-electrolysis.html"
+    },
+    {
+     "valor": "2 H+(aq) + 2 e–",
+     "valor_texto": "2 H+(aq) + 2 e–",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Electrolysis of water",
+     "url": "https://en.wikipedia.org/wiki/Electrolysis_of_water",
+     "trecho": "2 H+(aq) + 2 e– [a] → H2 (g) (E⦵ = 0 V)",
+     "arquivo": "Electrolysis_of_water.html",
+     "obs": "meio ácido (a nota [a] da página fica no meio da equação)"
+    },
+    {
+     "valor": "2 H2O + 2 e– → H2 (g) + 2 OH–(aq)",
+     "valor_texto": "2 H2O + 2 e– → H2 (g) + 2 OH–(aq)",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Electrolysis of water",
+     "url": "https://en.wikipedia.org/wiki/Electrolysis_of_water",
+     "trecho": "2 H2O + 2 e– → H2 (g) + 2 OH–(aq)",
+     "arquivo": "Electrolysis_of_water.html",
+     "obs": "meio básico"
+    }
+   ]
+  },
+  "cloro_alcali": {
+   "anodo": [
+    {
+     "valor": "the chloride ions are oxidised at the anode, losing electrons to become chlorine gas",
+     "valor_texto": "the chloride ions are oxidised at the anode, losing electrons to become chlorine gas",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Chloralkali process",
+     "url": "https://en.wikipedia.org/wiki/Chloralkali_process",
+     "trecho": "the chloride ions are oxidised at the anode, losing electrons to become chlorine gas",
+     "arquivo": "Chloralkali_process.html"
+    },
+    {
+     "valor": "2 Cl− → Cl2 + 2 e−",
+     "valor_texto": "2 Cl− → Cl2 + 2 e−",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Chloralkali process",
+     "url": "https://en.wikipedia.org/wiki/Chloralkali_process",
+     "trecho": "2 Cl− → Cl2 + 2 e−",
+     "arquivo": "Chloralkali_process.html"
+    }
+   ],
+   "catodo": [
+    {
+     "valor": "At the cathode, positive hydrogen ions pulled from water molecules are reduced by the electrons provided by the electrolytic current, to hydrogen gas, releasing hydroxide ions into the solution",
+     "valor_texto": "At the cathode, positive hydrogen ions pulled from water molecules are reduced by the electrons provided by the electrolytic current, to hydrogen gas, releasing hydroxide ions into the solution",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Chloralkali process",
+     "url": "https://en.wikipedia.org/wiki/Chloralkali_process",
+     "trecho": "At the cathode, positive hydrogen ions pulled from water molecules are reduced by the electrons provided by the electrolytic current, to hydrogen gas, releasing hydroxide ions into the solution",
+     "arquivo": "Chloralkali_process.html"
+    },
+    {
+     "valor": "2 H2O + 2 e− → H2 + 2 OH−",
+     "valor_texto": "2 H2O + 2 e− → H2 + 2 OH−",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Chloralkali process",
+     "url": "https://en.wikipedia.org/wiki/Chloralkali_process",
+     "trecho": "2 H2O + 2 e− → H2 + 2 OH−",
+     "arquivo": "Chloralkali_process.html"
+    }
+   ],
+   "soda_caustica": [
+    {
+     "valor": "sodium ions (Na+) to pass to the second chamber where they react with the hydroxide ions to produce caustic soda (NaOH)",
+     "valor_texto": "sodium ions (Na+) to pass to the second chamber where they react with the hydroxide ions to produce caustic soda (NaOH)",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Chloralkali process",
+     "url": "https://en.wikipedia.org/wiki/Chloralkali_process",
+     "trecho": "sodium ions (Na+) to pass to the second chamber where they react with the hydroxide ions to produce caustic soda (NaOH)",
+     "arquivo": "Chloralkali_process.html"
+    },
+    {
+     "valor": "chloride ions are oxidized at the anode to produce chlorine, and at the cathode, water is split into caustic soda and hydrogen",
+     "valor_texto": "chloride ions are oxidized at the anode to produce chlorine, and at the cathode, water is split into caustic soda and hydrogen",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Chloralkali process",
+     "url": "https://en.wikipedia.org/wiki/Chloralkali_process",
+     "trecho": "chloride ions are oxidized at the anode to produce chlorine, and at the cathode, water is split into caustic soda and hydrogen",
+     "arquivo": "Chloralkali_process.html",
+     "obs": "célula de diafragma"
+    }
+   ],
+   "o_que_e_eletrolisado": [
+    {
+     "valor": "Saturated brine is passed into the first chamber of the cell",
+     "valor_texto": "Saturated brine is passed into the first chamber of the cell",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Chloralkali process",
+     "url": "https://en.wikipedia.org/wiki/Chloralkali_process",
+     "trecho": "Saturated brine is passed into the first chamber of the cell",
+     "arquivo": "Chloralkali_process.html"
+    },
+    {
+     "valor": "Basic membrane cell used in the electrolysis of brine",
+     "valor_texto": "Basic membrane cell used in the electrolysis of brine",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Chloralkali process",
+     "url": "https://en.wikipedia.org/wiki/Chloralkali_process",
+     "trecho": "Basic membrane cell used in the electrolysis of brine",
+     "arquivo": "Chloralkali_process.html"
+    }
+   ],
+   "competicao_agua_cloreto": [
+    {
+     "valor": "water may be oxidized at a less negative/more positive potential (–1.229 V) than chloride ion (–1.358 V)",
+     "valor_texto": "water may be oxidized at a less negative/more positive potential (–1.229 V) than chloride ion (–1.358 V)",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-7-electrolysis",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-7-electrolysis",
+     "trecho": "water may be oxidized at a less negative/more positive potential (–1.229 V) than chloride ion (–1.358 V)",
+     "arquivo": "openstax_17-7-electrolysis.html",
+     "obs": "OpenStax: na solução aquosa de NaCl, a termodinâmica prevê O2, mas na prática sai também Cl2"
+    }
+   ]
+  },
+  "NaCl_fundido_Downs": {
+   "frase": [
+    {
+     "valor": "their industrial production relies on the large-scale electrolysis of molten sodium chloride, NaCl(l)",
+     "valor_texto": "their industrial production relies on the large-scale electrolysis of molten sodium chloride, NaCl(l)",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-7-electrolysis",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-7-electrolysis",
+     "trecho": "their industrial production relies on the large-scale electrolysis of molten sodium chloride, NaCl(l)",
+     "arquivo": "openstax_17-7-electrolysis.html"
+    }
+   ],
+   "reacoes": [
+    {
+     "valor": "anode:2Cl−(l)⟶Cl2(g)+2e−cathode:Na+(l)+e−⟶Na(l)",
+     "valor_texto": "anode:2Cl−(l)⟶Cl2(g)+2e−cathode:Na+(l)+e−⟶Na(l)",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-7-electrolysis",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-7-electrolysis",
+     "trecho": "anode:2Cl−(l)⟶Cl2(g)+2e−cathode:Na+(l)+e−⟶Na(l)",
+     "arquivo": "openstax_17-7-electrolysis.html"
+    }
+   ],
+   "eletrodos": [
+    {
+     "valor": "they typically use iron cathodes and carbon anodes",
+     "valor_texto": "they typically use iron cathodes and carbon anodes",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-7-electrolysis",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-7-electrolysis",
+     "trecho": "they typically use iron cathodes and carbon anodes",
+     "arquivo": "openstax_17-7-electrolysis.html"
+    }
+   ]
+  },
+  "hall_heroult": {
+   "o_que_e_eletrolisado": [
+    {
+     "valor": "It involves dissolving aluminium oxide (alumina) (obtained most often from bauxite, aluminium's chief ore, through the Bayer process) in molten cryolite and electrolyzing the molten salt bath",
+     "valor_texto": "It involves dissolving aluminium oxide (alumina) (obtained most often from bauxite, aluminium's chief ore, through the Bayer process) in molten cryolite and electrolyzing the molten salt bath",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Hall–Héroult process",
+     "url": "https://en.wikipedia.org/wiki/Hall–Héroult_process",
+     "trecho": "It involves dissolving aluminium oxide (alumina) (obtained most often from bauxite, aluminium's chief ore, through the Bayer process) in molten cryolite and electrolyzing the molten salt bath",
+     "arquivo": "Hall–Héroult_process.html"
+    },
+    {
+     "valor": "alumina, Al2O3, is dissolved in molten synthetic cryolite, Na3AlF6, to lower its melting point for easier electrolysis",
+     "valor_texto": "alumina, Al2O3, is dissolved in molten synthetic cryolite, Na3AlF6, to lower its melting point for easier electrolysis",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Hall–Héroult process",
+     "url": "https://en.wikipedia.org/wiki/Hall–Héroult_process",
+     "trecho": "alumina, Al2O3, is dissolved in molten synthetic cryolite, Na3AlF6, to lower its melting point for easier electrolysis",
+     "arquivo": "Hall–Héroult_process.html"
+    }
+   ],
+   "temperatura": [
+    {
+     "valor": "940–980",
+     "valor_texto": "940–980",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Hall–Héroult process",
+     "url": "https://en.wikipedia.org/wiki/Hall–Héroult_process",
+     "trecho": "happens at 940–980 °C",
+     "arquivo": "Hall–Héroult_process.html"
+    },
+    {
+     "valor": "940 and 980",
+     "valor_texto": "940 and 980",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Hall–Héroult process",
+     "url": "https://en.wikipedia.org/wiki/Hall–Héroult_process",
+     "trecho": "electrolysis can happen at temperatures between 940 and 980 °C",
+     "arquivo": "Hall–Héroult_process.html"
+    }
+   ],
+   "fusao_Al2O3": [
+    {
+     "valor": 2072,
+     "valor_texto": "2072",
+     "unidade": "°C",
+     "fonte": "Wikipedia (en): Hall–Héroult process",
+     "url": "https://en.wikipedia.org/wiki/Hall–Héroult_process",
+     "trecho": "aluminium oxide has a melting point of 2072 °C",
+     "arquivo": "Hall–Héroult_process.html"
+    }
+   ],
+   "tensao": [
+    {
+     "valor": "under 5",
+     "valor_texto": "under 5",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Hall–Héroult process",
+     "url": "https://en.wikipedia.org/wiki/Hall–Héroult_process",
+     "trecho": "passing a low voltage (under 5 V) direct current",
+     "arquivo": "Hall–Héroult_process.html"
+    }
+   ],
+   "corrente": [
+    {
+     "valor": "100–300",
+     "valor_texto": "100–300",
+     "unidade": "kA",
+     "fonte": "Wikipedia (en): Hall–Héroult process",
+     "url": "https://en.wikipedia.org/wiki/Hall–Héroult_process",
+     "trecho": "direct current at 100–300 kA through it",
+     "arquivo": "Hall–Héroult_process.html"
+    }
+   ],
+   "eletrodos": [
+    {
+     "valor": "This causes liquid aluminium to be deposited at the cathode, while the oxygen from the alumina combines with carbon from the anode to produce mostly carbon dioxide",
+     "valor_texto": "This causes liquid aluminium to be deposited at the cathode, while the oxygen from the alumina combines with carbon from the anode to produce mostly carbon dioxide",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Hall–Héroult process",
+     "url": "https://en.wikipedia.org/wiki/Hall–Héroult_process",
+     "trecho": "This causes liquid aluminium to be deposited at the cathode, while the oxygen from the alumina combines with carbon from the anode to produce mostly carbon dioxide",
+     "arquivo": "Hall–Héroult_process.html"
+    },
+    {
+     "valor": "The inside of the cell's bath is lined with cathode made from coke and pitch",
+     "valor_texto": "The inside of the cell's bath is lined with cathode made from coke and pitch",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Hall–Héroult process",
+     "url": "https://en.wikipedia.org/wiki/Hall–Héroult_process",
+     "trecho": "The inside of the cell's bath is lined with cathode made from coke and pitch",
+     "arquivo": "Hall–Héroult_process.html"
+    },
+    {
+     "valor": "Oxidation of the carbon anode increases the electrical efficiency at a cost of consuming the carbon electrodes and producing carbon dioxide",
+     "valor_texto": "Oxidation of the carbon anode increases the electrical efficiency at a cost of consuming the carbon electrodes and producing carbon dioxide",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Hall–Héroult process",
+     "url": "https://en.wikipedia.org/wiki/Hall–Héroult_process",
+     "trecho": "Oxidation of the carbon anode increases the electrical efficiency at a cost of consuming the carbon electrodes and producing carbon dioxide",
+     "arquivo": "Hall–Héroult_process.html"
+    }
+   ],
+   "pureza": [
+    {
+     "valor": "99.5–99.8",
+     "valor_texto": "99.5–99.8",
+     "unidade": "%",
+     "fonte": "Wikipedia (en): Hall–Héroult process",
+     "url": "https://en.wikipedia.org/wiki/Hall–Héroult_process",
+     "trecho": "produces aluminium with a purity of 99.5–99.8%",
+     "arquivo": "Hall–Héroult_process.html"
+    }
+   ]
+  },
+  "galvanoplastia": {
+   "definicao": [
+    {
+     "valor": "Electroplating, also known as electrochemical deposition or electrodeposition, is a process for producing a metal coating on a solid substrate through the reduction of cations of that metal by means of a direct electric current",
+     "valor_texto": "Electroplating, also known as electrochemical deposition or electrodeposition, is a process for producing a metal coating on a solid substrate through the reduction of cations of that metal by means of a direct electric current",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Electroplating",
+     "url": "https://en.wikipedia.org/wiki/Electroplating",
+     "trecho": "Electroplating, also known as electrochemical deposition or electrodeposition, is a process for producing a metal coating on a solid substrate through the reduction of cations of that metal by means of a direct electric current",
+     "arquivo": "Electroplating.html"
+    },
+    {
+     "valor": "The part that needs to be coated acts as the cathode (negative electrode) of an electrolytic cell",
+     "valor_texto": "The part that needs to be coated acts as the cathode (negative electrode) of an electrolytic cell",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Electroplating",
+     "url": "https://en.wikipedia.org/wiki/Electroplating",
+     "trecho": "The part that needs to be coated acts as the cathode (negative electrode) of an electrolytic cell",
+     "arquivo": "Electroplating.html"
+    },
+    {
+     "valor": "Electroplating results in a thin coating of one metal on top of a conducting surface",
+     "valor_texto": "Electroplating results in a thin coating of one metal on top of a conducting surface",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-7-electrolysis",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-7-electrolysis",
+     "trecho": "Electroplating results in a thin coating of one metal on top of a conducting surface",
+     "arquivo": "openstax_17-7-electrolysis.html"
+    }
+   ],
+   "metais_comuns": [
+    {
+     "valor": "cadmium, chromium, copper, gold, nickel, silver, and tin",
+     "valor_texto": "cadmium, chromium, copper, gold, nickel, silver, and tin",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-7-electrolysis",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-7-electrolysis",
+     "trecho": "The metals commonly used in electroplating include cadmium, chromium, copper, gold, nickel, silver, and tin",
+     "arquivo": "openstax_17-7-electrolysis.html"
+    }
+   ]
+  },
+  "refino_cobre": {
+   "frase": [
+    {
+     "valor": "In electrorefining, the anode consists of the impure metal (e.g., copper) to be refined. The impure metallic anode is oxidized and the metal dissolves into solution. The metal ions migrate through the electrolyte towards the cathode where the pure metal is deposited",
+     "valor_texto": "In electrorefining, the anode consists of the impure metal (e.g., copper) to be refined. The impure metallic anode is oxidized and the metal dissolves into solution. The metal ions migrate through the electrolyte towards the cathode where the pure metal is deposited",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Electrowinning",
+     "url": "https://en.wikipedia.org/wiki/Electrowinning",
+     "trecho": "In electrorefining, the anode consists of the impure metal (e.g., copper) to be refined. The impure metallic anode is oxidized and the metal dissolves into solution. The metal ions migrate through the electrolyte towards the cathode where the pure metal is deposited",
+     "arquivo": "Electrowinning.html",
+     "obs": "a página Electrorefining redireciona para Electrowinning"
+    },
+    {
+     "valor": "The anodes cast from processed blister copper are placed into an aqueous solution of 3–4% copper sulfate and 10–16% sulfuric acid. Cathodes are thin rolled sheets of highly pure copper",
+     "valor_texto": "The anodes cast from processed blister copper are placed into an aqueous solution of 3–4% copper sulfate and 10–16% sulfuric acid. Cathodes are thin rolled sheets of highly pure copper",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Copper extraction",
+     "url": "https://en.wikipedia.org/wiki/Copper_extraction",
+     "trecho": "The anodes cast from processed blister copper are placed into an aqueous solution of 3–4% copper sulfate and 10–16% sulfuric acid. Cathodes are thin rolled sheets of highly pure copper",
+     "arquivo": "Copper_extraction.html"
+    }
+   ],
+   "lama_anodica": [
+    {
+     "valor": "More noble metals and less soluble elements such as silver, gold, selenium, and tellurium settle to the bottom of the cell as anode slime",
+     "valor_texto": "More noble metals and less soluble elements such as silver, gold, selenium, and tellurium settle to the bottom of the cell as anode slime",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Copper extraction",
+     "url": "https://en.wikipedia.org/wiki/Copper_extraction",
+     "trecho": "More noble metals and less soluble elements such as silver, gold, selenium, and tellurium settle to the bottom of the cell as anode slime",
+     "arquivo": "Copper_extraction.html"
+    },
+    {
+     "valor": "Insoluble solid impurities sedimenting below the anode often contain valuable rare elements such as gold, silver and selenium",
+     "valor_texto": "Insoluble solid impurities sedimenting below the anode often contain valuable rare elements such as gold, silver and selenium",
+     "unidade": "texto",
+     "fonte": "Wikipedia (en): Electrowinning",
+     "url": "https://en.wikipedia.org/wiki/Electrowinning",
+     "trecho": "Insoluble solid impurities sedimenting below the anode often contain valuable rare elements such as gold, silver and selenium",
+     "arquivo": "Electrowinning.html"
+    }
+   ],
+   "tensao": [
+    {
+     "valor": "0.2–0.4",
+     "valor_texto": "0.2–0.4",
+     "unidade": "V",
+     "fonte": "Wikipedia (en): Copper extraction",
+     "url": "https://en.wikipedia.org/wiki/Copper_extraction",
+     "trecho": "A potential of only 0.2–0.4 volts is required for the process to commence",
+     "arquivo": "Copper_extraction.html"
+    }
+   ],
+   "pureza_catodo": [
+    {
+     "valor": 99.99,
+     "valor_texto": "99.99",
+     "unidade": "%",
+     "fonte": "Wikipedia (en): Copper extraction",
+     "url": "https://en.wikipedia.org/wiki/Copper_extraction",
+     "trecho": "A-grade copper cathode is of 99.99% copper",
+     "arquivo": "Copper_extraction.html"
+    }
+   ]
+  },
+  "faraday_exemplo": {
+   "frase": [
+    {
+     "valor": "a current of 10.23 A was passed through an electrolytic cell for exactly 1 hour",
+     "valor_texto": "a current of 10.23 A was passed through an electrolytic cell for exactly 1 hour",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-7-electrolysis",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-7-electrolysis",
+     "trecho": "a current of 10.23 A was passed through an electrolytic cell for exactly 1 hour",
+     "arquivo": "openstax_17-7-electrolysis.html",
+     "obs": "exemplo resolvido do OpenStax (prata)"
+    }
+   ]
+  }
+ },
+ "corrosao": {
+  "ferrugem_formula": [
+   {
+    "valor": "iron(III) oxide (Fe2O3), various hydrous ferric oxides (Fe2O3·nH2O) and iron(III) oxide-hydroxide (FeO(OH)",
+    "valor_texto": "iron(III) oxide (Fe2O3), various hydrous ferric oxides (Fe2O3·nH2O) and iron(III) oxide-hydroxide (FeO(OH)",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Rust",
+    "url": "https://en.wikipedia.org/wiki/Rust",
+    "trecho": "The chemical composition consists of iron(III) oxide (Fe2O3), various hydrous ferric oxides (Fe2O3·nH2O) and iron(III) oxide-hydroxide (FeO(OH)",
+    "arquivo": "Rust.html"
+   },
+   {
+    "valor": "Fe2O3·xH2O",
+    "valor_texto": "Fe2O3·xH2O",
+    "unidade": "texto",
+    "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+    "trecho": "⟶2Fe2O3·xH2O(s)+8H+(aq)",
+    "arquivo": "openstax_17-6-corrosion.html",
+    "obs": "óxido de ferro(III) hidratado; x variável"
+   },
+   {
+    "valor": "results in the production of an iron(III) oxide hydrate known as rust",
+    "valor_texto": "results in the production of an iron(III) oxide hydrate known as rust",
+    "unidade": "texto",
+    "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+    "trecho": "results in the production of an iron(III) oxide hydrate known as rust",
+    "arquivo": "openstax_17-6-corrosion.html"
+   }
+  ],
+  "ferrugem_agua_e_oxigenio": [
+   {
+    "valor": "When iron is in contact with water and oxygen, it rusts",
+    "valor_texto": "When iron is in contact with water and oxygen, it rusts",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Rust",
+    "url": "https://en.wikipedia.org/wiki/Rust",
+    "trecho": "When iron is in contact with water and oxygen, it rusts",
+    "arquivo": "Rust.html"
+   },
+   {
+    "valor": "Iron metal is relatively unaffected by pure water or by dry oxygen",
+    "valor_texto": "Iron metal is relatively unaffected by pure water or by dry oxygen",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Rust",
+    "url": "https://en.wikipedia.org/wiki/Rust",
+    "trecho": "Iron metal is relatively unaffected by pure water or by dry oxygen",
+    "arquivo": "Rust.html"
+   },
+   {
+    "valor": "Given sufficient time, any iron mass in the presence of water and oxygen will form rust",
+    "valor_texto": "Given sufficient time, any iron mass in the presence of water and oxygen will form rust",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Rust",
+    "url": "https://en.wikipedia.org/wiki/Rust",
+    "trecho": "Given sufficient time, any iron mass in the presence of water and oxygen will form rust",
+    "arquivo": "Rust.html"
+   },
+   {
+    "valor": "Iron will rust when it is exposed to oxygen and water",
+    "valor_texto": "Iron will rust when it is exposed to oxygen and water",
+    "unidade": "texto",
+    "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+    "trecho": "Iron will rust when it is exposed to oxygen and water",
+    "arquivo": "openstax_17-6-corrosion.html"
+   }
+  ],
+  "ferrugem_sal_acelera": [
+   {
+    "valor": "If salt is present, for example in seawater or salt spray, the iron tends to rust more quickly",
+    "valor_texto": "If salt is present, for example in seawater or salt spray, the iron tends to rust more quickly",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Rust",
+    "url": "https://en.wikipedia.org/wiki/Rust",
+    "trecho": "If salt is present, for example in seawater or salt spray, the iron tends to rust more quickly",
+    "arquivo": "Rust.html"
+   }
+  ],
+  "ferrugem_nao_protege": [
+   {
+    "valor": "the formation of rust does not create a protective layer and so corrosion of the iron continues as the rust flakes off and exposes fresh iron to the atmosphere",
+    "valor_texto": "the formation of rust does not create a protective layer and so corrosion of the iron continues as the rust flakes off and exposes fresh iron to the atmosphere",
+    "unidade": "texto",
+    "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+    "trecho": "the formation of rust does not create a protective layer and so corrosion of the iron continues as the rust flakes off and exposes fresh iron to the atmosphere",
+    "arquivo": "openstax_17-6-corrosion.html"
+   },
+   {
+    "valor": "Surface rust is commonly flaky and friable, and provides no passivational protection to the underlying iron",
+    "valor_texto": "Surface rust is commonly flaky and friable, and provides no passivational protection to the underlying iron",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Rust",
+    "url": "https://en.wikipedia.org/wiki/Rust",
+    "trecho": "Surface rust is commonly flaky and friable, and provides no passivational protection to the underlying iron",
+    "arquivo": "Rust.html"
+   }
+  ],
+  "ferrugem_pilha": {
+   "reacoes": [
+    {
+     "valor": "anode:Fe(s)⟶Fe2+(aq)+2e−EFe2+/Fe°=−0.44 V cathode:O2(g)+4H+(aq)+4e−⟶2H2O(l)EO2/O2°=+1.23 V overall:2Fe(s)+O2(g)+4H+(aq)⟶2Fe2+(aq)+2H2O(l)Ecell°=+1.67 V",
+     "valor_texto": "anode:Fe(s)⟶Fe2+(aq)+2e−EFe2+/Fe°=−0.44 V cathode:O2(g)+4H+(aq)+4e−⟶2H2O(l)EO2/O2°=+1.23 V overall:2Fe(s)+O2(g)+4H+(aq)⟶2Fe2+(aq)+2H2O(l)Ecell°=+1.67 V",
+     "unidade": "texto",
+     "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+     "trecho": "anode:Fe(s)⟶Fe2+(aq)+2e−EFe2+/Fe°=−0.44 V cathode:O2(g)+4H+(aq)+4e−⟶2H2O(l)EO2/O2°=+1.23 V overall:2Fe(s)+O2(g)+4H+(aq)⟶2Fe2+(aq)+2H2O(l)Ecell°=+1.67 V",
+     "arquivo": "openstax_17-6-corrosion.html"
+    }
+   ],
+   "E_celula": [
+    {
+     "valor": 1.67,
+     "valor_texto": "+1.67",
+     "unidade": "V",
+     "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+     "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+     "trecho": "overall:2Fe(s)+O2(g)+4H+(aq)⟶2Fe2+(aq)+2H2O(l)Ecell°=+1.67 V",
+     "arquivo": "openstax_17-6-corrosion.html"
+    }
+   ]
+  },
+  "pintura": [
+   {
+    "valor": "The layer of paint prevents the water and oxygen necessary for rust formation from coming into contact with the iron",
+    "valor_texto": "The layer of paint prevents the water and oxygen necessary for rust formation from coming into contact with the iron",
+    "unidade": "texto",
+    "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+    "trecho": "The layer of paint prevents the water and oxygen necessary for rust formation from coming into contact with the iron",
+    "arquivo": "openstax_17-6-corrosion.html"
+   }
+  ],
+  "galvanizacao": [
+   {
+    "valor": "Galvanization (also spelled galvanisation)[1] is the process of applying a protective zinc coating to steel or iron, to prevent rusting",
+    "valor_texto": "Galvanization (also spelled galvanisation)[1] is the process of applying a protective zinc coating to steel or iron, to prevent rusting",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Galvanization",
+    "url": "https://en.wikipedia.org/wiki/Galvanization",
+    "trecho": "Galvanization (also spelled galvanisation)[1] is the process of applying a protective zinc coating to steel or iron, to prevent rusting",
+    "arquivo": "Galvanization.html"
+   },
+   {
+    "valor": "galvanization, a process in which the metal to be protected is coated with a layer of a more readily oxidized metal, usually zinc",
+    "valor_texto": "galvanization, a process in which the metal to be protected is coated with a layer of a more readily oxidized metal, usually zinc",
+    "unidade": "texto",
+    "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+    "trecho": "galvanization, a process in which the metal to be protected is coated with a layer of a more readily oxidized metal, usually zinc",
+    "arquivo": "openstax_17-6-corrosion.html"
+   },
+   {
+    "valor": "galvanized steel, in which a sacrificial coating of zinc on steel parts protects them from rust",
+    "valor_texto": "galvanized steel, in which a sacrificial coating of zinc on steel parts protects them from rust",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Cathodic protection",
+    "url": "https://en.wikipedia.org/wiki/Cathodic_protection",
+    "trecho": "galvanized steel, in which a sacrificial coating of zinc on steel parts protects them from rust",
+    "arquivo": "Cathodic_protection.html"
+   }
+  ],
+  "anodo_de_sacrificio": [
+   {
+    "valor": "magnesium, aluminum and zinc",
+    "valor_texto": "magnesium, aluminum and zinc",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Galvanic anode",
+    "url": "https://en.wikipedia.org/wiki/Galvanic_anode",
+    "trecho": "There are three main metals used as galvanic anodes: magnesium, aluminum and zinc",
+    "arquivo": "Galvanic_anode.html"
+   },
+   {
+    "valor": "zinc or magnesium",
+    "valor_texto": "zinc or magnesium",
+    "unidade": "texto",
+    "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+    "trecho": "connecting them to a more active metal such as zinc or magnesium",
+    "arquivo": "openstax_17-6-corrosion.html"
+   },
+   {
+    "valor": "The more active metals (lower reduction potential) are called sacrificial anodes because as they get used up as they corrode (oxidize) at the anode",
+    "valor_texto": "The more active metals (lower reduction potential) are called sacrificial anodes because as they get used up as they corrode (oxidize) at the anode",
+    "unidade": "texto",
+    "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+    "trecho": "The more active metals (lower reduction potential) are called sacrificial anodes because as they get used up as they corrode (oxidize) at the anode",
+    "arquivo": "openstax_17-6-corrosion.html"
+   }
+  ],
+  "protecao_catodica": [
+   {
+    "valor": "Cathodic protection (CP; /kæˈθɒdɪk/ ⓘ) is a technique used to control the corrosion of a metal surface by making it the cathode of an electrochemical cell",
+    "valor_texto": "Cathodic protection (CP; /kæˈθɒdɪk/ ⓘ) is a technique used to control the corrosion of a metal surface by making it the cathode of an electrochemical cell",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Cathodic protection",
+    "url": "https://en.wikipedia.org/wiki/Cathodic_protection",
+    "trecho": "Cathodic protection (CP; /kæˈθɒdɪk/ ⓘ) is a technique used to control the corrosion of a metal surface by making it the cathode of an electrochemical cell",
+    "arquivo": "Cathodic_protection.html"
+   },
+   {
+    "valor": "Another important way to protect metal is to make it the cathode in a galvanic cell. This is cathodic protection",
+    "valor_texto": "Another important way to protect metal is to make it the cathode in a galvanic cell. This is cathodic protection",
+    "unidade": "texto",
+    "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+    "trecho": "Another important way to protect metal is to make it the cathode in a galvanic cell. This is cathodic protection",
+    "arquivo": "openstax_17-6-corrosion.html"
+   }
+  ],
+  "passivacao_aluminio": [
+   {
+    "valor": "Aluminium naturally forms a thin surface layer of aluminium oxide on contact with oxygen in the atmosphere",
+    "valor_texto": "Aluminium naturally forms a thin surface layer of aluminium oxide on contact with oxygen in the atmosphere",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Passivation (chemistry)",
+    "url": "https://en.wikipedia.org/wiki/Passivation_(chemistry)",
+    "trecho": "Aluminium naturally forms a thin surface layer of aluminium oxide on contact with oxygen in the atmosphere",
+    "arquivo": "Passivation__chemistry_.html"
+   },
+   {
+    "valor": "aluminium forms a thin oxide layer (~5 nm at room temperature)[45] that protects the metal from further corrosion by oxygen, water, or dilute acid, a process termed passivation",
+    "valor_texto": "aluminium forms a thin oxide layer (~5 nm at room temperature)[45] that protects the metal from further corrosion by oxygen, water, or dilute acid, a process termed passivation",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Aluminium",
+    "url": "https://en.wikipedia.org/wiki/Aluminium",
+    "trecho": "aluminium forms a thin oxide layer (~5 nm at room temperature)[45] that protects the metal from further corrosion by oxygen, water, or dilute acid, a process termed passivation",
+    "arquivo": "Aluminium.html"
+   }
+  ],
+  "passivacao_aluminio_espessura": [
+   {
+    "valor": 5,
+    "valor_texto": "5",
+    "unidade": "nm",
+    "fonte": "Wikipedia (en): Aluminium",
+    "url": "https://en.wikipedia.org/wiki/Aluminium",
+    "trecho": "aluminium forms a thin oxide layer (~5 nm at room temperature)",
+    "arquivo": "Aluminium.html"
+   }
+  ],
+  "anodizacao": [
+   {
+    "valor": "Anodizing is an electrolytic process that forms a thicker oxide layer",
+    "valor_texto": "Anodizing is an electrolytic process that forms a thicker oxide layer",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Passivation (chemistry)",
+    "url": "https://en.wikipedia.org/wiki/Passivation_(chemistry)",
+    "trecho": "Anodizing is an electrolytic process that forms a thicker oxide layer",
+    "arquivo": "Passivation__chemistry_.html"
+   }
+  ],
+  "aco_inoxidavel_cromo_minimo": [
+   {
+    "valor": 10.5,
+    "valor_texto": "10.5",
+    "unidade": "% de Cr (mínimo)",
+    "fonte": "Wikipedia (en): Stainless steel",
+    "url": "https://en.wikipedia.org/wiki/Stainless_steel",
+    "trecho": "Stainless steel's resistance to corrosion comes from its chromium content of 10.5% or more",
+    "arquivo": "Stainless_steel.html"
+   },
+   {
+    "valor": 10.5,
+    "valor_texto": "10.5",
+    "unidade": "% de Cr (mínimo)",
+    "fonte": "Wikipedia (en): Stainless steel",
+    "url": "https://en.wikipedia.org/wiki/Stainless_steel",
+    "trecho": "The minimum 10.5% chromium in stainless steels",
+    "arquivo": "Stainless_steel.html"
+   }
+  ],
+  "aco_inoxidavel_frase": [
+   {
+    "valor": "Stainless steel's resistance to corrosion comes from its chromium content of 10.5% or more, which forms a passive film that protects the material and can self-heal when exposed to oxygen",
+    "valor_texto": "Stainless steel's resistance to corrosion comes from its chromium content of 10.5% or more, which forms a passive film that protects the material and can self-heal when exposed to oxygen",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Stainless steel",
+    "url": "https://en.wikipedia.org/wiki/Stainless_steel",
+    "trecho": "Stainless steel's resistance to corrosion comes from its chromium content of 10.5% or more, which forms a passive film that protects the material and can self-heal when exposed to oxygen",
+    "arquivo": "Stainless_steel.html"
+   },
+   {
+    "valor": "stainless steel is an alloy of iron containing a small amount of chromium. The chromium tends to collect near the surface, where it corrodes and forms a passivating an oxide layer that protects the iron",
+    "valor_texto": "stainless steel is an alloy of iron containing a small amount of chromium. The chromium tends to collect near the surface, where it corrodes and forms a passivating an oxide layer that protects the iron",
+    "unidade": "texto",
+    "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+    "trecho": "stainless steel is an alloy of iron containing a small amount of chromium. The chromium tends to collect near the surface, where it corrodes and forms a passivating an oxide layer that protects the iron",
+    "arquivo": "openstax_17-6-corrosion.html",
+    "obs": "o \"a passivating an oxide layer\" é erro de digitação da fonte"
+   }
+  ],
+  "folha_de_flandres": [
+   {
+    "valor": "Tinplate consists of sheets of steel coated with a thin layer of tin to impede rusting",
+    "valor_texto": "Tinplate consists of sheets of steel coated with a thin layer of tin to impede rusting",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Tinplate",
+    "url": "https://en.wikipedia.org/wiki/Tinplate",
+    "trecho": "Tinplate consists of sheets of steel coated with a thin layer of tin to impede rusting",
+    "arquivo": "Tinplate.html"
+   },
+   {
+    "valor": "Tinning is the process of thinly coating sheets of wrought iron, steel, or copper with tin, and the resulting product is known as tinplate",
+    "valor_texto": "Tinning is the process of thinly coating sheets of wrought iron, steel, or copper with tin, and the resulting product is known as tinplate",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Tinning",
+    "url": "https://en.wikipedia.org/wiki/Tinning",
+    "trecho": "Tinning is the process of thinly coating sheets of wrought iron, steel, or copper with tin, and the resulting product is known as tinplate",
+    "arquivo": "Tinning.html"
+   },
+   {
+    "valor": "the primary use of tinplate now is the manufacture of tin cans",
+    "valor_texto": "the primary use of tinplate now is the manufacture of tin cans",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Tinplate",
+    "url": "https://en.wikipedia.org/wiki/Tinplate",
+    "trecho": "the primary use of tinplate now is the manufacture of tin cans",
+    "arquivo": "Tinplate.html"
+   }
+  ],
+  "patina_cobre": [
+   {
+    "valor": "formation of patina creates a protective layer on the copper surface, preventing further corrosion of the underlying copper",
+    "valor_texto": "formation of patina creates a protective layer on the copper surface, preventing further corrosion of the underlying copper",
+    "unidade": "texto",
+    "fonte": "OpenStax Chemistry 2e: 17-6-corrosion",
+    "url": "https://openstax.org/books/chemistry-2e/pages/17-6-corrosion",
+    "trecho": "formation of patina creates a protective layer on the copper surface, preventing further corrosion of the underlying copper",
+    "arquivo": "openstax_17-6-corrosion.html"
+   }
+  ],
+  "serie_galvanica": [
+   {
+    "valor": [
+     "Graphite",
+     "Palladium",
+     "Platinum",
+     "Gold",
+     "Silver",
+     "Titanium",
+     "Stainless steel 316 (passivated)",
+     "Stainless steel 304 (passivated)",
+     "Silicon bronze",
+     "Stainless steel 316 (active)",
+     "Monel 400",
+     "Phosphor bronze",
+     "Admiralty brass",
+     "Cupronickel",
+     "Molybdenum",
+     "Red brass",
+     "Brass plating",
+     "Yellow brass",
+     "Naval brass 464",
+     "Uranium 8% Mo",
+     "Niobium 1% Zr",
+     "Tungsten",
+     "Tin",
+     "Lead",
+     "Stainless steel 304 (active)",
+     "Tantalum",
+     "Chromium plating",
+     "Nickel (passive)",
+     "Copper",
+     "Nickel (active)",
+     "Cast iron",
+     "Steel",
+     "Indium",
+     "Aluminum",
+     "Uranium (pure)",
+     "Cadmium",
+     "Beryllium",
+     "Zinc plating (see galvanization)",
+     "Magnesium"
+    ],
+    "valor_texto": "Graphite | Palladium | Platinum | Gold | Silver | Titanium | Stainless steel 316 (passivated) | Stainless steel 304 (passivated) | Silicon bronze | Stainless steel 316 (active) | Monel 400 | Phosphor bronze | Admiralty brass | Cupronickel | Molybdenum | Red brass | Brass plating | Yellow brass | Naval brass 464 | Uranium 8% Mo | Niobium 1% Zr | Tungsten | Tin | Lead | Stainless steel 304 (active) | Tantalum | Chromium plating | Nickel (passive) | Copper | Nickel (active) | Cast iron | Steel | Indium | Aluminum | Uranium (pure) | Cadmium | Beryllium | Zinc plating (see galvanization) | Magnesium",
+    "unidade": "lista, do mais nobre (primeiro) ao menos nobre (último)",
+    "fonte": "Wikipedia (en): Galvanic series",
+    "url": "https://en.wikipedia.org/wiki/Galvanic_series",
+    "trecho": "The following is the galvanic series for stagnant (that is, low oxygen content) seawater. The order may change in different environments.[1] Graphite Palladium Platinum Gold Silver Titanium Stainless steel 316 (passivated) Stainless steel 304 (passivated) Silicon bronze Stainless steel 316 (active) Monel 400 Phosphor bronze Admiralty brass Cupronickel Molybdenum Red brass Brass plating Yellow brass Naval brass 464 Uranium 8% Mo Niobium 1% Zr Tungsten Tin Lead Stainless steel 304 (active) Tantalum Chromium plating Nickel (passive) Copper Nickel (active) Cast iron Steel Indium Aluminum Uranium (pure) Cadmium Beryllium Zinc plating (see galvanization) Magnesium Visual Representation",
+    "arquivo": "Galvanic_series.html",
+    "obs": "série em água do mar parada (pouco oxigênio); a página avisa que a ordem muda com o ambiente e que o artigo precisa de mais referências"
+   }
+  ],
+  "serie_galvanica_posicoes": {
+   "obs": "posição (1 = mais nobre) calculada pelo script a partir da lista acima; nomes como a página escreve",
+   "total": 39,
+   "posicoes": {
+    "Graphite": 1,
+    "Platinum": 3,
+    "Gold": 4,
+    "Silver": 5,
+    "Titanium": 6,
+    "Copper": 29,
+    "Tin": 23,
+    "Lead": 24,
+    "Cast iron": 31,
+    "Steel": 32,
+    "Aluminum": 34,
+    "Cadmium": 36,
+    "Zinc plating (see galvanization)": 38,
+    "Magnesium": 39
+   }
+  },
+  "serie_galvanica_frase": [
+   {
+    "valor": "When two metals are submerged in an electrolyte, while also electrically connected by some external conductor, the less noble (base) will experience galvanic corrosion",
+    "valor_texto": "When two metals are submerged in an electrolyte, while also electrically connected by some external conductor, the less noble (base) will experience galvanic corrosion",
+    "unidade": "texto",
+    "fonte": "Wikipedia (en): Galvanic series",
+    "url": "https://en.wikipedia.org/wiki/Galvanic_series",
+    "trecho": "When two metals are submerged in an electrolyte, while also electrically connected by some external conductor, the less noble (base) will experience galvanic corrosion",
+    "arquivo": "Galvanic_series.html"
+   }
+  ]
+ },
+ "divergencias": [
+  {
+   "item": "potenciais / Br2 + 2e- -> 2Br-",
+   "unidade": "V",
+   "criterio": "> 0,01 V",
+   "diferenca": 0.0213,
+   "valores": [
+    {
+     "valor": 1.066,
+     "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+     "obs": "Br2 LÍQUIDO (estado padrão do bromo)"
+    },
+    {
+     "valor": 1.0873,
+     "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+     "obs": "Br2 AQUOSO"
+    },
+    {
+     "valor": 1.0873,
+     "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+     "obs": "o OpenStax dá o Br2(aq), não o líquido"
+    }
+   ]
+  },
+  {
+   "item": "potenciais / Pt2+ + 2e- -> Pt",
+   "unidade": "V",
+   "criterio": "> 0,01 V",
+   "diferenca": 0.012,
+   "valores": [
+    {
+     "valor": 1.188,
+     "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+     "obs": null
+    },
+    {
+     "valor": 1.2,
+     "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+     "obs": null
+    }
+   ]
+  },
+  {
+   "item": "potenciais / Cr2O7 2- + 14H+ + 6e- -> 2Cr3+ + 7H2O",
+   "unidade": "V",
+   "criterio": "> 0,01 V",
+   "diferenca": 0.098,
+   "valores": [
+    {
+     "valor": 1.33,
+     "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+     "obs": null
+    },
+    {
+     "valor": 1.232,
+     "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+     "obs": "o OpenStax escreve com H3O+ (mesma semirreação, com água a mais dos dois lados)"
+    }
+   ]
+  },
+  {
+   "item": "potenciais / Au3+ + 3e- -> Au",
+   "unidade": "V",
+   "criterio": "> 0,01 V",
+   "diferenca": 0.022,
+   "valores": [
+    {
+     "valor": 1.52,
+     "fonte": "Wikipedia (en): Standard electrode potential (data page)",
+     "obs": null
+    },
+    {
+     "valor": 1.498,
+     "fonte": "OpenStax Chemistry 2e: l-standard-electrode-half-cell-potentials",
+     "obs": null
+    }
+   ]
+  },
+  {
+   "item": "pilhas / alcalina / tensao",
+   "unidade": "V",
+   "criterio": "> 1%",
+   "diferenca": 0.07,
+   "valores": [
+    {
+     "valor": 1.5,
+     "fonte": "Wikipedia (en): Alkaline battery",
+     "obs": "nominal"
+    },
+    {
+     "valor": 1.5,
+     "fonte": "Wikipedia (en): Alkaline battery",
+     "obs": "nominal"
+    },
+    {
+     "valor": 1.43,
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "obs": "E da célula escrito pelo OpenStax (não é a tensão nominal)"
+    }
+   ]
+  },
+  {
+   "item": "pilhas / chumbo_acido / tensao_por_celula",
+   "unidade": "V",
+   "criterio": "> 1%",
+   "diferenca": 0.1,
+   "valores": [
+    {
+     "valor": 2.1,
+     "fonte": "Wikipedia (en): Lead–acid battery",
+     "obs": "nominal"
+    },
+    {
+     "valor": 2.1,
+     "fonte": "Wikipedia (en): Lead–acid battery",
+     "obs": "nominal"
+    },
+    {
+     "valor": 2.05,
+     "fonte": "Wikipedia (en): Lead–acid battery",
+     "obs": "E° da reação global, não a nominal"
+    },
+    {
+     "valor": 2,
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "obs": "arredondado"
+    }
+   ]
+  },
+  {
+   "item": "pilhas / celula_combustivel_H2 / tensao",
+   "unidade": "V",
+   "criterio": "> 1%",
+   "diferenca": 0.0291,
+   "valores": [
+    {
+     "valor": 1.2291,
+     "fonte": "Wikipedia (en): Proton-exchange membrane fuel cell",
+     "obs": "E° teórico da reação global (célula PEM); ler sem os \"A\" (artefato)"
+    },
+    {
+     "valor": 1.2,
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "obs": "tensão produzida (aproximada)"
+    },
+    {
+     "valor": 1.2,
+     "fonte": "OpenStax Chemistry 2e: 17-5-batteries-and-fuel-cells",
+     "obs": null
+    }
+   ]
+  }
+ ]
+}
