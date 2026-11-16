@@ -84,7 +84,7 @@ window.CATALOGO.push(
     ["H05","Propriedades físicas: forças intermoleculares, ebulição e solubilidade",[],true],
     ["H06","Acidez e basicidade dos compostos orgânicos",[],true],
     ["H07","Isomeria constitucional: cadeia, posição, função e compensação",[],true],
-    ["H08","Estereoisomeria",[]],
+    ["H08","Estereoisomeria: cis e trans, carbono quiral e atividade óptica",[],true],
     ["H09","Substituição",[]],
     ["H10","Adição",[]],
     ["H11","Eliminação",[]],

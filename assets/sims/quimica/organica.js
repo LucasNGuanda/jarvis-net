@@ -70,7 +70,7 @@
       if (o.nums && o.nums[k] !== undefined) s += `<text x="${(X(k) - 17).toFixed(1)}" y="${(Y(k) - 11).toFixed(1)}" text-anchor="middle" style="font:600 11px Inter,system-ui,sans-serif;fill:var(--warn)">${o.nums[k]}</text>`; });
     return { svg: s, w: W, h: H }; };
   /* figura pronta, centralizada numa caixa de largura fixa; várias moléculas lado a lado com legenda embaixo de cada uma */
-  const fig = (lista, o = {}) => { const itens = (Array.isArray(lista) ? lista : [lista]).map((x) => (typeof x === "string" ? { smi: x } : x)), des = itens.map((it) => svg(it.smi, { ...o, ...it })), gap = 30, temLeg = itens.some((it) => it.leg), Wf = o.W || 560;
+  const fig = (lista, o = {}) => { const itens = (Array.isArray(lista) ? lista : [lista]).map((x) => (typeof x === "string" ? { smi: x } : x)), des = itens.map((it) => it.d || svg(it.smi, { ...o, ...it })), gap = 30, temLeg = itens.some((it) => it.leg), Wf = o.W || 560;
     /* cada molécula ocupa uma faixa da largura dela ou da legenda, a que for maior */
     const faixa = des.map((d, k) => Math.max(d.w, itens[k].leg ? itens[k].leg.length * 6.6 + 8 : 0)), tot = faixa.reduce((t, f) => t + f, 0) + gap * (des.length - 1), hmax = Math.max(...des.map((d) => d.h)), esc = Math.min(1, (Wf - 16) / tot), fonte = Math.max(10, 13 * esc);
     let x = (Wf - tot * esc) / 2, s = ""; des.forEach((d, k) => { const cx = x + (faixa[k] * esc) / 2; s += `<g transform="translate(${(cx - (d.w * esc) / 2).toFixed(1)},${(4 + ((hmax - d.h) * esc) / 2).toFixed(1)}) scale(${esc.toFixed(3)})">${d.svg}</g>`; if (itens[k].leg) s += `<text x="${cx.toFixed(1)}" y="${(hmax * esc + 20).toFixed(1)}" text-anchor="middle" class="tx2" style="font-size:${fonte.toFixed(1)}px">${itens[k].leg}</text>`; x += (faixa[k] + gap) * esc; });
@@ -330,6 +330,112 @@
     liga(el, "f", (v) => { f = v; sel = []; desenha(); });
     el.addEventListener("click", (ev) => { const b = ev.target.closest("[data-i]"); if (!b) return; const i = +b.dataset.i; if (sel.includes(i)) sel = sel.filter((x) => x !== i); else { sel.push(i); if (sel.length > 2) sel.shift(); } desenha(); });
     SIM.qIsomeros._ult = { poe: (ff, a, b) => { f = ff; const L = SIM.org.ISO[f]; sel = a ? [L.findIndex((x) => x[2] === a), L.findIndex((x) => x[2] === b)] : []; el.querySelectorAll("[data-f]").forEach((x) => x.setAttribute("aria-pressed", x.dataset.f === f)); desenha(); }, est }; desenha(); };
+
+  /* ---------- estereoisomeria (H08): desenhos e laboratório ---------- */
+  /* rótulo do grupo ligado ao átomo "de" a partir do átomo k (ou "H" se k < 0): CH₃, C₂H₅, OH, COOH, Cl... */
+  const grupo = (g, k, de) => { if (k < 0) return "H"; const a = g.at[k]; if (a.el !== "C") return a.el + (a.h ? "H" + (a.h > 1 ? SUB(a.h) : "") : "");
+    const ped = (x, pai) => { const b = g.at[x], f = b.viz.filter(([v]) => v !== pai), lig = b.viz.find(([v]) => v === pai), o = pai === de ? 1 : g.bd[lig[1]].o;
+      if (b.el !== "C") return (o === 2 ? "=" : "") + b.el + (b.h ? "H" + (b.h > 1 ? SUB(b.h) : "") : "");
+      const dO = f.filter(([v, kb]) => g.at[v].el === "O" && g.bd[kb].o === 2 && g.at[v].viz.length === 1), oh = f.filter(([v, kb]) => g.at[v].el === "O" && g.bd[kb].o === 1 && g.at[v].h === 1);
+      if (dO.length === 1 && oh.length === 1 && f.length === 2) return "COOH"; if (dO.length === 1 && f.length === 1 && b.h === 1) return "CHO";
+      const cs = f.filter(([v]) => g.at[v].el === "C"), hs = f.filter(([v]) => g.at[v].el !== "C"), prox = cs.length ? cs[cs.length - 1] : null, lados = [...hs, ...cs.slice(0, -1)].map(([v]) => { const s = ped(v, x); return /^(Cl|Br|F|I)$/.test(s) || !prox ? s : "(" + s + ")"; }).join("");
+      return (o === 2 ? "=" : "") + "C" + (b.h ? "H" + (b.h > 1 ? SUB(b.h) : "") : "") + lados + (prox ? ped(prox[0], x) : ""); };
+    const s = ped(k, de); return s === "CH₂CH₃" ? "C₂H₅" : s === "CH₂CH₂CH₃" ? "C₃H₇" : s; };
+  /* os grupos de um átomo (inclui os H), na ordem dos vizinhos */
+  const grupos = (g, k, fora = -1) => { const a = g.at[k], L = a.viz.filter(([v]) => v !== fora).map(([v]) => grupo(g, v, k)); for (let i = 0; i < a.h; i++) L.push("H"); return L; };
+  const TXT = (x, y, t, anc = "middle", cor = "var(--ink)") => `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${anc}" style="font:600 14px Inter,system-ui,sans-serif;fill:${cor}">${t}</text>`;
+  const LN = (x1, y1, x2, y2, w = 1.7) => `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" style="stroke:var(--ink);stroke-width:${w}"/>`;
+  /* alceno com quatro substituintes: [em cima à esquerda, embaixo à esquerda, em cima à direita, embaixo à direita] */
+  const alceno = (s) => { const le = Math.max(s[0].length, s[1].length) * 9.5 + 8, ld = Math.max(s[2].length, s[3].length) * 9.5 + 8, x1 = le + 34, x2 = x1 + 46, y = 56, w = x2 + 34 + ld;
+    return { w, h: 112, svg: LN(x1 + 8, y - 3, x2 - 8, y - 3) + LN(x1 + 8, y + 3, x2 - 8, y + 3) + LN(x1 - 6, y - 8, x1 - 26, y - 30) + LN(x1 - 6, y + 8, x1 - 26, y + 30) + LN(x2 + 6, y - 8, x2 + 26, y - 30) + LN(x2 + 6, y + 8, x2 + 26, y + 30)
+      + TXT(x1, y + 5, "C") + TXT(x2, y + 5, "C") + TXT(x1 - 30, y - 32, s[0], "end") + TXT(x1 - 30, y + 42, s[1], "end") + TXT(x2 + 30, y - 32, s[2], "start") + TXT(x2 + 30, y + 42, s[3], "start") }; };
+  /* carbono tetraédrico: [em cima (no plano), ao lado (no plano), cunha (para a frente), tracejado (para trás)]; espelho inverte esquerda e direita */
+  const tetra = (s, espelho = false, centro = "C") => { const lado = Math.max(s[1].length, s[2].length, s[3].length) * 9.5 + 56, w = lado * 2, cx = w / 2, cy = 62, e = espelho ? -1 : 1, X = (dx) => cx + e * dx, anc = (dx) => (dx * e < 0 ? "end" : "start");
+    const tri = `<polygon points="${X(5).toFixed(1)},${cy + 7} ${X(20).toFixed(1)},${cy + 40} ${X(29).toFixed(1)},${cy + 35}" style="fill:var(--ink)"/>`;
+    let tr = ""; for (let i = 1; i <= 6; i++) { const t = i / 6, px = 8 + 34 * t, py = 3 + 15 * t, hw = 0.8 + 4.2 * t, nx = -15 / 37.2, ny = 34 / 37.2; tr += LN(X(px + nx * hw), cy + py + ny * hw, X(px - nx * hw), cy + py - ny * hw, 1.5); }
+    return { w, h: 124, svg: LN(cx, cy - 9, cx, cy - 36) + LN(X(-8), cy + 5, X(-36), cy + 22) + tri + tr + TXT(cx, cy + 5, centro) + TXT(cx, cy - 41, s[0]) + TXT(X(-40), cy + 30, s[1], anc(-40)) + TXT(X(27), cy + 54, s[2], anc(27)) + TXT(X(47), cy + 26, s[3], anc(47)) }; };
+  /* dados de estereoisomeria de uma molécula da tabela EST, com os grupos de cada centro e de cada dupla */
+  const estereo = (nome) => { const e = SIM.org.EST[nome], g = parse(e.smi);
+    return { ...e, nome, g, centros: e.c.map((k) => ({ k, grupos: grupos(g, k) })), duplas: e.d.map(([a, b]) => { const ga = grupos(g, a, b), gb = grupos(g, b, a); return { a, b, ga, gb, cis: ga.includes("H") && gb.includes("H") }; }), max: Math.pow(2, e.c.length + e.d.length) }; };
+  /* os dois desenhos de uma dupla: mesmos lados e lados opostos. Com um H em cada carbono, são cis e trans */
+  const parDupla = (d) => { const ord = (L) => (L.includes("H") ? [L.find((x) => x !== "H") || "H", "H"] : L), a = ord(d.ga), b = ord(d.gb); return [alceno([a[0], a[1], b[0], b[1]]), alceno([a[0], a[1], b[1], b[0]])]; };
+  Object.assign(SIM.org, { grupo, grupos, alceno, tetra, estereo, parDupla });
+
+  /* nome: "Estereoisômeros: carbono quiral, cis e trans" · matéria: Química · tema: H08 */
+  SIM.qEstereo = (el, F) => {
+    const NOMES = ["butan-2-ol", "propan-2-ol", "ácido 2-hidroxipropanoico (láctico)", "ácido 2-aminopropanoico (alanina)", "3-metil-hexano", "bromoclorofluorometano", "but-2-eno", "but-1-eno", "1,2-dicloroeteno", "1,1-dicloroeteno", "ácido but-2-enodioico", "2-metilbut-2-eno", "2,3-diclorobutano", "2-bromo-3-clorobutano", "ácido 2,3-di-hidroxibutanodioico (tartárico)", "pent-3-en-2-ol", "hexa-2,4-dieno", "2,3,4,5,6-penta-hidroxi-hexanal (glicose, cadeia aberta)"];
+    let i = 0, ver = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;min-height:300px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><label style="font-size:13.5px;color:var(--ink2)">molécula <select data-v="sel" style="font:inherit;padding:5px 8px;border-radius:8px;background:var(--card,#161b24);color:inherit;border:1px solid var(--line,#2a3140);max-width:420px">${NOMES.map((n, k) => `<option value="${k}">${n}</option>`).join("")}</select></label></div>
+      <div><div class="bts"><button class="bt peq" data-v="ver" aria-pressed="false">mostrar os centros e os isômeros</button></div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), box = (d, esc = 1) => `<svg viewBox="0 0 ${d.w.toFixed(0)} ${d.h.toFixed(0)}" width="${(d.w * esc).toFixed(0)}" role="img" aria-label="estrutura">${d.svg}</svg>`;
+    const est = () => { const e = estereo(NOMES[i]); return { nome: e.nome, nc: e.c.length, nd: e.d.length, n: e.n, max: e.max, meso: e.meso, quirais: e.quirais, pares: e.quirais / 2, grupos: e.centros.map((c) => c.grupos), cis: e.duplas.map((d) => d.cis), ver }; };
+    const desenha = () => { const e = estereo(NOMES[i]), d = svg(e.g, { L: 44, destaque: ver ? [...e.c, ...e.d.flat()] : [] }); let h = box(d, Math.min(1.3, 560 / d.w));
+      if (ver) { if (e.duplas.length) { const [a, b] = parDupla(e.duplas[0]), cs = e.duplas[0].cis; h += `<div style="display:flex;gap:26px;align-items:flex-end;flex-wrap:wrap;justify-content:center">${[a, b].map((x, k) => `<div style="text-align:center">${box(x)}<div style="font-size:12.5px;color:var(--ink2)">${cs ? (k ? "trans: H em lados opostos" : "cis: H do mesmo lado") : k ? "isômero E ou Z (lados trocados)" : "isômero Z ou E"}</div></div>`).join("")}</div>`; }
+        if (e.centros.length) { const G = e.centros[0].grupos, o = [G[0], G[1], G[2], G[3]]; h += `<div style="display:flex;gap:0;align-items:center;justify-content:center">${box(tetra(o, false))}<div style="width:0;height:118px;border-left:2px dashed var(--ink2)" title="espelho"></div>${box(tetra(o, true))}</div><div style="font-size:12.5px;color:var(--ink2)">${e.centros.length > 1 ? "um dos carbonos quirais e a sua imagem no espelho" : "as duas imagens no espelho: não se sobrepõem (enantiômeros)"} · cunha cheia: para a frente; tracejado: para trás</div>`; } }
+      q("[data-v=sv]").innerHTML = h;
+      q("[data-v=lt]").innerHTML = vis("carbonos quirais", ver ? String(e.c.length) : "?") + vis("duplas com cis/trans", ver ? String(e.d.length) : "?") + vis("máximo pela regra 2ⁿ", ver ? String(e.max) : "?") + vis("estereoisômeros de verdade", ver ? String(e.n) : "?") + vis("pares de enantiômeros", ver ? String(e.quirais / 2) : "?") + vis("formas meso", ver ? String(e.meso) : "?");
+      q("[data-v=st]").innerHTML = !ver ? "Antes de clicar em <b>mostrar</b>: há algum carbono com quatro grupos diferentes? Há alguma dupla em que cada carbono segura dois grupos diferentes?" :
+        (e.c.length ? `Carbono quiral (em destaque) com os grupos <b>${e.centros.map((c) => c.grupos.join(", ")).join("</b>; outro com <b>")}</b>. ` : "Nenhum carbono com quatro grupos diferentes. ") + (e.d.length ? `Dupla com dois grupos diferentes em cada carbono (${e.duplas.map((x) => x.ga.join(" e ") + " | " + x.gb.join(" e ")).join("; ")}). ` : e.g.bd.some((b) => b.o === 2 && g2c(e.g, b)) ? "A dupla C=C tem um carbono com dois grupos iguais: não há cis e trans. " : "") + (e.n < e.max ? `A regra dá no máximo ${e.max}, mas a molécula é simétrica e há só <b>${e.n}</b>${e.meso ? ": uma das formas é <b>meso</b> (tem plano de simetria e é igual à própria imagem)" : ": trocar as duas duplas ao mesmo tempo dá a mesma molécula"}.` : e.n > 1 ? `Total: <b>${e.n}</b> estereoisômeros, o máximo da regra 2ⁿ.` : "Não tem estereoisômeros: é uma substância só.") + " Contagem feita por computador (RDKit)."; };
+    const g2c = (g, b) => g.at[b.a].el === "C" && g.at[b.b].el === "C";
+    q("[data-v=sel]").addEventListener("change", (ev) => { i = +ev.target.value; ver = false; q("[data-v=ver]").setAttribute("aria-pressed", "false"); desenha(); });
+    q("[data-v=ver]").addEventListener("click", () => { ver = !ver; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); });
+    SIM.qEstereo._ult = { poe: (nome, v = true) => { i = NOMES.indexOf(nome); ver = v; q("[data-v=sel]").value = String(i); q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); }, est, NOMES }; desenha(); };
+
+  /*EST-INI*/ /* GERADO por tools/quimica/gera-estereo.py (RDKit): não editar à mão. c: carbonos quirais (índices dos átomos no SMILES); d: duplas com cis/trans; n: estereoisômeros diferentes; meso; quirais */
+  SIM.org.EST = {
+    "butan-2-ol": { smi: "CCC(C)O", c: [2], d: [], n: 2, meso: 0, quirais: 2 },
+    "2-clorobutano": { smi: "CCC(C)Cl", c: [2], d: [], n: 2, meso: 0, quirais: 2 },
+    "2-bromobutano": { smi: "CCC(C)Br", c: [2], d: [], n: 2, meso: 0, quirais: 2 },
+    "ácido 2-hidroxipropanoico (láctico)": { smi: "CC(O)C(=O)O", c: [1], d: [], n: 2, meso: 0, quirais: 2 },
+    "ácido 2-aminopropanoico (alanina)": { smi: "CC(N)C(=O)O", c: [1], d: [], n: 2, meso: 0, quirais: 2 },
+    "3-metil-hexano": { smi: "CCCC(C)CC", c: [3], d: [], n: 2, meso: 0, quirais: 2 },
+    "pentan-2-ol": { smi: "CCCC(C)O", c: [3], d: [], n: 2, meso: 0, quirais: 2 },
+    "2-metilbutan-1-ol": { smi: "CCC(C)CO", c: [2], d: [], n: 2, meso: 0, quirais: 2 },
+    "propan-2-ol": { smi: "CC(C)O", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "pentan-3-ol": { smi: "CCC(O)CC", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "2-metilbutano": { smi: "CCC(C)C", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "butan-1-ol": { smi: "CCCCO", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "2-cloropropano": { smi: "CC(C)Cl", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "ácido propanoico": { smi: "CCC(=O)O", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "3-metilpentano": { smi: "CCC(C)CC", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "bromoclorofluorometano": { smi: "FC(Cl)Br", c: [1], d: [], n: 2, meso: 0, quirais: 2 },
+    "1-cloro-1-fluoroetano": { smi: "CC(F)Cl", c: [1], d: [], n: 2, meso: 0, quirais: 2 },
+    "ácido 2,3-di-hidroxibutanodioico (tartárico)": { smi: "OC(=O)C(O)C(O)C(=O)O", c: [3, 5], d: [], n: 3, meso: 1, quirais: 2 },
+    "2,3-diclorobutano": { smi: "CC(Cl)C(C)Cl", c: [1, 3], d: [], n: 3, meso: 1, quirais: 2 },
+    "butano-2,3-diol": { smi: "CC(O)C(C)O", c: [1, 3], d: [], n: 3, meso: 1, quirais: 2 },
+    "2,3-dibromobutano": { smi: "CC(Br)C(C)Br", c: [1, 3], d: [], n: 3, meso: 1, quirais: 2 },
+    "2-bromo-3-clorobutano": { smi: "CC(Br)C(C)Cl", c: [1, 3], d: [], n: 4, meso: 0, quirais: 4 },
+    "3-clorobutan-2-ol": { smi: "CC(Cl)C(C)O", c: [1, 3], d: [], n: 4, meso: 0, quirais: 4 },
+    "2,3,4,5,6-penta-hidroxi-hexanal (glicose, cadeia aberta)": { smi: "OCC(O)C(O)C(O)C(O)C=O", c: [2, 4, 6, 8], d: [], n: 16, meso: 0, quirais: 16 },
+    "2,3,4-tri-hidroxibutanal": { smi: "OCC(O)C(O)C=O", c: [2, 4], d: [], n: 4, meso: 0, quirais: 4 },
+    "2,3-di-hidroxipropanal (gliceraldeído)": { smi: "OCC(O)C=O", c: [2], d: [], n: 2, meso: 0, quirais: 2 },
+    "but-2-eno": { smi: "CC=CC", c: [], d: [[1, 2]], n: 2, meso: 0, quirais: 0 },
+    "pent-2-eno": { smi: "CC=CCC", c: [], d: [[1, 2]], n: 2, meso: 0, quirais: 0 },
+    "hex-3-eno": { smi: "CCC=CCC", c: [], d: [[2, 3]], n: 2, meso: 0, quirais: 0 },
+    "hex-2-eno": { smi: "CC=CCCC", c: [], d: [[1, 2]], n: 2, meso: 0, quirais: 0 },
+    "1,2-dicloroeteno": { smi: "ClC=CCl", c: [], d: [[1, 2]], n: 2, meso: 0, quirais: 0 },
+    "1,2-dibromoeteno": { smi: "BrC=CBr", c: [], d: [[1, 2]], n: 2, meso: 0, quirais: 0 },
+    "1-cloropropeno": { smi: "CC=CCl", c: [], d: [[1, 2]], n: 2, meso: 0, quirais: 0 },
+    "ácido but-2-enodioico": { smi: "OC(=O)C=CC(=O)O", c: [], d: [[3, 4]], n: 2, meso: 0, quirais: 0 },
+    "ácido but-2-enoico": { smi: "CC=CC(=O)O", c: [], d: [[1, 2]], n: 2, meso: 0, quirais: 0 },
+    "but-1-eno": { smi: "C=CCC", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "propeno": { smi: "C=CC", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "2-metilpropeno": { smi: "C=C(C)C", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "2-metilbut-2-eno": { smi: "CC=C(C)C", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "1,1-dicloroeteno": { smi: "C=C(Cl)Cl", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "pent-1-eno": { smi: "C=CCCC", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "2,3-dimetilbut-2-eno": { smi: "CC(C)=C(C)C", c: [], d: [], n: 1, meso: 0, quirais: 0 },
+    "3-metilpent-2-eno": { smi: "CC=C(C)CC", c: [], d: [[1, 2]], n: 2, meso: 0, quirais: 0 },
+    "pent-3-en-2-ol": { smi: "CC=CC(C)O", c: [3], d: [[1, 2]], n: 4, meso: 0, quirais: 4 },
+    "4-cloropent-2-eno": { smi: "CC=CC(C)Cl", c: [3], d: [[1, 2]], n: 4, meso: 0, quirais: 4 },
+    "hexa-2,4-dieno": { smi: "CC=CC=CC", c: [], d: [[1, 2], [3, 4]], n: 3, meso: 0, quirais: 0 },
+    "hepta-2,5-dieno": { smi: "CC=CCC=CC", c: [], d: [[1, 2], [4, 5]], n: 3, meso: 0, quirais: 0 },
+    "3-metilpent-1-eno": { smi: "C=CC(C)CC", c: [2], d: [], n: 2, meso: 0, quirais: 2 },
+    "but-3-en-2-ol": { smi: "C=CC(C)O", c: [2], d: [], n: 2, meso: 0, quirais: 2 },
+  };
+  /*EST-FIM*/
 
   /*PROP-INI*/ /* GERADO por tools/quimica/gera-prop-organica.py a partir de dadosH.json: não editar à mão. eb em °C (1 atm); sol em g/L de água, ou "miscível", ou "imiscível" (palavra da fonte), ou null (sem dado conversível) */
   SIM.org.PROP = {
