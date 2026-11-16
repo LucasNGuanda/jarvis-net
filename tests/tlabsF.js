@@ -36,6 +36,19 @@ const perto = (a, b, tol = 0.005) => Math.abs(a - b) <= tol * Math.max(1e-9, Mat
     const c1 = await eqv(0.1, 0.1, 0); ok(Math.abs(c1.fb - 0.5) < 0.03, 'F06: constantes iguais (K = 1) → metade de cada → ' + c1.fb.toFixed(3));
     ok(a1.idas > 5 && a1.voltas > 5 && Math.abs(a1.idas - a1.voltas) < 0.6 * Math.max(a1.idas, a1.voltas), 'F06: no equilíbrio as duas reações continuam e empatam (A → B: ' + a1.idas + ' e B → A: ' + a1.voltas + ' nos últimos 3 s)');
     ok(perto(await p.evaluate(() => SIM.eqAB.B(0.3, 0.1, 0, 2.5)), 0.75 * (1 - Math.exp(-1)), 1e-6), 'F06: a curva prevista chega a 63% do caminho em 1/(kd + ki) = 2,5 s'); }
+  // ----- F07: Le Chatelier -----
+  if (temas.has('F07')) { await abre('F07');
+    const lc = (acoes) => p.evaluate((acoes) => { const u = SIM.qLeChatelier._ult; u.zera(); u.passos(300); const sai = [u.est()]; for (const a of acoes) { u.acao(a); sai.push(u.est()); u.passos(1500); sai.push(u.est()); } return sai; }, acoes);
+    const prev = (n0, V, T) => p.evaluate(([n0, V, T]) => SIM.n2o4.eq(n0, V, T), [n0, V, T]);
+    const i0 = (await lc([]))[0]; ok(perto(i0.K, 6.53e-3, 1e-3) && perto(i0.alfa, 0.120, 0.01) && perto(i0.Q, i0.K, 0.01), 'F07: começo em equilíbrio: 0,100 mol em 1,00 L a 25 °C, K = 6,53·10⁻³, 12,0% dissociado → ' + (100 * i0.alfa).toFixed(1) + '%');
+    const c = await lc(['comp']), pc = await prev(0.1, 0.5, 298.15); ok(perto(c[1].Q / c[1].K, 2, 0.01) && perto(c[2].alfa, pc.alfa, 0.01) && perto(c[2].alfa, 0.086, 0.01) && c[2].n2 < c[0].n2, 'F07: comprimir à metade dobra Q; o equilíbrio vai para o N₂O₄ → ' + (100 * c[2].alfa).toFixed(1) + '% dissociado (previsto 8,6%)');
+    const e = await lc(['exp']); ok(perto(e[1].Q / e[1].K, 0.5, 0.01) && perto(e[2].alfa, 0.165, 0.01), 'F07: expandir ao dobro divide Q por 2; vai para o NO₂ → ' + (100 * e[2].alfa).toFixed(1) + '% (previsto 16,5%)');
+    const q = await lc(['quente']); ok(perto(q[1].K, 2.61e-2, 0.01) && perto(q[1].Q, q[0].Q, 1e-6) && perto(q[2].alfa, 0.225, 0.01), 'F07: esquentar 20 °C muda K (2,61·10⁻²) e não mexe em Q na hora; no fim, ' + (100 * q[2].alfa).toFixed(1) + '% (previsto 22,5%)');
+    const f = await lc(['frio']); ok(perto(f[1].K, 1.33e-3, 0.01) && perto(f[2].alfa, 0.056, 0.02), 'F07: esfriar 20 °C → K = 1,33·10⁻³ e ' + (100 * f[2].alfa).toFixed(1) + '% (previsto 5,6%)');
+    const m = await lc(['mais1']), pm = await prev(0.15, 1, 298.15); ok(m[1].Q < m[1].K && perto(m[2].n2, pm.n2, 0.01) && m[2].n1 > m[0].n1 && m[2].n1 < m[1].n1, 'F07: + N₂O₄ → Q < K, anda para a direita e gasta só PARTE do que entrou (N₂O₄: ' + m[0].n1.toFixed(4) + ' → ' + m[1].n1.toFixed(4) + ' → ' + m[2].n1.toFixed(4) + ' mol)');
+    const m2 = await lc(['mais2']); ok(m2[1].Q > m2[1].K && m2[2].n2 < m2[1].n2 && perto(m2[2].Q, m2[2].K, 0.01), 'F07: + NO₂ → Q > K, anda para a esquerda até Q = K');
+    const ci = await lc(['cat', 'inerte']); ok(perto(ci[1].Q, ci[0].Q, 1e-6) && perto(ci[4].n2, ci[0].n2, 0.002) && perto(ci[3].Q, ci[3].K, 0.01), 'F07: catalisador e gás inerte a volume fixo não deslocam nada (NO₂ fica em ' + ci[4].n2.toFixed(4) + ' mol)');
+    await p.evaluate(() => { SIM.qLeChatelier._ult.acao('cat'); SIM.qLeChatelier._ult.zera(); }); }
   //MAIS
   // ----- gabaritos: em todo exercício de alternativas, clicar na letra do gabarito tem de dar "certo" -----
   for (const cod of ['F01', 'F02', 'F03', 'F04', 'F05', 'F06', 'F07', 'F08', 'F09', 'F10'].filter((c) => temas.has(c))) { await p.goto(RAIZ + '#/quimica/' + cod); await p.waitForTimeout(1300);

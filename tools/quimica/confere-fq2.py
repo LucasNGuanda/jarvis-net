@@ -23,3 +23,10 @@ r = math.sqrt(50); x = r / (2 + r)
 print("  H2 + I2, 1,00 mol/L cada, Kc 50: x = %.4f; [HI] = %.3f; [H2] = %.3f; confere K = %.1f" % (x, 2 * x, 1 - x, (2 * x)**2 / (1 - x)**2))
 print("  N2O4: x = %.5f; alfa %.1f%%; [NO2] %.4f; [N2O4] %.4f; n %.4f; P %.3f atm; sem dissociar %.3f; Kp %.4f" % (x1, 100 * x1 / 0.1, 2 * x1, 0.1 - x1, 0.1 + x1, (0.1 + x1) * 0.082 * 298, 0.1 * 0.082 * 298, K * 0.082 * 298))
 print("  dobrando o volume: Q = %.3e (K/2 = %.3e); x = %.5f; alfa %.1f%%; [NO2] novo %.4f" % ((x1)**2 / ((0.1 - x1) / 2), K / 2, x2, 100 * x2 / 0.1, x2))
+print("F07 Le Chatelier no N2O4 ⇌ 2 NO2 (Kc 6,53e-3 a 25 °C; ΔH +57,23 kJ/mol)")
+def Kc(T):
+    Kp = 6.53e-3 * 0.082 * 298.15 * math.exp(57230 / 8.314 * (1 / 298.15 - 1 / T)); return Kp / (0.082 * T)
+def eq(n0, V, T):
+    K = Kc(T); x = (-K * V + math.sqrt(K * K * V * V + 16 * K * V * n0)) / 8; return K, x / n0
+for V, T in [(1, 298.15), (2, 298.15), (0.5, 298.15), (1, 318.15), (1, 278.15)]: print("  0,100 mol, %.2f L, %.0f K: Kc = %.3e; dissociado %.1f%%" % ((V, T) + (eq(0.1, V, T)[0], 100 * eq(0.1, V, T)[1])))
+print("  Haber (tabela da Wikipedia): K(300 °C)/K(450 °C) = %.0f; K(400)/K(500) = %.1f" % (4.34e-3 / 4.51e-5, 1.64e-4 / 1.45e-5))

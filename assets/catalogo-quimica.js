@@ -65,7 +65,7 @@ window.CATALOGO.push(
     ["F04","Cinética: velocidade de reação e energia de ativação",[],true],
     ["F05","Leis de velocidade: ordem, mecanismo e meia-vida",[],true],
     ["F06","Equilíbrio químico: Kc, Kp e quociente de reação",[],true],
-    ["F07","Le Chatelier",[]],
+    ["F07","Deslocamento de equilíbrio: o princípio de Le Chatelier",[],true],
     ["F08","pH e pOH",[]],
     ["F09","Hidrólise e tampão",[]],
     ["F10","Kps",[]],
