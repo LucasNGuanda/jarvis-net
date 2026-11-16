@@ -87,7 +87,7 @@ window.CATALOGO.push(
     ["H08","Estereoisomeria: cis e trans, carbono quiral e atividade óptica",[],true],
     ["H09","Reações de substituição: alcanos, haletos, benzeno e ésteres",[],true],
     ["H10","Reações de adição: hidrogenação, halogenação e regra de Markovnikov",[],true],
-    ["H11","Eliminação",[]],
+    ["H11","Reações de eliminação: desidratação, desidro-halogenação e regra de Zaitsev",[],true],
     ["H12","Oxidação e redução",[]],
     ["H13","Mecanismos de reação",[]],
   ] },
