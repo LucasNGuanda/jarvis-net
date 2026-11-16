@@ -49,7 +49,7 @@ window.CATALOGO.push(
     ["D07","Oxirredução e balanceamento redox",[],true],
   ] },
   { id:"QE", area:"qui", letra:"E", cor:"--mS", nome:"Físico-química I", desc:"Soluções, propriedades coligativas e termoquímica.", temas:[
-    ["E01","Leis dos gases",[]],
+    ["E01","Leis dos gases e equação dos gases ideais",[],true],
     ["E02","Teoria cinética e gases reais",[]],
     ["E03","Misturas gasosas",[]],
     ["E04","Diagramas de fases",[]],
