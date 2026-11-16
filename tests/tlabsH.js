@@ -31,6 +31,14 @@ const perto = (a, b, tol = 0.005) => Math.abs(a - b) <= tol * Math.max(1e-9, Mat
     const f = await nm(5, 2, 2, [[4, 'metil']]), g2 = await nm(4, 2, 1, [[3, 'metil']]); ok(f.iupac === '4-metilpent-2-eno' && f.igual && g2.iupac === '3-metilbut-1-eno' && g2.igual, 'H02: a insaturação manda na numeração: 4-metilpent-2-eno e 3-metilbut-1-eno');
     const h = await nm(1, 0, 1, []), i2 = await nm(8, 0, 1, []); ok(h.iupac === 'metano' && i2.iupac === 'octano', 'H02: extremos do controle: metano e octano');
     ok(await p.evaluate(() => { const o = SIM.org; return ['CC(C)CC(C)(C)C', 'CCC(CC)C(C)C', 'C=CC=C', 'C=CCC#C', 'CC(C)C#CC'].map((s) => o.nome(s)).join('|'); }) === '2,2,4-trimetilpentano|3-etil-2-metilpentano|buta-1,3-dieno|pent-1-en-4-ino|4-metilpent-2-ino', 'H02: nomes de conferência: 2,2,4-trimetilpentano; 3-etil-2-metilpentano; buta-1,3-dieno; pent-1-en-4-ino; 4-metilpent-2-ino'); await nm(5, 0, 1, [[2, 'metil']]); }
+  // ----- H03: caça às funções -----
+  if (temas.has('H03')) { await abre('H03');
+    const fn = (nome, ms) => p.evaluate(([nome, ms]) => { const u = SIM.qFuncoes._ult; u.poe(u.MOL.indexOf(nome), ms); return u.est(); }, [nome, ms]);
+    const a = await fn('ácido acetilsalicílico', ['éster', 'ácido carboxílico']); ok(a.certo && a.tem.sort().join(',') === 'ácido carboxílico,éster' && a.formula === 'C₉H₈O₄', 'H03: ácido acetilsalicílico (C₉H₈O₄): éster e ácido carboxílico; marcação certa é aceita');
+    const b2 = await fn('ácido acetilsalicílico', ['cetona', 'álcool', 'éter']); ok(!b2.certo, 'H03: marcar "cetona, álcool e éter" no ácido acetilsalicílico é recusado (o erro clássico)');
+    const c = await fn('vanilina', ['aldeído', 'éter', 'fenol']), d = await fn('fenol', ['álcool']), e = await fn('propano-1,2,3-triol', ['álcool']); ok(c.certo && !d.certo && d.tem[0] === 'fenol' && e.certo && e.fs.length === 3, 'H03: vanilina = aldeído, éter e fenol; fenol não é álcool; a glicerina tem três grupos álcool');
+    await p.evaluate(() => { const u = SIM.qFuncoes._ult; u.poe(u.MOL.indexOf('etanoato de etila'), ['éster']); u.confere(); }); await p.waitForTimeout(150); ok(/Certo/.test(await p.evaluate(() => document.querySelector('#lab-funcoes .status').textContent)) && await p.evaluate(() => document.querySelectorAll('#lab-funcoes svg circle').length >= 3), 'H03: "conferir" responde "Certo" e destaca os átomos do grupo éster');
+    ok(await p.evaluate(() => { const o = SIM.org; return o.COMP.every((c) => { try { o.svg(c[2]); return true; } catch (e) { return false; } }); }), 'H03: os 73 compostos da tabela são desenhados sem erro'); }
   //MAIS
   // ----- gabaritos: em todo exercício de alternativas, clicar na letra do gabarito tem de dar "certo" -----
   for (const cod of ['H01', 'H02', 'H03', 'H04', 'H05', 'H06', 'H07', 'H08', 'H09', 'H10', 'H11', 'H12', 'H13'].filter((c) => temas.has(c))) { await p.goto(RAIZ + '#/quimica/' + cod); await p.waitForTimeout(1300);

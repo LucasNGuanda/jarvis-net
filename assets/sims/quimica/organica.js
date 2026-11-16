@@ -155,6 +155,42 @@
     SIM.qCadeia._ult = { poe: (i, m) => { k = i; modo = m || modo; desenha(); }, est, MOL }; desenha(); };
 
 
+  /* ---------- funções orgânicas ----------
+     SIM.org.funcoes(smi) devolve a lista dos grupos funcionais achados, cada um {f: nome da função, at: índices dos átomos do grupo, cls: classe (álcool e amina: 1, 2, 3)}.
+     Conferência: tools/quimica/confere-organica.py compara a contagem de cada função com padrões SMARTS do RDKit, para todo SMILES dos temas e da tabela COMP. */
+  const funcoes = (smi) => { const g = typeof smi === "string" ? parse(smi) : smi, A = g.at, r = [], usado = new Set();
+    const viz = (k) => A[k].viz.map(([v, b]) => [v, g.bd[b].o]), eC = (k) => A[k].el === "C", HAL = ["F", "Cl", "Br", "I"];
+    const carbonila = (k) => eC(k) && viz(k).find(([v, o]) => A[v].el === "O" && o === 2);
+    A.forEach((a, k) => { if (!eC(k)) return; const co = carbonila(k); if (!co) return; const O2 = co[0], outros = viz(k).filter(([v]) => v !== O2), oh = outros.find(([v, o]) => A[v].el === "O" && o === 1 && A[v].h > 0), om = outros.find(([v, o]) => A[v].el === "O" && o === 1 && A[v].carga < 0), or = outros.find(([v, o]) => A[v].el === "O" && o === 1 && A[v].h === 0 && !A[v].carga && viz(v).filter(([w]) => eC(w)).length === 2), n = outros.find(([v]) => A[v].el === "N"), x = outros.find(([v]) => HAL.includes(A[v].el));
+      if (oh) { r.push({ f: "ácido carboxílico", at: [k, O2, oh[0]] }); usado.add(oh[0]); } else if (om) { r.push({ f: "carboxilato", at: [k, O2, om[0]] }); usado.add(om[0]); } else if (or) { /* anidrido: o O de ponte liga duas carbonilas */ const outroC = viz(or[0]).map(([w]) => w).find((w) => w !== k); if (carbonila(outroC)) { if (k < outroC) r.push({ f: "anidrido", at: [k, O2, or[0], outroC] }); } else r.push({ f: "éster", at: [k, O2, or[0]] }); usado.add(or[0]); }
+      else if (n) { const ns = outros.filter(([v]) => A[v].el === "N").map(([v]) => v); r.push({ f: "amida", at: [k, O2, ...ns] }); ns.forEach((v) => usado.add(v)); } else if (x) { r.push({ f: "haleto de acila", at: [k, O2, x[0]] }); usado.add(x[0]); }
+      else if (a.h >= 1) r.push({ f: "aldeído", at: [k, O2] }); else r.push({ f: "cetona", at: [k, O2] }); usado.add(O2); });
+    A.forEach((a, k) => { if (usado.has(k)) return; const cs = viz(k).filter(([v]) => eC(v));
+      if (a.el === "O" && !a.carga) { if (a.h > 0 && cs.length === 1) { const c = cs[0][0], cls = viz(c).filter(([v]) => eC(v)).length; if (A[c].arom) r.push({ f: "fenol", at: [k] }); else if (viz(c).some(([, o]) => o === 2)) r.push({ f: "enol", at: [k] }); else r.push({ f: "álcool", at: [k], cls: Math.max(1, cls) }); } else if (cs.length === 2 && viz(k).length === 2) r.push({ f: "éter", at: [k] }); }
+      else if (a.el === "N") { if (viz(k).some(([v, o]) => o === 3)) r.push({ f: "nitrila", at: [k, viz(k)[0][0]] }); else if (viz(k).filter(([v]) => A[v].el === "O").length === 2) r.push({ f: "nitrocomposto", at: [k, ...viz(k).filter(([v]) => A[v].el === "O").map(([v]) => v)] }); else if (cs.length >= 1 && viz(k).every(([, o]) => o === 1)) r.push({ f: "amina", at: [k], cls: cs.length }); }
+      else if (HAL.includes(a.el) && cs.length === 1) r.push({ f: A[cs[0][0]].arom ? "haleto de arila" : "haleto de alquila", at: [k], cls: Math.max(1, viz(cs[0][0]).filter(([v]) => eC(v)).length) });
+      else if (a.el === "S" && a.h > 0) r.push({ f: "tiol", at: [k] }); });
+    return r; };
+  SIM.org.funcoes = funcoes;
+  /* compostos dos temas H03 a H06: [nome em português, nome IUPAC em inglês usado na consulta ao PubChem, SMILES].
+     A correspondência nome em inglês ↔ estrutura é conferida no PubChem por tools/quimica/confere-pubchem.py (respostas guardadas em tools/quimica/pubchem-nomes.json).
+     O nome em português é a tradução sistemática do inglês: -ol, -al, -one → -ona, -oic acid → ácido -oico, alkyl alkanoate → alcanoato de alquila, alkoxy → alcóxi. */
+  SIM.org.COMP = [
+    ["metanol", "methanol", "CO"], ["etanol", "ethanol", "CCO"], ["propan-1-ol", "propan-1-ol", "CCCO"], ["propan-2-ol", "propan-2-ol", "CC(C)O"], ["butan-1-ol", "butan-1-ol", "CCCCO"], ["butan-2-ol", "butan-2-ol", "CCC(C)O"], ["2-metilpropan-2-ol", "2-methylpropan-2-ol", "CC(C)(C)O"], ["2-metilpropan-1-ol", "2-methylpropan-1-ol", "CC(C)CO"], ["etano-1,2-diol", "ethane-1,2-diol", "OCCO"], ["propano-1,2,3-triol", "propane-1,2,3-triol", "OCC(O)CO"], ["cicloexanol", "cyclohexanol", "OC1CCCCC1"],
+    ["fenol", "phenol", "Oc1ccccc1"],
+    ["metoximetano", "methoxymethane", "COC"], ["metoxietano", "methoxyethane", "CCOC"], ["etoxietano", "ethoxyethane", "CCOCC"], ["metoxibenzeno", "methoxybenzene", "COc1ccccc1"],
+    ["metanal", "methanal", "C=O"], ["etanal", "ethanal", "CC=O"], ["propanal", "propanal", "CCC=O"], ["butanal", "butanal", "CCCC=O"], ["2-metilpropanal", "2-methylpropanal", "CC(C)C=O"], ["benzaldeído", "benzaldehyde", "O=Cc1ccccc1"],
+    ["propanona", "propan-2-one", "CC(C)=O"], ["butanona", "butan-2-one", "CCC(C)=O"], ["pentan-2-ona", "pentan-2-one", "CCCC(C)=O"], ["pentan-3-ona", "pentan-3-one", "CCC(=O)CC"], ["cicloexanona", "cyclohexanone", "O=C1CCCCC1"],
+    ["ácido metanoico", "methanoic acid", "OC=O"], ["ácido etanoico", "ethanoic acid", "CC(=O)O"], ["ácido propanoico", "propanoic acid", "CCC(=O)O"], ["ácido butanoico", "butanoic acid", "CCCC(=O)O"], ["ácido benzoico", "benzoic acid", "OC(=O)c1ccccc1"], ["ácido etanodioico", "ethanedioic acid", "OC(=O)C(=O)O"], ["ácido 2-hidroxipropanoico", "2-hydroxypropanoic acid", "CC(O)C(=O)O"],
+    ["metanoato de metila", "methyl methanoate", "COC=O"], ["etanoato de metila", "methyl ethanoate", "COC(C)=O"], ["etanoato de etila", "ethyl ethanoate", "CCOC(C)=O"], ["propanoato de metila", "methyl propanoate", "CCC(=O)OC"], ["butanoato de etila", "ethyl butanoate", "CCCC(=O)OCC"], ["etanoato de pentila", "pentyl ethanoate", "CCCCCOC(C)=O"], ["benzoato de metila", "methyl benzoate", "COC(=O)c1ccccc1"],
+    ["metanamina", "methanamine", "CN"], ["etanamina", "ethanamine", "CCN"], ["propan-2-amina", "propan-2-amine", "CC(C)N"], ["N-metilmetanamina", "N-methylmethanamine", "CNC"], ["N,N-dimetilmetanamina", "N,N-dimethylmethanamine", "CN(C)C"], ["anilina", "aniline", "Nc1ccccc1"],
+    ["metanamida", "methanamide", "NC=O"], ["etanamida", "ethanamide", "CC(N)=O"], ["propanamida", "propanamide", "CCC(N)=O"], ["N-metiletanamida", "N-methylacetamide", "CNC(C)=O"], ["ureia", "urea", "NC(N)=O"],
+    ["etanonitrila", "ethanenitrile", "CC#N"], ["propanonitrila", "propanenitrile", "CCC#N"], ["nitrometano", "nitromethane", "C[N+](=O)[O-]"], ["nitrobenzeno", "nitrobenzene", "O=[N+]([O-])c1ccccc1"],
+    ["clorometano", "chloromethane", "CCl"], ["diclorometano", "dichloromethane", "ClCCl"], ["triclorometano", "trichloromethane", "ClC(Cl)Cl"], ["tetraclorometano", "tetrachloromethane", "ClC(Cl)(Cl)Cl"], ["cloroetano", "chloroethane", "CCCl"], ["bromoetano", "bromoethane", "CCBr"], ["2-cloropropano", "2-chloropropane", "CC(C)Cl"], ["2-bromo-2-metilpropano", "2-bromo-2-methylpropane", "CC(C)(C)Br"], ["clorobenzeno", "chlorobenzene", "Clc1ccccc1"], ["cloreto de etanoíla", "ethanoyl chloride", "CC(Cl)=O"],
+    ["ácido acetilsalicílico", "aspirin", "CC(=O)Oc1ccccc1C(=O)O"], ["paracetamol", "paracetamol", "CC(=O)Nc1ccc(O)cc1"], ["vanilina", "vanillin", "COc1cc(C=O)ccc1O"], ["ácido salicílico", "salicylic acid", "OC(=O)c1ccccc1O"], ["alanina", "alanine", "CC(N)C(=O)O"], ["glicina", "glycine", "NCC(=O)O"], ["anidrido etanoico", "ethanoic anhydride", "CC(=O)OC(C)=O"],
+  ];
+  SIM.org.smi = (nomePt) => { const c = SIM.org.COMP.find((x) => x[0] === nomePt); if (!c) throw new Error("composto fora da tabela: " + nomePt); return c[2]; };
+
   /* pontos de ebulição a 1 atm, em °C (tools/quimica/dadosH.json): alcanos lineares da Tabela 20.1 do OpenStax Chemistry 2e; os outros, das caixas de dados da Wikipedia */
   SIM.org.PE = { metano: -161.5, etano: -88.6, propano: -42.1, butano: -0.5, pentano: 36.1, hexano: 68.7, heptano: 98.4, octano: 125.7, decano: 174.0, metilpropano: -11.8, "2-metilbutano": 28, dimetilpropano: 9.5, "2,2,4-trimetilpentano": 99.3, cicloexano: 80.7, eteno: -103.7, propeno: -47.6, "but-1-eno": -6.5, "cis-but-2-eno": 3.7, "trans-but-2-eno": 0.8, benzeno: 80.1, metilbenzeno: 110.6, naftaleno: 218.0 };
 
@@ -180,4 +216,26 @@
     liga(el, "t", (v) => { tipo = +v; desenha(); }); [["n", (v) => (n = v)], ["pi", (v) => (pi = v)], ["ps", (v) => (ps = v)]].forEach(([c, fn]) => q(`[data-c=${c}]`).addEventListener("input", (e) => { fn(+e.target.value); desenha(); }));
     el.addEventListener("click", (e) => { const b = e.target.closest("[data-a]"); if (!b) return; const a = b.dataset.a; if (a === "limpa") subs = []; else if (a === "tira") subs.pop(); else if (subs.length < 5) subs.push([Math.min(ps, n), a]); desenha(); });
     SIM.qNomenclatura._ult = { poe: (nn, t, p, sb) => { n = nn; tipo = t; pi = p; subs = sb.map((x) => [...x]); q("[data-c=n]").value = nn; q("[data-c=pi]").value = p; el.querySelectorAll("[data-t]").forEach((x) => x.setAttribute("aria-pressed", +x.dataset.t === tipo)); desenha(); }, est }; desenha(); };
+
+  /* ---------- H03 (e H04) · caça às funções ---------- */
+  const CORF = { "álcool": "#4a9fe8", "fenol": "#7a6ff0", "enol": "#4a9fe8", "éter": "#3fae7a", "aldeído": "#e0a13a", "cetona": "#e5604d", "ácido carboxílico": "#d94f9b", "éster": "#b07cf0", "anidrido": "#b07cf0", "amina": "#3fb8c9", "amida": "#c9a23f", "nitrila": "#8fb84a", "nitrocomposto": "#e07a3a", "haleto de alquila": "#55b88a", "haleto de arila": "#55b88a", "haleto de acila": "#c97a55", "carboxilato": "#d94f9b", "tiol": "#c9c23f" };
+  SIM.org.CORF = CORF;
+  /* nome: "Caça às funções: ache os grupos funcionais da molécula" · matéria: Química · tema: H03 */
+  SIM.qFuncoes = (el, F, o = {}) => {
+    const MOL = o.mol || ["etanol", "fenol", "etoxietano", "propanal", "propanona", "ácido etanoico", "etanoato de etila", "ácido 2-hidroxipropanoico", "ácido acetilsalicílico", "vanilina", "ácido salicílico", "propano-1,2,3-triol"], OPC = o.opc || ["álcool", "fenol", "éter", "aldeído", "cetona", "ácido carboxílico", "éster"];
+    let k = 0, marc = new Set(), visto = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="min-height:200px;display:flex;align-items:center;justify-content:center"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><div class="bts">${botoes(MOL.map((m, i) => [i, m]), "k", k)}</div></div><div><p style="margin:0 0 6px;font-size:13.5px;color:var(--ink2)">Marque as funções que você vê e confira:</p><div class="bts">${OPC.map((f) => `<button class="bt peq" data-f="${f}" aria-pressed="false">${f}</button>`).join("")}</div><div class="bts" style="margin-top:8px"><button class="bt" data-a="confere">conferir</button><button class="bt peq" data-a="mostra">mostrar os grupos</button></div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const smi = SIM.org.smi(MOL[k]), fs = SIM.org.funcoes(smi), tem = [...new Set(fs.map((x) => x.f))], certo = tem.length === marc.size && tem.every((f) => marc.has(f)); return { nome: MOL[k], smi, fs, tem, marc: [...marc], certo, formula: SIM.org.formula(smi) }; };
+    const desenha = (msg) => { const e = est(), g = SIM.org.parse(e.smi), P = SIM.org.layout(g, 44), xs = P.map((p) => p[0]), ys = P.map((p) => p[1]), minx = Math.min(...xs) - 26, miny = Math.min(...ys) - 26, d = SIM.org.svg(g, { L: 44 });
+      const halos = visto ? e.fs.map((x) => x.at.map((a) => `<circle cx="${(P[a][0] - minx).toFixed(1)}" cy="${(P[a][1] - miny).toFixed(1)}" r="16" style="fill:${CORF[x.f]};opacity:.4"/>`).join("")).join("") : "";
+      q("[data-v=sv]").innerHTML = `<svg viewBox="0 0 ${d.w.toFixed(0)} ${d.h.toFixed(0)}" width="${Math.min(640, d.w * 1.4).toFixed(0)}" role="img" aria-label="fórmula estrutural">${halos}${d.svg}</svg>`;
+      q("[data-v=lt]").innerHTML = vis("molécula", e.nome) + vis("fórmula molecular", e.formula) + vis("grupos funcionais", visto ? String(e.fs.length) : "?");
+      q("[data-v=st]").innerHTML = msg || (visto ? e.tem.map((f) => `<span style="color:${CORF[f]}">●</span> ${f}${e.fs.filter((x) => x.f === f).length > 1 ? " (" + e.fs.filter((x) => x.f === f).length + ")" : ""}`).join(" &nbsp; ") : "Olhe para cada oxigênio (ou nitrogênio) e para o carbono em que ele está preso: é isso que define a função. Marque e confira; ou peça para mostrar."); };
+    liga(el, "k", (v) => { k = +v; marc = new Set(); visto = false; el.querySelectorAll("[data-f]").forEach((b) => b.setAttribute("aria-pressed", "false")); desenha(); });
+    el.querySelectorAll("[data-f]").forEach((b) => b.addEventListener("click", () => { const f = b.dataset.f; marc.has(f) ? marc.delete(f) : marc.add(f); b.setAttribute("aria-pressed", marc.has(f)); }));
+    el.addEventListener("click", (ev) => { const b = ev.target.closest("[data-a]"); if (!b) return; visto = true; const e = est(); if (b.dataset.a === "mostra") return desenha(); const falt = e.tem.filter((f) => !marc.has(f)), sobra = [...marc].filter((f) => !e.tem.includes(f)); desenha(e.certo ? `<b>Certo.</b> ${e.nome}: ${e.tem.join(", ")}.` : `Ainda não. ${falt.length ? "Faltou: <b>" + falt.join(", ") + "</b>. " : ""}${sobra.length ? "Não tem: <b>" + sobra.join(", ") + "</b>. " : ""}Veja os grupos destacados: ${e.tem.map((f) => `<span style="color:${CORF[f]}">●</span> ${f}`).join(" &nbsp; ")}.`); });
+    SIM.qFuncoes._ult = { poe: (i, ms) => { k = i; marc = new Set(ms || []); visto = false; desenha(); }, est, MOL, confere: () => q("[data-a=confere]").click() }; desenha(); };
 })();
