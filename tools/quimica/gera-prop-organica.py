@@ -36,9 +36,24 @@ for en, pt in PT.items():
     s, es = sol(c.get("solubilidade_agua"))
     linhas.append(f'    {json.dumps(pt, ensure_ascii=False)}: {{ eb: {json.dumps(meio(eb["valor"]) if eb else None)}, sol: {json.dumps(s, ensure_ascii=False)} }},')
     rel.append(f"{pt}: eb {meio(eb['valor']) if eb else None} | sol {s} | linha: {(es.get('obs') or es.get('valor_texto') or '') if es else '—'}")
-bloco = "/*PROP-INI*/ /* GERADO por tools/quimica/gera-prop-organica.py a partir de dadosH.json: não editar à mão. eb em °C (1 atm); sol em g/L de água, ou \"miscível\", ou \"imiscível\" (palavra da fonte), ou null (sem dado conversível) */\n  SIM.org.PROP = {\n" + "\n".join(linhas) + "\n  };\n  /*PROP-FIM*/"
+# ---- pKa: (nome em português, chave em dadosH, campo, fonte preferida, trecho que a observação precisa conter ou None, transformação) ----
+SPEC = [("etano", "ethane", "pKa", "Wiki", None, None), ("eteno", "ethylene", "pKa", "OpenStax", None, None), ("etino", "acetylene", "pKa", "OpenStax", None, None),
+        ("2-metilpropan-2-ol", "tert-butyl alcohol", "pKa", "OpenStax", "Tabela B1", None), ("etanol", "ethanol", "pKa", "OpenStax", "Tabela B1", None), ("metanol", "methanol", "pKa", "OpenStax", "Tabela B1", None),
+        ("propanona", "acetone", "pKa", "OpenStax", None, None), ("fenol", "phenol", "pKa", "OpenStax", "Tabela 17.1", None),
+        ("ácido etanoico", "acetic acid", "pKa", "OpenStax", "Tabela 20.3", None), ("ácido metanoico", "formic acid", "pKa", "OpenStax", "Tabela 20.3", None), ("ácido propanoico", "propionic acid", "pKa", "OpenStax", "Tabela 20.3", None),
+        ("ácido butanoico", "butyric acid", "pKa", "Wiki", None, None), ("ácido benzoico", "benzoic acid", "pKa", "OpenStax", "Tabela 20.3", None), ("ácido cloroetanoico", "chloroacetic acid", "pKa", "Wiki", None, None),
+        ("ácido tricloroetanoico", "trichloroacetic acid", "pKa", "Wiki", None, None), ("ácido trifluoroetanoico", "trifluoroacetic acid", "pKa", "OpenStax", "Tabela 20.3", None), ("ácido 2-hidroxipropanoico", "lactic acid", "pKa", "Wiki", None, None),
+        ("íon amônio", "ammonia", "pKa", "OpenStax", "ÍON AMÔNIO", None), ("íon metilamônio", "methylamine", "pKa", "OpenStax", "ÍON AMÔNIO", None), ("íon etilamônio", "ethylamine", "pKa", "OpenStax", "ÍON AMÔNIO", None), ("íon anilínio", "aniline", "pKa", "OpenStax", "ÍON AMÔNIO", None),
+        ("íon dimetilamônio", "dimethylamine", "pKb", "Wiki", None, "14-"), ("íon trimetilamônio", "trimethylamine", "pKb", "Wiki", None, "14-")]
+lp = []; relp = []
+for pt, en, campo, fonte, trecho, tr in SPEC:
+    k = chave(en); e = next((x for x in (d[k].get(campo) or []) if x.get("valor") is not None and fonte in x["fonte"] and (trecho is None or trecho in (x.get("obs") or ""))), None)
+    if e is None: relp.append(f"SEM VALOR: {pt}"); continue
+    v = round(14 - e["valor"], 2) if tr == "14-" else e["valor"]
+    lp.append(f'    {json.dumps(pt, ensure_ascii=False)}: {json.dumps(v)},'); relp.append(f"{pt}: pKa {v} ({'14 − pKb, ' if tr else ''}{e['fonte'][:38]}; {(e.get('obs') or '')[:40]})")
+bloco = "/*PROP-INI*/ /* GERADO por tools/quimica/gera-prop-organica.py a partir de dadosH.json: não editar à mão. eb em °C (1 atm); sol em g/L de água, ou \"miscível\", ou \"imiscível\" (palavra da fonte), ou null (sem dado conversível) */\n  SIM.org.PROP = {\n" + "\n".join(linhas) + "\n  };\n  /* pKa em água, 25 °C. Ácidos e álcoois: OpenStax Organic Chemistry (Tabelas 20.3, 17.1 e B1) ou caixa de dados da Wikipedia; \"íon ...amônio\": pKa do ácido conjugado da amina (OpenStax), ou 14 − pKb (Wikipedia) */\n  SIM.org.PKA = {\n" + "\n".join(lp) + "\n  };\n  /*PROP-FIM*/"
 p = os.path.join(RAIZ, "assets/sims/quimica/organica.js"); s = open(p, encoding="utf8").read()
 if "/*PROP-INI*/" in s: s = re.sub(r"/\*PROP-INI\*/.*?/\*PROP-FIM\*/", lambda m: bloco, s, flags=re.S)
 else: i = s.rindex("})();"); s = s[:i] + "\n  " + bloco + "\n" + s[i:]
 open(p, "w", encoding="utf8").write(s)
-print("\n".join(rel)); print(len(linhas), "compostos gravados em SIM.org.PROP")
+print("\n".join(rel)); print(len(linhas), "compostos gravados em SIM.org.PROP"); print("\n".join(relp)); print(len(lp), "valores gravados em SIM.org.PKA")

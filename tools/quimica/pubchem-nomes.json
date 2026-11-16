@@ -163,6 +163,14 @@
   "SMILES": "CCCC(=O)O",
   "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/butanoic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
  },
+ "chloroacetic acid": {
+  "CID": 300,
+  "ConnectivitySMILES": "C(C(=O)O)Cl",
+  "IUPACName": "2-chloroacetic acid",
+  "MolecularFormula": "C2H3ClO2",
+  "SMILES": "C(C(=O)O)Cl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/chloroacetic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
  "chlorobenzene": {
   "CID": 7964,
   "ConnectivitySMILES": "C1=CC=C(C=C1)Cl",
@@ -563,6 +571,14 @@
   "SMILES": "C(Cl)(Cl)(Cl)Cl",
   "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/tetrachloromethane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
  },
+ "trichloroacetic acid": {
+  "CID": 6421,
+  "ConnectivitySMILES": "C(=O)(C(Cl)(Cl)Cl)O",
+  "IUPACName": "2,2,2-trichloroacetic acid",
+  "MolecularFormula": "C2HCl3O2",
+  "SMILES": "C(=O)(C(Cl)(Cl)Cl)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/trichloroacetic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
  "trichloromethane": {
   "CID": 6212,
   "ConnectivitySMILES": "C(Cl)(Cl)Cl",
@@ -570,6 +586,14 @@
   "MolecularFormula": "CHCl3",
   "SMILES": "C(Cl)(Cl)Cl",
   "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/trichloromethane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "trifluoroacetic acid": {
+  "CID": 6422,
+  "ConnectivitySMILES": "C(=O)(C(F)(F)F)O",
+  "IUPACName": "2,2,2-trifluoroacetic acid",
+  "MolecularFormula": "C2HF3O2",
+  "SMILES": "C(=O)(C(F)(F)F)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/trifluoroacetic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
  },
  "urea": {
   "CID": 1176,

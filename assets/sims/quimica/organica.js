@@ -167,7 +167,7 @@
       else if (a.h >= 1) r.push({ f: "aldeído", at: [k, O2] }); else r.push({ f: "cetona", at: [k, O2] }); usado.add(O2); });
     A.forEach((a, k) => { if (usado.has(k)) return; const cs = viz(k).filter(([v]) => eC(v));
       if (a.el === "O" && !a.carga) { if (a.h > 0 && cs.length === 1) { const c = cs[0][0], cls = viz(c).filter(([v]) => eC(v)).length; if (A[c].arom) r.push({ f: "fenol", at: [k] }); else if (viz(c).some(([, o]) => o === 2)) r.push({ f: "enol", at: [k] }); else r.push({ f: "álcool", at: [k], cls: Math.max(1, cls) }); } else if (cs.length === 2 && viz(k).length === 2) r.push({ f: "éter", at: [k] }); }
-      else if (a.el === "N") { if (viz(k).some(([v, o]) => o === 3)) r.push({ f: "nitrila", at: [k, viz(k)[0][0]] }); else if (viz(k).filter(([v]) => A[v].el === "O").length === 2) r.push({ f: "nitrocomposto", at: [k, ...viz(k).filter(([v]) => A[v].el === "O").map(([v]) => v)] }); else if (cs.length >= 1 && viz(k).every(([, o]) => o === 1)) r.push({ f: "amina", at: [k], cls: cs.length }); }
+      else if (a.el === "N") { if (viz(k).some(([v, o]) => o === 3)) r.push({ f: "nitrila", at: [k, viz(k)[0][0]] }); else if (viz(k).filter(([v]) => A[v].el === "O").length === 2) r.push({ f: "nitrocomposto", at: [k, ...viz(k).filter(([v]) => A[v].el === "O").map(([v]) => v)] }); else if (cs.length >= 1 && viz(k).every(([, o]) => o === 1)) r.push(a.carga > 0 ? { f: "amônio", at: [k] } : { f: "amina", at: [k], cls: cs.length }); }
       else if (HAL.includes(a.el) && cs.length === 1) r.push({ f: A[cs[0][0]].arom ? "haleto de arila" : "haleto de alquila", at: [k], cls: Math.max(1, viz(cs[0][0]).filter(([v]) => eC(v)).length) });
       else if (a.el === "S" && a.h > 0) r.push({ f: "tiol", at: [k] }); });
     return r; };
@@ -188,6 +188,7 @@
     ["etanonitrila", "ethanenitrile", "CC#N"], ["propanonitrila", "propanenitrile", "CCC#N"], ["nitrometano", "nitromethane", "C[N+](=O)[O-]"], ["nitrobenzeno", "nitrobenzene", "O=[N+]([O-])c1ccccc1"],
     ["clorometano", "chloromethane", "CCl"], ["diclorometano", "dichloromethane", "ClCCl"], ["triclorometano", "trichloromethane", "ClC(Cl)Cl"], ["tetraclorometano", "tetrachloromethane", "ClC(Cl)(Cl)Cl"], ["cloroetano", "chloroethane", "CCCl"], ["bromoetano", "bromoethane", "CCBr"], ["2-cloropropano", "2-chloropropane", "CC(C)Cl"], ["2-bromo-2-metilpropano", "2-bromo-2-methylpropane", "CC(C)(C)Br"], ["clorobenzeno", "chlorobenzene", "Clc1ccccc1"], ["cloreto de etanoíla", "ethanoyl chloride", "CC(Cl)=O"],
     ["ácido acetilsalicílico", "aspirin", "CC(=O)Oc1ccccc1C(=O)O"], ["paracetamol", "paracetamol", "CC(=O)Nc1ccc(O)cc1"], ["vanilina", "vanillin", "COc1cc(C=O)ccc1O"], ["ácido salicílico", "salicylic acid", "OC(=O)c1ccccc1O"], ["alanina", "alanine", "CC(N)C(=O)O"], ["glicina", "glycine", "NCC(=O)O"], ["anidrido etanoico", "ethanoic anhydride", "CC(=O)OC(C)=O"],
+    ["ácido cloroetanoico", "chloroacetic acid", "OC(=O)CCl"], ["ácido tricloroetanoico", "trichloroacetic acid", "OC(=O)C(Cl)(Cl)Cl"], ["ácido trifluoroetanoico", "trifluoroacetic acid", "OC(=O)C(F)(F)F"],
   ];
   SIM.org.smi = (nomePt) => { const c = SIM.org.COMP.find((x) => x[0] === nomePt); if (!c) throw new Error("composto fora da tabela: " + nomePt); return c[2]; };
 
@@ -218,7 +219,7 @@
     SIM.qNomenclatura._ult = { poe: (nn, t, p, sb) => { n = nn; tipo = t; pi = p; subs = sb.map((x) => [...x]); q("[data-c=n]").value = nn; q("[data-c=pi]").value = p; el.querySelectorAll("[data-t]").forEach((x) => x.setAttribute("aria-pressed", +x.dataset.t === tipo)); desenha(); }, est }; desenha(); };
 
   /* ---------- H03 (e H04) · caça às funções ---------- */
-  const CORF = { "álcool": "#4a9fe8", "fenol": "#7a6ff0", "enol": "#4a9fe8", "éter": "#3fae7a", "aldeído": "#e0a13a", "cetona": "#e5604d", "ácido carboxílico": "#d94f9b", "éster": "#b07cf0", "anidrido": "#b07cf0", "amina": "#3fb8c9", "amida": "#c9a23f", "nitrila": "#8fb84a", "nitrocomposto": "#e07a3a", "haleto de alquila": "#55b88a", "haleto de arila": "#55b88a", "haleto de acila": "#c97a55", "carboxilato": "#d94f9b", "tiol": "#c9c23f" };
+  const CORF = { "álcool": "#4a9fe8", "fenol": "#7a6ff0", "enol": "#4a9fe8", "éter": "#3fae7a", "aldeído": "#e0a13a", "cetona": "#e5604d", "ácido carboxílico": "#d94f9b", "éster": "#b07cf0", "anidrido": "#b07cf0", "amina": "#3fb8c9", "amida": "#c9a23f", "nitrila": "#8fb84a", "nitrocomposto": "#e07a3a", "haleto de alquila": "#55b88a", "haleto de arila": "#55b88a", "haleto de acila": "#c97a55", "carboxilato": "#d94f9b", "tiol": "#c9c23f", "amônio": "#3fb8c9" };
   SIM.org.CORF = CORF;
   /* nome: "Caça às funções: ache os grupos funcionais da molécula" · matéria: Química · tema: H03 */
   SIM.qFuncoes = (el, F, o = {}) => {
@@ -275,6 +276,34 @@
     el.addEventListener("click", (ev) => { const b = ev.target.closest("[data-n]"); if (!b) return; if (slot === "A") A = b.dataset.n; else B = b.dataset.n; lista(); desenha(); });
     SIM.qPropFisicas._ult = { poe: (a, b) => { A = a; B = b; lista(); desenha(); }, est }; lista(); desenha(); };
 
+  /* ---------- H06 · escada de acidez ---------- */
+  /* estrutura do ácido de cada linha da tabela SIM.org.PKA (os "íons ...amônio" são os ácidos conjugados das aminas) */
+  SIM.org.ACID = { etano: "CC", eteno: "C=C", etino: "C#C", "2-metilpropan-2-ol": "CC(C)(C)O", etanol: "CCO", metanol: "CO", propanona: "CC(C)=O", fenol: "Oc1ccccc1", "ácido etanoico": "CC(=O)O", "ácido metanoico": "OC=O", "ácido propanoico": "CCC(=O)O", "ácido butanoico": "CCCC(=O)O", "ácido benzoico": "OC(=O)c1ccccc1", "ácido cloroetanoico": "OC(=O)CCl", "ácido tricloroetanoico": "OC(=O)C(Cl)(Cl)Cl", "ácido trifluoroetanoico": "OC(=O)C(F)(F)F", "ácido 2-hidroxipropanoico": "CC(O)C(=O)O", "íon amônio": "[NH4+]", "íon metilamônio": "C[NH3+]", "íon etilamônio": "CC[NH3+]", "íon anilínio": "[NH3+]c1ccccc1", "íon dimetilamônio": "C[NH2+]C", "íon trimetilamônio": "C[NH+](C)C" };
+  /* fração na forma desprotonada (base conjugada) num dado pH: 1 / (1 + 10^(pKa − pH)) */
+  SIM.org.fracBase = (pKa, pH) => 1 / (1 + Math.pow(10, pKa - pH));
+  /* nome: "Escada de acidez: compare pKa e veja a forma em cada pH" · matéria: Química · tema: H06 */
+  SIM.qAcidez = (el, F) => {
+    const L = ["ácido trifluoroetanoico", "ácido tricloroetanoico", "ácido cloroetanoico", "ácido metanoico", "ácido benzoico", "ácido etanoico", "íon anilínio", "íon amônio", "fenol", "íon metilamônio", "metanol", "etanol", "2-metilpropan-2-ol", "etino", "eteno", "etano"], PK = SIM.org.PKA; let A = "ácido etanoico", B = "etanol", slot = "A", pH = 7;
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 700 250" width="700" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><div class="bts">${botoes([["A", "escolher o ácido A"], ["B", "escolher o ácido B"]], "s", slot)}</div><div class="bts" style="margin-top:8px" data-v="cs"></div></div><div><div class="ctrl"><label>pH do meio</label><input type="range" min="0" max="14" step="0.5" value="7" data-c="ph"><output data-o="ph"></output></div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), nfp = (v, d = 2) => (+v).toFixed(d).replace(".", ",").replace("-", "−");
+    const est = () => { const pa = PK[A], pb = PK[B], fa = SIM.org.fracBase(pa, pH), fb = SIM.org.fracBase(pb, pH); return { A, B, pH, pa, pb, fa, fb, forte: pa < pb ? A : B, fator: Math.abs(pa - pb) }; };
+    const lista = () => { q("[data-v=cs]").innerHTML = L.map((n) => `<button class="bt peq" data-n="${n}" aria-pressed="${n === (slot === "A" ? A : B)}">${n}</button>`).join(""); };
+    const desenha = () => { const e = est(), X = (p) => 40 + (Math.max(-1, Math.min(51, p)) + 1) / 52 * 620; q("[data-o=ph]").textContent = nfp(pH, 1);
+      let h = `<line x1="40" y1="120" x2="660" y2="120" style="stroke:var(--ink2);stroke-width:2"/>` + [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50].map((p) => `<line x1="${X(p)}" y1="116" x2="${X(p)}" y2="124" style="stroke:var(--ink2)"/><text x="${X(p)}" y="142" text-anchor="middle" class="tx2">${p}</text>`).join("") + D.txt(40, 162, "← ácidos mais fortes", "tx2", "start") + D.txt(660, 162, "ácidos mais fracos →", "tx2", "end") + D.txt(350, 162, "pKa", "tx2");
+      L.forEach((n) => { if (n !== A && n !== B) h += `<circle cx="${X(PK[n]).toFixed(1)}" cy="120" r="4" style="fill:var(--ink3)"/>`; });
+      const marca = (n, cor, y, r) => `<circle cx="${X(PK[n]).toFixed(1)}" cy="120" r="7" style="fill:${cor};stroke:var(--bg);stroke-width:2"/><line x1="${X(PK[n]).toFixed(1)}" y1="112" x2="${X(PK[n]).toFixed(1)}" y2="${y + 6}" style="stroke:${cor}"/><text x="${Math.max(120, Math.min(580, X(PK[n]))).toFixed(1)}" y="${y}" text-anchor="middle" class="tx2" style="fill:${cor};font-weight:700">${r}: ${n} (pKa ${nfp(PK[n], PK[n] > 20 ? 0 : 2)})</text>`;
+      h += marca(A, "var(--mod)", 70, "A") + marca(B, "var(--warn)", 40, "B");
+      h += `<line x1="${X(pH)}" y1="96" x2="${X(pH)}" y2="186" style="stroke:var(--ok);stroke-width:2;stroke-dasharray:4 3"/><text x="${X(pH)}" y="200" text-anchor="middle" class="tx2" style="fill:var(--ok);font-weight:700">pH do meio: ${nfp(pH, 1)}</text>` + D.txt(350, 232, "à esquerda da linha verde: o ácido já perdeu o H⁺ (pKa < pH); à direita: ainda está com ele", "tx2");
+      q("[data-v=sv]").innerHTML = h;
+      const pc = (f) => (f > 0.999 ? "> 99,9%" : f < 0.001 ? "< 0,1%" : nfp(100 * f, 1) + "%");
+      q("[data-v=lt]").innerHTML = vis("pKa de A", nfp(e.pa, e.pa > 20 ? 0 : 2)) + vis("pKa de B", nfp(e.pb, e.pb > 20 ? 0 : 2)) + vis("mais ácido", e.pa === e.pb ? "iguais" : e.forte) + vis("razão entre os Ka", "10^" + nfp(e.fator, 1)) + vis("A sem o H⁺ neste pH", pc(e.fa)) + vis("B sem o H⁺ neste pH", pc(e.fb));
+      q("[data-v=st]").innerHTML = `Quanto <b>menor</b> o pKa, mais forte o ácido; cada unidade vale um fator 10 no Ka. ${e.pa === e.pb ? "" : `O ${e.forte} é 10^${nfp(e.fator, 1)} vezes mais ácido que o outro.`} Num meio de pH ${nfp(pH, 1)}, um ácido está metade ionizado quando pH = pKa; uma unidade de pH acima, 91%; uma abaixo, 9%. Os "íons ...amônio" são os ácidos conjugados das aminas: quanto <b>maior</b> o pKa deles, mais forte a amina como base. Valores de tabela (OpenStax Organic Chemistry e Wikipedia), em água a 25 °C.`; };
+    liga(el, "s", (v) => { slot = v; lista(); }); q("[data-c=ph]").addEventListener("input", (ev) => { pH = +ev.target.value; desenha(); });
+    el.addEventListener("click", (ev) => { const b = ev.target.closest("[data-n]"); if (!b) return; if (slot === "A") A = b.dataset.n; else B = b.dataset.n; lista(); desenha(); });
+    SIM.qAcidez._ult = { poe: (a, b, p) => { A = a; B = b; pH = p; q("[data-c=ph]").value = p; lista(); desenha(); }, est }; lista(); desenha(); };
+
   /*PROP-INI*/ /* GERADO por tools/quimica/gera-prop-organica.py a partir de dadosH.json: não editar à mão. eb em °C (1 atm); sol em g/L de água, ou "miscível", ou "imiscível" (palavra da fonte), ou null (sem dado conversível) */
   SIM.org.PROP = {
     "metano": { eb: -161.49, sol: 0.0227 },
@@ -328,6 +357,32 @@
     "tetraclorometano": { eb: 76.72, sol: 0.97 },
     "cloroetano": { eb: 12.27, sol: 4.47 },
     "bromoetano": { eb: 38.4, sol: 10.67 },
+  };
+  /* pKa em água, 25 °C. Ácidos e álcoois: OpenStax Organic Chemistry (Tabelas 20.3, 17.1 e B1) ou caixa de dados da Wikipedia; "íon ...amônio": pKa do ácido conjugado da amina (OpenStax), ou 14 − pKb (Wikipedia) */
+  SIM.org.PKA = {
+    "etano": 50,
+    "eteno": 44,
+    "etino": 25,
+    "2-metilpropan-2-ol": 18.0,
+    "etanol": 16.0,
+    "metanol": 15.5,
+    "propanona": 19.3,
+    "fenol": 9.89,
+    "ácido etanoico": 4.76,
+    "ácido metanoico": 3.75,
+    "ácido propanoico": 4.87,
+    "ácido butanoico": 4.82,
+    "ácido benzoico": 4.19,
+    "ácido cloroetanoico": 2.86,
+    "ácido tricloroetanoico": 0.66,
+    "ácido trifluoroetanoico": 0.23,
+    "ácido 2-hidroxipropanoico": 3.86,
+    "íon amônio": 9.26,
+    "íon metilamônio": 10.64,
+    "íon etilamônio": 10.75,
+    "íon anilínio": 4.63,
+    "íon dimetilamônio": 10.71,
+    "íon trimetilamônio": 9.81,
   };
   /*PROP-FIM*/
 })();

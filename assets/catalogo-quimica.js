@@ -82,7 +82,7 @@ window.CATALOGO.push(
     ["H03","Funções oxigenadas: do álcool ao éster",[],true],
     ["H04","Funções nitrogenadas e haletos orgânicos",[],true],
     ["H05","Propriedades físicas: forças intermoleculares, ebulição e solubilidade",[],true],
-    ["H06","Acidez e basicidade",[]],
+    ["H06","Acidez e basicidade dos compostos orgânicos",[],true],
     ["H07","Isomeria constitucional",[]],
     ["H08","Estereoisomeria",[]],
     ["H09","Substituição",[]],
