@@ -53,7 +53,7 @@ window.CATALOGO.push(
     ["E02","Teoria cinética dos gases; gases reais",[],true],
     ["E03","Misturas gasosas: pressão parcial e volume molar",[],true],
     ["E04","Diagramas de fases",[],true],
-    ["E05","Soluções e curvas de solubilidade",[]],
+    ["E05","Soluções e curvas de solubilidade",[],true],
     ["E06","Concentração, diluição e mistura de soluções",[]],
     ["E07","Titulometria",[]],
     ["E08","Propriedades coligativas",[]],
