@@ -66,7 +66,27 @@
       {"id": "ca", "nome": "cálcio", "fa": "Ca", "fp": "CaO", "n": 1, "reag": "ácido oxálico; depois, calcinação", "cor": null, "M": 56.08},
     ],
     HIDRATO: {"f": "BaCl2", "x": 2, "Manidro": 208.23, "Mhidrato": 244.26},
-    OPENSTAX: {"e415": {"amostra": 0.455, "BaSO4": 0.6168, "MgSO4": 0.3181, "pct": 69.91, "M_BaSO4": 233.43, "M_MgSO4": 120.37}, "e416": {"amostra": 0.00126, "CO2": 0.00394, "H2O": 0.00161, "formula": "CH2"}},
+    OPENSTAX: {"e415": {"amostra": 0.455, "BaSO4": 0.6168, "MgSO4": 0.3181, "pct": 69.91, "M_BaSO4": 233.43, "M_MgSO4": 120.37}, "e416": {"amostra": 0.00126, "CO2": 0.00394, "H2O": 0.00161, "formula": "CH2"}, "e414": {"Va": 50.0, "Vt": 35.23, "Ct": 0.25, "Ca": 0.176}},
+    IND: [
+      {"id": "alaranjado_de_metila", "nome": "alaranjado de metila", "lo": 3.1, "hi": 4.4, "c1": "vermelho", "c2": "amarelo"},
+      {"id": "verde_de_bromocresol", "nome": "verde de bromocresol", "lo": 3.8, "hi": 5.4, "c1": "amarelo", "c2": "azul"},
+      {"id": "vermelho_de_metila", "nome": "vermelho de metila", "lo": 4.4, "hi": 6.2, "c1": "vermelho", "c2": "amarelo"},
+      {"id": "azul_de_bromotimol", "nome": "azul de bromotimol", "lo": 6.0, "hi": 7.6, "c1": "amarelo", "c2": "azul"},
+      {"id": "vermelho_de_fenol", "nome": "vermelho de fenol", "lo": 6.4, "hi": 8.0, "c1": "amarelo", "c2": "vermelho"},
+      {"id": "fenolftaleina", "nome": "fenolftaleína", "lo": 8.3, "hi": 10.0, "c1": "incolor", "c2": "rosa"},
+      {"id": "timolftaleina", "nome": "timolftaleína", "lo": 9.3, "hi": 10.5, "c1": "incolor", "c2": "azul"},
+    ],
+    KA: {"acetico": 1.8e-05, "formico": 0.00018, "HF": 0.00064, "amonia_Kb": 1.8e-05},
+    EPOT: {"MnO4": 1.507, "Fe": 0.771, "I2": 0.5355, "S4O6": 0.08},
+    TIT: [
+      {"id": "hcl", "an": "HCl", "tit": "NaOH", "ct": 0.1, "a": 1, "t": 1, "tipo": "ab", "Ka": null, "ind": null, "c1": null, "c2": null, "eq": "HCl + NaOH → NaCl + H₂O"},
+      {"id": "hac", "an": "ácido acético", "tit": "NaOH", "ct": 0.1, "a": 1, "t": 1, "tipo": "ab", "Ka": 1.8e-05, "ind": null, "c1": null, "c2": null, "eq": "CH₃COOH + NaOH → CH₃COONa + H₂O"},
+      {"id": "fe", "an": "Fe²⁺ (em meio ácido)", "tit": "KMnO₄", "ct": 0.02, "a": 5, "t": 1, "tipo": "redox", "Ka": null, "ind": "o próprio permanganato", "c1": "sem cor de permanganato", "c2": "lilás claro", "eq": "MnO₄⁻ + 5 Fe²⁺ + 8 H⁺ → Mn²⁺ + 5 Fe³⁺ + 4 H₂O"},
+      {"id": "cl", "an": "Cl⁻ (meio quase neutro)", "tit": "AgNO₃", "ct": 0.1, "a": 1, "t": 1, "tipo": "prec", "Ka": null, "ind": "cromato de potássio (método de Mohr)", "c1": "branco", "c2": "vermelho", "eq": "Ag⁺ + Cl⁻ → AgCl(s)"},
+      {"id": "ca", "an": "Ca²⁺ (tampão de pH 10)", "tit": "EDTA", "ct": 0.01, "a": 1, "t": 1, "tipo": "comp", "Ka": null, "ind": "negro de eriocromo T", "c1": "vermelho", "c2": "azul", "eq": "Ca²⁺ + EDTA → complexo 1 : 1"},
+      {"id": "i2", "an": "I₂", "tit": "Na₂S₂O₃", "ct": 0.1, "a": 1, "t": 2, "tipo": "redox", "Ka": null, "ind": "amido", "c1": "azul-escuro", "c2": "incolor", "eq": "I₂ + 2 S₂O₃²⁻ → 2 I⁻ + S₄O₆²⁻"},
+    ],
+    KHP: {"f": "C8H5KO4", "M": 204.222},
   };
   /*ANA-FIM*/
 
@@ -127,6 +147,48 @@
     q("[data-v=rg]").addEventListener("input", (ev) => { m = +ev.target.value; desenha(); });
     q("[data-v=ver]").addEventListener("click", () => { ver = !ver; sinc(); });
     SIM.qGravimetria._ult = { poe: (i, mm, a, v = true) => { id = i; m = mm; am = a; ver = v; sinc(); }, est }; sinc(); };
+
+  /* ---------- J03: volumetria ---------- */
+  const VA = 25, VEQ = { A: 12.5, B: 20, C: 31.25 };
+  const HEX = { incolor: "#dfe7ee", rosa: "#e86aa6", vermelho: "#d8343a", amarelo: "#e8d44a", azul: "#3f8fd6", "lilás claro": "#b98bd9", "azul-escuro": "#27336e", branco: "#e8e8e8", "sem cor de permanganato": "#dfe7ee" };
+  const mist = (h1, h2, f) => { const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)), a = p(h1), b = p(h2); return "#" + a.map((x, i) => Math.round(x + (b[i] - x) * f).toString(16).padStart(2, "0")).join(""); };
+  /* pH durante a titulação de um ácido (forte, ou fraco com Ka) de concentração ca (volume va, mL) com base forte ct (volume v, mL): balanço de carga (SIM.phGeral) */
+  SIM.phTitJ = (ca, va, ct, v, Ka) => { const vt = va + v, A = ca * va / vt, B = ct * v / vt; return SIM.phGeral(Ka ? { CT: A, Ka, cb: B } : { ca: A, cb: B }).pH; };
+  /* estado de uma titulação do laboratório: tipo, amostra (A, B ou C: concentração escondida), volume gasto v (mL) e indicador (só nas ácido-base) */
+  SIM.titula = (id, am, v, indId = "fenolftaleina") => { const T = SIM.ANA.TIT.find((x) => x.id === id), veq = VEQ[am], ca = T.ct * veq * T.a / T.t / VA, ab = T.tipo === "ab", I = ab ? SIM.ANA.IND.find((x) => x.id === indId) : null;
+    let pH = null, cor, hex, virou;
+    if (ab) { pH = SIM.phTitJ(ca, VA, T.ct, v, T.Ka); const f = Math.max(0, Math.min(1, (pH - I.lo) / (I.hi - I.lo))); cor = f <= 0 ? I.c1 : f >= 1 ? I.c2 : `virando (${I.c1} → ${I.c2})`; hex = mist(HEX[I.c1], HEX[I.c2], f); virou = f >= 1; }
+    else { virou = v >= veq - 1e-9; cor = virou ? T.c2 : T.c1; hex = HEX[cor]; }
+    return { ...T, am, v, veq, ca, ab, pH, cor, hex, virou, indNome: ab ? I.nome : T.ind, indId: ab ? indId : null }; };
+  /* volume em que a cor termina de mudar (ácido-base: pH chega ao fim da faixa do indicador; nos outros tipos, o modelo vira na equivalência) */
+  SIM.titViragem = (id, am, indId = "fenolftaleina") => { const e0 = SIM.titula(id, am, 0, indId); if (!e0.ab) return e0.veq; const I = SIM.ANA.IND.find((x) => x.id === indId); let lo = 0, hi = 60; for (let k = 0; k < 50; k++) { const m = (lo + hi) / 2; SIM.phTitJ(e0.ca, VA, e0.ct, m, e0.Ka) >= I.hi ? (hi = m) : (lo = m); } return (lo + hi) / 2; };
+  /* nome: "Titulação: gota a gota até a viragem" · matéria: Química · tema: J03 */
+  SIM.qTitulacao = (el, F) => { const TT = SIM.ANA.TIT, INDS = ["alaranjado_de_metila", "azul_de_bromotimol", "fenolftaleina"].map((k) => SIM.ANA.IND.find((x) => x.id === k)); let id = "hcl", am = "A", ind = "fenolftaleina", v = 0, ver = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;justify-content:center;padding:12px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">o que está no erlenmeyer (25,00 mL) ← o que está na bureta</p><div class="bts">${botoes(TT.map((t) => [t.id, t.an.replace(/ \(.*/, "") + " ← " + t.tit]), "t", id)}</div></div>
+      <div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">amostra desconhecida</p><div class="bts">${botoes([["A", "amostra A"], ["B", "amostra B"], ["C", "amostra C"]], "am", am)}</div></div>
+      <div data-v="bi"><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">indicador (titulações ácido-base)</p><div class="bts">${botoes(INDS.map((i) => [i.id, i.nome]), "i", ind)}</div></div>
+      <div><label style="font-size:13px;color:var(--ink2)">volume gasto da bureta: <b data-v="vv"></b><input type="range" data-v="rg" min="0" max="40" step="0.05" value="0" style="width:100%"></label><div class="bts" style="margin-top:6px"><button class="bt peq" data-v="menos">− 1 gota</button><button class="bt peq" data-v="mais">+ 1 gota (0,05 mL)</button><button class="bt peq" data-v="ver" aria-pressed="false">mostrar a conta</button></div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), est = () => ({ ...SIM.titula(id, am, v, ind), ver });
+    const desenha = () => { const e = est(), W = 640, H = 236, T = (x, y, s, a = "start", c = "tx2", t = 12) => `<text x="${x}" y="${y}" text-anchor="${a}" class="${c}" style="font-size:${t}px">${s}</text>`;
+      const niv = 12 + 120 * (v / 40), bur = `<rect x="62" y="12" width="16" height="130" style="fill:none;stroke:var(--ink2);stroke-width:1.6"/><rect x="63.5" y="${niv}" width="13" height="${141 - niv}" style="fill:${e.tipo === "redox" && e.id === "fe" ? "#8e44ad" : "#6fa8dc"};opacity:.55"/><path d="M70,142 v16" style="stroke:var(--ink2);stroke-width:2"/><rect x="64" y="146" width="12" height="5" style="fill:var(--ink2)"/>${[0, 10, 20, 30, 40].map((m) => `<line x1="78" y1="${12 + 3 * m}" x2="84" y2="${12 + 3 * m}" style="stroke:var(--ink2);stroke-width:1"/><text x="88" y="${16 + 3 * m}" class="tx2" style="font-size:10px">${m}</text>`).join("")}`;
+      const erl = `<path d="M62,166 v18 l-32,42 h80 l-32,-42 v-18" style="fill:none;stroke:var(--ink2);stroke-width:2"/><path d="M52,198 l-20,26 h76 l-20,-26 z" style="fill:${e.hex};opacity:${e.cor === "incolor" || e.cor === "sem cor de permanganato" ? 0.25 : 0.85}"/>`;
+      let dir;
+      if (e.ab) { const X = (vv) => 330 + 280 * vv / 40, Y = (ph) => 206 - 180 * ph / 14, I = SIM.ANA.IND.find((x) => x.id === ind); let d = ""; for (let k = 0; k <= 160; k++) { const vv = k / 4; d += (k ? "L" : "M") + X(vv).toFixed(1) + "," + Y(SIM.phTitJ(e.ca, VA, e.ct, vv, e.Ka)).toFixed(1); }
+        dir = `<rect x="330" y="${Y(I.hi)}" width="280" height="${Y(I.lo) - Y(I.hi)}" style="fill:${mist(HEX[I.c1], HEX[I.c2], 0.5)};opacity:.28"/><line x1="330" y1="26" x2="330" y2="206" style="stroke:var(--ink2)"/><line x1="330" y1="206" x2="610" y2="206" style="stroke:var(--ink2)"/>${[0, 7, 14].map((p) => T(322, Y(p) + 4, p, "end", "tx2", 10)).join("")}${[0, 10, 20, 30, 40].map((m) => T(X(m), 220, m, "middle", "tx2", 10)).join("")}${T(470, 234, "volume gasto (mL)", "middle", "tx2", 11)}${T(336, 20, "pH", "start", "tx2", 11)}<path d="${d}" style="fill:none;stroke:var(--mod);stroke-width:2"/><circle cx="${X(v)}" cy="${Y(e.pH)}" r="5" style="fill:var(--warn);stroke:var(--bg);stroke-width:1.5"/>${T(606, Y(I.hi) - 4, "faixa do indicador", "end", "tx2", 10)}`; }
+      else dir = T(330, 70, "reação da titulação:", "start", "tx2", 12) + T(330, 96, e.eq, "start", "tx", 14) + T(330, 130, "proporção analito : titulante = " + e.a + " : " + e.t, "start", "tx2", 12) + T(330, 154, "indicador: " + e.ind, "start", "tx2", 12);
+      q("[data-v=sv]").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="bureta e erlenmeyer">${bur}${erl}${T(124, 30, "bureta: " + e.tit, "start", "tx2", 12)}${T(124, 46, nt(e.ct, 4) + " mol/L", "start", "tx2", 12)}${T(124, 200, "amostra: " + e.an.replace(/ \(.*/, ""), "start", "tx2", 12)}${T(124, 216, "cor: " + e.cor, "start", "tx", 12)}${dir}</svg>`;
+      q("[data-v=vv]").textContent = v.toFixed(2).replace(".", ",") + " mL"; q("[data-v=bi]").style.opacity = e.ab ? 1 : 0.35;
+      q("[data-v=lt]").innerHTML = vis("titulante", e.tit + " " + nt(e.ct, 4) + " mol/L") + vis("indicador", e.indNome) + vis("volume gasto", v.toFixed(2).replace(".", ",") + " mL") + vis("cor no erlenmeyer", e.cor) + vis("pH", e.ab ? nt(e.pH, 2) : "—") + vis("volume de equivalência", ver ? nt(e.veq, 2) + " mL" : "?") + vis("concentração da amostra", ver ? nt(e.ca, 4) + " mol/L" : "?");
+      const vv = SIM.titViragem(id, am, ind), dif = 100 * (vv - e.veq) / e.veq;
+      q("[data-v=st]").innerHTML = (!ver ? `Goteje até a cor mudar e não voltar. Anote o volume gasto e calcule a concentração da amostra (25,00 mL), lembrando a proporção ${e.a} : ${e.t}. ` : `No ponto de equivalência (${nt(e.veq, 2)} mL): ${nt(e.ct, 4)} mol/L × ${nt(e.veq / 1000, 5)} L = ${sci3(e.ct * e.veq / 1000)} mol de titulante, que reagem com ${sci3(e.ct * e.veq / 1000 * e.a / e.t)} mol de analito (${e.a} : ${e.t}). Em 25,00 mL: <b>${nt(e.ca, 4)} mol/L</b>. ` + (e.ab ? `Com ${e.indNome}, a cor termina de mudar em ${nt(vv, 2)} mL: ${Math.abs(dif) < 0.5 ? "praticamente na equivalência" : "erro de " + nt(dif, 1) + " % no volume"}. ` : "")) + (e.ab ? "pH calculado pelo balanço de carga, a 25 °C; faixas dos indicadores: Wikipedia. " : "Modelo: nestes casos a cor vira exatamente na equivalência; na prática há um pequeno excesso de titulante. ") + "As amostras A, B e C são hipotéticas."; };
+    const sinc = () => { [["t", id], ["am", am], ["i", ind]].forEach(([k, x]) => el.querySelectorAll(`[data-${k}]`).forEach((b) => b.setAttribute("aria-pressed", String(b.dataset[k] === x)))); q("[data-v=rg]").value = v; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); };
+    liga(el, "t", (x) => { id = x; v = 0; ver = false; sinc(); }); liga(el, "am", (x) => { am = x; v = 0; ver = false; sinc(); }); liga(el, "i", (x) => { ind = x; sinc(); });
+    q("[data-v=rg]").addEventListener("input", (ev) => { v = +ev.target.value; desenha(); });
+    q("[data-v=mais]").addEventListener("click", () => { v = Math.min(40, +(v + 0.05).toFixed(2)); sinc(); }); q("[data-v=menos]").addEventListener("click", () => { v = Math.max(0, +(v - 0.05).toFixed(2)); sinc(); });
+    q("[data-v=ver]").addEventListener("click", () => { ver = !ver; sinc(); });
+    SIM.qTitulacao._ult = { poe: (i, a, vol, indic = "fenolftaleina", mostra = true) => { id = i; am = a; v = vol; ind = indic; ver = mostra; sinc(); }, est }; sinc(); };
 
   //MAIS-LABS
 })();

@@ -105,7 +105,7 @@ window.CATALOGO.push(
   { id:"QJ", area:"qui", letra:"J", cor:"--mM", nome:"Química analítica", desc:"Titulação, análise qualitativa e quantitativa.", temas:[
     ["J01","Análise qualitativa: solubilidade, precipitados, chama e marcha de cátions",[],true],
     ["J02","Métodos gravimétricos: precipitação, volatilização e análise por combustão",[],true],
-    ["J03","Métodos volumétricos",[]],
+    ["J03","Métodos volumétricos: titulação ácido-base, redox, de precipitação e com EDTA",[],true],
     ["J04","Química de coordenação",[]],
   ] },
   /* aba Experimentos (simulações, no padrão dos experimentos de física) */

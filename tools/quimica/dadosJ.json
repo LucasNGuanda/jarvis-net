@@ -7597,7 +7597,33 @@
      "trecho": "A pH indicator is used to monitor the progress of the acid–base reaction and a titration curve can be constructed.[1]",
      "obs": null
     }
-   ]
+   ],
+   "padrao_primario_KHP": {
+    "massa_molar": [
+     {
+      "unidade": "g/mol",
+      "fonte": "Wikipedia (en): Potassium hydrogen phthalate",
+      "url": "https://en.wikipedia.org/wiki/Potassium_hydrogen_phthalate",
+      "arquivo": "Potassium_hydrogen_phthalate.html",
+      "obs": "caixa de dados",
+      "valor": 204.222,
+      "valor_texto": "204.222",
+      "trecho": "| Molar mass | 204.222 g·mol−1"
+     }
+    ],
+    "formula": [
+     {
+      "unidade": null,
+      "fonte": "Wikipedia (en): Potassium hydrogen phthalate",
+      "url": "https://en.wikipedia.org/wiki/Potassium_hydrogen_phthalate",
+      "arquivo": "Potassium_hydrogen_phthalate.html",
+      "obs": "caixa de dados",
+      "valor": "C8H5KO4",
+      "valor_texto": "C8H5KO4",
+      "trecho": "Chemical formula | C8H5KO4"
+     }
+    ]
+   }
   },
   "exemplo_openstax_4_14": [
    {

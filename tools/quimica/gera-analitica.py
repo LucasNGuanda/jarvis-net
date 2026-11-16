@@ -144,6 +144,57 @@ exige(AC["historia"], "Gay-Lussac", "Liebig", "1822", onde="história da combust
 exige(AC["o_que_se_pesa"], "mass increase of each device", "1/2 equivalent of water", onde="o que se pesa")
 exige(GV["exemplos"]["volatilizacao_agua_e_CO2"], "water and carbon dioxide", onde="volatilização")
 exige(GV["tipos"], "precipitation, volatilization", onde="tipos")
+# ---------- J03: volumetria ----------
+VO = D["volumetria"]; INDS = VO["indicadores"]
+CORPT = {"red": "vermelho", "yellow": "amarelo", "blue": "azul", "colorless": "incolor", "purple-pink": "rosa"}
+IND_L = [["alaranjado_de_metila", "alaranjado de metila"], ["verde_de_bromocresol", "verde de bromocresol"], ["vermelho_de_metila", "vermelho de metila"], ["azul_de_bromotimol", "azul de bromotimol"], ["vermelho_de_fenol", "vermelho de fenol"], ["fenolftaleina", "fenolftaleína"], ["timolftaleina", "timolftaleína"]]
+ind = []
+for ch, nome in IND_L:
+    e = INDS[ch]; fx = val(e["faixa_de_pH"]); c1 = val(e["cor_em_pH_baixo"]); c2 = val(e["cor_em_pH_alto"])
+    if isinstance(fx, str): fx = json.loads(fx)
+    if not (isinstance(fx, list) and len(fx) == 2 and fx[0] < fx[1] and c1 in CORPT and c2 in CORPT): erros.append(("indicador com dado inesperado", ch, fx, c1, c2)); continue
+    ind.append({"id": ch, "nome": nome, "lo": fx[0], "hi": fx[1], "c1": CORPT[c1], "c2": CORPT[c2]})
+ANA["IND"] = ind
+exige(INDS["escolha_do_indicador"], "Phenolphthalein", "brackets the abrupt change", "methyl orange", "well before the equivalence point", onde="escolha do indicador")
+KAJ = VO["constantes_de_acidez"]
+ANA["KA"] = {"acetico": val(KAJ["acido_acetico_Ka"]), "formico": val(KAJ["acido_formico_Ka"]), "HF": val(KAJ["HF_Ka"]), "amonia_Kb": val(KAJ["amonia_Kb"])}
+if any(not isinstance(v, float) or not (1e-6 < v < 1e-2) for v in ANA["KA"].values()): erros.append(("Ka fora do esperado", ANA["KA"]))
+RDX = VO["redox"]; PT = RDX["potenciais_padrao"]
+ANA["EPOT"] = {"MnO4": val(PT["MnO4-/Mn2+"]), "Fe": val(PT["Fe3+/Fe2+"]), "I2": val(PT["I2/I-"]), "S4O6": val(PT["S4O6 2-/S2O3 2-"])}
+if not (ANA["EPOT"]["MnO4"] == 1.507 and ANA["EPOT"]["Fe"] == 0.771 and ANA["EPOT"]["I2"] == 0.5355 and ANA["EPOT"]["S4O6"] == 0.08): erros.append(("potenciais inesperados", ANA["EPOT"]))
+PRC = VO["precipitacao"]; CPX = VO["complexometria"]; PM = RDX["permanganometria"]; IO = RDX["iodometria"]
+# id, analito, titulante, concentração do titulante (mol/L, escolha do laboratório), mol de analito : mol de titulante, tipo, Ka, indicador fixo, cor antes, cor depois, equação, [fonte, palavras]
+TIT_L = [["hcl", "HCl", "NaOH", 0.1, 1, 1, "ab", None, None, None, None, "HCl + NaOH → NaCl + H₂O", [VO["definicoes"]["titulacao_acido_base"], ["neutralizing"]]],
+         ["hac", "ácido acético", "NaOH", 0.1, 1, 1, "ab", "acetico", None, None, None, "CH₃COOH + NaOH → CH₃COONa + H₂O", [VO["definicoes"]["titulacao_acido_base"], ["neutralizing"]]],
+         ["fe", "Fe²⁺ (em meio ácido)", "KMnO₄", 0.02, 5, 1, "redox", None, "o próprio permanganato", "sem cor de permanganato", "lilás claro", "MnO₄⁻ + 5 Fe²⁺ + 8 H⁺ → Mn²⁺ + 5 Fe³⁺ + 4 H₂O", [list(PM["definicao"]) + list(PM["semirreacao_meio_acido"]) + list(PM["cores"]), ["iron(II)", "8 H+ + 5 e−", "light shade of purple", "purple in colour"]]],
+         ["cl", "Cl⁻ (meio quase neutro)", "AgNO₃", 0.1, 1, 1, "prec", None, "cromato de potássio (método de Mohr)", "branco", "vermelho", "Ag⁺ + Cl⁻ → AgCl(s)", [list(PRC["argentometria"]) + list(PRC["mohr"]), ["Ag+(aq) + Cl−(aq) → AgCl(s)", "red silver chromate", "near neutral"]]],
+         ["ca", "Ca²⁺ (tampão de pH 10)", "EDTA", 0.01, 1, 1, "comp", None, "negro de eriocromo T", "vermelho", "azul", "Ca²⁺ + EDTA → complexo 1 : 1", [list(CPX["EDTA_razao_1_para_1"]) + list(CPX["negro_de_eriocromo_T"]["cores"]) + list(CPX["EDTA_dissodico_e_pH"]), ["M2+ + H4Y", "turns red when it forms a complex with calcium", "blue end-point", "basic buffer", "pH 10"]]],
+         ["i2", "I₂", "Na₂S₂O₃", 0.1, 1, 2, "redox", None, "amido", "azul-escuro", "incolor", "I₂ + 2 S₂O₃²⁻ → 2 I⁻ + S₄O₆²⁻", [list(IO["reacao"]) + list(IO["amido_e_cor"]), ["2 S2O32− + I2 → S4O62− + 2 I−", "dark blue to colorless"]]]]
+tit = []
+for i, an, ti, ct, a, t_, tipo, ka, indf, c1, c2, eq, (fonte, pal) in TIT_L:
+    if exige(fonte, *pal, onde="titulação " + i): tit.append({"id": i, "an": an, "tit": ti, "ct": ct, "a": a, "t": t_, "tipo": tipo, "Ka": ANA["KA"][ka] if ka else None, "ind": indf, "c1": c1, "c2": c2, "eq": eq})
+ANA["TIT"] = tit
+# balanço da equação do permanganato com o ferro (átomos e carga) e número de elétrons das duas semirreações
+if not (-1 + 5 * 2 + 8 == 2 + 5 * 3 and 4 == 4 and 8 == 2 * 4 and 5 * 1 == 5): erros.append(("permanganato × ferro: balanço",))
+exige(PM["exemplo_openstax"], "2MnO4−(aq)+5H2C2O4(aq)+6H+(aq)⟶10CO2(g)+2Mn2+(aq)+8H2O(l)", onde="permanganato × oxálico")
+exige(IO["usos"], "2 Cu2+ + 4 I− → 2 CuI + I2", "active chlorine", onde="iodometria: usos")
+exige(PRC["volhard"], "back titration", "excess silver nitrate", "thiocyanate", "blood-red", onde="Volhard")
+exige(PRC["fajans"], "green suspension turning pink", onde="Fajans")
+exige(RDX["dicromatometria"], "yellow-orange for Cr(VI) to green for Cr(III)", onde="dicromato")
+exige(CPX["EDTA_hexadentado"], "hexadentate", onde="EDTA hexadentado"); exige(CPX["dureza_da_agua"], "total hardness of water", "calcium and magnesium", onde="dureza")
+DF = VO["definicoes"]
+exige(DF["ponto_final"], "indicator changes color", "not necessarily be the same", onde="ponto final"); exige(DF["ponto_de_equivalencia"], "chemically equivalent quantities", onde="equivalência")
+exige(DF["padrao_primario"], "High purity", "Low hygroscopicity", "High equivalent weight", onde="padrão primário")
+exige(DF["padrao_primario_exemplos"], "Potassium hydrogen phthalate", "Sodium carbonate for standardisation of aqueous acids", "Sodium chloride for standardisation of silver nitrate", onde="exemplos de padrão primário")
+exige(DF["titulacao_de_retorno"], "known excess of standard reagent", onde="retorno"); exige(DF["bureta"], "graduated glass tube", onde="bureta")
+kh = DF["padrao_primario_KHP"]; Mk = val(kh["massa_molar"]); fk = val(kh["formula"])
+if not (fk == "C8H5KO4" and Mk == 204.222 and abs(mm(fk) - Mk) / Mk < 0.003): erros.append(("KHP: fórmula ou massa molar", fk, Mk))
+ANA["KHP"] = {"f": fk, "M": Mk}
+Me = [e["valor"] for e in itens(CPX["EDTA_massa_molar"])][0]
+if abs(Me - 292.244) > 0.01: erros.append(("EDTA: massa molar", Me))
+e14 = texto(VO["exemplo_openstax_4_14"]); r14 = 35.23 * 0.250 / 50.00
+if not ("50.00-mL" in e14 and "35.23 mL of 0.250 M NaOH" in e14 and abs(r14 - val(VO["exemplo_openstax_4_14"], 1)) < 6e-4): erros.append(("exemplo 4.14 não confere", r14))
+ANA["OPENSTAX"]["e414"] = {"Va": 50.00, "Vt": 35.23, "Ct": 0.250, "Ca": val(VO["exemplo_openstax_4_14"], 1)}
 #MAIS-SECOES
 
 J = lambda o: json.dumps(o, ensure_ascii=False)
