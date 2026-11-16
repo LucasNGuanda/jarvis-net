@@ -134,7 +134,8 @@
   /* pI pela regra: média dos dois pKa que cercam a forma de carga zero */
   SIM.aaPI = (a) => (a.tr === "basica" ? (a.pk2 + a.pkr) / 2 : a.tr === "acida" ? (a.pk1 + Math.min(a.pkr, a.pk2)) / 2 : (a.pk1 + a.pk2) / 2);
   /* nome: "Aminoácido e pH: cargas e ponto isoelétrico" · matéria: Química · tema: I03 */
-  SIM.qAminoacido = (el, F) => { const AA = SIM.BIO.AA, O = SIM.org; let i = 1, ph = 7;
+  SIM.qAminoacido = (el, F) => { /* decisão do Lucas (16/11/2026): o que o desenhista não mostra direito não entra no seletor (triptofano: dois anéis fundidos) */
+    const AA = SIM.BIO.AA.filter((a) => !/2/.test(a.smi.replace(/\[[^\]]*\]/g, ""))), O = SIM.org; let i = 1, ph = 7;
     el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;min-height:250px"></div><div class="leitor" data-v="lt"></div>
       <div class="ctrls"><div>${seletor("aminoácido", AA.map((a) => `${a.nome} (${a.a3})`))}</div>
       <div style="min-width:300px"><label style="font-size:13.5px;color:var(--ink2)">pH da solução: <b data-v="ph"></b><br><input type="range" data-v="rg" min="0" max="14" step="0.1" value="7" style="width:100%"></label></div></div>
