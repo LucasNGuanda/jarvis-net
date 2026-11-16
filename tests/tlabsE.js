@@ -83,6 +83,15 @@ const perto = (a, b, tol = 0.005) => Math.abs(a - b) <= tol * Math.max(1e-9, Mat
   const vi = await p.evaluate(() => ['fen', 'bro', 'ala'].map((i) => SIM.viragem('HAc', 0.1, 25, 0.1, i)));
   ok(Math.abs(vi[0] - 25) < 0.05 && vi[2] < 5, 'E07: com ácido acético, a fenolftaleína vira em ' + vi[0].toFixed(2) + ' mL (equivalência: 25,00) e o alaranjado de metila, em ' + vi[2].toFixed(2) + ' mL (indicador errado)');
   await p.evaluate(() => { for (let k = 0; k < 200; k++) SIM.qBureta._ult.junta(1); }); bu = await p.evaluate(() => SIM.qBureta._ult.est()); ok(bu.Vb === 50, 'E07 caso limite: a bureta para em 50 mL');
+  // ----- E08: coligativas -----
+  await abre('E08');
+  const co = async (k, s2, w) => { await p.evaluate(([k, s2, w]) => SIM.qColigativas._ult.poe(k, s2, w), [k, s2, w]); await p.waitForTimeout(80); return p.evaluate((k) => SIM.qColigativas._ult.est(k), k); };
+  const g1 = await co(0, 'glicose', 1), n1 = await co(1, 'NaCl', 1);
+  ok(perto(g1.Tc, -1.86) && perto(g1.Te, 100.512, 1e-4) && perto(g1.Pv, 23.38, 0.001) && perto(g1.pi, 24.4, 0.003), 'E08: 1 mol/kg de glicose → −1,86 °C; 100,51 °C; 23,38 mmHg; 24,4 atm');
+  ok(perto(n1.Tc, -3.72) && perto(n1.dTc / g1.dTc, 2) && perto(n1.pi / g1.pi, 2), 'E08: 1 mol/kg de NaCl faz o DOBRO do efeito da glicose (i = 2) → ' + n1.Tc.toFixed(2) + ' °C');
+  const c3 = await co(1, 'CaCl2', 1); ok(perto(c3.dTc / g1.dTc, 3), 'E08: CaCl₂ (3 íons) faz o triplo');
+  const z = await co(0, 'NaCl', 0); ok(z.Tc === 0 && z.Te === 100 && perto(z.Pv, 23.8) && z.pi === 0, 'E08 caso limite: sem soluto → 0 °C, 100 °C, 23,8 mmHg, 0 atm');
+  const so2 = await co(0, 'NaCl', 0.154); ok(perto(so2.pi, 7.53, 0.005), 'E08: NaCl 0,154 mol/kg (soro fisiológico) → pressão osmótica de 7,5 atm → ' + so2.pi.toFixed(2));
   //MAIS
   // ----- gabaritos: em todo exercício de alternativas, clicar na letra do gabarito tem de dar "certo" -----
   for (const cod of ['E01', 'E02', 'E03', 'E04', 'E05', 'E06', 'E07', 'E08']) { await p.goto(RAIZ + '#/quimica/' + cod); await p.waitForTimeout(1300);

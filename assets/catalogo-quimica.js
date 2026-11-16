@@ -56,7 +56,7 @@ window.CATALOGO.push(
     ["E05","Soluções e curvas de solubilidade",[],true],
     ["E06","Concentração, diluição e mistura de soluções",[],true],
     ["E07","Titulometria",[],true],
-    ["E08","Propriedades coligativas",[]],
+    ["E08","Propriedades coligativas",[],true],
   ] },
   { id:"QF", area:"qui", letra:"F", cor:"--mT", nome:"Físico-química II", desc:"Cinética, equilíbrio químico e iônico.", temas:[
     ["F01","Termoquímica: entalpia",[]],

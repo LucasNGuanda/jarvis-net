@@ -171,7 +171,7 @@
   SIM.qColigativas = (el, F) => {
     const W = 700, H = 330; const st = [{ s: "glicose", w: 1 }, { s: "NaCl", w: 1 }];
     el.insertAdjacentHTML("beforeend", `<div class="palco"><svg viewBox="0 0 ${W} ${H}" width="${W}" data-v="sv"></svg></div><div class="leitor" data-v="lt"></div>
-      <div class="ctrls">${[0, 1].map((k) => `<div><div class="bts">solução ${k + 1}: ${botoes(Object.keys(SIM.COLIG).map((x) => [x, SIM.COLIG[x][0]]), "s" + k, st[k].s)}</div>${sl("Quantidade de soluto (mol por kg de água)", "w" + k, 0, 3, 0.05, st[k].w)}</div>`).join("")}</div>
+      <div class="ctrls">${[0, 1].map((k) => `<div><div class="bts">solução ${k + 1}: ${botoes(Object.keys(SIM.COLIG).map((x) => [x, SIM.COLIG[x][0]]), "s" + k, st[k].s)}</div>${sl("Soluto (mol/kg)", "w" + k, 0, 3, 0.05, st[k].w)}</div>`).join("")}</div>
       <div class="status">Três béqueres com 1 kg de água: água pura e duas soluções. Comece com 1 mol de glicose de um lado e 1 mol de NaCl do outro: mesmos mols de soluto, mas o NaCl se separa em <b>dois</b> íons e produz o <b>dobro</b> do efeito. As propriedades coligativas não querem saber quem é o soluto: só contam <b>partículas</b> dissolvidas. Modelo de solução ideal e diluída, com dissociação total; a pressão osmótica toma 1 kg de água como 1 L de solução, o que só é boa aproximação para soluções diluídas. Constantes da água: Kf = 1,86 e Kb = 0,512 K·kg/mol.</div>`);
     const q = (x) => el.querySelector(x);
     [0, 1].forEach((k) => { liga(el, "s" + k, (v) => (st[k].s = v)); q(`[data-c=w${k}]`).addEventListener("input", (e) => (st[k].w = +e.target.value)); });
@@ -184,8 +184,8 @@
         for (let j = 0; j < np; j++) h += `<circle cx="${x + 10 + ((j * 41 + 7) % 110)}" cy="${72 + ((j * 29 + 5) % 60)}" r="3.4" style="fill:${COR[k]}"/>`;
         h += D.txt(x + 65, 26, nomes[k], "tx2", "middle", `style="fill:${k ? COR[k] : "var(--ink)"};font-weight:700"`) + D.txt(x + 65, 158, k ? n2(c.np, 2) + " mol de partículas" : "sem soluto", "tx2");
         /* quatro barras: congelamento, ebulição, pressão de vapor, pressão osmótica */
-        const linha = (y, rot, val, fr, cor) => D.txt(x, y, rot, "tx2", "start") + `<rect x="${x}" y="${y + 5}" width="130" height="7" rx="3" style="fill:var(--line2)"/><rect x="${x}" y="${y + 5}" width="${f1(Math.max(0, Math.min(1, fr)) * 130)}" height="7" rx="3" style="fill:${cor}"/>` + D.txt(x + 130, y, val, "tx2", "end", 'style="fill:var(--ink);font-weight:700"');
-        h += linha(186, "congela a", n2(c.Tc, 2) + " °C", c.dTc / 23, "var(--mA)") + linha(222, "ferve a", n2(c.Te, 2) + " °C", c.dTe / 6.3, "var(--bad)") + linha(258, "pressão de vapor", n2(c.Pv, 2) + " mmHg", c.Pv / 23.8, "var(--ok)") + linha(294, "pressão osmótica", n2(c.pi, 1) + " atm", c.pi / 300, "var(--warn)"); });
+        const linha = (y, rot, val, fr, cor) => D.txt(x - 25, y, rot, "tx2", "start") + `<rect x="${x - 25}" y="${y + 5}" width="180" height="7" rx="3" style="fill:var(--line2)"/><rect x="${x - 25}" y="${y + 5}" width="${f1(Math.max(0, Math.min(1, fr)) * 180)}" height="7" rx="3" style="fill:${cor}"/>` + D.txt(x + 155, y, val, "tx2", "end", 'style="fill:var(--ink);font-weight:700"');
+        h += linha(186, "congela a", n2(c.Tc, 2) + " °C", c.dTc / 23, "var(--mA)") + linha(222, "ferve a", n2(c.Te, 2) + " °C", c.dTe / 6.3, "var(--bad)") + linha(258, "P de vapor", n2(c.Pv, 2) + " mmHg", c.Pv / 23.8, "var(--ok)") + linha(294, "P osmótica", n2(c.pi, 1) + " atm", c.pi / 300, "var(--warn)"); });
       q("[data-v=sv]").innerHTML = h;
       const raz = r[0].np > 0 ? r[1].np / r[0].np : null;
       q("[data-v=lt]").innerHTML = vis("solução 1: i (íons por fórmula)", SIM.COLIG[st[0].s][1] + " (" + SIM.COLIG[st[0].s][2] + ")") + vis("solução 2: i", SIM.COLIG[st[1].s][1] + " (" + SIM.COLIG[st[1].s][2] + ")") + vis("partículas: solução 2 ÷ solução 1", raz === null ? "—" : n2(raz, 2)) + vis("abaixamento do congelamento: 2 ÷ 1", raz === null ? "—" : n2(r[1].dTc / r[0].dTc, 2));
