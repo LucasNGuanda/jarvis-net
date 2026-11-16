@@ -86,7 +86,7 @@ window.CATALOGO.push(
     ["H07","Isomeria constitucional: cadeia, posição, função e compensação",[],true],
     ["H08","Estereoisomeria: cis e trans, carbono quiral e atividade óptica",[],true],
     ["H09","Reações de substituição: alcanos, haletos, benzeno e ésteres",[],true],
-    ["H10","Adição",[]],
+    ["H10","Reações de adição: hidrogenação, halogenação e regra de Markovnikov",[],true],
     ["H11","Eliminação",[]],
     ["H12","Oxidação e redução",[]],
     ["H13","Mecanismos de reação",[]],
