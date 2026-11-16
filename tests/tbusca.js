@@ -25,7 +25,7 @@ const falhas = []; const conf = (ok, txt, extra) => { console.log((ok ? 'ok     
   r = await R('regra da cadeia'); conf(r.chaves[0] === 'matematica/CI04', 'nome de tema: "regra da cadeia" → CI04 (Matemática)', r.chaves.slice(0, 3));
   r = await R('onde fica Bernoulli?'); conf(r.tipo === 'lista' && r.chaves.slice(0, 2).includes('N03') && r.chaves.slice(0, 2).includes('A18'), '"onde fica Bernoulli?" → N03 e A18', r.chaves.slice(0, 3));
   r = await R('bernouli'); conf(r.chaves.slice(0, 2).includes('N03'), 'erro de digitação: "bernouli" acha Bernoulli', r.chaves.slice(0, 3));
-  r = await R('pV = nRT'); conf(r.chaves[0] === 'T05', 'fórmula: "pV = nRT" → T05 (Gases)', r.chaves.slice(0, 3));
+  r = await R('pV = nRT'); conf(r.chaves.slice(0, 3).includes('T05') && r.chaves.slice(0, 3).includes('quimica/E01'), 'fórmula: "pV = nRT" → T05 (Gases, da Física) e quimica/E01 (Leis dos gases) entre os três primeiros', r.chaves.slice(0, 3)); /* até a β 5.5 só o T05 tinha essa fórmula; com o módulo E da Química, o E01 também tem e pode vir na frente */
   r = await R('Einstein'); conf(r.chaves.slice(0, 3).some((k) => /^C1[67]/.test(k)), 'cientista: "Einstein" → C16/C17 nos 3 primeiros', r.chaves.slice(0, 3));
   r = await R('Arquimedes'); conf(r.chaves[0] === 'A17', 'cientista: "Arquimedes" → A17 (Hidrostática)', r.chaves.slice(0, 3));
   r = await R('o que explica meia-vida'); conf(r.tipo === 'lista' && r.chaves[0] === 'quimica/EQ13', '"o que explica meia-vida" é busca (não dúvida) → EQ13', r.chaves.slice(0, 2));
