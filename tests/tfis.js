@@ -141,7 +141,12 @@ const perto = (a, b, tol = 0.01) => Math.abs(a - b) <= tol * Math.max(Math.abs(b
   await caso('p = 2: ∫₁^∞ dx/x² = 1', 'matematica/CII02', 'lab-imp', { p: 2 }, [], [['imprópria', 1, 0.01]]);
   await caso('pêndulo duplo: energia conservada', 'EP02', 'lab-p2', {}, [], [['erro relativo', (v) => Math.abs(v) < 0.1]], 3000);
   await caso('pêndulo triplo: energia conservada', 'EP03', 'lab-p3', {}, [], [['erro relativo', (v) => Math.abs(v) < 0.1]], 3000);
-  await caso('Drude: deriva média ≈ aτ', 'C06', 'lab-dr', {}, [], [['velocidade de deriva média', (v, o) => perto(v, numU(acha(o, 'esperada')), 0.25)]], 4000);
+  /* Drude: o mostrador é uma média curta de 90 elétrons e oscila uns 15% (uma leitura só falhava ~1 vez em 6 com tolerância de 25%).
+     Agora: média de 50 leituras do mostrador ao longo de 12 s (desvio medido da média: ~3,4%) e tolerância de 12%.
+     Prova de que continua servindo (16/11/2026): com a aceleração do laboratório trocada de 9 para 7 (−22%) o teste acusa. */
+  try { await vai('C06'); const dr = await p.evaluate(() => new Promise((fim) => { const el = document.querySelector('#lab-dr'), le = () => parseFloat(el.querySelector('.vis b').textContent.replace('−', '-').replace(',', '.')), v = []; setTimeout(() => { const id = setInterval(() => { v.push(le()); if (v.length >= 50) { clearInterval(id); fim({ m: v.reduce((a, b) => a + b, 0) / v.length, esp: parseFloat(el.querySelectorAll('.vis b')[1].textContent.replace(',', '.')) }); } }, 200); }, 2000); }));
+    res.push([perto(dr.m, dr.esp, 0.12), `C06 Drude: deriva média ≈ aτ: média de 12 s = ${dr.m.toFixed(1)} px/s (esperado ${dr.esp}, tolerância 12%)`]);
+  } catch (e) { res.push([false, 'C06 Drude: ERRO ' + e.message.split('\n')[0]]); }
   console.log(res.filter(r => r[0]).length + ' de ' + res.length + ' conferências ok'); process.exitCode = res.every((r) => r[0]) ? 0 : 1; /* β 3.7: falha vira código de erro */
   res.filter(r => !r[0]).forEach(r => console.log('FALHA  ' + r[1]));
   console.log('---'); res.filter(r => r[0]).forEach(r => console.log('ok     ' + r[1]));

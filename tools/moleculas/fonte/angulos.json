@@ -1,0 +1,326 @@
+[
+{
+"especie": "H2O",
+"angulo": "H–O–H",
+"valor": 104.4776,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7732185&charge=0",
+"trecho": "[H2O (Water)] Description ; Value ; Connectivity ; Reference ; Comment -> aHOH ; 104.4776 ; 2 ; 1 ; 3 ; 1979Hoy/Bun:1 ; equilibrium",
+"arquivo": "angulos-bruto/H2O.html"
+},
+{
+"especie": "NH3",
+"angulo": "H–N–H",
+"valor": 106.67,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7664417&charge=0",
+"trecho": "[NH3 (Ammonia)] Description ; Value ; Connectivity ; Reference ; Comment -> aHNH ; 106.67 ; 2 ; 1 ; 3 ; 1966Herzberg",
+"arquivo": "angulos-bruto/NH3.html"
+},
+{
+"especie": "H2S",
+"angulo": "H–S–H",
+"valor": 92.11,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7783064&charge=0",
+"trecho": "[H2S (Hydrogen sulfide)] Description ; Value ; Connectivity ; Reference ; Comment -> aHSH ; 92.11 ; 2 ; 1 ; 3 ; 1975Coo/DeL:237",
+"arquivo": "angulos-bruto/H2S.html"
+},
+{
+"especie": "PH3",
+"angulo": "H–P–H",
+"valor": 93.3,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7803512&charge=0",
+"trecho": "[PH3 (Phosphine)] Description ; Value ; Connectivity ; Reference ; Comment -> aHPH ; 93.3 ; 2 ; 1 ; 3 ; 1966Herzberg",
+"arquivo": "angulos-bruto/PH3.html"
+},
+{
+"especie": "O3",
+"angulo": "O–O–O",
+"valor": 116.8,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=10028156&charge=0",
+"trecho": "[O3 (Ozone)] Description ; Value ; Connectivity ; Reference ; Comment -> aOOO ; 116.8 ; 2 ; 1 ; 3 ; 1966Herzberg",
+"arquivo": "angulos-bruto/O3.html"
+},
+{
+"especie": "SO2",
+"angulo": "O–S–O",
+"valor": 119.5,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7446095&charge=0",
+"trecho": "[SO2 (Sulfur dioxide)] Description ; Value ; Connectivity ; Reference ; Comment -> aOSO ; 119.5 ; 2 ; 1 ; 3 ; 1966Herzberg",
+"arquivo": "angulos-bruto/SO2.html"
+},
+{
+"especie": "NO2",
+"angulo": "O–N–O",
+"valor": 134.1,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=10102440&charge=0",
+"trecho": "[NO2 (Nitrogen dioxide)] Description ; Value ; Connectivity ; Reference ; Comment -> aONO ; 134.1 ; 2 ; 1 ; 3 ; 1966Herzberg",
+"arquivo": "angulos-bruto/NO2.html"
+},
+{
+"especie": "ClO2",
+"angulo": "O–Cl–O",
+"valor": 117.4033,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=10049044&charge=0",
+"trecho": "[OClO (Chlorine dioxide)] Description ; Value ; Connectivity ; Reference ; Comment -> aOClO ; 117.4033 ; 2 ; 1 ; 3 ; 1992Kuchitsu(II/21)",
+"arquivo": "angulos-bruto/ClO2.html"
+},
+{
+"especie": "Cl2O",
+"angulo": "Cl–O–Cl",
+"valor": 110.88,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7791211&charge=0",
+"trecho": "[Cl2O (Dichlorine monoxide)] Description ; Value ; Connectivity ; Reference ; Comment -> aClOCl ; 110.88 ; 2 ; 1 ; 3 ; 1995Sug/Aya:259",
+"arquivo": "angulos-bruto/Cl2O.html"
+},
+{
+"especie": "OF2",
+"angulo": "F–O–F",
+"valor": 103.1,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7783417&charge=0",
+"trecho": "[F2O (Difluorine monoxide)] Description ; Value ; Connectivity ; Reference ; Comment -> aFOF ; 103.1 ; 2 ; 1 ; 3 ; 1979Har/Lau:619",
+"arquivo": "angulos-bruto/OF2.html"
+},
+{
+"especie": "NF3",
+"angulo": "F–N–F",
+"valor": 102.37,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7783542&charge=0",
+"trecho": "[NF3 (Nitrogen trifluoride)] Description ; Value ; Connectivity ; Reference ; Comment -> aFNF ; 102.37 ; 2 ; 1 ; 3 ; 1998Kuc",
+"arquivo": "angulos-bruto/NF3.html"
+},
+{
+"especie": "PCl3",
+"angulo": "Cl–P–Cl",
+"valor": 100.1,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7719122&charge=0",
+"trecho": "[PCl3 (Phosphorus trichloride)] Description ; Value ; Connectivity ; Reference ; Comment -> aClPCl ; 100.1 ; 2 ; 1 ; 3 ; 1976Hellwege(II/7)",
+"arquivo": "angulos-bruto/PCl3.html"
+},
+{
+"especie": "SCl2",
+"angulo": "Cl–S–Cl",
+"valor": 102.71,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=10545990&charge=0",
+"trecho": "[SCl2 (Sulfur dichloride)] Description ; Value ; Connectivity ; Reference ; Comment -> aClSCl ; 102.71 ; 2 ; 1 ; 3 ; 2000Biz/Clu:275 ; rs structure",
+"arquivo": "angulos-bruto/SCl2.html"
+},
+{
+"especie": "ClF3",
+"angulo": "F–Cl–F (o menor)",
+"valor": 87.45,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7790912&charge=0",
+"trecho": "[ClF3 (Chlorine trifluoride)] Description ; Value ; Connectivity ; Reference ; Comment -> aFClF ; 87.45 ; 2 ; 1 ; 3 ; 2001Muller:1570 ; re structure",
+"arquivo": "angulos-bruto/ClF3.html"
+},
+{
+"especie": "SF4",
+"angulo": "F–S–F axial-axial",
+"valor": 173.07,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7783600&charge=0",
+"trecho": "[SF4 (Sulfur tetrafluoride)] Description ; Value ; Connectivity ; Reference ; Comment -> aFSF ; 173.07 ; 2 ; 1 ; 3 ; 1962Tol/Gwi:1119 ; axial",
+"arquivo": "angulos-bruto/SF4.html"
+},
+{
+"especie": "SF4",
+"angulo": "F–S–F equatorial-equatorial",
+"valor": 101.55,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7783600&charge=0",
+"trecho": "[SF4 (Sulfur tetrafluoride)] Description ; Value ; Connectivity ; Reference ; Comment -> aFSF ; 101.55 ; 4 ; 1 ; 5 ; 1962Tol/Gwi:1119 ; equatorial",
+"arquivo": "angulos-bruto/SF4.html"
+},
+{
+"especie": "BrF5",
+"angulo": "F axial–Br–F equatorial",
+"valor": 84.8,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7789302&charge=0",
+"trecho": "[BrF5 (bromine pentafluoride)] Description ; Value ; Connectivity ; Reference ; Comment -> aFBrF ; 84.8 ; 2 ; 1 ; 3 ; Gurvich ; axial to equitorial",
+"arquivo": "angulos-bruto/BrF5.html"
+},
+{
+"especie": "SOCl2",
+"angulo": "Cl–S–Cl",
+"valor": 96.1,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7719097&charge=0",
+"trecho": "[SOCl2 (thionyl chloride)] Description ; Value ; Connectivity ; Reference ; Comment -> aClSCl ; 96.1 ; 3 ; 1 ; 4 ; 1976Hellwege(II/7)",
+"arquivo": "angulos-bruto/SOCl2.html"
+},
+{
+"especie": "SOCl2",
+"angulo": "O–S–Cl",
+"valor": 106.3,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7719097&charge=0",
+"trecho": "[SOCl2 (thionyl chloride)] Description ; Value ; Connectivity ; Reference ; Comment -> aOSCl ; 106.3 ; 2 ; 1 ; 3 ; 1976Hellwege(II/7)",
+"arquivo": "angulos-bruto/SOCl2.html"
+},
+{
+"especie": "COCl2",
+"angulo": "Cl–C–Cl",
+"valor": 111.91,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=75445&charge=0",
+"trecho": "[CCl2O (Phosgene)] Description ; Value ; Connectivity ; Reference ; Comment -> aClCCl ; 111.91 ; 3 ; 2 ; 4 ; 1998Kuc",
+"arquivo": "angulos-bruto/COCl2.html"
+},
+{
+"especie": "HOCl",
+"angulo": "H–O–Cl",
+"valor": 102.45,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7790923&charge=0",
+"trecho": "[HOCl (hypochlorous acid)] Description ; Value ; Connectivity ; Reference ; Comment -> aHOCl ; 102.45 ; 2 ; 1 ; 3 ; 1986Dar/Ger117-130 ; re value",
+"arquivo": "angulos-bruto/HOCl.html"
+},
+{
+"especie": "H2O2",
+"angulo": "H–O–O",
+"valor": 94.8,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7722841&charge=0",
+"trecho": "[H2O2 (Hydrogen peroxide)] Description ; Value ; Connectivity ; Reference ; Comment -> aHOO ; 94.8 ; 2 ; 1 ; 3 ; 1962Red/Ols:1311",
+"arquivo": "angulos-bruto/H2O2.html"
+},
+{
+"especie": "CH2Cl2",
+"angulo": "Cl–C–Cl",
+"valor": 112.2,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=75092&charge=0",
+"trecho": "[CH2Cl2 (Methylene chloride)] Description ; Value ; Connectivity ; Reference ; Comment -> aClCCl ; 112.2 ; 4 ; 1 ; 5 ; 1998Kuc ; rs",
+"arquivo": "angulos-bruto/CH2Cl2.html"
+},
+{
+"especie": "CHCl3",
+"angulo": "Cl–C–Cl",
+"valor": 110.92,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=67663&charge=0",
+"trecho": "[CHCl3 (Chloroform)] Description ; Value ; Connectivity ; Reference ; Comment -> aClCCl ; 110.92 ; 3 ; 1 ; 4 ; 1956Wol:976",
+"arquivo": "angulos-bruto/CHCl3.html"
+},
+{
+"especie": "CH3Cl",
+"angulo": "H–C–H",
+"valor": 110.75,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=74873&charge=0",
+"trecho": "[CH3Cl (Methyl chloride)] Description ; Value ; Connectivity ; Reference ; Comment -> aHCH ; 110.75 ; 3 ; 1 ; 4 ; 1973Dun/McK:232",
+"arquivo": "angulos-bruto/CH3Cl.html"
+},
+{
+"especie": "H2CO",
+"angulo": "H–C–H",
+"valor": 116.133,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=50000&charge=0",
+"trecho": "[H2CO (Formaldehyde)] Description ; Value ; Connectivity ; Reference ; Comment -> aHCH ; 116.133 ; 3 ; 2 ; 4 ; Gurvich",
+"arquivo": "angulos-bruto/H2CO.html"
+},
+{
+"especie": "C2H4",
+"angulo": "H–C–H",
+"valor": 117.6,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=74851&charge=0",
+"trecho": "[C2H4 (Ethylene)] Description ; Value ; Connectivity ; Reference ; Comment -> aHCH ; 117.6 ; 3 ; 1 ; 4 ; 1966Herzberg",
+"arquivo": "angulos-bruto/C2H4.html"
+},
+{
+"especie": "CH3OCH3",
+"angulo": "C–O–C",
+"valor": 111.2,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=115106&charge=0",
+"trecho": "[CH3OCH3 (Dimethyl ether)] Description ; Value ; Connectivity ; Reference ; Comment -> aCOC ; 111.2 ; 2 ; 1 ; 3 ; 2003Nii/Hay:65 ; rs",
+"arquivo": "angulos-bruto/CH3OCH3.html"
+},
+{
+"especie": "CH3OH",
+"angulo": "C–O–H",
+"valor": 108.87,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=67561&charge=0",
+"trecho": "[CH3OH (Methyl alcohol)] Description ; Value ; Connectivity ; Reference ; Comment -> aHOC ; 108.87 ; 1 ; 2 ; 6 ; 1955Ven/Gor:1200",
+"arquivo": "angulos-bruto/CH3OH.html"
+},
+{
+"especie": "S8",
+"angulo": "S–S–S",
+"valor": 107.9,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=10544500&charge=0",
+"trecho": "[S8 (Octasulfur)] Description ; Value ; Connectivity ; Reference ; Comment -> aSSS ; 107.9 ; 1 ; 5 ; 4 ; 1972Cot/Wil",
+"arquivo": "angulos-bruto/S8.html"
+},
+{
+"especie": "N2H4",
+"angulo": "H–N–H",
+"valor": 106,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=302012&charge=0",
+"trecho": "[N2H4 (Hydrazine)] Description ; Value ; Connectivity ; Reference ; Comment -> aHNH ; 106 ; 3 ; 1 ; 5 ; 1974Tsu/Ove:256",
+"arquivo": "angulos-bruto/N2H4.html"
+},
+{
+"especie": "HNO2",
+"angulo": "O–N–O",
+"valor": 110.6,
+"fonte": "NIST CCCBDB (Release 22, May 2022), geometria experimental",
+"url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7782776&charge=0",
+"trecho": "[HNO2 (Nitrous acid)] Description ; Value ; Connectivity ; Reference ; Comment -> aONO ; 110.6 ; 2 ; 3 ; 4 ; 1972Fin/Cox:548",
+"arquivo": "angulos-bruto/HNO2.html"
+},
+{
+"especie": "NO2−",
+"angulo": "O–N–O",
+"valor": 115,
+"fonte": "Wikipedia (en), artigo \"Nitrite\" (CCCBDB: \"No coordinate data available\")",
+"url": "https://en.wikipedia.org/wiki/Nitrite",
+"trecho": "The nitrite ion has a symmetrical structure (C2v) symmetry), with both N–O bonds having equal length and a bond angle of about 115°.",
+"arquivo": "angulos-bruto/wikipedia_Nitrite.html"
+},
+{
+"especie": "H3O+",
+"angulo": "H–O–H",
+"valor": 113,
+"fonte": "Wikipedia (en), artigo \"Hydronium\" (CCCBDB: \"No coordinate data available\")",
+"url": "https://en.wikipedia.org/wiki/Hydronium",
+"trecho": "The H−O−H bond angle is approximately 113°,",
+"arquivo": "angulos-bruto/wikipedia_Hydronium.html"
+},
+{
+"especie": "ClO3−",
+"angulo": "O–Cl–O",
+"valor": null,
+"fonte": null,
+"url": null,
+"trecho": "Tentado: CCCBDB pelo formulario (formula=ClO3-) -> \"Listing of experimental geometry data for ClO3- (chlorate anion) ... Point Group C3v No coordinate data available.\"; CCCBDB por casno=14866683&charge=-1 devolveu pagina de outra especie (H2CO-), descartada; Wikipedia (en) \"Chlorate\", \"Sodium chlorate\", \"Potassium chlorate\" e \"Chloric acid\": nenhuma traz angulo de ligacao.",
+"arquivo": "angulos-bruto/ClO3-_cccbdb_formula.html"
+},
+{
+"especie": "SO3^2−",
+"angulo": "O–S–O",
+"valor": 106,
+"fonte": "Wikipedia (en), artigo \"Sodium sulfite\" (cristal de Na2SO3·7H2O, raios X; CCCBDB: \"No coordinate data available\")",
+"url": "https://en.wikipedia.org/wiki/Sodium_sulfite",
+"trecho": "According to X-ray crystallography sodium sulfite heptahydrate features pyramidal SO32- centers. The S-O distances are 1.50 and the O-S-O angles are near 106º.",
+"arquivo": "angulos-bruto/wikipedia_Sodium_sulfite.html"
+}
+]

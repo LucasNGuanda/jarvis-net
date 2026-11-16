@@ -1,0 +1,18 @@
+{
+ "_fonte": "raios iônicos efetivos de Shannon (coordenação 6), em ångström; lidos por script da tabela \"Effective ionic radii\" do artigo Ionic radius da Wikipedia em inglês, em 16/11/2026",
+ "Na+": {
+  "r": 1.02
+ },
+ "K+": {
+  "r": 1.38
+ },
+ "Ca2+": {
+  "r": 1.0
+ },
+ "Cu2+": {
+  "r": 0.73
+ },
+ "Cl-": {
+  "r": 1.81
+ }
+}
