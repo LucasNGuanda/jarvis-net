@@ -96,7 +96,7 @@ window.CATALOGO.push(
     ["I02","Carboidratos e lipídeos: açúcares, gorduras e sabões",[],true],
     ["I03","Aminoácidos, proteínas e enzimas: pKa, ponto isoelétrico e ligação peptídica",[],true],
     ["I04","Ácidos nucleicos: DNA, RNA e o código genético",[],true],
-    ["I05","Biocombustíveis",[]],
+    ["I05","Biocombustíveis: etanol, biodiesel, biogás e o balanço de carbono",[],true],
     ["I06","Ciclos biogeoquímicos",[]],
     ["I07","Poluição da água e do ar",[]],
     ["I08","Química verde e cotidiano",[]],

@@ -243,8 +243,32 @@ else:
                   "atpDG": float(atp.group(1)), "atpF": val(AN["ATP"]["formula"]), "atpM": val(AN["ATP"]["massa_molar"])}
     if BIO["DNA"]["codons"] != 64: erros.append(("códons", BIO["DNA"]))
 BIO["BASES"] = bases
+
+# ---------- I05: combustíveis ----------
+# Entalpia padrão de combustão: só a Tabela 5.2 do OpenStax Chemistry 2e (kJ/mol), para as contas serem coerentes entre si. Densidade e octanagem (RON): caixa de dados e tabela da Wikipedia.
+CBS = D["biocombustiveis"]["combustiveis"]
+def com_obs(lista, palavra, un=None):
+    for e in (lista or []):
+        if isinstance(e, dict) and e.get("valor") is not None and palavra in str(e.get("obs") or "") and (un is None or e.get("unidade") == un): return e["valor"]
+    return None
+COMB_L = [["etanol", "etanol", "CCO", True, True], ["metanol", "metanol", "CO", True, False], ["metano", "metano", "C", False, True], ["hidrogenio", "hidrogênio", "[H][H]", False, False], ["isooctano", "isooctano (2,2,4-trimetilpentano)", "CC(C)CC(C)(C)C", True, False]]
+comb = []
+for ch, nome, smi, liquido, bio in COMB_L:
+    c = CBS[ch]; dh = com_obs(c["calor_de_combustao"], "Tabela 5.2", "kJ/mol"); f = val(c["formula"]); at = conta_smi(smi)
+    if dh is None or dh >= 0: erros.append(("combustível: ΔH de combustão do OpenStax não achado", ch, dh)); continue
+    if hill(at) != hill(conta_f(str(f))): erros.append(("combustível: fórmula", ch, f, hill(at)))
+    dens = num(c["densidade"]) if liquido else None
+    if liquido and not (0.6 < dens < 0.9): erros.append(("combustível: densidade", ch, dens))
+    ron = val(c.get("octanagem")); m = at.get("C", 0) * 12 + at.get("H", 0) + at.get("O", 0) * 16
+    comb.append({"k": ch, "nome": nome, "f": hill(at), "m": m, "mfonte": val(c["massa_molar"]), "dh": -dh, "c": at.get("C", 0), "h": at.get("H", 0), "o": at.get("O", 0), "d": dens, "ron": ron if isinstance(ron, (int, float)) else None, "bio": bio})
+BG = D["biocombustiveis"]["biogas"]; frm = str(val(D["biocombustiveis"]["fermentacao_alcoolica"]))
+if not re.search(r"C6H12O6 .*→ 2 C2H5OH \+ 2 CO2", frm): erros.append(("fermentação: equação da fonte", frm))
+BIO["COMB"] = comb
+BIO["BIOGAS"] = {"ch4": val(BG["CH4_percentual"]), "co2": val(BG["CO2_percentual"])}
+if not (isinstance(BIO["BIOGAS"]["ch4"], list) and len(comb) == 5): erros.append(("biogás/combustíveis", BIO["BIOGAS"], len(comb)))
 #MAIS-SECOES
 
+json.dump(cache, open(ARQ, "w"), ensure_ascii=False, indent=1)   # todas as consultas ao PubChem, de todas as seções
 J = lambda o: json.dumps(o, ensure_ascii=False)
 linhas = []
 for k, v in BIO.items():

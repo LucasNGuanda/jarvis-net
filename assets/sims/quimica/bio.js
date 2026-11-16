@@ -83,6 +83,14 @@
       {"nome": "timina", "l": "T", "f": "C5H6N2O2", "m": 126, "mfonte": 126.115, "tipo": "pirimidina", "onde": "só DNA", "smi": "Cc1c[nH]c(=O)[nH]c1=O"},
       {"nome": "uracila", "l": "U", "f": "C4H4N2O2", "m": 112, "mfonte": 112.08676, "tipo": "pirimidina", "onde": "só RNA", "smi": "O=c1cc[nH]c(=O)[nH]1"},
     ],
+    COMB: [
+      {"k": "etanol", "nome": "etanol", "f": "C2H6O", "m": 46, "mfonte": 46.069, "dh": 1366.8, "c": 2, "h": 6, "o": 1, "d": 0.78945, "ron": 108.6, "bio": true},
+      {"k": "metanol", "nome": "metanol", "f": "CH4O", "m": 32, "mfonte": 32.042, "dh": 726.1, "c": 1, "h": 4, "o": 1, "d": 0.792, "ron": 108.7, "bio": false},
+      {"k": "metano", "nome": "metano", "f": "CH4", "m": 16, "mfonte": 16.043, "dh": 890.8, "c": 1, "h": 4, "o": 0, "d": null, "ron": 120, "bio": true},
+      {"k": "hidrogenio", "nome": "hidrogênio", "f": "H2", "m": 2, "mfonte": 2.016, "dh": 285.8, "c": 0, "h": 2, "o": 0, "d": null, "ron": null, "bio": false},
+      {"k": "isooctano", "nome": "isooctano (2,2,4-trimetilpentano)", "f": "C8H18", "m": 114, "mfonte": 114.232, "dh": 5465.5, "c": 8, "h": 18, "o": 0, "d": 0.692, "ron": 100, "bio": false},
+    ],
+    BIOGAS: {"ch4": [50, 80], "co2": [15, 50]},
   };
   /*BIO-FIM*/
 
@@ -190,6 +198,26 @@
     el.querySelectorAll("[data-b]").forEach((b) => b.addEventListener("click", () => { const k = b.dataset.b; if (k === "x") s = s.length > 1 ? s.slice(0, -1) : s; else if (k === "r") { const n = 6 + Math.floor(Math.random() * 7); s = Array.from({ length: n }, () => "ATGC"[Math.floor(Math.random() * 4)]).join(""); ver = false; } else if (s.length < MAX) s += k; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); }));
     q("[data-v=ver]").addEventListener("click", () => { ver = !ver; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); });
     SIM.qDNA._ult = { poe: (x, v = true) => { s = x; ver = v; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); }, est }; desenha(); };
+
+  /* ---------- I05: combustíveis ---------- */
+  /* números de um combustível CxHyOz com entalpia de combustão dh (kJ/mol, positiva = liberada), massa m e densidade d (g/cm³, só líquidos) */
+  SIM.combustivel = (c) => ({ kJg: c.dh / c.m, MJL: c.d ? (c.dh / c.m) * c.d : null, o2: c.c + c.h / 4 - c.o / 2, co2: c.c, h2o: c.h / 2, gCO2MJ: (c.c * 44) / (c.dh / 1000) });
+  /* nome: "Combustíveis: energia, oxigênio e CO₂" · matéria: Química · tema: I05 */
+  SIM.qCombustivel = (el, F) => { const C = SIM.BIO.COMB; let i = 0, q = "g", modo = "kJg";
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;justify-content:center;padding:12px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">combustível</p><div class="bts">${botoes(C.map((c, k) => [k, c.nome.replace(/ \(.+\)/, "")]), "c", i)}</div></div>
+      <div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">queimar</p><div class="bts">${botoes([["g", "1 g"], ["mol", "1 mol"], ["L", "1 L (líquido)"]], "q", q)}</div></div>
+      <div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">comparar por</p><div class="bts">${botoes([["kJg", "energia por grama"], ["MJL", "energia por litro"], ["gCO2MJ", "CO₂ por energia"]], "modo", modo)}</div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const qs = (s) => el.querySelector(s), sb = (f) => f.replace(/(\d+)/g, "<sub>$1</sub>");
+    const est = () => { const c = C[i], x = SIM.combustivel(c), n = q === "g" ? 1 / c.m : q === "mol" ? 1 : c.d ? (1000 * c.d) / c.m : null; return { k: c.k, q, modo, ...x, n, energia: n === null ? null : n * c.dh, mCO2: n === null ? null : n * c.c * 44, mO2: n === null ? null : n * x.o2 * 32 }; };
+    const desenha = () => { const c = C[i], e = est(), W = 620, H = 30 * C.length + 34, vals = C.map((y) => SIM.combustivel(y)[modo]), mx = Math.max(...vals.filter((v) => v !== null)), UN = { kJg: "kJ/g", MJL: "MJ/L", gCO2MJ: "g de CO₂ por MJ" }[modo];
+      let s = ""; C.forEach((y, k) => { const v = vals[k], yy = 12 + 30 * k, w = v === null ? 0 : (350 * v) / mx; s += `<text x="150" y="${yy + 14}" text-anchor="end" class="tx2" style="font-size:12.5px;${k === i ? "fill:var(--ink);font-weight:700" : ""}">${y.nome.replace(/ \(.+\)/, "")}</text><rect x="160" y="${yy}" width="${w.toFixed(1)}" height="20" rx="4" style="fill:${k === i ? "var(--mod)" : "var(--line,#2a3140)"}"/><text x="${(166 + w).toFixed(1)}" y="${yy + 14}" class="tx2" style="font-size:12.5px">${v === null ? "é gás: sem densidade de líquido" : nt(v, 1) + " " + UN}</text>`; });
+      qs("[data-v=sv]").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="comparação entre combustíveis">${s}</svg>`;
+      qs("[data-v=lt]").innerHTML = vis("fórmula", sb(c.f)) + vis("ΔH de combustão", "−" + nt(c.dh, 1) + " kJ/mol") + vis("energia liberada", e.energia === null ? "—" : nt(e.energia, 1) + " kJ") + vis("O₂ consumido", e.mO2 === null ? "—" : nt(e.mO2, 2) + " g") + vis("CO₂ formado", e.mCO2 === null ? "—" : nt(e.mCO2, 2) + " g") + vis("octanagem (RON)", c.ron === null ? "sem dado" : nt(c.ron, 1));
+      qs("[data-v=st]").innerHTML = `Combustão completa de 1 mol: <b>${nt(e.o2, 2)} O₂ → ${e.co2} CO₂ + ${nt(e.h2o, 1)} H₂O</b>, liberando ${nt(c.dh, 1)} kJ. ` + (e.n === null ? "Este combustível é gás nas condições ambientes: a opção de 1 L de líquido não se aplica." : `Na quantidade escolhida há ${nt(e.n, 3)} mol.`) + ` ${c.bio ? "Pode ser obtido de biomassa (fermentação ou biodigestão)." : ""} ΔH: Tabela 5.2 do OpenStax Chemistry; densidade e octanagem: Wikipedia. Massas com H = 1, C = 12, O = 16.`; };
+    liga(el, "c", (v) => { i = +v; desenha(); }); liga(el, "q", (v) => { q = v; desenha(); }); liga(el, "modo", (v) => { modo = v; desenha(); });
+    SIM.qCombustivel._ult = { poe: (k, qq = "g", m = "kJg") => { i = C.findIndex((c) => c.k === k); q = qq; modo = m; [["c", i], ["q", q], ["modo", modo]].forEach(([a, v]) => el.querySelectorAll(`[data-${a}]`).forEach((x) => x.setAttribute("aria-pressed", String(x.dataset[a]) === String(v)))); desenha(); }, est }; desenha(); };
 
   //MAIS-LABS
 })();
