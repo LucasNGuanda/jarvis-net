@@ -1,0 +1,446 @@
+{
+ "methane": {
+  "cid": 297,
+  "smiles": "C"
+ },
+ "ethane": {
+  "cid": 6324,
+  "smiles": "CC"
+ },
+ "propane": {
+  "cid": 6334,
+  "smiles": "CCC"
+ },
+ "butane": {
+  "cid": 7843,
+  "smiles": "CCCC"
+ },
+ "2-methylpropane": {
+  "cid": 6360,
+  "smiles": "CC(C)C"
+ },
+ "pentane": {
+  "cid": 8003,
+  "smiles": "CCCCC"
+ },
+ "2-methylbutane": {
+  "cid": 6556,
+  "smiles": "CCC(C)C"
+ },
+ "2,2-dimethylpropane": {
+  "cid": 10041,
+  "smiles": "CC(C)(C)C"
+ },
+ "cyclohexane": {
+  "cid": 8078,
+  "smiles": "C1CCCCC1"
+ },
+ "chloromethane": {
+  "cid": 6327,
+  "smiles": "CCl"
+ },
+ "chloroethane": {
+  "cid": 6337,
+  "smiles": "CCCl"
+ },
+ "1-chloropropane": {
+  "cid": 10899,
+  "smiles": "CCCCl"
+ },
+ "2-chloropropane": {
+  "cid": 6361,
+  "smiles": "CC(C)Cl"
+ },
+ "1-chlorobutane": {
+  "cid": 8005,
+  "smiles": "CCCCCl"
+ },
+ "2-chlorobutane": {
+  "cid": 6563,
+  "smiles": "CCC(C)Cl"
+ },
+ "1-chloro-2-methylpropane": {
+  "cid": 10554,
+  "smiles": "CC(C)CCl"
+ },
+ "2-chloro-2-methylpropane": {
+  "cid": 10486,
+  "smiles": "CC(C)(C)Cl"
+ },
+ "1-chloropentane": {
+  "cid": 10977,
+  "smiles": "CCCCCCl"
+ },
+ "2-chloropentane": {
+  "cid": 12245,
+  "smiles": "CCCC(C)Cl"
+ },
+ "3-chloropentane": {
+  "cid": 12016,
+  "smiles": "CCC(CC)Cl"
+ },
+ "1-chloro-2-methylbutane": {
+  "cid": 12015,
+  "smiles": "CCC(C)CCl"
+ },
+ "2-chloro-2-methylbutane": {
+  "cid": 61143,
+  "smiles": "CCC(C)(C)Cl"
+ },
+ "2-chloro-3-methylbutane": {
+  "cid": 522085,
+  "smiles": "CC(C)C(C)Cl"
+ },
+ "1-chloro-3-methylbutane": {
+  "cid": 7893,
+  "smiles": "CC(C)CCCl"
+ },
+ "1-chloro-2,2-dimethylpropane": {
+  "cid": 12956,
+  "smiles": "CC(C)(C)CCl"
+ },
+ "chlorocyclohexane": {
+  "cid": 10952,
+  "smiles": "C1CCC(CC1)Cl"
+ },
+ "bromomethane": {
+  "cid": 6323,
+  "smiles": "CBr"
+ },
+ "bromoethane": {
+  "cid": 6332,
+  "smiles": "CCBr"
+ },
+ "1-bromopropane": {
+  "cid": 7840,
+  "smiles": "CCCBr"
+ },
+ "2-bromopropane": {
+  "cid": 6358,
+  "smiles": "CC(C)Br"
+ },
+ "1-bromobutane": {
+  "cid": 8002,
+  "smiles": "CCCCBr"
+ },
+ "2-bromobutane": {
+  "cid": 6554,
+  "smiles": "CCC(C)Br"
+ },
+ "2-bromo-2-methylpropane": {
+  "cid": 10485,
+  "smiles": "CC(C)(C)Br"
+ },
+ "1-bromo-2-methylpropane": {
+  "cid": 6555,
+  "smiles": "CC(C)CBr"
+ },
+ "2-bromo-2-methylbutane": {
+  "cid": 68180,
+  "smiles": "CCC(C)(C)Br"
+ },
+ "2-bromo-3-methylbutane": {
+  "cid": 529978,
+  "smiles": "CC(C)C(C)Br"
+ },
+ "methanol": {
+  "cid": 887,
+  "smiles": "CO"
+ },
+ "ethanol": {
+  "cid": 702,
+  "smiles": "CCO"
+ },
+ "propan-1-ol": {
+  "cid": 1031,
+  "smiles": "CCCO"
+ },
+ "propan-2-ol": {
+  "cid": 3776,
+  "smiles": "CC(C)O"
+ },
+ "butan-1-ol": {
+  "cid": 263,
+  "smiles": "CCCCO"
+ },
+ "butan-2-ol": {
+  "cid": 6568,
+  "smiles": "CCC(C)O"
+ },
+ "2-methylpropan-2-ol": {
+  "cid": 6386,
+  "smiles": "CC(C)(C)O"
+ },
+ "2-methylbutan-2-ol": {
+  "cid": 6405,
+  "smiles": "CCC(C)(C)O"
+ },
+ "2-methylpropan-1-ol": {
+  "cid": 6560,
+  "smiles": "CC(C)CO"
+ },
+ "3-methylbutan-2-ol": {
+  "cid": 11732,
+  "smiles": "CC(C)C(C)O"
+ },
+ "cyclohexanol": {
+  "cid": 7966,
+  "smiles": "C1CCC(CC1)O"
+ },
+ "propanenitrile": {
+  "cid": 7854,
+  "smiles": "CCC#N"
+ },
+ "ethanamine": {
+  "cid": 6341,
+  "smiles": "CCN"
+ },
+ "methoxyethane": {
+  "cid": 10903,
+  "smiles": "CCOC"
+ },
+ "ethoxyethane": {
+  "cid": 3283,
+  "smiles": "CCOCC"
+ },
+ "benzene": {
+  "cid": 241,
+  "smiles": "C1=CC=CC=C1"
+ },
+ "chlorobenzene": {
+  "cid": 7964,
+  "smiles": "C1=CC=C(C=C1)Cl"
+ },
+ "bromobenzene": {
+  "cid": 7961,
+  "smiles": "C1=CC=C(C=C1)Br"
+ },
+ "nitrobenzene": {
+  "cid": 7416,
+  "smiles": "C1=CC=C(C=C1)[N+](=O)[O-]"
+ },
+ "toluene": {
+  "cid": 1140,
+  "smiles": "CC1=CC=CC=C1"
+ },
+ "ethylbenzene": {
+  "cid": 7500,
+  "smiles": "CCC1=CC=CC=C1"
+ },
+ "2-nitrotoluene": {
+  "cid": 6944,
+  "smiles": "CC1=CC=CC=C1[N+](=O)[O-]"
+ },
+ "4-nitrotoluene": {
+  "cid": 7473,
+  "smiles": "CC1=CC=C(C=C1)[N+](=O)[O-]"
+ },
+ "3-nitrotoluene": {
+  "cid": 7422,
+  "smiles": "CC1=CC(=CC=C1)[N+](=O)[O-]"
+ },
+ "1,3-dinitrobenzene": {
+  "cid": 7452,
+  "smiles": "C1=CC(=CC(=C1)[N+](=O)[O-])[N+](=O)[O-]"
+ },
+ "1,2-dinitrobenzene": {
+  "cid": 10707,
+  "smiles": "C1=CC=C(C(=C1)[N+](=O)[O-])[N+](=O)[O-]"
+ },
+ "1,4-dinitrobenzene": {
+  "cid": 7492,
+  "smiles": "C1=CC(=CC=C1[N+](=O)[O-])[N+](=O)[O-]"
+ },
+ "2-bromotoluene": {
+  "cid": 7236,
+  "smiles": "CC1=CC=CC=C1Br"
+ },
+ "4-bromotoluene": {
+  "cid": 7805,
+  "smiles": "CC1=CC=C(C=C1)Br"
+ },
+ "3-bromotoluene": {
+  "cid": 11560,
+  "smiles": "CC1=CC(=CC=C1)Br"
+ },
+ "ethene": {
+  "cid": 6325,
+  "smiles": "C=C"
+ },
+ "propene": {
+  "cid": 8252,
+  "smiles": "CC=C"
+ },
+ "but-1-ene": {
+  "cid": 7844,
+  "smiles": "CCC=C"
+ },
+ "but-2-ene": {
+  "cid": 12220,
+  "smiles": "CC=CC"
+ },
+ "2-methylpropene": {
+  "cid": 8255,
+  "smiles": "CC(=C)C"
+ },
+ "2-methylbut-2-ene": {
+  "cid": 10553,
+  "smiles": "CC=C(C)C"
+ },
+ "2-methylbut-1-ene": {
+  "cid": 11240,
+  "smiles": "CCC(=C)C"
+ },
+ "3-methylbut-1-ene": {
+  "cid": 11239,
+  "smiles": "CC(C)C=C"
+ },
+ "pent-1-ene": {
+  "cid": 8004,
+  "smiles": "CCCC=C"
+ },
+ "pent-2-ene": {
+  "cid": 12585,
+  "smiles": "CCC=CC"
+ },
+ "2,3-dimethylbut-2-ene": {
+  "cid": 11250,
+  "smiles": "CC(=C(C)C)C"
+ },
+ "cyclohexene": {
+  "cid": 8079,
+  "smiles": "C1CCC=CC1"
+ },
+ "ethyne": {
+  "cid": 6326,
+  "smiles": "C#C"
+ },
+ "propyne": {
+  "cid": 6335,
+  "smiles": "CC#C"
+ },
+ "1,2-dibromoethane": {
+  "cid": 7839,
+  "smiles": "C(CBr)Br"
+ },
+ "1,2-dichloroethane": {
+  "cid": 11,
+  "smiles": "C(CCl)Cl"
+ },
+ "1,2-dibromopropane": {
+  "cid": 6553,
+  "smiles": "CC(CBr)Br"
+ },
+ "2,3-dibromobutane": {
+  "cid": 21508,
+  "smiles": "CC(C(C)Br)Br"
+ },
+ "1,2-dibromobutane": {
+  "cid": 10792,
+  "smiles": "CCC(CBr)Br"
+ },
+ "1,2-dibromocyclohexane": {
+  "cid": 95314,
+  "smiles": "C1CCC(C(C1)Br)Br"
+ },
+ "formaldehyde": {
+  "cid": 712,
+  "smiles": "C=O"
+ },
+ "acetaldehyde": {
+  "cid": 177,
+  "smiles": "CC=O"
+ },
+ "propanal": {
+  "cid": 527,
+  "smiles": "CCC=O"
+ },
+ "butanal": {
+  "cid": 261,
+  "smiles": "CCCC=O"
+ },
+ "2-methylpropanal": {
+  "cid": 6561,
+  "smiles": "CC(C)C=O"
+ },
+ "acetone": {
+  "cid": 180,
+  "smiles": "CC(=O)C"
+ },
+ "butan-2-one": {
+  "cid": 6569,
+  "smiles": "CCC(=O)C"
+ },
+ "3-methylbutan-2-one": {
+  "cid": 11251,
+  "smiles": "CC(C)C(=O)C"
+ },
+ "cyclohexanone": {
+  "cid": 7967,
+  "smiles": "C1CCC(=O)CC1"
+ },
+ "formic acid": {
+  "cid": 284,
+  "smiles": "C(=O)O"
+ },
+ "acetic acid": {
+  "cid": 176,
+  "smiles": "CC(=O)O"
+ },
+ "propanoic acid": {
+  "cid": 1032,
+  "smiles": "CCC(=O)O"
+ },
+ "butanoic acid": {
+  "cid": 264,
+  "smiles": "CCCC(=O)O"
+ },
+ "2-methylpropanoic acid": {
+  "cid": 6590,
+  "smiles": "CC(C)C(=O)O"
+ },
+ "ethyl acetate": {
+  "cid": 8857,
+  "smiles": "CCOC(=O)C"
+ },
+ "methyl acetate": {
+  "cid": 6584,
+  "smiles": "CC(=O)OC"
+ },
+ "ethyl formate": {
+  "cid": 8025,
+  "smiles": "CCOC=O"
+ },
+ "methyl propanoate": {
+  "cid": 11124,
+  "smiles": "CCC(=O)OC"
+ },
+ "propyl acetate": {
+  "cid": 7997,
+  "smiles": "CCCOC(=O)C"
+ },
+ "methyl formate": {
+  "cid": 7865,
+  "smiles": "COC=O"
+ },
+ "ethyl butanoate": {
+  "cid": 7762,
+  "smiles": "CCCC(=O)OCC"
+ },
+ "sodium acetate": {
+  "cid": 31372,
+  "smiles": "CC(=O)[O-].[Na+]"
+ },
+ "sodium formate": {
+  "cid": 2723810,
+  "smiles": "C(=O)[O-].[Na+]"
+ },
+ "sodium propanoate": {
+  "cid": 2723816,
+  "smiles": "CCC(=O)[O-].[Na+]"
+ },
+ "sodium butanoate": {
+  "cid": 5222465,
+  "smiles": "CCCC(=O)[O-].[Na+]"
+ }
+}

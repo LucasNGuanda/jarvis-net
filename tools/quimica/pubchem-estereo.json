@@ -1,0 +1,247 @@
+{
+ "butan-2-ol": {
+  "cid": 6568,
+  "smiles": "CCC(C)O",
+  "iupac": "butan-2-ol"
+ },
+ "2-chlorobutane": {
+  "cid": 6563,
+  "smiles": "CCC(C)Cl",
+  "iupac": "2-chlorobutane"
+ },
+ "2-bromobutane": {
+  "cid": 6554,
+  "smiles": "CCC(C)Br",
+  "iupac": "2-bromobutane"
+ },
+ "lactic acid": {
+  "cid": 612,
+  "smiles": "CC(C(=O)O)O",
+  "iupac": "2-hydroxypropanoic acid"
+ },
+ "alanine": {
+  "cid": 5950,
+  "smiles": "CC(C(=O)O)N",
+  "iupac": "(2S)-2-aminopropanoic acid"
+ },
+ "3-methylhexane": {
+  "cid": 11507,
+  "smiles": "CCCC(C)CC",
+  "iupac": "3-methylhexane"
+ },
+ "pentan-2-ol": {
+  "cid": 22386,
+  "smiles": "CCCC(C)O",
+  "iupac": "pentan-2-ol"
+ },
+ "2-methylbutan-1-ol": {
+  "cid": 8723,
+  "smiles": "CCC(C)CO",
+  "iupac": "2-methylbutan-1-ol"
+ },
+ "propan-2-ol": {
+  "cid": 3776,
+  "smiles": "CC(C)O",
+  "iupac": "propan-2-ol"
+ },
+ "pentan-3-ol": {
+  "cid": 11428,
+  "smiles": "CCC(CC)O",
+  "iupac": "pentan-3-ol"
+ },
+ "2-methylbutane": {
+  "cid": 6556,
+  "smiles": "CCC(C)C",
+  "iupac": "2-methylbutane"
+ },
+ "butan-1-ol": {
+  "cid": 263,
+  "smiles": "CCCCO",
+  "iupac": "butan-1-ol"
+ },
+ "2-chloropropane": {
+  "cid": 6361,
+  "smiles": "CC(C)Cl",
+  "iupac": "2-chloropropane"
+ },
+ "propanoic acid": {
+  "cid": 1032,
+  "smiles": "CCC(=O)O",
+  "iupac": "propanoic acid"
+ },
+ "3-methylpentane": {
+  "cid": 7282,
+  "smiles": "CCC(C)CC",
+  "iupac": "3-methylpentane"
+ },
+ "bromochlorofluoromethane": {
+  "cid": 79058,
+  "smiles": "C(F)(Cl)Br",
+  "iupac": "bromo-chloro-fluoromethane"
+ },
+ "1-chloro-1-fluoroethane": {
+  "cid": 15373,
+  "smiles": "CC(F)Cl",
+  "iupac": "1-chloro-1-fluoroethane"
+ },
+ "tartaric acid": {
+  "cid": 444305,
+  "smiles": "C(C(C(=O)O)O)(C(=O)O)O",
+  "iupac": "(2R,3R)-2,3-dihydroxybutanedioic acid"
+ },
+ "2,3-dichlorobutane": {
+  "cid": 24233,
+  "smiles": "CC(C(C)Cl)Cl",
+  "iupac": "2,3-dichlorobutane"
+ },
+ "butane-2,3-diol": {
+  "cid": 262,
+  "smiles": "CC(C(C)O)O",
+  "iupac": "butane-2,3-diol"
+ },
+ "2,3-dibromobutane": {
+  "cid": 21508,
+  "smiles": "CC(C(C)Br)Br",
+  "iupac": "2,3-dibromobutane"
+ },
+ "2-bromo-3-chlorobutane": {
+  "cid": 12644679,
+  "smiles": "CC(C(C)Br)Cl",
+  "iupac": "2-bromo-3-chlorobutane"
+ },
+ "3-chlorobutan-2-ol": {
+  "cid": 11252,
+  "smiles": "CC(C(C)Cl)O",
+  "iupac": "3-chlorobutan-2-ol"
+ },
+ "aldehydo-D-glucose": {
+  "cid": 107526,
+  "smiles": "C(C(C(C(C(C=O)O)O)O)O)O",
+  "iupac": "(2R,3S,4R,5R)-2,3,4,5,6-pentahydroxyhexanal"
+ },
+ "2,3,4-trihydroxybutanal": {
+  "cid": 101561,
+  "smiles": "C(C(C(C=O)O)O)O",
+  "iupac": "2,3,4-trihydroxybutanal"
+ },
+ "glyceraldehyde": {
+  "cid": 751,
+  "smiles": "C(C(C=O)O)O",
+  "iupac": "2,3-dihydroxypropanal"
+ },
+ "but-2-ene": {
+  "cid": 12220,
+  "smiles": "CC=CC",
+  "iupac": "but-2-ene"
+ },
+ "pent-2-ene": {
+  "cid": 12585,
+  "smiles": "CCC=CC",
+  "iupac": "pent-2-ene"
+ },
+ "hex-3-ene": {
+  "cid": 11601,
+  "smiles": "CCC=CCC",
+  "iupac": "hex-3-ene"
+ },
+ "hex-2-ene": {
+  "cid": 19966,
+  "smiles": "CCCC=CC",
+  "iupac": "hex-2-ene"
+ },
+ "1,2-dichloroethene": {
+  "cid": 10900,
+  "smiles": "C(=CCl)Cl",
+  "iupac": "1,2-dichloroethene"
+ },
+ "1,2-dibromoethene": {
+  "cid": 10897,
+  "smiles": "C(=CBr)Br",
+  "iupac": "1,2-dibromoethene"
+ },
+ "1-chloroprop-1-ene": {
+  "cid": 11536,
+  "smiles": "CC=CCl",
+  "iupac": "1-chloroprop-1-ene"
+ },
+ "but-2-enedioic acid": {
+  "cid": 444266,
+  "smiles": "C(=CC(=O)O)C(=O)O",
+  "iupac": "(Z)-but-2-enedioic acid"
+ },
+ "but-2-enoic acid": {
+  "cid": 19499,
+  "smiles": "CC=CC(=O)O",
+  "iupac": "but-2-enoic acid"
+ },
+ "but-1-ene": {
+  "cid": 7844,
+  "smiles": "CCC=C",
+  "iupac": "but-1-ene"
+ },
+ "propene": {
+  "cid": 8252,
+  "smiles": "CC=C",
+  "iupac": "prop-1-ene"
+ },
+ "2-methylpropene": {
+  "cid": 8255,
+  "smiles": "CC(=C)C",
+  "iupac": "2-methylprop-1-ene"
+ },
+ "2-methylbut-2-ene": {
+  "cid": 10553,
+  "smiles": "CC=C(C)C",
+  "iupac": "2-methylbut-2-ene"
+ },
+ "1,1-dichloroethene": {
+  "cid": 6366,
+  "smiles": "C=C(Cl)Cl",
+  "iupac": "1,1-dichloroethene"
+ },
+ "pent-1-ene": {
+  "cid": 8004,
+  "smiles": "CCCC=C",
+  "iupac": "pent-1-ene"
+ },
+ "2,3-dimethylbut-2-ene": {
+  "cid": 11250,
+  "smiles": "CC(=C(C)C)C",
+  "iupac": "2,3-dimethylbut-2-ene"
+ },
+ "3-methylpent-2-ene": {
+  "cid": 12014,
+  "smiles": "CCC(=CC)C",
+  "iupac": "3-methylpent-2-ene"
+ },
+ "pent-3-en-2-ol": {
+  "cid": 15289,
+  "smiles": "CC=CC(C)O",
+  "iupac": "pent-3-en-2-ol"
+ },
+ "4-chloropent-2-ene": {
+  "cid": 518970,
+  "smiles": "CC=CC(C)Cl",
+  "iupac": "4-chloropent-2-ene"
+ },
+ "hexa-2,4-diene": {
+  "cid": 11600,
+  "smiles": "CC=CC=CC",
+  "iupac": "hexa-2,4-diene"
+ },
+ "hepta-2,5-diene": {
+  "cid": 519275,
+  "smiles": "CC=CCC=CC",
+  "iupac": "hepta-2,5-diene"
+ },
+ "3-methylpent-1-ene": {
+  "cid": 12969,
+  "smiles": "CCC(C)C=C",
+  "iupac": "3-methylpent-1-ene"
+ },
+ "but-3-en-2-ol": {
+  "cid": 11716,
+  "smiles": "CC(C=C)O",
+  "iupac": "but-3-en-2-ol"
+ }
+}

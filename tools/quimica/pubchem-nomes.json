@@ -1,0 +1,806 @@
+{
+ "1,1-dimethylcyclopropane": {
+  "CID": 74202,
+  "ConnectivitySMILES": "CC1(CC1)C",
+  "IUPACName": "1,1-dimethylcyclopropane",
+  "MolecularFormula": "C5H10",
+  "SMILES": "CC1(CC1)C",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/1%2C1-dimethylcyclopropane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "1,2-dimethylcyclopropane": {
+  "CID": 102832,
+  "ConnectivitySMILES": "CC1CC1C",
+  "IUPACName": "1,2-dimethylcyclopropane",
+  "MolecularFormula": "C5H10",
+  "SMILES": "CC1CC1C",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/1%2C2-dimethylcyclopropane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "1-chloro-2-methylpropane": {
+  "CID": 10554,
+  "ConnectivitySMILES": "CC(C)CCl",
+  "IUPACName": "1-chloro-2-methylpropane",
+  "MolecularFormula": "C4H9Cl",
+  "SMILES": "CC(C)CCl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/1-chloro-2-methylpropane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "1-chlorobutane": {
+  "CID": 8005,
+  "ConnectivitySMILES": "CCCCCl",
+  "IUPACName": "1-chlorobutane",
+  "MolecularFormula": "C4H9Cl",
+  "SMILES": "CCCCCl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/1-chlorobutane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "1-chloropropane": {
+  "CID": 10899,
+  "ConnectivitySMILES": "CCCCl",
+  "IUPACName": "1-chloropropane",
+  "MolecularFormula": "C3H7Cl",
+  "SMILES": "CCCCl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/1-chloropropane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "1-methoxypropane": {
+  "CID": 11182,
+  "ConnectivitySMILES": "CCCOC",
+  "IUPACName": "1-methoxypropane",
+  "MolecularFormula": "C4H10O",
+  "SMILES": "CCCOC",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/1-methoxypropane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "2-bromo-2-methylpropane": {
+  "CID": 10485,
+  "ConnectivitySMILES": "CC(C)(C)Br",
+  "IUPACName": "2-bromo-2-methylpropane",
+  "MolecularFormula": "C4H9Br",
+  "SMILES": "CC(C)(C)Br",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/2-bromo-2-methylpropane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "2-chloro-2-methylpropane": {
+  "CID": 10486,
+  "ConnectivitySMILES": "CC(C)(C)Cl",
+  "IUPACName": "2-chloro-2-methylpropane",
+  "MolecularFormula": "C4H9Cl",
+  "SMILES": "CC(C)(C)Cl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/2-chloro-2-methylpropane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "2-chlorobutane": {
+  "CID": 6563,
+  "ConnectivitySMILES": "CCC(C)Cl",
+  "IUPACName": "2-chlorobutane",
+  "MolecularFormula": "C4H9Cl",
+  "SMILES": "CCC(C)Cl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/2-chlorobutane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "2-chloropropane": {
+  "CID": 6361,
+  "ConnectivitySMILES": "CC(C)Cl",
+  "IUPACName": "2-chloropropane",
+  "MolecularFormula": "C3H7Cl",
+  "SMILES": "CC(C)Cl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/2-chloropropane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "2-hydroxypropanoic acid": {
+  "CID": 612,
+  "ConnectivitySMILES": "CC(C(=O)O)O",
+  "IUPACName": "2-hydroxypropanoic acid",
+  "MolecularFormula": "C3H6O3",
+  "SMILES": "CC(C(=O)O)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/2-hydroxypropanoic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "2-methoxypropane": {
+  "CID": 11721,
+  "ConnectivitySMILES": "CC(C)OC",
+  "IUPACName": "2-methoxypropane",
+  "MolecularFormula": "C4H10O",
+  "SMILES": "CC(C)OC",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/2-methoxypropane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "2-methyloxirane": {
+  "CID": 6378,
+  "ConnectivitySMILES": "CC1CO1",
+  "IUPACName": "2-methyloxirane",
+  "MolecularFormula": "C3H6O",
+  "SMILES": "CC1CO1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/2-methyloxirane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "2-methylpropan-1-ol": {
+  "CID": 6560,
+  "ConnectivitySMILES": "CC(C)CO",
+  "IUPACName": "2-methylpropan-1-ol",
+  "MolecularFormula": "C4H10O",
+  "SMILES": "CC(C)CO",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/2-methylpropan-1-ol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "2-methylpropan-2-ol": {
+  "CID": 6386,
+  "ConnectivitySMILES": "CC(C)(C)O",
+  "IUPACName": "2-methylpropan-2-ol",
+  "MolecularFormula": "C4H10O",
+  "SMILES": "CC(C)(C)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/2-methylpropan-2-ol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "2-methylpropanal": {
+  "CID": 6561,
+  "ConnectivitySMILES": "CC(C)C=O",
+  "IUPACName": "2-methylpropanal",
+  "MolecularFormula": "C4H8O",
+  "SMILES": "CC(C)C=O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/2-methylpropanal/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "N,N-dimethylmethanamine": {
+  "CID": 1146,
+  "ConnectivitySMILES": "CN(C)C",
+  "IUPACName": "N,N-dimethylmethanamine",
+  "MolecularFormula": "C3H9N",
+  "SMILES": "CN(C)C",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/N%2CN-dimethylmethanamine/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "N-methylacetamide": {
+  "CID": 6582,
+  "ConnectivitySMILES": "CC(=O)NC",
+  "IUPACName": "N-methylacetamide",
+  "MolecularFormula": "C3H7NO",
+  "SMILES": "CC(=O)NC",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/N-methylacetamide/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "N-methylethanamide": {
+  "erro": "{\n  \"Fault\": {\n    \"Code\": \"PUGREST.NotFound\",\n    \"Message\": \"No CID found\",\n    \"Details\": [\n      \"No CID found that matches the given name\"\n    ]\n  }\n}\n",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/N-methylethanamide/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "N-methylethanamine": {
+  "CID": 12219,
+  "ConnectivitySMILES": "CCNC",
+  "IUPACName": "N-methylethanamine",
+  "MolecularFormula": "C3H9N",
+  "SMILES": "CCNC",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/N-methylethanamine/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "N-methylmethanamine": {
+  "CID": 674,
+  "ConnectivitySMILES": "CNC",
+  "IUPACName": "N-methylmethanamine",
+  "MolecularFormula": "C2H7N",
+  "SMILES": "CNC",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/N-methylmethanamine/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "alanine": {
+  "CID": 5950,
+  "ConnectivitySMILES": "CC(C(=O)O)N",
+  "IUPACName": "(2S)-2-aminopropanoic acid",
+  "MolecularFormula": "C3H7NO2",
+  "SMILES": "C[C@@H](C(=O)O)N",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/alanine/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "aniline": {
+  "CID": 6115,
+  "ConnectivitySMILES": "C1=CC=C(C=C1)N",
+  "IUPACName": "aniline",
+  "MolecularFormula": "C6H7N",
+  "SMILES": "C1=CC=C(C=C1)N",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/aniline/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "aspirin": {
+  "CID": 2244,
+  "ConnectivitySMILES": "CC(=O)OC1=CC=CC=C1C(=O)O",
+  "IUPACName": "2-acetyloxybenzoic acid",
+  "MolecularFormula": "C9H8O4",
+  "SMILES": "CC(=O)OC1=CC=CC=C1C(=O)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/aspirin/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "benzaldehyde": {
+  "CID": 240,
+  "ConnectivitySMILES": "C1=CC=C(C=C1)C=O",
+  "IUPACName": "benzaldehyde",
+  "MolecularFormula": "C7H6O",
+  "SMILES": "C1=CC=C(C=C1)C=O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/benzaldehyde/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "benzene": {
+  "CID": 241,
+  "ConnectivitySMILES": "C1=CC=CC=C1",
+  "IUPACName": "benzene",
+  "MolecularFormula": "C6H6",
+  "SMILES": "C1=CC=CC=C1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/benzene/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "benzoic acid": {
+  "CID": 243,
+  "ConnectivitySMILES": "C1=CC=C(C=C1)C(=O)O",
+  "IUPACName": "benzoic acid",
+  "MolecularFormula": "C7H6O2",
+  "SMILES": "C1=CC=C(C=C1)C(=O)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/benzoic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "bromoethane": {
+  "CID": 6332,
+  "ConnectivitySMILES": "CCBr",
+  "IUPACName": "bromoethane",
+  "MolecularFormula": "C2H5Br",
+  "SMILES": "CCBr",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/bromoethane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "butan-1-ol": {
+  "CID": 263,
+  "ConnectivitySMILES": "CCCCO",
+  "IUPACName": "butan-1-ol",
+  "MolecularFormula": "C4H10O",
+  "SMILES": "CCCCO",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/butan-1-ol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "butan-2-ol": {
+  "CID": 6568,
+  "ConnectivitySMILES": "CCC(C)O",
+  "IUPACName": "butan-2-ol",
+  "MolecularFormula": "C4H10O",
+  "SMILES": "CCC(C)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/butan-2-ol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "butan-2-one": {
+  "CID": 6569,
+  "ConnectivitySMILES": "CCC(=O)C",
+  "IUPACName": "butan-2-one",
+  "MolecularFormula": "C4H8O",
+  "SMILES": "CCC(=O)C",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/butan-2-one/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "butanal": {
+  "CID": 261,
+  "ConnectivitySMILES": "CCCC=O",
+  "IUPACName": "butanal",
+  "MolecularFormula": "C4H8O",
+  "SMILES": "CCCC=O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/butanal/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "butanoic acid": {
+  "CID": 264,
+  "ConnectivitySMILES": "CCCC(=O)O",
+  "IUPACName": "butanoic acid",
+  "MolecularFormula": "C4H8O2",
+  "SMILES": "CCCC(=O)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/butanoic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "chloroacetic acid": {
+  "CID": 300,
+  "ConnectivitySMILES": "C(C(=O)O)Cl",
+  "IUPACName": "2-chloroacetic acid",
+  "MolecularFormula": "C2H3ClO2",
+  "SMILES": "C(C(=O)O)Cl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/chloroacetic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "chlorobenzene": {
+  "CID": 7964,
+  "ConnectivitySMILES": "C1=CC=C(C=C1)Cl",
+  "IUPACName": "chlorobenzene",
+  "MolecularFormula": "C6H5Cl",
+  "SMILES": "C1=CC=C(C=C1)Cl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/chlorobenzene/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "chloroethane": {
+  "CID": 6337,
+  "ConnectivitySMILES": "CCCl",
+  "IUPACName": "chloroethane",
+  "MolecularFormula": "C2H5Cl",
+  "SMILES": "CCCl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/chloroethane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "chloromethane": {
+  "CID": 6327,
+  "ConnectivitySMILES": "CCl",
+  "IUPACName": "chloromethane",
+  "MolecularFormula": "CH3Cl",
+  "SMILES": "CCl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/chloromethane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "cyclobutane": {
+  "CID": 9250,
+  "ConnectivitySMILES": "C1CCC1",
+  "IUPACName": "cyclobutane",
+  "MolecularFormula": "C4H8",
+  "SMILES": "C1CCC1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/cyclobutane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "cyclohexane": {
+  "CID": 8078,
+  "ConnectivitySMILES": "C1CCCCC1",
+  "IUPACName": "cyclohexane",
+  "MolecularFormula": "C6H12",
+  "SMILES": "C1CCCCC1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/cyclohexane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "cyclohexanol": {
+  "CID": 7966,
+  "ConnectivitySMILES": "C1CCC(CC1)O",
+  "IUPACName": "cyclohexanol",
+  "MolecularFormula": "C6H12O",
+  "SMILES": "C1CCC(CC1)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/cyclohexanol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "cyclohexanone": {
+  "CID": 7967,
+  "ConnectivitySMILES": "C1CCC(=O)CC1",
+  "IUPACName": "cyclohexanone",
+  "MolecularFormula": "C6H10O",
+  "SMILES": "C1CCC(=O)CC1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/cyclohexanone/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "cyclopentane": {
+  "CID": 9253,
+  "ConnectivitySMILES": "C1CCCC1",
+  "IUPACName": "cyclopentane",
+  "MolecularFormula": "C5H10",
+  "SMILES": "C1CCCC1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/cyclopentane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "cyclopropanol": {
+  "CID": 123361,
+  "ConnectivitySMILES": "C1CC1O",
+  "IUPACName": "cyclopropanol",
+  "MolecularFormula": "C3H6O",
+  "SMILES": "C1CC1O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/cyclopropanol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "dichloromethane": {
+  "CID": 6344,
+  "ConnectivitySMILES": "C(Cl)Cl",
+  "IUPACName": "dichloromethane",
+  "MolecularFormula": "CH2Cl2",
+  "SMILES": "C(Cl)Cl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/dichloromethane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethanal": {
+  "CID": 177,
+  "ConnectivitySMILES": "CC=O",
+  "IUPACName": "acetaldehyde",
+  "MolecularFormula": "C2H4O",
+  "SMILES": "CC=O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanal/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethanamide": {
+  "CID": 178,
+  "ConnectivitySMILES": "CC(=O)N",
+  "IUPACName": "acetamide",
+  "MolecularFormula": "C2H5NO",
+  "SMILES": "CC(=O)N",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanamide/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethanamine": {
+  "CID": 6341,
+  "ConnectivitySMILES": "CCN",
+  "IUPACName": "ethanamine",
+  "MolecularFormula": "C2H7N",
+  "SMILES": "CCN",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanamine/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethane-1,2-diol": {
+  "CID": 174,
+  "ConnectivitySMILES": "C(CO)O",
+  "IUPACName": "ethane-1,2-diol",
+  "MolecularFormula": "C2H6O2",
+  "SMILES": "C(CO)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethane-1%2C2-diol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethanedioic acid": {
+  "CID": 971,
+  "ConnectivitySMILES": "C(=O)(C(=O)O)O",
+  "IUPACName": "oxalic acid",
+  "MolecularFormula": "C2H2O4",
+  "SMILES": "C(=O)(C(=O)O)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanedioic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethanenitrile": {
+  "CID": 6342,
+  "ConnectivitySMILES": "CC#N",
+  "IUPACName": "acetonitrile",
+  "MolecularFormula": "C2H3N",
+  "SMILES": "CC#N",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanenitrile/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethanoic acid": {
+  "CID": 176,
+  "ConnectivitySMILES": "CC(=O)O",
+  "IUPACName": "acetic acid",
+  "MolecularFormula": "C2H4O2",
+  "SMILES": "CC(=O)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanoic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethanoic anhydride": {
+  "CID": 7918,
+  "ConnectivitySMILES": "CC(=O)OC(=O)C",
+  "IUPACName": "acetyl acetate",
+  "MolecularFormula": "C4H6O3",
+  "SMILES": "CC(=O)OC(=O)C",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanoic%20anhydride/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethanol": {
+  "CID": 702,
+  "ConnectivitySMILES": "CCO",
+  "IUPACName": "ethanol",
+  "MolecularFormula": "C2H6O",
+  "SMILES": "CCO",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethanoyl chloride": {
+  "CID": 6367,
+  "ConnectivitySMILES": "CC(=O)Cl",
+  "IUPACName": "acetyl chloride",
+  "MolecularFormula": "C2H3ClO",
+  "SMILES": "CC(=O)Cl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethanoyl%20chloride/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethoxyethane": {
+  "CID": 3283,
+  "ConnectivitySMILES": "CCOCC",
+  "IUPACName": "ethoxyethane",
+  "MolecularFormula": "C4H10O",
+  "SMILES": "CCOCC",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethoxyethane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethyl butanoate": {
+  "CID": 7762,
+  "ConnectivitySMILES": "CCCC(=O)OCC",
+  "IUPACName": "ethyl butanoate",
+  "MolecularFormula": "C6H12O2",
+  "SMILES": "CCCC(=O)OCC",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethyl%20butanoate/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethyl ethanoate": {
+  "CID": 8857,
+  "ConnectivitySMILES": "CCOC(=O)C",
+  "IUPACName": "ethyl acetate",
+  "MolecularFormula": "C4H8O2",
+  "SMILES": "CCOC(=O)C",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethyl%20ethanoate/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "ethylcyclopropane": {
+  "CID": 70933,
+  "ConnectivitySMILES": "CCC1CC1",
+  "IUPACName": "ethylcyclopropane",
+  "MolecularFormula": "C5H10",
+  "SMILES": "CCC1CC1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/ethylcyclopropane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "glycine": {
+  "CID": 750,
+  "ConnectivitySMILES": "C(C(=O)O)N",
+  "IUPACName": "2-aminoacetic acid",
+  "MolecularFormula": "C2H5NO2",
+  "SMILES": "C(C(=O)O)N",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/glycine/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methanal": {
+  "CID": 712,
+  "ConnectivitySMILES": "C=O",
+  "IUPACName": "formaldehyde",
+  "MolecularFormula": "CH2O",
+  "SMILES": "C=O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methanal/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methanamide": {
+  "CID": 713,
+  "ConnectivitySMILES": "C(=O)N",
+  "IUPACName": "formamide",
+  "MolecularFormula": "CH3NO",
+  "SMILES": "C(=O)N",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methanamide/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methanamine": {
+  "CID": 6329,
+  "ConnectivitySMILES": "CN",
+  "IUPACName": "methanamine",
+  "MolecularFormula": "CH5N",
+  "SMILES": "CN",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methanamine/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methanoic acid": {
+  "CID": 284,
+  "ConnectivitySMILES": "C(=O)O",
+  "IUPACName": "formic acid",
+  "MolecularFormula": "CH2O2",
+  "SMILES": "C(=O)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methanoic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methanol": {
+  "CID": 887,
+  "ConnectivitySMILES": "CO",
+  "IUPACName": "methanol",
+  "MolecularFormula": "CH4O",
+  "SMILES": "CO",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methanol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methoxybenzene": {
+  "CID": 7519,
+  "ConnectivitySMILES": "COC1=CC=CC=C1",
+  "IUPACName": "anisole",
+  "MolecularFormula": "C7H8O",
+  "SMILES": "COC1=CC=CC=C1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methoxybenzene/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methoxyethane": {
+  "CID": 10903,
+  "ConnectivitySMILES": "CCOC",
+  "IUPACName": "methoxyethane",
+  "MolecularFormula": "C3H8O",
+  "SMILES": "CCOC",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methoxyethane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methoxyethene": {
+  "CID": 7861,
+  "ConnectivitySMILES": "COC=C",
+  "IUPACName": "methoxyethene",
+  "MolecularFormula": "C3H6O",
+  "SMILES": "COC=C",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methoxyethene/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methoxymethane": {
+  "CID": 8254,
+  "ConnectivitySMILES": "COC",
+  "IUPACName": "methoxymethane",
+  "MolecularFormula": "C2H6O",
+  "SMILES": "COC",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methoxymethane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methyl benzoate": {
+  "CID": 7150,
+  "ConnectivitySMILES": "COC(=O)C1=CC=CC=C1",
+  "IUPACName": "methyl benzoate",
+  "MolecularFormula": "C8H8O2",
+  "SMILES": "COC(=O)C1=CC=CC=C1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methyl%20benzoate/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methyl ethanoate": {
+  "CID": 6584,
+  "ConnectivitySMILES": "CC(=O)OC",
+  "IUPACName": "methyl acetate",
+  "MolecularFormula": "C3H6O2",
+  "SMILES": "CC(=O)OC",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methyl%20ethanoate/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methyl methanoate": {
+  "CID": 7865,
+  "ConnectivitySMILES": "COC=O",
+  "IUPACName": "methyl formate",
+  "MolecularFormula": "C2H4O2",
+  "SMILES": "COC=O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methyl%20methanoate/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methyl propanoate": {
+  "CID": 11124,
+  "ConnectivitySMILES": "CCC(=O)OC",
+  "IUPACName": "methyl propanoate",
+  "MolecularFormula": "C4H8O2",
+  "SMILES": "CCC(=O)OC",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methyl%20propanoate/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methylcyclobutane": {
+  "CID": 11725,
+  "ConnectivitySMILES": "CC1CCC1",
+  "IUPACName": "methylcyclobutane",
+  "MolecularFormula": "C5H10",
+  "SMILES": "CC1CCC1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methylcyclobutane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "methylcyclopropane": {
+  "CID": 11657,
+  "ConnectivitySMILES": "CC1CC1",
+  "IUPACName": "methylcyclopropane",
+  "MolecularFormula": "C4H8",
+  "SMILES": "CC1CC1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/methylcyclopropane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "nitrobenzene": {
+  "CID": 7416,
+  "ConnectivitySMILES": "C1=CC=C(C=C1)[N+](=O)[O-]",
+  "IUPACName": "nitrobenzene",
+  "MolecularFormula": "C6H5NO2",
+  "SMILES": "C1=CC=C(C=C1)[N+](=O)[O-]",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/nitrobenzene/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "nitromethane": {
+  "CID": 6375,
+  "ConnectivitySMILES": "C[N+](=O)[O-]",
+  "IUPACName": "nitromethane",
+  "MolecularFormula": "CH3NO2",
+  "SMILES": "C[N+](=O)[O-]",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/nitromethane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "oxetane": {
+  "CID": 10423,
+  "ConnectivitySMILES": "C1COC1",
+  "IUPACName": "oxetane",
+  "MolecularFormula": "C3H6O",
+  "SMILES": "C1COC1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/oxetane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "paracetamol": {
+  "CID": 1983,
+  "ConnectivitySMILES": "CC(=O)NC1=CC=C(C=C1)O",
+  "IUPACName": "N-(4-hydroxyphenyl)acetamide",
+  "MolecularFormula": "C8H9NO2",
+  "SMILES": "CC(=O)NC1=CC=C(C=C1)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/paracetamol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "pentan-2-one": {
+  "CID": 7895,
+  "ConnectivitySMILES": "CCCC(=O)C",
+  "IUPACName": "pentan-2-one",
+  "MolecularFormula": "C5H10O",
+  "SMILES": "CCCC(=O)C",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/pentan-2-one/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "pentan-3-one": {
+  "CID": 7288,
+  "ConnectivitySMILES": "CCC(=O)CC",
+  "IUPACName": "pentan-3-one",
+  "MolecularFormula": "C5H10O",
+  "SMILES": "CCC(=O)CC",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/pentan-3-one/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "pentyl ethanoate": {
+  "CID": 12348,
+  "ConnectivitySMILES": "CCCCCOC(=O)C",
+  "IUPACName": "pentyl acetate",
+  "MolecularFormula": "C7H14O2",
+  "SMILES": "CCCCCOC(=O)C",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/pentyl%20ethanoate/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "phenol": {
+  "CID": 996,
+  "ConnectivitySMILES": "C1=CC=C(C=C1)O",
+  "IUPACName": "phenol",
+  "MolecularFormula": "C6H6O",
+  "SMILES": "C1=CC=C(C=C1)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/phenol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "prop-2-en-1-ol": {
+  "CID": 7858,
+  "ConnectivitySMILES": "C=CCO",
+  "IUPACName": "prop-2-en-1-ol",
+  "MolecularFormula": "C3H6O",
+  "SMILES": "C=CCO",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/prop-2-en-1-ol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "propan-1-amine": {
+  "CID": 7852,
+  "ConnectivitySMILES": "CCCN",
+  "IUPACName": "propan-1-amine",
+  "MolecularFormula": "C3H9N",
+  "SMILES": "CCCN",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/propan-1-amine/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "propan-1-ol": {
+  "CID": 1031,
+  "ConnectivitySMILES": "CCCO",
+  "IUPACName": "propan-1-ol",
+  "MolecularFormula": "C3H8O",
+  "SMILES": "CCCO",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/propan-1-ol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "propan-2-amine": {
+  "CID": 6363,
+  "ConnectivitySMILES": "CC(C)N",
+  "IUPACName": "propan-2-amine",
+  "MolecularFormula": "C3H9N",
+  "SMILES": "CC(C)N",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/propan-2-amine/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "propan-2-ol": {
+  "CID": 3776,
+  "ConnectivitySMILES": "CC(C)O",
+  "IUPACName": "propan-2-ol",
+  "MolecularFormula": "C3H8O",
+  "SMILES": "CC(C)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/propan-2-ol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "propan-2-one": {
+  "CID": 180,
+  "ConnectivitySMILES": "CC(=O)C",
+  "IUPACName": "propan-2-one",
+  "MolecularFormula": "C3H6O",
+  "SMILES": "CC(=O)C",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/propan-2-one/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "propanal": {
+  "CID": 527,
+  "ConnectivitySMILES": "CCC=O",
+  "IUPACName": "propanal",
+  "MolecularFormula": "C3H6O",
+  "SMILES": "CCC=O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/propanal/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "propanamide": {
+  "CID": 6578,
+  "ConnectivitySMILES": "CCC(=O)N",
+  "IUPACName": "propanamide",
+  "MolecularFormula": "C3H7NO",
+  "SMILES": "CCC(=O)N",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/propanamide/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "propane-1,2,3-triol": {
+  "CID": 53436613,
+  "ConnectivitySMILES": "C(C(CO)O)O.C(C(CO)O)O.C(C(CO)O)O.C(C(CO)O)O.C(C(CO)O)O.C(C(CO)O)O.C(C(CO)O)O",
+  "IUPACName": "propane-1,2,3-triol",
+  "MolecularFormula": "C21H56O21",
+  "SMILES": "C(C(CO)O)O.C(C(CO)O)O.C(C(CO)O)O.C(C(CO)O)O.C(C(CO)O)O.C(C(CO)O)O.C(C(CO)O)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/propane-1%2C2%2C3-triol/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "propanenitrile": {
+  "CID": 7854,
+  "ConnectivitySMILES": "CCC#N",
+  "IUPACName": "propanenitrile",
+  "MolecularFormula": "C3H5N",
+  "SMILES": "CCC#N",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/propanenitrile/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "propanoic acid": {
+  "CID": 1032,
+  "ConnectivitySMILES": "CCC(=O)O",
+  "IUPACName": "propanoic acid",
+  "MolecularFormula": "C3H6O2",
+  "SMILES": "CCC(=O)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/propanoic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "salicylic acid": {
+  "CID": 338,
+  "ConnectivitySMILES": "C1=CC=C(C(=C1)C(=O)O)O",
+  "IUPACName": "2-hydroxybenzoic acid",
+  "MolecularFormula": "C7H6O3",
+  "SMILES": "C1=CC=C(C(=C1)C(=O)O)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/salicylic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "tetrachloromethane": {
+  "CID": 5943,
+  "ConnectivitySMILES": "C(Cl)(Cl)(Cl)Cl",
+  "IUPACName": "tetrachloromethane",
+  "MolecularFormula": "CCl4",
+  "SMILES": "C(Cl)(Cl)(Cl)Cl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/tetrachloromethane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "toluene": {
+  "CID": 1140,
+  "ConnectivitySMILES": "CC1=CC=CC=C1",
+  "IUPACName": "toluene",
+  "MolecularFormula": "C7H8",
+  "SMILES": "CC1=CC=CC=C1",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/toluene/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "trichloroacetic acid": {
+  "CID": 6421,
+  "ConnectivitySMILES": "C(=O)(C(Cl)(Cl)Cl)O",
+  "IUPACName": "2,2,2-trichloroacetic acid",
+  "MolecularFormula": "C2HCl3O2",
+  "SMILES": "C(=O)(C(Cl)(Cl)Cl)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/trichloroacetic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "trichloromethane": {
+  "CID": 6212,
+  "ConnectivitySMILES": "C(Cl)(Cl)Cl",
+  "IUPACName": "chloroform",
+  "MolecularFormula": "CHCl3",
+  "SMILES": "C(Cl)(Cl)Cl",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/trichloromethane/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "trifluoroacetic acid": {
+  "CID": 6422,
+  "ConnectivitySMILES": "C(=O)(C(F)(F)F)O",
+  "IUPACName": "2,2,2-trifluoroacetic acid",
+  "MolecularFormula": "C2HF3O2",
+  "SMILES": "C(=O)(C(F)(F)F)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/trifluoroacetic%20acid/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "urea": {
+  "CID": 1176,
+  "ConnectivitySMILES": "C(=O)(N)N",
+  "IUPACName": "urea",
+  "MolecularFormula": "CH4N2O",
+  "SMILES": "C(=O)(N)N",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/urea/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ },
+ "vanillin": {
+  "CID": 1183,
+  "ConnectivitySMILES": "COC1=C(C=CC(=C1)C=O)O",
+  "IUPACName": "4-hydroxy-3-methoxybenzaldehyde",
+  "MolecularFormula": "C8H8O3",
+  "SMILES": "COC1=C(C=CC(=C1)C=O)O",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/vanillin/property/SMILES,ConnectivitySMILES,IUPACName,MolecularFormula/JSON"
+ }
+}
