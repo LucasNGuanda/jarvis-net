@@ -108,6 +108,58 @@ for ch, nome, sig, tipo, mons, un, aguas, fun in POL:
                 "d": num(src["densidade"]), "pf": num(src["fusao"]), "cod": cod_de.get(ch)})
 json.dump(cache, open(ARQ, "w"), ensure_ascii=False, indent=1)
 BIO = {"POL": pol, "COD": {"1": "PET", "2": "PEAD (polietileno de alta densidade)", "3": "PVC", "4": "PEBD (polietileno de baixa densidade)", "5": "PP", "6": "PS", "7": "outros"}}
+
+# ---------- I02: carboidratos e lipídeos ----------
+CB = D["carboidratos"]
+def tem(lista, *palavras):
+    """True se algum trecho de fonte do item contém todas as palavras (conferência do que é escrito à mão)"""
+    return any(all(w.lower() in str(e.get("trecho") or "").lower() for w in palavras) for e in (lista or []) if isinstance(e, dict))
+# chave, nome, classe, aldose/cetose, SMILES de cadeia aberta (monossacarídeos), composição, ligação, redutor (só o que a fonte diz em frase)
+CARB_L = [
+ ["glicose", "glicose", "monossacarídeo", "aldose", "OCC(O)C(O)C(O)C(O)C=O", None, None, True, ["aldehyde"], ["reducing sugar"]],
+ ["frutose", "frutose", "monossacarídeo", "cetose", "OCC(O)C(O)C(O)C(=O)CO", None, None, True, ["keton"], ["reducing sugar"]],
+ ["galactose", "galactose", "monossacarídeo", "aldose", "OCC(O)C(O)C(O)C(O)C=O", None, None, None, [], []],
+ ["ribose", "ribose", "monossacarídeo", "aldose", "OCC(O)C(O)C(O)C=O", None, None, None, [], []],
+ ["desoxirribose", "desoxirribose", "monossacarídeo", "aldose", "OCC(O)C(O)CC=O", None, None, None, [], []],
+ ["sacarose", "sacarose", "dissacarídeo", None, None, "glicose + frutose", "α-1,β-2", False, ["glucose", "fructose"], ["reducing e"]],
+ ["lactose", "lactose", "dissacarídeo", None, None, "galactose + glicose", "β-1,4", True, ["galactose", "glucose", "β-1→4"], ["reducing sugar"]],
+ ["maltose", "maltose", "dissacarídeo", None, None, "glicose + glicose", "α-1,4", True, ["glucose"], ["reducing sugar"]],
+ ["celulose", "celulose", "polissacarídeo", None, None, "glicose", "β-1,4", None, ["glucose", "1→4-β"], []],
+ ["amilose", "amilose (amido)", "polissacarídeo", None, None, "glicose", "α-1,4", None, ["glucose", "α(1→4)"], []],
+ ["amilopectina", "amilopectina (amido)", "polissacarídeo", None, None, "glicose", "α-1,4 com ramos α-1,6", None, ["α(1→6)"], []],
+ ["glicogenio", "glicogênio", "polissacarídeo", None, None, "glicose", "α-1,4 com ramos α-1,6", None, ["glucose", "α(1→4)"], []],
+]
+carb = []
+for ch, nome, cls, ac, smi, comp, lig, red, pal_c, pal_r in CARB_L:
+    s = CB[ch]; f = val(s["formula"])
+    if smi and hill(conta_smi(smi)) != f: erros.append(("carboidrato: SMILES ≠ fórmula da fonte", ch, f))
+    if cls != "polissacarídeo" and not smi and f != "C12H22O11": erros.append(("dissacarídeo", ch, f))
+    alvo = (s.get("composicao") or []) + (s.get("ligacao_glicosidica") or []) + (s.get("classificacao") or [])
+    if pal_c and not all(tem(alvo, w) for w in pal_c): erros.append(("carboidrato: composição/ligação sem apoio na fonte", ch, pal_c))
+    if red is not None and not tem(s["acucar_redutor"], *pal_r): erros.append(("açúcar redutor sem frase na fonte", ch))
+    carb.append({"k": ch, "nome": nome, "cls": cls, "ac": ac, "smi": smi, "f": f if cls != "polissacarídeo" else "(C6H10O5)n", "comp": comp, "lig": lig, "red": red})
+EN = CB["energia_por_grama"]
+def par(lista):  # [kJ/g, kcal/g]
+    for e in lista:
+        if isinstance(e.get("valor"), list): return e["valor"]
+    return None
+energia = {"carboidrato": [17, 4] if tem(EN["carboidrato"], "17 kJ/g (4 kcal/g)") else None, "proteina": par(EN["proteina"]), "gordura": par(EN["gordura"]), "etanol": par(EN["etanol"])}
+if None in energia.values(): erros.append(("energia por grama", energia))
+# ácidos graxos: a estrutura condensada da fonte é convertida em SMILES e a fórmula é conferida com a da fonte
+AGS = D["lipideos"]["acidos_graxos"]
+NOME_AG = {"laurico": "láurico", "miristico": "mirístico", "palmitico": "palmítico", "estearico": "esteárico", "oleico": "oleico", "linoleico": "linoleico", "alfa_linolenico": "α-linolênico", "araquidonico": "araquidônico"}
+def cond_smiles(e):
+    e = re.sub(r"\(CH2\)(\d+)", lambda m: "C" * int(m.group(1)), e)
+    return e.replace("COOH", "C(=O)O").replace("CH3", "C").replace("CH2", "C").replace("CH=CH", "C=C")
+ag = []
+for ch, a in AGS.items():
+    est = val(a["estrutura"]); smi = cond_smiles(est); f = val(a["formula"]); cd = str(val(a["carbonos_e_duplas_CD"]))
+    c = conta_smi(smi)
+    if hill(c) != f: erros.append(("ácido graxo: estrutura ≠ fórmula", ch, est, hill(c), f))
+    C_, D_ = [int(x) for x in cd.split(":")]
+    if c["C"] != C_ or smi.count("=") - 1 != D_ or c["H"] != 2 * C_ - 2 * D_: erros.append(("ácido graxo: C:D", ch, cd))
+    ag.append({"k": ch, "nome": "ácido " + NOME_AG[ch], "cd": cd, "c": C_, "d": D_, "f": f, "m": c["C"] * 12 + c["H"] + 32, "mfonte": val(a["massa_molar"]), "pf": num(a["fusao"]), "est": est, "smi": smi})
+BIO["CARB"] = carb; BIO["ENERGIA"] = energia; BIO["AG"] = ag
 #MAIS-SECOES
 
 J = lambda o: json.dumps(o, ensure_ascii=False)

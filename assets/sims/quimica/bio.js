@@ -28,6 +28,31 @@
       {"k": "PLA", "nome": "poli(ácido láctico)", "sig": "PLA", "tipo": "condensação", "mon": [["ácido 2-hidroxipropanoico (láctico)", "CC(O)C(=O)O"]], "un": "–O–CH(CH₃)–CO–", "fu": "C3H4O2", "mu": 72, "aguas": 1, "fun": "éster", "d": [1.21, 1.43], "pf": [150, 160], "cod": null},
     ],
     COD: {"1": "PET", "2": "PEAD (polietileno de alta densidade)", "3": "PVC", "4": "PEBD (polietileno de baixa densidade)", "5": "PP", "6": "PS", "7": "outros"},
+    CARB: [
+      {"k": "glicose", "nome": "glicose", "cls": "monossacarídeo", "ac": "aldose", "smi": "OCC(O)C(O)C(O)C(O)C=O", "f": "C6H12O6", "comp": null, "lig": null, "red": true},
+      {"k": "frutose", "nome": "frutose", "cls": "monossacarídeo", "ac": "cetose", "smi": "OCC(O)C(O)C(O)C(=O)CO", "f": "C6H12O6", "comp": null, "lig": null, "red": true},
+      {"k": "galactose", "nome": "galactose", "cls": "monossacarídeo", "ac": "aldose", "smi": "OCC(O)C(O)C(O)C(O)C=O", "f": "C6H12O6", "comp": null, "lig": null, "red": null},
+      {"k": "ribose", "nome": "ribose", "cls": "monossacarídeo", "ac": "aldose", "smi": "OCC(O)C(O)C(O)C=O", "f": "C5H10O5", "comp": null, "lig": null, "red": null},
+      {"k": "desoxirribose", "nome": "desoxirribose", "cls": "monossacarídeo", "ac": "aldose", "smi": "OCC(O)C(O)CC=O", "f": "C5H10O4", "comp": null, "lig": null, "red": null},
+      {"k": "sacarose", "nome": "sacarose", "cls": "dissacarídeo", "ac": null, "smi": null, "f": "C12H22O11", "comp": "glicose + frutose", "lig": "α-1,β-2", "red": false},
+      {"k": "lactose", "nome": "lactose", "cls": "dissacarídeo", "ac": null, "smi": null, "f": "C12H22O11", "comp": "galactose + glicose", "lig": "β-1,4", "red": true},
+      {"k": "maltose", "nome": "maltose", "cls": "dissacarídeo", "ac": null, "smi": null, "f": "C12H22O11", "comp": "glicose + glicose", "lig": "α-1,4", "red": true},
+      {"k": "celulose", "nome": "celulose", "cls": "polissacarídeo", "ac": null, "smi": null, "f": "(C6H10O5)n", "comp": "glicose", "lig": "β-1,4", "red": null},
+      {"k": "amilose", "nome": "amilose (amido)", "cls": "polissacarídeo", "ac": null, "smi": null, "f": "(C6H10O5)n", "comp": "glicose", "lig": "α-1,4", "red": null},
+      {"k": "amilopectina", "nome": "amilopectina (amido)", "cls": "polissacarídeo", "ac": null, "smi": null, "f": "(C6H10O5)n", "comp": "glicose", "lig": "α-1,4 com ramos α-1,6", "red": null},
+      {"k": "glicogenio", "nome": "glicogênio", "cls": "polissacarídeo", "ac": null, "smi": null, "f": "(C6H10O5)n", "comp": "glicose", "lig": "α-1,4 com ramos α-1,6", "red": null},
+    ],
+    ENERGIA: {"carboidrato": [17, 4], "proteina": [17, 4], "gordura": [37, 9], "etanol": [29, 7]},
+    AG: [
+      {"k": "laurico", "nome": "ácido láurico", "cd": "12:0", "c": 12, "d": 0, "f": "C12H24O2", "m": 200, "mfonte": 200.322, "pf": 43.8, "est": "CH3(CH2)10COOH", "smi": "CCCCCCCCCCCC(=O)O"},
+      {"k": "miristico", "nome": "ácido mirístico", "cd": "14:0", "c": 14, "d": 0, "f": "C14H28O2", "m": 228, "mfonte": 228.376, "pf": 54.4, "est": "CH3(CH2)12COOH", "smi": "CCCCCCCCCCCCCC(=O)O"},
+      {"k": "palmitico", "nome": "ácido palmítico", "cd": "16:0", "c": 16, "d": 0, "f": "C16H32O2", "m": 256, "mfonte": 256.43, "pf": 62.9, "est": "CH3(CH2)14COOH", "smi": "CCCCCCCCCCCCCCCC(=O)O"},
+      {"k": "estearico", "nome": "ácido esteárico", "cd": "18:0", "c": 18, "d": 0, "f": "C18H36O2", "m": 284, "mfonte": 284.484, "pf": 69.3, "est": "CH3(CH2)16COOH", "smi": "CCCCCCCCCCCCCCCCCC(=O)O"},
+      {"k": "oleico", "nome": "ácido oleico", "cd": "18:1", "c": 18, "d": 1, "f": "C18H34O2", "m": 282, "mfonte": 282.468, "pf": [13, 14], "est": "CH3(CH2)7CH=CH(CH2)7COOH", "smi": "CCCCCCCCC=CCCCCCCCC(=O)O"},
+      {"k": "linoleico", "nome": "ácido linoleico", "cd": "18:2", "c": 18, "d": 2, "f": "C18H32O2", "m": 280, "mfonte": 280.452, "pf": -12, "est": "CH3(CH2)4CH=CHCH2CH=CH(CH2)7COOH", "smi": "CCCCCC=CCC=CCCCCCCCC(=O)O"},
+      {"k": "alfa_linolenico", "nome": "ácido α-linolênico", "cd": "18:3", "c": 18, "d": 3, "f": "C18H30O2", "m": 278, "mfonte": 278.436, "pf": -11, "est": "CH3CH2CH=CHCH2CH=CHCH2CH=CH(CH2)7COOH", "smi": "CCC=CCC=CCC=CCCCCCCCC(=O)O"},
+      {"k": "araquidonico", "nome": "ácido araquidônico", "cd": "20:4", "c": 20, "d": 4, "f": "C20H32O2", "m": 304, "mfonte": 304.474, "pf": -49, "est": "CH3(CH2)4CH=CHCH2CH=CHCH2CH=CHCH2CH=CH(CH2)3COOH", "smi": "CCCCCC=CCC=CCC=CCC=CCCCC(=O)O"},
+    ],
   };
   /*BIO-FIM*/
 
@@ -50,6 +75,35 @@
     q("[data-v=ver]").addEventListener("click", () => { ver = !ver; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); });
     liga(el, "n", (v) => { n = +v; desenha(); });
     SIM.qPolimero._ult = { poe: (k, nn = 1000, v = true) => { i = P.findIndex((p) => p.k === k); n = nn; ver = v; q("[data-v=sel]").value = String(i); q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); el.querySelectorAll("[data-n]").forEach((x) => x.setAttribute("aria-pressed", String(+x.dataset.n === n))); desenha(); }, est }; desenha(); };
+
+  /* ---------- I02: carboidratos e lipídeos ---------- */
+  /* contas de um triglicerídeo feito de três ácidos graxos (índices na tabela AG): glicerol (92) + 3 ácidos − 3 águas */
+  SIM.triglicerideo = (ks) => { const A = ks.map((k) => SIM.BIO.AG.find((a) => a.k === k)), c = 3 + A.reduce((t, a) => t + a.c, 0), d = A.reduce((t, a) => t + a.d, 0), h = 8 + A.reduce((t, a) => t + 2 * a.c - 2 * a.d, 0) - 6, m = 92 + A.reduce((t, a) => t + a.m, 0) - 54;
+    return { A, c, h, o: 6, d, m, f: `C${c}H${h}O6`, iodo: (100 * d * 254) / m, naoh: (100 / m) * 3 * 40, h2: d }; };
+  /* cadeia de n unidades de glicose: n C6H12O6 − (n − 1) H2O */
+  SIM.poliglicose = (n) => ({ n, c: 6 * n, h: 12 * n - 2 * (n - 1), o: 6 * n - (n - 1), m: 180 * n - 18 * (n - 1), aguas: n - 1 });
+  /* nome: "Açúcares e gorduras: montar e fazer a conta" · matéria: Química · tema: I02 */
+  SIM.qBiomol = (el, F) => { const AG = SIM.BIO.AG, O = SIM.org; let modo = "gordura", ks = ["estearico", "estearico", "estearico"], n = 2;
+    const sel = (j) => `<select data-s="${j}" style="font:inherit;padding:4px 6px;border-radius:8px;background:var(--card,#161b24);color:inherit;border:1px solid var(--line,#2a3140)">${AG.map((a) => `<option value="${a.k}">${a.nome.replace("ácido ", "")} (${a.cd})</option>`).join("")}</select>`;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;min-height:200px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><div class="bts">${botoes([["gordura", "triglicerídeo"], ["acucar", "cadeia de glicose"]], "modo", modo)}</div></div>
+      <div data-v="cg"><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">os três ácidos graxos</p>${sel(0)} ${sel(1)} ${sel(2)}</div>
+      <div data-v="ca" hidden><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">unidades de glicose</p><div class="bts">${botoes([[1, "1"], [2, "2"], [3, "3"], [10, "10"], [100, "100"], [1000, "1 000"]], "n", n)}</div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), sb = (f) => f.replace(/(\d+)/g, "<sub>$1</sub>");
+    const est = () => (modo === "gordura" ? { modo, ...SIM.triglicerideo(ks), A: undefined, ks: [...ks] } : { modo, ...SIM.poliglicose(n) });
+    const desenha = () => { q("[data-v=cg]").hidden = modo !== "gordura"; q("[data-v=ca]").hidden = modo === "gordura";
+      if (modo === "gordura") { const t = SIM.triglicerideo(ks), pf = t.A.map((a) => (Array.isArray(a.pf) ? a.pf[0] : a.pf));
+        q("[data-v=sv]").innerHTML = `<div style="display:grid;grid-template-columns:auto auto;gap:4px 14px;align-items:center;font:600 14px Inter,system-ui,sans-serif">${t.A.map((a, j) => `<div style="text-align:right">${a.est.replace("COOH", "").replace(/(\d+)/g, "<sub>$1</sub>")}</div><div style="color:var(--ink2)">${["–CO–O–CH₂", "–CO–O–CH", "–CO–O–CH₂"][j]} <span style="font-weight:400">&nbsp; ${a.nome.replace("ácido ", "")}, ${a.cd}</span></div>`).join("")}</div><div style="font-size:12.5px;color:var(--ink2);margin-top:6px">três cadeias de ácido graxo (à esquerda) presas por ligações éster aos três carbonos do glicerol (à direita, na vertical)</div>`;
+        q("[data-v=lt]").innerHTML = vis("fórmula", sb(t.f)) + vis("massa molar", nt(t.m, 0) + " g/mol") + vis("duplas C=C", String(t.d)) + vis("H₂ para saturar 1 mol", t.d + " mol") + vis("índice de iodo", nt(t.iodo, 1)) + vis("NaOH para 100 g", nt(t.naoh, 1) + " g");
+        q("[data-v=st]").innerHTML = `Glicerol (92) + três ácidos − três águas (54): <b>${nt(t.m, 0)} g/mol</b>. ${t.d ? `As ${t.d} duplas consomem ${t.d} mol de H₂ (ou de I₂) por mol: daí o índice de iodo, gramas de I₂ por 100 g.` : "Sem duplas: gordura saturada, índice de iodo zero."} Pontos de fusão dos ácidos (fonte): ${t.A.map((a, j) => nt(pf[j], 1) + " °C").join("; ")}. Quanto mais duplas, mais baixo. Massas com H = 1, C = 12, O = 16, I = 127, Na = 23.`; }
+      else { const g = SIM.poliglicose(n), f = `C${g.c}H${g.h}O${g.o}`;
+        q("[data-v=sv]").innerHTML = O.fig([{ smi: "OCC(O)C(O)C(O)C(O)C=O", leg: "glicose (cadeia aberta), C₆H₁₂O₆" }], { L: 36, W: 700 }) + `<div style="font:700 20px Inter,system-ui,sans-serif">${n === 1 ? "1 glicose" : n + " glicoses − " + (n - 1) + " H₂O"}</div>`;
+        q("[data-v=lt]").innerHTML = vis("unidades", String(n)) + vis("fórmula", sb(f)) + vis("massa molar", nt(g.m, 0) + " g/mol") + vis("ligações glicosídicas", String(g.aguas)) + vis("água liberada", g.aguas + " moléculas") + vis("classe", n === 1 ? "monossacarídeo" : n === 2 ? "dissacarídeo" : n < 10 ? "oligossacarídeo" : "polissacarídeo");
+        q("[data-v=st]").innerHTML = `Cada ligação glicosídica une duas unidades e libera uma água: n glicoses dão <b>n − 1</b> águas. ${n === 2 ? "Com duas, a fórmula é C₁₂H₂₂O₁₁: a da maltose, da sacarose e da lactose." : n >= 100 ? "Para n grande, a fórmula tende a (C₆H₁₀O₅)ₙ, a do amido e da celulose (162 g/mol por unidade)." : ""} A hidrólise faz o caminho de volta: consome uma água por ligação. Massas com H = 1, C = 12, O = 16.`; } };
+    liga(el, "modo", (v) => { modo = v; desenha(); }); liga(el, "n", (v) => { n = +v; desenha(); });
+    el.querySelectorAll("[data-s]").forEach((s) => s.addEventListener("change", () => { ks[+s.dataset.s] = s.value; desenha(); }));
+    SIM.qBiomol._ult = { poe: (m, x) => { modo = m; if (m === "gordura") { ks = x; el.querySelectorAll("[data-s]").forEach((s, j) => (s.value = ks[j])); } else n = x; el.querySelectorAll("[data-modo]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.modo === modo))); el.querySelectorAll("[data-n]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.n === n))); desenha(); }, est }; desenha(); };
 
   //MAIS-LABS
 })();
