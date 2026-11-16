@@ -242,4 +242,92 @@
   /* ---------- H04 · caça às funções com nitrogênio e halogênio ---------- */
   /* nome: "Caça às funções: nitrogênio e halogênios" · matéria: Química · tema: H04 */
   SIM.qFuncoesN = (el, F) => { SIM.qFuncoes(el, F, { mol: ["etanamina", "N-metilmetanamina", "N,N-dimetilmetanamina", "anilina", "etanamida", "N-metiletanamida", "etanonitrila", "nitrobenzeno", "2-cloropropano", "clorobenzeno", "cloreto de etanoíla", "alanina", "paracetamol", "ureia"], opc: ["amina", "amida", "nitrila", "nitrocomposto", "haleto de alquila", "haleto de arila", "haleto de acila", "ácido carboxílico", "fenol"] }); SIM.qFuncoesN._ult = SIM.qFuncoes._ult; };
+
+  /* ---------- H05 · forças entre moléculas e propriedades físicas ---------- */
+  SIM.org.HC = { metano: "C", etano: "CC", propano: "CCC", butano: "CCCC", metilpropano: "CC(C)C", pentano: "CCCCC", "2-metilbutano": "CCC(C)C", dimetilpropano: "CC(C)(C)C", hexano: "CCCCCC", heptano: "CCCCCCC", octano: "CCCCCCCC", decano: "CCCCCCCCCC", cicloexano: "C1CCCCC1", benzeno: "c1ccccc1", metilbenzeno: "Cc1ccccc1" };
+  SIM.org.smiDe = (n) => SIM.org.HC[n] || SIM.org.smi(n);
+  const ZAT = { H: 1, C: 6, N: 7, O: 8, F: 9, S: 16, Cl: 17, Br: 35, I: 53 };
+  /* forças entre moléculas iguais, deduzidas da estrutura: London sempre; dipolo permanente se há heteroátomo (menos nos casos simétricos, de momento dipolar zero);
+     ligação de hidrogênio se há H preso em O ou N. ne = número de elétrons (tamanho da nuvem). */
+  SIM.org.forcas = (smi) => { const g = parse(smi), c = conta(g), ne = Object.keys(c).reduce((t, k) => t + c[k] * (ZAT[k] || 0), 0), het = g.at.some((a) => a.el !== "C"), don = g.at.filter((a) => (a.el === "O" || a.el === "N") && a.h > 0).reduce((t, a) => t + a.h, 0), acc = g.at.filter((a) => a.el === "O" || a.el === "N").length, sim = smi === "ClC(Cl)(Cl)Cl"; return { ne, london: true, dipolo: het && !sim, lh: don > 0, don, acc }; };
+  /* nome: "Forças entre moléculas: compare duas substâncias" · matéria: Química · tema: H05 */
+  SIM.qPropFisicas = (el, F) => {
+    const FAM = { "hidrocarbonetos": ["metano", "propano", "butano", "metilpropano", "pentano", "2-metilbutano", "dimetilpropano", "hexano", "octano", "cicloexano", "benzeno"], "álcoois e fenol": ["metanol", "etanol", "propan-1-ol", "propan-2-ol", "butan-1-ol", "2-metilpropan-2-ol", "etano-1,2-diol", "propano-1,2,3-triol", "fenol"], "éteres, aldeídos e cetonas": ["metoximetano", "etoxietano", "metanal", "etanal", "propanal", "propanona", "butanona"], "ácidos e ésteres": ["ácido metanoico", "ácido etanoico", "ácido propanoico", "ácido butanoico", "etanoato de metila", "etanoato de etila"], "aminas e amida": ["metanamina", "etanamina", "N-metilmetanamina", "N,N-dimetilmetanamina", "anilina", "etanamida"], "haletos": ["clorometano", "diclorometano", "triclorometano", "tetraclorometano", "cloroetano", "bromoetano"] };
+    let A = "etanol", B = "metoximetano", slot = "A", fam = "álcoois e fenol";
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="min-height:210px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><div class="bts">${botoes([["A", "escolher a substância A"], ["B", "escolher a substância B"]], "s", slot)}</div><div class="bts" style="margin-top:8px">${botoes(Object.keys(FAM).map((f) => [f, f]), "f", fam)}</div></div><div><div class="bts" data-v="cs"></div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), PR = SIM.org.PROP;
+    const info = (n) => { const smi = SIM.org.smiDe(n); return { n, smi, M: SIM.org.massa(smi), ...SIM.org.forcas(smi), eb: PR[n].eb, sol: PR[n].sol, formula: SIM.org.formula(smi) }; };
+    const est = () => { const a = info(A), b = info(B), maior = a.eb > b.eb ? a : b, menor = maior === a ? b : a; let motivo; if (maior.lh && !menor.lh) motivo = "lh"; else if (maior.lh && menor.lh && maior.don !== menor.don && Math.abs(maior.ne - menor.ne) < 12) motivo = "maislh"; else if (maior.dipolo && !menor.dipolo && Math.abs(maior.ne - menor.ne) < 10) motivo = "dipolo"; else if (maior.ne > menor.ne * 1.12) motivo = "london"; else if (maior.formula === menor.formula) motivo = "formato"; else motivo = "misto"; return { a, b, maior: maior.n, menor: menor.n, motivo, dif: maior.eb - menor.eb }; };
+    const solT = (s) => (s === null ? "sem dado" : typeof s === "string" ? s : (s >= 100 ? s.toFixed(0) : s >= 1 ? s.toFixed(1) : String(+s.toPrecision(2))).replace(".", ",") + " g/L");
+    const lista = () => { q("[data-v=cs]").innerHTML = FAM[fam].map((n) => `<button class="bt peq" data-n="${n}" aria-pressed="${n === (slot === "A" ? A : B)}">${n}</button>`).join(""); };
+    const desenha = () => { const e = est(), dA = SIM.org.fig([{ smi: e.a.smi, leg: "A: " + e.a.n }, { smi: e.b.smi, leg: "B: " + e.b.n }], { W: 430 });
+      /* termômetro horizontal de −170 a 300 °C */
+      const X = (t) => 40 + ((Math.max(-170, Math.min(300, t)) + 170) / 470) * 600, marca = (o, cor, y) => `<line x1="${X(o.eb).toFixed(1)}" y1="26" x2="${X(o.eb).toFixed(1)}" y2="50" style="stroke:${cor};stroke-width:3"/><text x="${X(o.eb).toFixed(1)}" y="${y}" text-anchor="middle" class="tx2" style="fill:${cor};font-weight:700">${(o === e.a ? "A" : "B")}: ${String(o.eb).replace(".", ",").replace("-", "−")} °C</text>`;
+      const term = `<svg viewBox="0 0 680 84" width="680" role="img" aria-label="pontos de ebulição"><line x1="40" y1="38" x2="640" y2="38" style="stroke:var(--ink2);stroke-width:2"/>${[-150, -100, -50, 0, 50, 100, 150, 200, 250, 300].map((t) => `<line x1="${X(t)}" y1="34" x2="${X(t)}" y2="42" style="stroke:var(--ink2)"/><text x="${X(t)}" y="62" text-anchor="middle" class="tx2">${String(t).replace("-", "−")}</text>`).join("")}<line x1="${X(25)}" y1="20" x2="${X(25)}" y2="46" style="stroke:var(--ink3);stroke-dasharray:3 3"/><text x="${X(25)}" y="78" text-anchor="middle" class="tx2">25 °C</text>${marca(e.a, "var(--mod)", 16)}${marca(e.b, "var(--warn)", Math.abs(X(e.a.eb) - X(e.b.eb)) < 90 ? 84 : 16)}</svg>`;
+      q("[data-v=sv]").innerHTML = `<div style="display:flex;justify-content:center">${dA}</div><div style="display:flex;justify-content:center">${term}</div>`;
+      const fr = (o) => ["London", o.dipolo ? "dipolo" : null, o.lh ? "ligação de H" : null].filter(Boolean).join(" + ");
+      q("[data-v=lt]").innerHTML = vis("A: massa · elétrons", `${String(e.a.M).replace(".", ",")} g/mol · ${e.a.ne}`) + vis("A: forças", fr(e.a)) + vis("A: em água", solT(e.a.sol)) + vis("B: massa · elétrons", `${String(e.b.M).replace(".", ",")} g/mol · ${e.b.ne}`) + vis("B: forças", fr(e.b)) + vis("B: em água", solT(e.b.sol));
+      const T = { lh: `O ${e.maior} tem H preso em O ou N e faz <b>ligações de hidrogênio</b> entre as suas moléculas; o ${e.menor} não. É a força mais intensa das três, e por isso a diferença é de ${Math.round(e.dif)} °C.`, maislh: `Os dois fazem ligações de hidrogênio, mas o ${e.maior} tem <b>mais</b> grupos O–H ou N–H por molécula: mais pontos de amarração.`, dipolo: `Tamanhos parecidos; o ${e.maior} tem <b>dipolo permanente</b> e o ${e.menor} é apolar.`, london: `O ${e.maior} tem a nuvem eletrônica <b>maior</b> (mais elétrons, mais área de contato): forças de London mais fortes. Entre moléculas de tamanhos bem diferentes, o tamanho costuma ganhar.`, formato: `Mesma fórmula, mesmas forças: decide o <b>formato</b>. A molécula menos ramificada encosta melhor nas vizinhas.`, misto: `Aqui as tendências competem (tamanho, polaridade, ligações de hidrogênio), e só a medida decide: o ${e.maior} ferve ${Math.round(e.dif)} °C acima.` };
+      q("[data-v=st]").innerHTML = T[e.motivo] + " Pontos de ebulição e solubilidades são de tabela (caixas de dados da Wikipedia); as forças são deduzidas da estrutura."; };
+    liga(el, "s", (v) => { slot = v; lista(); }); liga(el, "f", (v) => { fam = v; lista(); });
+    el.addEventListener("click", (ev) => { const b = ev.target.closest("[data-n]"); if (!b) return; if (slot === "A") A = b.dataset.n; else B = b.dataset.n; lista(); desenha(); });
+    SIM.qPropFisicas._ult = { poe: (a, b) => { A = a; B = b; lista(); desenha(); }, est }; lista(); desenha(); };
+
+  /*PROP-INI*/ /* GERADO por tools/quimica/gera-prop-organica.py a partir de dadosH.json: não editar à mão. eb em °C (1 atm); sol em g/L de água, ou "miscível", ou "imiscível" (palavra da fonte), ou null (sem dado conversível) */
+  SIM.org.PROP = {
+    "metano": { eb: -161.49, sol: 0.0227 },
+    "etano": { eb: -88.5, sol: 0.0568 },
+    "propano": { eb: -42.1, sol: 0.047 },
+    "butano": { eb: 0.0, sol: 0.061 },
+    "metilpropano": { eb: -11.78, sol: 0.0489 },
+    "pentano": { eb: 36.1, sol: 0.04 },
+    "2-metilbutano": { eb: 28.0, sol: null },
+    "dimetilpropano": { eb: 9.5, sol: 0.0332 },
+    "hexano": { eb: 68.8, sol: 0.0095 },
+    "heptano": { eb: 98.38, sol: "imiscível" },
+    "octano": { eb: 125.6, sol: null },
+    "decano": { eb: 174.1, sol: null },
+    "cicloexano": { eb: 80.74, sol: "imiscível" },
+    "benzeno": { eb: 80.1, sol: 1.53 },
+    "metilbenzeno": { eb: 110.6, sol: 0.54 },
+    "metanol": { eb: 64.7, sol: "miscível" },
+    "etanol": { eb: 78.23, sol: "miscível" },
+    "propan-1-ol": { eb: 97.5, sol: "miscível" },
+    "propan-2-ol": { eb: 82.6, sol: "miscível" },
+    "butan-1-ol": { eb: 117.7, sol: 73 },
+    "butan-2-ol": { eb: 99.0, sol: 390 },
+    "2-metilpropan-2-ol": { eb: 82.5, sol: "miscível" },
+    "etano-1,2-diol": { eb: 197.3, sol: "miscível" },
+    "propano-1,2,3-triol": { eb: 290, sol: "miscível" },
+    "fenol": { eb: 181.7, sol: 83.0 },
+    "metoximetano": { eb: -24, sol: 71 },
+    "etoxietano": { eb: 34.6, sol: 60.5 },
+    "metanal": { eb: -19, sol: 400 },
+    "etanal": { eb: 20.2, sol: "miscível" },
+    "propanal": { eb: 48.0, sol: 200 },
+    "propanona": { eb: 56.08, sol: "miscível" },
+    "butanona": { eb: 79.64, sol: 275.0 },
+    "ácido metanoico": { eb: 100.8, sol: "miscível" },
+    "ácido etanoico": { eb: 118.5, sol: "miscível" },
+    "ácido propanoico": { eb: 141.15, sol: "miscível" },
+    "ácido butanoico": { eb: 163.75, sol: "miscível" },
+    "ácido benzoico": { eb: 250, sol: 1.7 },
+    "etanoato de metila": { eb: 56.9, sol: null },
+    "etanoato de etila": { eb: 77.1, sol: 83.0 },
+    "metanamina": { eb: -6.3, sol: 1008 },
+    "N-metilmetanamina": { eb: 8.0, sol: 1540.0 },
+    "N,N-dimetilmetanamina": { eb: 5.0, sol: "miscível" },
+    "etanamina": { eb: 18.0, sol: "miscível" },
+    "anilina": { eb: 184.13, sol: 36.0 },
+    "etanamida": { eb: 221.2, sol: 2000 },
+    "clorometano": { eb: -23.8, sol: 5.325 },
+    "diclorometano": { eb: 39.6, sol: 25.6 },
+    "triclorometano": { eb: 61.15, sol: 10.62 },
+    "tetraclorometano": { eb: 76.72, sol: 0.97 },
+    "cloroetano": { eb: 12.27, sol: 4.47 },
+    "bromoetano": { eb: 38.4, sol: 10.67 },
+  };
+  /*PROP-FIM*/
 })();

@@ -47,6 +47,15 @@ const perto = (a, b, tol = 0.005) => Math.abs(a - b) <= tol * Math.max(1e-9, Mat
     const e = await fn('N,N-dimetilmetanamina', ['amina']), f = await fn('etanamina', ['amina']), g2 = await fn('N-metilmetanamina', ['amina']); ok(e.fs[0].cls === 3 && f.fs[0].cls === 1 && g2.fs[0].cls === 2, 'H04: classes de amina pelo nitrogênio: etanamina 1ª, N-metilmetanamina 2ª, N,N-dimetilmetanamina 3ª');
     const h = await fn('clorobenzeno', ['haleto de arila']), i2 = await fn('cloreto de etanoíla', ['haleto de acila']), j = await fn('2-cloropropano', ['haleto de alquila']); ok(h.certo && i2.certo && j.certo && j.fs[0].cls === 2, 'H04: os três tipos de haleto são distinguidos; 2-cloropropano é secundário');
     ok(await p.evaluate(() => !/amin|amid|nitr|clor/i.test(document.querySelector('#lab-funcoesn .ctrls .bts').textContent)), 'H04: os botões das moléculas não mostram o nome (que entregaria a função)'); }
+  // ----- H05: forças e propriedades -----
+  if (temas.has('H05')) { await abre('H05');
+    const pf = (a, b2) => p.evaluate(([a, b2]) => { SIM.qPropFisicas._ult.poe(a, b2); return SIM.qPropFisicas._ult.est(); }, [a, b2]);
+    const a = await pf('etanol', 'metoximetano'); ok(a.a.ne === 26 && a.b.ne === 26 && a.a.lh && !a.b.lh && a.b.dipolo && a.maior === 'etanol' && a.motivo === 'lh' && perto(a.dif, 102.23, 1e-3), 'H05: etanol × metoximetano: 26 elétrons cada; só o etanol faz ligação de H; diferença de 102 °C');
+    const b2 = await pf('pentano', 'dimetilpropano'); ok(b2.motivo === 'formato' && b2.maior === 'pentano' && !b2.a.dipolo, 'H05: pentano × dimetilpropano: mesma fórmula, decide o formato');
+    const c = await pf('tetraclorometano', 'clorometano'); ok(c.maior === 'tetraclorometano' && !c.a.dipolo && c.b.dipolo && c.motivo === 'london' && c.a.ne === 74 && c.b.ne === 26, 'H05: CCl₄ (apolar, 74 elétrons) ferve acima de CH₃Cl (polar, 26): vence a força de London');
+    const d = await pf('octano', 'pentano'), e = await pf('propano-1,2,3-triol', 'propan-1-ol'); ok(d.motivo === 'london' && e.maior === 'propano-1,2,3-triol' && e.a.don === 3, 'H05: octano × pentano: tamanho; glicerina tem 3 doadores de ligação de H');
+    ok(await p.evaluate(() => { const P = SIM.org.PROP; return P.etanol.eb === 78.23 && P['butan-1-ol'].sol === 73 && P.cicloexano.sol === 'imiscível' && P['N-metilmetanamina'].sol === 1540 && Object.keys(P).length === 51; }), 'H05: tabela gerada das fontes: 51 compostos; etanol 78,23 °C; butan-1-ol 73 g/L; cicloexano imiscível');
+    await pf('etanol', 'metoximetano'); await p.waitForTimeout(150); const l = await leitor('lab-prop'); ok(/ligação de H/.test(l['A: forças']) && !/ligação de H/.test(l['B: forças']) && /miscível/.test(l['A: em água']), 'H05: mostrador: A ' + l['A: forças'] + ' · B ' + l['B: forças']); }
   //MAIS
   // ----- gabaritos: em todo exercício de alternativas, clicar na letra do gabarito tem de dar "certo" -----
   for (const cod of ['H01', 'H02', 'H03', 'H04', 'H05', 'H06', 'H07', 'H08', 'H09', 'H10', 'H11', 'H12', 'H13'].filter((c) => temas.has(c))) { await p.goto(RAIZ + '#/quimica/' + cod); await p.waitForTimeout(1300);
