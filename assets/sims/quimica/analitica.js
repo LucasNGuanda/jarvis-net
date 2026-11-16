@@ -87,6 +87,54 @@
       {"id": "i2", "an": "I₂", "tit": "Na₂S₂O₃", "ct": 0.1, "a": 1, "t": 2, "tipo": "redox", "Ka": null, "ind": "amido", "c1": "azul-escuro", "c2": "incolor", "eq": "I₂ + 2 S₂O₃²⁻ → 2 I⁻ + S₄O₆²⁻"},
     ],
     KHP: {"f": "C8H5KO4", "M": 204.222},
+    LIG: {"H2O": {"f": "H₂O", "nome": "aqua", "q": 0, "dent": 1}, "NH3": {"f": "NH₃", "nome": "amin", "q": 0, "dent": 1}, "CO": {"f": "CO", "nome": "carbonil", "q": 0, "dent": 1}, "F": {"f": "F⁻", "nome": "fluoro", "q": -1, "dent": 1}, "Cl": {"f": "Cl⁻", "nome": "cloro", "q": -1, "dent": 1}, "Br": {"f": "Br⁻", "nome": "bromo", "q": -1, "dent": 1}, "I": {"f": "I⁻", "nome": "iodo", "q": -1, "dent": 1}, "CN": {"f": "CN⁻", "nome": "ciano", "q": -1, "dent": 1}, "OH": {"f": "OH⁻", "nome": "hidroxo", "q": -1, "dent": 1}, "ox": {"f": "C₂O₄²⁻", "nome": "oxalato", "q": -2, "dent": 2}, "en": {"f": "en", "nome": "etilenodiamina", "q": 0, "dent": 2}, "EDTA": {"f": "EDTA⁴⁻", "nome": "EDTA", "q": -4, "dent": 6}},
+    CX: [
+      {"id": "CoNH3", "f": "[Co(NH₃)₆]Cl₃", "metal": "Co", "ligs": [["NH3", 6]], "carga": 3, "nox": 3, "nc": 6, "nome": "cloreto de hexaamincobalto(III)"},
+      {"id": "PtNH3Cl", "f": "[Pt(NH₃)₄Cl₂]²⁺", "metal": "Pt", "ligs": [["NH3", 4], ["Cl", 2]], "carga": 2, "nox": 4, "nc": 6, "nome": "íon tetraamindicloroplatina(IV)"},
+      {"id": "AgNH3", "f": "[Ag(NH₃)₂]⁺", "metal": "Ag", "ligs": [["NH3", 2]], "carga": 1, "nox": 1, "nc": 2, "nome": "íon diaminprata(I)"},
+      {"id": "CrH2OCl", "f": "[Cr(H₂O)₄Cl₂]Cl", "metal": "Cr", "ligs": [["H2O", 4], ["Cl", 2]], "carga": 1, "nox": 3, "nc": 6, "nome": "cloreto de tetraaquadiclorocromo(III)"},
+      {"id": "Coen", "f": "[Co(en)₃]₂(SO₄)₃", "metal": "Co", "ligs": [["en", 3]], "carga": 3, "nox": 3, "nc": 6, "nome": "sulfato de tris(etilenodiamina)cobalto(III)"},
+      {"id": "PtNH3Cl4", "f": "[Pt(NH₃)₂Cl₄]", "metal": "Pt", "ligs": [["NH3", 2], ["Cl", 4]], "carga": 0, "nox": 4, "nc": 6, "nome": "diamintetracloroplatina(IV)"},
+      {"id": "Nien", "f": "[Ni(en)₂Cl₂]", "metal": "Ni", "ligs": [["en", 2], ["Cl", 2]], "carga": 0, "nox": 2, "nc": 6, "nome": "diclorobis(etilenodiamina)níquel(II)"},
+      {"id": "PtCl6", "f": "[PtCl₆]²⁻", "metal": "Pt", "ligs": [["Cl", 6]], "carga": -2, "nox": 4, "nc": 6, "nome": "íon hexacloroplatinato(IV)"},
+      {"id": "SnCl6", "f": "Na₂[SnCl₆]", "metal": "Sn", "ligs": [["Cl", 6]], "carga": -2, "nox": 4, "nc": 6, "nome": "hexacloroestanato(IV) de sódio"},
+      {"id": "cisPt", "f": "cis-[Pt(NH₃)₂Cl₂]", "metal": "Pt", "ligs": [["NH3", 2], ["Cl", 2]], "carga": 0, "nox": 2, "nc": 4, "nome": "cis-diamindicloroplatina(II)"},
+    ],
+    GEO: [
+      {"nc": 2, "nome": "linear", "ex": "[Ag(NH₃)₂]⁺"},
+      {"nc": 4, "nome": "tetraédrica", "ex": "[Zn(CN)₄]²⁻"},
+      {"nc": 4, "nome": "quadrada plana", "ex": "[Pt(NH₃)₂Cl₂]"},
+      {"nc": 6, "nome": "octaédrica", "ex": "[Co(H₂O)₆]²⁺"},
+    ],
+    ESPL: [
+      {"id": "Ti3+", "f": "[Ti(H₂O)₆]³⁺", "metal": "Ti", "nox": 3, "dn": 1, "forte": false, "cor": "violeta"},
+      {"id": "V3+", "f": "[V(H₂O)₆]³⁺", "metal": "V", "nox": 3, "dn": 2, "forte": false, "cor": "roxo"},
+      {"id": "Cr3+", "f": "[Cr(H₂O)₆]³⁺", "metal": "Cr", "nox": 3, "dn": 3, "forte": false, "cor": "violeta"},
+      {"id": "Cr2+", "f": "[Cr(H₂O)₆]²⁺", "metal": "Cr", "nox": 2, "dn": 4, "forte": false, "cor": "azul"},
+      {"id": "Mn2+", "f": "[Mn(H₂O)₆]²⁺", "metal": "Mn", "nox": 2, "dn": 5, "forte": false, "cor": "rosa-claro"},
+      {"id": "Fe2+", "f": "[Fe(H₂O)₆]²⁺", "metal": "Fe", "nox": 2, "dn": 6, "forte": false, "cor": "verde-azulado claro"},
+      {"id": "Fe3+", "f": "[Fe(H₂O)₆]³⁺", "metal": "Fe", "nox": 3, "dn": 5, "forte": false, "cor": "violeta-claro"},
+      {"id": "Co2+", "f": "[Co(H₂O)₆]²⁺", "metal": "Co", "nox": 2, "dn": 7, "forte": false, "cor": "rosa"},
+      {"id": "Ni2+", "f": "[Ni(H₂O)₆]²⁺", "metal": "Ni", "nox": 2, "dn": 8, "forte": false, "cor": "verde"},
+      {"id": "Cu2+", "f": "[Cu(H₂O)₆]²⁺", "metal": "Cu", "nox": 2, "dn": 9, "forte": false, "cor": "azul"},
+      {"id": "Zn2+", "f": "[Zn(H₂O)₆]²⁺", "metal": "Zn", "nox": 2, "dn": 10, "forte": false, "cor": "incolor"},
+      {"id": "FeCN6_4", "f": "[Fe(CN)₆]⁴⁻", "metal": "Fe", "nox": 2, "dn": 6, "forte": true, "cor": "amarelo-claro"},
+      {"id": "FeCN6_3", "f": "[Fe(CN)₆]³⁻", "metal": "Fe", "nox": 3, "dn": 5, "forte": true, "cor": null},
+      {"id": "FeF6_3", "f": "[FeF₆]³⁻", "metal": "Fe", "nox": 3, "dn": 5, "forte": false, "cor": null},
+    ],
+    SERIE: [
+      "I⁻",
+      "Br⁻",
+      "Cl⁻",
+      "F⁻",
+      "H₂O",
+      "NH₃",
+      "en",
+      "NO₂⁻",
+      "CN⁻",
+    ],
+    TI: {"lambda": 499, "E": 3.99e-19},
+    KF: {"AgNH3": 17000000.0, "CuNH3": 17000000000000.0, "AgCN": 1e+21, "FeCN4": 1.5e+35, "NiNH3": 200000000.0, "ZnOH": 2000000000000000.0, "FeSCN": 890.0, "ZnCN": 2.1e+19},
   };
   /*ANA-FIM*/
 
@@ -189,6 +237,37 @@
     q("[data-v=mais]").addEventListener("click", () => { v = Math.min(40, +(v + 0.05).toFixed(2)); sinc(); }); q("[data-v=menos]").addEventListener("click", () => { v = Math.max(0, +(v - 0.05).toFixed(2)); sinc(); });
     q("[data-v=ver]").addEventListener("click", () => { ver = !ver; sinc(); });
     SIM.qTitulacao._ult = { poe: (i, a, vol, indic = "fenolftaleina", mostra = true) => { id = i; am = a; v = vol; ind = indic; ver = mostra; sinc(); }, est }; sinc(); };
+
+  /* ---------- J04: química de coordenação ---------- */
+  const SUPN = (n) => String(n).replace(/\d/g, (c) => "⁰¹²³⁴⁵⁶⁷⁸⁹"[+c]);
+  /* preenchimento dos orbitais d num campo octaédrico: n elétrons, campo forte (baixo spin) ou fraco (alto spin). occ = ocupação dos 5 orbitais (0 a 2 = t2g; 3 e 4 = eg) */
+  SIM.campoD = (n, forte) => { const occ = [0, 0, 0, 0, 0], ordem = forte ? [0, 1, 2, 0, 1, 2, 3, 4, 3, 4] : [0, 1, 2, 3, 4, 0, 1, 2, 3, 4]; for (let k = 0; k < n; k++) occ[ordem[k]]++; const t = occ[0] + occ[1] + occ[2], e = occ[3] + occ[4], des = occ.filter((x) => x === 1).length; return { n, forte, occ, t, e, des, spin: n >= 4 && n <= 7 ? (forte ? "baixo" : "alto") : "único", mag: des ? "paramagnético" : "diamagnético", cfg: "t₂g" + SUPN(t) + (e ? " eg" + SUPN(e) : "") }; };
+  /* número de oxidação do metal e número de coordenação a partir dos ligantes e da carga do complexo */
+  SIM.complexo = (ligs, carga) => ({ nox: carga - ligs.reduce((s, [l, k]) => s + SIM.ANA.LIG[l].q * k, 0), nc: ligs.reduce((s, [l, k]) => s + SIM.ANA.LIG[l].dent * k, 0) });
+  /* nome: "Campo cristalino: onde ficam os elétrons d" · matéria: Química · tema: J04 */
+  SIM.qCampo = (el, F) => { const E = SIM.ANA.ESPL; let pre = "Fe2+", dn = 6, forte = false, ver = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;justify-content:center;padding:12px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">complexos octaédricos com dado de fonte</p><div class="bts">${botoes(E.map((x) => [x.id, x.f]), "p", pre)}</div></div>
+      <div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">ou monte o seu (modelo)</p><label style="font-size:13px;color:var(--ink2)">elétrons d: <b data-v="dd"></b><input type="range" data-v="rg" min="1" max="10" step="1" value="6" style="width:100%"></label><div class="bts" style="margin-top:6px">${botoes([["0", "campo fraco (Δ < P)"], ["1", "campo forte (Δ > P)"]], "c", "0")}<button class="bt peq" data-v="ver" aria-pressed="false">distribuir os elétrons</button></div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), atual = () => E.find((x) => x.id === pre) || null, est = () => ({ ...SIM.campoD(dn, forte), pre, cx: atual(), ver });
+    const CORH = { violeta: "#8e5bd0", roxo: "#7d3fa8", azul: "#3f8fd6", "rosa-claro": "#f2b8cf", "verde-azulado claro": "#9fd6c8", "violeta-claro": "#c9b3e6", rosa: "#e86aa6", verde: "#3fae6a", incolor: "#dfe7ee", "amarelo-claro": "#efe7a8" };
+    const desenha = () => { const e = est(), W = 640, H = 236, G = forte ? 120 : 56, y0 = 122, yt = y0 + 0.4 * G, ye = y0 - 0.6 * G, T = (x, y, s, a = "middle", c = "tx2", t = 12) => `<text x="${x}" y="${y}" text-anchor="${a}" class="${c}" style="font-size:${t}px">${s}</text>`;
+      const lin = (x, y) => `<line x1="${x}" y1="${y}" x2="${x + 34}" y2="${y}" style="stroke:var(--ink);stroke-width:2.4"/>`, el2 = (x, y, k) => (k >= 1 ? `<text x="${x + 11}" y="${y - 5}" text-anchor="middle" style="font:700 17px Inter,system-ui,sans-serif;fill:var(--mod)">↑</text>` : "") + (k === 2 ? `<text x="${x + 23}" y="${y - 5}" text-anchor="middle" style="font:700 17px Inter,system-ui,sans-serif;fill:var(--mod)">↓</text>` : "");
+      let s = T(130, 24, "íon livre: 5 orbitais d iguais") + [0, 1, 2, 3, 4].map((k) => lin(40 + k * 38, y0)).join("") + T(130, y0 + 22, e.n + " elétrons d");
+      s += `<line x1="234" y1="${y0}" x2="372" y2="${ye}" style="stroke:var(--ink2);stroke-dasharray:4 4"/><line x1="234" y1="${y0}" x2="352" y2="${yt}" style="stroke:var(--ink2);stroke-dasharray:4 4"/>`;
+      s += T(470, 24, "no complexo octaédrico") + [0, 1].map((k) => lin(380 + k * 44, ye) + (ver ? el2(380 + k * 44, ye, e.occ[3 + k]) : "")).join("") + [0, 1, 2].map((k) => lin(360 + k * 44, yt) + (ver ? el2(360 + k * 44, yt, e.occ[k]) : "")).join("") + T(486, ye + 4, "eg", "start", "tx", 13) + T(506, yt + 4, "t₂g", "start", "tx", 13);
+      s += `<line x1="560" y1="${ye}" x2="560" y2="${yt}" style="stroke:var(--warn);stroke-width:1.6"/><polygon points="560,${ye} 556,${ye + 8} 564,${ye + 8}" style="fill:var(--warn)"/><polygon points="560,${yt} 556,${yt - 8} 564,${yt - 8}" style="fill:var(--warn)"/>` + T(570, (ye + yt) / 2 + 4, "Δoct", "start", "tx", 13) + T(570, (ye + yt) / 2 + 20, forte ? "grande" : "pequeno", "start", "tx2", 11);
+      if (!ver) s += `<text x="426" y="${y0 + 8}" text-anchor="middle" style="font:700 26px Inter,system-ui,sans-serif;fill:var(--warn)">?</text>`;
+      if (e.cx && e.cx.cor) s += `<circle cx="80" cy="200" r="13" style="fill:${CORH[e.cx.cor]};stroke:var(--ink2);stroke-width:1.2"/>` + T(100, 204, "cor em solução: " + e.cx.cor, "start");
+      q("[data-v=sv]").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="desdobramento dos orbitais d">${s}</svg>`; q("[data-v=dd]").textContent = "d" + SUPN(dn);
+      q("[data-v=lt]").innerHTML = vis("complexo", e.cx ? e.cx.f : "modelo (sem complexo)") + vis("metal e nox", e.cx ? e.cx.metal + ", +" + e.cx.nox : "—") + vis("elétrons d", "d" + SUPN(dn)) + vis("campo", forte ? "forte (Δ > P)" : "fraco (Δ < P)") + vis("configuração", ver ? e.cfg : "?") + vis("desemparelhados", ver ? e.des : "?") + vis("magnetismo", ver ? e.mag : "?") + vis("spin", ver ? (e.spin === "único" ? "só há um jeito" : e.spin + " spin") : "?");
+      q("[data-v=st]").innerHTML = (!ver ? `Antes de clicar: distribua os ${dn} elétrons. Os três orbitais t₂g enchem primeiro, um elétron em cada. Do quarto elétron em diante, ${forte ? "com campo forte compensa emparelhar em t₂g (subir custaria Δ, que é maior que P)" : "com campo fraco compensa subir para eg (emparelhar custaria P, que é maior que Δ)"}. Quantos ficam desemparelhados? ` : `Configuração ${e.cfg}: ${e.des} elétron${e.des === 1 ? "" : "s"} desemparelhado${e.des === 1 ? "" : "s"}, ${e.mag}. ${e.spin === "único" ? "Com " + dn + " elétrons d não há diferença entre campo forte e fraco." : "É um complexo de " + e.spin + " spin."} `) + (e.cx ? "Configuração e cor: dados de fonte (aquocomplexos: Wikipedia, \"Metal aquo complex\"; ferro com cianeto e com fluoreto: OpenStax 19.3)." : "Modo livre: o tamanho do campo é escolha sua; é um modelo, não um complexo real."); };
+    const sinc = () => { el.querySelectorAll("[data-p]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.p === pre))); el.querySelectorAll("[data-c]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.c === (forte ? "1" : "0")))); q("[data-v=rg]").value = dn; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); };
+    liga(el, "p", (x) => { pre = x; const c = atual(); dn = c.dn; forte = c.forte; ver = false; sinc(); }); liga(el, "c", (x) => { forte = x === "1"; pre = null; ver = false; sinc(); });
+    q("[data-v=rg]").addEventListener("input", (ev) => { dn = +ev.target.value; pre = null; ver = false; sinc(); });
+    q("[data-v=ver]").addEventListener("click", () => { ver = !ver; sinc(); });
+    SIM.qCampo._ult = { poe: (p, n, f, v = true) => { pre = p; if (p) { const c = E.find((x) => x.id === p); dn = c.dn; forte = c.forte; } else { dn = n; forte = !!f; } ver = v; sinc(); }, est }; sinc(); };
 
   //MAIS-LABS
 })();

@@ -106,7 +106,7 @@ window.CATALOGO.push(
     ["J01","Análise qualitativa: solubilidade, precipitados, chama e marcha de cátions",[],true],
     ["J02","Métodos gravimétricos: precipitação, volatilização e análise por combustão",[],true],
     ["J03","Métodos volumétricos: titulação ácido-base, redox, de precipitação e com EDTA",[],true],
-    ["J04","Química de coordenação",[]],
+    ["J04","Química de coordenação: complexos, isômeros, campo cristalino e cor",[],true],
   ] },
   /* aba Experimentos (simulações, no padrão dos experimentos de física) */
   { id:"EQg", area:"quiexp", letra:"QG", cor:"--mF", nome:"Gases", desc:"Difusão, pistão, Maxwell–Boltzmann e gases reais.", temas:[

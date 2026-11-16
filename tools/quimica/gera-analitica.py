@@ -195,6 +195,99 @@ if abs(Me - 292.244) > 0.01: erros.append(("EDTA: massa molar", Me))
 e14 = texto(VO["exemplo_openstax_4_14"]); r14 = 35.23 * 0.250 / 50.00
 if not ("50.00-mL" in e14 and "35.23 mL of 0.250 M NaOH" in e14 and abs(r14 - val(VO["exemplo_openstax_4_14"], 1)) < 6e-4): erros.append(("exemplo 4.14 não confere", r14))
 ANA["OPENSTAX"]["e414"] = {"Va": 50.00, "Vt": 35.23, "Ct": 0.250, "Ca": val(VO["exemplo_openstax_4_14"], 1)}
+# ---------- J04: química de coordenação ----------
+CO = D["coordenacao"]; LG = CO["ligantes"]
+CARGA = {"neutral": 0, "monoanionic": -1, "dianionic": -2, "tetraanionic": -4}; DENT = {"monodentate": 1, "bidentate": 2, "hexadentate": 6}
+# id, chave em dadosJ, fórmula para mostrar, nome do ligante em português (tradução do nome da fonte), nome da fonte que tem de aparecer
+LIG_L = [["H2O", "H2O", "H₂O", "aqua", "aqua"], ["NH3", "NH3", "NH₃", "amin", "ammine"], ["CO", "CO", "CO", "carbonil", "carbonyl"], ["F", "F-", "F⁻", "fluoro", "fluoro"], ["Cl", "Cl-", "Cl⁻", "cloro", "chloro"], ["Br", "Br-", "Br⁻", "bromo", "bromo"],
+         ["I", "I-", "I⁻", "iodo", "iodo"], ["CN", "CN-", "CN⁻", "ciano", "cyano"], ["OH", "OH-", "OH⁻", "hidroxo", "hydroxo"], ["ox", "C2O4 2-", "C₂O₄²⁻", "oxalato", "oxalato"], ["en", "en_etilenodiamina", "en", "etilenodiamina", "Ethylenediamine (en)"], ["EDTA", "EDTA", "EDTA⁴⁻", "EDTA", "(edta4−)"]]
+lig = {}
+for i, ch, f, nome, pal in LIG_L:
+    t_ = texto(LG[ch]); linha = next((str(e["valor"]) for e in itens(LG[ch]) if str(e["valor"]).startswith("|")), "")
+    if pal.lower() not in t_.lower(): erros.append(("ligante: nome não está na fonte", i, pal)); continue
+    q = next((v for k, v in CARGA.items() if "| " + k + " |" in linha), None); dn_ = next((v for k, v in DENT.items() if "| " + k in linha), None)
+    if q is None or dn_ is None: erros.append(("ligante: carga ou denticidade não lida na tabela", i, linha[:80])); continue
+    lig[i] = {"f": f, "nome": nome, "q": q, "dent": dn_}
+ANA["LIG"] = lig
+ROM = {"I": 1, "II": 2, "III": 3, "IV": 4}
+NM = texto(CO["nomenclatura"]["exemplos"]) + " " + texto(CO["cisplatina"]["formula_e_nome"])
+# id, fórmula para mostrar, metal, [ligantes: id, quantos], carga do complexo, nome em português (tradução), nome em inglês que está na fonte, fórmula como a fonte escreve
+CX_L = [["CoNH3", "[Co(NH₃)₆]Cl₃", "Co", [["NH3", 6]], 3, "cloreto de hexaamincobalto(III)", "hexaamminecobalt(III) chloride", "[Co(NH3)6]Cl3"],
+        ["PtNH3Cl", "[Pt(NH₃)₄Cl₂]²⁺", "Pt", [["NH3", 4], ["Cl", 2]], 2, "íon tetraamindicloroplatina(IV)", "tetraamminedichloroplatinum(IV) ion", "[Pt(NH3)4Cl2]2+"],
+        ["AgNH3", "[Ag(NH₃)₂]⁺", "Ag", [["NH3", 2]], 1, "íon diaminprata(I)", "diamminesilver(I) ion", "[Ag(NH3)2]+"],
+        ["CrH2OCl", "[Cr(H₂O)₄Cl₂]Cl", "Cr", [["H2O", 4], ["Cl", 2]], 1, "cloreto de tetraaquadiclorocromo(III)", "tetraaquadichlorochromium(III) chloride", "[Cr(H2O)4Cl2]Cl"],
+        ["Coen", "[Co(en)₃]₂(SO₄)₃", "Co", [["en", 3]], 3, "sulfato de tris(etilenodiamina)cobalto(III)", "tris(ethylenediamine)cobalt(III) sulfate", "[Co(H2NCH2CH2NH2)3]2(SO4)3"],
+        ["PtNH3Cl4", "[Pt(NH₃)₂Cl₄]", "Pt", [["NH3", 2], ["Cl", 4]], 0, "diamintetracloroplatina(IV)", "diamminetetrachloroplatinum(IV)", "[Pt(NH3)2Cl4]"],
+        ["Nien", "[Ni(en)₂Cl₂]", "Ni", [["en", 2], ["Cl", 2]], 0, "diclorobis(etilenodiamina)níquel(II)", "dichlorobis(ethylenediamine)nickel(II)", "[Ni(H2NCH2CH2NH2)2Cl2]"],
+        ["PtCl6", "[PtCl₆]²⁻", "Pt", [["Cl", 6]], -2, "íon hexacloroplatinato(IV)", "hexachloroplatinate(IV) ion", "[PtCl6]2−"],
+        ["SnCl6", "Na₂[SnCl₆]", "Sn", [["Cl", 6]], -2, "hexacloroestanato(IV) de sódio", "sodium hexachlorostannate(IV)", "Na2[SnCl6]"],
+        ["cisPt", "cis-[Pt(NH₃)₂Cl₂]", "Pt", [["NH3", 2], ["Cl", 2]], 0, "cis-diamindicloroplatina(II)", "cis-diamminedichloroplatinum(II)", "[Pt(NH3)2(Cl)2]"]]
+cx = []
+for i, f, metal, ligs, carga, nome, en, ff in CX_L:
+    if en not in NM or ff not in NM: erros.append(("complexo: nome ou fórmula não está na fonte", i, en, ff)); continue
+    nox = carga - sum(lig[l]["q"] * n for l, n in ligs); nc = sum(lig[l]["dent"] * n for l, n in ligs)
+    rom = re.search(r"\((I{1,3}|IV)\)", en).group(1)
+    if ROM[rom] != nox or "(" + rom + ")" not in nome: erros.append(("complexo: nox calculado não bate com o nome da fonte", i, nox, rom)); continue
+    cx.append({"id": i, "f": f, "metal": metal, "ligs": ligs, "carga": carga, "nox": nox, "nc": nc, "nome": nome})
+ANA["CX"] = cx
+for ch, pal in [("regra_2_ligantes_antes_do_metal", ["Name the ligands first", "alphabetically", "adding -o", "aqua (H2O), ammine (NH3)"]), ("regra_3_prefixos", ["di- (for two)", "bis- (for two), tris- (for three)"]), ("regra_4_cation_ou_neutro_numeral_romano", ["Roman numeral"]), ("regra_5_anion_sufixo_ato", ["suffix -ate", "ferrate"]), ("regra_1_cation_antes_do_anion", ["name the cation first"]), ("origem", ["Alfred Werner"])]:
+    exige(CO["nomenclatura"][ch], *pal, onde="nomenclatura " + ch)
+GE = CO["geometrias"]
+GEO_L = [[2, "linear", "[Ag(NH₃)₂]⁺", "NC2_linear", ["| 2 | linear | [Ag(NH3)2]+"]], [4, "tetraédrica", "[Zn(CN)₄]²⁻", "NC4_tetraedrica", ["tetrahedral", "[Zn(CN)4]2−", "109.5°"]], [4, "quadrada plana", "[Pt(NH₃)₂Cl₂]", "NC4_quadrada_plana", ["square planar (d8)", "[Pt(NH3)2Cl2]", "d8 configuration"]], [6, "octaédrica", "[Co(H₂O)₆]²⁺", "NC6_octaedrica", ["| 6 | octahedral", "corners of an octahedron"]]]
+geo = []
+for nc, nome, ex, ch, pal in GEO_L:
+    if exige(GE[ch], *pal, onde="geometria " + nome): geo.append({"nc": nc, "nome": nome, "ex": ex})
+exige(GE["resumo"], "[Co(H2O)6]2+ have coordination numbers of two, four, and six", onde="geometria: exemplo de NC 6")
+ANA["GEO"] = geo
+# campo cristalino: preenchimento (alto e baixo spin) conferido contra as configurações da fonte
+def campo(n, forte):
+    if forte: t = min(n, 6); e = n - t
+    else:
+        t = min(n, 3); e = min(max(n - 3, 0), 2); r = n - t - e; a = min(r, 3); t += a; e += r - a
+    des = (t if t <= 3 else 6 - t) + (e if e <= 2 else 4 - e)
+    return t, e, des
+CFG = CO["configuracao_d_dos_ions"]; CORJ = CO["cores"]
+CORAQ = {"violet": "violeta", "purple": "roxo", "blue": "azul", "pale pink": "rosa-claro", "pale blue-green": "verde-azulado claro", "pale violet": "violeta-claro", "pink": "rosa", "green": "verde", "colorless": "incolor"}
+aq = []
+for ion_, metal, nox in [["Ti3+", "Ti", 3], ["V3+", "V", 3], ["Cr3+", "Cr", 3], ["Cr2+", "Cr", 2], ["Mn2+", "Mn", 2], ["Fe2+", "Fe", 2], ["Fe3+", "Fe", 3], ["Co2+", "Co", 2], ["Ni2+", "Ni", 2], ["Cu2+", "Cu", 2], ["Zn2+", "Zn", 2]]:
+    c = val(CFG[ion_]); m = re.fullmatch(r"\(t2g\)(\d)(?:\(eg\)(\d))?", str(c)); cor = val(CORJ["[%s(H2O)6]%s" % (metal, ion_[len(metal):])])
+    if not m or cor not in CORAQ: erros.append(("aquo: configuração ou cor inesperada", ion_, c, cor)); continue
+    t = int(m.group(1)); e = int(m.group(2) or 0); n = t + e
+    if campo(n, False)[:2] != (t, e): erros.append(("aquo: a configuração de alto spin calculada não bate com a da fonte", ion_, c, campo(n, False))); continue
+    carga = ion_[len(metal):]; sup = carga.replace("2", "²").replace("3", "³").replace("+", "⁺")
+    aq.append({"id": ion_, "f": "[%s(H₂O)₆]%s" % (metal, sup), "metal": metal, "nox": nox, "dn": n, "forte": False, "cor": CORAQ[cor]})
+CC = CO["campo_cristalino"]
+if exige(CC["spin_baixo"], "six 3d electrons of the Fe2+ ion pair in the three t2g orbitals", "strong field of six cyanide", onde="[Fe(CN)6]4−") and exige(CORJ["[Fe(CN)6]4-"], "pale yellow", onde="cor do ferrocianeto") and campo(6, True)[2] == 0:
+    aq.append({"id": "FeCN6_4", "f": "[Fe(CN)₆]⁴⁻", "metal": "Fe", "nox": 2, "dn": 6, "forte": True, "cor": "amarelo-claro"})
+if exige(CC["spin_alto"], "[Fe(CN)6]3− ion is a low-spin complex with only one unpaired electron", "[FeF6]3− ions are high-spin complexes with five unpaired", "one pair of electrons and four unpaired", onde="spin do ferro") and campo(5, True)[2] == 1 and campo(5, False)[2] == 5 and campo(6, False)[2] == 4:
+    aq.append({"id": "FeCN6_3", "f": "[Fe(CN)₆]³⁻", "metal": "Fe", "nox": 3, "dn": 5, "forte": True, "cor": None})
+    aq.append({"id": "FeF6_3", "f": "[FeF₆]³⁻", "metal": "Fe", "nox": 3, "dn": 5, "forte": False, "cor": None})
+ANA["ESPL"] = aq
+if val(CC["quais_dn_tem_spin_alto_e_baixo"], 1) != "d4, d5, d6, and d7" or [n for n in range(1, 11) if campo(n, True)[:2] != campo(n, False)[:2]] != [4, 5, 6, 7]: erros.append(("d4 a d7: a regra calculada não bate com a fonte",))
+exige(CORJ["Cu+_d10_incolor"], "colorless", onde="d10 incolor"); exige(CORJ["regra_d0_d10"], "empty d subshell (d0) or with filled d subshells (d10) usually form colorless", onde="regra d0 d10")
+if campo(9, False)[2] != 1 or "Cu2+ is d9, so there will be one unpaired electron" not in texto(CFG["Cu2+"]): erros.append(("Cu2+ d9",))
+serie = val(CC["serie_espectroquimica"])
+if serie != "I−<Br−<Cl−<F−<H2O<NH3<en<NO2−<CN−": erros.append(("série espectroquímica inesperada", serie))
+ANA["SERIE"] = ["I⁻", "Br⁻", "Cl⁻", "F⁻", "H₂O", "NH₃", "en", "NO₂⁻", "CN⁻"]
+exige(CC["serie_espectroquimica"], "weak-field ligands", "strong-field ligands", onde="série")
+exige(CC["cor_complementar"], "red photons are absorbed from white light, the eyes see the color green", "violet photons are removed from white light, the eyes see lemon yellow", "yellow, orange, or red because they absorb higher-energy violet or blue", "blue-green, blue, or indigo because they absorb lower-energy yellow, orange, or red", onde="cores complementares")
+exige(CORJ["[Cu(NH3)4]2+"], "absorbs orange and red light", "blue", onde="cor do tetraamincobre"); exige(CORJ["[CoCl4]2-"], "blue ion", "pink", onde="cor do tetraclorocobaltato"); exige(CORJ["[Fe(SCN)]2+"], "blood-red", onde="cor do tiocianato de ferro")
+exige(CC["energia_de_emparelhamento"], "pairing energy (P)", onde="P"); exige(CC["desdobramento_octaedrico"], "Δoct", "t2g", onde="Δoct"); exige(CC["tetraedrico"], "all tetrahedral complexes are high spin", onde="tetraédrico"); exige(CC["magnetismo"], "paramagnetic", "diamagnetic", onde="magnetismo")
+ti = CC["exemplo_Ti_H2O_6"]; Eti = 6.626e-34 * 2.998e8 / 499e-9
+if not ("499 nm" in texto(ti) and abs(Eti - 3.99e-19) / 3.99e-19 < 0.004 and "appear purple" in texto(ti)): erros.append(("exemplo do titânio não confere", Eti))
+ANA["TI"] = {"lambda": 499, "E": 3.99e-19}
+KFJ = CO["constantes_de_formacao"]
+ANA["KF"] = {"AgNH3": val(KFJ["[Ag(NH3)2]+"]), "CuNH3": val(KFJ["[Cu(NH3)4]2+"]), "AgCN": val(KFJ["[Ag(CN)2]−"]), "FeCN4": val(KFJ["[Fe(CN)6]4−"]), "NiNH3": val(KFJ["[Ni(NH3)6]2+"]), "ZnOH": val(KFJ["[Zn(OH)4]2−"]), "FeSCN": val(KFJ["[Fe(SCN)]2+"]), "ZnCN": val(KFJ["[Zn(CN)4]2−"])}
+if ANA["KF"]["AgNH3"] != 1.7e7 or ANA["KF"]["CuNH3"] != 1.7e13 or any(not isinstance(v, float) or v < 100 for v in ANA["KF"].values()): erros.append(("Kf inesperado", ANA["KF"]))
+IS = CO["isomeria"]
+exige(IS["geometrica_cis_trans"], "[Co(NH3)4Cl2]+ ion has two isomers", "cis form is violet, and the trans form is green", "octahedral and square planar complexes (but not tetrahedral)", "Alfred Werner in 1893", onde="cis/trans")
+exige(IS["fac_mer"], "facial isomer (fac)", "meridional isomer (mer)", "fac-[CoCl3(NH3)3]", onde="fac/mer"); exige(IS["optica"], "nonsuperimposable mirror images", "[Co(en)2Cl2]+", "cis isomer exists as a pair of optical isomers", onde="óptica")
+exige(IS["de_ligacao"], "[Co(NH3)5SCN]2+ or [Co(NH3)5NCS]2+", onde="ligação"); exige(IS["de_ionizacao"], "[CoCl6][Br] and [CoCl5Br][Cl]", onde="ionização")
+CP = CO["cisplatina"]; exige(CP["uso"], "1978", "treatment of certain forms of cancer", onde="cisplatina: uso"); exige(CP["formula_e_nome"], "trans isomer was not effective", onde="cisplatina: trans"); exige(CP["geometria"], "square planar", onde="cisplatina: geometria")
+exige(CO["alfred_werner"], "Nobel Prize in Chemistry in 1913", onde="Werner"); exige(CO["complexos_na_natureza"]["visao_geral"], "hemoglobin", "chlorophyll", "vitamin B-12", onde="complexos na natureza")
+DFc = CO["definicoes"]
+exige(DFc["quelato"], "claw", "chelate effect", onde="quelato"); exige(DFc["numero_de_coordenacao"], "number of donor atoms bonded to it", "two, four, and six", onde="NC"); exige(DFc["ligacao_coordenada"], "both electrons originated from the same atom", onde="ligação coordenada")
+exige(DFc["esfera_de_coordenacao"], "Brackets in a formula enclose the coordination sphere", onde="esfera"); exige(DFc["constante_de_formacao"], "formation constant (Kf)", onde="Kf")
 #MAIS-SECOES
 
 J = lambda o: json.dumps(o, ensure_ascii=False)
