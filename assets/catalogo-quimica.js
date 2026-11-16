@@ -59,9 +59,9 @@ window.CATALOGO.push(
     ["E08","Propriedades coligativas",[],true],
   ] },
   { id:"QF", area:"qui", letra:"F", cor:"--mT", nome:"Físico-química II", desc:"Cinética, equilíbrio químico e iônico.", temas:[
-    ["F01","Termoquímica: entalpia",[]],
-    ["F02","Lei de Hess e energia de ligação",[]],
-    ["F03","Entropia e energia livre de Gibbs",[]],
+    ["F01","Termoquímica: entalpia e calorimetria",[],true],
+    ["F02","Lei de Hess e energia de ligação",[],true],
+    ["F03","Entropia e energia livre de Gibbs",[],true],
     ["F04","Cinética: velocidade de reação e energia de ativação",[],true],
     ["F05","Leis de velocidade: ordem, mecanismo e meia-vida",[],true],
     ["F06","Equilíbrio químico: Kc, Kp e quociente de reação",[],true],

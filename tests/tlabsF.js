@@ -9,6 +9,31 @@ const perto = (a, b, tol = 0.005) => Math.abs(a - b) <= tol * Math.max(1e-9, Mat
   const temas = new Set(await p.evaluate(() => 1).then(() => require('fs').readdirSync(path.resolve(__dirname, '..', 'temas', 'quimica')).map((f) => f.replace('.js', ''))));
   const abre = async (cod) => { await p.goto(RAIZ + '#/quimica/' + cod); await p.waitForTimeout(1500); };
   const leitor = (id) => p.evaluate((id) => { const o = {}; document.querySelectorAll('#' + id + ' .vis').forEach((v) => (o[v.querySelector('small').textContent.trim()] = v.querySelector('b').textContent.trim())); return o; }, id);
+  // ----- F01: calorímetro -----
+  if (temas.has('F01')) { await abre('F01');
+    const cal = (k, m, ma, ef) => p.evaluate(([k, m, ma, ef]) => { SIM.qCalorimetro._ult.poe(k, m, ma, ef); return SIM.qCalorimetro._ult.est(); }, [k, m, ma, ef]);
+    const c1 = await cal('C2H5OH', 2.3, 500, 1); ok(perto(c1.n, 0.05, 1e-6) && perto(c1.q, 68.35, 1e-4) && perto(c1.dT, 68350 / (500 * 4.18), 1e-6), 'F01: 2,30 g de etanol (0,0500 mol) → 68,35 kJ → ΔT = ' + c1.dT.toFixed(1) + ' °C em 500 g de água');
+    const c2 = await cal('CH4', 1.6, 1000, 1); ok(perto(c2.q, 89.07, 1e-4) && perto(c2.porg, 55.67, 1e-3) && perto(c2.medido, 890.7, 1e-6), 'F01: 1,6 g de metano → 89,07 kJ; 55,7 kJ/g; o ΔH medido com 100% de aproveitamento é o de tabela');
+    const c3 = await cal('C2H5OH', 1, 500, 0.4); ok(perto(c3.medido, 0.4 * 1367, 1e-6) && perto(c3.util, 0.4 * c3.q, 1e-9), 'F01: com 40% de aproveitamento o ΔH medido cai para ' + c3.medido.toFixed(0) + ' kJ/mol (erro sistemático da lamparina)');
+    const c4 = await cal('C4H10', 3, 100, 1); ok(c4.ferve === true, 'F01: calor demais para a água (3 g de butano, 100 g de água) → o laboratório avisa que ferveria');
+    const c5 = await cal('H2', 1, 1000, 1), c6 = await cal('C4H10', 1, 1000, 1); ok(c5.porg > 2.8 * c6.porg && c5.q < 5 * c6.q, 'F01: hidrogênio rende ' + c5.porg.toFixed(0) + ' kJ/g contra ' + c6.porg.toFixed(1) + ' do butano'); }
+  // ----- F02: lei de Hess -----
+  if (temas.has('F02')) { await abre('F02');
+    const hs = (k, m) => p.evaluate(([k, m]) => { SIM.qHess._ult.poe(k, m); return SIM.qHess._ult.est(); }, [k, m]);
+    const h1 = await hs('metano', 'form'); ok(perto(h1.hr, -74.6, 1e-6) && perto(h1.hp, -877.15, 1e-5) && perto(h1.dH, -802.55, 1e-5), 'F02: metano pelos elementos: −74,6 → 0 → −877,15; ΔH = −802,55 kJ');
+    const h2 = await hs('metano', 'lig'); ok(h2.quebra === 2656 && h2.forma === 3338 && h2.dHlig === -682 && h2.dHligCO2 === -798, 'F02: metano pelas ligações: 2656 − 3338 = −682 kJ; com a C=O do CO₂ (799), −798 kJ');
+    const h3 = await hs('amonia', 'lig'); ok(h3.dHlig === -86 && perto(h3.dH, -91.8, 1e-6), 'F02: amônia: −86 kJ pelas ligações, −91,8 pela formação');
+    const h4 = await hs('hcl', 'lig'), h5 = await hs('agua', 'lig'), h6 = await hs('eteno', 'lig'); ok(h4.dHlig === -185 && h5.dHlig === -486 && h6.dHlig === -128 && perto(h4.dH, -184.614, 1e-5) && perto(h5.dH, -483.64, 1e-6) && perto(h6.dH, -136.4, 1e-6), 'F02: HCl −185 (−184,6), água −486 (−483,6), eteno −128 (−136,4): estimativa perto da tabela');
+    await p.waitForTimeout(200); const l2 = await leitor('lab-hess'); ok(/−128/.test(l2['ΔH estimado']) && /−136,4/.test(l2['ΔH pela tabela de formação']), 'F02: o mostrador põe a estimativa ao lado do valor de tabela → ' + l2['ΔH estimado'] + ' · ' + l2['ΔH pela tabela de formação']); }
+  // ----- F03: energia livre -----
+  if (temas.has('F03')) { await abre('F03');
+    const gb = (k, t, h, s) => p.evaluate(([k, t, h, s]) => { SIM.qGibbs._ult.poe(k, t, h, s); return SIM.qGibbs._ult.est(); }, [k, t, h, s]);
+    const g1 = await gb('amonia', 298); ok(perto(g1.dH, -91.8, 1e-6) && perto(g1.dS, -198.1, 1e-4) && perto(g1.dG, -91.8 + 298 * 0.1981, 1e-4) && perto(g1.Tinv, 463.4, 1e-3) && g1.esp, 'F03: amônia a 298 K: ΔG = ' + g1.dG.toFixed(1) + ' kJ; vira em ' + g1.Tinv.toFixed(0) + ' K');
+    const g2 = await gb('amonia', 600); ok(g2.dG > 0 && !g2.esp, 'F03: amônia a 600 K: ΔG positivo (' + g2.dG.toFixed(1) + ' kJ)');
+    const g3 = await gb('calcario', 298); ok(g3.ded && perto(g3.dG, 131.44, 2e-3) && perto(g3.Tinv, 1131, 2e-3), 'F03: calcinação: ΔS deduzido de (ΔH − ΔG)/T, avisado na tela; ΔG = 0 em ' + g3.Tinv.toFixed(0) + ' K');
+    const g4 = await gb('ozonio', 1000), g5 = await gb('metanoL', 1000); ok(g4.Tinv === null && g4.dG > 0 && g5.dG < 0, 'F03: 3 O₂ → 2 O₃ nunca é espontânea (ΔH > 0, ΔS < 0); queimar metano é, a 1000 K');
+    const g6 = await gb('livre', 500, 50, 100); ok(perto(g6.dG, 0, 1e-9) || Math.abs(g6.dG) < 1e-9, 'F03: reação genérica com ΔH = 50 kJ e ΔS = 100 J/K → ΔG = 0 exatamente em 500 K'); ok(perto(g6.Tinv, 500, 1e-9), 'F03: temperatura de virada = ΔH/ΔS = 500 K');
+    const g7 = await gb('livre', 298, -60, 0); ok(perto(g7.lnK, 60000 / (8.314 * 298), 1e-9) && Math.abs(g7.lnK / Math.LN10 - 10.52) < 0.01, 'F03: ΔG = −60 kJ a 298 K → K = 10^' + (g7.lnK / Math.LN10).toFixed(2) + ' (esperado 10^10,52)'); await gb('vapor', 298); }
   // ----- F04: colisões -----
   if (temas.has('F04')) { await abre('F04');
     const col = (t, ea, c, n, k = 3000) => p.evaluate(([t, ea, c, n, k]) => { let ef = 0, tot = 0; for (let r = 0; r < 4; r++) { SIM.qColisoes._ult.poe(t, ea, c, n); SIM.qColisoes._ult.passos(k); const e = SIM.qColisoes._ult.est(); ef += e.efet; tot += e.total; } return { fr: ef / tot, tot, teor: SIM.qColisoes._ult.est().teor }; }, [t, ea, c, n, k]);
