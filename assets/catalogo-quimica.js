@@ -94,7 +94,7 @@ window.CATALOGO.push(
   { id:"QI", area:"qui", letra:"I", cor:"--mX", nome:"Bioquímica e ambiental", desc:"Biomoléculas, polímeros e química do ambiente.", temas:[
     ["I01","Polímeros: adição, condensação e reciclagem",[],true],
     ["I02","Carboidratos e lipídeos: açúcares, gorduras e sabões",[],true],
-    ["I03","Aminoácidos, proteínas e enzimas",[]],
+    ["I03","Aminoácidos, proteínas e enzimas: pKa, ponto isoelétrico e ligação peptídica",[],true],
     ["I04","Ácidos nucleicos",[]],
     ["I05","Biocombustíveis",[]],
     ["I06","Ciclos biogeoquímicos",[]],

@@ -53,6 +53,28 @@
       {"k": "alfa_linolenico", "nome": "ácido α-linolênico", "cd": "18:3", "c": 18, "d": 3, "f": "C18H30O2", "m": 278, "mfonte": 278.436, "pf": -11, "est": "CH3CH2CH=CHCH2CH=CHCH2CH=CH(CH2)7COOH", "smi": "CCC=CCC=CCC=CCCCCCCCC(=O)O"},
       {"k": "araquidonico", "nome": "ácido araquidônico", "cd": "20:4", "c": 20, "d": 4, "f": "C20H32O2", "m": 304, "mfonte": 304.474, "pf": -49, "est": "CH3(CH2)4CH=CHCH2CH=CHCH2CH=CHCH2CH=CH(CH2)3COOH", "smi": "CCCCCC=CCC=CCC=CCC=CCCCC(=O)O"},
     ],
+    AA: [
+      {"k": "glicina", "nome": "glicina", "a3": "Gly", "a1": "G", "f": "C2H5NO2", "m": 75, "mfonte": 75.067, "pk1": 2.34, "pk2": 9.6, "pkr": null, "tr": null, "pi": 5.97, "pic": 5.97, "div": false, "piw": 6.06, "cls": "neutro", "ess": "condicional", "smi": "NCC(=O)O"},
+      {"k": "alanina", "nome": "alanina", "a3": "Ala", "a1": "A", "f": "C3H7NO2", "m": 89, "mfonte": 89.094, "pk1": 2.34, "pk2": 9.69, "pkr": null, "tr": null, "pi": 6.01, "pic": 6.01, "div": false, "piw": 6.01, "cls": "neutro", "ess": "não", "smi": "CC(N)C(=O)O"},
+      {"k": "valina", "nome": "valina", "a3": "Val", "a1": "V", "f": "C5H11NO2", "m": 117, "mfonte": 117.148, "pk1": 2.32, "pk2": 9.62, "pkr": null, "tr": null, "pi": 5.96, "pic": 5.97, "div": false, "piw": 6.0, "cls": "neutro", "ess": "sim", "smi": "CC(C)C(N)C(=O)O"},
+      {"k": "leucina", "nome": "leucina", "a3": "Leu", "a1": "L", "f": "C6H13NO2", "m": 131, "mfonte": 131.175, "pk1": 2.36, "pk2": 9.6, "pkr": null, "tr": null, "pi": 5.98, "pic": 5.98, "div": false, "piw": 6.01, "cls": "neutro", "ess": "sim", "smi": "CC(C)CC(N)C(=O)O"},
+      {"k": "isoleucina", "nome": "isoleucina", "a3": "Ile", "a1": "I", "f": "C6H13NO2", "m": 131, "mfonte": 131.175, "pk1": 2.36, "pk2": 9.6, "pkr": null, "tr": null, "pi": 6.02, "pic": 5.98, "div": true, "piw": 6.05, "cls": "neutro", "ess": "sim", "smi": "CCC(C)C(N)C(=O)O"},
+      {"k": "prolina", "nome": "prolina", "a3": "Pro", "a1": "P", "f": "C5H9NO2", "m": 115, "mfonte": 115.132, "pk1": 1.99, "pk2": 10.6, "pkr": null, "tr": null, "pi": 6.3, "pic": 6.29, "div": false, "piw": 6.3, "cls": "neutro", "ess": "não", "smi": "OC(=O)C1CCCN1"},
+      {"k": "fenilalanina", "nome": "fenilalanina", "a3": "Phe", "a1": "F", "f": "C9H11NO2", "m": 165, "mfonte": 165.192, "pk1": 1.83, "pk2": 9.13, "pkr": null, "tr": null, "pi": 5.48, "pic": 5.48, "div": false, "piw": 5.49, "cls": "neutro", "ess": "sim", "smi": "NC(Cc1ccccc1)C(=O)O"},
+      {"k": "triptofano", "nome": "triptofano", "a3": "Trp", "a1": "W", "f": "C11H12N2O2", "m": 204, "mfonte": 204.229, "pk1": 2.83, "pk2": 9.39, "pkr": null, "tr": null, "pi": 5.89, "pic": 6.11, "div": true, "piw": 5.89, "cls": "neutro", "ess": "sim", "smi": "NC(Cc1c[nH]c2ccccc12)C(=O)O"},
+      {"k": "metionina", "nome": "metionina", "a3": "Met", "a1": "M", "f": "C5H11NO2S", "m": 149, "mfonte": 149.21, "pk1": 2.28, "pk2": 9.21, "pkr": null, "tr": null, "pi": 5.74, "pic": 5.74, "div": false, "piw": 5.74, "cls": "neutro", "ess": "sim", "smi": "CSCCC(N)C(=O)O"},
+      {"k": "serina", "nome": "serina", "a3": "Ser", "a1": "S", "f": "C3H7NO3", "m": 105, "mfonte": 105.093, "pk1": 2.21, "pk2": 9.15, "pkr": null, "tr": null, "pi": 5.68, "pic": 5.68, "div": false, "piw": 5.68, "cls": "neutro", "ess": "não", "smi": "NC(CO)C(=O)O"},
+      {"k": "treonina", "nome": "treonina", "a3": "Thr", "a1": "T", "f": "C4H9NO3", "m": 119, "mfonte": 119.12, "pk1": 2.09, "pk2": 9.1, "pkr": null, "tr": null, "pi": 5.6, "pic": 5.59, "div": false, "piw": 5.6, "cls": "neutro", "ess": "sim", "smi": "CC(O)C(N)C(=O)O"},
+      {"k": "cisteina", "nome": "cisteína", "a3": "Cys", "a1": "C", "f": "C3H7NO2S", "m": 121, "mfonte": 121.15, "pk1": 1.96, "pk2": 10.28, "pkr": 8.18, "tr": "acida", "pi": 5.07, "pic": 5.07, "div": false, "piw": 5.05, "cls": "neutro", "ess": "condicional", "smi": "NC(CS)C(=O)O"},
+      {"k": "tirosina", "nome": "tirosina", "a3": "Tyr", "a1": "Y", "f": "C9H11NO3", "m": 181, "mfonte": 181.191, "pk1": 2.2, "pk2": 9.11, "pkr": 10.07, "tr": "acida", "pi": 5.66, "pic": 5.63, "div": false, "piw": 5.64, "cls": "neutro", "ess": "condicional", "smi": "NC(Cc1ccc(O)cc1)C(=O)O"},
+      {"k": "asparagina", "nome": "asparagina", "a3": "Asn", "a1": "N", "f": "C4H8N2O3", "m": 132, "mfonte": 132.119, "pk1": 2.02, "pk2": 8.8, "pkr": null, "tr": null, "pi": 5.41, "pic": 5.41, "div": false, "piw": 5.41, "cls": "neutro", "ess": "não", "smi": "NC(CC(N)=O)C(=O)O"},
+      {"k": "glutamina", "nome": "glutamina", "a3": "Gln", "a1": "Q", "f": "C5H10N2O3", "m": 146, "mfonte": 146.146, "pk1": 2.17, "pk2": 9.13, "pkr": null, "tr": null, "pi": 5.65, "pic": 5.65, "div": false, "piw": 5.65, "cls": "neutro", "ess": "não", "smi": "NC(CCC(N)=O)C(=O)O"},
+      {"k": "acido_aspartico", "nome": "ácido aspártico", "a3": "Asp", "a1": "D", "f": "C4H7NO4", "m": 133, "mfonte": 133.103, "pk1": 1.88, "pk2": 9.6, "pkr": 3.65, "tr": "acida", "pi": 2.77, "pic": 2.76, "div": false, "piw": 2.85, "cls": "ácido", "ess": "não", "smi": "NC(CC(=O)O)C(=O)O"},
+      {"k": "acido_glutamico", "nome": "ácido glutâmico", "a3": "Glu", "a1": "E", "f": "C5H9NO4", "m": 147, "mfonte": 147.13, "pk1": 2.19, "pk2": 9.67, "pkr": 4.25, "tr": "acida", "pi": 3.22, "pic": 3.22, "div": false, "piw": 3.15, "cls": "ácido", "ess": "condicional", "smi": "NC(CCC(=O)O)C(=O)O"},
+      {"k": "lisina", "nome": "lisina", "a3": "Lys", "a1": "K", "f": "C6H14N2O2", "m": 146, "mfonte": 146.19, "pk1": 2.18, "pk2": 8.95, "pkr": 10.53, "tr": "basica", "pi": 9.74, "pic": 9.74, "div": false, "piw": 9.6, "cls": "básico", "ess": "sim", "smi": "NCCCCC(N)C(=O)O"},
+      {"k": "arginina", "nome": "arginina", "a3": "Arg", "a1": "R", "f": "C6H14N4O2", "m": 174, "mfonte": 174.204, "pk1": 2.17, "pk2": 9.04, "pkr": 12.48, "tr": "basica", "pi": 10.76, "pic": 10.76, "div": false, "piw": 10.76, "cls": "básico", "ess": "condicional", "smi": "NC(CCCNC(N)=N)C(=O)O"},
+      {"k": "histidina", "nome": "histidina", "a3": "His", "a1": "H", "f": "C6H9N3O2", "m": 155, "mfonte": 155.157, "pk1": 1.82, "pk2": 9.17, "pkr": 6.0, "tr": "basica", "pi": 7.59, "pic": 7.59, "div": false, "piw": 7.6, "cls": "básico", "ess": "sim", "smi": "NC(Cc1c[nH]cn1)C(=O)O"},
+    ],
   };
   /*BIO-FIM*/
 
@@ -104,6 +126,30 @@
     liga(el, "modo", (v) => { modo = v; desenha(); }); liga(el, "n", (v) => { n = +v; desenha(); });
     el.querySelectorAll("[data-s]").forEach((s) => s.addEventListener("change", () => { ks[+s.dataset.s] = s.value; desenha(); }));
     SIM.qBiomol._ult = { poe: (m, x) => { modo = m; if (m === "gordura") { ks = x; el.querySelectorAll("[data-s]").forEach((s, j) => (s.value = ks[j])); } else n = x; el.querySelectorAll("[data-modo]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.modo === modo))); el.querySelectorAll("[data-n]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.n === n))); desenha(); }, est }; desenha(); };
+
+  /* ---------- I03: aminoácidos e proteínas ---------- */
+  /* estado de ionização de um aminoácido num pH (Henderson-Hasselbalch em cada grupo, tratados como independentes) */
+  SIM.aaCarga = (a, ph) => { const fc = 1 / (1 + Math.pow(10, a.pk1 - ph)), fn = 1 / (1 + Math.pow(10, ph - a.pk2)), fr = a.tr === "acida" ? 1 / (1 + Math.pow(10, a.pkr - ph)) : a.tr === "basica" ? 1 / (1 + Math.pow(10, ph - a.pkr)) : null;
+    return { fc, fn, fr, q: -fc + fn + (a.tr === "acida" ? -fr : a.tr === "basica" ? fr : 0) }; };
+  /* pI pela regra: média dos dois pKa que cercam a forma de carga zero */
+  SIM.aaPI = (a) => (a.tr === "basica" ? (a.pk2 + a.pkr) / 2 : a.tr === "acida" ? (a.pk1 + Math.min(a.pkr, a.pk2)) / 2 : (a.pk1 + a.pk2) / 2);
+  /* nome: "Aminoácido e pH: cargas e ponto isoelétrico" · matéria: Química · tema: I03 */
+  SIM.qAminoacido = (el, F) => { const AA = SIM.BIO.AA, O = SIM.org; let i = 1, ph = 7;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;min-height:250px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div>${seletor("aminoácido", AA.map((a) => `${a.nome} (${a.a3})`))}</div>
+      <div style="min-width:300px"><label style="font-size:13.5px;color:var(--ink2)">pH da solução: <b data-v="ph"></b><br><input type="range" data-v="rg" min="0" max="14" step="0.1" value="7" style="width:100%"></label></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), pc = (x) => nt(100 * x, 1) + "%";
+    const est = () => { const a = AA[i], c = SIM.aaCarga(a, ph); return { k: a.k, ph, ...c, pi: SIM.aaPI(a), pitab: a.pi, div: a.div }; };
+    const barra = (rot, fr, sinal, pk) => { const cor = sinal > 0 ? "#5b8dee" : "#e5604d"; return `<div style="display:grid;grid-template-columns:230px 260px 150px;gap:10px;align-items:center;font-size:13.5px"><div style="text-align:right">${rot} <span style="color:var(--ink2)">(pKa ${nt(pk, 2)})</span></div><div style="height:14px;border-radius:7px;background:var(--line,#2a3140);overflow:hidden"><div style="width:${(100 * fr).toFixed(1)}%;height:100%;background:${cor}"></div></div><div style="color:var(--ink2)">${pc(fr)} com carga ${sinal > 0 ? "+" : "−"}</div></div>`; };
+    const desenha = () => { const a = AA[i], e = est(); let d = ""; const doisAneis = /2/.test(a.smi.replace(/\[[^\]]*\]/g, "")); if (doisAneis) d = `<div style="font-size:13px;color:var(--ink2);padding:18px 0">estrutura com dois anéis fundidos: o desenhista do site não a representa corretamente, por isso não é mostrada (fórmula ${a.f.replace(/(\d+)/g, "<sub>$1</sub>")})</div>`; else try { const s = O.svg(a.smi, { L: 36 }); d = `<svg viewBox="0 0 ${s.w.toFixed(0)} ${s.h.toFixed(0)}" height="${Math.min(150, s.h).toFixed(0)}" role="img" aria-label="estrutura do aminoácido">${s.svg}</svg>`; } catch (x) { d = ""; }
+      q("[data-v=ph]").textContent = nt(ph, 1);
+      q("[data-v=sv]").innerHTML = d + `<div style="font-size:12.5px;color:var(--ink2)">${a.nome} (${a.a3}, ${a.a1}) · forma neutra, como se escreve no papel</div><div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">${barra("–COOH → –COO⁻", e.fc, -1, a.pk1)}${barra("–NH₂ → –NH₃⁺", e.fn, 1, a.pk2)}${a.tr ? barra(a.tr === "acida" ? "cadeia lateral → ânion" : "cadeia lateral → cátion", e.fr, a.tr === "acida" ? -1 : 1, a.pkr) : ""}</div>`;
+      q("[data-v=lt]").innerHTML = vis("carga líquida média", (e.q > 0 ? "+" : e.q < -0.005 ? "−" : "") + nt(Math.abs(e.q), 2)) + vis("pI pelos pKa", nt(Math.round((e.pi + 1e-9) * 100) / 100, 2)) + vis("pI da tabela", nt(a.pi, 2)) + vis("na eletroforese", Math.abs(ph - e.pi) < 0.15 ? "não migra" : ph < e.pi ? "vai para o polo negativo" : "vai para o polo positivo") + vis("cadeia lateral", a.cls === "neutro" ? "neutra" : a.cls === "ácido" ? "ácida" : "básica") + vis("essencial", a.ess);
+      q("[data-v=st]").innerHTML = (ph < e.pi - 0.15 ? `pH <b>abaixo</b> do pI: sobram prótons, o aminoácido fica com carga líquida <b>positiva</b> (cátion).` : ph > e.pi + 0.15 ? `pH <b>acima</b> do pI: faltam prótons, carga líquida <b>negativa</b> (ânion).` : `pH praticamente igual ao pI: as cargas + e − se cancelam (íon dipolar, ou zwitterion) e a molécula não migra no campo elétrico.`) + ` Em cada grupo vale Henderson-Hasselbalch: com pH = pKa, metade está em cada forma. pKa e pI: Tabela 26.1 do OpenStax Organic Chemistry.` + (a.div ? ` <b>Nesta linha a tabela é inconsistente</b>: o pI impresso (${nt(a.pi, 2)}) não é a média dos pKa impressos (${nt(e.pi, 2)}).` : "") + ` A Wikipedia dá pI ${nt(a.piw, 2)}.`; };
+    q("[data-v=sel]").value = String(i); q("[data-v=sel]").addEventListener("change", (ev) => { i = +ev.target.value; desenha(); });
+    q("[data-v=rg]").addEventListener("input", (ev) => { ph = +ev.target.value; desenha(); });
+    SIM.qAminoacido._ult = { poe: (k, p) => { i = AA.findIndex((a) => a.k === k); ph = p; q("[data-v=sel]").value = String(i); q("[data-v=rg]").value = String(p); desenha(); }, est }; desenha(); };
 
   //MAIS-LABS
 })();

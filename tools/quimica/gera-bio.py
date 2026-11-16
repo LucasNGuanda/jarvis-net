@@ -63,10 +63,13 @@ def pubchem(nome):
     cache[nome] = {"cid": p.get("CID"), "smiles": p.get("ConnectivitySMILES") or p.get("SMILES"), "formula": p.get("MolecularFormula")}; return cache[nome]
 def plano(s):
     m = Chem.MolFromSmiles(s); Chem.RemoveStereochemistry(m); return Chem.MolToSmiles(m)
+def taut(s):
+    from rdkit.Chem.MolStandardize import rdMolStandardize
+    m = Chem.MolFromSmiles(s); Chem.RemoveStereochemistry(m); return Chem.MolToSmiles(rdMolStandardize.TautomerEnumerator().Canonicalize(m))
 def confere_nome(pt, en, smi):
     r = pubchem(en)
     if r is None: erros.append(("PubChem sem resposta", pt, en)); return
-    if plano(r["smiles"]) != plano(smi): erros.append(("PubChem difere", pt, en, r["smiles"], smi))
+    if plano(r["smiles"]) != plano(smi) and taut(r["smiles"]) != taut(smi): erros.append(("PubChem difere", pt, en, r["smiles"], smi))
 
 # ---------- I01: polímeros ----------
 # chave em dadosI, nome, sigla, tipo, [monômeros: nome pt, nome en, SMILES], unidade repetitiva, águas por unidade, funções da cadeia
@@ -160,6 +163,52 @@ for ch, a in AGS.items():
     if c["C"] != C_ or smi.count("=") - 1 != D_ or c["H"] != 2 * C_ - 2 * D_: erros.append(("ácido graxo: C:D", ch, cd))
     ag.append({"k": ch, "nome": "ácido " + NOME_AG[ch], "cd": cd, "c": C_, "d": D_, "f": f, "m": c["C"] * 12 + c["H"] + 32, "mfonte": val(a["massa_molar"]), "pf": num(a["fusao"]), "est": est, "smi": smi})
 BIO["CARB"] = carb; BIO["ENERGIA"] = energia; BIO["AG"] = ag
+
+# ---------- I03: aminoácidos ----------
+# pKa e pI: Tabela 26.1 do OpenStax Organic Chemistry (primeira fonte de cada item em dadosI.json); o pI da Wikipedia vai junto, para mostrar a divergência.
+# O gerador RECALCULA o pI a partir dos pKa (pH em que a carga líquida média é zero) e confere com o pI da mesma tabela.
+AAS = D["aminoacidos"]["aminoacidos"]
+AA_L = {"glicina": ["glicina", "NCC(=O)O", None], "alanina": ["alanina", "CC(N)C(=O)O", None], "valina": ["valina", "CC(C)C(N)C(=O)O", None], "leucina": ["leucina", "CC(C)CC(N)C(=O)O", None],
+ "isoleucina": ["isoleucina", "CCC(C)C(N)C(=O)O", None], "prolina": ["prolina", "OC(=O)C1CCCN1", None], "fenilalanina": ["fenilalanina", "NC(Cc1ccccc1)C(=O)O", None],
+ "triptofano": ["triptofano", "NC(Cc1c[nH]c2ccccc12)C(=O)O", None], "metionina": ["metionina", "CSCCC(N)C(=O)O", None], "serina": ["serina", "NC(CO)C(=O)O", None],
+ "treonina": ["treonina", "CC(O)C(N)C(=O)O", None], "cisteina": ["cisteína", "NC(CS)C(=O)O", "acida"], "tirosina": ["tirosina", "NC(Cc1ccc(O)cc1)C(=O)O", "acida"],
+ "asparagina": ["asparagina", "NC(CC(N)=O)C(=O)O", None], "glutamina": ["glutamina", "NC(CCC(N)=O)C(=O)O", None], "acido_aspartico": ["ácido aspártico", "NC(CC(=O)O)C(=O)O", "acida"],
+ "acido_glutamico": ["ácido glutâmico", "NC(CCC(=O)O)C(=O)O", "acida"], "lisina": ["lisina", "NCCCCC(N)C(=O)O", "basica"], "arginina": ["arginina", "NC(CCCNC(N)=N)C(=O)O", "basica"],
+ "histidina": ["histidina", "NC(Cc1c[nH]cn1)C(=O)O", "basica"]}
+CLS = {"Neutral Amino Acids": "neutro", "Acidic Amino Acids": "ácido", "Basic Amino Acids": "básico"}
+ESS = {"Yes": "sim", "No": "não"}
+def carga(ph, pk1, pk2, pkr, tr):
+    q = -1 / (1 + 10 ** (pk1 - ph)) + 1 / (1 + 10 ** (ph - pk2))
+    if tr == "acida": q += -1 / (1 + 10 ** (pkr - ph))
+    if tr == "basica": q += 1 / (1 + 10 ** (ph - pkr))
+    return q
+def pI_calc(pk1, pk2, pkr, tr):
+    a, b = 0.0, 14.0
+    for _ in range(60):
+        m = (a + b) / 2
+        if carga(m, pk1, pk2, pkr, tr) > 0: a = m
+        else: b = m
+    return (a + b) / 2
+aa = []; pi_div = []; frase_ess = str(val(D["aminoacidos"]["essenciais"]["lista"])).lower()
+for ch, (nome, smi, tr) in AA_L.items():
+    a = AAS[ch]; f = val(a["formula"]); en = val(a["nome_ingles"])
+    if hill(conta_smi(smi)) != f: erros.append(("aminoácido: SMILES ≠ fórmula da fonte", ch, hill(conta_smi(smi)), f))
+    confere_nome(nome, en if isinstance(en, str) else ch, smi)
+    pk1, pk2, pi = val(a["pKa_carboxila"]), val(a["pKa_amonio"]), val(a["pI"]); pkr = val(a["pKa_cadeia_lateral"]); pkr = pkr if isinstance(pkr, (int, float)) else None
+    if (pkr is None) != (tr is None): erros.append(("aminoácido: cadeia lateral ionizável", ch, pkr, tr))
+    pc = pI_calc(pk1, pk2, pkr, tr)
+    div = abs(pc - pi) > 0.03
+    if div: pi_div.append(ch)
+    cls = CLS.get(val(a["classe_cadeia_lateral"])); e = val(a["essencial_humanos"]); ess = ESS.get(e, "condicional")
+    if cls is None: erros.append(("aminoácido: classe", ch))
+    if (ess == "sim") != bool(re.search(r"\b" + re.escape(str(en).lower()) + r"\b", frase_ess)): erros.append(("aminoácido: essencial ≠ frase da fonte", ch, e))
+    c = conta_smi(smi)
+    aa.append({"k": ch, "nome": nome, "a3": val(a["abreviacao_3_letras"]), "a1": val(a["abreviacao_1_letra"]), "f": f, "m": c["C"] * 12 + c["H"] + c["N"] * 14 + c["O"] * 16 + c.get("S", 0) * 32,
+               "mfonte": val(a["massa_molar"]), "pk1": pk1, "pk2": pk2, "pkr": pkr, "tr": tr, "pi": pi, "pic": round(pc, 2), "div": div, "piw": val(a["pI"], 1), "cls": cls, "ess": ess, "smi": smi})
+# A própria Tabela 26.1 é inconsistente em duas linhas (o pI impresso não é a média dos pKa impressos): ficam marcadas com div e fora dos exercícios de cálculo de pI.
+if sorted(pi_div) != ["isoleucina", "triptofano"]: erros.append(("pI calculado ≠ pI da tabela em linhas inesperadas", pi_div))
+if sum(1 for x in aa if x["ess"] == "sim") != 9: erros.append(("aminoácidos essenciais ≠ 9",))
+BIO["AA"] = aa
 #MAIS-SECOES
 
 J = lambda o: json.dumps(o, ensure_ascii=False)
