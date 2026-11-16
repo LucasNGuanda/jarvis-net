@@ -1,0 +1,4641 @@
+{
+ "_meta": {
+  "gerado_por": "dadosF-scripts/extrai.py a partir dos HTML em dadosF-bruto/ (baixados em 2026-11-16)",
+  "regra": "todo \"valor\" é o grupo capturado por regex no texto da página; \"trecho\" é o casamento literal (espaços colapsados). Nada de memória. Onde há lista, são fontes diferentes (podem divergir).",
+  "aviso_openstax": "No texto extraído do OpenStax as fórmulas em MathML aparecem duplicadas (ex.: \"C=CC=C\", \"××\"); é artefato da extração, o trecho foi mantido literal."
+ },
+ "formacao": {
+  "H2O(l)": {
+   "dHf": [
+    {
+     "valor": -285.8,
+     "valor_texto": "−285.8",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Water | Liquid | H2O | −285.8",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -285.83,
+     "valor_texto": "–285.83",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| H2O(l) | –285.83 | –237.1 | 70.0"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -237.14,
+     "valor_texto": "−237.14",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Water | Liquid | H2O | −237.14"
+    },
+    {
+     "valor": -237.1,
+     "valor_texto": "–237.1",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| H2O(l) | –285.83 | –237.1 | 70.0"
+    }
+   ],
+   "S": [
+    {
+     "valor": 70.0,
+     "valor_texto": "70.0",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| H2O(l) | –285.83 | –237.1 | 70.0"
+    }
+   ]
+  },
+  "H2O(g)": {
+   "dHf": [
+    {
+     "valor": -241.818,
+     "valor_texto": "−241.818",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Water | Gas | H2O | −241.818",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -241.82,
+     "valor_texto": "–241.82",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| H2O(g) | –241.82 | –228.59 | 188.8"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -228.61,
+     "valor_texto": "−228.61",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Water | Gas | H2O | −228.61"
+    },
+    {
+     "valor": -228.59,
+     "valor_texto": "–228.59",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| H2O(g) | –241.82 | –228.59 | 188.8"
+    }
+   ],
+   "S": [
+    {
+     "valor": 188.8,
+     "valor_texto": "188.8",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| H2O(g) | –241.82 | –228.59 | 188.8"
+    }
+   ]
+  },
+  "CO2(g)": {
+   "dHf": [
+    {
+     "valor": -393.509,
+     "valor_texto": "−393.509",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Carbon dioxide | Gas | CO2 | −393.509",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -393.51,
+     "valor_texto": "–393.51",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CO2(g) | –393.51 | –394.36 | 213.8"
+    },
+    {
+     "valor": -393.5,
+     "valor_texto": "−393.5 kJ·mol−1",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Carbon dioxide",
+     "url": "https://en.wikipedia.org/wiki/Carbon_dioxide",
+     "trecho": "formation (ΔfH⦵298) | −393.5 kJ·mol−1",
+     "obs": "caixa de dados da página do composto"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -394.39,
+     "valor_texto": "−394.39",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Carbon dioxide | Gas | CO2 | −394.39"
+    },
+    {
+     "valor": -394.36,
+     "valor_texto": "–394.36",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CO2(g) | –393.51 | –394.36 | 213.8"
+    }
+   ],
+   "S": [
+    {
+     "valor": 213.8,
+     "valor_texto": "213.8",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CO2(g) | –393.51 | –394.36 | 213.8"
+    }
+   ]
+  },
+  "CO(g)": {
+   "dHf": [
+    {
+     "valor": -110.525,
+     "valor_texto": "−110.525",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Carbon monoxide | Gas | CO | −110.525",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -110.52,
+     "valor_texto": "–110.52",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CO(g) | –110.52 | –137.15 | 197.7"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -137.16,
+     "valor_texto": "−137.16",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Carbon monoxide | Gas | CO | −137.16"
+    },
+    {
+     "valor": -137.15,
+     "valor_texto": "–137.15",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CO(g) | –110.52 | –137.15 | 197.7"
+    }
+   ],
+   "S": [
+    {
+     "valor": 197.7,
+     "valor_texto": "197.7",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CO(g) | –110.52 | –137.15 | 197.7"
+    }
+   ]
+  },
+  "CH4(g)": {
+   "dHf": [
+    {
+     "valor": -74.9,
+     "valor_texto": "−74.9",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| CH4 | Methane | −17.9 | −74.9",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -74.6,
+     "valor_texto": "–74.6",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CH4(g) | –74.6 | –50.5 | 186.3"
+    },
+    {
+     "valor": -74.6,
+     "valor_texto": "−74.6 kJ/mol",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Methane",
+     "url": "https://en.wikipedia.org/wiki/Methane",
+     "trecho": "formation (ΔfH⦵298) | −74.6 kJ/mol",
+     "obs": "caixa de dados da página do composto"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -50.5,
+     "valor_texto": "–50.5",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CH4(g) | –74.6 | –50.5 | 186.3"
+    }
+   ],
+   "S": [
+    {
+     "valor": 186.3,
+     "valor_texto": "186.3",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CH4(g) | –74.6 | –50.5 | 186.3"
+    },
+    {
+     "valor": 186.3,
+     "valor_texto": "186.3 J/(K·mol)",
+     "unidade": "J/(mol·K)",
+     "fonte": "Wikipedia (en): Methane",
+     "url": "https://en.wikipedia.org/wiki/Methane",
+     "trecho": "entropy (S⦵298) | 186.3 J/(K·mol)",
+     "obs": "caixa de dados da página do composto"
+    }
+   ]
+  },
+  "C2H6(g)": {
+   "dHf": [
+    {
+     "valor": -83.7,
+     "valor_texto": "−83.7",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| C2H6 | Ethane | −20.0 | −83.7",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -84.0,
+     "valor_texto": "–84.0",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C2H6(g) | –84.0 | –32.0 | 229.2"
+    },
+    {
+     "valor": -84,
+     "valor_texto": "−84 kJ mol−1",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Ethane",
+     "url": "https://en.wikipedia.org/wiki/Ethane",
+     "trecho": "formation (ΔfH⦵298) | −84 kJ mol−1",
+     "obs": "caixa de dados da página do composto"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -32.0,
+     "valor_texto": "–32.0",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C2H6(g) | –84.0 | –32.0 | 229.2"
+    }
+   ],
+   "S": [
+    {
+     "valor": 229.2,
+     "valor_texto": "229.2",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C2H6(g) | –84.0 | –32.0 | 229.2"
+    }
+   ]
+  },
+  "C3H8(g)": {
+   "dHf": [
+    {
+     "valor": -104.6,
+     "valor_texto": "−104.6",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| C3H8 | Propane | −25.0 | −104.6",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -103.8,
+     "valor_texto": "–103.8",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C3H8(g) | –103.8 | –23.4 | 270.3"
+    },
+    {
+     "valor": "−105.2–104.2 kJ⋅mol−1",
+     "valor_texto": "−105.2–104.2 kJ⋅mol−1",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Propane",
+     "url": "https://en.wikipedia.org/wiki/Propane",
+     "trecho": "formation (ΔfH⦵298) | −105.2–104.2 kJ⋅mol−1",
+     "obs": "caixa de dados da página do composto"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -23.4,
+     "valor_texto": "–23.4",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C3H8(g) | –103.8 | –23.4 | 270.3"
+    }
+   ],
+   "S": [
+    {
+     "valor": 270.3,
+     "valor_texto": "270.3",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C3H8(g) | –103.8 | –23.4 | 270.3"
+    }
+   ]
+  },
+  "C4H10(g) n-butano": {
+   "dHf": [
+    {
+     "valor": -125.5,
+     "valor_texto": "−125.5",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| C4H10 | n-Butane | −30.0 | −125.5",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": "−126.3–−124.9 kJ/mol",
+     "valor_texto": "−126.3–−124.9 kJ/mol",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Butane",
+     "url": "https://en.wikipedia.org/wiki/Butane",
+     "trecho": "formation (ΔfH⦵298) | −126.3–−124.9 kJ/mol",
+     "obs": "faixa"
+    },
+    {
+     "valor": "-125.6 ± 0.67",
+     "valor_texto": "-125.6 ± 0.67",
+     "unidade": "kJ/mol",
+     "fonte": "NIST Chemistry WebBook (nist_butane_gas)",
+     "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C106978&Units=SI&Mask=1",
+     "trecho": "| ΔfH°gas | -125.6 ± 0.67 | kJ/mol | Ccb | Pittam and Pilcher, 1972"
+    },
+    {
+     "valor": "-127.1 ± 0.67",
+     "valor_texto": "-127.1 ± 0.67",
+     "unidade": "kJ/mol",
+     "fonte": "NIST Chemistry WebBook (nist_butane_gas)",
+     "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C106978&Units=SI&Mask=1",
+     "trecho": "| ΔfH°gas | -127.1 ± 0.67 | kJ/mol | Cm | Prosen, Maron, et al., 1951"
+    }
+   ],
+   "dGf": null,
+   "S": null,
+   "obs": "S° e ΔGf° do butano: não achados nas páginas baixadas (o NIST WebBook, Mask=1, não lista S°gas para o butano)."
+  },
+  "C2H4(g)": {
+   "dHf": [
+    {
+     "valor": 52.5,
+     "valor_texto": "52.5",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| C2H4 | Ethylene | 12.5 | 52.5",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": 52.4,
+     "valor_texto": "52.4",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C2H4(g) | 52.4 | 68.4 | 219.3"
+    },
+    {
+     "valor": 52.47,
+     "valor_texto": "+52.47 kJ/mol",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Ethylene",
+     "url": "https://en.wikipedia.org/wiki/Ethylene",
+     "trecho": "formation (ΔfH⦵298) | +52.47 kJ/mol",
+     "obs": "caixa de dados da página do composto"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": 68.4,
+     "valor_texto": "68.4",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C2H4(g) | 52.4 | 68.4 | 219.3"
+    }
+   ],
+   "S": [
+    {
+     "valor": 219.3,
+     "valor_texto": "219.3",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C2H4(g) | 52.4 | 68.4 | 219.3"
+    },
+    {
+     "valor": 219.32,
+     "valor_texto": "219.32 J·K−1·mol−1",
+     "unidade": "J/(mol·K)",
+     "fonte": "Wikipedia (en): Ethylene",
+     "url": "https://en.wikipedia.org/wiki/Ethylene",
+     "trecho": "entropy (S⦵298) | 219.32 J·K−1·mol−1",
+     "obs": "caixa de dados da página do composto"
+    }
+   ]
+  },
+  "C2H2(g)": {
+   "dHf": [
+    {
+     "valor": 226.8,
+     "valor_texto": "226.8",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| C2H2 | Acetylene | 54.2 | 226.8",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": 227.4,
+     "valor_texto": "227.4",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C2H2(g) | 227.4 | 209.2 | 200.9"
+    },
+    {
+     "valor": 227.4,
+     "valor_texto": "227.400 kJ·mol−1",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Acetylene",
+     "url": "https://en.wikipedia.org/wiki/Acetylene",
+     "trecho": "formation (ΔfH⦵298) | 227.400 kJ·mol−1",
+     "obs": "caixa de dados da página do composto"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": 209.2,
+     "valor_texto": "209.2",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C2H2(g) | 227.4 | 209.2 | 200.9"
+    }
+   ],
+   "S": [
+    {
+     "valor": 200.9,
+     "valor_texto": "200.9",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C2H2(g) | 227.4 | 209.2 | 200.9"
+    },
+    {
+     "valor": 200.927,
+     "valor_texto": "200.927 J·mol−1·K−1",
+     "unidade": "J/(mol·K)",
+     "fonte": "Wikipedia (en): Acetylene",
+     "url": "https://en.wikipedia.org/wiki/Acetylene",
+     "trecho": "entropy (S⦵298) | 200.927 J·mol−1·K−1",
+     "obs": "caixa de dados da página do composto"
+    }
+   ]
+  },
+  "C6H6(l)": {
+   "dHf": [
+    {
+     "valor": 48.95,
+     "valor_texto": "48.95",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Benzene | Liquid | C6H6 | 48.95",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": 49.1,
+     "valor_texto": "49.1",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C6H6(l) | 49.1 | 124.50 | 173.4"
+    },
+    {
+     "valor": 48.7,
+     "valor_texto": "48.7 kJ/mol",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Benzene",
+     "url": "https://en.wikipedia.org/wiki/Benzene",
+     "trecho": "formation (ΔfH⦵298) | 48.7 kJ/mol",
+     "obs": "caixa de dados da página do composto"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": 124.5,
+     "valor_texto": "124.50",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C6H6(l) | 49.1 | 124.50 | 173.4"
+    }
+   ],
+   "S": [
+    {
+     "valor": 173.4,
+     "valor_texto": "173.4",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C6H6(l) | 49.1 | 124.50 | 173.4"
+    },
+    {
+     "valor": 173.26,
+     "valor_texto": "173.26 J/mol·K[7]",
+     "unidade": "J/(mol·K)",
+     "fonte": "Wikipedia (en): Benzene",
+     "url": "https://en.wikipedia.org/wiki/Benzene",
+     "trecho": "entropy (S⦵298) | 173.26 J/mol·K[7]",
+     "obs": "caixa de dados da página do composto"
+    }
+   ]
+  },
+  "CH3OH(l)": {
+   "dHf": [
+    {
+     "valor": -238.4,
+     "valor_texto": "−238.4",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Methanol (methyl alcohol) | Liquid | CH3OH | −238.4",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -239.2,
+     "valor_texto": "–239.2",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CH3OH(l) | –239.2 | –166.6 | 126.8"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -166.6,
+     "valor_texto": "–166.6",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CH3OH(l) | –239.2 | –166.6 | 126.8"
+    }
+   ],
+   "S": [
+    {
+     "valor": 126.8,
+     "valor_texto": "126.8",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CH3OH(l) | –239.2 | –166.6 | 126.8"
+    }
+   ]
+  },
+  "C2H5OH(l)": {
+   "dHf": [
+    {
+     "valor": -277.0,
+     "valor_texto": "−277.0",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Ethanol | Liquid | C2H5OH | −277.0",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -277.6,
+     "valor_texto": "–277.6",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C2H5OH(l) | –277.6 | –174.8 | 160.7"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -174.8,
+     "valor_texto": "−174.8",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Ethanol | Liquid | C2H5OH | −174.8"
+    },
+    {
+     "valor": -174.8,
+     "valor_texto": "–174.8",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C2H5OH(l) | –277.6 | –174.8 | 160.7"
+    }
+   ],
+   "S": [
+    {
+     "valor": 160.7,
+     "valor_texto": "160.7",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C2H5OH(l) | –277.6 | –174.8 | 160.7"
+    }
+   ]
+  },
+  "C6H12O6(s) glicose": {
+   "dHf": [
+    {
+     "valor": -1271,
+     "valor_texto": "−1271",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Glucose | Solid | C6H12O6 | −1271",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -1271,
+     "valor_texto": "−1271 kJ/mol[4]",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Glucose",
+     "url": "https://en.wikipedia.org/wiki/Glucose",
+     "trecho": "formation (ΔfH⦵298) | −1271 kJ/mol[4]"
+    },
+    {
+     "valor": -1271.1,
+     "valor_texto": "-1271.1",
+     "unidade": "kJ/mol",
+     "fonte": "NIST Chemistry WebBook (nist_alpha_glucose_cond)",
+     "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C492626&Units=SI&Mask=2",
+     "trecho": "Corresponding ΔfHºsolid = -1271.1 kJ/mol",
+     "obs": "α-D-glicose; calculado pelo NIST a partir da combustão"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -910.56,
+     "valor_texto": "−910.56",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Glucose | Solid | C6H12O6 | −910.56"
+    }
+   ],
+   "S": [
+    {
+     "valor": 209.2,
+     "valor_texto": "209.2 J/(K·mol)[3]",
+     "unidade": "J/(mol·K)",
+     "fonte": "Wikipedia (en): Glucose",
+     "url": "https://en.wikipedia.org/wiki/Glucose",
+     "trecho": "entropy (S⦵298) | 209.2 J/(K·mol)[3]",
+     "obs": "caixa de dados (valor com unidade no texto)"
+    },
+    {
+     "valor": 209.19,
+     "valor_texto": "209.19",
+     "unidade": "J/(mol·K)",
+     "fonte": "NIST Chemistry WebBook (nist_alpha_glucose_cond)",
+     "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C492626&Units=SI&Mask=2",
+     "trecho": "| S°solid,1 bar | 209.19 | J/mol*K | N/A | Boerio-Goates, 1991 | DH",
+     "obs": "α-D-glicose"
+    }
+   ]
+  },
+  "NH3(g)": {
+   "dHf": [
+    {
+     "valor": -46.1,
+     "valor_texto": "−46.1",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Ammonia | Gas | NH3 | −46.1",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -45.9,
+     "valor_texto": "–45.9",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| NH3(g) | –45.9 | –16.5 | 192.8"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -16.4,
+     "valor_texto": "−16.4",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Ammonia | Gas | NH3 | −16.4"
+    },
+    {
+     "valor": -16.5,
+     "valor_texto": "–16.5",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| NH3(g) | –45.9 | –16.5 | 192.8"
+    }
+   ],
+   "S": [
+    {
+     "valor": 192.8,
+     "valor_texto": "192.8",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| NH3(g) | –45.9 | –16.5 | 192.8"
+    }
+   ]
+  },
+  "NO(g)": {
+   "dHf": [
+    {
+     "valor": 90.29,
+     "valor_texto": "90.29",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Nitric oxide | Gas | NO | 90.29",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": 90.25,
+     "valor_texto": "90.25",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| NO(g) | 90.25 | 87.6 | 210.8"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": 87.6,
+     "valor_texto": "87.60",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Nitrogen monoxide | Gas | NO | 87.60"
+    },
+    {
+     "valor": 87.6,
+     "valor_texto": "87.6",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| NO(g) | 90.25 | 87.6 | 210.8"
+    }
+   ],
+   "S": [
+    {
+     "valor": 210.8,
+     "valor_texto": "210.8",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| NO(g) | 90.25 | 87.6 | 210.8"
+    }
+   ]
+  },
+  "NO2(g)": {
+   "dHf": [
+    {
+     "valor": 33.2,
+     "valor_texto": "33.2",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Nitrogen dioxide | Gas | NO2 | 33.2",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": 33.2,
+     "valor_texto": "33.2",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| NO2(g) | 33.2 | 51.30 | 240.1"
+    },
+    {
+     "valor": 33.1,
+     "valor_texto": "33.10",
+     "unidade": "kJ/mol",
+     "fonte": "NIST Chemistry WebBook (nist_NO2_gas)",
+     "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102440&Units=SI&Mask=1",
+     "trecho": "| ΔfH°gas | 33.10 | kJ/mol | Review | Chase, 1998"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": 51.3,
+     "valor_texto": "51.3",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Nitrogen dioxide | Gas | NO2 | 51.3"
+    },
+    {
+     "valor": 51.3,
+     "valor_texto": "51.30",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| NO2(g) | 33.2 | 51.30 | 240.1"
+    }
+   ],
+   "S": [
+    {
+     "valor": 240.1,
+     "valor_texto": "240.1",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| NO2(g) | 33.2 | 51.30 | 240.1"
+    },
+    {
+     "valor": 240.04,
+     "valor_texto": "240.04",
+     "unidade": "J/(mol·K)",
+     "fonte": "NIST Chemistry WebBook (nist_NO2_gas)",
+     "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102440&Units=SI&Mask=1",
+     "trecho": "| S°gas,1 bar | 240.04 | J/mol*K | Review | Chase, 1998"
+    }
+   ]
+  },
+  "N2O4(g)": {
+   "dHf": [
+    {
+     "valor": 9.16,
+     "valor_texto": "9.16",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Dinitrogen tetroxide | Gas | N2O4 | 9.16",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": 11.1,
+     "valor_texto": "11.1",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| N2O4(g) | 11.1 | 99.8 | 304.4"
+    },
+    {
+     "valor": 9.16,
+     "valor_texto": "+9.16 kJ/mol[2]",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Dinitrogen tetroxide",
+     "url": "https://en.wikipedia.org/wiki/Dinitrogen_tetroxide",
+     "trecho": "formation (ΔfH⦵298) | +9.16 kJ/mol[2]"
+    },
+    {
+     "valor": 9.08,
+     "valor_texto": "9.08",
+     "unidade": "kJ/mol",
+     "fonte": "NIST Chemistry WebBook (nist_N2O4_gas)",
+     "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10544726&Units=SI&Mask=1",
+     "trecho": "| ΔfH°gas | 9.08 | kJ/mol | Review | Chase, 1998"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": 99.8,
+     "valor_texto": "99.8",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| N2O4(g) | 11.1 | 99.8 | 304.4"
+    }
+   ],
+   "S": [
+    {
+     "valor": 304.4,
+     "valor_texto": "304.4",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| N2O4(g) | 11.1 | 99.8 | 304.4"
+    },
+    {
+     "valor": 304.38,
+     "valor_texto": "304.38",
+     "unidade": "J/(mol·K)",
+     "fonte": "NIST Chemistry WebBook (nist_N2O4_gas)",
+     "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10544726&Units=SI&Mask=1",
+     "trecho": "| S°gas,1 bar | 304.38 | J/mol*K | Review | Chase, 1998"
+    }
+   ]
+  },
+  "SO2(g)": {
+   "dHf": [
+    {
+     "valor": -296.84,
+     "valor_texto": "−296.84",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Sulfur dioxide | Gas | SO2 | −296.84",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -296.83,
+     "valor_texto": "–296.83",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| SO2(g) | –296.83 | –300.1 | 248.2"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -300.13,
+     "valor_texto": "−300.13",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Sulfur dioxide | Gas | SO2 | −300.13"
+    },
+    {
+     "valor": -300.1,
+     "valor_texto": "–300.1",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| SO2(g) | –296.83 | –300.1 | 248.2"
+    }
+   ],
+   "S": [
+    {
+     "valor": 248.2,
+     "valor_texto": "248.2",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| SO2(g) | –296.83 | –300.1 | 248.2"
+    }
+   ]
+  },
+  "SO3(g)": {
+   "dHf": [
+    {
+     "valor": -395.7,
+     "valor_texto": "−395.7",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Sulfur trioxide | Gas | SO3 | −395.7",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -395.72,
+     "valor_texto": "–395.72",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| SO3(g) | –395.72 | –371.06 | 256.76"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -370.4,
+     "valor_texto": "−370.4",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Sulfur trioxide | Gas | SO3 | −370.4"
+    },
+    {
+     "valor": -371.06,
+     "valor_texto": "–371.06",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| SO3(g) | –395.72 | –371.06 | 256.76"
+    }
+   ],
+   "S": [
+    {
+     "valor": 256.76,
+     "valor_texto": "256.76",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| SO3(g) | –395.72 | –371.06 | 256.76"
+    }
+   ]
+  },
+  "HCl(g)": {
+   "dHf": [
+    {
+     "valor": -92.3,
+     "valor_texto": "−92.30",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Hydrogen chloride | Gas | HCl | −92.30",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -92.307,
+     "valor_texto": "–92.307",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| HCl(g) | –92.307 | –95.299 | 186.9"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -95.3,
+     "valor_texto": "−95.30",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Hydrogen chloride | Gas | HCl | −95.30"
+    },
+    {
+     "valor": -95.299,
+     "valor_texto": "–95.299",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| HCl(g) | –92.307 | –95.299 | 186.9"
+    }
+   ],
+   "S": [
+    {
+     "valor": 186.9,
+     "valor_texto": "186.9",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| HCl(g) | –92.307 | –95.299 | 186.9"
+    }
+   ]
+  },
+  "NaCl(s)": {
+   "dHf": [
+    {
+     "valor": -411.12,
+     "valor_texto": "−411.12",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Sodium chloride | Solid | NaCl | −411.12",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -411.2,
+     "valor_texto": "–411.2",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| NaCl(s) | –411.2 | –384.1 | 72.1"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -384.1,
+     "valor_texto": "−384.1",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Sodium chloride | Solid | NaCl | −384.1"
+    },
+    {
+     "valor": -384.1,
+     "valor_texto": "–384.1",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| NaCl(s) | –411.2 | –384.1 | 72.1"
+    }
+   ],
+   "S": [
+    {
+     "valor": 72.1,
+     "valor_texto": "72.1",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| NaCl(s) | –411.2 | –384.1 | 72.1"
+    }
+   ]
+  },
+  "CaCO3(s) calcita": {
+   "dHf": [
+    {
+     "valor": -1206.9,
+     "valor_texto": "−1206.9",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Calcium carbonate (Calcite) | Solid | CaCO3 | −1206.9",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -1220.0,
+     "valor_texto": "–1220.0",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CaCO3(s) (calcite) | –1220.0 | –1081.4 | 110.0"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -1129.1,
+     "valor_texto": "−1129.1",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Calcium carbonate (Calcite) | Solid | CaCO3 | −1129.1"
+    },
+    {
+     "valor": -1081.4,
+     "valor_texto": "–1081.4",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CaCO3(s) (calcite) | –1220.0 | –1081.4 | 110.0"
+    }
+   ],
+   "S": [
+    {
+     "valor": 110.0,
+     "valor_texto": "110.0",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CaCO3(s) (calcite) | –1220.0 | –1081.4 | 110.0"
+    }
+   ]
+  },
+  "CaO(s)": {
+   "dHf": [
+    {
+     "valor": -635.09,
+     "valor_texto": "−635.09",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Calcium oxide | Solid | CaO | −635.09",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -634.9,
+     "valor_texto": "–634.9",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CaO(s) | –634.9 | –603.3 | 38.1"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -603.3,
+     "valor_texto": "−603.3",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Calcium oxide | Solid | CaO | −603.3"
+    },
+    {
+     "valor": -603.3,
+     "valor_texto": "–603.3",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CaO(s) | –634.9 | –603.3 | 38.1"
+    }
+   ],
+   "S": [
+    {
+     "valor": 38.1,
+     "valor_texto": "38.1",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| CaO(s) | –634.9 | –603.3 | 38.1"
+    }
+   ]
+  },
+  "Fe2O3(s) hematita": {
+   "dHf": [
+    {
+     "valor": -824.2,
+     "valor_texto": "−824.2",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Iron(III) oxide (Hematite) | Solid | Fe2O3 | −824.2",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -824.2,
+     "valor_texto": "–824.2",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| Fe2O3(s) | –824.2 | –742.2 | 87.40"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -742.2,
+     "valor_texto": "–742.2",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| Fe2O3(s) | –824.2 | –742.2 | 87.40"
+    }
+   ],
+   "S": [
+    {
+     "valor": 87.4,
+     "valor_texto": "87.40",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| Fe2O3(s) | –824.2 | –742.2 | 87.40"
+    }
+   ]
+  },
+  "Al2O3(s)": {
+   "dHf": [
+    {
+     "valor": -1675.5,
+     "valor_texto": "−1675.5",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Aluminium oxide | Solid | Al2O3 | −1675.5",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -1676,
+     "valor_texto": "–1676",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| Al2O3(s) | –1676 | –1582 | 50.92"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -1582.3,
+     "valor_texto": "−1582.3",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Aluminum oxide | Solid | Al2O3 | −1582.3"
+    },
+    {
+     "valor": -1582,
+     "valor_texto": "–1582",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| Al2O3(s) | –1676 | –1582 | 50.92"
+    }
+   ],
+   "S": [
+    {
+     "valor": 50.92,
+     "valor_texto": "50.92",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| Al2O3(s) | –1676 | –1582 | 50.92"
+    }
+   ]
+  },
+  "H2O2(l)": {
+   "dHf": [
+    {
+     "valor": -187.8,
+     "valor_texto": "−187.8",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Hydrogen peroxide | Liquid | H2O2 | −187.8",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": -187.78,
+     "valor_texto": "–187.78",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| H2O2(l) | –187.78 | –120.35 | 109.6"
+    },
+    {
+     "valor": -187.8,
+     "valor_texto": "−187.80 kJ/mol",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Hydrogen peroxide",
+     "url": "https://en.wikipedia.org/wiki/Hydrogen_peroxide",
+     "trecho": "formation (ΔfH⦵298) | −187.80 kJ/mol",
+     "obs": "caixa de dados da página do composto"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": -120.42,
+     "valor_texto": "−120.42",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Hydrogen peroxide | Liquid | H2O2 | −120.42"
+    },
+    {
+     "valor": -120.35,
+     "valor_texto": "–120.35",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| H2O2(l) | –187.78 | –120.35 | 109.6"
+    }
+   ],
+   "S": [
+    {
+     "valor": 109.6,
+     "valor_texto": "109.6",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| H2O2(l) | –187.78 | –120.35 | 109.6"
+    }
+   ]
+  },
+  "O3(g)": {
+   "dHf": [
+    {
+     "valor": 143,
+     "valor_texto": "143",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Ozone | Gas | O3 | 143",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": 142.7,
+     "valor_texto": "142.7",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| O3(g) | 142.7 | 163.2 | 238.9"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": 163.2,
+     "valor_texto": "163.2",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Ozone | Gas | O3 | 163.2"
+    },
+    {
+     "valor": 163.2,
+     "valor_texto": "163.2",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| O3(g) | 142.7 | 163.2 | 238.9"
+    }
+   ],
+   "S": [
+    {
+     "valor": 238.9,
+     "valor_texto": "238.9",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| O3(g) | 142.7 | 163.2 | 238.9"
+    }
+   ]
+  },
+  "H2(g)": {
+   "dHf": [
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| H2(g) | 0 | 0 | 130.7"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Hydrogen | Gas | H2 | 0"
+    },
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| H2(g) | 0 | 0 | 130.7"
+    }
+   ],
+   "S": [
+    {
+     "valor": 130.7,
+     "valor_texto": "130.7",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| H2(g) | 0 | 0 | 130.7"
+    }
+   ],
+   "obs": "substância simples no estado padrão: ΔHf° = 0 por definição (a tabela do OpenStax traz 0)."
+  },
+  "O2(g)": {
+   "dHf": [
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| O2(g) | 0 | 0 | 205.2"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Dioxygen | Gas | O2 | 0"
+    },
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| O2(g) | 0 | 0 | 205.2"
+    }
+   ],
+   "S": [
+    {
+     "valor": 205.2,
+     "valor_texto": "205.2",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| O2(g) | 0 | 0 | 205.2"
+    }
+   ],
+   "obs": "substância simples no estado padrão: ΔHf° = 0 por definição (a tabela do OpenStax traz 0)."
+  },
+  "N2(g)": {
+   "dHf": [
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| N2(g) | 0 | 0 | 191.6"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| N2(g) | 0 | 0 | 191.6"
+    }
+   ],
+   "S": [
+    {
+     "valor": 191.6,
+     "valor_texto": "191.6",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| N2(g) | 0 | 0 | 191.6"
+    }
+   ],
+   "obs": "substância simples no estado padrão: ΔHf° = 0 por definição (a tabela do OpenStax traz 0)."
+  },
+  "C(grafite)": {
+   "dHf": [
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Carbon (Graphite) | Solid | C | 0",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C(s) (graphite) | 0 | 0 | 5.740"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Carbon (graphite) | Solid | C | 0"
+    },
+    {
+     "valor": 0,
+     "valor_texto": "0",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C(s) (graphite) | 0 | 0 | 5.740"
+    }
+   ],
+   "S": [
+    {
+     "valor": 5.74,
+     "valor_texto": "5.740",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C(s) (graphite) | 0 | 0 | 5.740"
+    }
+   ]
+  },
+  "C(diamante)": {
+   "dHf": [
+    {
+     "valor": 1.9,
+     "valor_texto": "1.9",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard enthalpy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_enthalpy_of_formation",
+     "trecho": "| Carbon (Diamond) | Solid | C | 1.9",
+     "obs": "tabela a 298,15 K e 1 atm (cabeçalho da tabela)"
+    },
+    {
+     "valor": 1.89,
+     "valor_texto": "1.89",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C(s) (diamond) | 1.89 | 2.90 | 2.38"
+    }
+   ],
+   "dGf": [
+    {
+     "valor": 2.9,
+     "valor_texto": "2.900",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Standard Gibbs free energy of formation",
+     "url": "https://en.wikipedia.org/wiki/Standard_Gibbs_free_energy_of_formation",
+     "trecho": "| Carbon (diamond) | Solid | C | 2.900"
+    },
+    {
+     "valor": 2.9,
+     "valor_texto": "2.90",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C(s) (diamond) | 1.89 | 2.90 | 2.38"
+    }
+   ],
+   "S": [
+    {
+     "valor": 2.38,
+     "valor_texto": "2.38",
+     "unidade": "J/(mol·K)",
+     "fonte": "OpenStax Chemistry 2e: g-standard-thermodynamic-properties-for-selected-substances",
+     "url": "https://openstax.org/books/chemistry-2e/pages/g-standard-thermodynamic-properties-for-selected-substances",
+     "trecho": "| C(s) (diamond) | 1.89 | 2.90 | 2.38"
+    }
+   ]
+  }
+ },
+ "ligacao": {
+  "H–H": [
+   {
+    "valor": 436,
+    "valor_texto": "436",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| H–H | 436",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 432,
+    "valor_texto": "432",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| H—H | 432",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   },
+   {
+    "valor": 431,
+    "valor_texto": "431",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| H−H | hydrogen | 103 | 431 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): H2"
+   }
+  ],
+  "C–H": [
+   {
+    "valor": 415,
+    "valor_texto": "415",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| H–C | 415",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 413,
+    "valor_texto": "413",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| C—H | 413",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   },
+   {
+    "valor": 439,
+    "valor_texto": "439",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| H3C−H | Methyl C−H bond | 105 | 439 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): H3C–H do metano"
+   }
+  ],
+  "C–C": [
+   {
+    "valor": 345,
+    "valor_texto": "345",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| C–C | 345",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 347,
+    "valor_texto": "347",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| C—C | 347",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   },
+   {
+    "valor": "347–377",
+    "valor_texto": "347–377",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| C−C | in typical alkane | 83–90 | 347–377 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): alcano típico (faixa)"
+   }
+  ],
+  "C=C": [
+   {
+    "valor": 611,
+    "valor_texto": "611",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| C=CC=C | 611",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 614,
+    "valor_texto": "614",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| C = C | 614",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   },
+   {
+    "valor": "~710",
+    "valor_texto": "~710",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| H2C=CH2 | Alkene C=C bond | ~170 | ~710 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): eteno (aproximado)"
+   }
+  ],
+  "C≡C": [
+   {
+    "valor": 837,
+    "valor_texto": "837",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| C≡CC≡C | 837",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 839,
+    "valor_texto": "839",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| C ≡ C | 839",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   },
+   {
+    "valor": "~960",
+    "valor_texto": "~960",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| HC≡CH | Alkyne C≡C triple bond | ~230 | ~960 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): etino (aproximado)"
+   }
+  ],
+  "C–O": [
+   {
+    "valor": 350,
+    "valor_texto": "350",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| C–O | 350",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 358,
+    "valor_texto": "358",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| C—O | 358",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   },
+   {
+    "valor": 385,
+    "valor_texto": "385",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| C−O | methanol | 92 | 385 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): metanol"
+   }
+  ],
+  "C=O": [
+   {
+    "valor": 741,
+    "valor_texto": "741",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| C=OC=O | 741",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 745,
+    "valor_texto": "745",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| C = O* | 745",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   },
+   {
+    "valor": 799,
+    "valor_texto": "799",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "*C == O(CO2) = 799",
+    "obs": "valor específico do CO2 (nota de rodapé da tabela do LibreTexts); o OpenStax NÃO distingue"
+   },
+   {
+    "valor": 532,
+    "valor_texto": "532",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| O=CO | carbon dioxide | 127 | 532 | 5.51 | Slightly stronger than C−H bonds, surprisingly low due to stability of C≡O",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): quebrar a 1ª ligação C=O do CO2"
+   },
+   {
+    "valor": 748,
+    "valor_texto": "748",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| O=CH2 | formaldehyde | 179 | 748 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): formaldeído"
+   }
+  ],
+  "O–H": [
+   {
+    "valor": 464,
+    "valor_texto": "464",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| H–O | 464",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 467,
+    "valor_texto": "467",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| O—H | 467",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   },
+   {
+    "valor": 497,
+    "valor_texto": "497",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| O−H | in water | 119 | 497 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): 1ª ligação O–H da água"
+   },
+   {
+    "valor": 440,
+    "valor_texto": "440",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| O−H | in methanol | 105 | 440 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): metanol"
+   },
+   {
+    "valor": 461.5,
+    "valor_texto": "461.5",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond energy",
+    "url": "https://en.wikipedia.org/wiki/Bond_energy",
+    "trecho": "the bond energy of a molecule of water is 461.5 kJ/mol",
+    "obs": "média das duas O–H da água"
+   }
+  ],
+  "O=O": [
+   {
+    "valor": 498,
+    "valor_texto": "498",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| O=OO=O | 498",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 495,
+    "valor_texto": "495",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| O = O | 495",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   },
+   {
+    "valor": 498,
+    "valor_texto": "498",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| O=O | oxygen | 119 | 498 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): O2"
+   }
+  ],
+  "N≡N": [
+   {
+    "valor": 946,
+    "valor_texto": "946",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| N≡NN≡N | 946",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 941,
+    "valor_texto": "941",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| N ≡ N | 941",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   },
+   {
+    "valor": 945,
+    "valor_texto": "945",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| N≡N | nitrogen | 226 | 945 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): N2"
+   }
+  ],
+  "N–H": [
+   {
+    "valor": 390,
+    "valor_texto": "390",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| H–N | 390",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 391,
+    "valor_texto": "391",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| N—H | 391",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   }
+  ],
+  "N=O": [
+   {
+    "valor": 607,
+    "valor_texto": "607",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| N = O | 607",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   }
+  ],
+  "Cl–Cl": [
+   {
+    "valor": 243,
+    "valor_texto": "243",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| Cl–Cl | 243",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 239,
+    "valor_texto": "239",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| Cl—Cl | 239",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   }
+  ],
+  "H–Cl": [
+   {
+    "valor": 432,
+    "valor_texto": "432",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| H–Cl | 432",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 427,
+    "valor_texto": "427",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| H—Cl | 427",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   }
+  ],
+  "C–Cl": [
+   {
+    "valor": 330,
+    "valor_texto": "330",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| C–Cl | 330",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 339,
+    "valor_texto": "339",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| C—Cl | 339",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   }
+  ],
+  "F–F": [
+   {
+    "valor": 160,
+    "valor_texto": "160",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| F–F | 160",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 154,
+    "valor_texto": "154",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| F—F | 154",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   }
+  ],
+  "H–F": [
+   {
+    "valor": 569,
+    "valor_texto": "569",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| H–F | 569",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 565,
+    "valor_texto": "565",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| H—F | 565",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   },
+   {
+    "valor": 569,
+    "valor_texto": "569",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| H−F | hydrogen fluoride | 136 | 569 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): HF"
+   }
+  ],
+  "Br–Br": [
+   {
+    "valor": 190,
+    "valor_texto": "190",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| Br–Br | 190",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 193,
+    "valor_texto": "193",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| Br—Br | 193",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   }
+  ],
+  "H–Br": [
+   {
+    "valor": 370,
+    "valor_texto": "370",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| H–Br | 370",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 363,
+    "valor_texto": "363",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| H—Br | 363",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   }
+  ],
+  "I–I": [
+   {
+    "valor": 150,
+    "valor_texto": "150",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| I–I | 150",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 149,
+    "valor_texto": "149",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| I—I | 149",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   }
+  ],
+  "H–I": [
+   {
+    "valor": 295,
+    "valor_texto": "295",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| H–I | 295",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 295,
+    "valor_texto": "295",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| H—I | 295",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   }
+  ],
+  "C–N": [
+   {
+    "valor": 290,
+    "valor_texto": "290",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| C–N | 290",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 305,
+    "valor_texto": "305",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| C—N | 305",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   }
+  ],
+  "C≡N": [
+   {
+    "valor": 891,
+    "valor_texto": "891",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| C≡NC≡N | 891",
+    "obs": "Tabela 7.2 \"Bond Energies (kJ/mol)\" (média)"
+   },
+   {
+    "valor": 891,
+    "valor_texto": "891",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| C ≡ N | 891",
+    "obs": "Table 1: Average Bond Energies (kJ/mol)"
+   }
+  ],
+  "C≡O (monóxido de carbono, extra)": [
+   {
+    "valor": 1080,
+    "valor_texto": "1080",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 7-5-strengths-of-ionic-and-covalent-bonds",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-5-strengths-of-ionic-and-covalent-bonds",
+    "trecho": "| C≡OC≡O | 1080"
+   },
+   {
+    "valor": 1072,
+    "valor_texto": "1072",
+    "unidade": "kJ/mol",
+    "fonte": "Chemistry LibreTexts (libretexts_Bond_Energies)",
+    "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Chemical_Bonding/Fundamentals_of_Chemical_Bonding/Bond_Energies",
+    "trecho": "| C ≡ O | 1072"
+   },
+   {
+    "valor": 1077,
+    "valor_texto": "1077",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Bond-dissociation energy",
+    "url": "https://en.wikipedia.org/wiki/Bond-dissociation_energy",
+    "trecho": "| C≡O | carbon monoxide | 257 | 1077 |",
+    "obs": "energia de DISSOCIAÇÃO numa molécula específica (não é média): CO"
+   }
+  ]
+ },
+ "agua": {
+  "calor_especifico_liquida": [
+   {
+    "valor": 4184,
+    "valor_texto": "4184",
+    "unidade": "J/(kg·K)",
+    "fonte": "Wikipedia (en): Properties of water",
+    "url": "https://en.wikipedia.org/wiki/Properties_of_water",
+    "trecho": "specific heat capacity of 4184 J/(kg·K) at 20 °C (4182 J/(kg·K) at 25 °C)",
+    "obs": "a 20 °C; dividir por 1000 para J/(g·K)"
+   },
+   {
+    "valor": 4182,
+    "valor_texto": "4182",
+    "unidade": "J/(kg·K)",
+    "fonte": "Wikipedia (en): Properties of water",
+    "url": "https://en.wikipedia.org/wiki/Properties_of_water",
+    "trecho": "specific heat capacity of 4184 J/(kg·K) at 20 °C (4182 J/(kg·K) at 25 °C)",
+    "obs": "a 25 °C"
+   },
+   {
+    "valor": 4.184,
+    "valor_texto": "4.184",
+    "unidade": "J/(g·°C)",
+    "fonte": "OpenStax Chemistry 2e: e-water-properties",
+    "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+    "trecho": "C°(H2O(l)) = 4.184 J∙g-1∙°C-1"
+   },
+   {
+    "valor": 4.184,
+    "valor_texto": "4.184",
+    "unidade": "J/(g·°C)",
+    "fonte": "OpenStax Chemistry 2e: 5-1-energy-basics",
+    "url": "https://openstax.org/books/chemistry-2e/pages/5-1-energy-basics",
+    "trecho": "| water | H2O(l) | 4.184",
+    "obs": "Tabela 5.1"
+   },
+   {
+    "valor": 4.18,
+    "valor_texto": "4.18",
+    "unidade": "J/(g·K)",
+    "fonte": "Wikipedia (en): Enthalpy of fusion",
+    "url": "https://en.wikipedia.org/wiki/Enthalpy_of_fusion",
+    "trecho": "specific heat capacity of water to be 4.18 J/(g⋅K)"
+   },
+   {
+    "valor": 75.385,
+    "valor_texto": "75.385",
+    "unidade": "J/(mol·K)",
+    "fonte": "Wikipedia (en): Properties of water",
+    "url": "https://en.wikipedia.org/wiki/Properties_of_water",
+    "trecho": "Heat capacity (C) | 75.385 ± 0.05 J/(mol·K)",
+    "obs": "molar, caixa de dados"
+   }
+  ],
+  "calor_especifico_gelo": [
+   {
+    "valor": 2.093,
+    "valor_texto": "2.093",
+    "unidade": "J/(g·°C)",
+    "fonte": "OpenStax Chemistry 2e: e-water-properties",
+    "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+    "trecho": "C°(H2O(s)) = 2.093 J∙g−1∙°C−1"
+   },
+   {
+    "valor": 2030,
+    "valor_texto": "2030",
+    "unidade": "J/(kg·K)",
+    "fonte": "Wikipedia (en): Properties of water",
+    "url": "https://en.wikipedia.org/wiki/Properties_of_water",
+    "trecho": "specific heat capacity of ice at −10 °C is 2030 J/(kg·K)",
+    "obs": "a −10 °C"
+   }
+  ],
+  "calor_especifico_vapor": [
+   {
+    "valor": 1.864,
+    "valor_texto": "1.864",
+    "unidade": "J/(g·°C)",
+    "fonte": "OpenStax Chemistry 2e: e-water-properties",
+    "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+    "trecho": "C°(H2O(g)) = 1.864 J∙g−1∙°C−1"
+   },
+   {
+    "valor": 2080,
+    "valor_texto": "2080",
+    "unidade": "J/(kg·K)",
+    "fonte": "Wikipedia (en): Properties of water",
+    "url": "https://en.wikipedia.org/wiki/Properties_of_water",
+    "trecho": "heat capacity of steam at 100 °C is 2080 J/(kg·K)",
+    "obs": "a 100 °C"
+   }
+  ],
+  "entalpia_fusao": [
+   {
+    "valor": 333.55,
+    "valor_texto": "333.55",
+    "unidade": "kJ/kg (= J/g)",
+    "fonte": "Wikipedia (en): Properties of water",
+    "url": "https://en.wikipedia.org/wiki/Properties_of_water",
+    "trecho": "enthalpy of fusion (more commonly known as latent heat) of water is 333.55 kJ/kg at 0 °C"
+   },
+   {
+    "valor": 333.55,
+    "valor_texto": "333.55",
+    "unidade": "J/g",
+    "fonte": "Wikipedia (en): Enthalpy of fusion",
+    "url": "https://en.wikipedia.org/wiki/Enthalpy_of_fusion",
+    "trecho": "| water | 79.72 | 333.55 | 0.0",
+    "obs": "tabela: colunas cal/g, J/g, ponto de fusão °C"
+   },
+   {
+    "valor": 79.72,
+    "valor_texto": "79.72",
+    "unidade": "cal/g",
+    "fonte": "Wikipedia (en): Enthalpy of fusion",
+    "url": "https://en.wikipedia.org/wiki/Enthalpy_of_fusion",
+    "trecho": "| water | 79.72 | 333.55 | 0.0"
+   },
+   {
+    "valor": 6.01,
+    "valor_texto": "6.01",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Water (data page)",
+    "url": "https://en.wikipedia.org/wiki/Water_(data_page)",
+    "trecho": "of fusion at 273.15 K, ΔfusH | 6.01 kJ/mol"
+   },
+   {
+    "valor": 6.088,
+    "valor_texto": "6.088",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: e-water-properties",
+    "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+    "trecho": "| melting | 273.15 | 6.088",
+    "obs": "Tabela E5; ATENÇÃO: diverge do 6.01 da Wikipedia"
+   }
+  ],
+  "entalpia_vaporizacao": [
+   {
+    "valor": 40.65,
+    "valor_texto": "40.65",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Properties of water",
+    "url": "https://en.wikipedia.org/wiki/Properties_of_water",
+    "trecho": "high heat of vaporization (40.65 kJ/mol or 2257 kJ/kg at the normal boiling point)",
+    "obs": "no ponto de ebulição normal"
+   },
+   {
+    "valor": 2257,
+    "valor_texto": "2257",
+    "unidade": "kJ/kg (= J/g)",
+    "fonte": "Wikipedia (en): Properties of water",
+    "url": "https://en.wikipedia.org/wiki/Properties_of_water",
+    "trecho": "high heat of vaporization (40.65 kJ/mol or 2257 kJ/kg at the normal boiling point)",
+    "obs": "no ponto de ebulição normal"
+   },
+   {
+    "valor": 40.66,
+    "valor_texto": "40.66",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Enthalpy of vaporization",
+    "url": "https://en.wikipedia.org/wiki/Enthalpy_of_vaporization",
+    "trecho": "| Water | 373.15 | 100 | 212 | 40.66 | 2257",
+    "obs": "a 100 °C"
+   },
+   {
+    "valor": 40.656,
+    "valor_texto": "40.656",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: e-water-properties",
+    "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+    "trecho": "| boiling | 373.15 | 40.656 (44.016 at 298 K)",
+    "obs": "a 373,15 K"
+   },
+   {
+    "valor": 44.016,
+    "valor_texto": "44.016",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: e-water-properties",
+    "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+    "trecho": "| boiling | 373.15 | 40.656 (44.016 at 298 K)",
+    "obs": "a 298 K"
+   }
+  ],
+  "Kw": {
+   "0 °C": [
+    {
+     "valor": 0.112,
+     "valor_texto": "0.112",
+     "unidade": "Kw × 10^14 (multiplicar por 1e-14)",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 0 | 0.112 | 14.95",
+     "obs": "Tabela E3 \"Water Kw and pKw at Different Temperatures\"; cabeçalho \"Kw 10–14\""
+    },
+    {
+     "valor": 14.95,
+     "valor_texto": "14.95",
+     "unidade": "pKw",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 0 | 0.112 | 14.95",
+     "obs": "Tabela E3"
+    },
+    {
+     "valor": 14.95,
+     "valor_texto": "14.95",
+     "unidade": "pKw",
+     "fonte": "Wikipedia (en): Self-ionization of water",
+     "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+     "trecho": "| 0 °C | 0.10 MPa | 14.95",
+     "obs": "tabela \"pKw values for liquid water\""
+    }
+   ],
+   "10 °C": [
+    {
+     "valor": 0.288,
+     "valor_texto": "0.288",
+     "unidade": "Kw × 10^14 (multiplicar por 1e-14)",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 10 | 0.288 | 14.54",
+     "obs": "Tabela E3 \"Water Kw and pKw at Different Temperatures\"; cabeçalho \"Kw 10–14\""
+    },
+    {
+     "valor": 14.54,
+     "valor_texto": "14.54",
+     "unidade": "pKw",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 10 | 0.288 | 14.54",
+     "obs": "Tabela E3"
+    },
+    {
+     "valor": 14.535,
+     "valor_texto": "14.535",
+     "unidade": "pKw",
+     "fonte": "Wikipedia (en): Self-ionization of water",
+     "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+     "trecho": "| H2O | 14.535 | 14.167 | 13.997 | 13.830 | 13.535 | 13.262",
+     "obs": "tabela \"pKw values for pure water\", coluna 10 °C (linha T/°C: 10 20 25 30 40 50)"
+    }
+   ],
+   "20 °C": [
+    {
+     "valor": 0.671,
+     "valor_texto": "0.671",
+     "unidade": "Kw × 10^14 (multiplicar por 1e-14)",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 20 | 0.671 | 14.17",
+     "obs": "Tabela E3 \"Water Kw and pKw at Different Temperatures\"; cabeçalho \"Kw 10–14\""
+    },
+    {
+     "valor": 14.17,
+     "valor_texto": "14.17",
+     "unidade": "pKw",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 20 | 0.671 | 14.17",
+     "obs": "Tabela E3"
+    },
+    {
+     "valor": 14.167,
+     "valor_texto": "14.167",
+     "unidade": "pKw",
+     "fonte": "Wikipedia (en): Self-ionization of water",
+     "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+     "trecho": "| H2O | 14.535 | 14.167 | 13.997 | 13.830 | 13.535 | 13.262",
+     "obs": "tabela \"pKw values for pure water\", coluna 20 °C (linha T/°C: 10 20 25 30 40 50)"
+    }
+   ],
+   "25 °C": [
+    {
+     "valor": 0.991,
+     "valor_texto": "0.991",
+     "unidade": "Kw × 10^14 (multiplicar por 1e-14)",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 25 | 0.991 | 14.00",
+     "obs": "Tabela E3 \"Water Kw and pKw at Different Temperatures\"; cabeçalho \"Kw 10–14\""
+    },
+    {
+     "valor": 14.0,
+     "valor_texto": "14.00",
+     "unidade": "pKw",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 25 | 0.991 | 14.00",
+     "obs": "Tabela E3"
+    },
+    {
+     "valor": 13.99,
+     "valor_texto": "13.99",
+     "unidade": "pKw",
+     "fonte": "Wikipedia (en): Self-ionization of water",
+     "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+     "trecho": "| 25 °C | 0.10 MPa | 13.99",
+     "obs": "tabela \"pKw values for liquid water\""
+    },
+    {
+     "valor": 13.997,
+     "valor_texto": "13.997",
+     "unidade": "pKw",
+     "fonte": "Wikipedia (en): Self-ionization of water",
+     "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+     "trecho": "| H2O | 14.535 | 14.167 | 13.997 | 13.830 | 13.535 | 13.262",
+     "obs": "tabela \"pKw values for pure water\", coluna 25 °C (linha T/°C: 10 20 25 30 40 50)"
+    }
+   ],
+   "30 °C": [
+    {
+     "valor": 1.432,
+     "valor_texto": "1.432",
+     "unidade": "Kw × 10^14 (multiplicar por 1e-14)",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 30 | 1.432 | 13.84",
+     "obs": "Tabela E3 \"Water Kw and pKw at Different Temperatures\"; cabeçalho \"Kw 10–14\""
+    },
+    {
+     "valor": 13.84,
+     "valor_texto": "13.84",
+     "unidade": "pKw",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 30 | 1.432 | 13.84",
+     "obs": "Tabela E3"
+    },
+    {
+     "valor": 13.83,
+     "valor_texto": "13.830",
+     "unidade": "pKw",
+     "fonte": "Wikipedia (en): Self-ionization of water",
+     "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+     "trecho": "| H2O | 14.535 | 14.167 | 13.997 | 13.830 | 13.535 | 13.262",
+     "obs": "tabela \"pKw values for pure water\", coluna 30 °C (linha T/°C: 10 20 25 30 40 50)"
+    }
+   ],
+   "40 °C": [
+    {
+     "valor": 2.851,
+     "valor_texto": "2.851",
+     "unidade": "Kw × 10^14 (multiplicar por 1e-14)",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 40 | 2.851 | 13.55",
+     "obs": "Tabela E3 \"Water Kw and pKw at Different Temperatures\"; cabeçalho \"Kw 10–14\""
+    },
+    {
+     "valor": 13.55,
+     "valor_texto": "13.55",
+     "unidade": "pKw",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 40 | 2.851 | 13.55",
+     "obs": "Tabela E3"
+    },
+    {
+     "valor": 13.535,
+     "valor_texto": "13.535",
+     "unidade": "pKw",
+     "fonte": "Wikipedia (en): Self-ionization of water",
+     "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+     "trecho": "| H2O | 14.535 | 14.167 | 13.997 | 13.830 | 13.535 | 13.262",
+     "obs": "tabela \"pKw values for pure water\", coluna 40 °C (linha T/°C: 10 20 25 30 40 50)"
+    }
+   ],
+   "50 °C": [
+    {
+     "valor": 5.297,
+     "valor_texto": "5.297",
+     "unidade": "Kw × 10^14 (multiplicar por 1e-14)",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 50 | 5.297 | 13.28",
+     "obs": "Tabela E3 \"Water Kw and pKw at Different Temperatures\"; cabeçalho \"Kw 10–14\""
+    },
+    {
+     "valor": 13.28,
+     "valor_texto": "13.28",
+     "unidade": "pKw",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 50 | 5.297 | 13.28",
+     "obs": "Tabela E3"
+    },
+    {
+     "valor": 13.26,
+     "valor_texto": "13.26",
+     "unidade": "pKw",
+     "fonte": "Wikipedia (en): Self-ionization of water",
+     "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+     "trecho": "| 50 °C | 0.10 MPa | 13.26",
+     "obs": "tabela \"pKw values for liquid water\""
+    },
+    {
+     "valor": 13.262,
+     "valor_texto": "13.262",
+     "unidade": "pKw",
+     "fonte": "Wikipedia (en): Self-ionization of water",
+     "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+     "trecho": "| H2O | 14.535 | 14.167 | 13.997 | 13.830 | 13.535 | 13.262",
+     "obs": "tabela \"pKw values for pure water\", coluna 50 °C (linha T/°C: 10 20 25 30 40 50)"
+    }
+   ],
+   "60 °C": [
+    {
+     "valor": 9.311,
+     "valor_texto": "9.311",
+     "unidade": "Kw × 10^14 (multiplicar por 1e-14)",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 60 | 9.311 | 13.03",
+     "obs": "Tabela E3 \"Water Kw and pKw at Different Temperatures\"; cabeçalho \"Kw 10–14\""
+    },
+    {
+     "valor": 13.03,
+     "valor_texto": "13.03",
+     "unidade": "pKw",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 60 | 9.311 | 13.03",
+     "obs": "Tabela E3"
+    }
+   ],
+   "100 °C": [
+    {
+     "valor": 56.23,
+     "valor_texto": "56.23",
+     "unidade": "Kw × 10^14 (multiplicar por 1e-14)",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 100 | 56.23 | 12.25",
+     "obs": "Tabela E3 \"Water Kw and pKw at Different Temperatures\"; cabeçalho \"Kw 10–14\""
+    },
+    {
+     "valor": 12.25,
+     "valor_texto": "12.25",
+     "unidade": "pKw",
+     "fonte": "OpenStax Chemistry 2e: e-water-properties",
+     "url": "https://openstax.org/books/chemistry-2e/pages/e-water-properties",
+     "trecho": "| 100 | 56.23 | 12.25",
+     "obs": "Tabela E3"
+    },
+    {
+     "valor": 12.25,
+     "valor_texto": "12.25",
+     "unidade": "pKw",
+     "fonte": "Wikipedia (en): Self-ionization of water",
+     "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+     "trecho": "| 100 °C | 0.10 MPa | 12.25",
+     "obs": "tabela \"pKw values for liquid water\""
+    }
+   ],
+   "texto": [
+    {
+     "valor": 1e-14,
+     "valor_texto": "1.0×10−14",
+     "unidade": "Kw",
+     "fonte": "Wikipedia (en): Self-ionization of water",
+     "url": "https://en.wikipedia.org/wiki/Self-ionization_of_water",
+     "trecho": "At 24.87 °C and zero ionic strength, Kw is equal to 1.0×10−14"
+    },
+    {
+     "valor": 5.6e-13,
+     "valor_texto": "5.6 ×× 10−13",
+     "unidade": "Kw",
+     "fonte": "OpenStax Chemistry 2e: 14-1-bronsted-lowry-acids-and-bases",
+     "url": "https://openstax.org/books/chemistry-2e/pages/14-1-bronsted-lowry-acids-and-bases",
+     "trecho": "at 100 °C, the value for Kw is about 5.6 ×× 10−13",
+     "obs": "a 100 °C"
+    },
+    {
+     "valor": 2.4e-13,
+     "valor_texto": "2.4 ×× 10−13",
+     "unidade": "Kw",
+     "fonte": "OpenStax Chemistry 2e: 14-1-bronsted-lowry-acids-and-bases",
+     "url": "https://openstax.org/books/chemistry-2e/pages/14-1-bronsted-lowry-acids-and-bases",
+     "trecho": "The ion product of water at 80 °C is 2.4 ×× 10−13",
+     "obs": "a 80 °C (enunciado de exercício)"
+    }
+   ]
+  }
+ },
+ "combustao": {
+  "H2": [
+   {
+    "valor": 285.83,
+    "valor_texto": "285.83",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Hydrogen[12] | 141.79 | 60969 | 285.83[e][13] | 119.96",
+    "obs": "tabela \"Higher (HHV) and lower (LHV) heating values of some common fuels at 25 °C\", coluna HHV kJ/mol (água líquida); valor positivo = calor liberado"
+   },
+   {
+    "valor": 141.79,
+    "valor_texto": "141.79",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Hydrogen[12] | 141.79 | 60969 | 285.83[e][13] | 119.96",
+    "obs": "mesma tabela, HHV"
+   },
+   {
+    "valor": 119.96,
+    "valor_texto": "119.96",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Hydrogen[12] | 141.79 | 60969 | 285.83[e][13] | 119.96",
+    "obs": "mesma tabela, LHV (água vapor)"
+   },
+   {
+    "valor": 244,
+    "valor_texto": "244",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Hydrogen | 120.971 | 1.8 | 52,017 | 244",
+    "obs": "tabela \"Lower heating value for some organic compounds (at 25 °C)\" = LHV (água VAPOR), marcada [citation needed] na Wikipedia"
+   },
+   {
+    "valor": 120.971,
+    "valor_texto": "120.971",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Hydrogen | 120.971 | 1.8 | 52,017 | 244",
+    "obs": "mesma tabela (LHV)"
+   },
+   {
+    "valor": -285.8,
+    "valor_texto": "−285.8",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 5-3-enthalpy",
+    "url": "https://openstax.org/books/chemistry-2e/pages/5-3-enthalpy",
+    "trecho": "| hydrogen | H2(g)+12O2(g)⟶H2O(l)H2(g)+12O2(g)⟶H2O(l) | −285.8",
+    "obs": "Tabela 5.2 (ΔHc° a 25 °C, água líquida)"
+   }
+  ],
+  "C(grafite)": [
+   {
+    "valor": 393.5,
+    "valor_texto": "393.5",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Carbon | 32.8 | 14,100 | 393.5",
+    "obs": "tabela \"Higher heating value of some less common fuels\""
+   },
+   {
+    "valor": 32.8,
+    "valor_texto": "32.8",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Carbon | 32.8 | 14,100 | 393.5",
+    "obs": "mesma tabela (HHV)"
+   },
+   {
+    "valor": -393.5,
+    "valor_texto": "−393.5",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 5-3-enthalpy",
+    "url": "https://openstax.org/books/chemistry-2e/pages/5-3-enthalpy",
+    "trecho": "| carbon | C(s)+O2(g)⟶CO2(g)C(s)+O2(g)⟶CO2(g) | −393.5",
+    "obs": "Tabela 5.2 (ΔHc° a 25 °C, água líquida)"
+   },
+   {
+    "valor": 32.808,
+    "valor_texto": "32.808",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Carbon (graphite) | 32.808 |",
+    "obs": "tabela LHV"
+   }
+  ],
+  "CH4": [
+   {
+    "valor": 890.7,
+    "valor_texto": "890.7",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Methane | 55.52 | 23874 | 890.7[14] | 50.00",
+    "obs": "tabela \"Higher (HHV) and lower (LHV) heating values of some common fuels at 25 °C\", coluna HHV kJ/mol (água líquida); valor positivo = calor liberado"
+   },
+   {
+    "valor": 55.52,
+    "valor_texto": "55.52",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Methane | 55.52 | 23874 | 890.7[14] | 50.00",
+    "obs": "mesma tabela, HHV"
+   },
+   {
+    "valor": 50.0,
+    "valor_texto": "50.00",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Methane | 55.52 | 23874 | 890.7[14] | 50.00",
+    "obs": "mesma tabela, LHV (água vapor)"
+   },
+   {
+    "valor": 802.34,
+    "valor_texto": "802.34",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Methane | 50.009 | 6.9 | 21,504 | 802.34",
+    "obs": "tabela \"Lower heating value for some organic compounds (at 25 °C)\" = LHV (água VAPOR), marcada [citation needed] na Wikipedia"
+   },
+   {
+    "valor": 50.009,
+    "valor_texto": "50.009",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Methane | 50.009 | 6.9 | 21,504 | 802.34",
+    "obs": "mesma tabela (LHV)"
+   },
+   {
+    "valor": -890.8,
+    "valor_texto": "−890.8",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 5-3-enthalpy",
+    "url": "https://openstax.org/books/chemistry-2e/pages/5-3-enthalpy",
+    "trecho": "| methane | CH4(g)+2O2(g)⟶CO2(g)+2H2O(l)CH4(g)+2O2(g)⟶CO2(g)+2H2O(l) | −890.8",
+    "obs": "Tabela 5.2 (ΔHc° a 25 °C, água líquida)"
+   },
+   {
+    "valor": -891,
+    "valor_texto": "−891 kJ/mol",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Methane",
+    "url": "https://en.wikipedia.org/wiki/Methane",
+    "trecho": "combustion (ΔcH⦵298) | −891 kJ/mol"
+   }
+  ],
+  "C2H6": [
+   {
+    "valor": 1560.7,
+    "valor_texto": "1560.7",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Ethane | 51.90 | 22319 | 1560.7[15] | 47.62",
+    "obs": "tabela \"Higher (HHV) and lower (LHV) heating values of some common fuels at 25 °C\", coluna HHV kJ/mol (água líquida); valor positivo = calor liberado"
+   },
+   {
+    "valor": 51.9,
+    "valor_texto": "51.90",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Ethane | 51.90 | 22319 | 1560.7[15] | 47.62",
+    "obs": "mesma tabela, HHV"
+   },
+   {
+    "valor": 47.62,
+    "valor_texto": "47.62",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Ethane | 51.90 | 22319 | 1560.7[15] | 47.62",
+    "obs": "mesma tabela, LHV (água vapor)"
+   },
+   {
+    "valor": 1437.2,
+    "valor_texto": "1,437.2",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Ethane | 47.794 | — | 20,551 | 1,437.2",
+    "obs": "tabela \"Lower heating value for some organic compounds (at 25 °C)\" = LHV (água VAPOR), marcada [citation needed] na Wikipedia"
+   },
+   {
+    "valor": 47.794,
+    "valor_texto": "47.794",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Ethane | 47.794 | — | 20,551 | 1,437.2",
+    "obs": "mesma tabela (LHV)"
+   },
+   {
+    "valor": "−1561.0–−1560.4 kJ mol−1",
+    "valor_texto": "−1561.0–−1560.4 kJ mol−1",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Ethane",
+    "url": "https://en.wikipedia.org/wiki/Ethane",
+    "trecho": "combustion (ΔcH⦵298) | −1561.0–−1560.4 kJ mol−1",
+    "obs": "faixa"
+   }
+  ],
+  "C3H8": [
+   {
+    "valor": 2219.2,
+    "valor_texto": "2219.2",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Propane | 50.33 | 21641 | 2219.2[16] | 46.35",
+    "obs": "tabela \"Higher (HHV) and lower (LHV) heating values of some common fuels at 25 °C\", coluna HHV kJ/mol (água líquida); valor positivo = calor liberado"
+   },
+   {
+    "valor": 50.33,
+    "valor_texto": "50.33",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Propane | 50.33 | 21641 | 2219.2[16] | 46.35",
+    "obs": "mesma tabela, HHV"
+   },
+   {
+    "valor": 46.35,
+    "valor_texto": "46.35",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Propane | 50.33 | 21641 | 2219.2[16] | 46.35",
+    "obs": "mesma tabela, LHV (água vapor)"
+   },
+   {
+    "valor": 2044.2,
+    "valor_texto": "2,044.2",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Propane | 46.357 | 25.3 | 19,934 | 2,044.2",
+    "obs": "tabela \"Lower heating value for some organic compounds (at 25 °C)\" = LHV (água VAPOR), marcada [citation needed] na Wikipedia"
+   },
+   {
+    "valor": 46.357,
+    "valor_texto": "46.357",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Propane | 46.357 | 25.3 | 19,934 | 2,044.2",
+    "obs": "mesma tabela (LHV)"
+   },
+   {
+    "valor": "−2.2197–2.2187 MJ⋅mol−1",
+    "valor_texto": "−2.2197–2.2187 MJ⋅mol−1",
+    "unidade": "MJ/mol",
+    "fonte": "Wikipedia (en): Propane",
+    "url": "https://en.wikipedia.org/wiki/Propane",
+    "trecho": "combustion (ΔcH⦵298) | −2.2197–2.2187 MJ⋅mol−1",
+    "obs": "faixa; sinal como está na página"
+   }
+  ],
+  "C4H10": [
+   {
+    "valor": 2877.5,
+    "valor_texto": "2877.5",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Butane | 49.51 | 21288 | 2877.5[17] | 45.75",
+    "obs": "tabela \"Higher (HHV) and lower (LHV) heating values of some common fuels at 25 °C\", coluna HHV kJ/mol (água líquida); valor positivo = calor liberado"
+   },
+   {
+    "valor": 49.51,
+    "valor_texto": "49.51",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Butane | 49.51 | 21288 | 2877.5[17] | 45.75",
+    "obs": "mesma tabela, HHV"
+   },
+   {
+    "valor": 45.75,
+    "valor_texto": "45.75",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Butane | 49.51 | 21288 | 2877.5[17] | 45.75",
+    "obs": "mesma tabela, LHV (água vapor)"
+   },
+   {
+    "valor": 2659.3,
+    "valor_texto": "2,659.3",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Butane | 45.752 | — | 19,673 | 2,659.3",
+    "obs": "tabela \"Lower heating value for some organic compounds (at 25 °C)\" = LHV (água VAPOR), marcada [citation needed] na Wikipedia"
+   },
+   {
+    "valor": 45.752,
+    "valor_texto": "45.752",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Butane | 45.752 | — | 19,673 | 2,659.3",
+    "obs": "mesma tabela (LHV)"
+   },
+   {
+    "valor": "−2.8781–−2.8769 MJ/mol",
+    "valor_texto": "−2.8781–−2.8769 MJ/mol",
+    "unidade": "MJ/mol",
+    "fonte": "Wikipedia (en): Butane",
+    "url": "https://en.wikipedia.org/wiki/Butane",
+    "trecho": "combustion (ΔcH⦵298) | −2.8781–−2.8769 MJ/mol",
+    "obs": "faixa"
+   },
+   {
+    "valor": "-2877.5 ± 0.63",
+    "valor_texto": "-2877.5 ± 0.63",
+    "unidade": "kJ/mol",
+    "fonte": "NIST Chemistry WebBook (nist_butane_gas)",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C106978&Units=SI&Mask=1",
+    "trecho": "| ΔcH°gas | -2877.5 ± 0.63 | kJ/mol | Ccb | Pittam and Pilcher, 1972"
+   }
+  ],
+  "C8H18 (n-octano)": [
+   {
+    "valor": 5074.9,
+    "valor_texto": "5,074.9",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Octane | 44.427 | — | 19,104 | 5,074.9",
+    "obs": "tabela \"Lower heating value for some organic compounds (at 25 °C)\" = LHV (água VAPOR), marcada [citation needed] na Wikipedia"
+   },
+   {
+    "valor": 44.427,
+    "valor_texto": "44.427",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Octane | 44.427 | — | 19,104 | 5,074.9",
+    "obs": "mesma tabela (LHV)"
+   },
+   {
+    "valor": "−5.53 to −5.33 MJ/mol",
+    "valor_texto": "−5.53 to −5.33 MJ/mol",
+    "unidade": "MJ/mol",
+    "fonte": "Wikipedia (en): Octane",
+    "url": "https://en.wikipedia.org/wiki/Octane",
+    "trecho": "combustion (ΔcH⦵298) | −5.53 to −5.33 MJ/mol",
+    "obs": "faixa larga na caixa de dados"
+   },
+   {
+    "valor": "-5430. ± 100.",
+    "valor_texto": "-5430. ± 100.",
+    "unidade": "kJ/mol",
+    "fonte": "NIST Chemistry WebBook (nist_octane_cond)",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C111659&Units=SI&Mask=2",
+    "trecho": "| ΔcH°liquid | -5430. ± 100. | kJ/mol | AVG | N/A | Average of 6 values",
+    "obs": "média de 6 valores, incerteza ±100"
+   }
+  ],
+  "C8H18 (isooctano, 2,2,4-trimetilpentano)": [
+   {
+    "valor": -5465.5,
+    "valor_texto": "–5465.5",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 5-3-enthalpy",
+    "url": "https://openstax.org/books/chemistry-2e/pages/5-3-enthalpy",
+    "trecho": "| isooctane | C8H18(l)+252O2(g)⟶8CO2(g)+9H2O(l)C8H18(l)+252O2(g)⟶8CO2(g)+9H2O(l) | –5465.5",
+    "obs": "Tabela 5.2 (ΔHc° a 25 °C, água líquida); ATENÇÃO: é o ISO-octano, e a tabela diz –5465.5 mas o texto do exemplo logo abaixo diz −5460"
+   },
+   {
+    "valor": 5061.5,
+    "valor_texto": "5,061.5",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| 2,2,4-Trimethylpentane | 44.310 | 30.49 | 19,053 | 5,061.5",
+    "obs": "tabela \"Lower heating value for some organic compounds (at 25 °C)\" = LHV (água VAPOR), marcada [citation needed] na Wikipedia"
+   },
+   {
+    "valor": 44.31,
+    "valor_texto": "44.310",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| 2,2,4-Trimethylpentane | 44.310 | 30.49 | 19,053 | 5,061.5",
+    "obs": "mesma tabela (LHV)"
+   }
+  ],
+  "etanol": [
+   {
+    "valor": 1367,
+    "valor_texto": "1,367",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Ethanol | 29.7 | 12,800 | 1,367",
+    "obs": "tabela \"Higher heating value of some less common fuels\""
+   },
+   {
+    "valor": 29.7,
+    "valor_texto": "29.7",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Ethanol | 29.7 | 12,800 | 1,367",
+    "obs": "mesma tabela (HHV)"
+   },
+   {
+    "valor": 1230.1,
+    "valor_texto": "1,230.1",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Ethanol | 26.70 | 22.77 | 12,412 | 1,230.1",
+    "obs": "tabela \"Lower heating value for some organic compounds (at 25 °C)\" = LHV (água VAPOR), marcada [citation needed] na Wikipedia"
+   },
+   {
+    "valor": 26.7,
+    "valor_texto": "26.70",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Ethanol | 26.70 | 22.77 | 12,412 | 1,230.1",
+    "obs": "mesma tabela (LHV)"
+   },
+   {
+    "valor": -1366.8,
+    "valor_texto": "−1366.8",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 5-3-enthalpy",
+    "url": "https://openstax.org/books/chemistry-2e/pages/5-3-enthalpy",
+    "trecho": "| ethanol | C2H5OH(l)+3O2(g)⟶2CO2(g)+3H2O(l)C2H5OH(l)+3O2(g)⟶2CO2(g)+3H2O(l) | −1366.8",
+    "obs": "Tabela 5.2 (ΔHc° a 25 °C, água líquida)"
+   }
+  ],
+  "metanol": [
+   {
+    "valor": 726,
+    "valor_texto": "726",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Methanol | 22.7 | 9,800 | 726",
+    "obs": "tabela \"Higher heating value of some less common fuels\""
+   },
+   {
+    "valor": 22.7,
+    "valor_texto": "22.7",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Methanol | 22.7 | 9,800 | 726",
+    "obs": "mesma tabela (HHV)"
+   },
+   {
+    "valor": 638.6,
+    "valor_texto": "638.6",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Methanol | 19.930 | 15.78 | 8,570 | 638.6",
+    "obs": "tabela \"Lower heating value for some organic compounds (at 25 °C)\" = LHV (água VAPOR), marcada [citation needed] na Wikipedia"
+   },
+   {
+    "valor": 19.93,
+    "valor_texto": "19.930",
+    "unidade": "MJ/kg (= kJ/g)",
+    "fonte": "Wikipedia (en): Heat of combustion",
+    "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+    "trecho": "| Methanol | 19.930 | 15.78 | 8,570 | 638.6",
+    "obs": "mesma tabela (LHV)"
+   },
+   {
+    "valor": -726.1,
+    "valor_texto": "−726.1",
+    "unidade": "kJ/mol",
+    "fonte": "OpenStax Chemistry 2e: 5-3-enthalpy",
+    "url": "https://openstax.org/books/chemistry-2e/pages/5-3-enthalpy",
+    "trecho": "| methanol | CH3OH(l)+32O2(g)⟶CO2(g)+2H2O(l)CH3OH(l)+32O2(g)⟶CO2(g)+2H2O(l) | −726.1",
+    "obs": "Tabela 5.2 (ΔHc° a 25 °C, água líquida)"
+   }
+  ],
+  "glicose": [
+   {
+    "valor": 2805,
+    "valor_texto": "2,805",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Glucose",
+    "url": "https://en.wikipedia.org/wiki/Glucose",
+    "trecho": "Heat of combustion, higher value (HHV) | 2,805 kJ/mol",
+    "obs": "caixa de dados"
+   },
+   {
+    "valor": "-2805.0 ± 1.3",
+    "valor_texto": "-2805.0 ± 1.3",
+    "unidade": "kJ/mol",
+    "fonte": "NIST Chemistry WebBook (nist_alpha_glucose_cond)",
+    "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C492626&Units=SI&Mask=2",
+    "trecho": "| ΔcH°solid | -2805.0 ± 1.3 | kJ/mol | Ccb | Ponomarev and Migarskaya, 1960",
+    "obs": "α-D-glicose sólida"
+   }
+  ],
+  "glicose_poder_calorifico_kJ_por_g": null,
+  "extras": {
+   "C2H2": [
+    {
+     "valor": 1300,
+     "valor_texto": "1,300",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Heat of combustion",
+     "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+     "trecho": "| Acetylene | 49.9 | 21,500 | 1,300",
+     "obs": "tabela \"Higher heating value of some less common fuels\""
+    },
+    {
+     "valor": 49.9,
+     "valor_texto": "49.9",
+     "unidade": "MJ/kg (= kJ/g)",
+     "fonte": "Wikipedia (en): Heat of combustion",
+     "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+     "trecho": "| Acetylene | 49.9 | 21,500 | 1,300",
+     "obs": "mesma tabela (HHV)"
+    },
+    {
+     "valor": -1301.1,
+     "valor_texto": "−1301.1",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: 5-3-enthalpy",
+     "url": "https://openstax.org/books/chemistry-2e/pages/5-3-enthalpy",
+     "trecho": "| acetylene | C2H2(g)+52O2(g)⟶2CO2(g)+H2O(l)C2H2(g)+52O2(g)⟶2CO2(g)+H2O(l) | −1301.1",
+     "obs": "Tabela 5.2 (ΔHc° a 25 °C, água líquida)"
+    }
+   ],
+   "C6H6": [
+    {
+     "valor": 3268,
+     "valor_texto": "3,268",
+     "unidade": "kJ/mol",
+     "fonte": "Wikipedia (en): Heat of combustion",
+     "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+     "trecho": "| Benzene | 41.8 | 18,000 | 3,268",
+     "obs": "tabela \"Higher heating value of some less common fuels\""
+    },
+    {
+     "valor": 41.8,
+     "valor_texto": "41.8",
+     "unidade": "MJ/kg (= kJ/g)",
+     "fonte": "Wikipedia (en): Heat of combustion",
+     "url": "https://en.wikipedia.org/wiki/Heat_of_combustion",
+     "trecho": "| Benzene | 41.8 | 18,000 | 3,268",
+     "obs": "mesma tabela (HHV)"
+    }
+   ],
+   "CO": [
+    {
+     "valor": -283.0,
+     "valor_texto": "−283.0",
+     "unidade": "kJ/mol",
+     "fonte": "OpenStax Chemistry 2e: 5-3-enthalpy",
+     "url": "https://openstax.org/books/chemistry-2e/pages/5-3-enthalpy",
+     "trecho": "| carbon monoxide | CO(g)+12O2(g)⟶CO2(g)CO(g)+12O2(g)⟶CO2(g) | −283.0",
+     "obs": "Tabela 5.2 (ΔHc° a 25 °C, água líquida)"
+    }
+   ]
+  }
+ },
+ "acidos": {
+  "acetico": [
+   {
+    "valor": 4.756,
+    "valor_texto": "4.756",
+    "unidade": "pKa",
+    "fonte": "Wikipedia (en): Acetic acid",
+    "url": "https://en.wikipedia.org/wiki/Acetic_acid",
+    "trecho": "| Acidity (pKa) | 4.756",
+    "obs": "caixa de dados (a caixa vale para 25 °C, 100 kPa, salvo indicação)"
+   },
+   {
+    "valor": 1.8e-05,
+    "valor_texto": "1.8 ×× 10−5",
+    "unidade": "Ka",
+    "fonte": "OpenStax Chemistry 2e: h-ionization-constants-of-weak-acids",
+    "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+    "trecho": "| acetic | CH3CO2H | 1.8 ×× 10−5",
+    "obs": "Apêndice H \"Ka at 25 °C\""
+   }
+  ],
+  "formico": [
+   {
+    "valor": 3.745,
+    "valor_texto": "3.745[3]",
+    "unidade": "pKa",
+    "fonte": "Wikipedia (en): Formic acid",
+    "url": "https://en.wikipedia.org/wiki/Formic_acid",
+    "trecho": "| Acidity (pKa) | 3.745[3]",
+    "obs": "caixa de dados (a caixa vale para 25 °C, 100 kPa, salvo indicação)"
+   },
+   {
+    "valor": 0.00018,
+    "valor_texto": "1.8 ×× 10−4",
+    "unidade": "Ka",
+    "fonte": "OpenStax Chemistry 2e: h-ionization-constants-of-weak-acids",
+    "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+    "trecho": "| formic | HCO2H | 1.8 ×× 10−4",
+    "obs": "Apêndice H \"Ka at 25 °C\""
+   }
+  ],
+  "benzoico": [
+   {
+    "valor": 4.202,
+    "valor_texto": "4.202",
+    "unidade": "pKa",
+    "fonte": "Wikipedia (en): Benzoic acid",
+    "url": "https://en.wikipedia.org/wiki/Benzoic_acid",
+    "trecho": "| Acidity (pKa) | 4.202 (H2O)",
+    "obs": "caixa de dados, em água"
+   }
+  ],
+  "fluoridrico": [
+   {
+    "valor": 3.17,
+    "valor_texto": "3.17[2]",
+    "unidade": "pKa",
+    "fonte": "Wikipedia (en): Hydrofluoric acid",
+    "url": "https://en.wikipedia.org/wiki/Hydrofluoric_acid",
+    "trecho": "| Acidity (pKa) | 3.17[2]",
+    "obs": "caixa de dados (a caixa vale para 25 °C, 100 kPa, salvo indicação)"
+   },
+   {
+    "valor": 0.00066,
+    "valor_texto": "6.6×10−4",
+    "unidade": "Ka",
+    "fonte": "Wikipedia (en): Hydrofluoric acid",
+    "url": "https://en.wikipedia.org/wiki/Hydrofluoric_acid",
+    "trecho": "acid ionization constant Ka = 6.6×10−4 (or pKa = 3.18)",
+    "obs": "texto da mesma página (diverge levemente da caixa: 3.17 × 3.18)"
+   },
+   {
+    "valor": 0.00064,
+    "valor_texto": "6.4 ×× 10−4",
+    "unidade": "Ka",
+    "fonte": "OpenStax Chemistry 2e: h-ionization-constants-of-weak-acids",
+    "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+    "trecho": "| hydrofluoric | HF | 6.4 ×× 10−4",
+    "obs": "Apêndice H \"Ka at 25 °C\""
+   }
+  ],
+  "cianidrico": [
+   {
+    "valor": 9.21,
+    "valor_texto": "9.21",
+    "unidade": "pKa",
+    "fonte": "Wikipedia (en): Hydrogen cyanide",
+    "url": "https://en.wikipedia.org/wiki/Hydrogen_cyanide",
+    "trecho": "| Acidity (pKa) | 9.21 (in water)"
+   },
+   {
+    "valor": 4.9e-10,
+    "valor_texto": "4.9 ×× 10−10",
+    "unidade": "Ka",
+    "fonte": "OpenStax Chemistry 2e: h-ionization-constants-of-weak-acids",
+    "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+    "trecho": "| hydrocyanic | HCN | 4.9 ×× 10−10",
+    "obs": "Apêndice H \"Ka at 25 °C\""
+   }
+  ],
+  "hipocloroso": [
+   {
+    "valor": 7.53,
+    "valor_texto": "7.53[1]",
+    "unidade": "pKa",
+    "fonte": "Wikipedia (en): Hypochlorous acid",
+    "url": "https://en.wikipedia.org/wiki/Hypochlorous_acid",
+    "trecho": "| Acidity (pKa) | 7.53[1]",
+    "obs": "caixa de dados (a caixa vale para 25 °C, 100 kPa, salvo indicação)"
+   },
+   {
+    "valor": 2.9e-08,
+    "valor_texto": "2.9 ×× 10−8",
+    "unidade": "Ka",
+    "fonte": "OpenStax Chemistry 2e: h-ionization-constants-of-weak-acids",
+    "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+    "trecho": "| hypochlorous | HClO | 2.9 ×× 10−8",
+    "obs": "Apêndice H \"Ka at 25 °C\""
+   }
+  ],
+  "nitroso": [
+   {
+    "valor": 3.15,
+    "valor_texto": "3.15[2]",
+    "unidade": "pKa",
+    "fonte": "Wikipedia (en): Nitrous acid",
+    "url": "https://en.wikipedia.org/wiki/Nitrous_acid",
+    "trecho": "| Acidity (pKa) | 3.15[2]",
+    "obs": "caixa de dados (a caixa vale para 25 °C, 100 kPa, salvo indicação)"
+   },
+   {
+    "valor": 0.00046,
+    "valor_texto": "4.6 ×× 10−4",
+    "unidade": "Ka",
+    "fonte": "OpenStax Chemistry 2e: h-ionization-constants-of-weak-acids",
+    "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+    "trecho": "| nitrous | HNO2 | 4.6 ×× 10−4",
+    "obs": "Apêndice H \"Ka at 25 °C\""
+   }
+  ],
+  "carbonico": {
+   "pKa1": [
+    {
+     "valor": 6.35,
+     "valor_texto": "6.35",
+     "unidade": "pKa",
+     "fonte": "Wikipedia (en): Carbonic acid",
+     "url": "https://en.wikipedia.org/wiki/Carbonic_acid",
+     "trecho": "pKa1 = 6.35 (hydrous)",
+     "obs": "\"hydrous\" = constante aparente, CO2(aq)+H2CO3 juntos; é o valor usado em prova"
+    },
+    {
+     "valor": 3.75,
+     "valor_texto": "3.75",
+     "unidade": "pKa",
+     "fonte": "Wikipedia (en): Carbonic acid",
+     "url": "https://en.wikipedia.org/wiki/Carbonic_acid",
+     "trecho": "pKa1 = 3.75 (25 °C; anhydrous)",
+     "obs": "\"anhydrous\" = H2CO3 verdadeiro; NÃO é o de prova"
+    },
+    {
+     "valor": 4.3e-07,
+     "valor_texto": "4.3 ×× 10−7",
+     "unidade": "Ka1",
+     "fonte": "OpenStax Chemistry 2e: h-ionization-constants-of-weak-acids",
+     "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+     "trecho": "| carbonic | H2CO3 | 4.3 ×× 10−7",
+     "obs": "Apêndice H"
+    }
+   ],
+   "pKa2": [
+    {
+     "valor": 10.33,
+     "valor_texto": "10.33",
+     "unidade": "pKa",
+     "fonte": "Wikipedia (en): Carbonic acid",
+     "url": "https://en.wikipedia.org/wiki/Carbonic_acid",
+     "trecho": "pKa2 = 10.33["
+    },
+    {
+     "valor": 4.7e-11,
+     "valor_texto": "4.7 ×× 10−11",
+     "unidade": "Ka2",
+     "fonte": "OpenStax Chemistry 2e: h-ionization-constants-of-weak-acids",
+     "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+     "trecho": "| carbonic | H2CO3 | 4.3 ×× 10−7 | | | 4.7 ×× 10−11",
+     "obs": "Apêndice H, linha seguinte"
+    }
+   ]
+  },
+  "fosforico": {
+   "pKa1": [
+    {
+     "valor": 2.14,
+     "valor_texto": "2.14",
+     "unidade": "pKa",
+     "fonte": "Wikipedia (en): Phosphoric acid",
+     "url": "https://en.wikipedia.org/wiki/Phosphoric_acid",
+     "trecho": "H3PO4 ⇌ H2PO4− + H+, pKa1 = 2.14"
+    },
+    {
+     "valor": 0.0075,
+     "valor_texto": "7.5 ×× 10−3",
+     "unidade": "Ka1",
+     "fonte": "OpenStax Chemistry 2e: h-ionization-constants-of-weak-acids",
+     "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+     "trecho": "| phosphoric | H3PO4 | 7.5 ×× 10−3"
+    }
+   ],
+   "pKa2": [
+    {
+     "valor": 7.2,
+     "valor_texto": "7.20",
+     "unidade": "pKa",
+     "fonte": "Wikipedia (en): Phosphoric acid",
+     "url": "https://en.wikipedia.org/wiki/Phosphoric_acid",
+     "trecho": "H2PO4− ⇌ HPO42− + H+, pKa2 = 7.20"
+    },
+    {
+     "valor": 6.2e-08,
+     "valor_texto": "6.2 ×× 10−8",
+     "unidade": "Ka2",
+     "fonte": "OpenStax Chemistry 2e: h-ionization-constants-of-weak-acids",
+     "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+     "trecho": "| phosphoric | H3PO4 | 7.5 ×× 10−3 | | | 6.2 ×× 10−8"
+    }
+   ],
+   "pKa3": [
+    {
+     "valor": 12.37,
+     "valor_texto": "12.37",
+     "unidade": "pKa",
+     "fonte": "Wikipedia (en): Phosphoric acid",
+     "url": "https://en.wikipedia.org/wiki/Phosphoric_acid",
+     "trecho": "HPO42− ⇌ PO43− + H+, pKa3 = 12.37"
+    },
+    {
+     "valor": 4.2e-13,
+     "valor_texto": "4.2 ×× 10−13",
+     "unidade": "Ka3",
+     "fonte": "OpenStax Chemistry 2e: h-ionization-constants-of-weak-acids",
+     "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+     "trecho": "| phosphoric | H3PO4 | 7.5 ×× 10−3 | | | 6.2 ×× 10−8 | | 4.2 ×× 10−13"
+    }
+   ]
+  },
+  "sulfidrico_pKa1": [
+   {
+    "valor": 7.0,
+    "valor_texto": "7.0",
+    "unidade": "pKa",
+    "fonte": "Wikipedia (en): Hydrogen sulfide",
+    "url": "https://en.wikipedia.org/wiki/Hydrogen_sulfide",
+    "trecho": "| Acidity (pKa) | 7.0",
+    "obs": "caixa de dados"
+   },
+   {
+    "valor": 6.9,
+    "valor_texto": "6.9",
+    "unidade": "pKa",
+    "fonte": "Wikipedia (en): Hydrogen sulfide",
+    "url": "https://en.wikipedia.org/wiki/Hydrogen_sulfide",
+    "trecho": "weak acid (pKa = 6.9 in 0.01–0.1 mol/litre solutions at 18 °C)",
+    "obs": "a 18 °C"
+   },
+   {
+    "valor": 8.9e-08,
+    "valor_texto": "8.9 ×× 10−8",
+    "unidade": "Ka",
+    "fonte": "OpenStax Chemistry 2e: h-ionization-constants-of-weak-acids",
+    "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+    "trecho": "| hydrogen sulfide | H2S | 8.9 ×× 10−8",
+    "obs": "Apêndice H \"Ka at 25 °C\""
+   }
+  ],
+  "amonio": [
+   {
+    "valor": 9.25,
+    "valor_texto": "9.25",
+    "unidade": "pKa",
+    "fonte": "Wikipedia (en): Ammonium",
+    "url": "https://en.wikipedia.org/wiki/Ammonium",
+    "trecho": "| Acidity (pKa) | 9.25",
+    "obs": "caixa de dados (a caixa vale para 25 °C, 100 kPa, salvo indicação)"
+   },
+   {
+    "valor": 9.24,
+    "valor_texto": "9.24",
+    "unidade": "pKa",
+    "fonte": "Wikipedia (en): Ammonia",
+    "url": "https://en.wikipedia.org/wiki/Ammonia",
+    "trecho": "| Acidity (pKa) | 32.5 (−33 °C),[6] 9.24 (of ammonium)"
+   },
+   {
+    "valor": 4.75,
+    "valor_texto": "4.75",
+    "unidade": "pKb (da amônia)",
+    "fonte": "Wikipedia (en): Ammonia",
+    "url": "https://en.wikipedia.org/wiki/Ammonia",
+    "trecho": "| Basicity (pKb) | 4.75"
+   },
+   {
+    "valor": 1.8e-05,
+    "valor_texto": "1.8 ×× 10−5",
+    "unidade": "Kb (da amônia)",
+    "fonte": "OpenStax Chemistry 2e: i-ionization-constants-of-weak-bases",
+    "url": "https://openstax.org/books/chemistry-2e/pages/i-ionization-constants-of-weak-bases",
+    "trecho": "| ammonia | | 1.8 ×× 10−5",
+    "obs": "Apêndice I \"Kb at 25 °C\""
+   }
+  ],
+  "latico": [
+   {
+    "valor": 3.86,
+    "valor_texto": "3.86",
+    "unidade": "pKa",
+    "fonte": "Wikipedia (en): Lactic acid",
+    "url": "https://en.wikipedia.org/wiki/Lactic_acid",
+    "trecho": "| Acidity (pKa) | 3.86",
+    "obs": "caixa de dados (o segundo valor, 15.1, é do OH)"
+   }
+  ]
+ },
+ "kps": {
+  "AgCl": [
+   {
+    "valor": 1.77e-10,
+    "valor_texto": "1.77×10−10",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Silver chloride",
+    "url": "https://en.wikipedia.org/wiki/Silver_chloride",
+    "trecho": "Solubility product (Ksp) | 1.77×10−10",
+    "obs": "caixa de dados da página do sal (padrão da caixa: 25 °C)"
+   },
+   {
+    "valor": 1.6e-10,
+    "valor_texto": "1.6 ×× 10−10",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| AgCl | 1.6 ×× 10−10",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   }
+  ],
+  "AgBr": [
+   {
+    "valor": 5.4e-13,
+    "valor_texto": "5.4 × 10 −13",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Silver bromide",
+    "url": "https://en.wikipedia.org/wiki/Silver_bromide",
+    "trecho": "Solubility product (Ksp) | 5.4 × 10 −13",
+    "obs": "caixa de dados da página do sal (padrão da caixa: 25 °C)"
+   },
+   {
+    "valor": 5e-13,
+    "valor_texto": "5.0 ×× 10−13",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| AgBr | 5.0 ×× 10−13",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   },
+   {
+    "valor": 5.2e-13,
+    "valor_texto": "5.2 × 10−13",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Silver chloride",
+    "url": "https://en.wikipedia.org/wiki/Silver_chloride",
+    "trecho": "For AgBr and AgI, the Ksp values are 5.2 × 10−13 and 8.3 × 10−17",
+    "obs": "texto da página do AgCl (diverge da caixa do AgBr)"
+   }
+  ],
+  "AgI": [
+   {
+    "valor": 8.52e-17,
+    "valor_texto": "8.52 × 10 −17",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Silver iodide",
+    "url": "https://en.wikipedia.org/wiki/Silver_iodide",
+    "trecho": "Solubility product (Ksp) | 8.52 × 10 −17",
+    "obs": "caixa de dados da página do sal (padrão da caixa: 25 °C)"
+   },
+   {
+    "valor": 1.5e-16,
+    "valor_texto": "1.5 ×× 10−16",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| AgI | 1.5 ×× 10−16",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   },
+   {
+    "valor": 8.3e-17,
+    "valor_texto": "8.3 × 10−17",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Silver chloride",
+    "url": "https://en.wikipedia.org/wiki/Silver_chloride",
+    "trecho": "For AgBr and AgI, the Ksp values are 5.2 × 10−13 and 8.3 × 10−17",
+    "obs": "texto da página do AgCl"
+   }
+  ],
+  "Ag2CrO4": [
+   {
+    "valor": 1.12e-12,
+    "valor_texto": "1.12×10−12",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Silver chromate",
+    "url": "https://en.wikipedia.org/wiki/Silver_chromate",
+    "trecho": "Solubility product (Ksp) | 1.12×10−12",
+    "obs": "caixa de dados da página do sal (padrão da caixa: 25 °C)"
+   },
+   {
+    "valor": 9e-12,
+    "valor_texto": "9.0 ×× 10−12",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| Ag2CrO4 | 9.0 ×× 10−12",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   }
+  ],
+  "BaSO4": [
+   {
+    "valor": 1.0842e-10,
+    "valor_texto": "1.0842 × 10−10",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Barium sulfate",
+    "url": "https://en.wikipedia.org/wiki/Barium_sulfate",
+    "trecho": "Solubility product (Ksp) | 1.0842 × 10−10 (25 °C)",
+    "obs": "caixa de dados da página do sal (padrão da caixa: 25 °C)"
+   },
+   {
+    "valor": 2.3e-08,
+    "valor_texto": "2.3 ×× 10−8",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| BaSO4 | 2.3 ×× 10−8",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   }
+  ],
+  "CaCO3": [
+   {
+    "valor": 3.3e-09,
+    "valor_texto": "3.3×10−9",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Calcium carbonate",
+    "url": "https://en.wikipedia.org/wiki/Calcium_carbonate",
+    "trecho": "Solubility product (Ksp) | 3.3×10−9",
+    "obs": "caixa de dados da página do sal (padrão da caixa: 25 °C)"
+   },
+   {
+    "valor": "3.7×10−9 to 8.7×10−9",
+    "valor_texto": "3.7×10−9 to 8.7×10−9",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Calcium carbonate",
+    "url": "https://en.wikipedia.org/wiki/Calcium_carbonate",
+    "trecho": "Ksp = 3.7×10−9 to 8.7×10−9 at 25 °C",
+    "obs": "faixa \"depending upon the data source\""
+   },
+   {
+    "valor": 8.7e-09,
+    "valor_texto": "8.7 ×× 10−9",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| CaCO3 | 8.7 ×× 10−9",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   }
+  ],
+  "CaF2": [
+   {
+    "valor": 3.9e-11,
+    "valor_texto": "3.9 × 10−11",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Calcium fluoride",
+    "url": "https://en.wikipedia.org/wiki/Calcium_fluoride",
+    "trecho": "Solubility product (Ksp) | 3.9 × 10−11",
+    "obs": "caixa de dados da página do sal (padrão da caixa: 25 °C)"
+   },
+   {
+    "valor": 4e-11,
+    "valor_texto": "4.0 ×× 10−11",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| CaF2 | 4.0 ×× 10−11",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   }
+  ],
+  "Ca(OH)2": [
+   {
+    "valor": 5.02e-06,
+    "valor_texto": "5.02×10−6",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Calcium hydroxide",
+    "url": "https://en.wikipedia.org/wiki/Calcium_hydroxide",
+    "trecho": "Solubility product (Ksp) | 5.02×10−6",
+    "obs": "caixa de dados da página do sal (padrão da caixa: 25 °C)"
+   },
+   {
+    "valor": 1.3e-06,
+    "valor_texto": "1.3 ×× 10−6",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| Ca(OH)2 | 1.3 ×× 10−6",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   }
+  ],
+  "Mg(OH)2": [
+   {
+    "valor": 5.61e-12,
+    "valor_texto": "5.61×10−12",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Magnesium hydroxide",
+    "url": "https://en.wikipedia.org/wiki/Magnesium_hydroxide",
+    "trecho": "Solubility product (Ksp) | 5.61×10−12",
+    "obs": "caixa de dados da página do sal (padrão da caixa: 25 °C)"
+   },
+   {
+    "valor": 8.9e-12,
+    "valor_texto": "8.9 ×× 10−12",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| Mg(OH)2 | 8.9 ×× 10−12",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   }
+  ],
+  "PbCl2": [
+   {
+    "valor": 1.7e-05,
+    "valor_texto": "1.7×10−5",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Lead(II) chloride",
+    "url": "https://en.wikipedia.org/wiki/Lead(II)_chloride",
+    "trecho": "Solubility product (Ksp) | 1.7×10−5 (20 °C)",
+    "obs": "caixa de dados; ATENÇÃO: a 20 °C"
+   },
+   {
+    "valor": 1.6e-05,
+    "valor_texto": "1.6 ×× 10−5",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| PbCl2 | 1.6 ×× 10−5",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   }
+  ],
+  "PbI2": [
+   {
+    "valor": 4.41e-09,
+    "valor_texto": "4.41×10−9",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Lead(II) iodide",
+    "url": "https://en.wikipedia.org/wiki/Lead(II)_iodide",
+    "trecho": "Solubility product (Ksp) | 4.41×10−9 (20 °C)",
+    "obs": "caixa de dados; ATENÇÃO: a 20 °C"
+   },
+   {
+    "valor": 1.4e-08,
+    "valor_texto": "1.4 ×× 10−8",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| PbI2 | 1.4 ×× 10−8",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   }
+  ],
+  "Fe(OH)3": [
+   {
+    "valor": 2.79e-39,
+    "valor_texto": "2.79×10−39",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Iron(III) oxide-hydroxide",
+    "url": "https://en.wikipedia.org/wiki/Iron(III)_oxide-hydroxide",
+    "trecho": "Solubility product (Ksp) | 2.79×10−39 for Fe(OH)3",
+    "obs": "caixa de dados da página \"Iron(III) oxide-hydroxide\""
+   },
+   {
+    "valor": 4e-38,
+    "valor_texto": "4 ×× 10−38",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| Fe(OH)3 | 4 ×× 10−38",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   }
+  ],
+  "CaSO4": [
+   {
+    "valor": 4.93e-05,
+    "valor_texto": "4.93 × 10−5",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Calcium sulfate",
+    "url": "https://en.wikipedia.org/wiki/Calcium_sulfate",
+    "trecho": "Solubility product (Ksp) | 4.93 × 10−5 mol2L−2 (anhydrous)",
+    "obs": "anidro"
+   },
+   {
+    "valor": 3.14e-05,
+    "valor_texto": "3.14 × 10−5",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Calcium sulfate",
+    "url": "https://en.wikipedia.org/wiki/Calcium_sulfate",
+    "trecho": "3.14 × 10−5 (dihydrate)",
+    "obs": "di-hidratado"
+   },
+   {
+    "valor": 6.1e-05,
+    "valor_texto": "6.1 ×× 10−5",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| CaSO4·2H2O | 6.1 ×× 10−5",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   },
+   {
+    "valor": 4.93e-05,
+    "valor_texto": "4.93×10−5",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Solubility equilibrium",
+    "url": "https://en.wikipedia.org/wiki/Solubility_equilibrium",
+    "trecho": "for calcium sulfate, with Ksp = 4.93×10−5 mol2 dm−6"
+   }
+  ],
+  "Al(OH)3": [
+   {
+    "valor": 3e-34,
+    "valor_texto": "3×10−34",
+    "unidade": "Ksp",
+    "fonte": "Wikipedia (en): Aluminium hydroxide",
+    "url": "https://en.wikipedia.org/wiki/Aluminium_hydroxide",
+    "trecho": "Solubility product (Ksp) | 3×10−34",
+    "obs": "caixa de dados da página do sal (padrão da caixa: 25 °C)"
+   },
+   {
+    "valor": 2e-32,
+    "valor_texto": "2 ×× 10−32",
+    "unidade": "Ksp",
+    "fonte": "OpenStax Chemistry 2e: j-solubility-products",
+    "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    "trecho": "| Al(OH)3 | 2 ×× 10−32",
+    "obs": "Apêndice J \"Ksp at 25 °C\""
+   }
+  ]
+ },
+ "equilibrios": {
+  "N2O4 ⇌ 2 NO2": [
+   {
+    "valor": "6.53 ± 0.03 × 10−3",
+    "valor_texto": "6.53 ± 0.03 × 10−3",
+    "unidade": "Kc (concentrações em mol/L)",
+    "fonte": "Chemistry LibreTexts (libretexts_Averill_15.02)",
+    "url": "https://chem.libretexts.org/Bookshelves/General_Chemistry/Book:_General_Chemistry:_Principles_Patterns_and_Applications_(Averill)/15:_Chemical_Equilibrium/15.02:_The_Equilibrium_Constant",
+    "trecho": "at equilibrium the quantity [NO2]2/[N2O4] will always be 6.53 ± 0.03 × 10−3 at 25°C",
+    "obs": "25 °C; a página traz também a Tabela 15.2.1 com 5 experimentos"
+   },
+   {
+    "valor": 160.0,
+    "valor_texto": "1.6×102",
+    "unidade": "Kc do sentido INVERSO (2 NO2 ⇌ N2O4)",
+    "fonte": "OpenStax Chemistry 2e: 13-2-equilibrium-constants",
+    "url": "https://openstax.org/books/chemistry-2e/pages/13-2-equilibrium-constants",
+    "trecho": "(b) At equilibrium, Kc=Qc=[N2O4][NO2]2=0.0420.0162=1.6×102",
+    "obs": "25 °C; exemplo resolvido do livro ([NO2] = 0.016 M, [N2O4] = 0.042 M)"
+   },
+   {
+    "valor": 57.23,
+    "valor_texto": "+57.23",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Dinitrogen tetroxide",
+    "url": "https://en.wikipedia.org/wiki/Dinitrogen_tetroxide",
+    "trecho": "N2O4 ⇌ 2 NO2 (ΔH = +57.23 kJ/mol)",
+    "obs": "ΔH da reação"
+   },
+   {
+    "valor": 1.07e-05,
+    "valor_texto": "1.07×10−5",
+    "unidade": "Kc",
+    "fonte": "OpenStax Chemistry 2e: 13-exercises",
+    "url": "https://openstax.org/books/chemistry-2e/pages/13-exercises",
+    "trecho": "N2O4(g)⇌2NO2(g)Kc=1.07×10−5N2O4(g)⇌2NO2(g)Kc=1.07×10−5 in chloroform",
+    "obs": "em CLOROFÓRMIO (solução), enunciado de exercício; temperatura não dada no trecho"
+   }
+  ],
+  "N2 + 3 H2 ⇌ 2 NH3": [
+   {
+    "valor": 0.00434,
+    "valor_texto": "434 × 10−5",
+    "unidade": "Keq = p²(NH3)/(p(N2)·p³(H2)); a página NÃO diz a unidade de pressão",
+    "fonte": "Wikipedia (en): Haber process",
+    "url": "https://en.wikipedia.org/wiki/Haber_process",
+    "trecho": "| 300 | 434 × 10−5",
+    "obs": "300 °C; tabela \"Change of the equilibrium constant K as a function of temperature\""
+   },
+   {
+    "valor": 0.000164,
+    "valor_texto": "16.4 × 10−5",
+    "unidade": "Keq = p²(NH3)/(p(N2)·p³(H2)); a página NÃO diz a unidade de pressão",
+    "fonte": "Wikipedia (en): Haber process",
+    "url": "https://en.wikipedia.org/wiki/Haber_process",
+    "trecho": "| 400 | 16.4 × 10−5",
+    "obs": "400 °C; tabela \"Change of the equilibrium constant K as a function of temperature\""
+   },
+   {
+    "valor": 4.51e-05,
+    "valor_texto": "4.51 × 10−5",
+    "unidade": "Keq = p²(NH3)/(p(N2)·p³(H2)); a página NÃO diz a unidade de pressão",
+    "fonte": "Wikipedia (en): Haber process",
+    "url": "https://en.wikipedia.org/wiki/Haber_process",
+    "trecho": "| 450 | 4.51 × 10−5",
+    "obs": "450 °C; tabela \"Change of the equilibrium constant K as a function of temperature\""
+   },
+   {
+    "valor": 1.45e-05,
+    "valor_texto": "1.45 × 10−5",
+    "unidade": "Keq = p²(NH3)/(p(N2)·p³(H2)); a página NÃO diz a unidade de pressão",
+    "fonte": "Wikipedia (en): Haber process",
+    "url": "https://en.wikipedia.org/wiki/Haber_process",
+    "trecho": "| 500 | 1.45 × 10−5",
+    "obs": "500 °C; tabela \"Change of the equilibrium constant K as a function of temperature\""
+   },
+   {
+    "valor": 5.38e-06,
+    "valor_texto": "0.538 × 10−5",
+    "unidade": "Keq = p²(NH3)/(p(N2)·p³(H2)); a página NÃO diz a unidade de pressão",
+    "fonte": "Wikipedia (en): Haber process",
+    "url": "https://en.wikipedia.org/wiki/Haber_process",
+    "trecho": "| 550 | 0.538 × 10−5",
+    "obs": "550 °C; tabela \"Change of the equilibrium constant K as a function of temperature\""
+   },
+   {
+    "valor": 2.25e-06,
+    "valor_texto": "0.225 × 10−5",
+    "unidade": "Keq = p²(NH3)/(p(N2)·p³(H2)); a página NÃO diz a unidade de pressão",
+    "fonte": "Wikipedia (en): Haber process",
+    "url": "https://en.wikipedia.org/wiki/Haber_process",
+    "trecho": "| 600 | 0.225 × 10−5",
+    "obs": "600 °C; tabela \"Change of the equilibrium constant K as a function of temperature\""
+   },
+   {
+    "valor": -92.28,
+    "valor_texto": "−92.28",
+    "unidade": "kJ por mol de N2",
+    "fonte": "Wikipedia (en): Haber process",
+    "url": "https://en.wikipedia.org/wiki/Haber_process",
+    "trecho": "ΔH298 K∘=−92.28 kJ per mole of NA2",
+    "obs": "ΔH° a 298 K (\"NA2\", \"NHA3\" são artefatos da extração do MathML)"
+   },
+   {
+    "valor": "150–200",
+    "valor_texto": "150–200",
+    "unidade": "°C em que K = 1",
+    "fonte": "Wikipedia (en): Haber process",
+    "url": "https://en.wikipedia.org/wiki/Haber_process",
+    "trecho": "It becomes unity at around 150–200 °C"
+   },
+   {
+    "valor": 0.5,
+    "valor_texto": "0.50",
+    "unidade": "Kc",
+    "fonte": "OpenStax Chemistry 2e: 13-2-equilibrium-constants",
+    "url": "https://openstax.org/books/chemistry-2e/pages/13-2-equilibrium-constants",
+    "trecho": "N2(g)+3H2(g)⇌2NH3(g)Kc1=0.50at400°C",
+    "obs": "400 °C; valor usado num exemplo do livro"
+   }
+  ],
+  "H2 + I2 ⇌ 2 HI": [
+   {
+    "valor": 50.0,
+    "valor_texto": "50.0",
+    "unidade": "Kc",
+    "fonte": "OpenStax Chemistry 2e: 13-3-shifting-equilibria-le-chateliers-principle",
+    "url": "https://openstax.org/books/chemistry-2e/pages/13-3-shifting-equilibria-le-chateliers-principle",
+    "trecho": "H2(g)+I2(g)⇌2HI(g)Kc=50.0at400°C",
+    "obs": "400 °C"
+   },
+   {
+    "valor": 50.2,
+    "valor_texto": "50.2",
+    "unidade": "Kc",
+    "fonte": "OpenStax Chemistry 2e: 13-exercises",
+    "url": "https://openstax.org/books/chemistry-2e/pages/13-exercises",
+    "trecho": "H2(g)+I2(g)⇌2HI(g)Kc=50.2at448°C",
+    "obs": "448 °C (enunciado de exercício)"
+   },
+   {
+    "valor": 53,
+    "valor_texto": "53",
+    "unidade": "kJ",
+    "fonte": "OpenStax Chemistry 2e: 13-exercises",
+    "url": "https://openstax.org/books/chemistry-2e/pages/13-exercises",
+    "trecho": "H2(g)+I2(s)⇌2HI(g)ΔH=53kJ",
+    "obs": "ΔH com I2 SÓLIDO"
+   },
+   {
+    "valor": 26.5,
+    "valor_texto": "26.5",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Hydrogen iodide",
+    "url": "https://en.wikipedia.org/wiki/Hydrogen_iodide",
+    "trecho": "formation (ΔfH⦵298) | 26.5 kJ mol−1",
+    "obs": "ΔHf° do HI(g)"
+   },
+   {
+    "valor": 1.7,
+    "valor_texto": "1.7",
+    "unidade": "kJ/mol",
+    "fonte": "Wikipedia (en): Hydrogen iodide",
+    "url": "https://en.wikipedia.org/wiki/Hydrogen_iodide",
+    "trecho": "Gibbs free energy (ΔfG⦵) | 1.7 kJ mol−1",
+    "obs": "ΔGf° do HI(g)"
+   }
+  ]
+ },
+ "cinetica": {
+  "Ea_H2O2": {
+   "sem_catalisador": [
+    {
+     "valor": 75,
+     "valor_texto": "75",
+     "unidade": "kJ/mol",
+     "fonte": "Purdue ChemEd (demo sheet 22.13) (purdue_demo_22.13)",
+     "url": "https://chemed.chem.purdue.edu/genchem/demosheets/22.13.html",
+     "trecho": "activation energy of the reaction is about 75 kJ/mol in the absence of catalyst"
+    },
+    {
+     "valor": 75.3,
+     "valor_texto": "75.3",
+     "unidade": "kJ/mol",
+     "fonte": "Chemistry LibreTexts (libretexts_4.04_Ea_Catalysts)",
+     "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Kinetics/04%3A_Reaction_Mechanisms/4.04%3A_Ea_and_Catalysts",
+     "trecho": "At 300 K, the activation energy, Ea, for the decomposition of \\(\\ce{H2O2}\\) has been measured to be 75.3 kJ/mol",
+     "obs": "enunciado de exercício"
+    },
+    {
+     "valor": 75,
+     "valor_texto": "75",
+     "unidade": "kJ/mol",
+     "fonte": "Doc Brown's Chemistry (docbrown_ASA2rates1a)",
+     "url": "https://docbrown.info/page03/ASA2rates1a.htm",
+     "trecho": "(i) uncatalysed: 75 kJmol-1"
+    }
+   ],
+   "platina": [
+    {
+     "valor": 49,
+     "valor_texto": "49",
+     "unidade": "kJ/mol",
+     "fonte": "Purdue ChemEd (demo sheet 22.13) (purdue_demo_22.13)",
+     "url": "https://chemed.chem.purdue.edu/genchem/demosheets/22.13.html",
+     "trecho": "Platinum metal catalysts can lower the activation energy to about 49 kJ/mol"
+    },
+    {
+     "valor": 49,
+     "valor_texto": "49",
+     "unidade": "kJ/mol",
+     "fonte": "Doc Brown's Chemistry (docbrown_ASA2rates1a)",
+     "url": "https://docbrown.info/page03/ASA2rates1a.htm",
+     "trecho": "(ii) catalysed with colloidal platinum: 49 kJmol-1"
+    }
+   ],
+   "iodeto": [
+    {
+     "valor": 56.5,
+     "valor_texto": "56.5",
+     "unidade": "kJ/mol",
+     "fonte": "Chemistry LibreTexts (libretexts_4.04_Ea_Catalysts)",
+     "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Kinetics/04%3A_Reaction_Mechanisms/4.04%3A_Ea_and_Catalysts",
+     "trecho": "In the presence of a definite concentration of iodide ions, \\(\\ce{I-}\\), the activation energy Ea has been estimated to be 56.5 kJ/mol",
+     "obs": "enunciado de exercício"
+    }
+   ],
+   "catalase": [
+    {
+     "valor": "below 8",
+     "valor_texto": "below 8",
+     "unidade": "kJ/mol",
+     "fonte": "Purdue ChemEd (demo sheet 22.13) (purdue_demo_22.13)",
+     "url": "https://chemed.chem.purdue.edu/genchem/demosheets/22.13.html",
+     "trecho": "catalase enzyme (found in blood) lowers the activation energy to below 8 kJ/mol"
+    },
+    {
+     "valor": 8.4,
+     "valor_texto": "8.4",
+     "unidade": "kJ/mol",
+     "fonte": "Chemistry LibreTexts (libretexts_4.04_Ea_Catalysts)",
+     "url": "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Kinetics/04%3A_Reaction_Mechanisms/4.04%3A_Ea_and_Catalysts",
+     "trecho": "When catalyzed by the enzyme catalase, the activation energy is 8.4 kJ/mol",
+     "obs": "enunciado de exercício"
+    },
+    {
+     "valor": 23,
+     "valor_texto": "23",
+     "unidade": "kJ/mol",
+     "fonte": "Doc Brown's Chemistry (docbrown_ASA2rates1a)",
+     "url": "https://docbrown.info/page03/ASA2rates1a.htm",
+     "trecho": "(iii) catalysed by the enzyme catalase in you body: 23 kJmol-1",
+     "obs": "DIVERGE das outras duas fontes"
+    }
+   ],
+   "entalpia_reacao": [
+    {
+     "valor": -196.1,
+     "valor_texto": "-196.1",
+     "unidade": "kJ (para 2 mol de H2O2)",
+     "fonte": "Purdue ChemEd (demo sheet 22.13) (purdue_demo_22.13)",
+     "url": "https://chemed.chem.purdue.edu/genchem/demosheets/22.13.html",
+     "trecho": "2 H2O2 (aq) ---> 2 H2O (l) + O2 (g) enthalpy: -196.1 kJ/mol"
+    }
+   ],
+   "obs": "Nenhuma página da Wikipedia baixada (Hydrogen peroxide, Catalysis, Activation energy, Catalase) traz esses números; as fontes são páginas didáticas."
+  },
+  "meia_vida": {
+   "C-14": [
+    {
+     "valor": "5700±30",
+     "valor_texto": "5700±30",
+     "unidade": "anos",
+     "fonte": "Wikipedia (en): Carbon-14",
+     "url": "https://en.wikipedia.org/wiki/Carbon-14",
+     "trecho": "| Half-life (t1/2) | 5700±30 years"
+    },
+    {
+     "valor": 5730,
+     "valor_texto": "5730",
+     "unidade": "anos",
+     "fonte": "OpenStax Chemistry 2e: 21-3-radioactive-decay",
+     "url": "https://openstax.org/books/chemistry-2e/pages/21-3-radioactive-decay",
+     "trecho": "with the half-life of 614C 614C being 5730 years",
+     "obs": "DIVERGE da Wikipedia (valor tradicional de livro)"
+    }
+   ],
+   "I-131": [
+    {
+     "valor": 8.0249,
+     "valor_texto": "8.0249",
+     "unidade": "dias",
+     "fonte": "Wikipedia (en): Iodine-131",
+     "url": "https://en.wikipedia.org/wiki/Iodine-131",
+     "trecho": "| Half-life (t1/2) | 8.0249 d"
+    },
+    {
+     "valor": 0.138,
+     "valor_texto": "0.138",
+     "unidade": "d⁻¹ (constante de decaimento, não meia-vida)",
+     "fonte": "OpenStax Chemistry 2e: 12-4-integrated-rate-laws",
+     "url": "https://openstax.org/books/chemistry-2e/pages/12-4-integrated-rate-laws",
+     "trecho": "The decay is first-order with a rate constant of 0.138 d−1",
+     "obs": "enunciado sobre o iodo-131"
+    }
+   ],
+   "U-238": [
+    {
+     "valor": 4463000000.0,
+     "valor_texto": "4.463×109",
+     "unidade": "anos",
+     "fonte": "Wikipedia (en): Uranium-238",
+     "url": "https://en.wikipedia.org/wiki/Uranium-238",
+     "trecho": "| Half-life (t1/2) | 4.463×109 years"
+    },
+    {
+     "valor": 4500000000.0,
+     "valor_texto": "4.5 ×× 109",
+     "unidade": "anos",
+     "fonte": "OpenStax Chemistry 2e: 21-3-radioactive-decay",
+     "url": "https://openstax.org/books/chemistry-2e/pages/21-3-radioactive-decay",
+     "trecho": "U-238 decays into Pb-206 with a half-life of 4.5 ×× 109 y"
+    }
+   ]
+  },
+  "N2O5": [
+   {
+    "valor": 0.00062,
+    "valor_texto": "6.2 ×× 10−4",
+    "unidade": "min⁻¹",
+    "fonte": "OpenStax Chemistry 2e: 12-exercises",
+    "url": "https://openstax.org/books/chemistry-2e/pages/12-exercises",
+    "trecho": "rate constant for the first-order decomposition at 45 °C of dinitrogen pentoxide, N2O5, dissolved in chloroform, CHCl3, is 6.2 ×× 10−4 min−1",
+    "obs": "45 °C, em clorofórmio; enunciado de exercício (1ª ordem)"
+   }
+  ]
+ },
+ "ph_comum": {
+  "suco_de_limao": null,
+  "suco_de_lima (substituto, não é limão-siciliano)": [
+   {
+    "valor": "about 2",
+    "valor_texto": "about 2",
+    "unidade": "pH",
+    "fonte": "OpenStax Chemistry 2e: 14-2-ph-and-poh",
+    "url": "https://openstax.org/books/chemistry-2e/pages/14-2-ph-and-poh",
+    "trecho": "Lime juice is listed at a p H of about 2",
+    "obs": "descrição (texto alternativo) da Figura 14.2 do OpenStax; valor aproximado lido de um desenho"
+   }
+  ],
+  "vinagre": [
+   {
+    "valor": "2–3",
+    "valor_texto": "2–3",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): PH",
+    "url": "https://en.wikipedia.org/wiki/PH",
+    "trecho": "| Vinegar | 2–3",
+    "obs": "tabela de exemplos da página pH (faixa)"
+   },
+   {
+    "valor": "about 2.6",
+    "valor_texto": "about 2.6",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): Vinegar",
+    "url": "https://en.wikipedia.org/wiki/Vinegar",
+    "trecho": "5 to 8% acetic acid in water, with a pH of about 2.6",
+    "obs": "vinagre destilado"
+   }
+  ],
+  "cafe": [
+   {
+    "valor": "5–5.03",
+    "valor_texto": "5–5.03",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): PH",
+    "url": "https://en.wikipedia.org/wiki/PH",
+    "trecho": "| Black coffee | 5–5.03",
+    "obs": "tabela de exemplos da página pH (faixa)"
+   },
+   {
+    "valor": "just past 5",
+    "valor_texto": "just past 5",
+    "unidade": "pH",
+    "fonte": "OpenStax Chemistry 2e: 14-2-ph-and-poh",
+    "url": "https://openstax.org/books/chemistry-2e/pages/14-2-ph-and-poh",
+    "trecho": "Coffee is listed just past 5",
+    "obs": "descrição (texto alternativo) da Figura 14.2 do OpenStax; valor aproximado lido de um desenho"
+   }
+  ],
+  "leite": [
+   {
+    "valor": "6.5–6.8",
+    "valor_texto": "6.5–6.8",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): PH",
+    "url": "https://en.wikipedia.org/wiki/PH",
+    "trecho": "| Milk | 6.5–6.8",
+    "obs": "tabela de exemplos da página pH (faixa)"
+   },
+   {
+    "valor": "6.7 to 6.9",
+    "valor_texto": "6.7 to 6.9",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): Milk",
+    "url": "https://en.wikipedia.org/wiki/Milk",
+    "trecho": "The pH of cow's milk, ranging from 6.7 to 6.9"
+   }
+  ],
+  "sangue": [
+   {
+    "valor": "7.34–7.45",
+    "valor_texto": "7.34–7.45",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): PH",
+    "url": "https://en.wikipedia.org/wiki/PH",
+    "trecho": "| Blood (natural pH) | 7.34–7.45"
+   },
+   {
+    "valor": "7.35–7.45",
+    "valor_texto": "7.35–7.45",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): Blood",
+    "url": "https://en.wikipedia.org/wiki/Blood",
+    "trecho": "| pH | 7.35–7.45"
+   },
+   {
+    "valor": "just beyond 7",
+    "valor_texto": "just beyond 7",
+    "unidade": "pH",
+    "fonte": "OpenStax Chemistry 2e: 14-2-ph-and-poh",
+    "url": "https://openstax.org/books/chemistry-2e/pages/14-2-ph-and-poh",
+    "trecho": "Pure blood is just beyond 7",
+    "obs": "descrição (texto alternativo) da Figura 14.2 do OpenStax; valor aproximado lido de um desenho"
+   }
+  ],
+  "agua_do_mar": [
+   {
+    "valor": "7.5–8.4",
+    "valor_texto": "7.5–8.4",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): PH",
+    "url": "https://en.wikipedia.org/wiki/PH",
+    "trecho": "| Sea water | 7.5–8.4 |",
+    "obs": "tabela de exemplos da página pH (faixa)"
+   },
+   {
+    "valor": "7.5 and 8.4",
+    "valor_texto": "7.5 and 8.4",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): Seawater",
+    "url": "https://en.wikipedia.org/wiki/Seawater",
+    "trecho": "Seawater pH is typically limited to a range between 7.5 and 8.4"
+   },
+   {
+    "valor": 8.05,
+    "valor_texto": "8.05",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): Seawater",
+    "url": "https://en.wikipedia.org/wiki/Seawater",
+    "trecho": "average pH of the ocean surface fell from approximately 8.15 to 8.05",
+    "obs": "superfície, 2020"
+   }
+  ],
+  "leite_de_magnesia": [
+   {
+    "valor": "just past a p H of 10.5",
+    "valor_texto": "just past a p H of 10.5",
+    "unidade": "pH",
+    "fonte": "OpenStax Chemistry 2e: 14-2-ph-and-poh",
+    "url": "https://openstax.org/books/chemistry-2e/pages/14-2-ph-and-poh",
+    "trecho": "Milk of Magnesia is listed just past a p H of 10.5",
+    "obs": "descrição (texto alternativo) da Figura 14.2 do OpenStax; valor aproximado lido de um desenho"
+   },
+   {
+    "valor": 10.5,
+    "valor_texto": "10.5",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): Magnesium hydroxide",
+    "url": "https://en.wikipedia.org/wiki/Magnesium_hydroxide",
+    "trecho": "pH 10.5 for Mg(OH) 2",
+    "obs": "frase sobre alcalinização com Mg(OH)2, não sobre o remédio"
+   }
+  ],
+  "amoniaco_domestico": [
+   {
+    "valor": "11.0–11.5",
+    "valor_texto": "11.0–11.5",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): PH",
+    "url": "https://en.wikipedia.org/wiki/PH",
+    "trecho": "| Ammonia | 11.0–11.5",
+    "obs": "tabela de exemplos da página pH (faixa)"
+   },
+   {
+    "valor": "just before a pH of 12",
+    "valor_texto": "just before a pH of 12",
+    "unidade": "pH",
+    "fonte": "OpenStax Chemistry 2e: 14-2-ph-and-poh",
+    "url": "https://openstax.org/books/chemistry-2e/pages/14-2-ph-and-poh",
+    "trecho": "Household ammonia is listed just before a pH of 12",
+    "obs": "descrição (texto alternativo) da Figura 14.2 do OpenStax; valor aproximado lido de um desenho"
+   },
+   {
+    "valor": 11.63,
+    "valor_texto": "11.63",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): Ammonia solution",
+    "url": "https://en.wikipedia.org/wiki/Ammonia_solution",
+    "trecho": "In a 1 M ammonia solution, about 0.42% of the ammonia is converted to ammonium, equivalent to pH = 11.63",
+    "obs": "solução 1 M (cálculo da página)"
+   }
+  ],
+  "suco_gastrico": [
+   {
+    "valor": "1.0–1.5",
+    "valor_texto": "1.0–1.5",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): PH",
+    "url": "https://en.wikipedia.org/wiki/PH",
+    "trecho": "| Gastric acid | 1.0–1.5",
+    "obs": "tabela de exemplos da página pH (faixa)"
+   },
+   {
+    "valor": "1.5–3.5",
+    "valor_texto": "1.5–3.5",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): PH",
+    "url": "https://en.wikipedia.org/wiki/PH",
+    "trecho": "| Gastric acid | 1.5–3.5",
+    "obs": "tabela de compartimentos do corpo, mesma página (diverge da outra tabela)"
+   },
+   {
+    "valor": "between 1 and 3",
+    "valor_texto": "between 1 and 3",
+    "unidade": "pH",
+    "fonte": "Wikipedia (en): Gastric acid",
+    "url": "https://en.wikipedia.org/wiki/Gastric_acid",
+    "trecho": "diluted in the stomach lumen to a pH of between 1 and 3"
+   },
+   {
+    "valor": "about 1.5",
+    "valor_texto": "about 1.5",
+    "unidade": "pH",
+    "fonte": "OpenStax Chemistry 2e: 14-2-ph-and-poh",
+    "url": "https://openstax.org/books/chemistry-2e/pages/14-2-ph-and-poh",
+    "trecho": "Gastric juices are listed at a p H of about 1.5",
+    "obs": "descrição (texto alternativo) da Figura 14.2 do OpenStax; valor aproximado lido de um desenho"
+   }
+  ],
+  "refrigerante_de_cola": null,
+  "extras": {
+   "suco_de_laranja": [
+    {
+     "valor": "3.3–4.2",
+     "valor_texto": "3.3–4.2",
+     "unidade": "pH",
+     "fonte": "Wikipedia (en): PH",
+     "url": "https://en.wikipedia.org/wiki/PH",
+     "trecho": "| Orange juice | 3.3–4.2",
+     "obs": "tabela de exemplos da página pH (faixa)"
+    }
+   ],
+   "agua_sanitaria": [
+    {
+     "valor": 12.5,
+     "valor_texto": "12.5",
+     "unidade": "pH",
+     "fonte": "Wikipedia (en): PH",
+     "url": "https://en.wikipedia.org/wiki/PH",
+     "trecho": "| Bleach | 12.5",
+     "obs": "tabela de exemplos da página pH (faixa)"
+    }
+   ],
+   "vinho": [
+    {
+     "valor": "around 3.5",
+     "valor_texto": "around 3.5",
+     "unidade": "pH",
+     "fonte": "OpenStax Chemistry 2e: 14-2-ph-and-poh",
+     "url": "https://openstax.org/books/chemistry-2e/pages/14-2-ph-and-poh",
+     "trecho": "Wine is listed around 3.5",
+     "obs": "descrição (texto alternativo) da Figura 14.2 do OpenStax; valor aproximado lido de um desenho"
+    }
+   ]
+  },
+  "obs": "Suco de limão e refrigerante de cola: nenhuma página baixada (pH, Lemon, Lemon juice, Cola, Coca-Cola, Soft drink, Citric acid, Acid erosion) traz o número."
+ },
+ "constantes": {
+  "Faraday": [
+   {
+    "valor": 96485.33212,
+    "valor_texto": "96485.33212",
+    "unidade": "C/mol",
+    "fonte": "Wikipedia (en): Faraday constant",
+    "url": "https://en.wikipedia.org/wiki/Faraday_constant",
+    "trecho": "| Value | 96485.33212 C/mol"
+   }
+  ],
+  "R": [
+   {
+    "valor": 8.31446261815324,
+    "valor_texto": "8.31446261815324",
+    "unidade": "J/(mol·K)",
+    "fonte": "Wikipedia (en): Gas constant",
+    "url": "https://en.wikipedia.org/wiki/Gas_constant",
+    "trecho": "| 8.31446261815324 | J⋅K−1⋅mol−1"
+   }
+  ],
+  "caloria": [
+   {
+    "valor": 4.184,
+    "valor_texto": "4.184",
+    "unidade": "J",
+    "fonte": "Wikipedia (en): Calorie",
+    "url": "https://en.wikipedia.org/wiki/Calorie",
+    "trecho": "| Thermochemical calorie | calth | ≡ 4.184 J",
+    "obs": "caloria termoquímica (exata)"
+   },
+   {
+    "valor": 4.1855,
+    "valor_texto": "4.1855",
+    "unidade": "J",
+    "fonte": "Wikipedia (en): Calorie",
+    "url": "https://en.wikipedia.org/wiki/Calorie",
+    "trecho": "| 15 °C calorie | cal15 | ≈ 4.1855 J",
+    "obs": "caloria a 15 °C"
+   },
+   {
+    "valor": 4.1868,
+    "valor_texto": "4.1868",
+    "unidade": "J",
+    "fonte": "Wikipedia (en): Calorie",
+    "url": "https://en.wikipedia.org/wiki/Calorie",
+    "trecho": "| International Steam Table calorie (1956) | calIT | ≡ 4.1868 J",
+    "obs": "caloria IT"
+   }
+  ]
+ }
+}

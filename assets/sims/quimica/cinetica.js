@@ -100,4 +100,39 @@
       q("[data-o=A0]").textContent = n2(A0, 2) + " mol/L"; q("[data-o=k]").textContent = n2(k, 2) + " " + SIM.ordem.un[n];
     });
   };
+
+  /* ---------- F06 · equilíbrio dinâmico: A ⇌ B ----------
+     Cada molécula A vira B com probabilidade kd·dt; cada B vira A com ki·dt (duas reações de primeira ordem, uma contra a outra).
+     Velocidades: v_direta = kd·[A]; v_inversa = ki·[B]. No equilíbrio são iguais: [B]/[A] = kd/ki = K. Fração de B no equilíbrio: kd/(kd + ki) = K/(1 + K).
+     Curva lisa (a prevista): [B](t) = B_eq + (B₀ − B_eq)·e^(−(kd + ki)t). As bolinhas flutuam em volta dela, porque são poucas (200).
+     Conferido em Python (tools/quimica/confere-fq2.py): kd = 0,30 e ki = 0,10 → K = 3,0; 75% de B, partindo só de A ou só de B; tempo característico 1/(kd + ki) = 2,5 s. */
+  SIM.eqAB = { K: (kd, ki) => kd / ki, frB: (kd, ki) => kd / (kd + ki), B: (kd, ki, b0, t) => kd / (kd + ki) + (b0 - kd / (kd + ki)) * Math.exp(-(kd + ki) * t) };
+  /* nome: "Equilíbrio dinâmico: a reação não para, empata" · matéria: Química · tema: F06 */
+  SIM.qEquilibrio = (el, F) => {
+    const W = 700, H = 280, BX = 14, BY = 14, BW = 270, BH = 240, N = 200; let kd = 0.3, ki = 0.1, ps = [], t = 0, b0 = 0, hist = [], idas = 0, voltas = 0, janela = [];
+    el.insertAdjacentHTML("beforeend", `<div class="palco"><canvas width="${W * 2}" height="${H * 2}" style="width:${W}px;height:${H}px"></canvas></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div>${sl("Constante da reação direta (A → B)", "kd", 0.02, 0.6, 0.01, kd)}${sl("Constante da reação inversa (B → A)", "ki", 0.02, 0.6, 0.01, ki)}</div><div><div class="bts"><button class="bt peq" data-ini="0">começar só com A</button><button class="bt peq" data-ini="1">começar só com B</button><button class="bt peq" data-ini="0.5">metade de cada</button></div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink2)">Linha lisa: o previsto. Linha tremida: as 200 moléculas da caixa.</p></div></div>
+      <div class="status">Azul: A. Vermelho: B. As duas reações acontecem o tempo todo: A vira B e B vira A. No começo uma ganha; a concentração do reagente dela cai, ela freia, e a outra acelera, até as <b>duas velocidades empatarem</b>. A partir daí as concentrações param de mudar, mas as moléculas continuam trocando de cor: o equilíbrio é <b>dinâmico</b>. Comece só com A e depois só com B: o ponto de chegada é o mesmo. No equilíbrio, [B]/[A] = K, que é a razão das duas constantes de velocidade.</div>`);
+    const q = (s) => el.querySelector(s), cv = q("canvas"), cx = cv.getContext("2d"); cx.scale(2, 2);
+    const inicia = (fb) => { b0 = fb; ps = []; for (let i = 0; i < N; i++) { const a = Math.random() * 6.283; ps.push({ x: BX + 6 + Math.random() * (BW - 12), y: BY + 6 + Math.random() * (BH - 12), vx: 40 * Math.cos(a), vy: 40 * Math.sin(a), b: i < Math.round(fb * N) }); } t = 0; hist = [[0, fb]]; idas = voltas = 0; janela = []; };
+    const css = (n) => getComputedStyle(el).getPropertyValue(n).trim();
+    function passo(dt) { let i1 = 0, v1 = 0; ps.forEach((p) => { p.x += p.vx * dt; p.y += p.vy * dt; if (p.x < BX + 5 || p.x > BX + BW - 5) { p.vx = -p.vx; p.x = Math.max(BX + 5, Math.min(BX + BW - 5, p.x)); } if (p.y < BY + 5 || p.y > BY + BH - 5) { p.vy = -p.vy; p.y = Math.max(BY + 5, Math.min(BY + BH - 5, p.y)); } if (!p.b && Math.random() < kd * dt) { p.b = true; i1++; } else if (p.b && Math.random() < ki * dt) { p.b = false; v1++; } }); t += dt; idas += i1; voltas += v1; janela.push([t, i1, v1]); while (janela.length && janela[0][0] < t - 3) janela.shift(); if (t - hist[hist.length - 1][0] > 0.15) hist.push([t, ps.filter((p) => p.b).length / N]); }
+    inicia(0);
+    q("[data-c=kd]").addEventListener("input", (e) => { kd = +e.target.value; inicia(b0); }); q("[data-c=ki]").addEventListener("input", (e) => { ki = +e.target.value; inicia(b0); });
+    el.querySelectorAll("[data-ini]").forEach((b) => b.addEventListener("click", () => inicia(+b.dataset.ini)));
+    SIM.qEquilibrio._ult = { poe: (a, b, f) => { kd = a; ki = b; inicia(f); }, passos: (k) => { for (let i = 0; i < k; i++) passo(1 / 60); }, est: () => { const fb = ps.filter((p) => p.b).length / N, vi = janela.reduce((s, j) => s + j[1], 0), vv = janela.reduce((s, j) => s + j[2], 0); return { kd, ki, t, fb, K: kd / ki, Q: fb / (1 - fb), idas3: vi, voltas3: vv, prev: SIM.eqAB.frB(kd, ki) }; } };
+    anima(el, F, (dt) => {
+      passo(dt); const ink2 = css("--ink2"), ink3 = css("--ink3"), mA = css("--mA"), bad = css("--bad"), warn = css("--warn");
+      cx.clearRect(0, 0, W, H); cx.strokeStyle = ink3; cx.lineWidth = 1.5; cx.strokeRect(BX, BY, BW, BH); ps.forEach((p) => { cx.fillStyle = p.b ? bad : mA; cx.beginPath(); cx.arc(p.x, p.y, 4, 0, 7); cx.fill(); });
+      const gx = 330, gy = 240, gw = 330, gh = 200, tmax = Math.max(25, t), X = (x) => gx + (x / tmax) * gw, Y = (v) => gy - v * gh;
+      cx.strokeStyle = ink2; cx.lineWidth = 1.3; cx.beginPath(); cx.moveTo(gx, gy - gh - 8); cx.lineTo(gx, gy); cx.lineTo(gx + gw + 8, gy); cx.stroke();
+      const curva = (f, cor, w) => { cx.strokeStyle = cor; cx.lineWidth = w; cx.beginPath(); for (let k = 0; k <= 100; k++) { const x = (tmax * k) / 100, y = f(x); k ? cx.lineTo(X(x), Y(y)) : cx.moveTo(X(x), Y(y)); } cx.stroke(); };
+      cx.globalAlpha = 0.5; curva((x) => SIM.eqAB.B(kd, ki, b0, x), bad, 1.6); curva((x) => 1 - SIM.eqAB.B(kd, ki, b0, x), mA, 1.6); cx.globalAlpha = 1;
+      const tr = (sel, cor) => { cx.strokeStyle = cor; cx.lineWidth = 2.2; cx.beginPath(); hist.forEach((h, k) => (k ? cx.lineTo(X(h[0]), Y(sel(h[1]))) : cx.moveTo(X(h[0]), Y(sel(h[1]))))); cx.stroke(); }; tr((v) => v, bad); tr((v) => 1 - v, mA);
+      cx.fillStyle = ink2; cx.font = "13px Inter"; cx.textAlign = "left"; cx.fillText("fração das moléculas", gx + 8, gy - gh - 4); cx.textAlign = "right"; cx.fillText("tempo →", gx + gw + 6, gy + 17); cx.fillStyle = bad; cx.fillText("B", gx + gw, Y(hist[hist.length - 1][1]) - 6); cx.fillStyle = mA; cx.fillText("A", gx + gw, Y(1 - hist[hist.length - 1][1]) - 6);
+      const e = SIM.qEquilibrio._ult.est();
+      q("[data-v=lt]").innerHTML = vis("A / B agora", Math.round((1 - e.fb) * N) + " / " + Math.round(e.fb * N)) + vis("A → B nos últimos 3 s", e.idas3) + vis("B → A nos últimos 3 s", e.voltas3) + vis("Q = [B]/[A] agora", e.fb < 1 ? n2(e.Q, 2) : "∞") + vis("K = k direta / k inversa", n2(e.K, 2));
+      q("[data-o=kd]").textContent = n2(kd, 2) + " s⁻¹"; q("[data-o=ki]").textContent = n2(ki, 2) + " s⁻¹";
+    });
+  };
 })();

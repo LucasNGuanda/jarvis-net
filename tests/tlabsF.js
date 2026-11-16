@@ -28,6 +28,14 @@ const perto = (a, b, tol = 0.005) => Math.abs(a - b) <= tol * Math.max(1e-9, Mat
     const d1 = await od(1, 2, 0.1), d0 = await od(0, 2, 0.1), d2 = await od(2, 2, 0.1);
     ok(perto(d1.meia, o1.meia) && perto(d0.meia, 2 * o0.meia) && perto(d2.meia, o2.meia / 2), 'F05: dobrando [A]₀, a meia-vida não muda na ordem 1, dobra na ordem 0 e cai pela metade na ordem 2');
     await p.waitForTimeout(200); const l5 = await leitor('lab-ordem'); ok(/\[A\]²/.test(l5['lei de velocidade']) && /L\/\(mol·s\)/.test(l5['unidade de k']), 'F05: o mostrador dá a lei e a unidade de k da ordem escolhida → ' + l5['lei de velocidade'] + ' · ' + l5['unidade de k']); }
+  // ----- F06: equilíbrio dinâmico -----
+  if (temas.has('F06')) { await abre('F06');
+    const eqv = (kd, ki, f, k = 3600) => p.evaluate(([kd, ki, f, k]) => { let s = 0, n = 0; for (let r = 0; r < 6; r++) { SIM.qEquilibrio._ult.poe(kd, ki, f); SIM.qEquilibrio._ult.passos(k); for (let j = 0; j < 20; j++) { SIM.qEquilibrio._ult.passos(30); s += SIM.qEquilibrio._ult.est().fb; n++; } } const e = SIM.qEquilibrio._ult.est(); return { fb: s / n, K: e.K, prev: e.prev, idas: e.idas3, voltas: e.voltas3 }; }, [kd, ki, f, k]);
+    const a1 = await eqv(0.3, 0.1, 0), b1 = await eqv(0.3, 0.1, 1);
+    ok(perto(a1.K, 3) && perto(a1.prev, 0.75) && Math.abs(a1.fb - 0.75) < 0.03 && Math.abs(b1.fb - 0.75) < 0.03, 'F06: kd = 0,30 e ki = 0,10 (K = 3) → 75% de B, partindo só de A (' + a1.fb.toFixed(3) + ') ou só de B (' + b1.fb.toFixed(3) + ')');
+    const c1 = await eqv(0.1, 0.1, 0); ok(Math.abs(c1.fb - 0.5) < 0.03, 'F06: constantes iguais (K = 1) → metade de cada → ' + c1.fb.toFixed(3));
+    ok(a1.idas > 5 && a1.voltas > 5 && Math.abs(a1.idas - a1.voltas) < 0.6 * Math.max(a1.idas, a1.voltas), 'F06: no equilíbrio as duas reações continuam e empatam (A → B: ' + a1.idas + ' e B → A: ' + a1.voltas + ' nos últimos 3 s)');
+    ok(perto(await p.evaluate(() => SIM.eqAB.B(0.3, 0.1, 0, 2.5)), 0.75 * (1 - Math.exp(-1)), 1e-6), 'F06: a curva prevista chega a 63% do caminho em 1/(kd + ki) = 2,5 s'); }
   //MAIS
   // ----- gabaritos: em todo exercício de alternativas, clicar na letra do gabarito tem de dar "certo" -----
   for (const cod of ['F01', 'F02', 'F03', 'F04', 'F05', 'F06', 'F07', 'F08', 'F09', 'F10'].filter((c) => temas.has(c))) { await p.goto(RAIZ + '#/quimica/' + cod); await p.waitForTimeout(1300);

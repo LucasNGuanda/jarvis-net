@@ -64,7 +64,7 @@ window.CATALOGO.push(
     ["F03","Entropia e energia livre de Gibbs",[]],
     ["F04","Cinética: velocidade de reação e energia de ativação",[],true],
     ["F05","Leis de velocidade: ordem, mecanismo e meia-vida",[],true],
-    ["F06","Equilíbrio químico",[]],
+    ["F06","Equilíbrio químico: Kc, Kp e quociente de reação",[],true],
     ["F07","Le Chatelier",[]],
     ["F08","pH e pOH",[]],
     ["F09","Hidrólise e tampão",[]],

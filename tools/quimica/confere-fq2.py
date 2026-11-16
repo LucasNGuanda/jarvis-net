@@ -15,3 +15,11 @@ print("  laboratório ([A]0 = 1, k = 0,1): meias-vidas %.2f; %.2f; %.2f; em 10 s
 q = 0; seq = []
 for _ in range(4): q = q / 4 + 400; seq.append(q)
 print("  chefão: k %.3f; 8 h: %.0f mg; 50 mg em %.0f h; depois das doses: %s; limite %.1f; antes %.1f; meia-vida 8 h: %.0f; 16 em 16 h: %.1f" % (math.log(2) / 4, 400 / 4, 4 * math.log2(8), seq, 400 / (1 - 1 / 4), 400 / (1 - 1 / 4) / 4, 400 / (1 - 1 / 2), 400 / (1 - 1 / 4)))
+print("F06 equilíbrio")
+K = 6.53e-3
+x1 = (-K + math.sqrt(K * K + 16 * 0.1 * K)) / 8; x2 = (-K + math.sqrt(K * K + 8 * 0.1 * K)) / 4
+print("  laboratório A ⇌ B: kd 0,30, ki 0,10: K = %.2f; fração de B %.3f; tempo característico %.2f s" % (0.3 / 0.1, 0.3 / 0.4, 1 / 0.4))
+r = math.sqrt(50); x = r / (2 + r)
+print("  H2 + I2, 1,00 mol/L cada, Kc 50: x = %.4f; [HI] = %.3f; [H2] = %.3f; confere K = %.1f" % (x, 2 * x, 1 - x, (2 * x)**2 / (1 - x)**2))
+print("  N2O4: x = %.5f; alfa %.1f%%; [NO2] %.4f; [N2O4] %.4f; n %.4f; P %.3f atm; sem dissociar %.3f; Kp %.4f" % (x1, 100 * x1 / 0.1, 2 * x1, 0.1 - x1, 0.1 + x1, (0.1 + x1) * 0.082 * 298, 0.1 * 0.082 * 298, K * 0.082 * 298))
+print("  dobrando o volume: Q = %.3e (K/2 = %.3e); x = %.5f; alfa %.1f%%; [NO2] novo %.4f" % ((x1)**2 / ((0.1 - x1) / 2), K / 2, x2, 100 * x2 / 0.1, x2))
