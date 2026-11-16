@@ -297,6 +297,42 @@ if abs(sum(AMB["ar"].values()) - 99.964) > 0.01: erros.append(("composição do 
 if AMB["gwp"]["CO2"] != 1 or sorted(AMB["gwp"]["CH4"]) != [27, 30] or AMB["gwp"]["N2O"] != 273: erros.append(("GWP", AMB["gwp"]))
 if AMB["co2"] and abs((AMB["co2"] / AMB["co2pre"] - 1) * 100 - AMB["co2aumento"]) > 1: erros.append(("CO2: aumento não confere com a própria fonte", AMB["co2"], AMB["co2pre"], AMB["co2aumento"]))
 BIO["AMB"] = AMB
+
+# ---------- I08: química verde ----------
+# Reações para a economia atômica: [nome, tipo, reagentes [(coef, fórmula)], produtos [(coef, fórmula)], índice do produto desejado]. O gerador confere o balanço de átomos
+# e calcula a economia atômica (massa do produto desejado / massa de todos os reagentes), com H 1, C 12, N 14, O 16, Na 23, Cl 35,5, Ca 40, Br 80.
+MA2 = {"H": 1, "C": 12, "N": 14, "O": 16, "Na": 23, "Cl": 35.5, "Ca": 40, "Br": 80, "S": 32}
+def massa_f(f): return sum(MA2[a] * q for a, q in conta_f(f).items())
+VERDE_L = [
+ ["bromação do eteno", "adição", [(1, "C2H4"), (1, "Br2")], [(1, "C2H4Br2")], 0],
+ ["hidrogenação do eteno", "adição", [(1, "C2H4"), (1, "H2")], [(1, "C2H6")], 0],
+ ["síntese da amônia", "síntese", [(1, "N2"), (3, "H2")], [(2, "NH3")], 0],
+ ["cloração do metano", "substituição", [(1, "CH4"), (1, "Cl2")], [(1, "CH3Cl"), (1, "HCl")], 0],
+ ["desidratação do etanol", "eliminação", [(1, "C2H6O")], [(1, "C2H4"), (1, "H2O")], 0],
+ ["esterificação", "substituição", [(1, "C2H4O2"), (1, "C2H6O")], [(1, "C4H8O2"), (1, "H2O")], 0],
+ ["fermentação da glicose", "decomposição", [(1, "C6H12O6")], [(2, "C2H6O"), (2, "CO2")], 0],
+ ["calcinação do calcário", "decomposição", [(1, "CaCO3")], [(1, "CaO"), (1, "CO2")], 0],
+ ["saponificação do etanoato de etila", "substituição", [(1, "C4H8O2"), (1, "NaOH")], [(1, "C2H3O2Na"), (1, "C2H6O")], 0],
+]
+verde = []
+for nome, tipo, reag, prod, k in VERDE_L:
+    e, d = Counter(), Counter()
+    for c, f in reag:
+        for a, q in conta_f(f).items(): e[a] += c * q
+    for c, f in prod:
+        for a, q in conta_f(f).items(): d[a] += c * q
+    if e != d: erros.append(("química verde: equação não balanceada", nome, dict(e), dict(d)))
+    mr = sum(c * massa_f(f) for c, f in reag); mp = prod[k][0] * massa_f(prod[k][1])
+    verde.append({"nome": nome, "tipo": tipo, "r": [[c, f] for c, f in reag], "p": [[c, f] for c, f in prod], "k": k, "mr": mr, "mp": mp, "ea": round(100 * mp / mr, 4)})
+QV = D["quimica_verde"]
+if not tem(QV["economia_atomica"]["formula"], "molecular weight of desired product", "all reactants"): erros.append(("economia atômica: fórmula da fonte",))
+if not tem(QV["fator_E"]["definicao"], "mass of waste per mass of product"): erros.append(("fator E: definição da fonte",))
+cmc = trecho_com(QV["concentracao_micelar_critica"], r"sodium dodecyl sulfate in water .* is 8×10−3 mol/L")
+sds = pubchem("sodium dodecyl sulfate")
+if not cmc or not sds or hill(conta_f(sds["formula"])) != hill(conta_f("C12H25NaO4S")): erros.append(("SDS: CMC ou fórmula", bool(cmc), sds))
+BIO["VERDE"] = verde
+BIO["QV"] = {"ano": 1998, "cmcSDS": 8e-3, "mSDS": 12 * 12 + 25 + 23 + 64 + 32, "principios": len(QV["doze_principios"])}
+if not tem(QV["autores_e_ano"], "1998", "Anastas") or BIO["QV"]["principios"] != 12: erros.append(("química verde: autores, ano ou nº de princípios",))
 #MAIS-SECOES
 
 json.dump(cache, open(ARQ, "w"), ensure_ascii=False, indent=1)   # todas as consultas ao PubChem, de todas as seções

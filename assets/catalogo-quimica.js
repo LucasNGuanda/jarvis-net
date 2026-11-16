@@ -99,7 +99,7 @@ window.CATALOGO.push(
     ["I05","Biocombustíveis: etanol, biodiesel, biogás e o balanço de carbono",[],true],
     ["I06","Ciclos biogeoquímicos: carbono, nitrogênio e o processo Haber-Bosch",[],true],
     ["I07","Poluição do ar e da água: chuva ácida, efeito estufa, ozônio e oxigênio dissolvido",[],true],
-    ["I08","Química verde e cotidiano",[]],
+    ["I08","Química verde e cotidiano: economia atômica, fator E e os doze princípios",[],true],
     ["I09","Tratamento de água e resíduos",[]],
   ] },
   { id:"QJ", area:"qui", letra:"J", cor:"--mM", nome:"Química analítica", desc:"Titulação, análise qualitativa e quantitativa.", temas:[

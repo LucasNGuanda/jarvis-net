@@ -92,6 +92,18 @@
     ],
     BIOGAS: {"ch4": [50, 80], "co2": [15, 50]},
     AMB: {"ar": {"N2": 78.084, "O2": 20.946, "Ar": 0.934}, "co2": 432.0, "co2ano": 2026, "co2pre": 280.0, "co2aumento": 54.0, "haberDH": 92.2, "haberMPa": 20.0, "haberT": 500.0, "chuva": 5.6, "chuvaAcida": 5.0, "gwp": {"CO2": 1, "CH4": [27, 30], "N2O": 273, "CFC-12": 10200, "SF6": 23500}, "coAfin": 200.0, "o2sol20": 7.6, "o2sol0": 14.6, "montreal": 1987, "ozonioKm": [15.0, 35.0], "dboRio": 1.0},
+    VERDE: [
+      {"nome": "bromação do eteno", "tipo": "adição", "r": [[1, "C2H4"], [1, "Br2"]], "p": [[1, "C2H4Br2"]], "k": 0, "mr": 188, "mp": 188, "ea": 100.0},
+      {"nome": "hidrogenação do eteno", "tipo": "adição", "r": [[1, "C2H4"], [1, "H2"]], "p": [[1, "C2H6"]], "k": 0, "mr": 30, "mp": 30, "ea": 100.0},
+      {"nome": "síntese da amônia", "tipo": "síntese", "r": [[1, "N2"], [3, "H2"]], "p": [[2, "NH3"]], "k": 0, "mr": 34, "mp": 34, "ea": 100.0},
+      {"nome": "cloração do metano", "tipo": "substituição", "r": [[1, "CH4"], [1, "Cl2"]], "p": [[1, "CH3Cl"], [1, "HCl"]], "k": 0, "mr": 87.0, "mp": 50.5, "ea": 58.046},
+      {"nome": "desidratação do etanol", "tipo": "eliminação", "r": [[1, "C2H6O"]], "p": [[1, "C2H4"], [1, "H2O"]], "k": 0, "mr": 46, "mp": 28, "ea": 60.8696},
+      {"nome": "esterificação", "tipo": "substituição", "r": [[1, "C2H4O2"], [1, "C2H6O"]], "p": [[1, "C4H8O2"], [1, "H2O"]], "k": 0, "mr": 106, "mp": 88, "ea": 83.0189},
+      {"nome": "fermentação da glicose", "tipo": "decomposição", "r": [[1, "C6H12O6"]], "p": [[2, "C2H6O"], [2, "CO2"]], "k": 0, "mr": 180, "mp": 92, "ea": 51.1111},
+      {"nome": "calcinação do calcário", "tipo": "decomposição", "r": [[1, "CaCO3"]], "p": [[1, "CaO"], [1, "CO2"]], "k": 0, "mr": 100, "mp": 56, "ea": 56.0},
+      {"nome": "saponificação do etanoato de etila", "tipo": "substituição", "r": [[1, "C4H8O2"], [1, "NaOH"]], "p": [[1, "C2H3O2Na"], [1, "C2H6O"]], "k": 0, "mr": 128, "mp": 82, "ea": 64.0625},
+    ],
+    QV: {"ano": 1998, "cmcSDS": 0.008, "mSDS": 288, "principios": 12},
   };
   /*BIO-FIM*/
 
@@ -273,6 +285,28 @@
         q("[data-v=st]").innerHTML = `A chuva limpa já é levemente ácida (pH 5,6), por causa do CO₂ do ar, que forma ácido carbônico: [H⁺] = 10⁻⁵·⁶ = ${(e.h0 * 1e6).toFixed(2).replace(".", ",")} µmol/L. Cada molécula de H₂SO₄ (vinda do SO₂) soma 2 H⁺. Com ${nt(c, 0)} µmol/L: pH <b>${nt(e.ph, 2)}</b>, ${nt(e.vezes, 1)} vezes mais H⁺ que a chuva limpa. A escala é logarítmica: uma unidade de pH = dez vezes. Modelo simples: ácido forte totalmente ionizado, sem contar outras substâncias dissolvidas.`; } };
     liga(el, "modo", (v) => { modo = v; desenha(); }); liga(el, "g", (v) => { g = v; desenha(); }); liga(el, "m", (v) => { m = +v; desenha(); }); liga(el, "c", (v) => { c = +v; desenha(); });
     SIM.qPoluicao._ult = { poe: (mo, a, b) => { modo = mo; if (mo === "estufa") { g = a; m = b; } else c = a; [["modo", modo], ["g", g], ["m", m], ["c", c]].forEach(([k, v]) => el.querySelectorAll(`[data-${k}]`).forEach((x) => x.setAttribute("aria-pressed", String(x.dataset[k]) === String(v)))); desenha(); }, est }; desenha(); };
+
+  /* ---------- I08: química verde ---------- */
+  /* massa molar de uma fórmula simples (sem parênteses), com as massas de prova */
+  SIM.mfor = (f) => { const M = { H: 1, C: 12, N: 14, O: 16, Na: 23, Cl: 35.5, Ca: 40, Br: 80, S: 32 }; let t = 0; f.replace(/([A-Z][a-z]?)(\d*)/g, (x, el, n) => { t += M[el] * (n ? +n : 1); return ""; }); return t; };
+  /* economia atômica (%) de uma reação da tabela VERDE, fator E e massas para 100 g de reagentes na proporção certa, com rendimento rd (%) */
+  SIM.verde = (x, rd = 100) => { const mr = x.r.reduce((t, [c, f]) => t + c * SIM.mfor(f), 0), mp = x.p[x.k][0] * SIM.mfor(x.p[x.k][1]), ea = (100 * mp) / mr, prod = (ea * rd) / 100, res = 100 - prod; return { mr, mp, ea, prod, res, E: res / prod }; };
+  SIM.eqVerde = (x, sub = true) => { const s = (f) => (sub ? f.replace(/(\d+)/g, (d) => d.split("").map((c) => "₀₁₂₃₄₅₆₇₈₉"[+c]).join("")) : f), lado = (L) => L.map(([c, f]) => (c > 1 ? c + " " : "") + s(f)).join(" + "); return lado(x.r) + " → " + lado(x.p); };
+  /* nome: "Química verde: economia atômica e fator E" · matéria: Química · tema: I08 */
+  SIM.qVerde = (el, F) => { const V = SIM.BIO.VERDE; let i = 3, rd = 100, ver = false;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div>${seletor("reação", V.map((x) => x.nome))}</div>
+      <div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">rendimento</p><div class="bts">${botoes([[50, "50%"], [70, "70%"], [90, "90%"], [100, "100%"]], "rd", rd)}</div></div>
+      <div><div class="bts"><button class="bt peq" data-v="ver" aria-pressed="false">mostrar a economia atômica</button></div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), est = () => ({ nome: V[i].nome, rd, ...SIM.verde(V[i], rd), ver });
+    const desenha = () => { const x = V[i], e = est(), W = 600, wp = (e.prod / 100) * 520;
+      q("[data-v=sv]").innerHTML = `<div style="font:700 19px Inter,system-ui,sans-serif">${SIM.eqVerde(x)}</div><div style="font-size:12.5px;color:var(--ink2)">produto desejado: <b style="color:var(--ink)">${SIM.eqVerde({ r: [x.p[x.k]], p: [] }).replace(" → ", "")}</b> · reação de ${x.tipo}</div>` + (ver ? `<svg viewBox="0 0 ${W} 74" width="${W}" role="img" aria-label="destino de 100 g de reagentes"><rect x="40" y="14" width="${wp.toFixed(1)}" height="26" rx="5" style="fill:var(--mod)"/><rect x="${(40 + wp).toFixed(1)}" y="14" width="${(520 - wp).toFixed(1)}" height="26" rx="5" style="fill:#e5604d;opacity:.7"/><text x="40" y="60" class="tx2" style="font-size:12px">produto: ${nt(e.prod, 1)} g</text><text x="560" y="60" text-anchor="end" class="tx2" style="font-size:12px">resíduo (subprodutos + o que não reagiu): ${nt(e.res, 1)} g</text></svg><div style="font-size:12px;color:var(--ink2)">destino de 100 g de reagentes, na proporção da equação</div>` : `<div style="font:700 24px Inter,system-ui,sans-serif;color:var(--warn);padding:10px">?</div>`);
+      q("[data-v=lt]").innerHTML = vis("massa dos reagentes", nt(e.mr, 1) + " g/mol") + vis("massa do produto desejado", nt(e.mp, 1) + " g/mol") + vis("economia atômica", ver ? nt(e.ea, 1) + "%" : "?") + vis("rendimento", rd + "%") + vis("produto (de 100 g)", ver ? nt(e.prod, 1) + " g" : "?") + vis("fator E", ver ? nt(e.E, 2) : "?");
+      q("[data-v=st]").innerHTML = !ver ? "Antes de clicar em <b>mostrar</b>: some as massas de todos os reagentes e compare com a massa do produto desejado. Que fração dos átomos vai parar onde se quer?" : `Economia atômica: ${nt(e.mp, 1)} / ${nt(e.mr, 1)} = <b>${nt(e.ea, 1)}%</b>. ${e.ea > 99.99 ? "Todos os átomos dos reagentes estão no produto: nenhum subproduto." : "O resto dos átomos sai como subproduto, mesmo com rendimento de 100%."} Com rendimento de ${rd}%, de cada 100 g de reagentes saem ${nt(e.prod, 1)} g de produto e ${nt(e.res, 1)} g de resíduo: fator E = ${nt(e.E, 2)} (gramas de resíduo por grama de produto). Massas com H = 1, C = 12, N = 14, O = 16, Na = 23, Cl = 35,5, Ca = 40, Br = 80. A conta ignora solventes e catalisadores, que na prática aumentam o fator E.`; };
+    q("[data-v=sel]").value = String(i); q("[data-v=sel]").addEventListener("change", (ev) => { i = +ev.target.value; ver = false; q("[data-v=ver]").setAttribute("aria-pressed", "false"); desenha(); });
+    q("[data-v=ver]").addEventListener("click", () => { ver = !ver; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); }); liga(el, "rd", (v) => { rd = +v; desenha(); });
+    SIM.qVerde._ult = { poe: (nome, r = 100, v = true) => { i = V.findIndex((x) => x.nome === nome); rd = r; ver = v; q("[data-v=sel]").value = String(i); q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); el.querySelectorAll("[data-rd]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.rd === rd))); desenha(); }, est }; desenha(); };
 
   //MAIS-LABS
 })();

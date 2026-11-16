@@ -198,5 +198,10 @@
   "cid": 1174,
   "smiles": "C1=CNC(=O)NC1=O",
   "formula": "C4H4N2O2"
+ },
+ "sodium dodecyl sulfate": {
+  "cid": 3423265,
+  "smiles": "CCCCCCCCCCCCOS(=O)(=O)[O-].[Na+]",
+  "formula": "C12H25NaO4S"
  }
 }
