@@ -1,0 +1,1382 @@
+[
+{
+"n": 1,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "hidrogênio, H₂",
+"en": "hydrogen"
+},
+{
+"n": 2,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "oxigênio, O₂",
+"en": "oxygen"
+},
+{
+"n": 3,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "ozônio, O₃",
+"en": "ozone"
+},
+{
+"n": 4,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "nitrogênio, N₂",
+"en": "nitrogen"
+},
+{
+"n": 5,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "flúor, F₂",
+"en": "fluorine"
+},
+{
+"n": 6,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "cloro, Cl₂",
+"en": "chlorine"
+},
+{
+"n": 7,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "bromo, Br₂",
+"en": "bromine"
+},
+{
+"n": 8,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "iodo, I₂",
+"en": "iodine"
+},
+{
+"n": 9,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "enxofre, S₈",
+"en": "cyclooctasulfur"
+},
+{
+"n": 10,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "fósforo branco, P₄",
+"en": "tetraphosphorus"
+},
+{
+"n": 11,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "fulereno, C₆₀",
+"en": "buckminsterfullerene"
+},
+{
+"n": 12,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "água, H₂O",
+"en": "water"
+},
+{
+"n": 13,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "água oxigenada (peróxido de hidrogênio), H₂O₂",
+"en": "hydrogen peroxide"
+},
+{
+"n": 14,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "amônia, NH₃",
+"en": "ammonia"
+},
+{
+"n": 15,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "hidrazina, N₂H₄",
+"en": "hydrazine"
+},
+{
+"n": 16,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "fosfina, PH₃",
+"en": "phosphine"
+},
+{
+"n": 17,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "sulfeto de hidrogênio, H₂S",
+"en": "hydrogen sulfide"
+},
+{
+"n": 18,
+"secao": "Substâncias simples e hidretos pequenos",
+"nome": "silano, SiH₄",
+"en": "silane"
+},
+{
+"n": 19,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido fluorídrico, HF",
+"en": "hydrogen fluoride"
+},
+{
+"n": 20,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido clorídrico, HCl",
+"en": "hydrochloric acid"
+},
+{
+"n": 21,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido bromídrico, HBr",
+"en": "hydrogen bromide"
+},
+{
+"n": 22,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido iodídrico, HI",
+"en": "hydrogen iodide"
+},
+{
+"n": 23,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido cianídrico, HCN",
+"en": "hydrogen cyanide"
+},
+{
+"n": 24,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido nítrico, HNO₃",
+"en": "nitric acid"
+},
+{
+"n": 25,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido nitroso, HNO₂",
+"en": "nitrous acid"
+},
+{
+"n": 26,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido sulfúrico, H₂SO₄",
+"en": "sulfuric acid"
+},
+{
+"n": 27,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido sulfuroso, H₂SO₃",
+"en": "sulfurous acid"
+},
+{
+"n": 28,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido carbônico, H₂CO₃",
+"en": "carbonic acid"
+},
+{
+"n": 29,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido fosfórico, H₃PO₄",
+"en": "phosphoric acid"
+},
+{
+"n": 30,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido fosforoso, H₃PO₃",
+"en": "phosphorous acid"
+},
+{
+"n": 31,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido hipocloroso, HClO",
+"en": "hypochlorous acid"
+},
+{
+"n": 32,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido cloroso, HClO₂",
+"en": "chlorous acid"
+},
+{
+"n": 33,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido clórico, HClO₃",
+"en": "chloric acid"
+},
+{
+"n": 34,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido perclórico, HClO₄",
+"en": "perchloric acid"
+},
+{
+"n": 35,
+"secao": "Ácidos inorgânicos",
+"nome": "ácido bórico, H₃BO₃",
+"en": "boric acid"
+},
+{
+"n": 36,
+"secao": "Óxidos moleculares",
+"nome": "monóxido de carbono, CO",
+"en": "carbon monoxide"
+},
+{
+"n": 37,
+"secao": "Óxidos moleculares",
+"nome": "dióxido de carbono, CO₂",
+"en": "carbon dioxide"
+},
+{
+"n": 38,
+"secao": "Óxidos moleculares",
+"nome": "dióxido de enxofre, SO₂",
+"en": "sulfur dioxide"
+},
+{
+"n": 39,
+"secao": "Óxidos moleculares",
+"nome": "trióxido de enxofre, SO₃",
+"en": "sulfur trioxide"
+},
+{
+"n": 40,
+"secao": "Óxidos moleculares",
+"nome": "monóxido de nitrogênio, NO",
+"en": "nitric oxide"
+},
+{
+"n": 41,
+"secao": "Óxidos moleculares",
+"nome": "dióxido de nitrogênio, NO₂",
+"en": "nitrogen dioxide"
+},
+{
+"n": 42,
+"secao": "Óxidos moleculares",
+"nome": "óxido nitroso, N₂O",
+"en": "nitrous oxide"
+},
+{
+"n": 43,
+"secao": "Óxidos moleculares",
+"nome": "tetróxido de dinitrogênio, N₂O₄",
+"en": "dinitrogen tetroxide"
+},
+{
+"n": 44,
+"secao": "Óxidos moleculares",
+"nome": "pentóxido de dinitrogênio, N₂O₅",
+"en": "dinitrogen pentoxide"
+},
+{
+"n": 45,
+"secao": "Óxidos moleculares",
+"nome": "decóxido de tetrafósforo, P₄O₁₀ (o \"P₂O₅\")",
+"en": "phosphorus pentoxide"
+},
+{
+"n": 46,
+"secao": "Óxidos moleculares",
+"nome": "dióxido de cloro, ClO₂",
+"en": "chlorine dioxide"
+},
+{
+"n": 47,
+"secao": "Óxidos moleculares",
+"nome": "monóxido de dicloro, Cl₂O",
+"en": "dichlorine monoxide"
+},
+{
+"n": 48,
+"secao": "Óxidos moleculares",
+"nome": "difluoreto de oxigênio, OF₂",
+"en": "oxygen difluoride"
+},
+{
+"n": 49,
+"secao": "Clássicos de geometria",
+"nome": "cloreto de berílio, BeCl₂",
+"en": "beryllium chloride"
+},
+{
+"n": 50,
+"secao": "Clássicos de geometria",
+"nome": "trifluoreto de boro, BF₃",
+"en": "boron trifluoride"
+},
+{
+"n": 51,
+"secao": "Clássicos de geometria",
+"nome": "tricloreto de boro, BCl₃",
+"en": "boron trichloride"
+},
+{
+"n": 52,
+"secao": "Clássicos de geometria",
+"nome": "tetracloreto de carbono, CCl₄",
+"en": "carbon tetrachloride"
+},
+{
+"n": 53,
+"secao": "Clássicos de geometria",
+"nome": "trifluoreto de nitrogênio, NF₃",
+"en": "nitrogen trifluoride"
+},
+{
+"n": 54,
+"secao": "Clássicos de geometria",
+"nome": "tricloreto de fósforo, PCl₃",
+"en": "phosphorus trichloride"
+},
+{
+"n": 55,
+"secao": "Clássicos de geometria",
+"nome": "pentacloreto de fósforo, PCl₅",
+"en": "phosphorus pentachloride"
+},
+{
+"n": 56,
+"secao": "Clássicos de geometria",
+"nome": "tetrafluoreto de enxofre, SF₄",
+"en": "sulfur tetrafluoride"
+},
+{
+"n": 57,
+"secao": "Clássicos de geometria",
+"nome": "hexafluoreto de enxofre, SF₆",
+"en": "sulfur hexafluoride"
+},
+{
+"n": 58,
+"secao": "Clássicos de geometria",
+"nome": "trifluoreto de cloro, ClF₃",
+"en": "chlorine trifluoride"
+},
+{
+"n": 59,
+"secao": "Clássicos de geometria",
+"nome": "pentafluoreto de bromo, BrF₅",
+"en": "bromine pentafluoride"
+},
+{
+"n": 60,
+"secao": "Clássicos de geometria",
+"nome": "heptafluoreto de iodo, IF₇",
+"en": "iodine heptafluoride"
+},
+{
+"n": 61,
+"secao": "Clássicos de geometria",
+"nome": "difluoreto de xenônio, XeF₂",
+"en": "xenon difluoride"
+},
+{
+"n": 62,
+"secao": "Clássicos de geometria",
+"nome": "tetrafluoreto de xenônio, XeF₄",
+"en": "xenon tetrafluoride"
+},
+{
+"n": 63,
+"secao": "Clássicos de geometria",
+"nome": "dissulfeto de carbono, CS₂",
+"en": "carbon disulfide"
+},
+{
+"n": 64,
+"secao": "Clássicos de geometria",
+"nome": "dicloreto de enxofre, SCl₂",
+"en": "sulfur dichloride"
+},
+{
+"n": 65,
+"secao": "Clássicos de geometria",
+"nome": "fosgênio, COCl₂",
+"en": "phosgene"
+},
+{
+"n": 66,
+"secao": "Clássicos de geometria",
+"nome": "cloreto de tionila, SOCl₂",
+"en": "thionyl chloride"
+},
+{
+"n": 67,
+"secao": "Íons poliatômicos",
+"nome": "amônio, NH₄⁺",
+"en": "ammonium"
+},
+{
+"n": 68,
+"secao": "Íons poliatômicos",
+"nome": "hidrônio, H₃O⁺",
+"en": "hydronium"
+},
+{
+"n": 69,
+"secao": "Íons poliatômicos",
+"nome": "hidróxido, OH⁻",
+"en": "hydroxide"
+},
+{
+"n": 70,
+"secao": "Íons poliatômicos",
+"nome": "nitrato, NO₃⁻",
+"en": "nitrate"
+},
+{
+"n": 71,
+"secao": "Íons poliatômicos",
+"nome": "nitrito, NO₂⁻",
+"en": "nitrite"
+},
+{
+"n": 72,
+"secao": "Íons poliatômicos",
+"nome": "sulfato, SO₄²⁻",
+"en": "sulfate"
+},
+{
+"n": 73,
+"secao": "Íons poliatômicos",
+"nome": "sulfito, SO₃²⁻",
+"en": "sulfite"
+},
+{
+"n": 74,
+"secao": "Íons poliatômicos",
+"nome": "tiossulfato, S₂O₃²⁻",
+"en": "thiosulfate"
+},
+{
+"n": 75,
+"secao": "Íons poliatômicos",
+"nome": "carbonato, CO₃²⁻",
+"en": "carbonate"
+},
+{
+"n": 76,
+"secao": "Íons poliatômicos",
+"nome": "hidrogenocarbonato (bicarbonato), HCO₃⁻",
+"en": "bicarbonate"
+},
+{
+"n": 77,
+"secao": "Íons poliatômicos",
+"nome": "fosfato, PO₄³⁻",
+"en": "phosphate"
+},
+{
+"n": 78,
+"secao": "Íons poliatômicos",
+"nome": "hipoclorito, ClO⁻",
+"en": "hypochlorite"
+},
+{
+"n": 79,
+"secao": "Íons poliatômicos",
+"nome": "clorato, ClO₃⁻",
+"en": "chlorate"
+},
+{
+"n": 80,
+"secao": "Íons poliatômicos",
+"nome": "perclorato, ClO₄⁻",
+"en": "perchlorate"
+},
+{
+"n": 81,
+"secao": "Íons poliatômicos",
+"nome": "permanganato, MnO₄⁻",
+"en": "permanganate"
+},
+{
+"n": 82,
+"secao": "Íons poliatômicos",
+"nome": "dicromato, Cr₂O₇²⁻",
+"en": "dichromate"
+},
+{
+"n": 83,
+"secao": "Íons poliatômicos",
+"nome": "cianeto, CN⁻",
+"en": "cyanide"
+},
+{
+"n": 84,
+"secao": "Íons poliatômicos",
+"nome": "acetato, CH₃COO⁻",
+"en": "acetate"
+},
+{
+"n": 85,
+"secao": "Íons poliatômicos",
+"nome": "oxalato, C₂O₄²⁻",
+"en": "oxalate"
+},
+{
+"n": 86,
+"secao": "Íons poliatômicos",
+"nome": "tri-iodeto, I₃⁻",
+"en": "triiodide"
+},
+{
+"n": 87,
+"secao": "Bases e sais comuns",
+"nome": "hidróxido de sódio, NaOH",
+"en": "sodium hydroxide"
+},
+{
+"n": 88,
+"secao": "Bases e sais comuns",
+"nome": "hidróxido de potássio, KOH",
+"en": "potassium hydroxide"
+},
+{
+"n": 89,
+"secao": "Bases e sais comuns",
+"nome": "hidróxido de cálcio, Ca(OH)₂",
+"en": "calcium hydroxide"
+},
+{
+"n": 90,
+"secao": "Bases e sais comuns",
+"nome": "cloreto de sódio, NaCl",
+"en": "sodium chloride"
+},
+{
+"n": 91,
+"secao": "Bases e sais comuns",
+"nome": "carbonato de cálcio, CaCO₃",
+"en": "calcium carbonate"
+},
+{
+"n": 92,
+"secao": "Bases e sais comuns",
+"nome": "carbonato de sódio, Na₂CO₃",
+"en": "sodium carbonate"
+},
+{
+"n": 93,
+"secao": "Bases e sais comuns",
+"nome": "bicarbonato de sódio, NaHCO₃",
+"en": "sodium bicarbonate"
+},
+{
+"n": 94,
+"secao": "Bases e sais comuns",
+"nome": "sulfato de cálcio, CaSO₄",
+"en": "calcium sulfate"
+},
+{
+"n": 95,
+"secao": "Bases e sais comuns",
+"nome": "sulfato de cobre(II), CuSO₄",
+"en": "copper(II) sulfate"
+},
+{
+"n": 96,
+"secao": "Bases e sais comuns",
+"nome": "cloreto de amônio, NH₄Cl",
+"en": "ammonium chloride"
+},
+{
+"n": 97,
+"secao": "Bases e sais comuns",
+"nome": "nitrato de amônio, NH₄NO₃",
+"en": "ammonium nitrate"
+},
+{
+"n": 98,
+"secao": "Bases e sais comuns",
+"nome": "nitrato de potássio, KNO₃",
+"en": "potassium nitrate"
+},
+{
+"n": 99,
+"secao": "Bases e sais comuns",
+"nome": "hipoclorito de sódio, NaClO",
+"en": "sodium hypochlorite"
+},
+{
+"n": 100,
+"secao": "Bases e sais comuns",
+"nome": "permanganato de potássio, KMnO₄",
+"en": "potassium permanganate"
+},
+{
+"n": 101,
+"secao": "Hidrocarbonetos",
+"nome": "metano",
+"en": "methane"
+},
+{
+"n": 102,
+"secao": "Hidrocarbonetos",
+"nome": "etano",
+"en": "ethane"
+},
+{
+"n": 103,
+"secao": "Hidrocarbonetos",
+"nome": "propano",
+"en": "propane"
+},
+{
+"n": 104,
+"secao": "Hidrocarbonetos",
+"nome": "butano",
+"en": "butane"
+},
+{
+"n": 105,
+"secao": "Hidrocarbonetos",
+"nome": "isobutano (metilpropano)",
+"en": "isobutane"
+},
+{
+"n": 106,
+"secao": "Hidrocarbonetos",
+"nome": "pentano",
+"en": "pentane"
+},
+{
+"n": 107,
+"secao": "Hidrocarbonetos",
+"nome": "isopentano (2-metilbutano)",
+"en": "isopentane"
+},
+{
+"n": 108,
+"secao": "Hidrocarbonetos",
+"nome": "neopentano (2,2-dimetilpropano)",
+"en": "neopentane"
+},
+{
+"n": 109,
+"secao": "Hidrocarbonetos",
+"nome": "hexano",
+"en": "hexane"
+},
+{
+"n": 110,
+"secao": "Hidrocarbonetos",
+"nome": "heptano",
+"en": "heptane"
+},
+{
+"n": 111,
+"secao": "Hidrocarbonetos",
+"nome": "octano",
+"en": "octane"
+},
+{
+"n": 112,
+"secao": "Hidrocarbonetos",
+"nome": "isoctano (2,2,4-trimetilpentano)",
+"en": "2,2,4-trimethylpentane"
+},
+{
+"n": 113,
+"secao": "Hidrocarbonetos",
+"nome": "eteno (etileno)",
+"en": "ethylene"
+},
+{
+"n": 114,
+"secao": "Hidrocarbonetos",
+"nome": "propeno",
+"en": "propene"
+},
+{
+"n": 115,
+"secao": "Hidrocarbonetos",
+"nome": "but-1-eno",
+"en": "1-butene"
+},
+{
+"n": 116,
+"secao": "Hidrocarbonetos",
+"nome": "cis-but-2-eno",
+"en": "cis-2-butene"
+},
+{
+"n": 117,
+"secao": "Hidrocarbonetos",
+"nome": "trans-but-2-eno",
+"en": "trans-2-butene"
+},
+{
+"n": 118,
+"secao": "Hidrocarbonetos",
+"nome": "buta-1,3-dieno",
+"en": "1,3-butadiene"
+},
+{
+"n": 119,
+"secao": "Hidrocarbonetos",
+"nome": "isopreno (2-metilbuta-1,3-dieno)",
+"en": "isoprene"
+},
+{
+"n": 120,
+"secao": "Hidrocarbonetos",
+"nome": "etino (acetileno)",
+"en": "acetylene"
+},
+{
+"n": 121,
+"secao": "Hidrocarbonetos",
+"nome": "propino",
+"en": "propyne"
+},
+{
+"n": 122,
+"secao": "Hidrocarbonetos",
+"nome": "ciclopropano",
+"en": "cyclopropane"
+},
+{
+"n": 123,
+"secao": "Hidrocarbonetos",
+"nome": "ciclobutano",
+"en": "cyclobutane"
+},
+{
+"n": 124,
+"secao": "Hidrocarbonetos",
+"nome": "ciclopentano",
+"en": "cyclopentane"
+},
+{
+"n": 125,
+"secao": "Hidrocarbonetos",
+"nome": "ciclo-hexano",
+"en": "cyclohexane"
+},
+{
+"n": 126,
+"secao": "Hidrocarbonetos",
+"nome": "ciclo-hexeno",
+"en": "cyclohexene"
+},
+{
+"n": 127,
+"secao": "Hidrocarbonetos",
+"nome": "benzeno",
+"en": "benzene"
+},
+{
+"n": 128,
+"secao": "Hidrocarbonetos",
+"nome": "tolueno",
+"en": "toluene"
+},
+{
+"n": 129,
+"secao": "Hidrocarbonetos",
+"nome": "orto-xileno",
+"en": "o-xylene"
+},
+{
+"n": 130,
+"secao": "Hidrocarbonetos",
+"nome": "meta-xileno",
+"en": "m-xylene"
+},
+{
+"n": 131,
+"secao": "Hidrocarbonetos",
+"nome": "para-xileno",
+"en": "p-xylene"
+},
+{
+"n": 132,
+"secao": "Hidrocarbonetos",
+"nome": "estireno",
+"en": "styrene"
+},
+{
+"n": 133,
+"secao": "Hidrocarbonetos",
+"nome": "naftaleno",
+"en": "naphthalene"
+},
+{
+"n": 134,
+"secao": "Hidrocarbonetos",
+"nome": "antraceno",
+"en": "anthracene"
+},
+{
+"n": 135,
+"secao": "Haletos orgânicos",
+"nome": "clorometano",
+"en": "chloromethane"
+},
+{
+"n": 136,
+"secao": "Haletos orgânicos",
+"nome": "diclorometano",
+"en": "dichloromethane"
+},
+{
+"n": 137,
+"secao": "Haletos orgânicos",
+"nome": "clorofórmio (triclorometano)",
+"en": "chloroform"
+},
+{
+"n": 138,
+"secao": "Haletos orgânicos",
+"nome": "cloroetano",
+"en": "chloroethane"
+},
+{
+"n": 139,
+"secao": "Haletos orgânicos",
+"nome": "cloreto de vinila (cloroeteno)",
+"en": "vinyl chloride"
+},
+{
+"n": 140,
+"secao": "Haletos orgânicos",
+"nome": "cis-1,2-dicloroeteno",
+"en": "cis-1,2-dichloroethylene"
+},
+{
+"n": 141,
+"secao": "Haletos orgânicos",
+"nome": "trans-1,2-dicloroeteno",
+"en": "trans-1,2-dichloroethylene"
+},
+{
+"n": 142,
+"secao": "Haletos orgânicos",
+"nome": "clorobenzeno",
+"en": "chlorobenzene"
+},
+{
+"n": 143,
+"secao": "Haletos orgânicos",
+"nome": "diclorodifluorometano (CFC-12)",
+"en": "dichlorodifluoromethane"
+},
+{
+"n": 144,
+"secao": "Haletos orgânicos",
+"nome": "tetrafluoroeteno",
+"en": "tetrafluoroethylene"
+},
+{
+"n": 145,
+"secao": "Haletos orgânicos",
+"nome": "DDT",
+"en": "DDT"
+},
+{
+"n": 146,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "metanol",
+"en": "methanol"
+},
+{
+"n": 147,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "etanol",
+"en": "ethanol"
+},
+{
+"n": 148,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "propan-1-ol",
+"en": "1-propanol"
+},
+{
+"n": 149,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "propan-2-ol (isopropanol)",
+"en": "isopropanol"
+},
+{
+"n": 150,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "butan-1-ol",
+"en": "1-butanol"
+},
+{
+"n": 151,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "butan-2-ol",
+"en": "2-butanol"
+},
+{
+"n": 152,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "2-metilpropan-2-ol (terc-butanol)",
+"en": "tert-butanol"
+},
+{
+"n": 153,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "etano-1,2-diol (etilenoglicol)",
+"en": "ethylene glycol"
+},
+{
+"n": 154,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "propano-1,2,3-triol (glicerol, glicerina)",
+"en": "glycerol"
+},
+{
+"n": 155,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "ciclo-hexanol",
+"en": "cyclohexanol"
+},
+{
+"n": 156,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "fenol",
+"en": "phenol"
+},
+{
+"n": 157,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "éter dimetílico (metoximetano)",
+"en": "dimethyl ether"
+},
+{
+"n": 158,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "éter dietílico (etoxietano)",
+"en": "diethyl ether"
+},
+{
+"n": 159,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "óxido de etileno (epóxido)",
+"en": "ethylene oxide"
+},
+{
+"n": 160,
+"secao": "Álcoois, fenóis e éteres",
+"nome": "tetra-hidrofurano",
+"en": "tetrahydrofuran"
+},
+{
+"n": 161,
+"secao": "Aldeídos e cetonas",
+"nome": "metanal (formaldeído)",
+"en": "formaldehyde"
+},
+{
+"n": 162,
+"secao": "Aldeídos e cetonas",
+"nome": "etanal (acetaldeído)",
+"en": "acetaldehyde"
+},
+{
+"n": 163,
+"secao": "Aldeídos e cetonas",
+"nome": "propanal",
+"en": "propanal"
+},
+{
+"n": 164,
+"secao": "Aldeídos e cetonas",
+"nome": "benzaldeído",
+"en": "benzaldehyde"
+},
+{
+"n": 165,
+"secao": "Aldeídos e cetonas",
+"nome": "propanona (acetona)",
+"en": "acetone"
+},
+{
+"n": 166,
+"secao": "Aldeídos e cetonas",
+"nome": "butanona",
+"en": "butanone"
+},
+{
+"n": 167,
+"secao": "Aldeídos e cetonas",
+"nome": "ciclo-hexanona",
+"en": "cyclohexanone"
+},
+{
+"n": 168,
+"secao": "Aldeídos e cetonas",
+"nome": "vanilina",
+"en": "vanillin"
+},
+{
+"n": 169,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "ácido metanoico (fórmico)",
+"en": "formic acid"
+},
+{
+"n": 170,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "ácido etanoico (acético)",
+"en": "acetic acid"
+},
+{
+"n": 171,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "ácido propanoico",
+"en": "propionic acid"
+},
+{
+"n": 172,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "ácido butanoico (butírico)",
+"en": "butyric acid"
+},
+{
+"n": 173,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "ácido benzoico",
+"en": "benzoic acid"
+},
+{
+"n": 174,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "ácido oxálico",
+"en": "oxalic acid"
+},
+{
+"n": 175,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "ácido lático",
+"en": "lactic acid"
+},
+{
+"n": 176,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "ácido cítrico",
+"en": "citric acid"
+},
+{
+"n": 177,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "ácido palmítico",
+"en": "palmitic acid"
+},
+{
+"n": 178,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "ácido oleico",
+"en": "oleic acid"
+},
+{
+"n": 179,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "etanoato de etila (acetato de etila)",
+"en": "ethyl acetate"
+},
+{
+"n": 180,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "etanoato de isoamila (essência de banana)",
+"en": "isoamyl acetate"
+},
+{
+"n": 181,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "tributirina (um triglicerídeo pequeno)",
+"en": "tributyrin"
+},
+{
+"n": 182,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "etanamida (acetamida)",
+"en": "acetamide"
+},
+{
+"n": 183,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "ureia",
+"en": "urea"
+},
+{
+"n": 184,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "anidrido acético",
+"en": "acetic anhydride"
+},
+{
+"n": 185,
+"secao": "Ácidos carboxílicos e derivados",
+"nome": "cloreto de etanoíla (cloreto de acetila)",
+"en": "acetyl chloride"
+},
+{
+"n": 186,
+"secao": "Compostos nitrogenados e sulfurados",
+"nome": "metilamina",
+"en": "methylamine"
+},
+{
+"n": 187,
+"secao": "Compostos nitrogenados e sulfurados",
+"nome": "dimetilamina",
+"en": "dimethylamine"
+},
+{
+"n": 188,
+"secao": "Compostos nitrogenados e sulfurados",
+"nome": "trimetilamina",
+"en": "trimethylamine"
+},
+{
+"n": 189,
+"secao": "Compostos nitrogenados e sulfurados",
+"nome": "anilina",
+"en": "aniline"
+},
+{
+"n": 190,
+"secao": "Compostos nitrogenados e sulfurados",
+"nome": "piridina",
+"en": "pyridine"
+},
+{
+"n": 191,
+"secao": "Compostos nitrogenados e sulfurados",
+"nome": "nitrobenzeno",
+"en": "nitrobenzene"
+},
+{
+"n": 192,
+"secao": "Compostos nitrogenados e sulfurados",
+"nome": "TNT (2,4,6-trinitrotolueno)",
+"en": "2,4,6-trinitrotoluene"
+},
+{
+"n": 193,
+"secao": "Compostos nitrogenados e sulfurados",
+"nome": "nitroglicerina",
+"en": "nitroglycerin"
+},
+{
+"n": 194,
+"secao": "Compostos nitrogenados e sulfurados",
+"nome": "etanonitrila (acetonitrila)",
+"en": "acetonitrile"
+},
+{
+"n": 195,
+"secao": "Compostos nitrogenados e sulfurados",
+"nome": "etanotiol",
+"en": "ethanethiol"
+},
+{
+"n": 196,
+"secao": "Compostos nitrogenados e sulfurados",
+"nome": "dimetilsulfóxido (DMSO)",
+"en": "dimethyl sulfoxide"
+},
+{
+"n": 197,
+"secao": "Compostos nitrogenados e sulfurados",
+"nome": "ácido tereftálico (monômero do PET)",
+"en": "terephthalic acid"
+},
+{
+"n": 198,
+"secao": "Biomoléculas e moléculas famosas",
+"nome": "glicose (α-D-glicopiranose)",
+"en": "alpha-D-glucopyranose"
+},
+{
+"n": 199,
+"secao": "Biomoléculas e moléculas famosas",
+"nome": "frutose",
+"en": "D-fructose"
+},
+{
+"n": 200,
+"secao": "Biomoléculas e moléculas famosas",
+"nome": "sacarose",
+"en": "sucrose"
+},
+{
+"n": 201,
+"secao": "Biomoléculas e moléculas famosas",
+"nome": "glicina",
+"en": "glycine"
+},
+{
+"n": 202,
+"secao": "Biomoléculas e moléculas famosas",
+"nome": "alanina",
+"en": "L-alanine"
+},
+{
+"n": 203,
+"secao": "Biomoléculas e moléculas famosas",
+"nome": "cafeína",
+"en": "caffeine"
+},
+{
+"n": 204,
+"secao": "Biomoléculas e moléculas famosas",
+"nome": "ácido acetilsalicílico (aspirina)",
+"en": "aspirin"
+},
+{
+"n": 205,
+"secao": "Fila de espera",
+"nome": "ribose",
+"en": "D-ribose"
+},
+{
+"n": 206,
+"secao": "Fila de espera",
+"nome": "desoxirribose",
+"en": "2-deoxy-D-ribose"
+},
+{
+"n": 207,
+"secao": "Fila de espera",
+"nome": "glicilglicina",
+"en": "glycylglycine"
+},
+{
+"n": 208,
+"secao": "Fila de espera",
+"nome": "cisteína",
+"en": "L-cysteine"
+},
+{
+"n": 209,
+"secao": "Fila de espera",
+"nome": "fenilalanina",
+"en": "L-phenylalanine"
+},
+{
+"n": 210,
+"secao": "Fila de espera",
+"nome": "adenina",
+"en": "adenine"
+},
+{
+"n": 211,
+"secao": "Fila de espera",
+"nome": "timina",
+"en": "thymine"
+},
+{
+"n": 212,
+"secao": "Fila de espera",
+"nome": "citosina",
+"en": "cytosine"
+},
+{
+"n": 213,
+"secao": "Fila de espera",
+"nome": "guanina",
+"en": "guanine"
+},
+{
+"n": 214,
+"secao": "Fila de espera",
+"nome": "uracila",
+"en": "uracil"
+},
+{
+"n": 215,
+"secao": "Fila de espera",
+"nome": "ATP",
+"en": "adenosine triphosphate"
+},
+{
+"n": 216,
+"secao": "Fila de espera",
+"nome": "colesterol",
+"en": "cholesterol"
+},
+{
+"n": 217,
+"secao": "Fila de espera",
+"nome": "ácido ascórbico (vitamina C)",
+"en": "ascorbic acid"
+},
+{
+"n": 218,
+"secao": "Fila de espera",
+"nome": "paracetamol",
+"en": "acetaminophen"
+},
+{
+"n": 219,
+"secao": "Fila de espera",
+"nome": "ibuprofeno",
+"en": "ibuprofen"
+},
+{
+"n": 220,
+"secao": "Fila de espera",
+"nome": "nicotina",
+"en": "nicotine"
+},
+{
+"n": 221,
+"secao": "Fila de espera",
+"nome": "adrenalina",
+"en": "epinephrine"
+},
+{
+"n": 222,
+"secao": "Fila de espera",
+"nome": "mentol",
+"en": "menthol"
+},
+{
+"n": 223,
+"secao": "Fila de espera",
+"nome": "limoneno",
+"en": "limonene"
+},
+{
+"n": 224,
+"secao": "Fila de espera",
+"nome": "β-caroteno",
+"en": "beta-carotene"
+},
+{
+"n": 225,
+"secao": "Fila de espera",
+"nome": "fenolftaleína",
+"en": "phenolphthalein"
+},
+{
+"n": 226,
+"secao": "Fila de espera",
+"nome": "metacrilato de metila",
+"en": "methyl methacrylate"
+},
+{
+"n": 227,
+"secao": "Fila de espera",
+"nome": "ácido adípico",
+"en": "adipic acid"
+},
+{
+"n": 228,
+"secao": "Fila de espera",
+"nome": "hexametilenodiamina",
+"en": "hexamethylenediamine"
+},
+{
+"n": 229,
+"secao": "Fila de espera",
+"nome": "caprolactama",
+"en": "caprolactam"
+},
+{
+"n": 230,
+"secao": "Fila de espera",
+"nome": "EDTA",
+"en": "EDTA"
+}
+]

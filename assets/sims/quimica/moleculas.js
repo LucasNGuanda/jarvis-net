@@ -12,10 +12,10 @@
    Conferido em Python (tools/moleculas/confere.py): ângulos das 13 geometrias e soma dos dipolos de CO₂, BF₃, CH₄, CCl₄ (zero), H₂O, NH₃, CHCl₃, CH₂Cl₂, SF₄, ClF₃ (não zero), XeF₂, XeF₄ (zero). */
 (function () {
   const SIM = (window.SIM = window.SIM || {});
-  const COR = { H: "#e9edf2", C: "#8b93a1", N: "#5b86f5", O: "#ef5350", F: "#8fd96a", Cl: "#3ec25a", Br: "#b3563a", I: "#9a57c9", S: "#e9c53f", P: "#f0903a", B: "#f2a892", Be: "#bfe36a", Si: "#d9b08c", Xe: "#56b9cf", Na: "#a985f2" };
+  const COR = { H: "#e9edf2", C: "#8b93a1", N: "#5b86f5", O: "#ef5350", F: "#8fd96a", Cl: "#3ec25a", Br: "#b3563a", I: "#9a57c9", S: "#e9c53f", P: "#f0903a", B: "#f2a892", Be: "#bfe36a", Si: "#d9b08c", Xe: "#56b9cf", Na: "#a985f2", K: "#8f6ae0", Ca: "#7fd0a0", Cu: "#c98a4a", Mn: "#b06fc0", Cr: "#7f9fc4", Se: "#e0a030" };
   const VAL = { H: 1, Be: 2, B: 3, C: 4, Si: 4, N: 5, P: 5, O: 6, S: 6, F: 7, Cl: 7, Br: 7, I: 7, Xe: 8, Na: 1 };
   const NOMEEL = { H: "hidrogênio", Be: "berílio", B: "boro", C: "carbono", N: "nitrogênio", O: "oxigênio", F: "flúor", P: "fósforo", S: "enxofre", Cl: "cloro", Br: "bromo", I: "iodo", Xe: "xenônio", Na: "sódio", Si: "silício" };
-  const rDes = (el) => (el === "H" ? 0.24 : "CNOFB".includes(el) && el.length === 1 || el === "Be" ? 0.36 : 0.43);
+  const rDes = (el) => (el === "H" ? 0.24 : ("CNOFB".includes(el) && el.length === 1) || el === "Be" ? 0.36 : ["Na", "K", "Ca", "Cu", "Mn", "Cr"].includes(el) ? 0.5 : 0.43);
   const n1 = (v, d = 1) => (+v).toFixed(d).replace(".", ",").replace("-", "−");
   const soma = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]], dif = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]], esc = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
   const pe = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2], mod = (a) => Math.hypot(a[0], a[1], a[2]), uni = (a) => { const m = mod(a) || 1; return esc(a, 1 / m); };
@@ -72,9 +72,14 @@
     m.lp = pares(m); m.nH = m.atomos.filter((a) => a.el === "H").length; m.pesados = m.atomos.length - m.nH; return m;
   }
   /* composto iônico: os íons separados (em escala, pelos raios iônicos) e um pedaço 3 × 3 × 3 do retículo do tipo NaCl */
-  function modelosIonicos(reg) {
-    const [c, a] = reg.ions, d = reg.reticulo.d, sep = c[2] + a[2] + 1.6;
-    const par = { reg, ionico: true, atomos: [{ el: c[0], p: [-sep / 2, 0, 0], q: c[1], r: c[2] }, { el: a[0], p: [sep / 2, 0, 0], q: a[1], r: a[2] }], ligs: [], lp: [], rotulo: "os íons, separados", nH: 0, pesados: 2 };
+  function modelosIonicos(reg, lista) {
+    /* um íon de cada tipo, lado a lado: o monoatômico é uma esfera (raio iônico em escala, quando há); o poliatômico é o modelo dele, vindo do próprio catálogo */
+    const partes = reg.ions.map((io) => { if (io.ref) { const m = modelo(lista.find((x) => x.id === io.ref)); return { at: m.atomos, ligs: m.ligs, raio: Math.max(...m.atomos.map((a) => mod(a.p))) + 0.5 }; } return { at: [{ el: io.el, p: [0, 0, 0], q: io.q, r: io.r || 1 }], ligs: [], raio: io.r || 1 }; });
+    const total = partes.reduce((t, p) => t + 2 * p.raio, 0) + 1.2 * (partes.length - 1); let x = -total / 2; const atomos = [], lg = [];
+    partes.forEach((p) => { x += p.raio; const b = atomos.length; p.at.forEach((a) => atomos.push({ el: a.el, p: [a.p[0] + x, a.p[1], a.p[2]], q: a.q, r: a.r })); p.ligs.forEach((l) => lg.push([l[0] + b, l[1] + b, l[2]])); x += p.raio + 1.2; });
+    const par = { reg, ionico: true, atomos, ligs: lg, lp: [], rotulo: "os íons, separados", nH: 0, pesados: 9 };
+    if (!reg.reticulo) return [par];
+    const c = [reg.ions[0].el, reg.ions[0].q, reg.ions[0].r], a = [reg.ions[1].el, reg.ions[1].q, reg.ions[1].r], d = reg.reticulo.d;
     const at = [], id = {}, ligs = [];
     for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (let k = -1; k <= 1; k++) { const cat = (i + j + k) % 2 === 0; id[[i, j, k]] = at.length; at.push({ el: cat ? c[0] : a[0], p: [i * d, j * d, k * d], q: cat ? c[1] : a[1], r: (cat ? c[2] : a[2]) * 0.45 }); }
     for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (let k = -1; k <= 1; k++) [[1, 0, 0], [0, 1, 0], [0, 0, 1]].forEach((v) => { const o = id[[i + v[0], j + v[1], k + v[2]]]; if (o !== undefined) ligs.push([id[[i, j, k]], o, 0.5]); });
@@ -87,7 +92,7 @@
     const rmax = Math.max(2.3, ...m.atomos.map((a) => mod(a.p) + (a.r || 0.5))) + (op.seta ? 0.4 : 0), s0 = (0.44 * Math.min(w, h) / rmax) * zoom, cx = x0 + w / 2, cy = y0 + h / 2 + 8;
     const P = m.atomos.map((a) => { const v = mv(R, a.p), f = 1 + v[2] * 0.035; return { x: cx + v[0] * s0 * f, y: cy - v[1] * s0 * f, z: v[2], s: s0 * f }; });
     const pt = (p) => { const v = mv(R, p), f = 1 + v[2] * 0.035; return { x: cx + v[0] * s0 * f, y: cy - v[1] * s0 * f, z: v[2], s: s0 * f }; };
-    const itens = [];
+    const itens = [], letras = [];
     m.ligs.forEach(([i, j, ord]) => { if (!vis[i] || !vis[j]) return; const a = P[i], b = P[j], mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, dx = b.x - a.x, dy = b.y - a.y, n = Math.hypot(dx, dy) || 1, ox = -dy / n, oy = dx / n;
       [[a, i], [b, j]].forEach(([p, k]) => itens.push({ z: (p.z * 2 + (a.z + b.z) / 2) / 3 - 0.01, f: () => { const el = m.atomos[k].el, cor = escuro(COR[el] || "#aaaaaa", 0.82), esp = (op.esq ? 0.07 : 0.11) * p.s;
         const linha = (o, tr, alfa) => { ctx.beginPath(); ctx.moveTo(p.x + ox * o, p.y + oy * o); ctx.lineTo(mx + ox * o, my + oy * o); ctx.lineWidth = Math.max(1.2, esp); ctx.strokeStyle = cor; ctx.globalAlpha = alfa; ctx.setLineDash(tr ? [esp * 1.1, esp * 0.9] : []); ctx.lineCap = tr ? "butt" : "round"; ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; };
@@ -96,14 +101,16 @@
         else if (ord === 2) { linha(-g, false, 1); linha(g, false, 1); } else if (ord === 3) { linha(-1.7 * g, false, 1); linha(0, false, 1); linha(1.7 * g, false, 1); } else if (ord === 1.5) { linha(-g, false, 1); linha(g, true, 0.9); } else linha(0, false, 1); } })); });
     m.atomos.forEach((a, i) => { if (!vis[i]) return; const p = P[i], r = (a.r || rDes(a.el)) * p.s, cor = COR[a.el] || "#aaaaaa";
       itens.push({ z: p.z, f: () => {
-        if (op.esq && !m.ionico) { if (a.el !== "C") { ctx.font = `700 ${Math.round(0.36 * p.s)}px Inter, sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; const t = a.el + (a.el !== "H" && vizinhos(m, i).some((j) => m.atomos[j].el === "H" && !vis[j]) ? "H" : ""); ctx.fillStyle = tinta.card; ctx.beginPath(); ctx.arc(p.x, p.y, 0.26 * p.s, 0, 7); ctx.fill(); ctx.fillStyle = cor; ctx.fillText(t, p.x, p.y + 1); } return; }
+        if (op.esq && !m.ionico) { if (a.el !== "C") { ctx.font = `700 ${Math.round(0.36 * p.s)}px Inter, sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; const t = a.el + (a.el !== "H" && vizinhos(m, i).some((j) => m.atomos[j].el === "H" && !vis[j]) ? "H" : ""); ctx.fillStyle = tinta.card; ctx.beginPath(); ctx.arc(p.x, p.y, 0.26 * p.s, 0, 7); ctx.fill(); ctx.fillStyle = a.el === "H" ? tinta.ink2 : cor; ctx.fillText(t, p.x, p.y + 1); } return; }
         const g = ctx.createRadialGradient(p.x - r * 0.35, p.y - r * 0.4, r * 0.08, p.x, p.y, r); g.addColorStop(0, "#ffffff"); g.addColorStop(0.28, cor); g.addColorStop(1, escuro(cor, 0.5));
         ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = "rgba(0,0,0,.35)"; ctx.stroke();
-        if (a.q) { ctx.font = `700 ${Math.max(11, Math.round(Math.min(r * 0.9, 0.3 * p.s)))}px Inter, sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = "#10141c"; ctx.fillText((Math.abs(a.q) > 1 ? Math.abs(a.q) : "") + (a.q > 0 ? "+" : "−"), p.x, p.y + 1); }
-        else if (m.ionico || op.letras) { ctx.font = `700 ${Math.round(r * 0.9)}px Inter, sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = "#10141c"; ctx.fillText(a.el, p.x, p.y + 1); } } }); });
+        /* letra ou carga: escrita no fim, por cima dos pares isolados e das ligações (só não aparece se outro átomo estiver na frente) */
+        if (a.q) letras.push({ i, f: `700 ${Math.max(12, Math.round(Math.min(r * 0.95, 0.32 * p.s)))}px Inter, sans-serif`, t: (Math.abs(a.q) > 1 ? Math.abs(a.q) : "") + (a.q > 0 ? "+" : "−") });
+        else if (m.ionico || op.letras) letras.push({ i, f: `700 ${Math.round(r * 0.9)}px Inter, sans-serif`, t: a.el }); } }); });
     if (op.pares) m.lp.forEach((l) => { if (!vis[l.i]) return; const a = m.atomos[l.i], c = pt(soma(a.p, esc(l.d, rDes(a.el) + 0.3))), r = 0.2 * c.s, t = uni(mv(R, perp(l.d)));
       itens.push({ z: c.z, f: () => { ctx.beginPath(); ctx.arc(c.x, c.y, r, 0, 7); ctx.fillStyle = "rgba(240,200,60,.34)"; ctx.fill(); ctx.lineWidth = 1.2; ctx.strokeStyle = "rgba(240,200,60,.9)"; ctx.stroke(); [-1, 1].forEach((sg) => { ctx.beginPath(); ctx.arc(c.x + sg * t[0] * r * 0.42, c.y - sg * t[1] * r * 0.42, Math.max(1.6, r * 0.2), 0, 7); ctx.fillStyle = tinta.ink; ctx.fill(); }); } }); });
     itens.sort((a, b) => a.z - b.z).forEach((it) => it.f());
+    letras.forEach((l) => { const p = P[l.i]; if (m.atomos.some((b, j) => j !== l.i && vis[j] && P[j].z > p.z && Math.hypot(P[j].x - p.x, P[j].y - p.y) < (b.r || rDes(b.el)) * P[j].s * 0.85)) return; ctx.font = l.f; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineWidth = 3; ctx.strokeStyle = "rgba(255,255,255,.55)"; ctx.strokeText(l.t, p.x, p.y + 1); ctx.fillStyle = "#10141c"; ctx.fillText(l.t, p.x, p.y + 1); });
     /* por cima de tudo: ângulos e seta do dipolo */
     if (op.ang !== undefined && op.ang !== null && m.atomos[op.ang] && vis[op.ang]) { const c = m.atomos[op.ang], viz = vizinhos(m, op.ang).filter((j) => vis[j]), pares2 = [];
       for (let a = 0; a < viz.length; a++) for (let b = a + 1; b < viz.length; b++) pares2.push([viz[a], viz[b]]);
@@ -123,13 +130,15 @@
     const ctx = cv.getContext("2d"); let R = R0(), zoom = 1, mods = [], op = {}, vivo = true, sujo = true, arr = null, ult = [], t0 = 0, girar = !reduz();
     const tinta = () => { const c = getComputedStyle(cv); const v = (n, d) => c.getPropertyValue(n).trim() || d; return { ink: v("--ink", "#e6e9ef"), ink2: v("--ink2", "#aab2c0"), ink3: v("--ink3", "#7a8394"), card: v("--card", "#161b26"), warn: v("--warn", "#f0b429"), line: v("--line", "#2a3140") }; };
     const mede = () => { const d = Math.min(2, window.devicePixelRatio || 1), w = cv.clientWidth, h = cv.clientHeight; if (w && (cv.width !== Math.round(w * d) || cv.height !== Math.round(h * d))) { cv.width = Math.round(w * d); cv.height = Math.round(h * d); } return d; };
-    const pinta = () => { const d = mede(), w = cv.width / d, h = cv.height / d, t = tinta(); ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, w, h); const n = mods.length || 1, lw = w / n;
-      ult = mods.map((m, k) => { if (k) { ctx.beginPath(); ctx.moveTo(k * lw, 12); ctx.lineTo(k * lw, h - 12); ctx.lineWidth = 1; ctx.strokeStyle = t.line; ctx.stroke(); } ctx.save(); ctx.beginPath(); ctx.rect(k * lw, 0, lw, h); ctx.clip(); const P = cena(ctx, k * lw, 0, lw, h, m, R, zoom, Object.assign({}, op, { ang: op.angs ? op.angs[k] : null, seta: m.seta }), t); ctx.restore(); return P; }); };
+    const pinta = () => { const d = mede(), w = cv.width / d, h = cv.height / d, t = tinta(); ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, w, h); const g = grade(), lw = w / g.c, lh = h / g.l;
+      ult = mods.map((m, k) => { const x0 = (k % g.c) * lw, y0 = Math.floor(k / g.c) * lh; ctx.lineWidth = 1; ctx.strokeStyle = t.line; if (k % g.c) { ctx.beginPath(); ctx.moveTo(x0, y0 + 12); ctx.lineTo(x0, y0 + lh - 12); ctx.stroke(); } if (y0 && !(k % g.c)) { ctx.beginPath(); ctx.moveTo(12, y0); ctx.lineTo(w - 12, y0); ctx.stroke(); }
+        ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, lw, lh); ctx.clip(); const P = cena(ctx, x0, y0, lw, lh, m, R, zoom, Object.assign({}, op, { ang: op.angs ? op.angs[k] : null, seta: m.seta }), t); ctx.restore(); return P; }); };
+    const grade = () => { const n = mods.length || 1; return n === 4 ? { c: 2, l: 2 } : { c: n, l: 1 }; }; /* 1, 2 ou 3 lado a lado; 4 em dois por dois */
     const q = (ts) => { if (!vivo) return; const dt = Math.min(0.05, (ts - t0) / 1000 || 0); t0 = ts; if (girar && !arr) { R = mm(rotY(dt * 0.45), R); sujo = true; } if (sujo) { pinta(); sujo = false; } requestAnimationFrame(q); };
     const pos = (e) => { const b = cv.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
     cv.addEventListener("pointerdown", (e) => { arr = { p: pos(e), andou: 0 }; cv.setPointerCapture(e.pointerId); });
     cv.addEventListener("pointermove", (e) => { if (!arr) return; const p = pos(e), dx = p[0] - arr.p[0], dy = p[1] - arr.p[1]; arr.andou += Math.abs(dx) + Math.abs(dy); arr.p = p; R = mm(mm(rotY(dx * 0.01), rotX(dy * 0.01)), R); sujo = true; });
-    const solta = (e) => { if (!arr) return; const clique = arr.andou < 4, p = arr.p; arr = null; if (clique && aoClicar) { const lw = cv.clientWidth / (mods.length || 1), k = Math.min(mods.length - 1, Math.floor(p[0] / lw)); let melhor = -1, mz = -1e9; (ult[k] || []).forEach((a, i) => { if (a.vis && Math.hypot(a.x - p[0], a.y - p[1]) <= Math.max(a.r, 9) && a.z > mz) { mz = a.z; melhor = i; } }); aoClicar(k, melhor); } };
+    const solta = (e) => { if (!arr) return; const clique = arr.andou < 4, p = arr.p; arr = null; if (clique && aoClicar) { const g = grade(), k = Math.min(mods.length - 1, Math.floor(p[0] / (cv.clientWidth / g.c)) + g.c * Math.floor(p[1] / (cv.clientHeight / g.l))); let melhor = -1, mz = -1e9; (ult[k] || []).forEach((a, i) => { if (a.vis && Math.hypot(a.x - p[0], a.y - p[1]) <= Math.max(a.r, 9) && a.z > mz) { mz = a.z; melhor = i; } }); aoClicar(k, melhor); } };
     cv.addEventListener("pointerup", solta); cv.addEventListener("pointercancel", () => (arr = null));
     cv.addEventListener("wheel", (e) => { e.preventDefault(); zoom = Math.max(0.4, Math.min(3, zoom * (e.deltaY < 0 ? 1.1 : 1 / 1.1))); sujo = true; }, { passive: false });
     cv.addEventListener("dblclick", () => { R = R0(); zoom = 1; sujo = true; });
@@ -140,7 +149,7 @@
 
   /* ---------- busca: nome (em português ou inglês), fórmula ou SMILES; sem acento, sem diferença de maiúscula, com erro de digitação ---------- */
   const norm = (s) => String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[₀-₉]/g, (d) => SUB.indexOf(d)).replace(/\s+/g, " ").trim();
-  const conta = (f) => { if (!/^(?:[A-Z][a-z]?\d*)+$/.test(f)) return null; const d = {}; f.replace(/([A-Z][a-z]?)(\d*)/g, (_, e, n) => { d[e] = (d[e] || 0) + (+n || 1); }); return Object.keys(d).sort().map((e) => e + d[e]).join(" "); };
+  const conta = (f0) => { let f = String(f0); while (f.includes("(")) { const g = f.replace(/\(([^()]*)\)(\d*)/, (_, x, n) => x.repeat(+n || 1)); if (g === f) return null; f = g; } if (!/^(?:[A-Z][a-z]?\d*)+$/.test(f)) return null; const d = {}; f.replace(/([A-Z][a-z]?)(\d*)/g, (_, e, n) => { d[e] = (d[e] || 0) + (+n || 1); }); return Object.keys(d).sort().map((e) => e + d[e]).join(" "); };
   const lev = (a, b) => { const d = Array.from({ length: a.length + 1 }, (_, i) => [i]); for (let j = 1; j <= b.length; j++) d[0][j] = j; for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[a.length][b.length]; };
   SIM.qMolBusca = (lista, texto) => {
     const cru = String(texto || "").trim(); if (!cru) return { itens: [], porFormula: [] };
@@ -148,8 +157,9 @@
     const poe = (m, como) => { if (!achou.has(m.id)) achou.set(m.id, { m, como }); };
     const porFormula = lista.filter((m) => norm(m.formula).replace(/\^/g, "") === fq || (cq && cq === conta(m.formula)));
     porFormula.forEach((m) => poe(m, "fórmula"));
-    lista.filter((m) => m.smiles === cru).forEach((m) => poe(m, "SMILES"));
+    lista.filter((m) => m.smiles === cru || m.can === cru).forEach((m) => poe(m, "SMILES"));
     const tq = norm(cru).split(/[^a-z0-9α-ω]+/).filter(Boolean), texto2 = (m) => norm(m.nome + " " + m.en);
+    lista.filter((m) => norm(m.nome) === norm(cru) || norm(m.en) === norm(cru) || norm(m.nome).split(" (")[0] === norm(cru)).forEach((m) => poe(m, "nome"));
     if (tq.length) { lista.filter((m) => texto2(m).split(/[^a-z0-9α-ω]+/).some((p) => p.startsWith(tq[0])) && tq.every((t) => texto2(m).includes(t))).forEach((m) => poe(m, "nome"));
       lista.filter((m) => tq.every((t) => texto2(m).includes(t))).forEach((m) => poe(m, "nome"));
       lista.filter((m) => tq.every((t) => t.length >= 4 && texto2(m).split(/[^a-z0-9α-ω]+/).some((p) => lev(t, p) <= (t.length >= 8 ? 2 : 1)))).forEach((m) => poe(m, "nome parecido")); }
@@ -173,6 +183,7 @@
   .mv-fc h4{margin:0 0 6px;font-size:17px}.mv-fc h4 span{font-weight:500;color:var(--ink3);font-size:13.5px;margin-left:6px}
   .mv-fc dl{display:grid;grid-template-columns:150px 1fr;gap:4px 12px;margin:0;font-size:14px}.mv-fc dt{color:var(--ink3)}.mv-fc dd{margin:0}.mv-fc code{font-size:13px;background:var(--bg);padding:1px 6px;border-radius:5px;word-break:break-all}
   .mv-aviso{border:1px solid color-mix(in srgb,var(--warn) 55%,transparent);background:color-mix(in srgb,var(--warn) 10%,transparent);border-radius:9px;padding:8px 12px;font-size:14px;margin-top:8px}
+  .mv-nc{display:inline-block;font:600 11px var(--f-text);color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 60%,transparent);border-radius:5px;padding:0 6px;margin-left:6px;vertical-align:1px}
   .mv-modelo{color:var(--ink2);font-size:13px;margin-top:6px}
   .vc{display:grid;grid-template-columns:minmax(0,1fr) 300px;border-bottom:1px solid var(--line)}.vc-dir{border-left:1px solid var(--line);background:var(--card2);padding:12px 14px;display:flex;flex-direction:column;gap:12px}
   .vc-dir h5{margin:0 0 5px;font:600 12px var(--f-text);color:var(--ink2)}.vc-pos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.vc-pos select{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--line2);border-radius:7px;padding:5px 4px;font:500 13px var(--f-text)}`;
@@ -195,29 +206,30 @@
     const aplica = () => { pal.op({ semH: !op.h, esq: op.e, pares: op.p, angs: op.a ? angs.slice() : null }); const m0 = mods[0], ion = m0 && m0.ionico; q("[data-b=h]").disabled = ion || !mods.some((m) => m.nH && m.pesados > 1); q("[data-b=e]").disabled = ion; q("[data-b=p]").disabled = ion || !mods.some((m) => m.lp.length); q("[data-b=a]").disabled = ion || !mods.some((m) => centroPadrao(m) !== null);
       q("[data-v=msg]").textContent = ion ? "íons e retículo: não é uma molécula" : op.a ? "clique num átomo para ver os ângulos em volta dele" : mods.length > 1 ? "isômeros: mesma fórmula, arranjos diferentes" : ""; };
     const linha = (r, v) => (v ? `<dt>${r}</dt><dd>${v}</dd>` : "");
-    const ficha = (m) => { const an = m.angulo, ion = m.tipo === "ionico", iso = m.isomeros && dados.lista.find((x) => x.id === m.isomeros);
+    const ficha = (m) => { const an = m.angulo, ion = m.tipo === "ionico", cf = !ion && conta(m.formula), isos = cf ? dados.lista.filter((x) => x.id !== m.id && x.tipo !== "ionico" && conta(x.formula) === cf) : [];
+      const nomeIon = (io) => (io.ref ? fBonita((dados.lista.find((x) => x.id === io.ref) || {}).formula || "?") : io.el + (Math.abs(io.q) > 1 ? SUP[Math.abs(io.q)] : "") + SUP[io.q > 0 ? "+" : "-"]);
       const ang = an && an.calc && an.calc.length ? `${an.calc.map((x) => n1(x) + "°").join(", ")} <span style="color:var(--ink3)">(${an.rot}, calculado nas coordenadas do modelo)</span>` : "";
       const ref = an ? (an.ref !== null && an.ref !== undefined ? `${n1(an.ref)}° <span style="color:var(--ink3)">(${an.fonte})</span>` : an.fonte) : "";
-      return `<div class="mv-fc" data-id="${m.id}"><h4>${m.nome}<span>${m.en}</span></h4><dl>${linha("fórmula", `<b>${fBonita(m.formula)}</b>`)}${linha("SMILES", `<code>${m.smiles.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</code>`)}${linha("geometria", m.geometria)}${linha("ângulo no modelo", ang)}${linha("ângulo de livro", ref)}${linha("usos", (m.usos || []).join("; "))}${linha("de onde vem o desenho", m.origem)}</dl>
+      return `<div class="mv-fc" data-id="${m.id}"><h4>${m.nome}<span>${m.en}</span></h4><dl>${linha("fórmula", `<b>${fBonita(m.formula)}</b>`)}${linha("SMILES", `<code>${m.smiles.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</code>`)}${ion ? linha("íons", m.ions.map((io) => io.n + " " + nomeIon(io)).join(" + ")) : ""}${linha("geometria", m.geometria)}${linha("ângulo no modelo", ang)}${linha("ângulo de livro", ref)}${linha("usos", m.usos && m.usos.length ? m.usos.join("; ") + (m.usosFonte ? ` <span style="color:var(--ink3)">(${m.usosFonte})</span>` : ` <span class="mv-nc" title="ainda sem conferência em fonte">não conferido</span>`) : m.usosFonte ? `<span style="color:var(--ink3)">sem dado: ${m.usosFonte}</span>` : `<span class="mv-nc">não conferido</span>`)}${linha("de onde vem o desenho", m.origem)}</dl>
         ${ang && ref ? `<div class="mv-modelo">Os dois ângulos não precisam coincidir: o desenho é um <b>modelo</b>, e modelo é aproximação. O valor de livro é o medido.</div>` : ""}
-        ${m.nota ? `<div class="mv-aviso">${m.nota}${ion ? ` No sólido, cada íon fica cercado por 6 vizinhos de carga oposta.${escrito("EQ18") ? ` <a href="${F.href("EQ18", "quimica")}">Monte o retículo no experimento EQ18.</a>` : " O experimento EQ18 (monte o retículo) ainda está em breve."}` : ""}</div>` : ""}
-        ${iso && abertos.length === 1 ? `<p style="margin:8px 0 0"><button class="bt peq" data-iso="${m.id},${iso.id}">ver ao lado do isômero: ${iso.nome}</button></p>` : ""}</div>`; };
-    const abre = (ids) => { abertos = ids.slice(0, 3).map((id) => dados.lista.find((m) => m.id === id)).filter(Boolean); if (!abertos.length) return;
-      mods = abertos.length === 1 && abertos[0].tipo === "ionico" ? modelosIonicos(abertos[0]) : abertos.filter((m) => m.tipo !== "ionico").map(modelo); if (abertos.length > 1) mods.forEach((m) => (m.rotulo = m.reg.nome)); else if (!mods[0].ionico) mods[0].rotulo = "";
+        ${m.nota ? `<div class="mv-aviso">${m.nota}${ion ? `${m.reticulo ? " Neste cristal, cada íon fica cercado por 6 vizinhos de carga oposta." : " O retículo deste composto não está desenhado: até agora só a estrutura do NaCl foi conferida em fonte."}${escrito("EQ18") ? ` <a href="${F.href("EQ18", "quimica")}">Monte o retículo no experimento EQ18.</a>` : " O experimento EQ18 (monte o retículo) ainda está em breve."}` : ""}</div>` : ""}
+        ${isos.length && abertos.length === 1 ? `<p style="margin:8px 0 0"><button class="bt peq" data-iso="${[m].concat(isos).slice(0, 4).map((x) => x.id).join(",")}">ver ao lado ${isos.length === 1 ? "do isômero: " + isos[0].nome : "dos isômeros (" + isos.length + ")"}</button></p>` : ""}</div>`; };
+    const abre = (ids) => { abertos = ids.slice(0, 4).map((id) => dados.lista.find((m) => m.id === id)).filter(Boolean); if (!abertos.length) return;
+      mods = abertos.length === 1 && abertos[0].tipo === "ionico" ? modelosIonicos(abertos[0], dados.lista) : abertos.filter((m) => m.tipo !== "ionico").map(modelo); if (abertos.length > 1) mods.forEach((m) => (m.rotulo = m.reg.nome)); else if (!mods[0].ionico) mods[0].rotulo = "";
       angs = mods.map(centroPadrao); pal.mostra(mods); aplica(); const f = q("[data-v=ficha]"); f.classList.toggle("dupla", abertos.length > 1); f.innerHTML = abertos.map(ficha).join("");
       el.querySelectorAll(".mv-it").forEach((b) => b.setAttribute("aria-pressed", abertos.some((m) => m.id === b.dataset.id))); el.dataset.abertos = abertos.map((m) => m.id).join(","); };
     const lista = (itens, busca) => { let h = "", g = ""; itens.forEach(({ m, como }) => { if (!busca && m.grupo !== g) { g = m.grupo; h += `<div class="mv-grupo">${g}</div>`; } h += `<button class="mv-it" data-id="${m.id}" aria-pressed="${abertos.some((x) => x.id === m.id)}"><span class="f">${fBonita(m.formula)}</span><span class="n">${m.nome}</span>${busca ? `<small>${como}</small>` : ""}</button>`; }); q("[data-v=lista]").innerHTML = h || `<div class="mv-nota" style="padding:10px 4px">Nada no catálogo com esse nome, fórmula ou SMILES.</div>`; };
     const busca = () => { const t = q("#mv-q").value, r = SIM.qMolBusca(dados.lista, t), a = q("[data-v=achou]");
       if (!t.trim()) { a.innerHTML = ""; return lista(dados.lista.map((m) => ({ m })), false); }
       lista(r.itens, true);
-      if (r.porFormula.length > 1) { a.innerHTML = `<b>${r.porFormula.length} isômeros</b> com a fórmula ${fBonita(r.porFormula[0].formula)}: mesma fórmula, moléculas diferentes. Estão lado a lado.`; abre(r.porFormula.map((m) => m.id)); }
-      else { a.innerHTML = r.itens.length ? `${r.itens.length} ${r.itens.length === 1 ? "resultado" : "resultados"}` : ""; if (r.itens.length === 1 || r.porFormula.length === 1) abre([(r.porFormula[0] || r.itens[0].m).id]); } };
+      if (r.porFormula.length > 1) { a.innerHTML = `<b>${r.porFormula.length} isômeros</b> com a fórmula ${fBonita(r.porFormula[0].formula)}: mesma fórmula, moléculas diferentes. ${r.porFormula.length > 4 ? "Os 4 primeiros estão lado a lado." : "Estão lado a lado."}`; abre(r.porFormula.map((m) => m.id)); }
+      else { a.innerHTML = r.itens.length ? `${r.itens.length} ${r.itens.length === 1 ? "resultado" : "resultados"}` : ""; if (r.itens.length) abre([(r.porFormula[0] || r.itens[0].m).id]); } }; /* abre o melhor resultado; os outros ficam na lista */
     el.addEventListener("click", (e) => { const it = e.target.closest(".mv-it"); if (it) return abre([it.dataset.id]); const iso = e.target.closest("[data-iso]"); if (iso) return abre(iso.dataset.iso.split(","));
       const z = e.target.closest("[data-z]"); if (z) return z.dataset.z === "0" ? pal.recentra() : pal.zoom(z.dataset.z === "+" ? 1.2 : 1 / 1.2);
       const b = e.target.closest("[data-b]"); if (!b || b.disabled) return; const k = b.dataset.b, on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", on); if (k === "g") return pal.girar(on); op[k] = on; aplica(); });
     q("#mv-q").addEventListener("input", () => dados && busca());
     SIM.qMoleculas._ult = { pal, abre: (ids) => abre(ids), estado: () => ({ abertos: abertos.map((m) => m.id), mods: mods.length, op: Object.assign({}, op), angs: angs.slice(), lp: mods.map((m) => m.lp.length) }) };
-    carrega().then((d) => { dados = d; q("[data-v=nota]").innerHTML = `A busca por SMILES só encontra moléculas <b>deste catálogo</b> (${d.lista.length} por enquanto), e só quando o SMILES é escrito como está na ficha. Ela não desenha molécula nova.`; lista(d.lista.map((m) => ({ m })), false); abre(["h2o"]); }).catch(() => { q("[data-v=msg]").textContent = "O catálogo de moléculas não carregou. Recarregue a página."; });
+    carrega().then((d) => { dados = d; q("[data-v=nota]").innerHTML = `A busca por SMILES só encontra moléculas <b>deste catálogo</b> (${d.lista.length}), comparando o texto com o SMILES da ficha. Ela não desenha molécula nova.`; lista(d.lista.map((m) => ({ m })), false); abre(["h2o"]); }).catch(() => { q("[data-v=msg]").textContent = "O catálogo de moléculas não carregou. Recarregue a página."; });
   };
 
   /* ---------- construtor VSEPR ---------- */

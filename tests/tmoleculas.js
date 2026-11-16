@@ -16,7 +16,7 @@ let falhas = 0; const ok = (c, m) => { console.log((c ? 'ok ' : 'FALHA ') + m); 
   // ----- visualizador -----
   await p.goto(RAIZ + '#/quimica/MV01'); await p.waitForTimeout(2000);
   const ini = await p.evaluate(() => ({ n: window.MOLECULAS && window.MOLECULAS.lista.length, itens: document.querySelectorAll('.mv-it').length, ab: document.querySelector('#lab-moleculas').dataset.abertos, nota: document.querySelector('[data-v=nota]').textContent, pal: document.querySelector('.mv-palco').getBoundingClientRect(), dir: document.querySelector('.mv-dir').getBoundingClientRect() }));
-  ok(ini.n === 36 && ini.itens === 36 && ini.ab === 'h2o', 'visualizador: 36 moléculas no catálogo e na lista; abre na água → ' + ini.n + ', ' + ini.itens + ', ' + ini.ab);
+  ok(ini.n === 230 && ini.itens === 230 && ini.ab === 'h2o', 'visualizador: 230 moléculas no catálogo e na lista; abre na água → ' + ini.n + ', ' + ini.itens + ', ' + ini.ab);
   ok(/só encontra moléculas deste catálogo/.test(ini.nota) && /não desenha molécula nova/.test(ini.nota), 'aviso escrito: a busca por SMILES só encontra moléculas do catálogo');
   ok(Math.abs(ini.pal.width - ini.pal.height) < 2 && ini.pal.width > 480 && ini.dir.left >= ini.pal.right && ini.dir.width > 250, 'desenho: quadrado grande (' + Math.round(ini.pal.width) + ' px) e painel de busca à direita (' + Math.round(ini.dir.width) + ' px)');
   const pintado = () => p.evaluate(() => { const c = document.querySelector('#lab-moleculas canvas'), d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 4 * 50) if (d[i] > 0) n++; return n; });
@@ -26,14 +26,14 @@ let falhas = 0; const ok = (c, m) => { console.log((c ? 'ok ' : 'FALHA ') + m); 
   ok(conf.length === 0, 'dados: em todas as moléculas, os átomos e a carga das coordenadas batem com a fórmula escrita' + (conf.length ? ' → ' + conf.join(',') : ''));
   // busca
   const busca = (t) => p.evaluate((t) => SIM.qMolBusca(window.MOLECULAS.lista, t).itens.map((x) => x.m.id + ':' + x.como), t);
-  const casos = [['agua', 'h2o'], ['ÁGUA', 'h2o'], ['h2o', 'h2o'], ['H₂O', 'h2o'], ['OH2', 'h2o'], ['water', 'h2o'], ['cafeina', 'cafeina'], ['caffeine', 'cafeina'], ['CCO', 'etanol'], ['c1ccccc1', 'c6h6'], ['nh4+', 'nh4'], ['CO3^2-', 'co3'], ['acido sulfurico', 'h2so4'], ['benzno', 'c6h6'], ['NaCl', 'nacl']];
+  const casos = [['agua', 'h2o'], ['ÁGUA', 'h2o'], ['h2o', 'h2o'], ['H₂O', 'h2o'], ['OH2', 'h2o'], ['water', 'h2o'], ['cafeina', 'cafeina'], ['caffeine', 'cafeina'], ['CCO', 'etanol'], ['c1ccccc1', 'c6h6'], ['C1=CC=CC=C1', 'c6h6'], ['P4O10', 'm045'], ['fulereno', 'm011'], ['Ca(OH)2', 'm089'], ['colesterol', 'm216'], ['nh4+', 'nh4'], ['CO3^2-', 'co3'], ['acido sulfurico', 'h2so4'], ['benzno', 'c6h6'], ['NaCl', 'nacl']];
   for (const [t, id] of casos) { const r = await busca(t); ok(r.length >= 1 && r[0].split(':')[0] === id, 'busca "' + t + '" → ' + (r.slice(0, 3).join(', ') || 'nada')); }
-  { const r = await busca('etanl'); ok(r.length === 2 && r.some((x) => x.startsWith('etanol:')) && r.some((x) => x.startsWith('c2h6:')), 'busca "etanl" (erro de digitação): oferece etanol e etano → ' + r.join(', ')); }
-  ok((await busca('C1CCCCC1')).length === 0 && (await busca('xyzzy')).length === 0, 'busca: SMILES de fora do catálogo (ciclo-hexano) e texto sem sentido não acham nada');
+  { const r = await busca('etanl'); ok(r.some((x) => x.startsWith('etanol:')) && r.some((x) => x.startsWith('c2h6:')), 'busca "etanl" (erro de digitação): oferece etanol e etano, entre outros parecidos → ' + r.join(', ')); }
+  ok((await busca('C1CCCCCC1')).length === 0 && (await busca('xyzzy')).length === 0, 'busca: SMILES de fora do catálogo (ciclo-heptano) e texto sem sentido não acham nada');
   await p.fill('#mv-q', 'C2H6O'); await p.waitForTimeout(300);
   const iso = await p.evaluate(() => ({ ab: document.querySelector('#lab-moleculas').dataset.abertos, txt: document.querySelector('[data-v=achou]').textContent, fichas: document.querySelectorAll('.mv-fc').length, n: SIM.qMoleculas._ult.pal.estado().n }));
   ok(iso.ab === 'etanol,eterdim' && /2 isômeros/.test(iso.txt) && iso.fichas === 2 && iso.n === 2, 'fórmula com isômeros: C2H6O abre etanol e éter dimetílico lado a lado, com o aviso → ' + iso.txt.slice(0, 60));
-  await p.fill('#mv-q', 'c4h8'); await p.waitForTimeout(300); ok((await p.evaluate(() => document.querySelector('#lab-moleculas').dataset.abertos)) === 'cisbut,transbut', 'C4H8: cis e trans-but-2-eno lado a lado');
+  await p.fill('#mv-q', 'c4h8'); await p.waitForTimeout(300); ok((await p.evaluate(() => document.querySelector('#lab-moleculas').dataset.abertos)) === 'm115,cisbut,transbut,m123' && (await p.evaluate(() => SIM.qMoleculas._ult.pal.estado().n)) === 4, 'C4H8: quatro isômeros (but-1-eno, cis e trans-but-2-eno, ciclobutano) em dois por dois');
   await p.fill('#mv-q', 'glicose'); await p.waitForTimeout(300); ok((await p.evaluate(() => document.querySelector('#lab-moleculas').dataset.abertos)) === 'glicose', 'um resultado só: abre direto');
   // botões
   const vis = () => p.evaluate(() => { SIM.qMoleculas._ult.pal.pintaJa(); return SIM.qMoleculas._ult.pal.estado().atomos[0]; });
@@ -54,7 +54,14 @@ let falhas = 0; const ok = (c, m) => { console.log((c ? 'ok ' : 'FALHA ') + m); 
   // composto iônico
   await p.fill('#mv-q', 'sal de cozinha'); await p.waitForTimeout(200); await p.fill('#mv-q', 'cloreto de sodio'); await p.waitForTimeout(300);
   const ion = await p.evaluate(() => ({ n: SIM.qMoleculas._ult.pal.estado().atomos, txt: document.querySelector('.mv-aviso').textContent, off: ['h', 'e', 'p', 'a'].every((k) => document.querySelector('#lab-moleculas [data-b=' + k + ']').disabled) }));
-  ok(ion.n.join() === '2,27' && /no sólido é uma rede, não uma molécula/.test(ion.txt) && /EQ18/.test(ion.txt) && ion.off, 'NaCl: 2 íons separados + pedaço do retículo com 27 íons, aviso "é uma rede, não uma molécula", menção ao EQ18, botões de molécula desligados');
+  ok(ion.n.join() === '2,27' && /no sólido é uma rede de íons, não uma molécula/.test(ion.txt) && /EQ18/.test(ion.txt) && ion.off, 'NaCl: 2 íons separados + pedaço do retículo com 27 íons, aviso "é uma rede de íons, não uma molécula", menção ao EQ18, botões de molécula desligados');
+  await p.fill('#mv-q', 'carbonato de calcio'); await p.waitForTimeout(300);
+  const caco = await p.evaluate(() => ({ n: SIM.qMoleculas._ult.pal.estado().atomos, txt: document.querySelector('.mv-fc').textContent }));
+  ok(caco.n.join() === '5' && /1 Ca²⁺ \+ 1 CO₃²⁻/.test(caco.txt) && /retículo deste composto não está desenhado/.test(caco.txt), 'CaCO₃: os íons separados (Ca²⁺ e o carbonato inteiro), sem retículo, e a ficha diz por quê');
+  const todas = await p.evaluate(() => { const ruins = []; window.MOLECULAS.lista.forEach((m) => { try { SIM.qMoleculas._ult.abre([m.id]); SIM.qMoleculas._ult.pal.pintaJa(); const n = SIM.qMoleculas._ult.pal.estado().atomos.reduce((a, b) => a + b, 0); if (!n || !document.querySelector('.mv-fc')) ruins.push(m.id); } catch (e) { ruins.push(m.id + ' ' + e.message); } }); return ruins; });
+  ok(todas.length === 0, 'as 230 abrem e desenham sem erro' + (todas.length ? ' → ' + todas.slice(0, 6).join(', ') : ''));
+  const marcas = await p.evaluate(() => ({ nc: window.MOLECULAS.lista.filter((m) => !m.usosFonte).length, vazios: window.MOLECULAS.lista.filter((m) => m.usosFonte && !m.usos.length).length, tela: document.querySelectorAll('.mv-nc').length }));
+  ok(marcas.nc === 0 && marcas.tela === 0 && marcas.vazios <= 40, 'usos: nenhuma das 230 fica "não conferido"; as que a fonte não cita aparecem como "sem dado" → sem dado: ' + marcas.vazios);
   // ----- construtor -----
   await p.goto(RAIZ + '#/quimica/MV02'); await p.waitForTimeout(2000);
   const mu = (c, l, e) => p.evaluate(([c, l, e]) => { SIM.qVsepr3d._ult.poe(c, l, e); const el = document.querySelector('#lab-vsepr3d'); return el.dataset.geo + '|' + el.dataset.mu; }, [c, l, e]);
