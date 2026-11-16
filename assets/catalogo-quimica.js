@@ -103,7 +103,7 @@ window.CATALOGO.push(
     ["I09","Tratamento de água e resíduos: cloração, pH, dureza e esgoto",[],true],
   ] },
   { id:"QJ", area:"qui", letra:"J", cor:"--mM", nome:"Química analítica", desc:"Titulação, análise qualitativa e quantitativa.", temas:[
-    ["J01","Análise qualitativa e marcha de íons",[]],
+    ["J01","Análise qualitativa: solubilidade, precipitados, chama e marcha de cátions",[],true],
     ["J02","Métodos gravimétricos",[]],
     ["J03","Métodos volumétricos",[]],
     ["J04","Química de coordenação",[]],
