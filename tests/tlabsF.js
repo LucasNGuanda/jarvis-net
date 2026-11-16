@@ -74,6 +74,34 @@ const perto = (a, b, tol = 0.005) => Math.abs(a - b) <= tol * Math.max(1e-9, Mat
     const m2 = await lc(['mais2']); ok(m2[1].Q > m2[1].K && m2[2].n2 < m2[1].n2 && perto(m2[2].Q, m2[2].K, 0.01), 'F07: + NO₂ → Q > K, anda para a esquerda até Q = K');
     const ci = await lc(['cat', 'inerte']); ok(perto(ci[1].Q, ci[0].Q, 1e-6) && perto(ci[4].n2, ci[0].n2, 0.002) && perto(ci[3].Q, ci[3].K, 0.01), 'F07: catalisador e gás inerte a volume fixo não deslocam nada (NO₂ fica em ' + ci[4].n2.toFixed(4) + ' mol)');
     await p.evaluate(() => { SIM.qLeChatelier._ult.acao('cat'); SIM.qLeChatelier._ult.zera(); }); }
+  // ----- F08: escala de pH -----
+  if (temas.has('F08')) { await abre('F08');
+    const ph = (k, l, t) => p.evaluate(([k, l, t]) => { SIM.qPH._ult.poe(k, l, t); return SIM.qPH._ult.est(); }, [k, l, t]);
+    const a1 = await ph('HCl', -2, 25), a2 = await ph('NaOH', -3, 25); ok(perto(a1.pH, 2, 1e-4) && perto(a2.pH, 11, 1e-4) && perto(a2.pOH, 3, 1e-4), 'F08: HCl 0,010 mol/L → pH 2,00; NaOH 0,0010 mol/L → pOH 3,00 e pH 11,00');
+    const a3 = await ph('HCl', -8, 25); ok(Math.abs(a3.pH - 6.978) < 0.002 && a3.ingenuo === 8, 'F08: HCl 10⁻⁸ mol/L → pH ' + a3.pH.toFixed(3) + ' (a conta direta daria 8; o laboratório avisa)');
+    const a4 = await ph('HAc', -1, 25), a5 = await ph('HAc', -5, 25); ok(Math.abs(a4.pH - 2.875) < 0.002 && Math.abs(a4.alfa - 0.0133) < 0.0005 && a5.alfa > 0.7 && a5.alfa < 0.73, 'F08: acético 0,10 mol/L → pH ' + a4.pH.toFixed(2) + ', ' + (100 * a4.alfa).toFixed(1) + '% ionizado; a 10⁻⁵ mol/L, ' + (100 * a5.alfa).toFixed(0) + '% (Ostwald)');
+    const a6 = await ph('NH3', -1, 25); ok(Math.abs(a6.pH - 11.125) < 0.002, 'F08: amônia 0,10 mol/L → pH ' + a6.pH.toFixed(2));
+    const a7 = await ph('agua', -2, 50), a8 = await ph('agua', -2, 100), a9 = await ph('agua', -2, 0); ok(Math.abs(a7.pH - 6.638) < 0.002 && Math.abs(a8.pH - 6.125) < 0.002 && Math.abs(a9.pH - 7.475) < 0.002 && perto(a7.h, a7.oh, 1e-6), 'F08: água pura: pH ' + a9.pH.toFixed(2) + ' a 0 °C, ' + a7.pH.toFixed(2) + ' a 50 °C e ' + a8.pH.toFixed(2) + ' a 100 °C, sempre com [H⁺] = [OH⁻]');
+    await p.evaluate(() => { SIM.qPH._ult.poe('agua', -2, 50); document.querySelector('#lab-ph [data-k=HAc]').click(); }); const a10 = await p.evaluate(() => SIM.qPH._ult.est()); ok(a10.T === 25, 'F08: escolher um eletrólito fraco volta a temperatura para 25 °C (as constantes são de 25 °C)'); await ph('HCl', -2, 25); }
+  // ----- F09: tampão -----
+  if (temas.has('F09')) { await abre('F09');
+    const tp = (pr, a, b, f) => p.evaluate(([pr, a, b, f]) => { SIM.qTampao._ult.poe(pr, a, b, f); return SIM.qTampao._ult.est(); }, [pr, a, b, f]);
+    const t0 = await tp('ac', 0.1, 0.1, 0), t1 = await tp('ac', 0.1, 0.1, 0.01), t2 = await tp('ac', 0.1, 0.1, -0.01); ok(Math.abs(t0.pH - 4.745) < 0.002 && Math.abs(t1.pH - 4.658) < 0.002 && Math.abs(t2.pH - 4.832) < 0.002 && perto(t1.agua, 2, 1e-3) && perto(t2.agua, 12, 1e-3), 'F09: tampão acético 0,10/0,10: pH ' + t0.pH.toFixed(2) + '; com 0,010 mol de HCl, ' + t1.pH.toFixed(2) + ' (a água vai a 2,00); com NaOH, ' + t2.pH.toFixed(2) + ' (a água vai a 12,00)');
+    ok(Math.abs(t1.hh - t1.pH) < 0.005, 'F09: dentro da faixa, a fórmula de Henderson-Hasselbalch (' + t1.hh.toFixed(3) + ') coincide com o cálculo exato (' + t1.pH.toFixed(3) + ')');
+    const t3 = await tp('ac', 0.1, 0.1, 0.1), t4 = await tp('ac', 0.1, 0.1, 0.11); ok(t3.estourou && t3.hh === null && Math.abs(t3.pH - 2.72) < 0.01 && Math.abs(t4.pH - 1.99) < 0.01, 'F09: com 0,100 mol de HCl o acetato acaba (pH ' + t3.pH.toFixed(2) + ', fórmula "não vale"); com 0,110 mol, pH ' + t4.pH.toFixed(2));
+    const t5 = await tp('ac', 0, 0.1, 0), t6 = await tp('am', 0.1, 0, 0); ok(Math.abs(t5.pH - 8.872) < 0.002 && Math.abs(t6.pH - 5.128) < 0.002, 'F09: hidrólise: acetato de sódio 0,10 mol/L → pH ' + t5.pH.toFixed(2) + '; cloreto de amônio 0,10 mol/L → pH ' + t6.pH.toFixed(2));
+    const t7 = await tp('am', 0.1, 0.1, 0); ok(Math.abs(t7.pH - 9.255) < 0.002, 'F09: tampão amônio/amônia 0,10/0,10 → pH ' + t7.pH.toFixed(2) + ' (= pKa do amônio)');
+    await tp('ac', 0.1, 0.1, 0); await p.click('#lab-tampao [data-a=h]'); await p.click('#lab-tampao [data-a=h]'); const t8 = await p.evaluate(() => SIM.qTampao._ult.est()); ok(perto(t8.forte, 0.02, 1e-9) && Math.abs(t8.pH - (4.7447 + Math.log10(0.08 / 0.12))) < 0.003, 'F09: dois cliques em "+ HCl" somam 0,020 mol → pH ' + t8.pH.toFixed(2)); }
+  // ----- F10: Kps -----
+  if (temas.has('F10')) { await abre('F10');
+    const kp = (k, a, b) => p.evaluate(([k, a, b]) => { SIM.qKps._ult.poe(k, a, b); return SIM.qKps._ult.est(); }, [k, a, b]);
+    const k1 = await kp('AgCl', -3, -3); ok(k1.ppt && perto(k1.c1 * k1.c2, 1.77e-10, 1e-6) && perto(k1.c1, 1.330e-5, 1e-3) && perto(k1.s, 1.330e-5, 1e-3), 'F10: AgCl com 10⁻³ de cada íon: precipita e sobram ' + k1.c1.toExponential(2) + ' mol/L de cada (= solubilidade em água pura)');
+    const k2 = await kp('AgCl', -6, -6); ok(!k2.ppt && k2.x === 0 && perto(k2.Q, 1e-12, 1e-9), 'F10: AgCl com 10⁻⁶ de cada: Q = 10⁻¹² < Kps, não precipita');
+    const k3 = await kp('CaF2', -2, -2); ok(k3.ppt && perto(k3.c1 * k3.c2 * k3.c2, 3.9e-11, 1e-6) && perto(k3.x, 4.956e-3, 1e-3) && k3.c2 < k3.c1 / 10, 'F10: CaF₂ com 10⁻² de cada: o fluoreto (em falta, sai de 2 em 2) quase some: ' + k3.c2.toExponential(2) + ' contra ' + k3.c1.toExponential(2) + ' de Ca²⁺');
+    const k4 = await kp('Ag2CrO4', -2, -3); ok(k4.ppt && perto(k4.c1 * k4.c1 * k4.c2, 1.12e-12, 1e-6), 'F10: Ag₂CrO₄: as concentrações finais devolvem o Kps com o expoente 2 na prata');
+    ok(perto(await p.evaluate(() => SIM.kps.s('MgOH2')), 1.119e-4, 1e-3) && perto(await p.evaluate(() => SIM.kps.comum('AgCl', 0.1)), 1.77e-9, 1e-4), 'F10: Mg(OH)₂: s = 1,12·10⁻⁴ mol/L; AgCl em Cl⁻ 0,10 mol/L: s = 1,77·10⁻⁹ mol/L (íon comum)');
+    /* a resposta em notação "1,33e-5" tem de ser aceita no campo */
+    const acc = await p.evaluate(() => { const ex = [...document.querySelectorAll('.ex')].find((e) => e.querySelector('.ex-num')); const t = ex._d.num.v.toExponential(2).replace('.', ','); ex.querySelector('.ex-num input').value = t; ex.querySelector('.ex-num button').click(); const a = t + ' ' + ex.querySelector('.ex-fb').textContent; ex.querySelector('.ex-num input').value = t.replace('e', '·10^'); ex.querySelector('.ex-num button').click(); return [a, ex.querySelector('.ex-fb').textContent]; }); ok(/Certo/.test(acc[0]) && /Certo/.test(acc[1]), 'F10: o exercício 1 aceita a resposta digitada em notação científica (com "e" ou com "·10^") → ' + acc.join(' / ')); }
   //MAIS
   // ----- gabaritos: em todo exercício de alternativas, clicar na letra do gabarito tem de dar "certo" -----
   for (const cod of ['F01', 'F02', 'F03', 'F04', 'F05', 'F06', 'F07', 'F08', 'F09', 'F10'].filter((c) => temas.has(c))) { await p.goto(RAIZ + '#/quimica/' + cod); await p.waitForTimeout(1300);

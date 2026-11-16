@@ -66,9 +66,9 @@ window.CATALOGO.push(
     ["F05","Leis de velocidade: ordem, mecanismo e meia-vida",[],true],
     ["F06","Equilíbrio químico: Kc, Kp e quociente de reação",[],true],
     ["F07","Deslocamento de equilíbrio: o princípio de Le Chatelier",[],true],
-    ["F08","pH e pOH",[]],
-    ["F09","Hidrólise e tampão",[]],
-    ["F10","Kps",[]],
+    ["F08","Equilíbrio iônico da água: pH e pOH",[],true],
+    ["F09","Hidrólise salina e solução-tampão",[],true],
+    ["F10","Produto de solubilidade (Kps)",[],true],
   ] },
   { id:"QG", area:"qui", letra:"G", cor:"--mK1", nome:"Eletroquímica", desc:"Pilhas, potenciais e eletrólise.", temas:[
     ["G01","Pilhas e potenciais",[]],
