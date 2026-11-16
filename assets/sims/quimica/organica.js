@@ -91,7 +91,42 @@
     /* ramificada: cadeia aberta com carbono terciário ou quaternário; cadeia fechada com carbono fora do anel */
     const ram = ciclos ? C.some((k) => !emAnel.has(k)) : C.some((k) => g.at[k].viz.filter(([v]) => g.at[v].el === "C").length >= 3);
     return { nC, aberta: !ciclos, ciclos, aromatica: arom, saturada: !insat, homogenea: !hetero, ramificada: ram, mista: ciclos > 0 && C.some((k) => !emAnel.has(k)) }; };
-  SIM.org = { parse, conta, formula, massa, idh, classes, hib, sigmapi, cadeia, layout, svg, fig };
+  /* ---------- nomenclatura IUPAC (recomendações de 1993, como nos livros brasileiros) de hidrocarbonetos de cadeia aberta com ramificações metil e etil ----------
+     Regras aplicadas, nesta ordem: (1) a cadeia principal contém todas as duplas e triplas; (2) é a mais longa; (3) entre as de mesmo tamanho, a mais ramificada;
+     (4) numeração que dá os menores números às insaturações; (5) depois, os menores números às ramificações; (6) no empate, o menor número ao grupo citado primeiro
+     em ordem alfabética. Devolve null se a molécula sai desse universo (anel, heteroátomo, ramificação maior que etil).
+     Conferência (tools/quimica/confere-nomes.py): gera todos os alcanos de C4 a C8 por construção, compara com o RDKit e exige um nome por molécula, nomes diferentes
+     para moléculas diferentes e o número de isômeros de tabela (2, 3, 5, 9, 18). */
+  const PREF = ["", "met", "et", "prop", "but", "pent", "hex", "hept", "oct", "non", "dec", "undec", "dodec"], MULT = ["", "", "di", "tri", "tetra", "penta", "hexa"];
+  const analisa = (smi) => { const g = typeof smi === "string" ? parse(smi) : smi; if (g.at.some((a) => a.el !== "C" || a.carga) || g.bd.length !== g.at.length - 1) return null;
+    const n = g.at.length, viz = g.at.map((a) => a.viz.map(([v, k]) => [v, g.bd[k].o])); if (n === 1) return { cadeia: [0], ins: [], subs: [], n: 1 };
+    const multi = g.bd.filter((b) => b.o > 1), folhas = [...Array(n).keys()].filter((k) => viz[k].length === 1), caminhos = [];
+    const anda = (u, vis, cam) => { cam.push(u); vis.add(u); let fim = true; for (const [v] of viz[u]) if (!vis.has(v)) { fim = false; anda(v, vis, cam); } if (fim) caminhos.push([...cam]); cam.pop(); vis.delete(u); };
+    folhas.forEach((f) => anda(f, new Set(), []));
+    const cands = [];
+    for (const c of caminhos) { const pos = new Map(c.map((u, i) => [u, i + 1])); if (!multi.every((b) => pos.has(b.a) && pos.has(b.b))) continue;
+      const ins = multi.map((b) => [Math.min(pos.get(b.a), pos.get(b.b)), b.o]).sort((x, y) => x[0] - y[0]); let okc = true; const subs = [];
+      for (const u of c) for (const [v] of viz[u]) { if (pos.has(v)) continue; const outros = viz[v].filter(([w]) => w !== u); if (outros.length === 0) subs.push([pos.get(u), "metil"]); else if (outros.length === 1 && viz[outros[0][0]].length === 1 && outros[0][1] === 1) subs.push([pos.get(u), "etil"]); else okc = false; }
+      if (okc) cands.push({ cadeia: c, ins, subs: subs.sort((x, y) => x[0] - y[0] || (x[1] < y[1] ? -1 : 1)), n: c.length }); }
+    if (!cands.length) return null;
+    const lex = (a, b) => { for (let i = 0; i < Math.min(a.length, b.length); i++) if (a[i] !== b[i]) return a[i] - b[i]; return a.length - b.length; }, alfa = (c) => [...c.subs].sort((x, y) => (x[1] < y[1] ? -1 : x[1] > y[1] ? 1 : x[0] - y[0])).map((x) => x[0]);
+    cands.sort((A, B) => B.n - A.n || B.subs.length - A.subs.length || lex(A.ins.map((x) => x[0]), B.ins.map((x) => x[0])) || lex(A.ins.filter((x) => x[1] === 2).map((x) => x[0]), B.ins.filter((x) => x[1] === 2).map((x) => x[0])) || lex(A.subs.map((x) => x[0]), B.subs.map((x) => x[0])) || lex(alfa(A), alfa(B)));
+    return cands[0]; };
+  const nome = (smi) => { const c = analisa(smi); return c ? formata(c) : null; };
+  /* escreve o nome de uma descrição {n, ins: [[posição, ordem]], subs: [[posição, tipo]]} tal como foi dada (sem conferir se é a escolha IUPAC) */
+  const formata = (c) => { const n = c.n, du = c.ins.filter((x) => x[1] === 2).map((x) => x[0]), tr = c.ins.filter((x) => x[1] === 3).map((x) => x[0]);
+    /* ramificações em ordem alfabética (etil antes de metil), com di, tri... */
+    const tipos = [...new Set(c.subs.map((x) => x[1]))].sort(), soUm = n <= 3 || (n === 4 && false), partes = tipos.map((t) => { const ls = c.subs.filter((x) => x[1] === t).map((x) => x[0]); return (n === 3 ? "" : ls.join(",") + "-") + MULT[ls.length] + t; });
+    let raiz = PREF[n], suf;
+    const loc = (ls) => (n <= 3 && ls.length === 1 && !(n === 3 && c.subs.length === 0 && false) ? "" : "-" + ls.join(",") + "-");
+    if (!du.length && !tr.length) suf = "ano";
+    else { const semLoc = n === 2 || (n === 3 && du.length + tr.length === 1); const pd = du.length ? (semLoc ? "" : "-" + du.join(",") + "-") + MULT[du.length] + "en" : "", pt = tr.length ? (semLoc ? "" : "-" + tr.join(",") + "-") + MULT[tr.length] + "in" : ""; if (du.length > 1 || tr.length > 1) raiz += "a"; suf = pd + pt + "o"; if (du.length && tr.length) suf = pd + pt + "o"; }
+    const prefixo = partes.join("-"), junta = prefixo && raiz[0] === "h" ? "-" : "";
+    return prefixo + junta + raiz + suf; };
+  /* construtor: cadeia principal de n carbonos, insaturações [[posição, ordem]], ramificações [[posição, "metil" | "etil"]] → SMILES */
+  const monta = (n, ins = [], subs = []) => { let s = ""; for (let i = 1; i <= n; i++) { s += "C"; subs.filter((x) => x[0] === i).forEach((x) => (s += x[1] === "etil" ? "(CC)" : "(C)")); const b = ins.find((x) => x[0] === i); if (b && i < n) s += b[1] === 3 ? "#" : "="; } return s; };
+  SIM.org = { parse, conta, formula, massa, idh, classes, hib, sigmapi, cadeia, layout, svg, fig, analisa, nome, formata, monta };
+
 
   /* ---------- H01 · leitor de cadeias ---------- */
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
