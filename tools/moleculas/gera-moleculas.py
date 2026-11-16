@@ -247,7 +247,7 @@ def main():
     rel.append("## Campo de força reprovado (desenho trocado pelo VSEPR ideal)\n" + ("\n".join("- " + f for f in trocas) if trocas else "Nenhum.") + "\n")
     rel.append("## Ângulo calculado sem valor de livro conferido\n" + (", ".join(semref) if semref else "Nenhum.") + "\n")
     rel.append("## Desenhadas com cargas formais separadas (o RDKit normaliza; a ficha avisa)\n" + (", ".join(cargas) if cargas else "Nenhuma.") + "\n")
-    rel.append("## Usos\nResumidos (por IA) de textos baixados por script: primeiro parágrafo do artigo da Wikipedia em inglês e descrições do PubChem. Cada uso tem um trecho literal de apoio em fonte/usos.json.\n\n**Com uso:** %d · **sem dado (a fonte não cita uso):** %d%s\n" % (sum(1 for r in saida if r.get("usos")), len(semuso), (" → " + ", ".join(semuso)) if semuso else ""))
+    rel.append("## Usos\nResumidos (por IA) de textos baixados por script: primeiro parágrafo do artigo da Wikipedia em inglês, descrições e seção Uses do PubChem. Cada uso tem um trecho literal de apoio em fonte/usos.json.\n\n**Com uso:** %d · **sem dado (a fonte não cita uso):** %d%s\n" % (sum(1 for r in saida if r.get("usos")), len(semuso), (" → " + ", ".join(semuso)) if semuso else ""))
     rel.append("## Maiores diferenças entre o modelo e o valor de livro (5 graus ou mais)\nNão foram ajustadas: a ficha mostra os dois números.\n\n" + ("\n".join("- " + t for _, t in sorted(difs, reverse=True)) if difs else "Nenhuma.") + "\n")
     rel.append("## Tabela\n\n| nº | molécula | fórmula escrita | pelo SMILES (RDKit) | no PubChem | confere | desenho | átomos | ângulo no modelo | ângulo de livro |\n|---|---|---|---|---|---|---|---|---|---|")
     rel += linhas

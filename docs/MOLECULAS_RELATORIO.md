@@ -25,6 +25,11 @@ pentacloreto de fósforo, tetrafluoreto de enxofre, hexafluoreto de enxofre, hep
 ## Desenhadas com cargas formais separadas (o RDKit normaliza; a ficha avisa)
 ácido cloroso, ácido clórico, ácido perclórico, dióxido de cloro, clorato, perclorato
 
+## Usos
+Resumidos (por IA) de textos baixados por script: primeiro parágrafo do artigo da Wikipedia em inglês, descrições e seção Uses do PubChem. Cada uso tem um trecho literal de apoio em fonte/usos.json.
+
+**Com uso:** 222 · **sem dado (a fonte não cita uso):** 8 → ácido carbônico, ácido cloroso, tetrafluoreto de xenônio, carbonato, hipoclorito, permanganato, dicromato, tri-iodeto
+
 ## Maiores diferenças entre o modelo e o valor de livro (5 graus ou mais)
 Não foram ajustadas: a ficha mostra os dois números.
 
