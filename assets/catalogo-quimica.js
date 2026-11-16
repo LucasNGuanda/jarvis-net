@@ -80,7 +80,7 @@ window.CATALOGO.push(
     ["H01","O átomo de carbono e as cadeias carbônicas",[],true],
     ["H02","Hidrocarbonetos: classes, nomenclatura e petróleo",[],true],
     ["H03","Funções oxigenadas: do álcool ao éster",[],true],
-    ["H04","Funções nitrogenadas",[]],
+    ["H04","Funções nitrogenadas e haletos orgânicos",[],true],
     ["H05","Propriedades físicas e estrutura",[]],
     ["H06","Acidez e basicidade",[]],
     ["H07","Isomeria constitucional",[]],

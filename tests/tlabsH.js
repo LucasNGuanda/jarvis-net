@@ -39,6 +39,14 @@ const perto = (a, b, tol = 0.005) => Math.abs(a - b) <= tol * Math.max(1e-9, Mat
     const c = await fn('vanilina', ['aldeído', 'éter', 'fenol']), d = await fn('fenol', ['álcool']), e = await fn('propano-1,2,3-triol', ['álcool']); ok(c.certo && !d.certo && d.tem[0] === 'fenol' && e.certo && e.fs.length === 3, 'H03: vanilina = aldeído, éter e fenol; fenol não é álcool; a glicerina tem três grupos álcool');
     await p.evaluate(() => { const u = SIM.qFuncoes._ult; u.poe(u.MOL.indexOf('etanoato de etila'), ['éster']); u.confere(); }); await p.waitForTimeout(150); ok(/Certo/.test(await p.evaluate(() => document.querySelector('#lab-funcoes .status').textContent)) && await p.evaluate(() => document.querySelectorAll('#lab-funcoes svg circle').length >= 3), 'H03: "conferir" responde "Certo" e destaca os átomos do grupo éster');
     ok(await p.evaluate(() => { const o = SIM.org; return o.COMP.every((c) => { try { o.svg(c[2]); return true; } catch (e) { return false; } }); }), 'H03: os 73 compostos da tabela são desenhados sem erro'); }
+  // ----- H04: caça às funções com N e halogênio -----
+  if (temas.has('H04')) { await abre('H04');
+    const fn = (nome, ms) => p.evaluate(([nome, ms]) => { const u = SIM.qFuncoesN._ult; u.poe(u.MOL.indexOf(nome), ms); return u.est(); }, [nome, ms]);
+    const a = await fn('paracetamol', ['amida', 'fenol']), b2 = await fn('paracetamol', ['amina', 'fenol']); ok(a.certo && !b2.certo, 'H04: paracetamol = amida e fenol; "amina e fenol" é recusado');
+    const c = await fn('alanina', ['amina', 'ácido carboxílico']), d = await fn('ureia', ['amida']); ok(c.certo && d.certo && d.fs.length === 1, 'H04: alanina = amina e ácido carboxílico (aminoácido); ureia = amida, com os dois N no mesmo grupo');
+    const e = await fn('N,N-dimetilmetanamina', ['amina']), f = await fn('etanamina', ['amina']), g2 = await fn('N-metilmetanamina', ['amina']); ok(e.fs[0].cls === 3 && f.fs[0].cls === 1 && g2.fs[0].cls === 2, 'H04: classes de amina pelo nitrogênio: etanamina 1ª, N-metilmetanamina 2ª, N,N-dimetilmetanamina 3ª');
+    const h = await fn('clorobenzeno', ['haleto de arila']), i2 = await fn('cloreto de etanoíla', ['haleto de acila']), j = await fn('2-cloropropano', ['haleto de alquila']); ok(h.certo && i2.certo && j.certo && j.fs[0].cls === 2, 'H04: os três tipos de haleto são distinguidos; 2-cloropropano é secundário');
+    ok(await p.evaluate(() => !/amin|amid|nitr|clor/i.test(document.querySelector('#lab-funcoesn .ctrls .bts').textContent)), 'H04: os botões das moléculas não mostram o nome (que entregaria a função)'); }
   //MAIS
   // ----- gabaritos: em todo exercício de alternativas, clicar na letra do gabarito tem de dar "certo" -----
   for (const cod of ['H01', 'H02', 'H03', 'H04', 'H05', 'H06', 'H07', 'H08', 'H09', 'H10', 'H11', 'H12', 'H13'].filter((c) => temas.has(c))) { await p.goto(RAIZ + '#/quimica/' + cod); await p.waitForTimeout(1300);
