@@ -28,7 +28,7 @@ const falhas = []; const conf = (ok, txt, extra) => { console.log((ok ? 'ok     
   r = await R('pV = nRT'); conf(r.chaves.slice(0, 3).includes('T05') && r.chaves.slice(0, 3).includes('quimica/E01'), 'fórmula: "pV = nRT" → T05 (Gases, da Física) e quimica/E01 (Leis dos gases) entre os três primeiros', r.chaves.slice(0, 3)); /* até a β 5.5 só o T05 tinha essa fórmula; com o módulo E da Química, o E01 também tem e pode vir na frente */
   r = await R('Einstein'); conf(r.chaves.slice(0, 3).some((k) => /^C1[67]/.test(k)), 'cientista: "Einstein" → C16/C17 nos 3 primeiros', r.chaves.slice(0, 3));
   r = await R('Arquimedes'); conf(r.chaves[0] === 'A17', 'cientista: "Arquimedes" → A17 (Hidrostática)', r.chaves.slice(0, 3));
-  r = await R('o que explica meia-vida'); conf(r.tipo === 'lista' && r.chaves[0] === 'quimica/EQ13', '"o que explica meia-vida" é busca (não dúvida) → EQ13', r.chaves.slice(0, 2));
+  r = await R('o que explica meia-vida'); conf(r.tipo === 'lista' && r.chaves.slice(0, 2).includes('quimica/EQ13'), '"o que explica meia-vida" é busca (não dúvida) → EQ13 entre os dois primeiros', r.chaves.slice(0, 2)); /* até a β 5.6 o EQ13 vinha em primeiro; com o módulo F da Química, o F05 (meia-vida das reações) pode vir na frente */
   r = await R('experimento de pêndulo'); conf(r.chaves[0] === 'EP01', '"experimento de pêndulo" → EP01', r.chaves.slice(0, 3));
   r = await R('mol'); conf(r.chaves[0] === 'quimica/D04', 'sinônimo/termo curto: "mol" → D04 (Mol, massa molar)', r.chaves.slice(0, 3));
   r = await R('queda livre'); conf(r.chaves.slice(0, 3).some((k) => /^A0[36]/.test(k)), 'sinônimo: "queda livre" → MRUV/Lançamentos', r.chaves.slice(0, 3));
