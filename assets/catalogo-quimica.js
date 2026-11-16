@@ -97,7 +97,7 @@ window.CATALOGO.push(
     ["I03","Aminoácidos, proteínas e enzimas: pKa, ponto isoelétrico e ligação peptídica",[],true],
     ["I04","Ácidos nucleicos: DNA, RNA e o código genético",[],true],
     ["I05","Biocombustíveis: etanol, biodiesel, biogás e o balanço de carbono",[],true],
-    ["I06","Ciclos biogeoquímicos",[]],
+    ["I06","Ciclos biogeoquímicos: carbono, nitrogênio e o processo Haber-Bosch",[],true],
     ["I07","Poluição da água e do ar",[]],
     ["I08","Química verde e cotidiano",[]],
     ["I09","Tratamento de água e resíduos",[]],

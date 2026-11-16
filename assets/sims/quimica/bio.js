@@ -91,6 +91,7 @@
       {"k": "isooctano", "nome": "isooctano (2,2,4-trimetilpentano)", "f": "C8H18", "m": 114, "mfonte": 114.232, "dh": 5465.5, "c": 8, "h": 18, "o": 0, "d": 0.692, "ron": 100, "bio": false},
     ],
     BIOGAS: {"ch4": [50, 80], "co2": [15, 50]},
+    AMB: {"ar": {"N2": 78.084, "O2": 20.946, "Ar": 0.934}, "co2": 432.0, "co2ano": 2026, "co2pre": 280.0, "co2aumento": 54.0, "haberDH": 92.2, "haberMPa": 20.0, "haberT": 500.0, "chuva": 5.6, "chuvaAcida": 5.0, "gwp": {"CO2": 1, "CH4": [27, 30], "N2O": 273, "CFC-12": 10200, "SF6": 23500}, "coAfin": 200.0, "o2sol20": 7.6, "o2sol0": 14.6, "montreal": 1987, "ozonioKm": [15.0, 35.0], "dboRio": 1.0},
   };
   /*BIO-FIM*/
 
@@ -218,6 +219,33 @@
       qs("[data-v=st]").innerHTML = `Combustão completa de 1 mol: <b>${nt(e.o2, 2)} O₂ → ${e.co2} CO₂ + ${nt(e.h2o, 1)} H₂O</b>, liberando ${nt(c.dh, 1)} kJ. ` + (e.n === null ? "Este combustível é gás nas condições ambientes: a opção de 1 L de líquido não se aplica." : `Na quantidade escolhida há ${nt(e.n, 3)} mol.`) + ` ${c.bio ? "Pode ser obtido de biomassa (fermentação ou biodigestão)." : ""} ΔH: Tabela 5.2 do OpenStax Chemistry; densidade e octanagem: Wikipedia. Massas com H = 1, C = 12, O = 16.`; };
     liga(el, "c", (v) => { i = +v; desenha(); }); liga(el, "q", (v) => { q = v; desenha(); }); liga(el, "modo", (v) => { modo = v; desenha(); });
     SIM.qCombustivel._ult = { poe: (k, qq = "g", m = "kJg") => { i = C.findIndex((c) => c.k === k); q = qq; modo = m; [["c", i], ["q", q], ["modo", modo]].forEach(([a, v]) => el.querySelectorAll(`[data-${a}]`).forEach((x) => x.setAttribute("aria-pressed", String(x.dataset[a]) === String(v)))); desenha(); }, est }; desenha(); };
+
+  /* ---------- I06: ciclos biogeoquímicos ---------- */
+  /* espécies de nitrogênio: [fórmula para mostrar, nº de N, nº de H, nº de O, carga]; o nox sai da regra: (carga − H + 2·O) / N */
+  SIM.NESP = { N2: ["N₂", 2, 0, 0, 0], NH3: ["NH₃", 1, 3, 0, 0], NH4: ["NH₄⁺", 1, 4, 0, 1], NO2m: ["NO₂⁻", 1, 0, 2, -1], NO3m: ["NO₃⁻", 1, 0, 3, -1], NO: ["NO", 1, 0, 1, 0], N2O: ["N₂O", 2, 0, 1, 0], NO2: ["NO₂", 1, 0, 2, 0], org: ["N orgânico (R–NH₂)", 1, 3, 0, 0] };
+  SIM.noxN = (k) => { const e = SIM.NESP[k]; return (e[4] - e[2] + 2 * e[3]) / e[1]; };
+  /* etapas do ciclo do nitrogênio: [nome, de, para, quem faz] */
+  SIM.NCICLO = [["fixação", "N2", "NH3", "bactérias fixadoras (no solo e nas raízes de leguminosas); na indústria, o processo Haber-Bosch"], ["amonificação", "org", "NH4", "bactérias e fungos decompositores"], ["nitrificação, 1ª etapa", "NH4", "NO2m", "bactérias nitrificantes do solo"], ["nitrificação, 2ª etapa", "NO2m", "NO3m", "bactérias nitrificantes do solo"], ["desnitrificação", "NO3m", "N2", "bactérias desnitrificantes, em ambiente sem oxigênio"], ["assimilação", "NO3m", "org", "plantas, que usam o nitrato para fazer aminoácidos"]];
+  SIM.netapa = (j) => { const e = SIM.NCICLO[j], a = SIM.noxN(e[1]), b = SIM.noxN(e[2]); return { nome: e[0], de: e[1], para: e[2], a, b, eletrons: Math.abs(b - a), tipo: b > a ? "oxidação" : b < a ? "redução" : "sem mudança de nox", quem: e[3] }; };
+  /* nome: "Ciclo do nitrogênio: os degraus do nox" · matéria: Química · tema: I06 */
+  SIM.qNitrogenio = (el, F) => { let j = 0, ver = false; const ORD = ["NH3", "N2", "N2O", "NO", "NO2m", "NO2", "NO3m"];
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="sv" style="display:flex;justify-content:center;padding:12px"></div><div class="leitor" data-v="lt"></div>
+      <div class="ctrls"><div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">etapa do ciclo</p><div class="bts">${botoes(SIM.NCICLO.map((e, k) => [k, e[0]]), "j", j)}</div></div>
+      <div><div class="bts"><button class="bt peq" data-v="ver" aria-pressed="false">mostrar o nox e os elétrons</button></div></div></div>
+      <div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), sg = (v) => (v > 0 ? "+" + v : String(v).replace("-", "−")), est = () => ({ ...SIM.netapa(j), ver });
+    const desenha = () => { const e = est(), W = 640, H = 230, X = (v) => 60 + (v + 3) * 65, y0 = 150; let s = `<line x1="${X(-3) - 20}" y1="${y0}" x2="${X(5) + 20}" y2="${y0}" style="stroke:var(--ink2);stroke-width:1.5"/>`;
+      for (let v = -3; v <= 5; v++) s += `<line x1="${X(v)}" y1="${y0 - 5}" x2="${X(v)}" y2="${y0 + 5}" style="stroke:var(--ink2);stroke-width:1.5"/><text x="${X(v)}" y="${y0 + 22}" text-anchor="middle" class="tx2" style="font-size:12px">${sg(v)}</text>`;
+      s += `<text x="${W / 2}" y="${y0 + 46}" text-anchor="middle" class="tx2" style="font-size:12px">número de oxidação do nitrogênio</text>`;
+      ORD.forEach((k, i) => { const v = SIM.noxN(k), on = ver && (k === e.de || k === e.para || (e.de === "org" && k === "NH3") || (e.para === "org" && k === "NH3")); if (!ver) return; s += `<circle cx="${X(v)}" cy="${y0}" r="5" style="fill:${on ? "var(--mod)" : "var(--ink2)"}"/><text x="${X(v)}" y="${y0 - 14 - (k === "NO2" || k === "N2O" ? 0 : 0)}" text-anchor="middle" style="font:600 13px Inter,system-ui,sans-serif;fill:${on ? "var(--ink)" : "var(--ink2)"}">${ver ? SIM.NESP[k][0] : ""}</text>`; });
+      if (ver && e.a !== e.b) { const x1 = X(e.a), x2 = X(e.b), my = y0 - 62; s += `<path d="M${x1},${y0 - 34} Q${(x1 + x2) / 2},${my - 40} ${x2},${y0 - 34}" style="fill:none;stroke:var(--mod);stroke-width:2.4"/><polygon points="${x2},${y0 - 30} ${x2 - (x2 > x1 ? 9 : -9)},${y0 - 40} ${x2 - (x2 > x1 ? 1 : -1)},${y0 - 44}" style="fill:var(--mod)"/><text x="${(x1 + x2) / 2}" y="${my - 14}" text-anchor="middle" style="font:700 13px Inter,system-ui,sans-serif;fill:var(--mod)">${e.eletrons} e⁻ por N</text>`; }
+      s += `<text x="${W / 2}" y="22" text-anchor="middle" style="font:700 16px Inter,system-ui,sans-serif;fill:var(--ink)">${SIM.NESP[e.de][0]}  →  ${SIM.NESP[e.para][0]}</text>`;
+      q("[data-v=sv]").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="escada do nox do nitrogênio">${s}</svg>`;
+      q("[data-v=lt]").innerHTML = vis("etapa", e.nome) + vis("nox do N antes", ver ? sg(e.a) : "?") + vis("nox do N depois", ver ? sg(e.b) : "?") + vis("o nitrogênio sofre", ver ? e.tipo : "?") + vis("elétrons por átomo de N", ver ? String(e.eletrons) : "?");
+      q("[data-v=st]").innerHTML = !ver ? "Antes de clicar em <b>mostrar</b>: calcule o nox do nitrogênio nas duas espécies. Ele sobe ou desce?" : `<b>${e.nome[0].toUpperCase() + e.nome.slice(1)}</b>: ${e.tipo}${e.eletrons ? `, com ${e.eletrons} elétrons ${e.b > e.a ? "perdidos" : "ganhos"} por átomo de N` : " (o nitrogênio continua em −3: muda a molécula, não o estado de oxidação)"}. Quem faz: ${e.quem}. Regra do nox: H vale +1, O vale −2, e a soma dá a carga da espécie.`; };
+    liga(el, "j", (v) => { j = +v; ver = false; q("[data-v=ver]").setAttribute("aria-pressed", "false"); desenha(); });
+    q("[data-v=ver]").addEventListener("click", () => { ver = !ver; q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); });
+    SIM.qNitrogenio._ult = { poe: (jj, v = true) => { j = jj; ver = v; el.querySelectorAll("[data-j]").forEach((x) => x.setAttribute("aria-pressed", String(+x.dataset.j === j))); q("[data-v=ver]").setAttribute("aria-pressed", String(ver)); desenha(); }, est }; desenha(); };
 
   //MAIS-LABS
 })();

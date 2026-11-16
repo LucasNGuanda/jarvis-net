@@ -266,6 +266,37 @@ if not re.search(r"C6H12O6 .*→ 2 C2H5OH \+ 2 CO2", frm): erros.append(("fermen
 BIO["COMB"] = comb
 BIO["BIOGAS"] = {"ch4": val(BG["CH4_percentual"]), "co2": val(BG["CO2_percentual"])}
 if not (isinstance(BIO["BIOGAS"]["ch4"], list) and len(comb) == 5): erros.append(("biogás/combustíveis", BIO["BIOGAS"], len(comb)))
+
+# ---------- I06 e I07: atmosfera, ciclos e poluição ----------
+# Todo número sai, por expressão regular, da frase literal guardada em dadosI.json (o padrão falha se a frase mudar).
+CA = D["ciclos_e_atmosfera"]; PO = D["poluicao"]
+def rx(lista, padrao, grupo=1, conv=float):
+    m = trecho_com(lista, padrao)
+    if not m: erros.append(("frase de fonte não achada", padrao)); return None
+    return conv(m.group(grupo).replace(",", ""))
+def pct(lista):
+    return next((e["valor"] for e in lista if isinstance(e, dict) and e.get("unidade") == "% em volume"), None)
+HB = CA["nitrogenio"]["haber_bosch"]
+def gwp(g, i=0):
+    v = [e["valor"] for e in PO["efeito_estufa"]["GWP100"][g] if isinstance(e, dict) and isinstance(e.get("valor"), (int, float))]
+    return v[i] if len(v) > i else None
+AMB = {
+ "ar": {"N2": pct(CA["ar_seco"]["N2"]), "O2": pct(CA["ar_seco"]["O2"]), "Ar": pct(CA["ar_seco"]["Ar"])},
+ "co2": rx(CA["carbono"]["CO2_atmosferico"], r"In (\d{4}), the concentration of carbon dioxide in the atmosphere reached (\d+) ppm", 2), "co2ano": rx(CA["carbono"]["CO2_atmosferico"], r"In (\d{4}), the concentration of carbon dioxide", 1, int),
+ "co2pre": rx(CA["carbono"]["CO2_atmosferico"], r"up from (\d+) ppm"), "co2aumento": rx(CA["carbono"]["CO2_atmosferico"], r"increase of (\d+)%"),
+ "haberDH": rx(HB["entalpia"], r"ΔH=−([\d.]+)kJ"), "haberMPa": rx(HB["temperatura_e_pressao"], r"\((\d+) MPa"), "haberT": rx(HB["temperatura_e_pressao"], r"and (\d+) °C"),
+ "chuva": rx(PO["chuva_acida"]["pH_da_chuva_limpa"], r"slightly acidic pH of ([\d.]+)"), "chuvaAcida": rx(PO["chuva_acida"]["pH_da_chuva_limpa"], r"pH less than (\d+)"),
+ "gwp": {"CO2": gwp("CO2"), "CH4": [gwp("CH4", 1), gwp("CH4", 0)], "N2O": gwp("N2O"), "CFC-12": gwp("CFC-12"), "SF6": gwp("SF6")},
+ "coAfin": rx(PO["monoxido_de_carbono"]["afinidade_hemoglobina"], r"some (\d+) times greater than oxygen"),
+ "o2sol20": next(e["valor"] for e in PO["oxigenio_dissolvido"]["solubilidade_O2"] if "20 °C" in str(e.get("obs"))), "o2sol0": rx(PO["oxigenio_dissolvido"]["solubilidade_O2"], r"\(([\d.]+) mg/L\) dissolves at 0 °C"),
+ "montreal": rx(PO["camada_de_ozonio"]["protocolo_de_montreal"], r"agreed on 16 September (\d{4})", 1, int),
+ "ozonioKm": [rx(PO["camada_de_ozonio"]["onde"], r"approximately (\d+) to (\d+) kilometers", 1), rx(PO["camada_de_ozonio"]["onde"], r"approximately (\d+) to (\d+) kilometers", 2)],
+ "dboRio": rx(PO["DBO"]["valores_tipicos"], r"BOD below (\d+) mg/L"),
+}
+if abs(sum(AMB["ar"].values()) - 99.964) > 0.01: erros.append(("composição do ar", AMB["ar"]))
+if AMB["gwp"]["CO2"] != 1 or sorted(AMB["gwp"]["CH4"]) != [27, 30] or AMB["gwp"]["N2O"] != 273: erros.append(("GWP", AMB["gwp"]))
+if AMB["co2"] and abs((AMB["co2"] / AMB["co2pre"] - 1) * 100 - AMB["co2aumento"]) > 1: erros.append(("CO2: aumento não confere com a própria fonte", AMB["co2"], AMB["co2pre"], AMB["co2aumento"]))
+BIO["AMB"] = AMB
 #MAIS-SECOES
 
 json.dump(cache, open(ARQ, "w"), ensure_ascii=False, indent=1)   # todas as consultas ao PubChem, de todas as seções
