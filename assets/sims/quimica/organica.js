@@ -77,7 +77,7 @@
     return `<svg class="figura" viewBox="0 0 ${Wf} ${(hmax * esc + (temLeg ? 30 : 8)).toFixed(0)}" width="${Wf}" role="img" aria-label="fórmula estrutural">${s}</svg>`; };
 
   /* hibridização de cada carbono: sp3 (só simples), sp2 (uma dupla ou aromático), sp (uma tripla ou duas duplas) */
-  const hib = (smi) => { const g = parse(smi); return g.at.map((a) => { if (a.el !== "C") return null; const os = a.viz.map(([, k]) => g.bd[k].o), d = os.filter((o) => o === 2).length, t = os.filter((o) => o === 3).length; return t || d === 2 ? "sp" : d === 1 || a.arom ? "sp2" : "sp3"; }); };
+  const hib = (smi) => { const g = parse(smi); return g.at.map((a) => { if (a.el !== "C") return null; const os = a.viz.map(([, k]) => g.bd[k].o), d = os.filter((o) => o === 2).length, t = os.filter((o) => o === 3).length; return t || d === 2 ? "sp" : d === 1 || a.arom || a.carga > 0 ? "sp2" : "sp3"; }); };
   /* ligações sigma e pi da molécula inteira (contando as C–H e as outras com H) */
   const sigmapi = (smi) => { const g = parse(smi), nh = g.at.reduce((t, a) => t + a.h, 0); let sg = nh, pi = 0, ar = 0; g.bd.forEach((b) => { sg += 1; if (b.o === 2) pi += 1; if (b.o === 3) pi += 2; if (b.o === 1.5) ar += 1; }); return { sigma: sg, pi: pi + Math.round(ar / 2) }; };
   /* classificação da cadeia carbônica, como nos livros brasileiros */
@@ -168,7 +168,7 @@
     A.forEach((a, k) => { if (usado.has(k)) return; const cs = viz(k).filter(([v]) => eC(v));
       if (a.el === "O" && !a.carga) { if (a.h > 0 && cs.length === 1) { const c = cs[0][0], cls = viz(c).filter(([v]) => eC(v)).length; if (A[c].arom) r.push({ f: "fenol", at: [k] }); else if (viz(c).some(([, o]) => o === 2)) r.push({ f: "enol", at: [k] }); else r.push({ f: "álcool", at: [k], cls: Math.max(1, cls) }); } else if (cs.length === 2 && viz(k).length === 2) r.push({ f: "éter", at: [k] }); }
       else if (a.el === "N") { if (viz(k).some(([v, o]) => o === 3)) r.push({ f: "nitrila", at: [k, viz(k)[0][0]] }); else if (viz(k).filter(([v]) => A[v].el === "O").length === 2) r.push({ f: "nitrocomposto", at: [k, ...viz(k).filter(([v]) => A[v].el === "O").map(([v]) => v)] }); else if (cs.length >= 1 && viz(k).every(([, o]) => o === 1)) r.push(a.carga > 0 ? { f: "amônio", at: [k] } : { f: "amina", at: [k], cls: cs.length }); }
-      else if (HAL.includes(a.el) && cs.length === 1) r.push({ f: A[cs[0][0]].arom ? "haleto de arila" : "haleto de alquila", at: [k], cls: Math.max(1, viz(cs[0][0]).filter(([v]) => eC(v)).length) });
+      else if (HAL.includes(a.el) && cs.length === 1) r.push({ f: A[cs[0][0]].arom ? "haleto de arila" : viz(cs[0][0]).some(([v, o]) => eC(v) && o === 2) ? "haleto de vinila" : "haleto de alquila", at: [k], cls: Math.max(1, viz(cs[0][0]).filter(([v]) => eC(v)).length) });
       else if (a.el === "S" && a.h > 0) r.push({ f: "tiol", at: [k] }); });
     return r; };
   SIM.org.funcoes = funcoes;
@@ -222,7 +222,7 @@
     SIM.qNomenclatura._ult = { poe: (nn, t, p, sb) => { n = nn; tipo = t; pi = p; subs = sb.map((x) => [...x]); q("[data-c=n]").value = nn; q("[data-c=pi]").value = p; el.querySelectorAll("[data-t]").forEach((x) => x.setAttribute("aria-pressed", +x.dataset.t === tipo)); desenha(); }, est }; desenha(); };
 
   /* ---------- H03 (e H04) · caça às funções ---------- */
-  const CORF = { "álcool": "#4a9fe8", "fenol": "#7a6ff0", "enol": "#4a9fe8", "éter": "#3fae7a", "aldeído": "#e0a13a", "cetona": "#e5604d", "ácido carboxílico": "#d94f9b", "éster": "#b07cf0", "anidrido": "#b07cf0", "amina": "#3fb8c9", "amida": "#c9a23f", "nitrila": "#8fb84a", "nitrocomposto": "#e07a3a", "haleto de alquila": "#55b88a", "haleto de arila": "#55b88a", "haleto de acila": "#c97a55", "carboxilato": "#d94f9b", "tiol": "#c9c23f", "amônio": "#3fb8c9" };
+  const CORF = { "álcool": "#4a9fe8", "fenol": "#7a6ff0", "enol": "#4a9fe8", "éter": "#3fae7a", "aldeído": "#e0a13a", "cetona": "#e5604d", "ácido carboxílico": "#d94f9b", "éster": "#b07cf0", "anidrido": "#b07cf0", "amina": "#3fb8c9", "amida": "#c9a23f", "nitrila": "#8fb84a", "nitrocomposto": "#e07a3a", "haleto de alquila": "#55b88a", "haleto de arila": "#55b88a", "haleto de vinila": "#55b88a", "haleto de acila": "#c97a55", "carboxilato": "#d94f9b", "tiol": "#c9c23f", "amônio": "#3fb8c9" };
   SIM.org.CORF = CORF;
   /* nome: "Caça às funções: ache os grupos funcionais da molécula" · matéria: Química · tema: H03 */
   SIM.qFuncoes = (el, F, o = {}) => {

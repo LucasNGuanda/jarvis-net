@@ -16,15 +16,15 @@ for f in fontes:
         if re.fullmatch(r"[A-Z][a-z]?\d*", s) and s not in ("C", "N", "O", "CC", "CO", "CN"): continue   # símbolos e fórmulas soltas (Fe, H2...)
         mol = Chem.MolFromSmiles(s)
         if mol is not None and mol.GetNumAtoms() > 0 and any(a.GetSymbol() == "C" for a in mol.GetAtoms()): cand.add(s)
-jsC = "global.window={SIM:{}};" + open(os.path.join(RAIZ, "assets/sims/quimica/organica.js"), encoding="utf8").read() + ";console.log(JSON.stringify((window.SIM.org.COMP||[]).map(c=>c[2])))"
-cand |= set(json.loads(subprocess.run(["node", "-e", jsC], capture_output=True, text=True, check=True).stdout))
+jsC = "global.window={SIM:{}};" + open(os.path.join(RAIZ, "assets/sims/quimica/organica.js"), encoding="utf8").read() + ";console.log(JSON.stringify((window.SIM.org.COMP||[]).map(c=>c[2]).concat(Object.values(window.SIM.org.NOMES||{}),Object.values(window.SIM.org.EST||{}).map(e=>e.smi))))"
+cand |= set(json.loads(subprocess.run(["node", "-"], input=jsC, capture_output=True, text=True, check=True).stdout))
 L = sorted(cand)
-SMARTS = {"ácido carboxílico": "[CX3](=O)[OX2H1]", "éster": "[CX3](=O)[OX2H0][#6;!$(C=O)]", "anidrido": "[CX3](=O)[OX2][CX3](=O)", "aldeído": "[CX3;H1,H2;!$(C[OX2,N,F,Cl,Br,I])]=O", "cetona": "[#6][CX3](=O)[#6]",
+SMARTS = {"ácido carboxílico": "[CX3](=O)[OX2H1]", "éster": "[CX3](=O)[OX2H0][#6;!$(C=O)]", "anidrido": "[CX3](=O)[OX2][CX3](=O)", "aldeído": "[CX3;H1,H2;!$(C[OX2,OX1-,N,F,Cl,Br,I])]=O", "cetona": "[#6][CX3](=O)[#6]",
           "álcool": "[OX2H][CX4]", "fenol": "[OX2H]c", "éter": "[OD2]([#6;!$(C=O)])[#6;!$(C=O)]", "amina": "[NX3+0;$(N[#6]);!$(NC=O)]", "amida": "[CX3](=O)[NX3]", "nitrila": "C#N", "nitrocomposto": "[N+](=O)[O-]",
-          "haleto de alquila": "[F,Cl,Br,I;$(*[CX4])]", "haleto de arila": "[F,Cl,Br,I;$(*c)]", "haleto de acila": "[CX3](=O)[F,Cl,Br,I]"}
+          "haleto de alquila": "[F,Cl,Br,I;$(*[CX4])]", "haleto de arila": "[F,Cl,Br,I;$(*c)]", "haleto de vinila": "[F,Cl,Br,I;$(*[CX3]=[CX3])]", "haleto de acila": "[CX3](=O)[F,Cl,Br,I]"}
 PAT = {k: Chem.MolFromSmarts(v) for k, v in SMARTS.items()}
 js = "global.window={SIM:{MA:{H:1,C:12,N:14,O:16,F:19,S:32,Cl:35.5,Br:80,I:127,Na:23,K:39,P:31}}};" + open(os.path.join(RAIZ, "assets/sims/quimica/organica.js"), encoding="utf8").read() + ";const o=window.SIM.org,r={};for(const s of %s){try{const sp=o.sigmapi(s),c=o.cadeia(s);r[s]={f:o.formula(s,'ce'),cl:o.classes(s).filter(x=>x!==null),hb:o.hib(s).filter(Boolean),sg:sp.sigma,pi:sp.pi,an:c.ciclos,idh:o.idh(s),fn:o.funcoes(s).map(x=>x.f)}}catch(e){r[s]={erro:e.message}}};console.log(JSON.stringify(r))" % json.dumps(L)
-R = json.loads(subprocess.run(["node", "-e", js], capture_output=True, text=True, check=True).stdout)
+R = json.loads(subprocess.run(["node", "-"], input=js, capture_output=True, text=True, check=True).stdout)
 falhas = 0; naolidos = []
 HB = {Chem.HybridizationType.SP3: "sp3", Chem.HybridizationType.SP2: "sp2", Chem.HybridizationType.SP: "sp"}
 for s in L:
