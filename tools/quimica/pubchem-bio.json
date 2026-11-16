@@ -1,0 +1,77 @@
+{
+ "ethylene": {
+  "cid": 6325,
+  "smiles": "C=C",
+  "formula": "C2H4"
+ },
+ "propene": {
+  "cid": 8252,
+  "smiles": "CC=C",
+  "formula": "C3H6"
+ },
+ "vinyl chloride": {
+  "cid": 6338,
+  "smiles": "C=CCl",
+  "formula": "C2H3Cl"
+ },
+ "styrene": {
+  "cid": 7501,
+  "smiles": "C=CC1=CC=CC=C1",
+  "formula": "C8H8"
+ },
+ "tetrafluoroethylene": {
+  "cid": 8301,
+  "smiles": "C(=C(F)F)(F)F",
+  "formula": "C2F4"
+ },
+ "acrylonitrile": {
+  "cid": 7855,
+  "smiles": "C=CC#N",
+  "formula": "C3H3N"
+ },
+ "methyl methacrylate": {
+  "cid": 6658,
+  "smiles": "CC(=C)C(=O)OC",
+  "formula": "C5H8O2"
+ },
+ "isoprene": {
+  "cid": 6557,
+  "smiles": "CC(=C)C=C",
+  "formula": "C5H8"
+ },
+ "chloroprene": {
+  "cid": 31369,
+  "smiles": "C=CC(=C)Cl",
+  "formula": "C4H5Cl"
+ },
+ "terephthalic acid": {
+  "cid": 7489,
+  "smiles": "C1=CC(=CC=C1C(=O)O)C(=O)O",
+  "formula": "C8H6O4"
+ },
+ "ethylene glycol": {
+  "cid": 174,
+  "smiles": "C(CO)O",
+  "formula": "C2H6O2"
+ },
+ "adipic acid": {
+  "cid": 196,
+  "smiles": "C(CCC(=O)O)CC(=O)O",
+  "formula": "C6H10O4"
+ },
+ "hexamethylenediamine": {
+  "cid": 16402,
+  "smiles": "C(CCCN)CCN",
+  "formula": "C6H16N2"
+ },
+ "p-phenylenediamine": {
+  "cid": 7814,
+  "smiles": "C1=CC(=CC=C1N)N",
+  "formula": "C6H8N2"
+ },
+ "lactic acid": {
+  "cid": 612,
+  "smiles": "CC(C(=O)O)O",
+  "formula": "C3H6O3"
+ }
+}

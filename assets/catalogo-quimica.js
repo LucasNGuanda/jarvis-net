@@ -92,7 +92,7 @@ window.CATALOGO.push(
     ["H13","Mecanismos de reação: SN1, SN2, E1, E2, carbocátions e radicais",[],true],
   ] },
   { id:"QI", area:"qui", letra:"I", cor:"--mX", nome:"Bioquímica e ambiental", desc:"Biomoléculas, polímeros e química do ambiente.", temas:[
-    ["I01","Polímeros",[]],
+    ["I01","Polímeros: adição, condensação e reciclagem",[],true],
     ["I02","Carboidratos e lipídeos",[]],
     ["I03","Aminoácidos, proteínas e enzimas",[]],
     ["I04","Ácidos nucleicos",[]],
