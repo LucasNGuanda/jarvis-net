@@ -110,10 +110,10 @@ window.CATALOGO.push(
   ] },
   /* aba Experimentos (simulações, no padrão dos experimentos de física) */
   { id:"EQg", area:"quiexp", letra:"QG", cor:"--mF", nome:"Gases", desc:"Difusão, pistão, Maxwell–Boltzmann e gases reais.", temas:[
-    ["EQ01","Gás enchendo o recipiente: difusão e efusão",[]],
-    ["EQ02","Pistão: pressão, volume e temperatura",[]],
-    ["EQ03","Distribuição de Maxwell-Boltzmann",[]],
-    ["EQ04","Gás real × gás ideal",[]],
+    ["EQ01","Gás enchendo o recipiente: difusão e efusão",[],true],
+    ["EQ02","Pistão: pressão, volume e temperatura",[],true],
+    ["EQ03","Distribuição de Maxwell-Boltzmann",[],true],
+    ["EQ04","Gás real × gás ideal",[],true],
   ] },
   { id:"EQr", area:"quiexp", letra:"QR", cor:"--mO", nome:"Reações", desc:"Colisões, catalisador, Le Chatelier, titulação na bureta e balanceamento.", temas:[
     ["EQ05","Colisões e energia de ativação",[]],
