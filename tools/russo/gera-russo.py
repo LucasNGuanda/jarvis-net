@@ -249,6 +249,8 @@ for pal, chave, pt in N_PT:
         if tk and tk[0] in ("m", "f", "n") and tk[0] not in gs: gs.append(tk[0])
         if len(tk) > 1 and tk[1] in ("anim", "inan") and an is None: an = tk[1]
     if not gs: erros.append(f"RG03 {pal}: gênero não entendido {gen!r}")
+    # o verbete de лицо traz "n anim or n inan": animado no sentido de "pessoa", inanimado no de "rosto", que é o sentido usado no site (definição "(anatomy) face")
+    if pal == "лицо" and "anatomy" in gl: an = "inan"
     marcas = [v(m) for m in (e.get("marcas") or [])]
     linha = v(e.get("linha_do_verbete")) or ""
     conject = "conjectural or unused" in linha
@@ -273,11 +275,103 @@ for pal, x in D3["numero"]["plurais_irregulares"]["pedidos"].items():
     IRR.append(pal)
 if len(NOM) < 95: erros.append(f"RG03: só {len(NOM)} substantivos")
 
+# ---------- RG04 em diante: declinação completa, pronomes, verbos e frases (tools/russo/dadosR4.json: tabelas do Wiktionary em inglês) ----------
+D4 = json.load(open(os.path.join(R, "dadosR4.json"), encoding="utf-8"))
+CASOS = [("nom", "nominative"), ("acc", "accusative"), ("gen", "genitive"), ("dat", "dative"), ("ins", "instrumental"), ("prep", "prepositional")]
+RUIM = re.compile(r"archaic|nonstandard|non-standard|colloquial|dated|obsolete|rare|poetic|epic|proscribed|less common", re.I)
+def marca_ruim(notas):
+    """a legenda do * muda de página para página: só vale como "forma a evitar" se a nota da própria tabela disser (arcaica, coloquial, rara...)"""
+    for n in notas or []:
+        s = v(n) or ""
+        if s.startswith("*") and not s.startswith("**") and RUIM.search(s): return True
+    return False
+def formas(cel, notas=None):
+    """formas de uma célula da tabela; sai a forma marcada com * quando a legenda da tabela diz que ela é arcaica, coloquial, rara ou fora do padrão"""
+    if not isinstance(cel, dict) or cel.get("valor") is None: return []
+    val = cel["valor"]; lista = val if isinstance(val, list) else [val]; txt = cel.get("valor_texto") or ""
+    if not marca_ruim(notas): return lista
+    boas = [f for f in lista if not re.search(re.escape(f) + r"\s*(△\s*)?\*(?!\*)", txt)]
+    return boas or lista
+GEN_PT = {"m": "masculino", "f": "feminino", "n": "neutro"}
+DECL = {}
+for x in NOM:
+    t = D4["declinacoes"].get(x["w"], {}).get("tabela") or {}
+    if not t.get("casos"): continue
+    cs = {}
+    for k, en in CASOS:
+        c = t["casos"].get(en) or {}
+        esc = lambda cel: cel.get("animate" if x["an"] == "anim" else "inanimate") if isinstance(cel, dict) and "animate" in cel else cel  # tabela que separa animate / inanimate: vale a animacidade do verbete
+        sgc = c.get("singular")
+        # linha "inanimate" com uma célula só: essa célula é a do plural; o singular é a célula da linha "animate", que vale para as duas (célula mesclada na página)
+        if isinstance(sgc, dict) and "animate" in sgc and x["an"] != "anim" and (sgc["inanimate"].get("trecho") or "").count("|") == 1: sgc = sgc["animate"]
+        cs[k] = [formas(esc(sgc), t.get("notas")), formas(esc(c.get("plural")), t.get("notas"))]
+    if not x["soPl"] and x["w"] not in [f.replace("́", "") for f in cs["nom"][0]]: erros.append(f"RG04 {x['w']}: o nominativo singular da tabela {cs['nom'][0]} não é a palavra")
+    for f in x["pl"]:
+        if f.replace("\u0301", "") not in [y.replace("\u0301", "") for y in cs["nom"][1]]: erros.append(f"RG04 {x['w']}: plural {f!r} do verbete fora da tabela {cs['nom'][1]}")
+    DECL[x["w"]] = {"ac": x["ac"], "pt": x["pt"], "g": x["gs"][0], "an": x["an"], "genPt": GEN_PT[x["gs"][0]] + (", animado" if x["an"] == "anim" else ", inanimado" if x["an"] == "inan" else "") + (", só plural" if x["soPl"] else ""), "soPl": x["soPl"], "casos": cs}
+# verbos: [infinitivo, índice da entrada, palavra em inglês que tem de estar na definição, tradução]
+V_PT = [["читать", 0, "to read", "ler"], ["писать", 0, "to write", "escrever"], ["знать", 0, "to know", "saber, conhecer"], ["видеть", 0, "to see", "ver"], ["любить", 0, "to love", "amar, gostar de"],
+        ["решать", 0, "to solve", "resolver"], ["решить", 0, "to solve", "resolver (até o fim)"], ["понимать", 0, "to understand", "entender"], ["делать", 0, "to do", "fazer"], ["говорить", 0, "to speak", "falar"],
+        ["думать", 0, "to think", "pensar"], ["работать", 0, "to work", "trabalhar"], ["жить", 0, "to live", "viver, morar"], ["быть", 0, "to be", "ser, estar"], ["иметь", 0, "to have", "ter"],
+        ["хотеть", 0, "to want", "querer"], ["мочь", 0, "can", "poder"], ["слушать", 0, "to listen", "escutar"], ["смотреть", 0, "to look", "olhar"], ["изучать", 0, "to study", "estudar (uma matéria)"],
+        ["учить", 0, "to teach", "ensinar"], ["учиться", 0, "to learn", "aprender, estudar"], ["покупать", 0, "to buy", "comprar"], ["давать", 0, "to give", "dar"], ["дать", 0, "to give", "dar (uma vez)"],
+        ["помогать", 0, "to help", "ajudar"], ["идти", 0, "to go", "ir (a pé)"], ["ехать", 0, "vehicle", "ir (de veículo)"], ["пить", 0, "to drink", "beber"], ["есть", 0, "to eat", "comer"],
+        ["спрашивать", 0, "to ask", "perguntar"], ["отвечать", 0, "to answer", "responder"], ["звонить", 0, "to call", "telefonar"]]
+VERB = {}
+for inf, i, chave, pt in V_PT:
+    es = D4["verbos"].get(inf, {}).get("entradas_verb") or []
+    if len(es) <= i: erros.append(f"RG04 verbo {inf}: sem entrada"); continue
+    e = es[i]; gl = " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])][:5])
+    if chave not in gl: erros.append(f"RG04 verbo {inf}: {chave!r} não está na definição ({gl[:50]!r})"); continue
+    c = e.get("conjugacao") or {}; asp = v(e.get("aspecto"))
+    if asp not in ("impf", "pf") or not c.get("passado"): erros.append(f"RG04 verbo {inf}: aspecto ou conjugação ausente"); continue
+    tab = c["presente"] if asp == "impf" else c["futuro"]
+    pres = [formas(tab.get(k), c.get("notas")) for k in ("1sg", "2sg", "3sg", "1pl", "2pl", "3pl")]
+    if any(not f for f in pres): erros.append(f"RG04 verbo {inf}: célula vazia em {pres}")
+    ac = v(e["forma_acentuada"])
+    if ac.replace("́", "") != inf: erros.append(f"RG04 verbo {inf}: forma acentuada {ac!r}")
+    tit = v(c.get("titulo")) or ""
+    VERB[inf] = {"ac": ac, "pt": pt, "asp": asp, "par": v(e.get("par_aspectual")), "tempo": "presente" if asp == "impf" else "futuro", "pres": pres, "pass": [formas(c["passado"].get(k), c.get("notas")) for k in ("m", "f", "n", "pl")],
+                 "imp": [formas(c["imperativo"].get(k), c.get("notas")) for k in ("sg", "pl")], "ipa": v(e.get("ipa")), "trans": "intransitive" not in tit and "transitive" in tit, "tit": tit}
+P_PT = [["я", "I (", "eu"], ["ты", "you", "tu, você"], ["он", "he", "ele"], ["она", "she", "ela"], ["оно", "it", "ele, ela (neutro)"], ["мы", "we", "nós"], ["вы", "you", "vocês; o senhor, a senhora"], ["они", "they", "eles, elas"], ["кто", "who", "quem"], ["что", "what", "o quê"]]
+PRON = {}
+for w, chave, pt in P_PT:
+    e = D4["pronomes"].get(w)
+    if not e or chave not in " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])]): erros.append(f"RG04 pronome {w}: verbete ou definição"); continue
+    cel = lambda c: c.get("singular") if isinstance(c, dict) and "singular" in c else c  # кто e что têm a tabela com coluna "singular"
+    cs = {k: formas(cel(e["tabela"]["casos"].get(en))) for k, en in CASOS}
+    if w not in [f.replace("́", "") for f in cs["nom"]]: erros.append(f"RG04 pronome {w}: nominativo {cs['nom']}")
+    PRON[w] = {"pt": pt, "casos": cs}
+# frases de exemplo dos verbetes: [frase literal da fonte, tradução, sujeito (forma no nominativo) ou None, objeto direto (forma no acusativo) ou None, palavra em inglês que tem de estar na tradução da fonte]
+FR_PT = [
+ ["Я ви́жу её.", "Eu a vejo.", "Я", "её", "see"], ["Я её хорошо́ зна́ю.", "Eu a conheço bem.", "Я", "её", "know"], ["Я хорошо́ зна́ю матема́тику.", "Eu sei bem matemática.", "Я", "матема́тику", "math"],
+ ["Она́ их ви́дит.", "Ela os vê.", "Она́", "их", "sees"], ["Он ел мя́со и сала́т.", "Ele comia carne e salada.", "Он", "мя́со", "meat"], ["Он преподнёс ей кни́гу.", "Ele deu um livro de presente a ela.", "Он", "кни́гу", "book"],
+ ["Я хочу́ име́ть друзе́й.", "Eu quero ter amigos.", "Я", "друзе́й", "friends"], ["Рабо́та кипи́т.", "O trabalho está a todo vapor.", "Рабо́та", None, "Work"], ["Э́ти часы́ не иду́т.", "Este relógio não funciona.", "часы́", None, "clock"],
+ ["Вре́мя идёт бы́стро.", "O tempo passa depressa.", "Вре́мя", None, "Time"], ["Кто э́то?", "Quem é este?", "Кто", None, "Who"], ["Что э́то?", "O que é isto?", "Что", None, "What"],
+ ["Я ру́сский.", "Eu sou russo.", "Я", None, "Russian"], ["Что она́ говори́т?", "O que ela está dizendo?", "она́", "Что", "saying"], ["Я говорю́ по-ру́сски.", "Eu falo russo.", "Я", None, "Russian"],
+]
+todas_fr = {v(f["russo"]): f for f in D4["frases"] + D4.get("frases_alem_do_limite", [])}
+def tem_forma(forma, caso):
+    f = forma.replace("́", "").lower()
+    for d in DECL.values():
+        if f in [y.replace("́", "").lower() for lado in d["casos"][caso] for y in lado]: return True
+    return any(f in [y.replace("́", "").lower() for y in p["casos"][caso]] for p in PRON.values())
+FRASES = []
+for ru_, pt, suj, obj, chave in FR_PT:
+    f = todas_fr.get(ru_)
+    if not f: erros.append(f"RG04 frase não está na fonte: {ru_!r}"); continue
+    en = v(f["traducao"])
+    if chave not in en: erros.append(f"RG04 frase {ru_!r}: {chave!r} não está na tradução da fonte ({en!r})")
+    if suj and (suj not in ru_ or not tem_forma(suj, "nom")): erros.append(f"RG04 frase {ru_!r}: sujeito {suj!r} não é nominativo de palavra do banco")
+    if obj and (obj not in ru_ or not tem_forma(obj, "acc")): erros.append(f"RG04 frase {ru_!r}: objeto {obj!r} não é acusativo de palavra do banco")
+    FRASES.append({"ru": ru_, "pt": pt, "en": en, "suj": suj, "obj": obj, "de": f["verbete"]})
+if len(DECL) < 90 or len(VERB) < 30 or len(PRON) != 10: erros.append(f"RG04: DECL {len(DECL)}, VERB {len(VERB)}, PRON {len(PRON)}")
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -286,4 +380,5 @@ open(saida, "w", encoding="utf-8").write(txt)
 print(f"gravado: {len(ALF)} letras, {len(PAL)} palavras, {len(PAR)} pares de acento; listas: " + ", ".join(f"{k} {len(x)}" for k, x in LISTA.items()))
 print("RG02:", len(RED["akanye"]), "akanye,", len(RED["mole"]), "pares depois de mole,", len(RED["ikanye"]), "pares ikanye,", len(ENS), "ensurdecimento,", len(DEZ), "dezenas,", ESTR)
 print("RG03:", len(NOM), "substantivos;", sum(1 for x in NOM if x["pl"]), "com plural;", len(IRR), "irregulares conferidos com a Wikipedia")
+print("RG04:", len(DECL), "declinações;", len(VERB), "verbos;", len(PRON), "pronomes;", len(FRASES), "frases")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})

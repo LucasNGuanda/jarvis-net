@@ -10,7 +10,7 @@ window.CATALOGO.push(
     ["RG01","Alfabeto cirílico e pronúncia",[],true],
     ["RG02","Ortografia e acento tônico",["RG01"],true],
     ["RG03","Substantivos: gênero e número",["RG01","RG02"],true],
-    ["RG04","Nominativo e acusativo",[]],
+    ["RG04","Nominativo e acusativo",["RG03"],true],
     ["RG05","Genitivo",[]],
     ["RG06","Dativo",[]],
     ["RG07","Instrumental",[]],
