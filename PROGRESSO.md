@@ -52,7 +52,7 @@ EP01 Pêndulo simples pela lagrangiana, EP02 Pêndulo duplo e caos, EP03 Pêndul
 - **Matemática** (MB, AR, GE, AL) e **Olimpíada e demonstrações** (DM, TNO, DES, CBO, GEO, FUN, PRI): 114 temas cadastrados, todos "em breve".
 - Rota `#/matematica/<COD>`; progresso em `mat:`.
 
-### Química — 3 abas, 79 de 79 temas escritos na aba Química: módulos A (β 4.8 a 5.0), B (β 5.1), C (β 5.2), D (β 5.4), E (β 5.6), F (β 5.7), G (β 5.8), H (β 5.9) e I (β 6.0), todos no `main`; módulo J (β 6.1), também no `main` (aprovado em 17/11/2026: "ficou top"); aba Experimentos: 25 de 25 escritos (β 6.3, na branch `quimica-experimentos`, esperando aprovação); aba Moléculas (β 5.5)
+### Química — 3 abas, 79 de 79 temas escritos na aba Química: módulos A (β 4.8 a 5.0), B (β 5.1), C (β 5.2), D (β 5.4), E (β 5.6), F (β 5.7), G (β 5.8), H (β 5.9) e I (β 6.0), todos no `main`; módulo J (β 6.1), também no `main` (aprovado em 17/11/2026: "ficou top"); aba Experimentos: 25 de 25 escritos (β 6.3 a 6.5, no `main` desde 17/11/2026); aba Moléculas (β 5.5)
 Química (módulos QA–QJ: introdução, atomística, ligações, reações e estequiometria, físico-química I e II, eletroquímica, orgânica, bioquímica e ambiental, analítica; 79 temas) e Experimentos (EQ01–EQ25, todos "em breve"; módulo novo EQs "Soluções e indicadores"). mhchem carregado e testado. Progresso em `qui:`.
 
 | Aba | Módulo | Temas | Exercícios (mín–máx) | Total | Sem figura | Com `F.chute` | Com chefão | Laboratórios |
@@ -133,7 +133,7 @@ Duas tarefas pedidas pelo Lucas em 15/11/2026, as duas FEITAS (módulo C na β 5
 - Regressão da β 5.1 foi iniciada depois do commit do módulo B; conferir o resultado em `<scratchpad>/regressao4/resumo.txt` e registrar aqui.
 
 ### Idiomas — Russo, Alemão e Sânscrito (cartão com a barrinha Я / DE / सं), tudo "em breve"
-- Russo: Gramática RG01–RG18, Leitura RL01–RL08; botão "Exportar para o Anki" previsto e desativado. `rus:`. **RG01 e RG02 escritos na β 6.6, RG03 na β 6.8, RG04 na β 6.9** (branch `russo`, esperando aprovação); os outros 14 de gramática e os 8 de leitura continuam "em breve".
+- Russo: Gramática RG01–RG18, Leitura RL01–RL08; botão "Exportar para o Anki" previsto e desativado. `rus:`. **RG01 e RG02 escritos na β 6.6, RG03 na β 6.8, RG04 na β 6.9; tudo no `main` desde 17/11/2026 (aprovado pelo Lucas: "tudo certinho coloca no main"), junto com os experimentos de química (β 6.2 a 6.5)**; os outros 14 de gramática e os 8 de leitura continuam "em breve".
   - **β 6.9, RG04 Nominativo e acusativo + mapas mentais (pedidos do Lucas, 17/11/2026: "pode continuar no russo" e "mapas mentais, tipo pegar uma palavra, exemplo работает, e conjugar em tudo"), branch `russo`:**
     - **Mapa mental** (`assets/sims/russo/mapa.js`): uma palavra no centro e todas as formas em volta; verbo com infinitivo e aspecto, seis pessoas, passado e imperativo; substantivo com os seis casos no singular e no plural; modo "esconder e lembrar" com contador; botão de ouvir. 30 palavras na lista do tema (16 verbos, работать primeiro, e 14 substantivos); o banco tem mapa para 129. O RG04 traz também o mapa mental do tema (acusativo).
     - **RG04:** 4 laboratórios ("Quem faz e quem recebe?", com frases do dicionário; "A regra do acusativo contra o dicionário"; o mapa mental; "Escreva a palavra no caso pedido"), 3 exemplos, 16 exercícios (11 de alternativas, 1 de número, 4 de resposta escrita), chefão.
