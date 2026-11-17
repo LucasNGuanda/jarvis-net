@@ -103,10 +103,10 @@ window.CATALOGO.push(
     ["I09","Tratamento de água e resíduos: cloração, pH, dureza e esgoto",[],true],
   ] },
   { id:"QJ", area:"qui", letra:"J", cor:"--mM", nome:"Química analítica", desc:"Titulação, análise qualitativa e quantitativa.", temas:[
-    ["J01","Análise qualitativa e marcha de íons",[]],
-    ["J02","Métodos gravimétricos",[]],
-    ["J03","Métodos volumétricos",[]],
-    ["J04","Química de coordenação",[]],
+    ["J01","Análise qualitativa: solubilidade, precipitados, chama e marcha de cátions",[],true],
+    ["J02","Métodos gravimétricos: precipitação, volatilização e análise por combustão",[],true],
+    ["J03","Métodos volumétricos: titulação ácido-base, redox, de precipitação e com EDTA",[],true],
+    ["J04","Química de coordenação: complexos, isômeros, campo cristalino e cor",[],true],
   ] },
   /* aba Experimentos (simulações, no padrão dos experimentos de física) */
   { id:"EQg", area:"quiexp", letra:"QG", cor:"--mF", nome:"Gases", desc:"Difusão, pistão, Maxwell–Boltzmann e gases reais.", temas:[
