@@ -17,7 +17,7 @@ const { chromium } = require('playwright');
     const foto = () => p.evaluate(() => { const l = document.querySelector('.lab'); const s = l && l.querySelector('svg, canvas'); return !s ? '' : s.tagName === 'CANVAS' ? s.toDataURL().slice(-200) : s.innerHTML; });
     const a = await foto(); await p.waitForTimeout(700); const z = await foto();
     const r = await p.evaluate(() => ({ katex: document.querySelectorAll('.katex-error').length, lab: document.querySelectorAll('.lab').length, texto: document.querySelector('#pagina').innerText.length, ex: document.querySelectorAll('.ex').length, cru: /\\ce\{|\$[^$]{1,80}\$|\{,\}/.test(document.querySelector('#pagina').innerText) }));
-    const parado = ['EQ08', 'EQ20'].includes(c); /* EQ20: construtor, só gira se pedir */ /* só se mexe com a torneira aberta (conferido mais abaixo) */
+    const parado = ['EQ08', 'EQ20', 'EQ12'].includes(c); /* EQ20: construtor, só gira se pedir */ /* só se mexe com a torneira aberta (conferido mais abaixo) */
     ok(r.katex === 0 && r.lab === 1 && !!a && (parado || a !== z) && r.texto > 1500 && r.ex === 0 && !r.cru, c + ': página montada, sem fórmula quebrada nem TeX solto, simulação animando, sem exercícios ' + JSON.stringify(r));
   }
   // ----- EQ01: difusão e efusão -----
@@ -123,6 +123,22 @@ const { chromium } = require('playwright');
   if (temas.has('EQ20')) { await abre('EQ20');
     const c = await p.evaluate(() => { const f = SIM.qVseprConta; return [f('C', ['H', 'H', 'H', 'H'], 0).modMu, f('C', ['Cl', 'Cl', 'Cl', 'Cl'], 0).modMu, f('C', ['H', 'Cl', 'Cl', 'Cl'], 0).modMu, f('O', ['H', 'H'], 2).modMu, f('C', ['O', 'O'], 0).modMu, f('Xe', ['F', 'F', 'F', 'F'], 2).modMu, document.querySelectorAll('#exp-vsepr svg, #exp-vsepr canvas').length]; });
     ok(c[0] < 1e-9 && c[1] < 1e-9 && perto(c[2], 0.96, 0.01) && perto(c[3], 1.43, 0.01) && c[4] < 1e-9 && c[5] < 1e-9 && c[6] > 0, 'EQ20: o construtor está montado; CH₄, CCl₄, CO₂ e XeF₄ dão dipolo zero; CHCl₃ 0,96 e H₂O 1,43 (em Δχ)'); }
+  // ----- EQ13: decaimento -----
+  if (temas.has('EQ13')) { await abre('EQ13');
+    const d = await p.evaluate(() => { const u = SIM.eqDecaimento._ult, r = []; u.semente(13); u.poe('C14'); u.semente(13); r.push(u.est()); for (let k = 0; k < 4; k++) { u.avanca(1); r.push(u.est()); } u.poe('I131'); return { r, i: u.est(), lei: [SIM.decai(400, 1, 1), SIM.decai(400, 3, 1), SIM.decai(1, 5700, 5700)] }; });
+    const sg = (n, p) => Math.sqrt(n * p * (1 - p));
+    ok(d.r[0].n === 400 && [1, 2, 3, 4].every((k) => Math.abs(d.r[k].n - 400 / 2 ** k) < 3 * sg(400, 1 / 2 ** k)) && d.r[1].n > d.r[2].n && d.r[2].n > d.r[3].n, 'EQ13: de 400 núcleos restam ' + [1, 2, 3, 4].map((k) => d.r[k].n).join(', ') + ' depois de 1, 2, 3 e 4 meias-vidas (lei: 200, 100, 50, 25), dentro de 3 desvios padrão');
+    ok(d.r[0].meia === 5700 && perto(d.r[2].tReal, 11400, 1) && Math.abs(d.r[2].idade / 11400 - 1) < 0.15 && d.i.meia === 8.0249 && d.i.un === 'dias' && d.lei.join() === '200,50,0.5', 'EQ13: ¹⁴C com meia-vida de 5700 anos: em 11 400 anos, idade calculada pela fração: ' + Math.round(d.r[2].idade) + ' anos; ¹³¹I: 8,0249 dias'); }
+  // ----- EQ12: fissão em cadeia -----
+  if (temas.has('EQ12')) { await abre('EQ12');
+    const f = await p.evaluate(() => { const u = SIM.eqFissao._ult, media = (L, P, B) => { u.semente(21); let s = 0, mx = 0, ne = 0; for (let k = 0; k < 30; k++) { u.poe(L, P, B); u.dispara(); const e = u.roda(); s += e.fracao; mx = Math.max(mx, e.fracao); ne += e.fis; } return { fr: s / 30, mx, fis: ne / 30 }; }; return { peq: media(5, 1, 0), gra: media(19, 1, 0), dil: media(19, 0.5, 0), bar: media(19, 1, 2), um: (() => { u.semente(21); u.poe(19, 1, 0); u.dispara(); return u.roda(); })() }; });
+    ok(f.peq.fr < 0.35 && f.gra.fr > 0.6 && f.gra.fr > 2 * f.peq.fr && f.dil.fr < f.gra.fr / 2 && f.bar.fr < f.gra.fr, 'EQ12 (média de 30 disparos): amostra 5 × 5 fissiona ' + Math.round(100 * f.peq.fr) + '% dos núcleos; 19 × 19 pura, ' + Math.round(100 * f.gra.fr) + '%; com 50% de físseis, ' + Math.round(100 * f.dil.fr) + '%; com 2 barras de controle, ' + Math.round(100 * f.bar.fr) + '%');
+    ok(f.um.voando === 0 && f.um.MeV === 200 * f.um.fis && f.um.ger.reduce((a, x) => a + x, 0) === f.um.fis && f.um.fis <= f.um.fisseis, 'EQ12: um disparo na amostra grande: ' + f.um.fis + ' fissões em ' + f.um.ger.length + ' gerações (' + f.um.ger.slice(0, 6).join(', ') + '…); energia = 200 MeV por fissão; cada núcleo fissiona no máximo uma vez'); }
+  // ----- EQ14: fusão -----
+  if (temas.has('EQ14')) { await abre('EQ14');
+    const fu = await p.evaluate(() => { const u = SIM.eqFusao._ult, r = {}; for (const T of [20, 60, 120]) { u.semente(14); u.poe(T); u.semente(14); u.avanca(40); r[T] = u.est(); } return r; });
+    ok(fu[20].fus <= 1 && fu[60].fus > fu[20].fus && fu[120].fus > fu[60].fus && Math.abs(fu[120].fr / fu[120].teor - 1) < 0.5, 'EQ14: em 40 s, ' + fu[20].fus + ' fusões a 20 milhões de K, ' + fu[60].fus + ' a 60 e ' + fu[120].fus + ' a 120; fração que funde a 120: ' + (100 * fu[120].fr).toFixed(1) + '% (modelo: ' + (100 * fu[120].teor).toFixed(1) + '%)');
+    ok([20, 60, 120].every((T) => fu[T].He === fu[T].fus && fu[T].n === fu[T].fus && fu[T].D === 40 - fu[T].fus && fu[T].Tr === 40 - fu[T].fus && perto(fu[T].MeV, 17.6 * fu[T].fus, 1e-9)), 'EQ14: cada fusão consome um ²H e um ³H e dá um ⁴He e um nêutron; energia = 17,6 MeV por fusão'); }
   ok(errs.length === 0, errs.length ? 'ERROS de JS: ' + errs.join(' | ') : 'sem erros de JS');
   console.log('FALHAS (' + falhas + '):');
   await b.close(); process.exit(falhas ? 1 : 0);

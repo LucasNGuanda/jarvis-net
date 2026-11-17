@@ -130,9 +130,9 @@ window.CATALOGO.push(
     ["EQ11","Corrosão e proteção catódica",[],true],
   ] },
   { id:"EQn", area:"quiexp", letra:"QN", cor:"--mN", nome:"Nuclear", desc:"Fissão, decaimento e fusão.", temas:[
-    ["EQ12","Fissão em cadeia",[]],
-    ["EQ13","Decaimento e meia-vida",[]],
-    ["EQ14","Fusão nuclear",[]],
+    ["EQ12","Fissão em cadeia",[],true],
+    ["EQ13","Decaimento e meia-vida",[],true],
+    ["EQ14","Fusão nuclear",[],true],
   ] },
   { id:"EQt", area:"quiexp", letra:"QT", cor:"--mC", nome:"Átomos e ligações", desc:"Orbitais, tabela periódica, moléculas, chama, espectros e cristais.", temas:[
     ["EQ15","Orbitais atômicos em 3D",[],true],
