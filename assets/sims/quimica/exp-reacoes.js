@@ -32,7 +32,7 @@
     c.resta = () => c.ps.filter((p) => p.tipo === 0).length / o.N;
     c.desenha = () => `<rect x="${o.x}" y="${o.y}" width="${o.w}" height="${o.h}" style="fill:none;stroke:var(--ink2);stroke-width:2"/>` + c.ps.map((p) => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" style="fill:${["var(--mA)", "var(--warn)", "var(--ok)"][p.tipo]}"/>`).join("");
     return c; };
-  SIM.arrhenius = (Ea, Tk) => Math.exp(-Ea * 300 / Tk);
+  SIM.eqArrh = (Ea, Tk) => Math.exp(-Ea * 300 / Tk);
 
   /* ---------- EQ05 · colisões e energia de ativação ---------- */
   /* nome: "Colisões e energia de ativação: quem bate forte reage" · matéria: Química · tema: EQ05 */
@@ -41,7 +41,7 @@
       <div class="ctrls"><div>${sl("temperatura (K)", "T", 200, 900, 10, 300)}${sl("energia de ativação (em kT a 300 K)", "E", 0.5, 6, 0.1, 2)}</div>
       <div><div class="bts"><button class="bt pri" data-a="re">Recomeçar</button><button class="bt" data-a="rg" aria-pressed="true">Reagir de verdade</button></div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink2)">Azul e laranja: reagentes A e B. Verde: produto C.</p></div></div>
       <div class="status" data-v="st"></div>`);
-    const q = (s) => el.querySelector(s), est = () => ({ Tk, Ea, reagir, nAB: cx.nAB, nEf: cx.nEf, fr: cx.nAB ? cx.nEf / cx.nAB : null, teor: SIM.arrhenius(Ea, Tk), resta: cx.resta(), t: cx.t });
+    const q = (s) => el.querySelector(s), est = () => ({ Tk, Ea, reagir, nAB: cx.nAB, nEf: cx.nEf, fr: cx.nAB ? cx.nEf / cx.nAB : null, teor: SIM.eqArrh(Ea, Tk), resta: cx.resta(), t: cx.t });
     const desenha = () => { const e = est(); q("[data-o=T]").textContent = Tk + " K"; q("[data-o=E]").textContent = n2(Ea, 1);
       const gx = 470, gy = 250, gw = 190, gh = 200; let s = cx.desenha() + `<line x1="${gx}" y1="${gy}" x2="${gx + gw}" y2="${gy}" style="stroke:var(--ink3)"/><line x1="${gx}" y1="${gy}" x2="${gx}" y2="${gy - gh}" style="stroke:var(--ink3)"/>` + T(gx + gw / 2, 16, "reagente A que ainda resta", "middle", "tx2", 11) + T(gx - 4, gy - gh + 4, "100%", "end", "tx2", 10) + T(gx + gw / 2, gy + 16, "tempo", "middle", "tx2", 10);
       if (cx.hist.length > 1) { const tm = Math.max(20, cx.hist[cx.hist.length - 1][0]); s += `<path d="${cx.hist.map((p, i) => (i ? "L" : "M") + (gx + gw * p[0] / tm).toFixed(1) + "," + (gy - gh * p[1]).toFixed(1)).join("")}" style="fill:none;stroke:var(--mA);stroke-width:2"/>`; }
