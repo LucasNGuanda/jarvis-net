@@ -210,11 +210,74 @@ for s in v(RO["resumo_tabela"]):
 if [r["letras"] for r in REG] != [["г", "к", "х"], ["ж", "ч", "ш", "щ"], ["ц"]]: erros.append(f"tabela de ortografia inesperada: {REG}")
 ESTR = re.findall(r"[Ѐ-ӿ]+", v(RO["excecoes_estrangeirismos"]).split("For example,")[1])
 
+# ---------- RG03: substantivos, gênero e nominativo plural (tools/russo/dadosR3.json: Wiktionary para as palavras, Wikipedia para as regras) ----------
+D3 = json.load(open(os.path.join(R, "dadosR3.json"), encoding="utf-8"))
+# [palavra, palavra em inglês que tem de estar na definição do verbete, tradução]
+N_PT = [
+ ["стол", "table", "mesa"], ["стул", "chair", "cadeira"], ["дом", "house", "casa"], ["город", "city", "cidade"], ["друг", "friend", "amigo"], ["брат", "brother", "irmão"],
+ ["сын", "son", "filho"], ["отец", "father", "pai"], ["день", "day", "dia"], ["год", "year", "ano"], ["человек", "person", "pessoa"], ["язык", "tongue", "língua"],
+ ["хлеб", "bread", "pão"], ["чай", "tea", "chá"], ["кот", "tomcat", "gato"], ["урок", "lesson", "aula"], ["учитель", "teacher", "professor"], ["студент", "student", "estudante"],
+ ["вопрос", "question", "pergunta"], ["ответ", "answer", "resposta"], ["этаж", "floor", "andar (de prédio)"], ["юг", "south", "sul"], ["мяч", "ball", "bola"], ["ёж", "hedgehog", "ouriço"],
+ ["цирк", "circus", "circo"], ["вечер", "evening", "noite (o começo dela)"], ["музей", "museum", "museu"], ["герой", "hero", "herói"], ["словарь", "dictionary", "dicionário"],
+ ["врач", "medicine", "médico"], ["мальчик", "boy", "menino"], ["ребёнок", "child", "criança"], ["муж", "husband", "marido"], ["глаз", "eye", "olho"], ["месяц", "month", "mês"],
+ ["поезд", "train", "trem"], ["лес", "forest", "floresta"], ["мама", "mom", "mamãe"], ["папа", "dad", "papai"], ["вода", "water", "água"], ["книга", "book", "livro"],
+ ["улица", "street", "rua"], ["школа", "school", "escola"], ["сестра", "sister", "irmã"], ["дочь", "daughter", "filha"], ["мать", "mother", "mãe"], ["ночь", "night", "noite"],
+ ["жизнь", "life", "vida"], ["рука", "hand", "mão"], ["работа", "work", "trabalho"], ["задача", "problem", "problema (de prova)"], ["семья", "family", "família"], ["мышь", "mouse", "camundongo"],
+ ["сила", "strength", "força"], ["масса", "mass", "massa"], ["скорость", "speed", "velocidade"], ["энергия", "energy", "energia"], ["физика", "physics", "física"],
+ ["математика", "mathematics", "matemática"], ["химия", "chemistry", "química"], ["девочка", "girl", "menina"], ["девушка", "girl", "moça"], ["жена", "wife", "esposa"],
+ ["неделя", "week", "semana"], ["станция", "station", "estação"], ["лекция", "lecture", "aula expositiva"], ["фамилия", "surname", "sobrenome"], ["тетрадь", "notebook", "caderno"],
+ ["дверь", "door", "porta"], ["дядя", "uncle", "tio"], ["мужчина", "man", "homem"], ["женщина", "woman", "mulher"], ["окно", "window", "janela"], ["молоко", "milk", "leite"],
+ ["утро", "morning", "manhã"], ["время", "time", "tempo"], ["дело", "affair", "assunto"], ["слово", "word", "palavra"], ["место", "place", "lugar"], ["лицо", "face", "rosto"],
+ ["решение", "solution", "solução"], ["число", "number", "número"], ["мясо", "meat", "carne"], ["яблоко", "apple", "maçã"], ["эхо", "echo", "eco"], ["море", "sea", "mar"],
+ ["поле", "field", "campo"], ["имя", "name", "nome"], ["здание", "building", "prédio"], ["письмо", "letter", "carta"], ["кофе", "coffee", "café"], ["такси", "taxi", "táxi"],
+ ["метро", "subway", "metrô"], ["пальто", "overcoat", "sobretudo"], ["деньги", "money", "dinheiro"], ["часы", "clock", "relógio"], ["люди", "people", "pessoas"],
+ ["дети", "ребёнок", "crianças"], ["ножницы", "scissors", "tesoura"], ["брюки", "trousers", "calças"],
+]
+NOM = []
+for pal, chave, pt in N_PT:
+    p = D3["palavras"].get(pal)
+    if not p or not p.get("entradas"): erros.append(f"RG03 {pal}: sem verbete"); continue
+    e = p["entradas"][0]
+    if v(e["classe"]) != "Noun": erros.append(f"RG03 {pal}: a primeira entrada não é substantivo"); continue
+    gl = " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])][:6])
+    if chave.lower() not in gl.lower(): erros.append(f"RG03 {pal}: {chave!r} não está na definição ({gl[:60]!r})"); continue
+    ac = v(e["forma_acentuada"])
+    if ac.replace("́", "") != pal: erros.append(f"RG03 {pal}: forma acentuada {ac!r} é outra palavra")
+    gen = v(e["genero"]); gs = []; an = None
+    for parte in gen.split(" or "):
+        tk = parte.split()
+        if tk and tk[0] in ("m", "f", "n") and tk[0] not in gs: gs.append(tk[0])
+        if len(tk) > 1 and tk[1] in ("anim", "inan") and an is None: an = tk[1]
+    if not gs: erros.append(f"RG03 {pal}: gênero não entendido {gen!r}")
+    marcas = [v(m) for m in (e.get("marcas") or [])]
+    linha = v(e.get("linha_do_verbete")) or ""
+    conject = "conjectural or unused" in linha
+    npl = v(e.get("nominativo_plural")); pl, raro = [], []
+    if npl and not conject:
+        for f in npl.split(" or "):
+            (raro if "*" in f else pl).append(f.replace("*", "").strip())
+    ipa = v(e.get("ipa")); ipa = ipa[0] if isinstance(ipa, list) and ipa else ipa
+    so_pl = "plural only" in marcas or " pl" in (" " + gen)
+    NOM.append({"w": pal, "ac": ac, "tr": v(e["transliteracao"]), "ipa": ipa, "gs": gs, "an": an, "gen": gen, "pl": pl, "plRaro": raro, "indecl": "indeclinable" in marcas, "soPl": so_pl, "semPl": conject, "pt": pt})
+# conferência cruzada: o plural irregular que a Wikipedia dá tem de estar entre as formas do Wiktionary
+IRR = []
+for pal, x in D3["numero"]["plurais_irregulares"]["pedidos"].items():
+    s = v(x)
+    if not s: continue
+    mm = re.match(r"^(\S+) \((\w)\) – ([^|]+) \| (\S+)", s)
+    if not mm: erros.append(f"RG03 irregular não entendido: {s!r}"); continue
+    n = next((y for y in NOM if y["w"] == pal), None)
+    if not n: continue
+    if mm.group(4) not in n["pl"] + n["plRaro"]: erros.append(f"RG03 {pal}: plural da Wikipedia {mm.group(4)!r} não está no Wiktionary {n['pl']}")
+    if mm.group(2) not in n["gs"]: erros.append(f"RG03 {pal}: gênero da Wikipedia {mm.group(2)!r} diferente do Wiktionary {n['gs']}")
+    IRR.append(pal)
+if len(NOM) < 95: erros.append(f"RG03: só {len(NOM)} substantivos")
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -222,4 +285,5 @@ txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.j
 open(saida, "w", encoding="utf-8").write(txt)
 print(f"gravado: {len(ALF)} letras, {len(PAL)} palavras, {len(PAR)} pares de acento; listas: " + ", ".join(f"{k} {len(x)}" for k, x in LISTA.items()))
 print("RG02:", len(RED["akanye"]), "akanye,", len(RED["mole"]), "pares depois de mole,", len(RED["ikanye"]), "pares ikanye,", len(ENS), "ensurdecimento,", len(DEZ), "dezenas,", ESTR)
+print("RG03:", len(NOM), "substantivos;", sum(1 for x in NOM if x["pl"]), "com plural;", len(IRR), "irregulares conferidos com a Wikipedia")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})

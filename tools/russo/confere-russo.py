@@ -10,6 +10,7 @@ import json, re, os, sys, glob
 R = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
 fonte = open(os.path.join(R, "tools", "russo", "dadosR.json"), encoding="utf-8").read()
 fonte = json.dumps(json.loads(fonte), ensure_ascii=False)  # desfaz \uXXXX, se houver
+fonte += json.dumps(json.load(open(os.path.join(R, "tools", "russo", "dadosR3.json"), encoding="utf-8")), ensure_ascii=False)  # RG03 em diante
 CIR = r"Ѐ-ӿ́"
 palavras_fonte = set(re.findall(f"[{CIR}]+", fonte))
 sem_acento = {w.replace("́", "") for w in palavras_fonte}
