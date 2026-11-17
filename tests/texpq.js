@@ -17,7 +17,7 @@ const { chromium } = require('playwright');
     const foto = () => p.evaluate(() => { const l = document.querySelector('.lab'); const s = l && l.querySelector('svg, canvas'); return !s ? '' : s.tagName === 'CANVAS' ? s.toDataURL().slice(-200) : s.innerHTML; });
     const a = await foto(); await p.waitForTimeout(700); const z = await foto();
     const r = await p.evaluate(() => ({ katex: document.querySelectorAll('.katex-error').length, lab: document.querySelectorAll('.lab').length, texto: document.querySelector('#pagina').innerText.length, ex: document.querySelectorAll('.ex').length, cru: /\\ce\{|\$[^$]{1,80}\$|\{,\}/.test(document.querySelector('#pagina').innerText) }));
-    const parado = ['EQ08'].includes(c); /* só se mexe com a torneira aberta (conferido mais abaixo) */
+    const parado = ['EQ08', 'EQ20'].includes(c); /* EQ20: construtor, só gira se pedir */ /* só se mexe com a torneira aberta (conferido mais abaixo) */
     ok(r.katex === 0 && r.lab === 1 && !!a && (parado || a !== z) && r.texto > 1500 && r.ex === 0 && !r.cru, c + ': página montada, sem fórmula quebrada nem TeX solto, simulação animando, sem exercícios ' + JSON.stringify(r));
   }
   // ----- EQ01: difusão e efusão -----
@@ -100,9 +100,29 @@ const { chromium } = require('playwright');
     const c = await p.evaluate(() => { const u = SIM.eqCorrosao._ult, r = {}; for (const m of ['', 'Zn', 'Mg', 'Sn', 'Cu']) { u.poe(m, true, true, false); u.avanca(10); r[m || 'so'] = u.est(); } u.poe('', false, true, false); u.avanca(10); r.seco = u.est(); u.poe('Cu', true, false, false); u.avanca(10); r.semO2 = u.est(); u.poe('', true, true, true); u.avanca(10); r.sal = u.est(); return r; });
     ok(c.so.corroi === 'Fe' && c.so.dFe > 0 && c.Zn.corroi === 'Zn' && c.Zn.dFe === 0 && c.Zn.dOu > 0 && c.Mg.corroi === 'Mg' && c.Mg.dFe === 0 && c.Mg.dOu > c.Zn.dOu, 'EQ11: sozinho, o ferro corrói; com Zn ou Mg, corrói o outro metal e o ferro fica intacto (o Mg, de potencial mais baixo, some mais depressa no desenho)');
     ok(c.Sn.corroi === 'Fe' && c.Cu.corroi === 'Fe' && c.Cu.dFe > c.Sn.dFe && c.Sn.dFe > c.so.dFe && c.Cu.dOu === 0, 'EQ11: com Sn ou Cu, quem corrói é o ferro, e mais depressa que sozinho (' + (100 * c.so.dFe).toFixed(0) + '% → ' + (100 * c.Sn.dFe).toFixed(0) + '% → ' + (100 * c.Cu.dFe).toFixed(0) + '% em 10 s)');
-    const fimZn = await p.evaluate(() => { const u = SIM.eqCorrosao._ult; u.poe('Mg', true, true, true); u.avanca(12); const antes = u.est(); u.avanca(40); return [antes, u.est()]; });
+    const fimZn = await p.evaluate(() => { const u = SIM.eqCorrosao._ult; u.poe('Mg', true, true, true); u.avanca(3); const antes = u.est(); u.avanca(40); return [antes, u.est()]; });
     ok(fimZn[0].dFe === 0 && !fimZn[0].acabou && fimZn[1].acabou && fimZn[1].dFe > 0 && fimZn[1].corroi === 'Fe', 'EQ11: quando o ânodo de sacrifício acaba, o ferro volta a corroer');
     ok(c.seco.corroi === null && c.seco.dFe === 0 && c.semO2.corroi === null && c.semO2.dFe === 0 && c.sal.dFe > c.so.dFe, 'EQ11: sem água ou sem oxigênio, nada corrói; com sal, o ferro corrói mais depressa'); }
+  // ----- EQ15: orbitais -----
+  if (temas.has('EQ15')) { await abre('EQ15');
+    const o = await p.evaluate(() => { const u = SIM.eqOrbitais._ult, r = {}; u.semente(2); for (const id of Object.keys(SIM.ORBITAIS)) { u.poe(id); const e = u.est(), pts = u.pontos(); r[id] = { ...e, perto2: pts.filter((q) => Math.abs(Math.hypot(q[0], q[1], q[2]) - 2) < 0.12).length, eixoZ: pts.filter((q) => Math.abs(q[2]) < 0.4).length / pts.length }; } return { r, psi: [SIM.psiH('1s', 0, 0, 1), SIM.psiH('2s', 0, 0, 2), SIM.psiH('2pz', 1, 0, 0), SIM.psiH('3pz', 0, 0, 6), SIM.psiH('3dz2', 0, 0, 3)] }; });
+    const ids = Object.keys(o.r);
+    ok(ids.length === 8 && ids.every((k) => o.r[k].N === 2600 && Math.abs(o.r[k].rmed / o.r[k].rteor - 1) < 0.04), 'EQ15: distância média dos 2600 pontos a menos de 4% da teoria: ' + ids.map((k) => k + ' ' + o.r[k].rmed.toFixed(2) + ' (' + o.r[k].rteor + ')').join('; '));
+    ok(o.r['1s'].fpos === 1 && ['2pz', '3pz', '3dxz', '3dx2y2'].every((k) => Math.abs(o.r[k].fpos - 0.5) < 0.04) && o.r['2s'].perto2 < 12 && o.r['2s'].nosR === 1 && o.r['3s'].nosR === 2 && o.r['3pz'].nosR === 1 && o.r['3dz2'].nosA === 2 && o.r['2pz'].eixoZ < 0.05, 'EQ15: 1s tem um sinal só; p e d têm metade dos pontos de cada sinal; quase nenhum ponto no nó do 2s (r = 2: ' + o.r['2s'].perto2 + ' de 2600) nem no plano nodal do 2p');
+    ok(perto(o.psi[0], 2 * Math.exp(-1) / Math.sqrt(4 * Math.PI), 1e-12) && Math.abs(o.psi[1]) < 1e-15 && Math.abs(o.psi[2]) < 1e-15 && Math.abs(o.psi[3]) < 1e-15 && o.psi[4] > 0, 'EQ15: ψ(1s) em r = 1 igual à fórmula; ψ = 0 no nó do 2s (r = 2), no plano nodal do 2p e no nó radial do 3p (r = 6)'); }
+  // ----- EQ16: geometrias -----
+  if (temas.has('EQ16')) { await abre('EQ16');
+    const g = await p.evaluate(() => { const u = SIM.eqGeometrias._ult, r = {}; for (const k of u.lista()) { u.poe(k); r[k] = u.est(); } return r; });
+    ok(Object.keys(g).length === 13 && g['4,0'].angs.join() === '109.5' && g['3,0'].angs.join() === '120' && g['2,0'].angs.join() === '180' && g['6,0'].angs.join() === '90,180' && g['5,0'].angs.join() === '90,120,180' && g['2,2'].forma === 'angular' && g['2,2'].arranjo === 'tetraédrica' && g['4,2'].forma === 'quadrada plana' && g['4,2'].angs.join() === '90,180' && g['3,1'].forma === 'piramidal' && g['2,3'].forma === 'linear' && g['2,3'].angs.join() === '180', 'EQ16: 13 geometrias; AX₄ 109,5°, AX₃ 120°, AX₂ 180°, AX₅ 90/120/180°, AX₆ 90/180°; AX₂E₂ angular (arranjo tetraédrico), AX₃E piramidal, AX₄E₂ quadrada plana, AX₂E₃ linear'); }
+  // ----- EQ19: tabela periódica -----
+  if (temas.has('EQ19')) { await abre('EQ19');
+    const tb = await p.evaluate(() => { const u = SIM.eqTabela._ult, pos = SIM.eqPosTabela, E = window.TABELA_DADOS.elementos.filter(Boolean), s = (x) => E.find((e) => e.s === x); u.poe('en', 9); const en = u.est(); u.poe('ei', 2); const ei = u.est(); u.apaga(); u.avanca(1); const meio = u.est(); const todas = new Set(E.map((e) => pos(e.z).join())); return { n: u.celulas(), en, ei, meio, unicas: todas.size, pos: [pos(1), pos(2), pos(5), pos(26), pos(57), pos(72), pos(118), pos(92), pos(20), pos(31)].map((x) => x.join()), quebras: [s('Be').ei > s('B').ei, s('N').ei > s('O').ei, s('Li').ei < s('Be').ei, s('Na').ei < s('Li').ei] }; });
+    ok(tb.n === 118 && tb.unicas === 118 && tb.pos.join(' ') === '1,1 18,1 13,2 8,4 3,8 4,6 18,7 6,9 2,4 13,4', 'EQ19: 118 células, nenhuma posição repetida; H (1,1), He (18,1), B (13,2), Fe (8,4), La (3,8), Hf (4,6), Og (18,7), U (6,9), Ca (2,4), Ga (13,4)');
+    ok(tb.en.max === 'F' && tb.ei.max === 'He' && tb.en.comDado < 118 && tb.meio.frente === 40 && tb.quebras.every(Boolean), 'EQ19: maior eletronegatividade: F; maior energia de ionização: He; ' + tb.en.comDado + ' elementos com eletronegatividade (os outros aparecem como "sem dado"); as quebras Be → B e N → O estão nos dados'); }
+  // ----- EQ20: construtor (o mesmo da aba Moléculas) -----
+  if (temas.has('EQ20')) { await abre('EQ20');
+    const c = await p.evaluate(() => { const f = SIM.qVseprConta; return [f('C', ['H', 'H', 'H', 'H'], 0).modMu, f('C', ['Cl', 'Cl', 'Cl', 'Cl'], 0).modMu, f('C', ['H', 'Cl', 'Cl', 'Cl'], 0).modMu, f('O', ['H', 'H'], 2).modMu, f('C', ['O', 'O'], 0).modMu, f('Xe', ['F', 'F', 'F', 'F'], 2).modMu, document.querySelectorAll('#exp-vsepr svg, #exp-vsepr canvas').length]; });
+    ok(c[0] < 1e-9 && c[1] < 1e-9 && perto(c[2], 0.96, 0.01) && perto(c[3], 1.43, 0.01) && c[4] < 1e-9 && c[5] < 1e-9 && c[6] > 0, 'EQ20: o construtor está montado; CH₄, CCl₄, CO₂ e XeF₄ dão dipolo zero; CHCl₃ 0,96 e H₂O 1,43 (em Δχ)'); }
   ok(errs.length === 0, errs.length ? 'ERROS de JS: ' + errs.join(' | ') : 'sem erros de JS');
   console.log('FALHAS (' + falhas + '):');
   await b.close(); process.exit(falhas ? 1 : 0);

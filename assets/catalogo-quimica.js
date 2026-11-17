@@ -135,15 +135,15 @@ window.CATALOGO.push(
     ["EQ14","Fusão nuclear",[]],
   ] },
   { id:"EQt", area:"quiexp", letra:"QT", cor:"--mC", nome:"Átomos e ligações", desc:"Orbitais, tabela periódica, moléculas, chama, espectros e cristais.", temas:[
-    ["EQ15","Orbitais atômicos em 3D",[]],
-    ["EQ16","Geometria molecular girando",[]],
+    ["EQ15","Orbitais atômicos em 3D",[],true],
+    ["EQ16","Geometria molecular girando",[],true],
     ["EQ17","Forças intermoleculares",[]],
     /* EQ18 (pedido de 15/11/2026): monte o retículo. Empilham-se os íons e o cristal se forma, mostrando o número de coordenação. */
     ["EQ18","Monte o retículo: cristais iônicos e número de coordenação",[]],
     /* EQ19: escolhe-se uma propriedade (raio, eletronegatividade, energia de ionização) e a tabela vira mapa de calor, com as tendências aparecendo sozinhas. */
-    ["EQ19","Tabela periódica que acende",[]],
+    ["EQ19","Tabela periódica que acende",[],true],
     /* EQ20: arrastam-se átomos, ligam-se, e o site aplica VSEPR, mostra a geometria girando em 3D, calcula a polaridade e desenha o vetor momento dipolar. */
-    ["EQ20","Construtor de moléculas: VSEPR, 3D e momento dipolar",[]],
+    ["EQ20","Construtor de moléculas: VSEPR, 3D e momento dipolar",[],true],
     /* EQ22: joga-se o sal na chama e vê-se a cor do cátion. */
     ["EQ22","Teste de chama",[]],
     /* EQ23: aquece-se o elemento, aparecem as linhas e, ao lado, os saltos de nível do átomo de Bohr que geraram cada uma. */
