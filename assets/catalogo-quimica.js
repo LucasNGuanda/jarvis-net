@@ -110,50 +110,50 @@ window.CATALOGO.push(
   ] },
   /* aba Experimentos (simulações, no padrão dos experimentos de física) */
   { id:"EQg", area:"quiexp", letra:"QG", cor:"--mF", nome:"Gases", desc:"Difusão, pistão, Maxwell–Boltzmann e gases reais.", temas:[
-    ["EQ01","Gás enchendo o recipiente: difusão e efusão",[]],
-    ["EQ02","Pistão: pressão, volume e temperatura",[]],
-    ["EQ03","Distribuição de Maxwell-Boltzmann",[]],
-    ["EQ04","Gás real × gás ideal",[]],
+    ["EQ01","Gás enchendo o recipiente: difusão e efusão",[],true],
+    ["EQ02","Pistão: pressão, volume e temperatura",[],true],
+    ["EQ03","Distribuição de Maxwell-Boltzmann",[],true],
+    ["EQ04","Gás real × gás ideal",[],true],
   ] },
   { id:"EQr", area:"quiexp", letra:"QR", cor:"--mO", nome:"Reações", desc:"Colisões, catalisador, Le Chatelier, titulação na bureta e balanceamento.", temas:[
-    ["EQ05","Colisões e energia de ativação",[]],
-    ["EQ06","Catalisador mudando o caminho",[]],
-    ["EQ07","Le Chatelier ao vivo",[]],
+    ["EQ05","Colisões e energia de ativação",[],true],
+    ["EQ06","Catalisador mudando o caminho",[],true],
+    ["EQ07","Le Chatelier ao vivo",[],true],
     /* EQ08 (pedido de 15/11/2026): bureta de verdade. Abre-se a torneira, as gotas caem uma a uma, a cor vira no ponto de viragem e a curva de pH se desenha junto; tem de dar para passar do ponto de propósito. */
-    ["EQ08","Titulação na bureta: gota a gota, viragem e curva de pH",[]],
+    ["EQ08","Titulação na bureta: gota a gota, viragem e curva de pH",[],true],
     /* EQ21: os dois lados da equação com os átomos contados em bolinhas; mexe-se nos coeficientes até os lados se igualarem. */
-    ["EQ21","Balanceador visual de equações",[]],
+    ["EQ21","Balanceador visual de equações",[],true],
   ] },
   { id:"EQe", area:"quiexp", letra:"QE", cor:"--mK1", nome:"Eletroquímica", desc:"Pilha de Daniell, eletrólise e corrosão.", temas:[
-    ["EQ09","Pilha de Daniell",[]],
-    ["EQ10","Eletrólise",[]],
-    ["EQ11","Corrosão e proteção catódica",[]],
+    ["EQ09","Pilha de Daniell",[],true],
+    ["EQ10","Eletrólise",[],true],
+    ["EQ11","Corrosão e proteção catódica",[],true],
   ] },
   { id:"EQn", area:"quiexp", letra:"QN", cor:"--mN", nome:"Nuclear", desc:"Fissão, decaimento e fusão.", temas:[
-    ["EQ12","Fissão em cadeia",[]],
-    ["EQ13","Decaimento e meia-vida",[]],
-    ["EQ14","Fusão nuclear",[]],
+    ["EQ12","Fissão em cadeia",[],true],
+    ["EQ13","Decaimento e meia-vida",[],true],
+    ["EQ14","Fusão nuclear",[],true],
   ] },
   { id:"EQt", area:"quiexp", letra:"QT", cor:"--mC", nome:"Átomos e ligações", desc:"Orbitais, tabela periódica, moléculas, chama, espectros e cristais.", temas:[
-    ["EQ15","Orbitais atômicos em 3D",[]],
-    ["EQ16","Geometria molecular girando",[]],
-    ["EQ17","Forças intermoleculares",[]],
+    ["EQ15","Orbitais atômicos em 3D",[],true],
+    ["EQ16","Geometria molecular girando",[],true],
+    ["EQ17","Forças intermoleculares",[],true],
     /* EQ18 (pedido de 15/11/2026): monte o retículo. Empilham-se os íons e o cristal se forma, mostrando o número de coordenação. */
-    ["EQ18","Monte o retículo: cristais iônicos e número de coordenação",[]],
+    ["EQ18","Monte o retículo: cristais iônicos e número de coordenação",[],true],
     /* EQ19: escolhe-se uma propriedade (raio, eletronegatividade, energia de ionização) e a tabela vira mapa de calor, com as tendências aparecendo sozinhas. */
-    ["EQ19","Tabela periódica que acende",[]],
+    ["EQ19","Tabela periódica que acende",[],true],
     /* EQ20: arrastam-se átomos, ligam-se, e o site aplica VSEPR, mostra a geometria girando em 3D, calcula a polaridade e desenha o vetor momento dipolar. */
-    ["EQ20","Construtor de moléculas: VSEPR, 3D e momento dipolar",[]],
+    ["EQ20","Construtor de moléculas: VSEPR, 3D e momento dipolar",[],true],
     /* EQ22: joga-se o sal na chama e vê-se a cor do cátion. */
-    ["EQ22","Teste de chama",[]],
+    ["EQ22","Teste de chama",[],true],
     /* EQ23: aquece-se o elemento, aparecem as linhas e, ao lado, os saltos de nível do átomo de Bohr que geraram cada uma. */
-    ["EQ23","Espectro de emissão e os saltos do átomo de Bohr",[]],
+    ["EQ23","Espectro de emissão e os saltos do átomo de Bohr",[],true],
   ] },
   /* módulo novo (15/11/2026). EQ24: aquece-se a solução, dissolve-se mais, esfria-se devagar e os cristais crescem, com o tempo acelerável.
      EQ25: pinga-se o indicador nas substâncias de casa (vinagre, bicarbonato, sabão) e vê-se a escala de cor. */
   { id:"EQs", area:"quiexp", letra:"QS", cor:"--mS", nome:"Soluções e indicadores", desc:"Cristalização e o indicador de repolho roxo.", temas:[
-    ["EQ24","Cristalização: aquecer, dissolver, esfriar e ver crescer",[]],
-    ["EQ25","Indicador de repolho roxo",[]],
+    ["EQ24","Cristalização: aquecer, dissolver, esfriar e ver crescer",[],true],
+    ["EQ25","Indicador de repolho roxo",[],true],
   ] },
   /* aba Moléculas */
   { id:"QMV", area:"quimol", letra:"3D", cor:"--mT", nome:"Moléculas em 3D", desc:"Visualizador com busca por nome, fórmula ou SMILES e construtor de geometrias (VSEPR).", temas:[

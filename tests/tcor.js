@@ -13,7 +13,13 @@ const res = []; const ok = (c, m) => res.push([c, m]);
   await p.goto(base + '#/C01'); await p.waitForTimeout(1200); await p.goBack(); await p.waitForTimeout(1200);
   ok(await gira(), 'gira depois de abrir um tema e voltar pelo botão voltar');
   const p2 = await b.newPage(); await require('./adm')(p2); await p2.goto('about:blank'); await p2.bringToFront(); await p.waitForTimeout(1500); await p.bringToFront(); await p.waitForTimeout(1200);
-  ok(await gira(), 'gira depois de trocar de aba do navegador e voltar');
+  /* Depois de voltar de outra aba, o navegador pode demorar a religar a animação (era a causa da falha "de vez em quando": a medida de 0,7 s às vezes
+     caía antes do primeiro quadro). Mede-se por até 6 s, e logo abaixo o teste PROVA que continua acusando figura parada. */
+  const giraAte = (pg, ms) => pg.evaluate(async (ms) => { const pega = () => { const e = document.querySelector('.jv-globo .jv-mer'), l = document.querySelector('.jv-globo .jv-lua'); return [+e.getAttribute('rx'), +l.getAttribute('cx')]; }; const a = pega(), t0 = Date.now(); while (Date.now() - t0 < ms) { await new Promise(r => setTimeout(r, 250)); const c = pega(); if (Math.abs(a[0] - c[0]) > 0.5 && Math.abs(a[1] - c[1]) > 0.5) return true; } return false; }, ms);
+  ok(await giraAte(p, 6000), 'gira depois de trocar de aba do navegador e voltar (em até 6 s)');
+  { const p3 = await b.newPage({ viewport: { width: 1280, height: 900 } }); await require('./adm')(p3); await p3.goto(base + '#/home'); await p3.bringToFront(); await p3.waitForTimeout(1200);
+    const antes = await giraAte(p3, 6000); await p3.evaluate(() => { window.requestAnimationFrame = () => 0; }); await p3.waitForTimeout(400); const parada = await giraAte(p3, 6000);
+    ok(antes && !parada, 'prova do teste: com a animação travada de propósito, a mesma medida de 6 s acusa (girando: ' + antes + '; travada: ' + parada + ')'); await p3.close(); await p2.close(); await p.bringToFront(); await p.waitForTimeout(600); }
   ok(await p.evaluate(() => !document.querySelector('.jv-cab p') && !document.body.textContent.includes('meu sistema de estudo')), 'sem o texto "meu sistema de estudo"');
   // seletor de cor aparece ao passar o mouse
   const vis0 = await p.evaluate(() => getComputedStyle(document.querySelector('.jv-cor')).visibility);

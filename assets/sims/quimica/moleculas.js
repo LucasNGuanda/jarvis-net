@@ -239,6 +239,7 @@
   const AXE = { "2,0": ["linear", "linear", "180°", "CO₂, BeCl₂"], "3,0": ["trigonal plana", "trigonal plana", "120°", "BF₃, SO₃"], "2,1": ["trigonal plana", "angular", "um pouco menor que 120°", "SO₂, O₃"], "4,0": ["tetraédrica", "tetraédrica", "109,5°", "CH₄, NH₄⁺"], "3,1": ["tetraédrica", "piramidal", "um pouco menor que 109,5°", "NH₃, PCl₃"], "2,2": ["tetraédrica", "angular", "um pouco menor que 109,5°", "H₂O, H₂S"],
     "5,0": ["bipirâmide trigonal", "bipirâmide trigonal", "90°, 120° e 180°", "PCl₅"], "4,1": ["bipirâmide trigonal", "gangorra", "cerca de 90°, 120° e 180°", "SF₄"], "3,2": ["bipirâmide trigonal", "forma de T", "cerca de 90° e 180°", "ClF₃"], "2,3": ["bipirâmide trigonal", "linear", "180°", "XeF₂, I₃⁻"], "6,0": ["octaédrica", "octaédrica", "90° e 180°", "SF₆"], "5,1": ["octaédrica", "pirâmide de base quadrada", "cerca de 90°", "BrF₅"], "4,2": ["octaédrica", "quadrada plana", "90° e 180°", "XeF₄"] };
   const CENTRAIS = ["Be", "B", "C", "N", "O", "P", "S", "Cl", "Xe"], LIGANTES = ["H", "F", "Cl", "Br", "I", "O"];
+  SIM.VSEPR = { GEO, AXE }; /* direções e nomes, para o experimento EQ16 usar os mesmos */
   const chi = (el) => { const t = window.TABELA_DADOS && window.TABELA_DADOS.elementos.find((e) => e && e.s === el); return t && typeof t.en === "number" ? t.en : null; };
   /* conta do construtor, separada do desenho (é o que o teste e o Python conferem) */
   SIM.qVseprConta = (central, ligs, E, raios) => { const X = ligs.length, dirs = GEO[X + E], chiC = chi(central); let mu = [0, 0, 0], sem = chiC === null;
@@ -246,7 +247,7 @@
     ligs.forEach((l, k) => { const d = dirs[E + k], dist = ((raios && raios[central]) || 0.9) + ((raios && raios[l]) || 0.7); atomos.push({ el: l, p: esc(d, dist), q: 0 }); lg.push([0, k + 1, l === "O" ? 2 : 1]); const c = chi(l); if (c === null) sem = true; else if (!sem) mu = soma(mu, esc(d, c - chiC)); });
     const angs = []; for (let a = 0; a < X; a++) for (let b = a + 1; b < X; b++) angs.push(Math.round(angulo(dirs[E + a], dirs[E + b]) * 10) / 10);
     return { atomos, ligs: lg, pares: dirs.slice(0, E).map((d) => [0, d[0], d[1], d[2]]), mu: sem ? null : mu, modMu: sem ? null : mod(mu), angs: [...new Set(angs)].sort((a, b) => a - b), nome: AXE[X + "," + E] }; };
-  /* nome: "Construtor VSEPR: geometria e dipolo" · matéria: Química · tema: MV02 */
+  /* nome: "Construtor VSEPR: geometria e dipolo" · matéria: Química · tema: EQ20, MV02 */
   SIM.qVsepr3d = (el, F) => {
     estilo(); let central = "C", X = 4, E = 0, ligs = ["H", "H", "H", "H"], raios = null, verPares = true;
     const sub = (n) => (n === 1 ? "" : String(n).split("").map((c) => SUB[+c]).join(""));

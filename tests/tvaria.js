@@ -25,6 +25,7 @@ for (let i = 0; i < args.length; i++) { if (args[i] === '--n') opt.n = +args[++i
           inp.value = String(d.num.v === 0 ? 1 : d.num.v * 1.3).replace('.', ','); bt.click(); if (/Certo/.test(fb())) o.prob.push('valor 30% maior aceito');
           const resp = (d.resp || '').replace(/<[^>]+>/g, ''); if (!/\d/.test(resp)) o.prob.push('resp sem número'); }
         else if (d.certa) { const alts = [...el.querySelectorAll('.alt')]; const errada = alts.find(a => a.dataset.l !== d.certa); errada.click(); if (/Certo/.test(fb())) o.prob.push('alternativa errada aceita'); alts.find(a => a.dataset.l === d.certa).click(); if (!/Certo/.test(fb())) o.prob.push('alternativa certa recusada'); if (new Set(alts.map(a => a.textContent)).size !== alts.length) o.prob.push('alternativas repetidas'); }
+        else if (d.txt) { /* β 6.7: resposta escrita */ const inp = el.querySelector('.ex-txt input'), bt = el.querySelector('.ex-txt button'), v = [].concat(d.txt.v)[0]; if (!v || typeof v !== 'string') o.prob.push('gabarito escrito vazio'); inp.value = v; bt.click(); if (!/Certo/.test(fb())) o.prob.push('gabarito escrito recusado: ' + v); inp.value = v + 'ъ'; bt.click(); if (/Certo/.test(fb())) o.prob.push('resposta com letra a mais aceita'); }
         else o.prob.push('sem correção automática');
         return o; }, [i, k]);
       dump.push({ cod: c, n: r.n, k: r.k, v: r.v, py: r.py }); if (r.prob.length) ruins.push(r.n + ' (versão ' + r.k + '): ' + r.prob.join('; '));

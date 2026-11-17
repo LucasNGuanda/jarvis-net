@@ -104,7 +104,7 @@ F.registrar("quimica/C07", {
           <p>(iv) Dois elétrons desemparelhados: molécula <b>paramagnética</b>. É o que se observa.</p>
           <p>(v) Ordem de ligação: $\frac{8 - 4}{2} = 2$. A ligação dupla de Lewis está certa; o que Lewis não mostra é a distribuição dos elétrons.</p>`)}
         <p><b>Uma troca de ordem.</b> No $\ce{O2}$ e no $\ce{F2}$, o $\sigma2p$ fica abaixo dos $\pi2p$. Do $\ce{Li2}$ ao $\ce{N2}$, os orbitais $2s$ e $2p$ têm energias próximas e se misturam, o que empurra o $\sigma2p$ para <b>cima</b> dos $\pi2p$. A prova experimental é o $\ce{B2}$: ele é paramagnético, o que só acontece se os dois últimos elétrons estiverem nos $\pi2p$, um em cada.</p>
-        ${F.fig(fig(OM("N2", 0, 8, { w: 270 }) + OM("B2", 290, 8, { w: 270 }) + D.txt(135, 20, "N₂", "tx") + D.txt(425, 20, "B₂", "tx"), 225), "Até o N₂, os π2p vêm antes do σ2p. N₂: tudo emparelhado, ordem 3. B₂: dois elétrons desemparelhados.")}
+        ${F.fig(fig(OM("N2", 20, 8, { w: 240 }) + OM("B2", 300, 8, { w: 240 }) + D.txt(135, 20, "N₂", "tx") + D.txt(425, 20, "B₂", "tx"), 225), "Até o N₂, os π2p vêm antes do σ2p. N₂: tudo emparelhado, ordem 3. B₂: dois elétrons desemparelhados.")}
         <h3>Teorema 3: a ordem de ligação prevê força e comprimento</h3>
         <table class="tb"><tr><th>Molécula</th><th>Elétrons de valência</th><th>Ordem</th><th>Comprimento (pm)</th><th>Energia (kJ/mol)</th><th>Magnetismo</th></tr>
           <tr><td>$\ce{Li2}$</td><td>2</td><td>1</td><td>267</td><td>105</td><td>diamagnética</td></tr>

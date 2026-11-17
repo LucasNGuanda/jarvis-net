@@ -5,7 +5,7 @@ Ideia do Lucas (15/11/2026), depois do bug em que laboratórios da Química apag
 Em cima de cada definição `SIM.nome = (el, …) => …` fica UMA linha de comentário:
     /* nome: "Dipolo girando num campo uniforme" · matéria: Física · tema: C03 */
 É só comentário: não muda nome nem comportamento. O nome por extenso é o título que o tema passa ao F.lab("título", "id").
-A matéria vem da pasta do arquivo (assets/sims/ = Física; assets/sims/matematica/ = Matemática; assets/sims/quimica/ = Química).
+A matéria vem da pasta do arquivo (assets/sims/ = Física; assets/sims/matematica/ = Matemática; assets/sims/quimica/ = Química; assets/sims/russo/ = Russo).
 Pode rodar de novo à vontade: a linha antiga é trocada pela nova. O teste tests/tsim.js exige a etiqueta em todo laboratório.
 
 Uso: python3 tools/etiqueta-labs.py            (mostra o que faria)
@@ -13,7 +13,7 @@ Uso: python3 tools/etiqueta-labs.py            (mostra o que faria)
 import glob, os, re, sys
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 aplica = '--aplica' in sys.argv
-MAT = lambda rel: 'Química' if '/quimica/' in rel else 'Matemática' if '/matematica/' in rel else 'Física'
+MAT = lambda rel: 'Química' if '/quimica/' in rel else 'Matemática' if '/matematica/' in rel else 'Russo' if '/russo/' in rel else 'Física'
 temas = {}
 for f in glob.glob(RAIZ + '/temas/**/*.js', recursive=True):
     rel = os.path.relpath(f, RAIZ + '/temas')[:-3]
