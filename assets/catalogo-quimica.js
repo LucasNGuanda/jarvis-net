@@ -116,13 +116,13 @@ window.CATALOGO.push(
     ["EQ04","Gás real × gás ideal",[],true],
   ] },
   { id:"EQr", area:"quiexp", letra:"QR", cor:"--mO", nome:"Reações", desc:"Colisões, catalisador, Le Chatelier, titulação na bureta e balanceamento.", temas:[
-    ["EQ05","Colisões e energia de ativação",[]],
-    ["EQ06","Catalisador mudando o caminho",[]],
-    ["EQ07","Le Chatelier ao vivo",[]],
+    ["EQ05","Colisões e energia de ativação",[],true],
+    ["EQ06","Catalisador mudando o caminho",[],true],
+    ["EQ07","Le Chatelier ao vivo",[],true],
     /* EQ08 (pedido de 15/11/2026): bureta de verdade. Abre-se a torneira, as gotas caem uma a uma, a cor vira no ponto de viragem e a curva de pH se desenha junto; tem de dar para passar do ponto de propósito. */
-    ["EQ08","Titulação na bureta: gota a gota, viragem e curva de pH",[]],
+    ["EQ08","Titulação na bureta: gota a gota, viragem e curva de pH",[],true],
     /* EQ21: os dois lados da equação com os átomos contados em bolinhas; mexe-se nos coeficientes até os lados se igualarem. */
-    ["EQ21","Balanceador visual de equações",[]],
+    ["EQ21","Balanceador visual de equações",[],true],
   ] },
   { id:"EQe", area:"quiexp", letra:"QE", cor:"--mK1", nome:"Eletroquímica", desc:"Pilha de Daniell, eletrólise e corrosão.", temas:[
     ["EQ09","Pilha de Daniell",[]],

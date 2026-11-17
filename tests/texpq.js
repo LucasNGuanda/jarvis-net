@@ -17,7 +17,8 @@ const { chromium } = require('playwright');
     const foto = () => p.evaluate(() => { const l = document.querySelector('.lab'); const s = l && l.querySelector('svg, canvas'); return !s ? '' : s.tagName === 'CANVAS' ? s.toDataURL().slice(-200) : s.innerHTML; });
     const a = await foto(); await p.waitForTimeout(700); const z = await foto();
     const r = await p.evaluate(() => ({ katex: document.querySelectorAll('.katex-error').length, lab: document.querySelectorAll('.lab').length, texto: document.querySelector('#pagina').innerText.length, ex: document.querySelectorAll('.ex').length, cru: /\\ce\{|\$[^$]{1,80}\$|\{,\}/.test(document.querySelector('#pagina').innerText) }));
-    ok(r.katex === 0 && r.lab === 1 && !!a && a !== z && r.texto > 1500 && r.ex === 0 && !r.cru, c + ': página montada, sem fórmula quebrada nem TeX solto, simulação animando, sem exercícios ' + JSON.stringify(r));
+    const parado = ['EQ08'].includes(c); /* só se mexe com a torneira aberta (conferido mais abaixo) */
+    ok(r.katex === 0 && r.lab === 1 && !!a && (parado || a !== z) && r.texto > 1500 && r.ex === 0 && !r.cru, c + ': página montada, sem fórmula quebrada nem TeX solto, simulação animando, sem exercícios ' + JSON.stringify(r));
   }
   // ----- EQ01: difusão e efusão -----
   if (temas.has('EQ01')) { await abre('EQ01');
@@ -52,6 +53,37 @@ const { chromium } = require('playwright');
     const a = await md(0.05, 1, 300), q = await md(0.05, 4, 300), d = await md(0.6, 2, 120), i = await md(0.3, 0.8, 120);
     ok(perto(a.Z, a.Zvirial, 0.03) && perto(q.Z, q.Zvirial, 0.03) && a.Z < 0.98 && q.Z > 1.02, 'EQ04 pouco denso (ρ = 0,05): frio (T = 1), Z = ' + a.Z.toFixed(3) + ' (virial: ' + a.Zvirial.toFixed(3) + '); quente (T = 4), Z = ' + q.Z.toFixed(3) + ' (virial: ' + q.Zvirial.toFixed(3) + ')');
     ok(d.Z > 1.8 && i.Z < 0.85 && perto(a.kT, 1, 0.08) && perto(d.kT, 2, 0.15) && i.vizinhos > a.vizinhos, 'EQ04: muito denso (ρ = 0,6, T = 2), Z = ' + d.Z.toFixed(2) + ' (repulsão); frio e médio (ρ = 0,3, T = 0,8), Z = ' + i.Z.toFixed(2) + ' (atração); o termostato segura a temperatura pedida'); }
+  // ----- EQ05: colisões e energia de ativação -----
+  if (temas.has('EQ05')) { await abre('EQ05');
+    const col = (T, E, seg) => p.evaluate(([T, E, seg]) => { const u = SIM.eqColisoes._ult; u.semente(4); u.poe(T, E, false); u.semente(4); u.avanca(seg); return u.est(); }, [T, E, seg]);
+    const a = await col(300, 2, 240), b2 = await col(600, 2, 240), c = await col(300, 4, 600);
+    ok(a.nAB > 3000 && perto(a.fr, Math.exp(-2), 0.02) && perto(b2.fr, Math.exp(-1), 0.03) && perto(c.fr, Math.exp(-4), 0.006) && a.resta === 1, 'EQ05 só contando: Ea = 2 a 300 K, ' + (100 * a.fr).toFixed(1) + '% eficazes em ' + a.nAB + ' choques (Arrhenius: 13,5%); a 600 K, ' + (100 * b2.fr).toFixed(1) + '% (36,8%); Ea = 4, ' + (100 * c.fr).toFixed(2) + '% (1,83%)');
+    ok(b2.nAB / a.nAB > 1.2 && b2.nAB / a.nAB < 1.65, 'EQ05: dobrar T aumenta os choques só ' + (b2.nAB / a.nAB).toFixed(2) + ' vezes (√2 = 1,41), mas a fração eficaz ' + (b2.fr / a.fr).toFixed(2) + ' vezes');
+    const r = await p.evaluate(() => { const u = SIM.eqColisoes._ult; u.semente(4); u.poe(300, 2, true); u.semente(4); u.avanca(5); const e1 = u.est(); u.avanca(60); return [e1, u.est()]; });
+    ok(r[0].resta < 1 && r[1].resta < r[0].resta && r[1].resta < 0.4, 'EQ05 reagindo: o reagente cai para ' + Math.round(100 * r[0].resta) + '% em 5 s e ' + Math.round(100 * r[1].resta) + '% em 65 s (cada vez mais devagar)'); }
+  // ----- EQ06: catalisador -----
+  if (temas.has('EQ06')) { await abre('EQ06');
+    const k = await p.evaluate(() => { const u = SIM.eqCatalisador._ult; u.semente(6); u.poe(300, 2); u.semente(6); u.avanca(400, false); const conta = u.est(); u.semente(6); u.poe(300, 2); u.semente(6); u.avanca(25); const meio = u.est(); u.avanca(900); return { conta, meio, fim: u.est() }; });
+    ok(perto(k.conta.ganho, Math.exp(2), 1e-9) && Math.abs((k.conta.f2 / k.conta.f1) / Math.exp(2) - 1) < 0.2 && Math.abs(k.conta.n2 / k.conta.n1 - 1) < 0.08, 'EQ06 só contando: os choques são iguais nas duas caixas (' + k.conta.n1 + ' e ' + k.conta.n2 + '); a fração eficaz com catalisador é ' + (k.conta.f2 / k.conta.f1).toFixed(1) + ' vezes maior (previsto e² = 7,4)');
+    ok(k.meio.r2 > k.meio.r1 + 0.2 && k.fim.r1 > 0.9 && k.fim.r2 > 0.97, 'EQ06 reagindo: em 25 s, ' + Math.round(100 * k.meio.r1) + '% sem e ' + Math.round(100 * k.meio.r2) + '% com catalisador; no fim as duas chegam ao mesmo lugar (' + Math.round(100 * k.fim.r1) + '% e ' + Math.round(100 * k.fim.r2) + '%)'); }
+  // ----- EQ07: Le Chatelier -----
+  if (temas.has('EQ07')) { await abre('EQ07');
+    const lc = await p.evaluate(() => { const u = SIM.eqLeChatelier._ult; u.semente(8); const N0 = u.est().N; u.avanca(60); const a = u.media(240); u.poe(300, 0.5); u.avanca(60); const b = u.media(240); const N1 = u.est().N; u.poe(360, 0.5); u.avanca(60); const c = u.media(240); u.poe(300, 1); u.avanca(60); const d0 = u.media(120); u.injeta(20); const logo = u.est(); u.avanca(60); const d1 = u.media(120); return { N0, N1, a, b, c, d0, logo, d1, N2: u.est().N }; });
+    ok(lc.N0 === 80 && lc.N1 === 80 && lc.N2 === 100, 'EQ07: os átomos de N se conservam (80 antes e depois de apertar e aquecer; 100 depois de injetar 20 NO₂)');
+    ok(Math.abs(lc.b.Q / lc.a.Q - 1) < 0.25 && lc.b.fr < lc.a.fr - 0.04, 'EQ07 apertar (volume 1 → 0,5, mesma T): Q médio ' + lc.a.Q.toFixed(1) + ' → ' + lc.b.Q.toFixed(1) + ' (o mesmo K); a fração de NO₂ cai de ' + Math.round(100 * lc.a.fr) + '% para ' + Math.round(100 * lc.b.fr) + '%');
+    ok(lc.c.fr > lc.b.fr + 0.1 && lc.c.Q > 2 * lc.b.Q, 'EQ07 aquecer (300 → 360 K): a fração de NO₂ sobe para ' + Math.round(100 * lc.c.fr) + '% e Q vai a ' + lc.c.Q.toFixed(1) + ' (K mudou)');
+    ok(lc.logo.nNO2 > lc.d1.fr * 0 && Math.abs(lc.d1.Q / lc.d0.Q - 1) < 0.3, 'EQ07 injetar NO₂: depois de assentar, Q volta de ' + lc.d0.Q.toFixed(1) + ' para ' + lc.d1.Q.toFixed(1)); }
+  // ----- EQ08: bureta -----
+  if (temas.has('EQ08')) { await abre('EQ08');
+    const bu = await p.evaluate(() => { const u = SIM.eqBureta._ult; u.poe('hcl', 'A', 'fenolftaleina'); const e0 = u.est(); u.torneira(10); u.avanca(25.2); u.torneira(0); u.avanca(2); const e1 = u.est(); u.gota(); u.avanca(2); const e2 = u.est(); u.torneira(12); u.avanca(10); u.torneira(0); u.avanca(2); const e3 = u.est(); u.poe('hac', 'B', 'alaranjado_de_metila'); u.torneira(12); u.avanca(12); u.torneira(0); u.avanca(2); return { e0, e1, e2, e3, e4: u.est() }; });
+    ok(bu.e0.v === 0 && perto(bu.e0.pH, 1.301, 0.005) && bu.e1.ngotas === Math.round(bu.e1.v / 0.05) && bu.e1.v > 12.3 && bu.e1.v <= 12.65 && bu.e1.noAr === 0, 'EQ08: HCl amostra A começa em pH 1,30; torneira a 10 gotas/s por 25 s → ' + bu.e1.v.toFixed(2) + ' mL (' + bu.e1.ngotas + ' gotas de 0,05 mL)');
+    ok(perto(bu.e2.v - bu.e1.v, 0.05, 1e-9) && bu.e3.v > 18 && bu.e3.pH > 11.5 && bu.e3.cor === 'rosa' && bu.e3.npts > 300, 'EQ08: uma gota soma 0,05 mL; passando do ponto (' + bu.e3.v.toFixed(1) + ' mL), pH ' + bu.e3.pH.toFixed(1) + ' e cor rosa; a curva tem ' + bu.e3.npts + ' pontos');
+    ok(bu.e4.cor === 'amarelo' && bu.e4.v < bu.e4.veq - 4 && bu.e4.pH < 6, 'EQ08: ácido acético com alaranjado de metila já está amarelo em ' + bu.e4.v.toFixed(1) + ' mL (pH ' + bu.e4.pH.toFixed(1) + '), longe da equivalência em ' + bu.e4.veq + ' mL'); }
+  // ----- EQ21: balanceador -----
+  if (temas.has('EQ21')) { await abre('EQ21');
+    const ba = await p.evaluate(() => { const u = SIM.eqBalanca._ult, out = []; for (let i = 0; i < SIM.EQS.length; i++) { u.poe(i); const um = u.est(); u.poe(i, um.sol); u.avanca(3); const certo = u.est(); u.poe(i, um.sol.map((x) => 2 * x)); const dobro = u.est(); out.push({ i, umOk: um.ok, jaMinimo: um.sol.every((x) => x === 1), certo: certo.minimo && Math.abs(certo.mE - certo.mD) < 1e-6 && Math.abs(certo.ang) < 0.5, dobro: dobro.ok && !dobro.minimo }); } u.poe(0); u.avanca(3); const torto = u.est(); u.clica(0, true); u.clica(2, true); u.avanca(3); return { out, torto, depois: u.est() }; });
+    ok(ba.out.length === 19 && ba.out.every((x) => x.certo && x.dobro && (x.umOk === x.jaMinimo)), 'EQ21: nas 19 equações, os coeficientes mínimos dão átomos e massas iguais e balança na horizontal; o dobro é acusado como "dá para simplificar"; com tudo em 1, só passa a que já é 1 : 1');
+    ok(Math.abs(ba.torto.ang) > 1 && !ba.torto.ok && ba.depois.minimo && ba.depois.coef.join() === '2,1,2' && Math.abs(ba.depois.ang) < 0.5, 'EQ21: H₂ + O₂ → H₂O com tudo em 1 inclina a balança (' + ba.torto.ang.toFixed(1) + '°); clicando até 2, 1, 2 ela fica na horizontal'); }
   ok(errs.length === 0, errs.length ? 'ERROS de JS: ' + errs.join(' | ') : 'sem erros de JS');
   console.log('FALHAS (' + falhas + '):');
   await b.close(); process.exit(falhas ? 1 : 0);
