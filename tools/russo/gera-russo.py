@@ -158,15 +158,68 @@ for pal, x in PAL.items():
     for c, t in WT[:7]:
         if c in pal.lower() and t not in x["tr"].lower(): EXC.append([pal, c, t, x["tr"]]); avisos.append(f"{pal}: a leitura {x['tr']!r} não tem {t!r} para a letra {c} (o verbete translitera pela pronúncia)")
 
+# ---------- RG02: redução das vogais, ensurdecimento, dezenas e regras de ortografia (Wikipedia em inglês) ----------
+GL_PT = {"ceiling": "teto", "ferry": "balsa", "cloud": "nuvem", "grass": "grama", "hedgehog": "ouriço", "hedgehogs": "ouriços", "sturgeon": "esturjão", "sturgeons": "esturjões",
+         "kernel, core, nucleus, etc.": "núcleo", "kernels, cores, nuclei, etc.": "núcleos", "row": "fileira", "rows": "fileiras", "wife": "esposa", "wives": "esposas",
+         "dugout boat": "canoa de tronco", "dugout boats": "canoas de tronco", "silk": "seda", "silks": "sedas", "seed": "semente", "seeds": "sementes", "skull": "crânio",
+         "skulls": "crânios", "price": "preço", "prices": "preços", "story, tale": "história, conto", "knife": "faca", "Ivanov": "Ivanov (sobrenome)", "spoon": "colher",
+         "to do": "fazer", "god": "deus", "request": "pedido", "vodka": "vodca", "tomcat": "gato", "tomcats": "gatos", "village": "aldeia", "villages": "aldeias", "cheek, jowl, jaw": "bochecha", "cheeks, jowls, jaws": "bochechas"}
+def gl(en, onde):
+    if en not in GL_PT: erros.append(f"{onde}: falta a tradução de {en!r}")
+    return GL_PT.get(en)
+def exemplos(lista, onde):
+    o = []
+    for x in lista:
+        x = v(x)
+        o.append({"ac": x["palavra"], "ipa": x["ipa"], "en": x["glosa"], "pt": gl(x["glosa"], onde)})
+    return o
+RV = D["reducao_vocalica"]["artigo_reducao"]
+def pares(lista, onde, ordem_tonica_primeiro=None):
+    e = exemplos(lista, onde)
+    if len(e) % 2: erros.append(f"{onde}: número ímpar de exemplos")
+    return [[e[i], e[i + 1]] for i in range(0, len(e) - 1, 2)]
+RED = {"akanye": exemplos(RV["akanye_exemplos"], "akanye"), "mole": pares(RV["depois_de_mole_exemplos"], "depois de mole"), "ikanye": pares(RV["ikanye_exemplos"], "ikanye")}
+# ensurdecimento e assimilação: frases "X (glosa) sounds like Y [ipa]"
+ENS = []
+C = D["consoantes"]
+frases = [(s, "final") for s in v(C["ensurdecimento_final_exemplos"])] if isinstance(v(C["ensurdecimento_final_exemplos"]), list) else []
+frases = [(v(s) if not isinstance(s, str) else s, t) for s, t in frases] + [(v(C["assimilacao_exemplo_1"]), "assimilação"), (v(C["assimilacao_exemplo_2"]), "assimilação")]
+for s, tipo in frases:
+    mm = re.search(r"([Ѐ-ӿ]+) \(([^)]+)\) sounds like ([Ѐ-ӿ]+) (\[[^\]]+\])", s)
+    if not mm: erros.append(f"ensurdecimento: frase não entendida {s!r}"); continue
+    ENS.append({"ru": mm.group(1), "como": mm.group(3), "ipa": mm.group(4), "en": mm.group(2), "pt": gl(mm.group(2), "ensurdecimento"), "tipo": tipo})
+s = v(C["assimilacao_ultimo_obstruinte"])
+for mm in re.finditer(r"([Ѐ-ӿ]+) (\[[^\]]+\])ⓘ? \('([^']+)'\)", s):
+    ENS.append({"ru": mm.group(1), "como": None, "ipa": mm.group(2), "en": mm.group(3), "pt": gl(mm.group(3), "assimilação"), "tipo": "assimilação"})
+if len(ENS) < 6: erros.append(f"ensurdecimento: só {len(ENS)} exemplos")
+# dezenas: o acento muda de lugar em 50 e 60
+DEZ = []
+for s in v(D["acento"]["exemplo_dezenas"]):
+    s = v(s) if not isinstance(s, str) else s
+    a, n = s.split("|"); DEZ.append({"ac": a.replace(" ", ""), "n": int(n)})
+if [x["n"] for x in DEZ] != [10, 20, 30, 40, 50, 60, 70, 80, 90]: erros.append("dezenas inesperadas")
+# regras de ortografia: tabela-resumo da página "Russian spelling rules"
+REG = []
+RO = D["regras_de_ortografia"]
+cab = [x.strip() for x in v(RO["resumo_cabecalho"]).split("|")][1:]
+if cab != ["ы↔и", "у↔ю", "а↔я", "о↔ё/е"]: erros.append(f"cabeçalho da tabela de ortografia inesperado: {cab}")
+for s in v(RO["resumo_tabela"]):
+    s = v(s) if not isinstance(s, str) else s
+    cel = [x.strip() for x in s.split("|")]
+    REG.append({"en": cel[0].split()[0], "letras": re.findall(r"[Ѐ-ӿ]", cel[0]), "cols": [c.split("/") for c in cel[1:]]})
+if [r["letras"] for r in REG] != [["г", "к", "х"], ["ж", "ч", "ш", "щ"], ["ц"]]: erros.append(f"tabela de ortografia inesperada: {REG}")
+ESTR = re.findall(r"[Ѐ-ӿ]+", v(RO["excecoes_estrangeirismos"]).split("For example,")[1])
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
        "(function () { const SIM = (window.SIM = window.SIM || {});\nSIM.RU = " + json.dumps(RU, ensure_ascii=False, separators=(",", ":")) + ";\n})();\n")
 open(saida, "w", encoding="utf-8").write(txt)
 print(f"gravado: {len(ALF)} letras, {len(PAL)} palavras, {len(PAR)} pares de acento; listas: " + ", ".join(f"{k} {len(x)}" for k, x in LISTA.items()))
+print("RG02:", len(RED["akanye"]), "akanye,", len(RED["mole"]), "pares depois de mole,", len(RED["ikanye"]), "pares ikanye,", len(ENS), "ensurdecimento,", len(DEZ), "dezenas,", ESTR)
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})

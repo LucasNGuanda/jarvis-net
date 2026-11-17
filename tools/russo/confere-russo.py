@@ -15,13 +15,16 @@ palavras_fonte = set(re.findall(f"[{CIR}]+", fonte))
 sem_acento = {w.replace("́", "") for w in palavras_fonte}
 minus = {w.lower() for w in sem_acento}
 arqs = sorted(glob.glob(os.path.join(R, "temas", "russo", "*.js")) + [a for a in glob.glob(os.path.join(R, "assets", "sims", "russo", "*.js")) if not a.endswith("dados.js")])
-erros = 0; total = 0
+erros = 0; total = 0; isentas = 0
 for a in arqs:
     t = open(a, encoding="utf-8").read()
     vistos = set()
     for w in re.findall(f"[{CIR}]{{2,}}", t):
         if w in vistos: continue
         vistos.add(w); total += 1
+        V = set("аеёиоуыэюяьъ"); S = set(w.lower())
+        if len(S) == len(w) and (S <= V or not (S & V)): isentas += 1; continue  # conjunto de letras (só vogais e sinais, ou só consoantes, sem repetição): não é palavra
+        if len(w) == 2 and w[0].lower() in "гкхжчшщц" and w[1] in "ыиуюая": isentas += 1; continue  # combinação consoante + vogal das regras de ortografia
         if "́" in w: ok = w in palavras_fonte
         else: ok = w in sem_acento or w.lower() in minus
         if not ok: erros += 1; print(f"ERRO {os.path.basename(a)}: {w!r} não está na fonte")
@@ -29,5 +32,5 @@ for a in arqs:
         total += 1
         if tr not in fonte: erros += 1; print(f"ERRO {os.path.basename(a)}: transcrição {tr} não está na fonte")
     print(f"{os.path.basename(a)}: {len(vistos)} palavras em cirílico conferidas")
-print(f"{total} itens conferidos, {erros} erro(s)")
+print(f"{total} itens conferidos, {erros} erro(s); {isentas} conjuntos de letras ou combinações de duas letras não são palavras e ficaram de fora")
 sys.exit(1 if erros else 0)
