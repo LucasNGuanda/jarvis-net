@@ -7,7 +7,7 @@ window.AREAS.push(
 );
 window.CATALOGO.push(
   { id:"RG", area:"rus", letra:"RG", cor:"--mR", nome:"Gramática russa", desc:"Do alfabeto aos casos, aspectos verbais e orações.", temas:[
-    ["RG01","Alfabeto cirílico e pronúncia",[]],
+    ["RG01","Alfabeto cirílico e pronúncia",[],true],
     ["RG02","Ortografia e acento tônico",[]],
     ["RG03","Substantivos: gênero e número",[]],
     ["RG04","Nominativo e acusativo",[]],
