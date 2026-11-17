@@ -36,7 +36,7 @@
   /* nome: "Leia a palavra antes de ver a resposta" · matéria: Russo · tema: RG01 */
   SIM.ruLeitura = (el, F) => { const NIV = [["cognatas", "parecidas com o português"], ["curtas", "curtas do dia a dia"], ["todas", "todas"]]; let niv = "cognatas", r = rng(1), fila = [], atual = null, verTr = false, verPt = false, vistas = 0;
     el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">palavras</p><div class="bts">${botoes(NIV, "n", niv)}</div></div>
-      <div><div class="bts"><button class="bt peq" data-v="tr" aria-pressed="false">mostrar a leitura</button><button class="bt peq" data-v="pt" aria-pressed="false">mostrar a tradução</button><button class="bt peq" data-v="prox">próxima palavra</button></div></div></div>
+      <div><div class="bts"><button class="bt peq" data-v="tr" aria-pressed="false">mostrar a leitura</button><button class="bt peq" data-v="pt" aria-pressed="false">mostrar a tradução</button><button class="bt peq" data-v="prox">próxima palavra</button><button class="bt peq" data-v="ouvir" title="voz russa do navegador, se houver">ouvir</button></div><div data-v="semvoz" style="font-size:12.5px;color:var(--warn);min-height:16px"></div></div></div>
       <div class="palco" data-v="pal" style="text-align:center;padding:22px 10px"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
     const q = (s) => el.querySelector(s), lista = () => SIM.RU.LISTA[niv];
     const enche = () => { fila = lista().slice(); for (let i = fila.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [fila[i], fila[j]] = [fila[j], fila[i]]; } if (atual && fila.length > 1 && fila[fila.length - 1] === atual) fila.unshift(fila.pop()); };
@@ -47,6 +47,6 @@
       q("[data-v=lt]").innerHTML = vis("leitura (transliteração)", verTr ? p.tr : "?") + vis("pronúncia (AFI)", verTr ? p.ipa || "sem dado" : "?") + vis("tradução", verPt ? p.pt : "?") + vis("classe", verPt ? p.cl : "?");
       q("[data-v=st]").innerHTML = !verTr && !verPt ? "Leia em voz alta, letra por letra, e só depois clique em mostrar. Onde você acha que cai a sílaba forte?" : `Acento, transliteração e pronúncia: verbete "${atual}" do Wiktionary em inglês. A tradução para o português foi feita a partir da definição em inglês do verbete${verPt && p.en ? ` (<i>${p.en}</i>)` : ""}.`; };
     liga(el, "n", (v) => { niv = v; fila = []; prox(); });
-    q("[data-v=tr]").addEventListener("click", () => { verTr = !verTr; desenha(); }); q("[data-v=pt]").addEventListener("click", () => { verPt = !verPt; desenha(); }); q("[data-v=prox]").addEventListener("click", prox);
+    q("[data-v=tr]").addEventListener("click", () => { verTr = !verTr; desenha(); }); q("[data-v=pt]").addEventListener("click", () => { verPt = !verPt; desenha(); }); q("[data-v=prox]").addEventListener("click", prox); if (SIM.ruBotaoOuvir) SIM.ruBotaoOuvir(el, () => atual);
     SIM.ruLeitura._ult = { semente: (n) => { r = rng(n); fila = []; atual = null; vistas = 0; prox(); }, prox, mostra: (a = true, b = true) => { verTr = a; verPt = b; desenha(); }, nivel: (v) => { niv = v; el.querySelectorAll("[data-n]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.n === v))); fila = []; prox(); }, est }; prox(); };
 })();

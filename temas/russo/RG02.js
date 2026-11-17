@@ -76,6 +76,10 @@ F.registrar("russo/RG02", {
         return { enun: R`<p>${ru(a.ac)} ${a.ipa} (${a.pt}) e ${ru(b.ac)} ${b.ipa} (${b.pt}): a primeira vogal é a mesma letra nas duas formas, mas o som é outro. O que explica?</p>`, fig: cart(a.ac + "   " + b.ac, "mesma letra, dois sons"), ...a5, resp: "o acento mudou de sílaba", dicas: [R`<p>Veja em qual das duas formas a primeira vogal carrega o acento.</p>`], sol: R`<p>Numa forma a primeira vogal é tônica (som cheio); na outra o acento foi para outra sílaba e ela reduziu. A escrita não mostra essa redução.</p>` }; } }),
       F.exercicio({ n: 14, nivel: "Máximo", gerar: (p) => { const k = p ? 0 : F.escolha([0, 1, 2]), conta = [RU.DEZ.filter((d) => ton(d.ac) === 1), RU.DEZ.filter((d) => ton(d.ac) !== 1), RU.DEZ.filter((d) => ton(d.ac) === nv(d.ac))][k], v = conta.length;
         return { enun: R`<p>A tabela traz as dezenas de 10 a 90 com o acento marcado. Em quantas delas o acento cai <b>${["na primeira sílaba", "fora da primeira sílaba", "na última sílaba"][k]}</b>?</p>`, fig: figDez, num: { v, tol: 0.001, un: "" }, py: `${v}`, resp: String(v), dicas: [R`<p>Em cada numeral, conte as vogais até a que tem o acento.</p>`], sol: R`<p>${conta.map((d) => `${d.n} (${d.ac})`).join(", ")}. Total: <b>${v}</b>.</p>` }; } }),
+      F.exercicio({ n: 15, nivel: "Físico", gerar: (p) => { const w = SIM.pega(FINAIS, p, 2), ult = [...w].slice(-1)[0], s = SIM.ruSurda(ult);
+        return { enun: R`<p>Na fala, a última consoante da palavra abaixo (${P[w].pt}) soa como outra letra. Digite essa letra, em cirílico.</p>`, fig: cart(w, "a última letra é uma consoante sonora"), txt: { v: s, teclado: "ru", rot: "uma letra" }, resp: s, dicas: [R`<p>É a surda que faz par com ${ru(ult)}.</p>`], sol: R`<p>${ru(ult)} no fim da palavra soa como <b>${s}</b>: ${ru(P[w].ac)} ${P[w].ipa}.</p>` }; } }),
+      F.exercicio({ n: 16, nivel: "Máximo", gerar: (p) => { const cons = RU.REG.flatMap((r) => r.letras), ruins = cons.flatMap((c) => ["ы", "ю", "я"].map((v) => c + v)).filter((s) => !SIM.ruPode(s[0], s[1])), x = p ? "шы" : F.escolha(ruins), certo = x[0] + { ы: "и", ю: "у", я: "а" }[x[1]];
+        return { enun: R`<p>A combinação abaixo não é admitida pela ortografia russa. Escreva, em cirílico, a combinação que se usa no lugar dela.</p>`, fig: cart(x, "consoante + vogal não admitida", "var(--warn)"), txt: { v: certo, teclado: "ru", rot: "duas letras" }, resp: certo, dicas: [R`<p>A consoante fica; troca-se a vogal pela parceira do par (dura por mole, ou mole por dura).</p>`], sol: R`<p>No lugar de ${ru(x)} escreve-se <b>${certo}</b>.</p>` }; } }),
     ];
 
     const mol = pal("молоко"), hor = pal("хорошо"), gor = pal("город"), descr = (x) => comp(x).itens.map((v) => `${ord[v.j]} ${ru(v.c)}: ${v.ton ? "tônica, som cheio" : CL[v.cl][0] + ", [" + v.som + "]"}`).join("; ");
@@ -107,6 +111,8 @@ F.registrar("russo/RG02", {
         <p>O acento também separa palavras: ${RU.PAR.map((x) => `${ru(x.a.ac)} (${x.a.pt}) e ${ru(x.b.ac)} (${x.b.pt})`).join("; ")}. E pode mudar de lugar entre formas da mesma palavra, como você vai ver nos pares singular e plural mais abaixo.</p>
         <p><b>A letra ${ru("ё")}.</b> É a única que entrega o acento: quase sempre está na sílaba tônica, e por isso nunca recebe a marca. Em compensação, o uso dela não é obrigatório: é correto escrever ${ru("е")} no lugar, e o leitor tem de saber que ali se lê "yo". Dicionários e material de ensino costumam mantê-la.</p>
         ${F.caixa("pegadinha", R`<p>Não existe sílaba fixa para o acento, nem regra geral que o adivinhe. Decorar uma palavra russa sem o acento é decorar metade dela: aprenda sempre a forma acentuada (é assim que o Wiktionary e os dicionários a mostram) e fale em voz alta.</p>`)}`),
+
+      F.secao("treino", "Treino: onde cai o acento?", R`<p>Como não há regra, o jeito é testar a memória. A palavra aparece sem acento, como num texto de verdade; clique na vogal tônica. Vale ouvir antes, se o seu navegador tiver voz russa.</p><div id="lab-tonica"></div>`),
 
       F.secao("reducao", "Vogais átonas: a redução", R`
         <p>Fora da sílaba tônica, as vogais russas ficam mais curtas e várias delas trocam de som. A escrita não mostra nada disso.</p>
@@ -146,5 +152,6 @@ F.registrar("russo/RG02", {
   montar(F) {
     let e = document.getElementById("lab-acento"); e.outerHTML = F.lab("Mesmas letras, outro acento, outra palavra", "lab-acento"); SIM.ruAcento(document.getElementById("lab-acento"), F);
     e = document.getElementById("lab-reducao"); e.outerHTML = F.lab("A regra das vogais átonas contra o dicionário", "lab-reducao"); SIM.ruReducao(document.getElementById("lab-reducao"), F);
+    e = document.getElementById("lab-tonica"); e.outerHTML = F.lab("Onde cai o acento? Clique na vogal tônica", "lab-tonica"); SIM.ruTonica(document.getElementById("lab-tonica"), F);
   },
 });

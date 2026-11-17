@@ -248,18 +248,25 @@
   /* β 5.3: campo opcional gerar(primeiro) → devolve os campos que mudam (enun, fig, alts, certa, num, dicas, resp, sol): o exercício ganha o botão
      "Me dá um parecido", que sorteia outra versão. Só a versão que abre com a página (gerar(true)) entra no mapa de erros; as sorteadas são treino.
      Para os testes: o elemento guarda a versão atual em el._d (num.v, certa e, se houver, py = a mesma conta escrita como expressão Python). */
+  /* β 6.7: texto digitado comparado sem maiúsculas, sem acento de sílaba tônica (U+0301) e sem espaços sobrando */
+  F.normTxt = (s) => String(s || "").normalize("NFC").replace(/\u0301/g, "").trim().replace(/\s+/g, " ").toLowerCase();
+  /* teclado cirílico na tela (ordem alfabética), para quem não tem o teclado russo instalado; serve a qualquer campo de texto */
+  F.tecladoRu = () => `<div class="tecl-ru" style="display:flex;flex-wrap:wrap;gap:4px;max-width:560px;margin:8px 0">${[..."абвгдеёжзийклмнопрстуфхцчшщъыьэюя"].map((c) => `<button type="button" class="bt peq" data-tecla="${c}" style="min-width:34px;padding:4px 0;font-size:16px">${c}</button>`).join("")}<button type="button" class="bt peq" data-tecla="apaga" title="apagar a última letra">⌫</button></div>`;
+  F.ligaTecladoRu = (el, inp) => $$(".tecl-ru [data-tecla]", el).forEach((b) => b.addEventListener("click", () => { inp.value = b.dataset.tecla === "apaga" ? [...inp.value].slice(0, -1).join("") : inp.value + b.dataset.tecla; inp.focus(); inp.dispatchEvent(new Event("input")); }));
   F.exercicio = (e) => {
     const chave = `marca:${temaAtual}-${e.n}`, chaveRes = `resultado:${temaAtual}-${e.n}`;
     const d0 = e.gerar ? Object.assign({}, e, e.gerar(true)) : e;
     exercicios.push(chave);
     const id = F.id("ex");
     const corpo = (d) => {
-      const auto = !!(d.certa || d.num);
+      const auto = !!(d.certa || d.num || d.txt);
       const alts = d.alts ? (d.certa
         ? `<ol class="alts clicaveis">${d.alts.map((a, i) => `<li><button type="button" class="alt" data-l="${String.fromCharCode(65 + i)}"><b>${String.fromCharCode(65 + i)})</b><span>${a}</span></button></li>`).join("")}</ol>`
         : `<ol class="alts">${d.alts.map((a, i) => `<li><b>${String.fromCharCode(65 + i)})</b>${a}</li>`).join("")}</ol>`) : "";
       const campo = d.num ? `<div class="ex-num"><label>sua resposta <input type="text" inputmode="decimal" autocomplete="off" aria-label="sua resposta numérica"></label>${d.num.un ? `<span class="un">${d.num.un}</span>` : ""}<button type="button" class="bt peq">Conferir</button></div>` : "";
-      const correcao = auto ? `${campo}<div class="ex-fb" aria-live="polite"></div><div class="ex-prim"></div>` : "";
+      /* β 6.7: resposta escrita (campo opcional txt: { v: "texto" ou lista de aceitos, teclado: "ru" para o teclado cirílico na tela, rot: rótulo }) */
+      const campoTxt = d.txt ? `<div class="ex-num ex-txt"><label>${d.txt.rot || "sua resposta"} <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" lang="${d.txt.teclado === "ru" ? "ru" : "pt"}" aria-label="sua resposta escrita" style="min-width:220px"></label><button type="button" class="bt peq">Conferir</button></div>${d.txt.teclado === "ru" ? F.tecladoRu() : ""}` : "";
+      const correcao = auto ? `${campo}${campoTxt}<div class="ex-fb" aria-live="polite"></div><div class="ex-prim"></div>` : "";
       const rev = F.revela([...(d.dicas || []).map((x, i) => ({ rot: `Dica ${i + 1}`, html: x })), { rot: "Resposta e resolução", html: `<p><b>Resposta:</b> ${d.resp}</p>${d.sol}`, resp: true }]);
       return `<div>${d.enun}</div>${d.fig ? F.fig(d.fig) : ""}${alts}${correcao}${rev}${e.gerar ? `<div class="bts" style="margin-top:10px"><button type="button" class="bt peq ex-par">${F.ic("dado")} Me dá um parecido</button></div>` : ""}`;
     };
@@ -272,7 +279,7 @@
       const liga = (d, treino) => {
         el._d = d;
         const par = $(".ex-par", el); if (par) par.addEventListener("click", () => { const nd = Object.assign({}, e, e.gerar(false)), c = $(".ex-corpo", el); c.innerHTML = corpo(nd); F.math(c); liga(nd, true); });
-        if (!(d.certa || d.num)) return;
+        if (!(d.certa || d.num || d.txt)) return;
         const fb = $(".ex-fb", el);
         const registra = (certo, dada) => { if (treino) return; if (!F.store.get(chaveRes, null)) F.store.set(chaveRes, { r: certo ? "certo" : "errado", dada }); F.evento("resultado"); };
         const avisa = (certo, txt) => { fb.className = "ex-fb " + (certo ? "certo" : "errado"); fb.innerHTML = txt; };
@@ -295,6 +302,17 @@
           };
           $(".ex-num button", el).addEventListener("click", confere);
           inp.addEventListener("keydown", (ev) => { if (ev.key === "Enter") { ev.preventDefault(); confere(); } });
+        }
+        if (d.txt) {
+          const inp = $(".ex-txt input", el), aceitos = [].concat(d.txt.v).map(F.normTxt), confere = () => {
+            const v = F.normTxt(inp.value); if (!v) { avisa(false, "Escreva a resposta no campo."); return; }
+            const certo = aceitos.includes(v);
+            avisa(certo, certo ? "Certo!" : "Ainda não. Confira letra por letra, ou abra uma dica.");
+            registra(certo, inp.value.trim());
+          };
+          $(".ex-txt button", el).addEventListener("click", confere);
+          inp.addEventListener("keydown", (ev) => { if (ev.key === "Enter") { ev.preventDefault(); confere(); } });
+          F.ligaTecladoRu(el, inp);
         }
       };
       liga(d0, false);
