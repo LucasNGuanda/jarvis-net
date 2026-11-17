@@ -8,7 +8,7 @@ F.registrar("quimica/EQ11", {
   html(F) {
     const R = String.raw;
     return [
-      F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Experimento 11 · eletroquímica</div><div class="q">Cascos de navio levam blocos de zinco parafusados que precisam ser trocados de tempos em tempos, porque somem. Ninguém conserta o defeito: os blocos estão lá justamente para sumir. Por que deixar um metal ser comido de propósito?</div><p>Porque, enquanto o zinco é comido, o aço do casco não é. A ferrugem é uma pilha indesejada, e dá para escolher quem faz o papel do ânodo.</p></div>`),
+      F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Experimento 11 · eletroquímica</div><div class="q">Para proteger uma estrutura de aço da ferrugem, uma saída é prender nela um bloco de zinco ou de magnésio, que vai sendo comido e precisa ser trocado de tempos em tempos. O bloco está lá justamente para sumir. Por que deixar um metal ser comido de propósito?</div><p>Porque, enquanto o zinco é comido, o aço não é. A ferrugem é uma pilha indesejada, e dá para escolher quem faz o papel do ânodo.</p></div>`),
       F.secao("experimento", "Experimento", R`<p>Deixe o ferro sozinho na água e veja a ferrugem crescer. Depois encoste outro metal nele, um de cada vez, e tire a água ou o oxigênio.</p><div id="exp-cor"></div>`),
       F.secao("teoria", "A explicação", R`
         <h3>1. A ferrugem é uma pilha</h3>

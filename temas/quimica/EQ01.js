@@ -7,7 +7,7 @@ F.registrar("quimica/EQ01", {
   html(F) {
     const R = String.raw;
     return [
-      F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Experimento 1 · gases</div><div class="q">Alguém abre um frasco de perfume no canto da sala. As moléculas voam a centenas de metros por segundo, mas o cheiro leva um bom tempo para chegar do outro lado. E um balão de hélio murcha de um dia para o outro, enquanto um de ar dura bem mais. Por quê?</div><p>As duas respostas saem da mesma ideia: à mesma temperatura, molécula leve é molécula rápida. Só que andar rápido não é o mesmo que chegar rápido.</p></div>`),
+      F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Experimento 1 · gases</div><div class="q">Alguém abre um frasco de perfume no canto da sala. As moléculas voam a centenas de metros por segundo, mas o cheiro leva um bom tempo para chegar do outro lado. E, por um furo minúsculo, um gás leve escapa bem mais depressa que um pesado. Por quê?</div><p>As duas respostas saem da mesma ideia: à mesma temperatura, molécula leve é molécula rápida. Só que andar rápido não é o mesmo que chegar rápido.</p></div>`),
       F.secao("experimento", "Experimento", R`<p>Escolha os dois gases. No primeiro modo, tire a parede e acompanhe a mistura. No segundo, deixe os gases escaparem por um furo e compare as contagens com a lei de Graham.</p><div id="exp-dif"></div>`),
       F.secao("teoria", "A explicação", R`
         <h3>1. Mesma temperatura, mesma energia cinética média</h3>

@@ -65,6 +65,12 @@ PEDIDOS = [
     ["equilibrios_classicos", None, "brown", "NO2 castanho"], ["equilibrios_classicos", None, "colourless", "N2O4 incolor"],
     ["corrosao", None, "sacrificial", "ânodo de sacrifício"], ["corrosao", None, "oxygen", "ferrugem precisa de oxigênio"], ["corrosao", None, "zinc", "zinco protege o ferro"],
     ["eletrolise", None, "96485", "constante de Faraday"], ["eletrolise", None, "chlorine", "cloro no ânodo"], ["pilha_daniell", None, "salt bridge", "ponte salina"],
+    # revisão (17/11/2026): frases dos textos de EQ06, EQ07, EQ10 e EQ11
+    ["catalise", None, "no effect on the chemical equilibrium", "catalisador não muda o equilíbrio"], ["catalise", None, "lower activation energy", "caminho com energia de ativação menor"],
+    ["equilibrios_classicos", None, "+57", "N2O4 ⇌ 2 NO2 endotérmica (+57 kJ/mol)"], ["eletrolise", "cobre_anodo_de_cobre", "plated out at the cathode", "cobreação: ânodo de cobre repõe os íons"],
+    ["eletrolise", "NaCl_fundido_catodo", "2Na (l)", "NaCl fundido: sódio no cátodo"], ["corrosao", None, "rust more quickly", "sal acelera a ferrugem"],
+    ["corrosao", None, "water and oxygen", "ferrugem precisa de água e oxigênio"], ["corrosao", None, "magnesium, aluminum and zinc", "metais usados como ânodo de sacrifício"],
+    ["pilha_daniell", None, "move into the zinc half-cell", "ânions da ponte vão para o lado do zinco"],
     #MAIS
 ]
 falhas = 0

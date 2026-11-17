@@ -36,7 +36,7 @@
     const desenha = () => { const e = est(), cx = 200, base = 250; mix += (1 - mix) * 0.08;
       const chama = (h, w, cor, op) => { const o = 5 * Math.sin(t * 9) + 3 * Math.sin(t * 23); return `<path d="M${cx - w},${base} C${cx - w * 1.2},${base - h * 0.5} ${cx - w * 0.3 + o},${base - h * 0.8} ${cx + o * 0.6},${base - h} C${cx + w * 0.3 + o},${base - h * 0.8} ${cx + w * 1.2},${base - h * 0.5} ${cx + w},${base} Z" style="fill:${cor};opacity:${op}"/>`; };
       let s = `<rect x="${cx - 14}" y="${base}" width="28" height="36" style="fill:var(--ink3)"/><rect x="${cx - 34}" y="${base + 36}" width="68" height="8" rx="3" style="fill:var(--ink2)"/>` + chama(150, 34, e.hex, 0.55 * mix + 0.15) + chama(96, 22, e.hex, 0.75) + chama(52, 13, AZUL, 0.9);
-      if (atual()) s += `<line x1="${cx + 150}" y1="${base - 20}" x2="${cx + 12}" y2="${base - 78}" style="stroke:var(--ink2);stroke-width:2"/><circle cx="${cx + 8}" cy="${base - 80}" r="5" style="fill:none;stroke:var(--ink);stroke-width:2"/>` + T(cx + 156, base - 16, "fio com a amostra", "start", "tx2", 11);
+      if (atual()) s += `<line x1="${cx + 110}" y1="${base - 14}" x2="${cx + 12}" y2="${base - 78}" style="stroke:var(--ink2);stroke-width:2"/><circle cx="${cx + 8}" cy="${base - 80}" r="5" style="fill:none;stroke:var(--ink);stroke-width:2"/>` + T(cx + 116, base - 10, "fio com a amostra", "start", "tx2", 11);
       if (vidro) s += `<rect x="${cx - 90}" y="40" width="180" height="230" rx="8" style="fill:#1c3fb8;opacity:.42;stroke:#5f86ff"/>` + T(cx, 34, "vidro azul de cobalto", "middle", "tx2", 11);
       s += T(520, 90, e.el || "—", "middle", "tx", 44) + T(520, 116, "metal da amostra", "middle", "tx2", 12) + T(520, 170, e.cor.split(":")[0], "middle", "tx", 16) + T(520, 192, "cor que se vê", "middle", "tx2", 12) + (e.nm ? T(520, 240, "linha principal: " + n2(e.nm, 1) + " nm", "middle", "tx2", 12) : "");
       q("[data-v=sv]").innerHTML = s;
@@ -46,7 +46,7 @@
     const sorteia = () => { const L = CH.filter((c) => c.el !== "Na"); misterio = L[Math.floor(rnd() * L.length)].el; revelado = false; elx = null; mix = 0; el.querySelectorAll("[data-e]").forEach((b) => b.setAttribute("aria-pressed", "false")); };
     q("[data-a=mi]").addEventListener("click", sorteia); q("[data-a=rv]").addEventListener("click", () => { revelado = true; }); q("[data-a=li]").addEventListener("click", () => { elx = null; misterio = null; revelado = false; el.querySelectorAll("[data-e]").forEach((b) => b.setAttribute("aria-pressed", "false")); });
     anima(el, F, (dt) => { t += dt; desenha(); });
-    SIM.eqChama._ult = { semente: (n) => { rnd = G.rng(n); }, poe: (e, na, vi) => { elx = e; misterio = null; revelado = false; sodio = !!na; vidro = !!vi; desenha(); }, misterio: sorteia, revela: () => { revelado = true; }, est }; };
+    SIM.eqChama._ult = { semente: (n) => { rnd = G.rng(n); }, poe: (e, na, vi) => { elx = e; misterio = null; revelado = false; sodio = !!na; vidro = !!vi; el.querySelectorAll("[data-e]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.e === e))); q("[data-a=na]").setAttribute("aria-pressed", String(sodio)); q("[data-a=vi]").setAttribute("aria-pressed", String(vidro)); desenha(); }, misterio: sorteia, revela: () => { revelado = true; }, est }; };
 
   /* ---------- EQ23 · espectro de emissão e átomo de Bohr ---------- */
   const RH = 1.09677e7, E1 = 13.6;
