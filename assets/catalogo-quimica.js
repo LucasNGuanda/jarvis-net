@@ -125,9 +125,9 @@ window.CATALOGO.push(
     ["EQ21","Balanceador visual de equações",[],true],
   ] },
   { id:"EQe", area:"quiexp", letra:"QE", cor:"--mK1", nome:"Eletroquímica", desc:"Pilha de Daniell, eletrólise e corrosão.", temas:[
-    ["EQ09","Pilha de Daniell",[]],
-    ["EQ10","Eletrólise",[]],
-    ["EQ11","Corrosão e proteção catódica",[]],
+    ["EQ09","Pilha de Daniell",[],true],
+    ["EQ10","Eletrólise",[],true],
+    ["EQ11","Corrosão e proteção catódica",[],true],
   ] },
   { id:"EQn", area:"quiexp", letra:"QN", cor:"--mN", nome:"Nuclear", desc:"Fissão, decaimento e fusão.", temas:[
     ["EQ12","Fissão em cadeia",[]],
