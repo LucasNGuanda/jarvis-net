@@ -59,7 +59,7 @@
       <div class="status" data-v="st"></div>`);
     const q = (s) => el.querySelector(s), valido = () => de > para, est = () => ({ de, para, valido: valido(), ...(valido() ? SIM.eqBohrCalc(de, para) : {}), fase, linhas: Object.keys(linhas).length });
     const dispara = () => { if (valido() && fase === 0) fase = 0.001; };
-    const desenha = () => { const e = est(), cx = 170, cy = 150, R = (n) => 14 + 5.2 * n * n * 0.72;
+    const desenha = () => { const e = est(), cx = 170, cy = 140, R = (n) => 10 + 3.2 * n * n;
       let s = `<circle cx="${cx}" cy="${cy}" r="5" style="fill:var(--bad)"/>`; for (let n = 1; n <= 6; n++) s += `<circle cx="${cx}" cy="${cy}" r="${R(n)}" style="fill:none;stroke:${n === de || n === para ? "var(--ink2)" : "var(--ink3)"};stroke-width:${n === de || n === para ? 1.6 : 0.7}"/>` + T(cx + R(n) * 0.707 + 4, cy - R(n) * 0.707, n, "start", "tx2", 9);
       /* fase: 0 parado em "para"; 0..0,35 subindo; 0,35..0,6 girando em cima; 0,6..1 caindo e emitindo */
       const rr = !e.valido ? R(para) : fase === 0 ? R(para) : fase < 0.35 ? R(para) + (R(de) - R(para)) * fase / 0.35 : fase < 0.6 ? R(de) : R(de) + (R(para) - R(de)) * Math.min(1, (fase - 0.6) / 0.12), an = performance.now() / 500;
@@ -78,7 +78,7 @@
     liga(el, "d", (v) => { de = +v; }); liga(el, "p", (v) => { para = +v; }); q("[data-a=go]").addEventListener("click", dispara); q("[data-a=au]").addEventListener("click", (ev) => { auto = !auto; ev.target.setAttribute("aria-pressed", String(auto)); }); q("[data-a=lz]").addEventListener("click", () => { linhas = {}; });
     const passo = (dt) => { if (fase > 0) { fase += dt / 1.6; if (fase >= 1) { linhas[de + ">" + para] = SIM.eqBohrCalc(de, para).nm; fase = 0; } } else if (auto) { fila = (fila * 7 + 3) % 13; const p = 1 + (fila % 3), d = p + 1 + (Math.floor(fila / 3) % (6 - p)); de = Math.min(6, d); para = p; el.querySelectorAll("[data-d]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.d === de))); el.querySelectorAll("[data-p]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.p === para))); fase = 0.001; } };
     anima(el, F, (dt) => { passo(dt); desenha(); });
-    SIM.eqBohr._ult = { poe: (d, p) => { de = d; para = p; fase = 0; desenha(); }, dispara, avanca: (seg) => { for (let i = 0; i < Math.round(seg * 60); i++) passo(1 / 60); desenha(); }, auto: (v) => { auto = !!v; }, est }; };
+    SIM.eqBohr._ult = { poe: (d, p) => { de = d; para = p; fase = 0; el.querySelectorAll("[data-d]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.d === de))); el.querySelectorAll("[data-p]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.p === para))); desenha(); }, dispara, avanca: (seg) => { for (let i = 0; i < Math.round(seg * 60); i++) passo(1 / 60); desenha(); }, auto: (v) => { auto = !!v; }, est }; };
 
   /* ---------- EQ17 · forças intermoleculares: quem ferve primeiro ---------- */
   /* séries: [fórmula, ponto de ebulição em °C (fonte), tipo de força principal] */

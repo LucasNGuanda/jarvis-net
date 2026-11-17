@@ -53,13 +53,25 @@ PEDIDOS = [
     ["cristais", "raio_Na_mais", "102", "Na+ 102 pm"], ["cristais", "raio_Cs_mais", "167", "Cs+ 167 pm"], ["cristais", "raio_Zn2_mais", "74", "Zn2+ 74 pm"], ["cristais", "raio_Cl_menos", "181", "Cl− 181 pm"],
     ["cristais", "raio_S2_menos", "184", "S2− 184 pm"], ["cristais", "razao_de_raios_critica_CN4", "0.2247", "razão crítica CN 4"], ["cristais", "razao_de_raios_critica_CN6", "0.4142", "razão crítica CN 6"],
     ["cristais", "razao_de_raios_critica_CN8", "0.732", "razão crítica CN 8"], ["cristais", "razao_de_raios_limite", "not obeyed for all compounds", "a regra falha em alguns"],
+    # EQ25 repolho roxo
+    ["repolho_roxo", "cores_por_pH", "red, pink, or magenta", "ácido: vermelho, rosa ou magenta"], ["repolho_roxo", "cores_por_pH", "purple", "neutro: roxo"],
+    ["repolho_roxo", "cores_por_pH", "blue to green to yellow", "básico: de azul a verde a amarelo"], ["repolho_roxo", "halocromismo", "changes in pH", "a estrutura muda com o pH"],
+    ["repolho_roxo", "cozinhar", "turn blue", "na panela fica azul; vinagre devolve a cor"], ["repolho_roxo", "pH_suco_de_limao", "2.2", "limão 2,2"], ["repolho_roxo", "pH_vinegar", "2–3", "vinagre 2 a 3"],
+    ["repolho_roxo", "pH_orange_juice", "3.3–4.2", "laranja"], ["repolho_roxo", "pH_black_coffee", "5–5.03", "café"], ["repolho_roxo", "pH_milk", "6.5–6.8", "leite"],
+    ["repolho_roxo", "pH_pure_water_at_25_c", "7", "água pura"], ["repolho_roxo", "pH_sea_water", "7.5–8.4", "água do mar"], ["repolho_roxo", "pH_ammonia", "11.0–11.5", "amônia"],
+    ["repolho_roxo", "pH_bleach", "12.5", "água sanitária"], ["repolho_roxo", "pH_lye", "14", "soda cáustica"],
+    # textos dos experimentos de reações e de eletroquímica
+    ["catalise", None, "activation energy", "catalisador baixa a energia de ativação"], ["catalise", None, "not consumed", "catalisador não é consumido"],
+    ["equilibrios_classicos", None, "brown", "NO2 castanho"], ["equilibrios_classicos", None, "colourless", "N2O4 incolor"],
+    ["corrosao", None, "sacrificial", "ânodo de sacrifício"], ["corrosao", None, "oxygen", "ferrugem precisa de oxigênio"], ["corrosao", None, "zinc", "zinco protege o ferro"],
+    ["eletrolise", None, "96485", "constante de Faraday"], ["eletrolise", None, "chlorine", "cloro no ânodo"], ["pilha_daniell", None, "salt bridge", "ponte salina"],
     #MAIS
 ]
 falhas = 0
 for sec, chave, pal, para in PEDIDOS:
-    try: ok = pal in texto(sec, chave)
+    try: ok = (pal in texto(sec, chave)) if chave else any(pal in texto(sec, k) for k in D[sec])
     except KeyError: ok = False
     if not ok: falhas += 1
-    print(("ok    " if ok else "FALHA ") + f"{sec}/{chave}: \"{pal}\"  ({para})")
+    print(("ok    " if ok else "FALHA ") + f"{sec}/{chave or '(qualquer chave)'}: \"{pal}\"  ({para})")
 print(f"{len(PEDIDOS)} constantes conferidas; FALHAS ({falhas})")
 sys.exit(1 if falhas else 0)

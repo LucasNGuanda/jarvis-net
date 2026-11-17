@@ -17,7 +17,7 @@ const { chromium } = require('playwright');
     const foto = () => p.evaluate(() => { const l = document.querySelector('.lab'); const s = l && l.querySelector('svg, canvas'); return !s ? '' : s.tagName === 'CANVAS' ? s.toDataURL().slice(-200) : s.innerHTML; });
     const a = await foto(); await p.waitForTimeout(700); const z = await foto();
     const r = await p.evaluate(() => ({ katex: document.querySelectorAll('.katex-error').length, lab: document.querySelectorAll('.lab').length, texto: document.querySelector('#pagina').innerText.length, ex: document.querySelectorAll('.ex').length, cru: /\\ce\{|\$[^$]{1,80}\$|\{,\}/.test(document.querySelector('#pagina').innerText) }));
-    const parado = ['EQ08', 'EQ20', 'EQ12'].includes(c); /* EQ20: construtor, só gira se pedir */ /* só se mexe com a torneira aberta (conferido mais abaixo) */
+    const parado = ['EQ08', 'EQ20', 'EQ12', 'EQ24', 'EQ25'].includes(c); /* EQ20: construtor, só gira se pedir */ /* só se mexe com a torneira aberta (conferido mais abaixo) */
     ok(r.katex === 0 && r.lab === 1 && !!a && (parado || a !== z) && r.texto > 1500 && r.ex === 0 && !r.cru, c + ': página montada, sem fórmula quebrada nem TeX solto, simulação animando, sem exercícios ' + JSON.stringify(r));
   }
   // ----- EQ01: difusão e efusão -----
@@ -160,6 +160,17 @@ const { chromium } = require('playwright');
     const re = await p.evaluate(() => { const u = SIM.eqReticulo._ult, r = {}; for (const k of Object.keys(SIM.RETIC)) { u.poe(k, true); r[k] = u.est(); } u.poe('NaCl', false); r.vazio = u.est(); return r; });
     ok(re.NaCl.cn === 6 && re.CsCl.cn === 8 && re.ZnS.cn === 4 && ['NaCl', 'CsCl', 'ZnS'].every((k) => re[k].cn === re[k].fonte && re[k].previsto === re[k].cn && re[k].vizNoDesenho === re[k].cn && re[k].mostrados === re[k].total), 'EQ18: número de coordenação contado na rede: NaCl 6, CsCl 8, ZnS 4, igual ao da fonte, ao previsto pela razão de raios e ao número de vizinhos desenhados');
     ok(perto(re.NaCl.razao, 0.5635, 0.001) && perto(re.CsCl.razao, 0.9227, 0.001) && perto(re.ZnS.razao, 0.4022, 0.001) && perto(re.NaCl.dist, 0.5, 1e-9) && perto(re.CsCl.dist, Math.sqrt(3) / 2, 1e-9) && perto(re.ZnS.dist, Math.sqrt(3) / 4, 1e-9) && re.vazio.mostrados === 0, 'EQ18: razões de raios 0,564; 0,923; 0,402; distância ao vizinho: a/2 (NaCl), a√3/2 (CsCl), a√3/4 (ZnS); a rede começa vazia e é empilhada'); }
+  // ----- EQ24: cristalização -----
+  if (temas.has('EQ24')) { await abre('EQ24');
+    const cr = await p.evaluate(() => { const u = SIM.eqCristal._ult, c = SIM.cristaliza; u.poe('KNO3', 110, 70); const q = u.est(); u.esfria(-25, true); u.avanca(2); const f = u.est(); u.esfria(12, false); u.avanca(5); const re = u.est(); return { k60: c('KNO3', 110, 60), k20: c('KNO3', 110, 20), n100: c('NaCl', 36, 100), n0: c('NaCl', 36, 0), q, f, re }; });
+    ok(perto(cr.k60.cristais, 0, 1e-9) && perto(cr.k20.cristais, 78.4, 1e-9) && perto(cr.k20.dissolvido, 31.6, 1e-9) && cr.n100.cristais === 0 && perto(cr.n0.cristais, 0.35, 1e-9), 'EQ24: 110 g de KNO₃ em 100 g de água: tudo dissolvido a 60 °C; a 20 °C, 31,6 g dissolvidos e 78,4 g de cristais; 36 g de NaCl de 100 °C a 0 °C: só 0,35 g cristaliza');
+    ok(cr.q.cristais === 0 && perto(cr.f.T, 20, 0.5) && cr.f.cristais > 70 && perto(cr.f.dissolvido + cr.f.cristais, 110, 1e-9) && cr.f.ncrist === 40 && cr.re.T > 75 && cr.re.cristais === 0, 'EQ24 na simulação: a 70 °C nada cristaliza; esfriando depressa até ' + cr.f.T.toFixed(0) + ' °C, ' + cr.f.cristais.toFixed(1) + ' g de cristais (40 pequenos); reaquecendo, tudo se dissolve de novo'); }
+  // ----- EQ25: repolho roxo -----
+  if (temas.has('EQ25')) { await abre('EQ25');
+    const rp = await p.evaluate(() => { const u = SIM.eqRepolho._ult, c = SIM.corRepolho; u.poe(['limao', 'vinagre', 'agua', 'amonia', 'sanitaria', 'soda']); const antes = u.est(); u.pinga(); u.avanca(0.5); const meio = u.est(); u.avanca(2); return { antes, meio, depois: u.est(), faixas: [0, 2, 5, 6.4, 7, 8, 11, 14].map((x) => c(x).faixa + ':' + c(x).nome) }; });
+    const cores = rp.depois.tubos.map((x) => x.cor);
+    ok(rp.antes.tubos.every((x) => x.cor === 'sem indicador' && x.faixa === '?') && rp.meio.tubos.every((x) => x.cor === 'sem indicador') && cores[0] === 'vermelho' && cores[1] === 'vermelho' && cores[2] === 'roxo' && ['azul', 'verde', 'amarelo'].includes(cores[3]) && ['verde', 'amarelo'].includes(cores[4]) && cores[5] === 'amarelo', 'EQ25: antes de pingar nenhuma cor aparece; depois: limão e vinagre vermelhos, água roxa, amoníaco ' + cores[3] + ', água sanitária ' + cores[4] + ', soda cáustica ' + cores[5]);
+    ok(rp.faixas.join(' ') === 'ácida:vermelho ácida:vermelho ácida:rosa ácida:rosa neutra:roxo básica:azul básica:verde básica:amarelo' && rp.depois.tubos.slice(0, 2).every((x) => x.faixa === 'ácida') && rp.depois.tubos[2].faixa === 'neutra' && rp.depois.tubos.slice(3).every((x) => x.faixa === 'básica'), 'EQ25: três faixas da fonte: ácida (vermelho a rosa), neutra (roxo), básica (azul, verde, amarelo, nessa ordem)'); }
   ok(errs.length === 0, errs.length ? 'ERROS de JS: ' + errs.join(' | ') : 'sem erros de JS');
   console.log('FALHAS (' + falhas + '):');
   await b.close(); process.exit(falhas ? 1 : 0);

@@ -152,8 +152,8 @@ window.CATALOGO.push(
   /* módulo novo (15/11/2026). EQ24: aquece-se a solução, dissolve-se mais, esfria-se devagar e os cristais crescem, com o tempo acelerável.
      EQ25: pinga-se o indicador nas substâncias de casa (vinagre, bicarbonato, sabão) e vê-se a escala de cor. */
   { id:"EQs", area:"quiexp", letra:"QS", cor:"--mS", nome:"Soluções e indicadores", desc:"Cristalização e o indicador de repolho roxo.", temas:[
-    ["EQ24","Cristalização: aquecer, dissolver, esfriar e ver crescer",[]],
-    ["EQ25","Indicador de repolho roxo",[]],
+    ["EQ24","Cristalização: aquecer, dissolver, esfriar e ver crescer",[],true],
+    ["EQ25","Indicador de repolho roxo",[],true],
   ] },
   /* aba Moléculas */
   { id:"QMV", area:"quimol", letra:"3D", cor:"--mT", nome:"Moléculas em 3D", desc:"Visualizador com busca por nome, fórmula ou SMILES e construtor de geometrias (VSEPR).", temas:[
