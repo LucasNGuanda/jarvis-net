@@ -30,6 +30,29 @@ PEDIDOS = [
     ["fusao", "sol_temperatura_do_nucleo", "15.7", "núcleo do Sol: 15,7 milhões de K"], ["fusao", "barreira_de_coulomb_DT", "0.1", "barreira D-T ~0,1 MeV"],
     ["fusao", "barreira_de_coulomb_tunelamento", "do not actually have to have enough energy", "tunelamento"], ["fusao", "pp_energia_total", "26.73", "cadeia pp: 26,73 MeV"],
     ["fusao", "Fe56_mais_ligado", "most efficiently bound", "Fe-56"],
+    # EQ22 chama e EQ23 espectro
+    ["linhas_de_emissao", "litio", "670.8", "Li: 670,8 nm"], ["linhas_de_emissao", "sodio_D_pirotecnia", "589", "Na: 589 nm"], ["linhas_de_emissao", "potassio", "766.5", "K: 766,5 nm"],
+    ["linhas_de_emissao", "cor_da_chama_sodium", "invisible through cobalt blue glass", "o amarelo do sódio não passa pelo vidro de cobalto"],
+    ["espectro_hidrogenio", "constante_de_rydberg", "10967700", "R_H = 1,09677e7 m⁻¹"], ["espectro_hidrogenio", "energia_nivel_fundamental", "13.6", "13,6 eV"],
+    ["espectro_hidrogenio", "energia_niveis_2_e_3", "-3.4", "E₂ = −3,4 eV"], ["espectro_hidrogenio", "H_alfa_comprimento_de_onda", "656.3", "H-alfa 656,3 nm"],
+    ["espectro_hidrogenio", "H_beta_comprimento_de_onda", "486.1", "H-beta 486,1 nm"], ["espectro_hidrogenio", "H_gama_comprimento_de_onda", "434.0", "H-gama 434,0 nm"],
+    ["espectro_hidrogenio", "H_delta_comprimento_de_onda", "410.2", "H-delta 410,2 nm"], ["espectro_hidrogenio", "lyman_alfa_comprimento_de_onda", "121.57", "Lyman-alfa"],
+    ["espectro_hidrogenio", "paschen_alfa_comprimento_de_onda", "1875", "Paschen-alfa"], ["espectro_hidrogenio", "H_alfa_cor", "Red", "H-alfa vermelha"], ["espectro_hidrogenio", "H_beta_cor", "Cyan", "H-beta ciano"],
+    ["espectro_hidrogenio", "H_delta_cor", "Violet", "H-delta violeta"], ["espectro_hidrogenio", "lyman_faixa", "ultraviolet", "Lyman no UV"], ["espectro_hidrogenio", "paschen_faixa", "infrared", "Paschen no IV"],
+    # EQ17 pontos de ebulição
+    ["forcas_intermoleculares", "metano_ebulicao", "-161.49", "CH4"], ["forcas_intermoleculares", "etano_ebulicao", "-88.5", "C2H6"], ["forcas_intermoleculares", "propano_ebulicao", "-42.25", "C3H8 (faixa)"],
+    ["forcas_intermoleculares", "propano_ebulicao", "-42.04", "C3H8 (faixa)"], ["forcas_intermoleculares", "butano_ebulicao", "-1", "C4H10 (faixa −1 a 1)"], ["forcas_intermoleculares", "pentano_ebulicao", "35.9", "C5H12 (faixa)"],
+    ["forcas_intermoleculares", "pentano_ebulicao", "36.3", "C5H12 (faixa)"], ["forcas_intermoleculares", "hexano_ebulicao", "68.5", "C6H14 (faixa)"], ["forcas_intermoleculares", "hexano_ebulicao", "69.1", "C6H14 (faixa)"],
+    ["forcas_intermoleculares", "He_ebulicao", "-268.928", "He"], ["forcas_intermoleculares", "Ne_ebulicao", "-246.046", "Ne"], ["forcas_intermoleculares", "Ar_ebulicao", "-185.848", "Ar"],
+    ["forcas_intermoleculares", "Kr_ebulicao", "-153.415", "Kr"], ["forcas_intermoleculares", "Xe_ebulicao", "-108.099", "Xe"], ["forcas_intermoleculares", "HF_ebulicao", "19.5", "HF"],
+    ["forcas_intermoleculares", "HCl_ebulicao", "-85.05", "HCl"], ["forcas_intermoleculares", "HBr_ebulicao", "-66.8", "HBr"], ["forcas_intermoleculares", "HI_ebulicao", "-35.36", "HI"],
+    ["forcas_intermoleculares", "H2O_ebulicao", "99.98", "H2O"], ["forcas_intermoleculares", "H2S_ebulicao", "-59.55", "H2S"], ["forcas_intermoleculares", "H2Se_ebulicao", "-41.25", "H2Se"],
+    ["forcas_intermoleculares", "H2Te_ebulicao", "-2.2", "H2Te"], ["forcas_intermoleculares", "etanol_ebulicao", "78.23", "etanol"], ["forcas_intermoleculares", "eter_dimetilico_ebulicao", "-24", "éter dimetílico"],
+    # EQ18 cristais
+    ["cristais", "NaCl_numero_de_coordenacao", "six", "NaCl: 6"], ["cristais", "CsCl_numero_de_coordenacao", "8", "CsCl: 8"], ["cristais", "ZnS_numero_de_coordenacao", "four", "ZnS: 4"],
+    ["cristais", "raio_Na_mais", "102", "Na+ 102 pm"], ["cristais", "raio_Cs_mais", "167", "Cs+ 167 pm"], ["cristais", "raio_Zn2_mais", "74", "Zn2+ 74 pm"], ["cristais", "raio_Cl_menos", "181", "Cl− 181 pm"],
+    ["cristais", "raio_S2_menos", "184", "S2− 184 pm"], ["cristais", "razao_de_raios_critica_CN4", "0.2247", "razão crítica CN 4"], ["cristais", "razao_de_raios_critica_CN6", "0.4142", "razão crítica CN 6"],
+    ["cristais", "razao_de_raios_critica_CN8", "0.732", "razão crítica CN 8"], ["cristais", "razao_de_raios_limite", "not obeyed for all compounds", "a regra falha em alguns"],
     #MAIS
 ]
 falhas = 0
