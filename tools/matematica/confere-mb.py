@@ -116,5 +116,29 @@ ok(3 * 4 == 12 and 5 - 2 == 3 and Fr(12, 10) == Fr(6, 5), "MB03: (3×10⁵)(4×1
 ok(abs(Decimal(2).sqrt() - Decimal("1.41421356")) < Decimal("1e-8") and 2 ** 20 == 1048576 and 2 ** 30 == 1073741824, "MB03: √2 = 1,41421356...; 2²⁰ ≈ 10⁶ e 2³⁰ ≈ 10⁹")
 ok(Fr(9) ** Fr(1, 2).numerator == 9 and 3 * 3 == 9, "MB03 teorema 2: 3·3 = 9, então 9^(1/2) = 3")
 
+# ---------- MB04 ----------
+ok(Fr(2, 3) == Fr(6, 9) and 2 * 9 == 3 * 6 == 18 and Fr(2 + 6, 3 + 9) == Fr(2, 3), "MB04: 2/3 = 6/9; 2·9 = 3·6 = 18; (2 + 6)/(3 + 9) = 2/3")
+ok(Fr(12, 18) == Fr(2, 3) and Fr(12, 30) == Fr(2, 5), "MB04: 12 meninos e 18 meninas: 2/3; meninos sobre o total: 2/5")
+# teorema 1 e teorema 2 numa grade de frações exatas
+G4 = [Fr(-3), Fr(-1), Fr(1, 2), Fr(2), Fr(5)]
+ok(all((a / b == c / d) == (a * d == b * c) for a in G4 for b in G4 for c in G4 for d in G4), "MB04 teorema 1: a/b = c/d ⇔ ad = bc em 625 casos")
+ok(all((k * b + k * d) / (b + d) == k for k in G4 for b in G4 for d in G4 if b + d != 0), "MB04 teorema 2: (a + c)/(b + d) = a/b quando a = kb e c = kd")
+ok(Fr(1, 2) + Fr(1, 3) != Fr(1 + 1, 2 + 3), "MB04: somar numeradores e denominadores NÃO é somar frações (1/2 + 1/3 ≠ 2/5)")
+ok([Fr(120) * w / 6 for w in (1, 2, 3)] == [20, 40, 60], "MB04: 120 em 1 : 2 : 3 = 20, 40, 60")
+inv = [Fr(1), Fr(1, 2), Fr(1, 3)]
+ok([120 * w / sum(inv) for w in inv] == [Fr(720, 11), Fr(360, 11), Fr(240, 11)], "MB04: 120 inversamente a 1, 2, 3 = 720/11, 360/11, 240/11")
+ok(6 * 12 == 72 == 9 * 8 and 1 * 72 == 2 * 36 == 3 * 24 == 72 and Fr(12 * 9, 6) == 18, "MB04: 6 operários × 12 dias = 72 = 9 × 8; tabela 1×72, 2×36, 3×24; o erro 'em cruz' daria 18")
+ok(2 * 120 == 240 and 3 * 120 == 360 and 5 * 120 == 600 and 240 + 360 + 600 == 1200, "MB04 exemplo: 1200 em 2 : 3 : 5 = 240, 360, 600")
+ok(Fr(12, 10) * Fr(13, 10) == Fr(156, 100) and 200 * Fr(156, 100) == 312 and 56 - 20 - 30 == 6 and Fr(30, 100) * 20 == 6, "MB04 exemplo: 1,2 × 1,3 = 1,56; 200 → 312; os 6% a mais são 30% de 20%")
+ok(Fr(35, 100) * 240 == 84, "MB04: 35% de 240 = 84")
+ok(Fr(120, 100) * Fr(80, 100) == Fr(96, 100) and Fr(20, 100) * 120 == 24 and 120 - 24 == 96, "MB04: +20% e −20%: 100 → 120 → 96")
+ok(all((1 + Fr(q, 100)) * (1 - Fr(q, 100)) == 1 - Fr(q * q, 10000) for q in range(1, 100)), "MB04 teorema 3: (1 + p/100)(1 − p/100) = 1 − p²/10000, p de 1 a 99")
+ok(Fr(5, 4) * Fr(4, 5) == 1 and 1 - Fr(4, 5) == Fr(20, 100), "MB04 chefão (a): depois de +25%, a queda que desfaz é de 20%")
+ok(Fr(1, 100) * 100 == 1 and 1 / Fr(2, 100) == 50, "MB04 chefão (b): 1 kg de sólido; 2% do peso final → 50 kg")
+ok(Fr(120, 60) == 2 and Fr(120, 40) == 3 and Fr(240, 5) == 48 and Fr(2 * 60 * 40, 60 + 40) == 48, "MB04 chefão (c): 240 km em 5 h = 48 km/h = 2·60·40/(60 + 40)")
+ok(Fr(1, 6) + Fr(1, 4) - Fr(1, 12) == Fr(1, 3), "MB04 chefão (d): 1/6 + 1/4 − 1/12 = 1/3 do tanque por hora → 3 h")
+ok(all(((Fr(2, 3) * b) ** 2 + (Fr(2, 3) * d) ** 2) / (b * b + d * d) == Fr(4, 9) and (Fr(2, 3) * b + Fr(2, 3) * d) / (b + d) == Fr(2, 3) for b in (1, 3, 7) for d in (2, 5, 9)), "MB04 chefão (e): (a + c)/(b + d) = 2/3 e (a² + c²)/(b² + d²) = 4/9")
+ok(Fr(1, 3) + Fr(1, 6) == Fr(1, 2), "MB04 pegadinha: 1/3 + 1/6 = 1/2 do serviço por hora → 2 h")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

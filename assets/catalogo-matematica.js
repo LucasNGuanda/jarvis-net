@@ -12,7 +12,7 @@ window.CATALOGO.push(
     ["MB01","Frações e Equações",[],true],
     ["MB02","Fatoração e Manipulações Algébricas",["MB01"],true],
     ["MB03","Potenciação e Radiciação",["MB02"],true],
-    ["MB04","Razão e Proporção",[]],
+    ["MB04","Razão e Proporção",["MB01"],true],
     ["MB05","Equações e Problemas",[]],
   ] },
   { id:"AR", area:"mat", letra:"AR", cor:"--mO", nome:"Aritmética", desc:"Divisibilidade, MDC, MMC, primos e congruências.", temas:[
