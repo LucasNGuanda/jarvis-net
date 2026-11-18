@@ -32,7 +32,7 @@ window.CATALOGO.push(
     ["RL03","Textos nível B1",["RL02"],true],
     ["RL04","Vocabulário de matemática em russo",["RG03"],true],
     ["RL05","Vocabulário de física em russo",["RL04"],true],
-    ["RL06","Como ler um enunciado de olimpíada",[]],
+    ["RL06","Como ler um enunciado de olimpíada",["RG17","RL04","RL05"],true],
     ["RL07","Enunciados da Fiztech comentados",[]],
     ["RL08","Falsos amigos e armadilhas de tradução",["RL04","RL05"],true],
   ] },

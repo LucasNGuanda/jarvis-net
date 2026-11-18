@@ -1077,11 +1077,64 @@ for tit, niv, pts in FB_PT:
     if str(v(f.get("tradutor"))) != "Leo Wiener" or str(v(f.get("ano_da_traducao"))) != "1904": erros.append(f"Leitura: fábula {tit!r}: tradutor ou ano diferente do esperado")
     FABULAS.append({"tit": tit[0] + tit[1:].lower(), "titEn": str(v(f["titulo_en"])).title(), "niv": niv, "ru": ru_p, "en": en_p, "pt": pts, "ano": str(v(f.get("ano_do_original"))), "trad": "Leo Wiener, 1904"})
 
+# ---------- Leitura RL06: como ler um enunciado (verbos de pedido e palavras de estrutura: verbetes; frases: Tatoeba e exemplos de verbetes) ----------
+VE6 = DL["verbos_de_enunciado"]
+FVE = {"verbos": {w: {"entradas_verb": [x for x in (e.get("entradas") or []) if str(v(x.get("classe"))) == "Verb" and x.get("conjugacao")]} for w, e in VE6.items() if isinstance(e, dict)}}
+# verbos de pedido e de descrição: [infinitivo, palavra em inglês da definição, tradução, grupo]
+VEN_PT = [["найти", "to find", "achar, determinar", "pedido"], ["определить", "to determine", "determinar", "pedido"], ["вычислить", "to calculate", "calcular", "pedido"], ["доказать", "to prove", "provar, demonstrar", "pedido"],
+          ["показать", "to show", "mostrar", "pedido"], ["рассмотреть", "to examine", "examinar, considerar", "pedido"], ["сравнить", "to compare", "comparar", "pedido"], ["построить", "to build", "construir", "pedido"],
+          ["выразить", "to express", "expressar", "pedido"], ["записать", "to write down", "anotar, escrever", "pedido"], ["указать", "to indicate", "indicar", "pedido"], ["объяснить", "to explain", "explicar", "pedido"],
+          ["пренебречь", "to neglect", "desprezar (uma grandeza)", "pedido"], ["принять", "to assume", "adotar, supor", "pedido"],
+          ["зависеть", "to depend", "depender", "descrição"], ["падать", "to fall", "cair", "descrição"], ["бросить", "to throw", "lançar, jogar", "descrição"], ["составлять", "to amount to", "ser de, perfazer", "descrição"],
+          ["действовать", "to affect", "agir, atuar", "descrição"], ["равняться", "to be equal", "ser igual a", "descrição"]]
+VEN = {}
+for inf, chave, pt, grp in VEN_PT:
+    es = FVE["verbos"].get(inf, {}).get("entradas_verb") or []
+    i = next((k for k, x in enumerate(es) if any(chave in d_ for d_ in defs_rl(x))), None)
+    if i is None: erros.append(f"RL06 verbo {inf}: {chave!r} não achado"); continue
+    n_antes = len(erros); x = le_verbo(FVE, inf, i, defs_rl(es[i])[0][:6], pt)
+    if not x: continue
+    x["grp"] = grp; VEN[inf] = x
+# palavras de estrutura: [palavra, classe, palavra em inglês, tradução, papel no enunciado]
+EST_PT = [["пусть", "Particle", "(mathematics) let", "seja", "abre uma suposição"], ["если", "Conjunction", "if", "se", "abre a condição"], ["то", "Conjunction", "then", "então", "responde ao «если»"],
+          ["тогда", "Adverb", "then", "então, nesse caso", "tira a consequência"], ["следовательно", "Adverb", "consequently", "logo, portanto", "tira a consequência"], ["поэтому", "Adverb", "therefore", "por isso", "tira a consequência"],
+          ["причём", "Conjunction", "moreover", "sendo que, e além disso", "acrescenta um dado"], ["известно", "Predicative", "it is (well) known", "sabe-se, é sabido", "apresenta um dado"],
+          ["дано", "Verb", "passive past participle of дать", "dado, é dado", "apresenta os dados"], ["равен", "Adjective", "short masculine singular", "é igual a (masculino)", "dá o valor"],
+          ["сколько", "Pronoun", "how much", "quanto, quantos", "faz a pergunta"], ["каков", "Pronoun", "what", "qual é, como é", "faz a pergunta"], ["чему", "Pronoun", "dative of что", "a quê (igual a quê?)", "faz a pergunta"]]
+EST = []
+for w, cl, chave, pt, papel in EST_PT:
+    e = next((x for x in (VE6.get(w) or {}).get("entradas") or [] if str(v(x.get("classe"))) == cl and any(chave in d_ for d_ in defs_rl(x))), None)
+    if not e: erros.append(f"RL06 estrutura {w}: sem entrada {cl} com {chave!r}"); continue
+    EST.append({"w": w, "ac": v(e["forma_acentuada"]), "pt": pt, "papel": papel, "en": next(d_ for d_ in defs_rl(e) if chave in d_)[:110]})
+# frases com cara de enunciado: [frase literal, palavra em inglês da tradução, tradução, tipo, fonte]
+txt_d6 = json.dumps(D6["preposicoes"], ensure_ascii=False) + json.dumps(I6["verbetes"], ensure_ascii=False)
+EN_PT = [["Решите уравнение.", "Solve the equation", "Resolvam a equação.", "pedido", "tat"], ["Вы уже решили задачу?", "solved the problem", "Vocês já resolveram o problema?", "pergunta", "tat"],
+         ["Задача проста.", "task is simple", "O problema é simples.", "dado", "tat"], ["Он с лёгкостью решил все эти задачи.", "solved all those problems", "Ele resolveu todos esses problemas com facilidade.", "dado", "tat"],
+         ["Прямой угол равен девяноста градусам.", "right angle", "O ângulo reto é igual a noventa graus.", "dado", "tat"], ["Квадратный корень из двадцати пяти равен пяти.", "square root", "A raiz quadrada de vinte e cinco é igual a cinco.", "dado", "tat"],
+         ["Радиус Земли приблизительно равен шести тысячам километров.", "radius of the Earth", "O raio da Terra é aproximadamente igual a seis mil quilômetros.", "dado", "tat"], ["Доллар равен ста центам.", "hundred cents", "Um dólar é igual a cem centavos.", "dado", "tat"],
+         ["Предположим, что 𝑥 равен 1.", "Suppose", "Suponhamos que x é igual a 1.", "suposição", "tat"], ["Массу планет вычисляют по закону всемирного тяготения.", "is calculated", "A massa dos planetas é calculada pela lei da gravitação universal.", "dado", "tat"],
+         ["Атомная масса алюминия - 26,982.", "atomic mass", "A massa atômica do alumínio é 26,982.", "dado", "tat"], ["Атомное число железа - 26.", "atomic number of iron", "O número atômico do ferro é 26.", "dado", "tat"],
+         ["Сто — это большое число.", "big number", "Cem é um número grande.", "dado", "tat"], ["Если меня здесь нет, то где я?", "not here", "Se eu não estou aqui, então onde estou?", "suposição", "tat"],
+         ["Этот физик изучает волны.", "studies waves", "Este físico estuda ondas.", "dado", "tat"],
+         ["Пусть X (икс) равно́ двум.", "Let X be 2", "Seja X igual a 2.", "suposição", "wt"], ["Шесть де́лится на три — это два.", "Six divided by three is two", "Seis dividido por três é dois.", "dado", "wt"],
+         ["Пять на два не де́лится", "Five is not divisible by two", "Cinco não é divisível por dois.", "dado", "wt"]]
+ENUN = []
+for ru_, chave, pt, tipo, de in EN_PT:
+    if de == "tat":
+        f = TAT.get(ru_)
+        if not f: erros.append(f"RL06 frase fora do Tatoeba: {ru_!r}"); continue
+        en = str(v(f["traducao"]))
+        if chave not in en: erros.append(f"RL06 {ru_!r}: {chave!r} não está na tradução ({en!r})")
+        ENUN.append({"ru": ru_, "pt": pt, "en": en, "niv": "EN", "tipo": tipo, "autor": str(v(f["autor"])), "id": str(v(f["id"])), "lic": str(v(f["licenca"]))})
+    else:
+        if ru_ not in txt_d6 or chave not in txt_d6: erros.append(f"RL06 frase fora dos verbetes: {ru_!r}"); continue
+        ENUN.append({"ru": ru_, "pt": pt, "en": chave, "niv": "EN", "tipo": tipo, "autor": "Wiktionary em inglês", "id": "exemplo de verbete", "lic": "verbete"})
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM, "FRI": FRI, "COND_WP": COND_WP, "CONJ": CONJ, "FRC": FRC, "KOT": KOT, "VOCM": VOCM, "VOCF": VOCF, "ARMA": ARMA, "DIVERG": DIVERG, "LEIT": LEIT, "MIUDAS": MIUDAS, "FABULAS": FABULAS}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM, "FRI": FRI, "COND_WP": COND_WP, "CONJ": CONJ, "FRC": FRC, "KOT": KOT, "VOCM": VOCM, "VOCF": VOCF, "ARMA": ARMA, "DIVERG": DIVERG, "LEIT": LEIT, "MIUDAS": MIUDAS, "FABULAS": FABULAS, "VEN": VEN, "EST": EST, "ENUN": ENUN}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -1100,6 +1153,7 @@ print("RG18:", len(CONJ), "conjunções;", len(FRC), "frases;", "который:
 print("RL04:", len(VOCM), "termos de matemática,", sum(1 for x in VOCM if x["rot"]), "com rótulo de domínio; RL05:", len(VOCF), "de física,", sum(1 for x in VOCF if x["rot"]), "com rótulo")
 print("RL08:", sum(1 for x in ARMA if x["tipo"] == "falso"), "falsos amigos;", sum(1 for x in ARMA if x["tipo"] == "dois"), "palavras de dois sentidos; divergência:", DIVERG)
 print("RL01-03:", len(LEIT), "frases (" + ", ".join(n + " " + str(sum(1 for x in LEIT if x["niv"] == n)) for n in ("A1", "A2", "B1")) + ");", len(MIUDAS), "palavrinhas;", len(FABULAS), "fábulas")
+print("RL06:", len(VEN), "verbos de enunciado;", len(EST), "palavras de estrutura;", len(ENUN), "frases")
 print("RG09:", len(ADJ), "adjetivos;", len(PARES_AS), "pares adjetivo + substantivo")
 print("RG10:", len(POSS), "possessivos e demonstrativos;", len(PARES_PS), "pares;", len(FRP), "frases")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})

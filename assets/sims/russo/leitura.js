@@ -29,7 +29,7 @@
     q("[data-v=grp]").addEventListener("change", (ev) => { grp = ev.target.value; fila = []; prox(); }); q("[data-v=ver]").addEventListener("click", mostra); q("[data-v=sim]").addEventListener("click", () => marca(true)); q("[data-v=nao]").addEventListener("click", () => marca(false)); if (SIM.ruBotaoOuvir) SIM.ruBotaoOuvir(el, () => x.ac);
     SIM.ruVocCartoes._ult = { semente: (n) => { r = rng(n); fila = []; sabia = vistos = 0; prox(); }, mostra, marca, prox, est, grupo: (g) => { grp = g; fila = []; prox(); } }; prox(); };
 
-  /* nome: "Jogo de pares: termo e tradução" · matéria: Russo · tema: RL04, RL05, RL08 */
+  /* nome: "Jogo de pares: termo e tradução" · matéria: Russo · tema: RL04, RL05, RL06, RL08 */
   SIM.ruVocPares = (el, F, op = {}) => { const L = op.lista, N = 6; let r = rng(1), esq = [], dir = [], selE = null, selD = null, feitos = new Set(), tent = 0, erro = null, grp = "";
     el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${botoesGrupo(L)}<button class="bt peq" data-v="novo">novas palavras</button></div></div></div><div data-v="mesa" style="display:grid;grid-template-columns:1fr 1fr;gap:8px 28px;max-width:680px;margin:10px auto"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
     const q = (s) => el.querySelector(s), W = (w) => L.find((x) => x.w === w);
