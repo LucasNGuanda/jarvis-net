@@ -86,5 +86,35 @@ for m in (2, 3, 4, 10, 50):
     ok(prod == Fr(m + 1, 2 * m), f"MB02 chefão: produto até {m} = {m + 1}/{2 * m}")
 ok(Fr(3, 4) * Fr(8, 9) == Fr(2, 3) and Fr(2, 3) * Fr(15, 16) == Fr(5, 8), "MB02 chefão (a): P₃ = 2/3 e P₄ = 5/8")
 
+# ---------- MB03 ----------
+# Raízes: confere-se com inteiros, elevando ao quadrado (nada de ponto flutuante nas igualdades).
+import math
+from decimal import Decimal, getcontext
+getcontext().prec = 60
+ok(2 ** 3 * 2 ** 4 == 2 ** 7 and (2 ** 3) ** 2 == 2 ** 6 and Fr(2) ** -3 == Fr(1, 8) and 2 ** 0 == 1, "MB03: 2³·2⁴ = 2⁷; (2³)² = 2⁶; 2⁻³ = 1/8; 2⁰ = 1")
+ok(-3 ** 2 == -9 and (-3) ** 2 == 9 and math.isqrt(9 + 16) == 5, "MB03 pegadinha: −3² = −9, (−3)² = 9, √(9 + 16) = 5")
+ok(2 ** 3 == 8 and 2 ** 2 == 4 and 3 ** 3 == 27 and 3 ** 2 == 9 and 2 ** 4 == 16 and 2 ** 3 == 8, "MB03: 8^(2/3) = 4; 27^(2/3) = 9; 16^(3/4) = 8 (pela base)")
+ok(6 * 6 * 2 == 72 and 36 * 2 == 72, "MB03: √72 = 6√2 (6²·2 = 72)")
+ok(12 * 3 == 36 == 6 ** 2, "MB03: √12·√3 = √36 = 6")
+ok(2 * 2 * 3 == 12 and 3 * 3 * 3 == 27 and 2 + 3 == 5, "MB03: √12 + √27 = 2√3 + 3√3 = 5√3")
+ok(Fr(6, 3) == 2, "MB03: 6/√3 = 6√3/3 = 2√3")
+ok(3 - 2 == 1, "MB03: 1/(√3 + √2) = (√3 − √2)/(3 − 2) = √3 − √2")
+# (√2 + √3)² = 5 + 2√6 e (1 + √2)² = 3 + 2√2: partes racional e irracional
+ok(2 + 3 == 5 and 2 * 3 == 6 and 1 + 2 == 3 and 1 * 2 == 2, "MB03: √(5 + 2√6) = √2 + √3 e √(3 + 2√2) = 1 + √2 (soma e produto)")
+ok(abs((Decimal(5) + 2 * Decimal(6).sqrt()).sqrt() - Decimal(2).sqrt() - Decimal(3).sqrt()) < Decimal(10) ** -50, "MB03: √(5 + 2√6) = √2 + √3, com 50 casas")
+ok(2 ** 30 == 8 ** 10 and 3 ** 20 == 9 ** 10 and 2 ** 30 < 3 ** 20, "MB03: 2³⁰ = 8¹⁰ < 9¹⁰ = 3²⁰")
+ok(2 ** 300 == 8 ** 100 and 3 ** 200 == 9 ** 100 and 2 ** 300 < 3 ** 200, "MB03 chefão (b): 2³⁰⁰ < 3²⁰⁰")
+ok(2 ** 10 == 1024 and len(str(2 ** 100)) == 31 and str(2 ** 100)[:3] == "126", "MB03 chefão (a): 2¹⁰ = 1024; 2¹⁰⁰ tem 31 algarismos e começa com 1,26...")
+ok(abs(1.024 ** 10 - 1.27) < 0.005, "MB03 chefão (a): 1,024¹⁰ ≈ 1,27")
+ok([7 ** k % 10 for k in range(1, 6)] == [7, 9, 3, 1, 7] and 2026 % 4 == 2 and pow(7, 2026, 10) == 9 and 2026 == 4 * 506 + 2, "MB03: ciclo do 7 é 7, 9, 3, 1; 7²⁰²⁶ termina em 9")
+s = sum(1 / (Decimal(k).sqrt() + Decimal(k + 1).sqrt()) for k in range(1, 100))
+ok(abs(s - 9) < Decimal(10) ** -50, "MB03 chefão (e): a soma de 1/(√k + √(k+1)), k = 1..99, é 9")
+ok(Fr(7, 5) ** 2 == Fr(49, 25) and float(Fr(49, 25)) == 1.96 and Fr(17, 12) ** 2 == Fr(289, 144) and abs(289 / 144 - 2.007) < 0.0005, "MB03 teorema 3: (7/5)² = 1,96 e (17/12)² ≈ 2,007")
+# nenhuma fração a/b com b até 2000 tem quadrado 2 (ilustração; a prova é a do texto)
+ok(all(math.isqrt(2 * b * b) ** 2 != 2 * b * b for b in range(1, 2001)), "MB03 teorema 3: 2b² nunca é quadrado perfeito para b de 1 a 2000")
+ok(3 * 4 == 12 and 5 - 2 == 3 and Fr(12, 10) == Fr(6, 5), "MB03: (3×10⁵)(4×10⁻²) = 12×10³ = 1,2×10⁴")
+ok(abs(Decimal(2).sqrt() - Decimal("1.41421356")) < Decimal("1e-8") and 2 ** 20 == 1048576 and 2 ** 30 == 1073741824, "MB03: √2 = 1,41421356...; 2²⁰ ≈ 10⁶ e 2³⁰ ≈ 10⁹")
+ok(Fr(9) ** Fr(1, 2).numerator == 9 and 3 * 3 == 9, "MB03 teorema 2: 3·3 = 9, então 9^(1/2) = 3")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

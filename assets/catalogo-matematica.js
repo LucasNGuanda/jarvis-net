@@ -11,7 +11,7 @@ window.CATALOGO.push(
   { id:"MB", area:"mat", letra:"MB", cor:"--mF", nome:"Matemática Básica", desc:"Frações, potências, equações e funções: a base de tudo.", temas:[
     ["MB01","Frações e Equações",[],true],
     ["MB02","Fatoração e Manipulações Algébricas",["MB01"],true],
-    ["MB03","Potenciação e Radiciação",[]],
+    ["MB03","Potenciação e Radiciação",["MB02"],true],
     ["MB04","Razão e Proporção",[]],
     ["MB05","Equações e Problemas",[]],
   ] },
