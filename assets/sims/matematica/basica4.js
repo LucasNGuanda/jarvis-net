@@ -8,7 +8,7 @@
   const vis = (r, v) => `<div class="vis"><small>${r}</small><b>${v}</b></div>`;
   const T = (x, y, s, o) => `<text x="${x}" y="${y}" text-anchor="${(o && o.a) || "middle"}" style="font:${(o && o.w) || 500} ${(o && o.f) || 13}px Inter,system-ui,sans-serif;fill:${(o && o.c) || "var(--ink)"}">${s}</text>`;
   /* tabela: cab = títulos das linhas (à esquerda), cols = colunas de valores (cada uma, um vetor com um valor por linha) */
-  M.tabela = (cab, cols, D, o) => { const L = (o && o.larg) || 150, w = Math.min(70, (500 - L) / cols.length), x0 = (560 - L - w * cols.length) / 2, h = 34; let s = "";
+  M.tabela = (cab, cols, D, o) => { const L = (o && o.larg) || 150, w = Math.min((o && o.w) || 70, (500 - L) / cols.length), x0 = (560 - L - w * cols.length) / 2, h = 34; let s = "";
     cab.forEach((c, i) => { s += `<rect x="${x0}" y="${8 + i * h}" width="${L}" height="${h}" style="fill:var(--card2);stroke:var(--line)"/>` + T(x0 + L / 2, 30 + i * h, c, { w: 600, c: "var(--ink2)" }); cols.forEach((col, j) => { s += `<rect x="${x0 + L + j * w}" y="${8 + i * h}" width="${w}" height="${h}" style="fill:none;stroke:var(--line)"/>` + T(x0 + L + j * w + w / 2, 30 + i * h, col[i], { w: 600, f: 15 }); }); });
     return D.svg(560, 16 + cab.length * h, s, "figura"); };
   /* partes: divide o total em partes proporcionais aos pesos (ou aos inversos deles); devolve frações exatas */

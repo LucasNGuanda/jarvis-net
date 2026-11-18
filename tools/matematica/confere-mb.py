@@ -140,5 +140,33 @@ ok(Fr(1, 6) + Fr(1, 4) - Fr(1, 12) == Fr(1, 3), "MB04 chefão (d): 1/6 + 1/4 −
 ok(all(((Fr(2, 3) * b) ** 2 + (Fr(2, 3) * d) ** 2) / (b * b + d * d) == Fr(4, 9) and (Fr(2, 3) * b + Fr(2, 3) * d) / (b + d) == Fr(2, 3) for b in (1, 3, 7) for d in (2, 5, 9)), "MB04 chefão (e): (a + c)/(b + d) = 2/3 e (a² + c²)/(b² + d²) = 4/9")
 ok(Fr(1, 3) + Fr(1, 6) == Fr(1, 2), "MB04 pegadinha: 1/3 + 1/6 = 1/2 do serviço por hora → 2 h")
 
+# ---------- MB05 ----------
+def q2(a, b, c, x):
+    return a * x * x + b * x + c
+ok(q2(1, 6, 5, -1) == 0 and q2(1, 6, 5, -5) == 0 and (-1 + 3) ** 2 == 4 and (-5 + 3) ** 2 == 4, "MB05: x² + 6x + 5 = 0 → (x + 3)² = 4 → x = −1 ou −5")
+ok(q2(1, -5, 6, 2) == 0 and q2(1, -5, 6, 3) == 0 and 2 + 3 == 5 and 2 * 3 == 6, "MB05: x² − 5x + 6 = 0 tem raízes 2 e 3 (soma 5, produto 6)")
+ok(49 - 24 == 25 and q2(2, -7, 3, Fr(1, 2)) == 0 and q2(2, -7, 3, 3) == 0 and Fr(1, 2) + 3 == Fr(7, 2), "MB05: 2x² − 7x + 3 = 0: Δ = 25, raízes 1/2 e 3, soma 7/2")
+ok(16 - 20 == -4, "MB05: x² − 4x + 5 = 0 tem Δ = −4")
+ok(q2(1, -7, 10, 2) == 0 and q2(1, -7, 10, 5) == 0 and 49 - 40 == 9, "MB05 exemplo: x² − 7x + 10 = 0: Δ = 9, raízes 2 e 5")
+ok(2 * 3 + 3 * 2 == 12 and 5 * 3 - 3 * 2 == 9 and 12 + 9 == 21 == 7 * 3, "MB05 exemplo e teorema 1: 2x + 3y = 12, 5x − 3y = 9 → 7x = 21 → (3, 2)")
+ok(2 * (8 + 5) == 26 and 8 * 5 == 40 and q2(1, -13, 40, 8) == 0 and q2(1, -13, 40, 5) == 0 and 169 - 160 == 9, "MB05 exemplo: perímetro 26 e área 40 → lados 8 e 5")
+ok(3 + 2 == 5 and 3 - 2 == 1, "MB05: x + y = 5, x − y = 1 → (3, 2)")
+ok(23 + 12 == 35 and 2 * 23 + 4 * 12 == 94 and 2 * 35 == 70 and (94 - 70) // 2 == 12, "MB05: 35 cabeças e 94 pés → 12 coelhos e 23 galinhas")
+# teorema 2 (a fórmula) e teorema 3 (soma e produto), em equações de raízes racionais r e s: a(x − r)(x − s)
+G5 = [Fr(-4), Fr(-3, 2), Fr(-1, 3), Fr(2), Fr(5, 2), Fr(7)]
+ok(all(-(-a * (r + s)) / a == r + s and (a * r * s) / a == r * s and (a * (r + s)) ** 2 - 4 * a * (a * r * s) == (a * (r - s)) ** 2
+       for a in (Fr(1), Fr(2), Fr(-3)) for r in G5 for s in G5), "MB05 teoremas 2 e 3: com raízes r e s, −b/a = r + s, c/a = rs e Δ = a²(r − s)²")
+# o passo central da demonstração: 4a(ax² + bx + c) = (2ax + b)² − (b² − 4ac)
+ok(all(4 * a * (a * x * x + b * x + c) == (2 * a * x + b) ** 2 - (b * b - 4 * a * c) for a in G5 for b in G5 for c in G5 for x in G5), "MB05 teorema 2: 4a(ax² + bx + c) = (2ax + b)² − Δ, em 1296 casos")
+# teorema 1: eliminação
+ok(all((a1 * b2 - a2 * b1) * x == (a1 * x + b1 * y) * b2 - (a2 * x + b2 * y) * b1 for a1 in G5 for b1 in G5 for a2 in G5 for b2 in G5 for x in (Fr(2), Fr(-1, 3)) for y in (Fr(5), Fr(3, 4))), "MB05 teorema 1: (a₁b₂ − a₂b₁)x = c₁b₂ − c₂b₁")
+ok(Fr(2) + Fr(1, 2) == Fr(5, 2) and 2 * 4 - 5 * 2 + 2 == 0 and 25 - 16 == 9, "MB05 chefão (a): x + 1/x = 5/2 → 2 e 1/2")
+ok(all(x ** 4 - 13 * x ** 2 + 36 == 0 for x in (2, -2, 3, -3)) and 4 + 9 == 13 and 4 * 9 == 36, "MB05 chefão (b): x⁴ − 13x² + 36 = 0 → ±2 e ±3")
+ok(q2(1, -11, 18, 2) == 0 and q2(1, -11, 18, 9) == 0 and math.isqrt(9 + 7) == 4 == 9 - 5 and math.isqrt(2 + 7) == 3 != 2 - 5, "MB05 chefão (c): raízes 2 e 9; só o 9 serve na equação com raiz")
+ok(all((2 * m) ** 2 - 4 * (m + 2) == 0 for m in (2, -1)) and q2(1, -1, -2, 2) == 0 and q2(1, -1, -2, -1) == 0, "MB05 chefão (d): raiz dupla para m = 2 e m = −1")
+phi5 = (1 + Decimal(5).sqrt()) / 2
+ok(abs(phi5 - (1 + 1 / phi5)) < Decimal(10) ** -50 and abs(phi5 - Decimal("1.618")) < Decimal("0.0005"), "MB05 chefão (e): x = 1 + 1/x → (1 + √5)/2 ≈ 1,618")
+ok((1 + Decimal(2).sqrt()) ** 2 - 2 * (1 + Decimal(2).sqrt()) - 1 < Decimal(10) ** -50, "MB05: 1 + √2 é raiz de x² − 2x − 1")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)
