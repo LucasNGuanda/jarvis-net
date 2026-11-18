@@ -1006,11 +1006,82 @@ for w, sec, kA, ptA, kB, ptB in DS_PT:
     e = es[0]
     ARMA.append({"w": w, "ac": v(e["forma_acentuada"]), "pt": ptB, "grp": "dois sentidos", "tipo": "dois", "comum": ptA, "cl": "s" if v(e.get("classe")) == "Noun" else "a", "g": (str(v(e.get("genero")) or "").split(" ")[0] or None) if v(e.get("classe")) == "Noun" else None, "en": dB[:80], "en2": dA[:80]})
 
+# ---------- Leitura RL01 a RL03: frases do Tatoeba (CC BY 2.0 FR, autor em cada frase) e fábulas de Esopo na versão de Tolstói (Wikisource) ----------
+TAT = {v(f["russo"]): f for f in DL["frases_tatoeba"]["frases"]}
+# [frase literal, palavra em inglês da tradução da fonte, tradução (minha, a partir do inglês), nível (classificação minha, pelo tamanho)]
+LT_PT = [["Где школа?", "Where is the school", "Onde fica a escola?", "A1"], ["Город большой.", "city is large", "A cidade é grande.", "A1"], ["Он математик.", "mathematician", "Ele é matemático.", "A1"],
+         ["Она физик.", "physicist", "Ela é física.", "A1"], ["Я физик.", "physicist", "Eu sou físico.", "A1"], ["Это книга?", "a book", "Isto é um livro?", "A1"], ["Это школа?", "a school", "Isto é uma escola?", "A1"],
+         ["Иду домой.", "going home", "Estou indo para casa.", "A1"], ["Мне семнадцать.", "seventeen", "Tenho dezessete anos.", "A1"], ["Можно выйти?", "May I", "Posso sair?", "A1"], ["Нужно работать.", "need to work", "É preciso trabalhar.", "A1"],
+         ["Сегодня среда?", "Wednesday", "Hoje é quarta-feira?", "A1"], ["Хороший ответ.", "Good answer", "Boa resposta.", "A1"], ["Решите уравнение.", "Solve the equation", "Resolvam a equação.", "A1"], ["Что потом?", "next", "E depois?", "A1"],
+         ["А завтра?", "tomorrow", "E amanhã?", "A1"], ["Если хочешь.", "If you want", "Se você quiser.", "A1"], ["Хочешь знать?", "Want to know", "Quer saber?", "A1"], ["Дети в школе?", "children at school", "As crianças estão na escola?", "A1"],
+         ["Часы на столе.", "on the table", "O relógio está em cima da mesa.", "A1"], ["Школа в городе.", "in the city", "A escola fica na cidade.", "A1"], ["Я люблю числа.", "numbers", "Eu gosto de números.", "A1"],
+         ["Он вчера пил.", "yesterday", "Ele bebeu ontem.", "A1"], ["Уже день.", "already", "Já é dia.", "A1"], ["Учись писать.", "Learn to write", "Aprenda a escrever.", "A1"],
+         ["Вы уже идёте домой?", "going home already", "Vocês já estão indo para casa?", "A2"], ["Вы уже решили задачу?", "solved the problem", "Vocês já resolveram o problema?", "A2"], ["Где ты будешь сидеть?", "going to sit", "Onde você vai se sentar?", "A2"],
+         ["Давай сделаем это завтра.", "do it tomorrow", "Vamos fazer isso amanhã.", "A2"], ["Его книга очень интересная.", "very interesting", "O livro dele é muito interessante.", "A2"], ["Ей нельзя туда ходить.", "not allowed", "Ela não pode ir lá.", "A2"],
+         ["Когда можешь, помогай другим.", "help others", "Quando puder, ajude os outros.", "A2"], ["На столе лежат часы?", "on the table", "Há um relógio em cima da mesa?", "A2"], ["На это ушли годы.", "took years", "Isso levou anos.", "A2"],
+         ["Он хочет вас видеть.", "wants to see you", "Ele quer ver vocês.", "A2"], ["Она его ещё любила.", "still loved", "Ela ainda o amava.", "A2"], ["Почему ты не вошёл?", "go inside", "Por que você não entrou?", "A2"],
+         ["Сколько мне тебе дать?", "How much should I give", "Quanto devo te dar?", "A2"], ["Сто — это большое число.", "big number", "Cem é um número grande.", "A2"], ["Ты ходила в школу?", "go to school", "Você foi à escola?", "A2"],
+         ["У меня масса дел.", "things to do", "Tenho um monte de coisas para fazer.", "A2"], ["Учитель идёт в школу.", "teacher is going", "O professor está indo para a escola.", "A2"], ["Что ты увидел потом?", "see next", "O que você viu depois?", "A2"],
+         ["Этот физик изучает волны.", "studies waves", "Este físico estuda ondas.", "A2"], ["Я люблю писать письма.", "writing letters", "Eu gosto de escrever cartas.", "A2"], ["Я начал писать письмо.", "started writing", "Comecei a escrever uma carta.", "A2"],
+         ["Я не понимаю математику.", "understand", "Eu não entendo matemática.", "A2"], ["Я тоже хочу знать.", "also want", "Eu também quero saber.", "A2"],
+         ["Если меня здесь нет, то где я?", "not here", "Se eu não estou aqui, então onde estou?", "B1"], ["Как это я не могу его увидеть?", "can't see him", "Como assim eu não consigo vê-lo?", "B1"],
+         ["Он вчера получил письмо от старого друга.", "from an old friend", "Ontem ele recebeu uma carta de um velho amigo.", "B1"], ["С чего вы решили, что я против?", "against", "Por que vocês acharam que eu sou contra?", "B1"],
+         ["Сколько у нас будет на это времени?", "How much time", "Quanto tempo teremos para isso?", "B1"], ["Так нам обычно мой учитель математики говорил.", "math teacher", "Era o que o meu professor de matemática costumava nos dizer.", "B1"],
+         ["У нас ещё масса времени для этого.", "plenty of time", "Ainda temos muito tempo para isso.", "B1"], ["Я люблю его, а он любит другую.", "loves someone else", "Eu o amo, mas ele ama outra.", "B1"],
+         ["Я сделал то, что вы мне сказали.", "what you told me", "Fiz o que vocês me disseram.", "B1"], ["Я хочу знать, что всё это значит.", "what this is all about", "Quero saber o que tudo isso significa.", "B1"],
+         ["Кто-то плохо учил физику в школе.", "learn physics well", "Alguém não estudou física direito na escola.", "B1"]]
+LEIT = []
+for ru_, chave, pt, niv in LT_PT:
+    f = TAT.get(ru_)
+    if not f: erros.append(f"Leitura: frase fora do Tatoeba: {ru_!r}"); continue
+    en = str(v(f["traducao"]))
+    if chave not in en: erros.append(f"Leitura {ru_!r}: {chave!r} não está na tradução ({en!r})")
+    if str(v(f.get("licenca"))) not in ("CC BY 2.0 FR", "CC0 1.0"): erros.append(f"Leitura {ru_!r}: licença inesperada {v(f.get('licenca'))!r}")
+    LEIT.append({"ru": ru_, "pt": pt, "en": en, "niv": niv, "autor": str(v(f["autor"])), "id": str(v(f["id"])), "lic": str(v(f["licenca"]))})
+# palavrinhas sem tabela no banco. [palavra, de onde vem o sentido, palavra em inglês que tem de estar lá, tradução]
+#   "t6", "n6", "c6", "i6", "ve": glosa de verbete do Wiktionary (tempo, numerais, conjunções, imperativo, verbos de enunciado);
+#   "tat:<frase>": só há a tradução de uma frase do Tatoeba (sentido tirado da frase, não de dicionário: a tela diz isso)
+MI_PT = [["сегодня", "t6", "today", "hoje"], ["завтра", "t6", "tomorrow", "amanhã"], ["вчера", "t6", "yesterday", "ontem"], ["сколько", "n6", "how much", "quanto, quantos"], ["много", "n6", "much", "muito, muitos"],
+         ["почему", "c6", "why", "por que"], ["бы", "i6", "conditional", "partícula do condicional"], ["тогда", "ve", "then", "então, naquele momento"], ["следовательно", "ve", "consequently", "consequentemente, logo"],
+         ["не", "tat:Я не понимаю математику.", "don't", "não"], ["уже", "tat:Уже день.", "already", "já"], ["очень", "tat:Его книга очень интересная.", "very", "muito"], ["потом", "tat:Что ты увидел потом?", "next", "depois"],
+         ["можно", "tat:Можно выйти?", "May I", "pode-se, é permitido"], ["нужно", "tat:Нужно работать.", "need to", "é preciso"], ["нельзя", "tat:Ей нельзя туда ходить.", "not allowed", "não se pode, é proibido"],
+         ["туда", "tat:Ей нельзя туда ходить.", "go there", "para lá"], ["домой", "tat:Иду домой.", "going home", "para casa"], ["здесь", "tat:Если меня здесь нет, то где я?", "here", "aqui"],
+         ["ещё", "tat:Она его ещё любила.", "still", "ainda"], ["обычно", "tat:Так нам обычно мой учитель математики говорил.", "used to", "geralmente, de costume"], ["всё", "tat:Я хочу знать, что всё это значит.", "all", "tudo"],
+         ["плохо", "tat:Кто-то плохо учил физику в школе.", "didn't learn physics well", "mal"], ["так", "tat:Так нам обычно мой учитель математики говорил.", "That's what", "assim"]]
+def glosa_de(onde, w):
+    if onde == "t6": return str(v((T6.get(w) or {}).get("glosa")) or "")
+    src = {"n6": N6, "c6": C6["verbetes"], "i6": I6["verbetes"], "ve": DL["verbos_de_enunciado"]}[onde]
+    return " | ".join(d_ for x in (src.get(w) or {}).get("entradas") or [] for d_ in ([str(v(x.get("glosa")) or "")] + defs_rl(x)))
+MIUDAS = {}
+for w, onde, chave, pt in MI_PT:
+    if onde.startswith("tat:"):
+        f = TAT.get(onde[4:]); en = str(v(f["traducao"])) if f else ""
+        if not f or chave not in en or w not in [sem_ac(x).lower() for x in re.findall(r"[Ѐ-ӿ]+", onde[4:])]: erros.append(f"Leitura palavrinha {w}: frase ou {chave!r} não confere ({en!r})"); continue
+        MIUDAS[w] = {"pt": pt, "de": "frase", "fr": onde[4:]}
+    else:
+        gl = glosa_de(onde, w)
+        if chave not in gl: erros.append(f"Leitura palavrinha {w}: {chave!r} não está na glosa ({gl[:60]!r})"); continue
+        MIUDAS[w] = {"pt": pt, "de": "verbete"}
+# fábulas: [título russo como na página, nível, parágrafos em português (tradução minha, seguindo o russo e conferindo com a inglesa de 1904)]
+FB_PT = [["КУРИЦА И ЗОЛОТЫЕ ЯЙЦА", "A2", ["Um dono tinha uma galinha que punha ovos de ouro. Ele quis mais ouro de uma vez só e matou a galinha (pensava que dentro dela havia um grande pedaço de ouro); mas ela era igual a todas as outras galinhas."]],
+         ["РЫБАК И РЫБКА", "A2", ["Um pescador pegou um peixinho. E o peixinho disse:", "«Pescador, solte-me na água; você vê que sou pequeno: pouco proveito terá de mim. Se me soltar, eu cresço, e então você me pega: terá mais proveito.»", "E o pescador disse:", "«Tolo será quem ficar esperando um proveito grande e deixar escapar das mãos o pequeno.»"]],
+         ["МУРАВЕЙ И ГОЛУБКА", "B1", ["Uma formiga desceu ao riacho: queria beber. Uma onda a cobriu e quase a afogou. Uma pomba carregava um ramo; viu que a formiga se afogava e jogou-lhe o ramo no riacho. A formiga subiu no ramo e se salvou. Depois um caçador armou uma rede para a pomba e ia fechá-la. A formiga rastejou até o caçador e mordeu-lhe a perna; o caçador gemeu e deixou cair a rede. A pomba bateu as asas e voou embora."]],
+         ["ЛЕВ И МЫШЬ", "B1", ["Um leão dormia. Um rato correu por cima do corpo dele. Ele acordou e o pegou. O rato começou a pedir que o soltasse; disse:", "— Se você me soltar, eu também lhe farei um bem.", "O leão riu de o rato prometer fazer-lhe um bem, e o soltou.", "Depois uns caçadores pegaram o leão e o amarraram com uma corda a uma árvore. O rato ouviu o rugido do leão, veio correndo, roeu a corda e disse:", "— Lembra? Você riu, não pensava que eu pudesse lhe fazer um bem, e agora vê: até de um rato pode vir um bem."]]]
+FABULAS = []
+fab_txt = {str(v(f["titulo_ru"])): f for f in DL["textos_dominio_publico"]["fabulas_tolstoi_wikisource"]["textos"]}
+for tit, niv, pts in FB_PT:
+    f = fab_txt.get(tit)
+    if not f: erros.append(f"Leitura: fábula {tit!r} não achada"); continue
+    ru_p = [str(v(x)) for x in f["paragrafos_ru"]]; en_p = [str(v(x)).replace("​", "").strip() for x in f["paragrafos_en"]]
+    if len(ru_p) != len(pts) or len(en_p) != len(pts): erros.append(f"Leitura: fábula {tit!r} com {len(ru_p)} parágrafos russos, {len(en_p)} ingleses e {len(pts)} portugueses"); continue
+    if str(v(f.get("tradutor"))) != "Leo Wiener" or str(v(f.get("ano_da_traducao"))) != "1904": erros.append(f"Leitura: fábula {tit!r}: tradutor ou ano diferente do esperado")
+    FABULAS.append({"tit": tit[0] + tit[1:].lower(), "titEn": str(v(f["titulo_en"])).title(), "niv": niv, "ru": ru_p, "en": en_p, "pt": pts, "ano": str(v(f.get("ano_do_original"))), "trad": "Leo Wiener, 1904"})
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM, "FRI": FRI, "COND_WP": COND_WP, "CONJ": CONJ, "FRC": FRC, "KOT": KOT, "VOCM": VOCM, "VOCF": VOCF, "ARMA": ARMA, "DIVERG": DIVERG}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM, "FRI": FRI, "COND_WP": COND_WP, "CONJ": CONJ, "FRC": FRC, "KOT": KOT, "VOCM": VOCM, "VOCF": VOCF, "ARMA": ARMA, "DIVERG": DIVERG, "LEIT": LEIT, "MIUDAS": MIUDAS, "FABULAS": FABULAS}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -1028,6 +1099,7 @@ print("RG17:", len(FRI), "frases de modo;", len(COND_WP), "formas do condicional
 print("RG18:", len(CONJ), "conjunções;", len(FRC), "frases;", "который:", KOT.get("который", {}).get("casos", {}).get("nom"))
 print("RL04:", len(VOCM), "termos de matemática,", sum(1 for x in VOCM if x["rot"]), "com rótulo de domínio; RL05:", len(VOCF), "de física,", sum(1 for x in VOCF if x["rot"]), "com rótulo")
 print("RL08:", sum(1 for x in ARMA if x["tipo"] == "falso"), "falsos amigos;", sum(1 for x in ARMA if x["tipo"] == "dois"), "palavras de dois sentidos; divergência:", DIVERG)
+print("RL01-03:", len(LEIT), "frases (" + ", ".join(n + " " + str(sum(1 for x in LEIT if x["niv"] == n)) for n in ("A1", "A2", "B1")) + ");", len(MIUDAS), "palavrinhas;", len(FABULAS), "fábulas")
 print("RG09:", len(ADJ), "adjetivos;", len(PARES_AS), "pares adjetivo + substantivo")
 print("RG10:", len(POSS), "possessivos e demonstrativos;", len(PARES_PS), "pares;", len(FRP), "frases")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})

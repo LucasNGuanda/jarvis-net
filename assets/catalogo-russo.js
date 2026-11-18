@@ -27,9 +27,9 @@ window.CATALOGO.push(
     ["RG18","Orações subordinadas e conjunções",["RG17"],true],
   ] },
   { id:"RL", area:"rusleit", letra:"RL", cor:"--mC", nome:"Leitura", desc:"Textos A1–B1, vocabulário de exatas e enunciados de olimpíada.", temas:[
-    ["RL01","Textos nível A1",[]],
-    ["RL02","Textos nível A2",[]],
-    ["RL03","Textos nível B1",[]],
+    ["RL01","Textos nível A1",["RG04"],true],
+    ["RL02","Textos nível A2",["RL01"],true],
+    ["RL03","Textos nível B1",["RL02"],true],
     ["RL04","Vocabulário de matemática em russo",["RG03"],true],
     ["RL05","Vocabulário de física em russo",["RL04"],true],
     ["RL06","Como ler um enunciado de olimpíada",[]],
