@@ -24,7 +24,7 @@ window.CATALOGO.push(
     ["RG15","Preposições e regência",["RG08"],true],
     ["RG16","Numerais e expressões de tempo",["RG05"],true],
     ["RG17","Imperativo e condicional",["RG12"],true],
-    ["RG18","Orações subordinadas e conjunções",[]],
+    ["RG18","Orações subordinadas e conjunções",["RG17"],true],
   ] },
   { id:"RL", area:"rusleit", letra:"RL", cor:"--mC", nome:"Leitura", desc:"Textos A1–B1, vocabulário de exatas e enunciados de olimpíada.", temas:[
     ["RL01","Textos nível A1",[]],

@@ -844,11 +844,75 @@ for c in I6["wikipedia"]["secoes"]["russian_grammar_moods"]["conteudo"]:
 COND_WP = [x for i, x in enumerate(COND_WP) if x not in COND_WP[:i]]
 if len(COND_WP) < 8: erros.append(f"RG17: tabela do condicional lida pela metade ({COND_WP})")
 
+# ---------- RG18: conjunções e orações subordinadas (dadosR6.json: verbetes do Wiktionary; "Syntax" de Russian grammar, Wikipedia) ----------
+C6 = D6["conjuncoes"]; txt_sint = json.dumps(C6["wikipedia"]["secoes"], ensure_ascii=False)
+G_PT = {"soma": "coordenação: soma", "opos": "coordenação: oposição", "alt": "coordenação: alternativa", "sub": "subordinação"}
+# [palavra, classe da entrada, palavra em inglês da definição, tradução, grupo, função]
+CJ_PT = [["и", "Conjunction", "and", "e", "soma", "soma"], ["тоже", "Adverb", "also", "também", "soma", "soma"], ["также", "Adverb", "also", "também, igualmente", "soma", "soma"],
+         ["а", "Conjunction", "but, and, while", "e, mas (contraste fraco)", "opos", "contraste"], ["но", "Conjunction", "but", "mas", "opos", "oposição"], ["однако", "Adverb", "however", "porém, no entanto", "opos", "oposição"],
+         ["зато", "Adverb", "on the other hand", "em compensação", "opos", "compensação"], ["или", "Conjunction", "or", "ou", "alt", "alternativa"], ["либо", "Conjunction", "either", "ou (um ou outro)", "alt", "alternativa"],
+         ["что", "Conjunction", "that", "que", "sub", "conteúdo"], ["чтобы", "Conjunction", "in order", "para que, para", "sub", "finalidade"], ["потому что", "Conjunction", "because", "porque", "sub", "causa"],
+         ["так как", "Conjunction", "since", "já que, como", "sub", "causa"], ["если", "Conjunction", "if", "se (condição)", "sub", "condição"], ["когда", "Conjunction", "when", "quando", "sub", "tempo"],
+         ["пока", "Conjunction", "while", "enquanto", "sub", "tempo"], ["хотя", "Conjunction", "although", "embora", "sub", "concessão"], ["как", "Conjunction", "like", "como", "sub", "comparação"],
+         ["чем", "Conjunction", "than", "do que", "sub", "comparação"], ["где", "Conjunction", "where", "onde", "sub", "lugar"], ["ли", "Conjunction", "whether", "se (pergunta indireta)", "sub", "pergunta indireta"],
+         ["который", "Pronoun", "which", "que, o qual", "sub", "oração relativa"]]
+CONJ = []
+for w, cl, chave, pt, grp, fun in CJ_PT:
+    e = next((x for x in C6["verbetes"].get(w, {}).get("entradas", []) if v(x.get("classe")) == cl), None)
+    if not e: erros.append(f"RG18 {w}: sem entrada {cl}"); continue
+    gl = " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])] + [str(v(d_.get("definicao")) or "") for d_ in (e.get("definicoes") or [])])
+    if chave not in gl: erros.append(f"RG18 {w}: {chave!r} não está na definição ({gl[:70]!r})")
+    CONJ.append({"w": w, "ac": v(e["forma_acentuada"]), "pt": pt, "grupo": grp, "fun": fun})
+# o grupo das coordenativas tem de ser o da Wikipedia ("Conjoining / Oppositional / Separative coordinations are formed with ... the conjunctions ...")
+for grp, marca in (("soma", "Conjoining coordinations are formed"), ("opos", "Oppositional coordinations are formed"), ("alt", "Separative coordinations are formed")):
+    i = txt_sint.find(marca); trecho = sem_ac(txt_sint[i:i + 400]) if i >= 0 else ""
+    for x in CONJ:
+        if x["grupo"] == grp and not re.search(r"(?<![Ѐ-ӿ])" + re.escape(x["w"]) + r"(?![Ѐ-ӿ])", trecho): erros.append(f"RG18 {x['w']}: não está entre as conjunções de {marca!r}")
+for w in ("если", "потому что", "так как", "чтобы", "хотя"):
+    if w + " [" not in sem_ac(txt_sint[txt_sint.find("Complementizers"):]): erros.append(f"RG18 {w}: fora da lista de subordinativas da Wikipedia")
+# frases com a conjunção marcada: [frase literal, palavra em inglês da tradução, tradução, conjunção, fonte]
+FRC_PT = [["Вот я́блоко и гру́ша.", "an apple and a pear", "Aqui estão uma maçã e uma pera.", "и", "wt"], ["Сего́дня тепло́, а вчера́ бы́ло хо́лодно.", "yesterday it was cold", "Hoje está quente, e ontem estava frio.", "а", "wt"],
+          ["Э́то не я́блоко, а гру́ша.", "not an apple", "Isto não é uma maçã, e sim uma pera.", "а", "wt"], ["Хо́чешь чай и́ли ко́фе?", "tea or coffee", "Quer chá ou café?", "или", "wt"],
+          ["Я ду́маю, что он до́ма.", "I think that", "Acho que ele está em casa.", "что", "wt"], ["Я не зна́ю, когда́ э́то бы́ло.", "when it was", "Não sei quando isso foi.", "когда", "wt"],
+          ["Я не зна́ю, где мои́ сапоги́.", "where my boots are", "Não sei onde estão as minhas botas.", "где", "wt"], ["Я хочу́ кни́гу, кото́рая лежи́т на столе́.", "the book that is on the table", "Quero o livro que está em cima da mesa.", "который", "wt"],
+          ["лу́чше по́здно, чем никогда́", "better late than never", "antes tarde do que nunca", "чем", "wt"], ["Я бы пошёл в кино́, е́сли бы у меня́ бы́ло вре́мя.", "if I had had time", "Eu teria ido ao cinema, se tivesse tido tempo.", "если", "wt"],
+          ["что́бы быть во́время", "in order to be on time", "para chegar na hora", "чтобы", "wt"], ["Я там был, Ива́н то́же.", "so was Ivan", "Eu estive lá, e o Ivan também.", "тоже", "wt"],
+          ["Хотя́ произведе́ние бы́ло просты́м, кри́тики хвали́ли его́.", "Although", "Embora a obra fosse simples, os críticos a elogiaram.", "хотя", "wt"], ["ли́бо я, ли́бо он", "either I or he", "ou eu, ou ele", "либо", "wt"],
+          ["Я не зна́ю англи́йского, зато́ я говорю́ по-калмы́цки.", "but I do speak", "Não sei inglês; em compensação, falo calmuco.", "зато", "wt"],
+          ["они́ уе́хали, и мы уезжа́ем", "and we are leaving", "eles foram embora, e nós estamos indo (também)", "и", "wp"], ["они́ уже́ уе́хали, а мы ещё нет", "haven't (left) yet", "eles já foram embora, e nós ainda não", "а", "wp"],
+          ["они уе́хали, но ненадо́лго", "but not for long", "eles foram embora, mas não por muito tempo", "но", "wp"]]
+FRC = []
+for ru_, chave, pt, w, de in FRC_PT:
+    if de == "wt":
+        if ru_ not in trad6: erros.append(f"RG18 frase fora da fonte: {ru_!r}"); continue
+        en = trad6[ru_][0]
+        if chave not in en: erros.append(f"RG18 frase {ru_!r}: {chave!r} não está na tradução ({en!r})")
+    else:
+        if ru_ not in txt_sint or chave not in txt_sint: erros.append(f"RG18 frase fora da Wikipedia: {ru_!r}"); continue
+        en = chave
+    cj = next((x for x in CONJ if x["w"] == w), None)
+    pal = [sem_ac(y).lower() for y in re.findall(r"[Ѐ-ӿ́-]+", ru_)]
+    forma = next((y for y in re.findall(r"[Ѐ-ӿ́-]+", ru_) if sem_ac(y).lower() == w or (w == "который" and sem_ac(y).lower().startswith("котор"))), None)
+    if not cj or not forma: erros.append(f"RG18 frase {ru_!r}: {w} não achada"); continue
+    FRC.append({"ru": ru_, "pt": pt, "en": en, "w": w, "forma": forma})
+# который: tabela de declinação, no mesmo formato dos adjetivos
+KOT = {}
+ek = next(x for x in C6["verbetes"]["который"]["entradas"] if v(x.get("classe")) == "Pronoun"); tk = ek["tabelas"][0]; csk = {}
+for k, en in CASOS:
+    linha = tk["casos"][en]
+    def cel(c, qual):
+        x = linha[c]
+        return formas(x.get(qual) if isinstance(x, dict) and qual in x else x, tk.get("notas"))
+    if k == "acc": csk["accA"] = [cel(c, "animate") for c in COLS]; csk["acc"] = [cel(c, "inanimate") for c in COLS]
+    else: csk[k] = [cel(c, "x") for c in COLS]
+if any(not f for k in csk for f in csk[k]): erros.append(f"RG18 который: célula vazia {csk}")
+KOT["который"] = {"ac": v(ek["forma_acentuada"]), "pt": "que, o qual", "casos": csk}
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM, "FRI": FRI, "COND_WP": COND_WP}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM, "FRI": FRI, "COND_WP": COND_WP, "CONJ": CONJ, "FRC": FRC, "KOT": KOT}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -863,6 +927,7 @@ print("RG14:", len(MOV), "pares de movimento;", len(PREF), "prefixos;", len(FRM)
 print("RG15:", len(PREP), "usos de", len({x["p"] for x in PREP}), "preposições;", PREP_WP, "também nas listas da Wikipedia;", len(ONDE), "exemplos onde/para onde;", len(PARES_PREP), "pares;", sum(1 for x in PREP if x["ex"]), "com exemplo;", [x["alt"] for x in ALT_PREP])
 print("RG16:", len(NUM), "cardinais;", len(ORD), "ordinais;", len(TEMPO), "palavras de tempo;", len(QUANDO), "expressões de dia e mês;", len(EX_NUM), "exemplos de numeral + substantivo")
 print("RG17:", len(FRI), "frases de modo;", len(COND_WP), "formas do condicional na tabela da Wikipedia:", COND_WP)
+print("RG18:", len(CONJ), "conjunções;", len(FRC), "frases;", "который:", KOT.get("который", {}).get("casos", {}).get("nom"))
 print("RG09:", len(ADJ), "adjetivos;", len(PARES_AS), "pares adjetivo + substantivo")
 print("RG10:", len(POSS), "possessivos e demonstrativos;", len(PARES_PS), "pares;", len(FRP), "frases")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})

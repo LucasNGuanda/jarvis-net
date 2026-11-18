@@ -17,7 +17,7 @@
   SIM.ruAdjRegra = (w, c, col, anim = false) => { const p = sem(w), b = p.slice(0, -2), T = SIM.ruAdjTipo(w), nom = [p, b + T.o + "е", b + T.a, b + T.y + "е"];
     const T4 = { gen: [T.o + "го", T.o + "го", T.o + "й", T.y + "х"], dat: [T.o + "му", T.o + "му", T.o + "й", T.y + "м"], ins: [T.y + "м", T.y + "м", T.o + "й", T.y + "ми"], prep: [T.o + "м", T.o + "м", T.o + "й", T.y + "х"] };
     if (c === "nom") return nom[col]; if (c === "acc") return col === 1 ? nom[1] : col === 2 ? b + T.u : anim ? b + T4.gen[col] : nom[col]; return b + T4[c][col]; };
-  const B = (w) => SIM.RU.ADJ[w] || (SIM.RU.POSS || {})[w]; /* adjetivo ou possessivo/demonstrativo: mesmas tabelas */
+  const B = (w) => SIM.RU.ADJ[w] || (SIM.RU.POSS || {})[w] || (SIM.RU.KOT || {})[w]; /* adjetivo ou possessivo/demonstrativo: mesmas tabelas */
   const dic = (w, c, col, anim) => B(w).casos[c === "acc" && anim ? "accA" : c][col];
   SIM.ruAdjDic = dic;
   SIM.ruPlacarAdj = () => { let n = 0, ok = 0; const erradas = []; Object.keys(SIM.RU.ADJ).forEach((w) => { let tudo = true; CASOS.forEach((c) => [0, 1, 2, 3].forEach((col) => [false, true].forEach((an) => { if (an && c !== "acc") return; n++; if (dic(w, c, col, an).map(sem).includes(SIM.ruAdjRegra(w, c, col, an))) ok++; else tudo = false; }))); if (!tudo) erradas.push(w); }); return { n, ok, erradas, adj: Object.keys(SIM.RU.ADJ).length }; };
