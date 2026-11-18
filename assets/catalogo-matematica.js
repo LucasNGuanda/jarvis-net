@@ -9,7 +9,7 @@ window.AREAS.push(
 window.CATALOGO.push(
   /* aba Matemática */
   { id:"MB", area:"mat", letra:"MB", cor:"--mF", nome:"Matemática Básica", desc:"Frações, potências, equações e funções: a base de tudo.", temas:[
-    ["MB01","Frações e Equações",[]],
+    ["MB01","Frações e Equações",[],true],
     ["MB02","Fatoração e Manipulações Algébricas",[]],
     ["MB03","Potenciação e Radiciação",[]],
     ["MB04","Razão e Proporção",[]],

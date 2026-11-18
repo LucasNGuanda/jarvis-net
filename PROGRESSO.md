@@ -2,6 +2,8 @@
 
 > **Publicação (18/11/2026, branch `github-pages`):** site preparado para o GitHub Pages (título, descrição, `robots.txt`, `sitemap.xml`; caminhos conferidos por HTTP numa subpasta); branch `gh-pages` gerada só com os arquivos do site por `tools/publica-site.sh`; dados pessoais tirados do CLAUDE.md e deste arquivo (ficam em `CLAUDE.local.md`, fora do Git). Em 18/11/2026 o autor aprovou a β 7.0 a 8.3 e tudo foi juntado ao `main`; a `gh-pages` foi gerada de novo na β 8.3. Não feito: ativar o Pages e o Search Console (só o autor pode); limpar o histórico; trocar os códigos de acesso.
 
+> **Matemática, módulo MB (branch `matematica-mb`, 18/11/2026):** **β 8.4, MB01 Frações e Equações.** Três laboratórios (as quatro operações em barras; divisão longa e dízima; equação na balança), três teoremas demonstrados (comparação pelo produto em cruz; dividir é multiplicar pelo inverso; geratriz), 3 exemplos, 16 exercícios com sorteio e figura (10 de alternativas, 6 numéricos) e o chefão da soma telescópica. Testes: `tlabsMB` (10 ok; pegou um erro de precisão na geratriz de 1/17, corrigido com inteiros grandes), `tmec`, `tchaves`, `texemp`, `tfigtexto`, `tvaria` + `confere-py` (72 contas), `confere-mb.py` (23 afirmações), `tsim` (314 laboratórios). Não feito: regressão completa (só mudou a matemática); MB02 a MB05 ainda "em breve".
+
 
 ## Estado final (15/11/2026, β 4.7, fim do chat; tudo no `main`, aprovado pelo autor)
 As regras, o perfil do autor e as decisões fixas estão no `CLAUDE.md`. Aqui fica o estado do trabalho. Números contados automaticamente

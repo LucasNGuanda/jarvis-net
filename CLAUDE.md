@@ -101,6 +101,15 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Modelo de dados (`docs/MODELO_DE_DADOS.md`): prefixos por matéria e rotas por matéria implementados na β 3.8. Falta decidir: renomear a física de `fisica:` para `fis:` (exige migrar o progresso salvo; hoje não foi feito) e o mapa de erros (registro de acerto e erro).
 - Ativar o GitHub Pages.
 
+## Sessão de matemática (pedido do autor, 18/11/2026: "começa a fazer o 1 módulo de mat")
+- Ordem: módulo **MB (Matemática Básica)**, MB01 a MB05, um tema por vez, na branch `matematica-mb`; ZIP e aprovação antes do `main`. **MB01 (Frações e Equações) escrito na β 8.4.**
+- Território: `temas/matematica/MB*.js`, `assets/sims/matematica/basica.js`, `tools/matematica/`, `tests/tlabsMB.js`, uma linha de `<script>` no `index.html` por arquivo de laboratório.
+- **Núcleo de frações `SIM.mb`** (em `basica.js`): `fr`, `soma`, `sub`, `mul`, `div`, `tex`, `txt`, `mdc`, `mmc`, `dizima`, `geratriz`, `lin` e os desenhos `figBarras`, `pizza`, `reta`, `balanca`, `cartao`. Aritmética exata com inteiros; **a geratriz usa inteiros grandes (BigInt)**, porque período comprido (1/17 tem 16 algarismos) passa da precisão dos números comuns (erro pego pelo `tlabsMB`, que testa as 1640 frações de denominador até 40).
+- Em matemática não há "fonte" a baixar: **toda conta escrita à mão no texto entra em `python3 tools/matematica/confere-mb.py`** (com `fractions.Fraction`), e todo exercício numérico sorteado leva `py`.
+- Padrão do tema: o completo (pergunta, chute, laboratórios, teoria com teoremas demonstrados "com números primeiro" e depois em geral, 3 exemplos, caixas, 16 exercícios com sorteio e figura, chefão). "Pense como matemático" = `F.caixa("fisico", html, "Pense como matemático")`.
+- **Regras de escrita que o `texemp` cobra nos exemplos:** nunca "1x" (usar o ajudante `cx`), nunca "+ −". Atenção: numa fração como (x + 1)/(x − 2), o texto renderizado junta "1" e "x" e o teste acusa "1x": nos EXEMPLOS, evitar constantes terminadas em 1 no numerador e no denominador.
+- Solução que depende de um caso (ex.: fração com denominador c − a) não pode ser calculada para todos os casos de uma vez: `fr(…, 0)` é `null` e quebra a página inteira (aconteceu no exercício 14).
+
 ## Publicação (decisão do autor, 18/11/2026)
 - O repositório é **público** e o site é publicado pelo GitHub Pages em https://lucasnguanda.github.io/site-fisica/.
 - O Pages serve a branch **`gh-pages`**, que tem SÓ os arquivos do site: `index.html`, `assets/`, `temas/`, `.nojekyll`, `robots.txt`, `sitemap.xml`. Ela é GERADA: nunca editar à mão. Para atualizar, rodar `bash tools/publica-site.sh` a partir da branch que tem o site aprovado.
