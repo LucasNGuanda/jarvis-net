@@ -19,7 +19,7 @@ window.CATALOGO.push(
     ["RG10","Pronomes",["RG09"],true],
     ["RG11","Verbos no presente",["RG04"],true],
     ["RG12","Verbos no passado e no futuro",["RG11"],true],
-    ["RG13","Aspecto verbal: perfectivo × imperfectivo",[]],
+    ["RG13","Aspecto verbal: perfectivo × imperfectivo",[],true],
     ["RG14","Verbos de movimento",[]],
     ["RG15","Preposições e regência",[]],
     ["RG16","Numerais e expressões de tempo",[]],

@@ -445,8 +445,10 @@ for inf, i, chave, pt in V_PT2:
 # pares de aspecto em que os dois verbos estão no banco
 PARES_ASP = []
 for inf, x in VERB.items():
-    par = (x["par"] or "").replace("́", "")
-    if x["asp"] == "impf" and par in VERB and VERB[par]["asp"] == "pf": PARES_ASP.append([inf, par])
+    # a linha do verbete pode dar mais de um perfectivo ("X or Y"): entra o primeiro que está no banco e é perfectivo
+    cands = ["".join(ch for ch in c.strip() if ord(ch) != 0x301) for c in (x["par"] or "").split(" or ")]
+    par = next((c for c in cands if c in VERB and VERB[c]["asp"] == "pf"), None)
+    if x["asp"] == "impf" and par: PARES_ASP.append([inf, par])
 if len(VERB) < 55: erros.append(f"RG11: só {len(VERB)} verbos")
 
 # frases com a forma do verbo marcada: [frase literal, tradução, palavra em inglês da tradução da fonte, forma, infinitivo, tempo ("pres", "pass" ou "fut"), índice da pessoa (ou do gênero, no passado), fonte]
