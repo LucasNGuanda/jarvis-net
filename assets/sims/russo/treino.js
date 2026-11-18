@@ -13,9 +13,15 @@
   SIM.ruNorm = norm;
 
   /* ---------- voz ---------- */
-  SIM.ruVoz = () => { try { const s = window.speechSynthesis; if (!s) return null; return s.getVoices().find((v) => /^ru\b/i.test(v.lang)) || null; } catch (e) { return null; } };
-  SIM.ruFala = (texto) => { const voz = SIM.ruVoz(); if (!voz) return false; const u = new SpeechSynthesisUtterance(String(texto).split(AC).join("")); u.voice = voz; u.lang = voz.lang; u.rate = 0.8; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); return true; };
-  /* botão "ouvir": pega o texto na hora do clique; sem voz russa, explica em vez de fingir */
+  /* β 7.0: a voz pode ser escolhida e ajustada (laboratório "Voz russa" do RG01); a escolha fica em rus:voz, neste navegador */
+  const cfgVoz = () => { try { return Object.assign({ nome: "", vel: 0.85, acento: false }, JSON.parse(localStorage.getItem("rus:voz") || "{}")); } catch (e) { return { nome: "", vel: 0.85, acento: false }; } };
+  SIM.ruVozCfg = (novo) => { if (novo) { try { localStorage.setItem("rus:voz", JSON.stringify(Object.assign(cfgVoz(), novo))); } catch (e) {} } return cfgVoz(); };
+  SIM.ruVozes = () => { try { const s = window.speechSynthesis; return s ? s.getVoices().filter((v) => /^ru\b/i.test(v.lang)) : []; } catch (e) { return []; } };
+  /* sem escolha feita: prefere as vozes "naturais" ou de rede, que costumam soar melhor que a voz básica do sistema */
+  SIM.ruVoz = () => { const vs = SIM.ruVozes(), c = cfgVoz(); return vs.find((v) => v.name === c.nome) || vs.find((v) => /natural|online|neural|google|premium|enhanced/i.test(v.name)) || vs[0] || null; };
+  const diz = (texto, voz) => { const c = cfgVoz(), u = new SpeechSynthesisUtterance(c.acento ? String(texto) : String(texto).split(AC).join("")); u.voice = voz; u.lang = voz.lang; u.rate = c.vel; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); };
+  /* alguns navegadores só entregam a lista de vozes um instante depois do primeiro pedido: nesse caso espera a lista e fala em seguida */
+  SIM.ruFala = (texto) => { const voz = SIM.ruVoz(); if (voz) { diz(texto, voz); return true; } try { const s = window.speechSynthesis; if (s && s.addEventListener && !s._ruEspera) { s._ruEspera = true; s.addEventListener("voiceschanged", () => { s._ruEspera = false; const v2 = SIM.ruVoz(); if (v2) diz(texto, v2); }, { once: true }); } } catch (e) {} return false; };
   SIM.ruBotaoOuvir = (raiz, pegaTexto) => { const b = raiz.querySelector("[data-v=ouvir]"), aviso = raiz.querySelector("[data-v=semvoz]"); if (!b) return; b.addEventListener("click", () => { const ok = SIM.ruFala(pegaTexto()); if (aviso) aviso.textContent = ok ? "" : "Este navegador não tem voz russa instalada: sem áudio aqui. (O site não traz gravações; ele usa a voz do sistema.)"; }); };
   const OUVIR = `<button class="bt peq" data-v="ouvir" title="voz russa do navegador, se houver">ouvir</button>`, SEMVOZ = `<div data-v="semvoz" style="font-size:12.5px;color:var(--warn);min-height:16px"></div>`;
 
@@ -87,4 +93,19 @@
       q("[data-v=st]").innerHTML = clic === null ? "A palavra está sem o acento, como num texto comum. Clique na vogal que você acha que é a tônica. Não há regra que resolva: é memória de cada palavra, e é por isso que vale treinar." : `A tônica é a vogal em verde: ${x.ac} ${x.ipa}. Fonte: ${x.fonte}.`; };
     q("[data-v=prox]").addEventListener("click", prox); SIM.ruBotaoOuvir(el, () => x.ac);
     SIM.ruTonica._ult = { semente: (n) => { r = rng(n); fila = []; certos = feitos = 0; prox(); }, clica, prox, est }; prox(); };
+  /* nome: "Voz russa: escolha e ajuste" · matéria: Russo · tema: RG01 */
+  SIM.ruVozLab = (el, F) => { const TESTE = ["молоко́", "здра́вствуйте", "хорошо́"].filter((w) => SIM.RU.PAL[w.split(AC).join("")]);
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">voz</p><select data-v="voz" class="bt peq" style="font-size:14px;padding:5px 8px;max-width:360px"></select></div>
+      <div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">velocidade: <b data-v="velr"></b></p><input type="range" data-v="vel" min="0.5" max="1.2" step="0.05" style="width:180px"></div>
+      <div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">acento</p><div class="bts"><button class="bt peq" data-v="ac" aria-pressed="false">mandar o acento marcado para a voz</button></div></div></div>
+      <div class="ctrls"><div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">testar</p><div class="bts">${TESTE.map((w, i) => `<button class="bt peq" data-t="${i}">${w}</button>`).join("")}</div></div></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), est = () => ({ ...SIM.ruVozCfg(), vozes: SIM.ruVozes().map((v) => v.name), usada: (SIM.ruVoz() || {}).name || null });
+    const desenha = () => { const c = SIM.ruVozCfg(), vs = SIM.ruVozes(), usada = SIM.ruVoz();
+      q("[data-v=voz]").innerHTML = vs.length ? vs.map((v) => `<option value="${v.name.replace(/"/g, "&quot;")}" ${usada && v.name === usada.name ? "selected" : ""}>${v.name} (${v.lang})</option>`).join("") : `<option>nenhuma voz russa neste navegador</option>`;
+      q("[data-v=vel]").value = String(c.vel); q("[data-v=velr]").textContent = String(c.vel).replace(".", ","); q("[data-v=ac]").setAttribute("aria-pressed", String(c.acento));
+      q("[data-v=st]").innerHTML = (vs.length ? `Este navegador tem <b>${vs.length}</b> voz(es) russa(s). Se o som estiver estranho, troque de voz (as de nome "Natural", "Online" ou "Google" costumam ser melhores que a básica do sistema), reduza a velocidade e experimente ligar o acento: algumas vozes usam a marca para acertar a sílaba tônica, outras tropeçam nela. ` : "Este navegador não tem voz russa instalada. Ela se instala nas configurações de fala (texto para fala) do sistema; outra saída é abrir o site num navegador que traga voz russa própria. ") + "O site não traz gravações: o som é o da voz do seu sistema, e por isso não foi possível testá-lo daqui. A escolha fica salva neste navegador."; };
+    q("[data-v=voz]").addEventListener("change", (ev) => { SIM.ruVozCfg({ nome: ev.target.value }); desenha(); }); q("[data-v=vel]").addEventListener("input", (ev) => { SIM.ruVozCfg({ vel: +ev.target.value }); desenha(); });
+    q("[data-v=ac]").addEventListener("click", () => { SIM.ruVozCfg({ acento: !SIM.ruVozCfg().acento }); desenha(); }); el.querySelectorAll("[data-t]").forEach((b) => b.addEventListener("click", () => SIM.ruFala(TESTE[+b.dataset.t])));
+    try { if (window.speechSynthesis && window.speechSynthesis.addEventListener) window.speechSynthesis.addEventListener("voiceschanged", desenha); } catch (e) {}
+    SIM.ruVozLab._ult = { est, desenha }; desenha(); };
 })();

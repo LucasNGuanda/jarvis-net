@@ -48,7 +48,7 @@
     q("[data-v=sort]").addEventListener("click", () => { let n = k; while (n === k) n = Math.floor(r() * L.length); k = n; ver = false; desenha(); }); q("[data-v=ver]").addEventListener("click", () => { ver = !ver; desenha(); });
     SIM.ruAcusativoLab._ult = { semente: (n) => { r = rng(n); }, sorteia: () => q("[data-v=sort]").click(), poe: (w, num = 0, v = false) => { k = L.findIndex((x) => x.w === w && x.num === num); ver = v; desenha(); }, compara: (v = true) => { ver = v; desenha(); }, est }; desenha(); };
 
-  /* nome: "Escreva a palavra no caso pedido" · matéria: Russo · tema: RG04 */
+  /* nome: "Escreva a palavra no caso pedido" · matéria: Russo · tema: RG04, RG05, RG06, RG07, RG08 */
   SIM.ruEscreveCaso = (el, F, op = {}) => { const casos = op.casos || ["acc"]; let r = rng(1), fila = [], x = null, res = null, certos = 0, feitos = 0;
     el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-v="ouvir" title="voz russa do navegador, se houver">ouvir</button><button class="bt peq" data-v="prox">outra palavra</button></div><div data-v="semvoz" style="font-size:12.5px;color:var(--warn);min-height:16px"></div></div></div><div class="palco" data-v="pal" style="text-align:center;padding:16px 10px"></div>
       <div style="display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap"><input type="text" data-v="inp" lang="ru" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="escreva a forma em cirílico" style="font:600 24px Inter,system-ui,sans-serif;padding:6px 10px;min-width:280px;background:var(--card2);color:var(--ink);border:1.5px solid var(--line);border-radius:9px"><button class="bt peq" data-v="conf">conferir</button></div>

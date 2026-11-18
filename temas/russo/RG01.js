@@ -139,6 +139,7 @@ F.registrar("russo/RG01", {
       F.secao("treino", "Treino: escrever, parear e ler rápido", R`
         <p>Reconhecer uma letra é diferente de <b>produzi-la</b>. Três treinos, do mais lento ao mais rápido. No primeiro você escreve: comece em "copiar a palavra" (para achar as teclas), passe para "a partir da leitura" e termine em "a partir do sentido".</p><div id="lab-digita"></div>
         <p>No segundo você liga seis palavras russas aos sentidos. No terceiro, o relógio corre: é o treino de ler sem soletrar.</p><div id="lab-pares"></div><div id="lab-relogio"></div>
+        <p><b>Ouvir.</b> Os botões "ouvir" do site inteiro usam a voz russa do seu navegador. Aqui você escolhe qual voz, a velocidade e se o acento marcado vai junto; vale a pena gastar um minuto testando até achar a combinação que soa melhor no seu computador.</p><div id="lab-voz"></div>
         ${F.caixa("fisico", R`<p>Use os três em sequência, alguns minutos por dia, e meça: o placar da escrita e o número de acertos em 60 segundos são as suas medidas. Compare só com você mesmo, de um dia para o outro. Os botões "ouvir" usam a voz russa do seu navegador, quando ele tem uma; o site não traz gravações.</p>`, "Pense como quem treina")}`),
 
       F.secao("escritas", "Duas transliterações, itálico e cursiva", R`
@@ -158,5 +159,6 @@ F.registrar("russo/RG01", {
     e = document.getElementById("lab-digita"); e.outerHTML = F.lab("Escreva em cirílico", "lab-digita"); SIM.ruDigita(document.getElementById("lab-digita"), F);
     e = document.getElementById("lab-pares"); e.outerHTML = F.lab("Jogo de pares: palavra e sentido", "lab-pares"); SIM.ruPares(document.getElementById("lab-pares"), F);
     e = document.getElementById("lab-relogio"); e.outerHTML = F.lab("Leitura contra o relógio", "lab-relogio"); SIM.ruRelogio(document.getElementById("lab-relogio"), F);
+    e = document.getElementById("lab-voz"); e.outerHTML = F.lab("Voz russa: escolha e ajuste", "lab-voz"); SIM.ruVozLab(document.getElementById("lab-voz"), F);
   },
 });

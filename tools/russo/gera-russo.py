@@ -367,11 +367,53 @@ for ru_, pt, suj, obj, chave in FR_PT:
     FRASES.append({"ru": ru_, "pt": pt, "en": en, "suj": suj, "obj": obj, "de": f["verbete"]})
 if len(DECL) < 90 or len(VERB) < 30 or len(PRON) != 10: erros.append(f"RG04: DECL {len(DECL)}, VERB {len(VERB)}, PRON {len(PRON)}")
 
+# ---------- RG05 a RG08: frases com o caso de cada palavra marcado. [frase literal, tradução, palavra em inglês da tradução da fonte, [[forma, caso], ...], fonte] ----------
+FR2_PT = [
+ ["У бра́та не́сколько часо́в.", "Meu irmão tem vários relógios.", "watches", [["бра́та", "gen"], ["часо́в", "gen"]], "wt"],
+ ["У меня́ вре́мени в обре́з.", "Estou com o tempo contado.", "time", [["меня́", "gen"], ["вре́мени", "gen"]], "wt"],
+ ["Э́то сто́ит больши́х де́нег.", "Isso custa muito dinheiro.", "money", [["де́нег", "gen"]], "wt"],
+ ["Он у́чится у свои́х друзе́й.", "Ele aprende com os amigos.", "friends", [["Он", "nom"], ["друзе́й", "gen"]], "wt"],
+ ["Я дру́гу помога́ю де́ньгами.", "Eu ajudo um amigo com dinheiro.", "friend", [["Я", "nom"], ["дру́гу", "dat"], ["де́ньгами", "ins"]], "wt"],
+ ["Я ему́ помога́л.", "Eu o ajudava.", "helping", [["Я", "nom"], ["ему́", "dat"]], "wt"],
+ ["Он преподнёс ей кни́гу.", "Ele deu um livro de presente a ela.", "book", [["Он", "nom"], ["ей", "dat"], ["кни́гу", "acc"]], "wt"],
+ ["Ему́ два́дцать оди́н год.", "Ele tem 21 anos.", "21", [["Ему́", "dat"], ["год", "nom"]], "wt"],
+ ["Ей не спи́тся.", "Ela não consegue dormir.", "sleep", [["Ей", "dat"]], "wt"],
+ ["Он живёт этажо́м вы́ше.", "Ele mora um andar acima.", "floor", [["Он", "nom"], ["этажо́м", "ins"]], "wt"],
+ ["Свеча́ горе́ла на столе́.", "Uma vela ardia sobre a mesa.", "table", [["столе́", "prep"]], "wt"],
+ ["Он э́то при ней сказа́л.", "Ele disse isso na presença dela.", "presence", [["Он", "nom"], ["ней", "prep"]], "wt"],
+ ["Я в де́ле!", "Estou dentro!", "in", [["Я", "nom"], ["де́ле", "prep"]], "wt"],
+ ["Я ви́жу её.", "Eu a vejo.", "see", [["Я", "nom"], ["её", "acc"]], "wt"],
+ ["Я хорошо́ зна́ю матема́тику.", "Eu sei bem matemática.", "math", [["Я", "nom"], ["матема́тику", "acc"]], "wt"],
+ ["У моего брата есть обед", "Meu irmão tem um almoço.", "My brother has a lunch", [["брата", "gen"]], "wp"],
+ ["Я напился воды", "Eu bebi água.", "I drank water", [["Я", "nom"], ["воды", "gen"]], "wp"],
+ ["мне двадцать лет", "Eu tenho 20 anos.", "I am 20", [["мне", "dat"]], "wp"],
+ ["мне холодно", "Estou com frio.", "I am cold", [["мне", "dat"]], "wp"],
+ ["я работаю утром", "Eu trabalho de manhã.", "I work in the morning", [["я", "nom"], ["утром", "ins"]], "wp"],
+ ["я хочу быть врачом", "Eu quero ser médico.", "I want to be a doctor", [["я", "nom"], ["врачом", "ins"]], "wp"],
+]
+wp_txt = json.dumps(D4["casos_wikipedia"], ensure_ascii=False)
+FRASES2 = []
+for ru_, pt, chave, marcas, de in FR2_PT:
+    if de == "wt":
+        f = todas_fr.get(ru_)
+        if not f: erros.append(f"frase não está nos exemplos do Wiktionary: {ru_!r}"); continue
+        en = v(f["traducao"]); fonte = f'exemplo do verbete "{f["verbete"]}" do Wiktionary em inglês'
+        if chave not in en: erros.append(f"frase {ru_!r}: {chave!r} não está na tradução da fonte ({en!r})")
+    else:
+        if ru_ not in wp_txt or chave not in wp_txt: erros.append(f"frase ou tradução não está nos trechos da Wikipedia: {ru_!r} / {chave!r}"); continue
+        en = chave; fonte = "exemplo da Wikipedia em inglês (páginas sobre os casos)"
+    for forma, caso in marcas:
+        if forma not in ru_.replace(".", "").replace("!", "").split(" "): erros.append(f"frase {ru_!r}: {forma!r} não é palavra da frase")
+        if not tem_forma(forma, caso): erros.append(f"frase {ru_!r}: {forma!r} não é {caso} de palavra do banco")
+    FRASES2.append({"ru": ru_, "pt": pt, "en": en, "marcas": marcas, "fonte": fonte})
+for caso in ("gen", "dat", "ins", "prep"):
+    if sum(1 for f in FRASES2 if any(m[1] == caso for m in f["marcas"])) < 3: erros.append(f"menos de 3 frases com {caso}")
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
