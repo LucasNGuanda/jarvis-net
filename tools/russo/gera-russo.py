@@ -908,11 +908,71 @@ for k, en in CASOS:
 if any(not f for k in csk for f in csk[k]): erros.append(f"RG18 который: célula vazia {csk}")
 KOT["который"] = {"ac": v(ek["forma_acentuada"]), "pt": "que, o qual", "casos": csk}
 
+# ---------- Leitura (RL04, RL05): vocabulário de matemática e de física (tools/russo/dadosRL.json: verbetes do Wiktionary em inglês) ----------
+DL = json.load(open(os.path.join(R, "dadosRL.json"), encoding="utf-8"))
+ROT_DOM = re.compile(r"\((?:[^)]*\b)?(mathematics|arithmetic|geometry|number theory|set theory|physics|engineering)\b[^)]*\)")
+def defs_rl(e):
+    o = [str(v(e.get("glosa")) or "")]
+    for x in e.get("definicoes") or []:
+        s = v(x.get("texto")) if isinstance(x, dict) else None
+        if s: o.append(str(s))
+    return list(dict.fromkeys(o))
+def le_vocab(sec, lista, nome):
+    out = []
+    for w, cl, chave, pt, grp in lista:
+        e0 = DL[sec].get(w) or {}
+        if "ver" in e0: e0 = DL[str(e0["ver"]).split("/")[0]].get(w) or {}
+        e = next((x for x in e0.get("entradas") or [] if str(v(x.get("classe"))) == cl and any(chave in d_ for d_ in defs_rl(x))), None)
+        if not e: erros.append(f"{nome} {w}: sem entrada {cl} com {chave!r}"); continue
+        d_ = next(x for x in defs_rl(e) if chave in x); ac = v(e["forma_acentuada"])
+        if sem_ac(ac) != w: erros.append(f"{nome} {w}: forma acentuada {ac!r}")
+        out.append({"w": w, "ac": ac, "pt": pt, "grp": grp, "cl": {"Noun": "s", "Adjective": "a", "Verb": "v", "Adverb": "adv", "Predicative": "pred"}.get(cl, cl), "g": (str(v(e.get("genero")) or "").split(" ")[0] or None) if cl == "Noun" else None,
+                    "gen": v(e.get("genitivo")) if cl == "Noun" else None, "pl": v(e.get("nominativo_plural")) if cl == "Noun" else None, "rot": bool(ROT_DOM.search(d_)), "en": d_[:110]})
+    return out
+VM_PT = [["число", "Noun", "number", "número", "aritmética"], ["цифра", "Noun", "digit", "algarismo", "aritmética"], ["сумма", "Noun", "sum", "soma", "aritmética"], ["разность", "Noun", "result of substraction", "diferença (resultado da subtração)", "aritmética"],
+         ["произведение", "Noun", "product", "produto", "aritmética"], ["частное", "Noun", "quotient", "quociente", "aritmética"], ["дробь", "Noun", "fraction", "fração", "aritmética"], ["числитель", "Noun", "numerator", "numerador", "aritmética"],
+         ["знаменатель", "Noun", "denominator", "denominador", "aritmética"], ["плюс", "Noun", "plus", "mais (sinal)", "aritmética"], ["минус", "Noun", "minus", "menos (sinal)", "aritmética"], ["умножить", "Verb", "to multiply", "multiplicar", "aritmética"], ["делить", "Verb", "to divide", "dividir", "aritmética"],
+         ["уравнение", "Noun", "equation", "equação", "álgebra"], ["неравенство", "Noun", "inequality", "desigualdade, inequação", "álgebra"], ["корень", "Noun", "root, radical", "raiz", "álgebra"], ["степень", "Noun", "power", "potência", "álgebra"],
+         ["квадрат", "Noun", "square", "quadrado", "álgebra"], ["куб", "Noun", "third power", "cubo", "álgebra"], ["функция", "Noun", "function", "função", "álgebra"], ["график", "Noun", "graph", "gráfico", "álgebra"],
+         ["переменная", "Noun", "variable", "variável", "álgebra"], ["постоянная", "Noun", "constant", "constante", "álgebra"], ["множество", "Noun", "set", "conjunto", "álgebra"], ["элемент", "Noun", "element", "elemento", "álgebra"],
+         ["равенство", "Noun", "equality", "igualdade", "álgebra"], ["выражение", "Noun", "expression", "expressão", "álgebra"], ["значение", "Noun", "value", "valor", "álgebra"], ["формула", "Noun", "formula", "fórmula", "álgebra"],
+         ["точка", "Noun", "point", "ponto", "geometria"], ["прямая", "Noun", "straight line", "reta", "geometria"], ["отрезок", "Noun", "segment", "segmento", "geometria"], ["луч", "Noun", "ray", "raio (semirreta; de luz)", "geometria"],
+         ["угол", "Noun", "angle", "ângulo", "geometria"], ["треугольник", "Noun", "triangle", "triângulo", "geometria"], ["прямоугольник", "Noun", "rectangle", "retângulo", "geometria"], ["окружность", "Noun", "circumference", "circunferência", "geometria"],
+         ["круг", "Noun", "circle", "círculo", "geometria"], ["радиус", "Noun", "radius", "raio (do círculo)", "geometria"], ["диаметр", "Noun", "diameter", "diâmetro", "geometria"], ["площадь", "Noun", "area", "área", "geometria"],
+         ["объём", "Noun", "volume", "volume", "geometria"], ["длина", "Noun", "length", "comprimento", "geometria"], ["ширина", "Noun", "width", "largura", "geometria"], ["высота", "Noun", "height", "altura", "geometria"],
+         ["сторона", "Noun", "side", "lado", "geometria"], ["вершина", "Noun", "vertex", "vértice", "geometria"], ["плоскость", "Noun", "plane", "plano", "geometria"], ["вектор", "Noun", "vector", "vetor", "geometria"],
+         ["координата", "Noun", "coordinate", "coordenada", "geometria"], ["ось", "Noun", "axis", "eixo", "geometria"],
+         ["производная", "Noun", "derivative", "derivada", "análise"], ["интеграл", "Noun", "integral", "integral", "análise"], ["предел", "Noun", "limit", "limite", "análise"], ["последовательность", "Noun", "sequence", "sequência", "análise"],
+         ["ряд", "Noun", "series", "série", "análise"], ["вероятность", "Noun", "probability", "probabilidade", "análise"],
+         ["задача", "Noun", "problem", "problema", "enunciado"], ["условие", "Noun", "condition", "condição (do problema)", "enunciado"], ["решение", "Noun", "solution", "solução, resolução", "enunciado"], ["ответ", "Noun", "answer", "resposta", "enunciado"],
+         ["пример", "Noun", "example", "exemplo", "enunciado"], ["доказательство", "Noun", "proof", "demonstração, prova", "enunciado"], ["теорема", "Noun", "theorem", "teorema", "enunciado"],
+         ["чётный", "Adjective", "even", "par", "adjetivos"], ["нечётный", "Adjective", "odd", "ímpar", "adjetivos"], ["простой", "Adjective", "prime", "primo; simples", "adjetivos"], ["целый", "Adjective", "integer", "inteiro", "adjetivos"],
+         ["натуральный", "Adjective", "natural", "natural", "adjetivos"], ["положительный", "Adjective", "positive", "positivo", "adjetivos"], ["отрицательный", "Adjective", "negative", "negativo", "adjetivos"],
+         ["параллельный", "Adjective", "parallel", "paralelo", "adjetivos"], ["перпендикулярный", "Adjective", "perpendicular", "perpendicular", "adjetivos"], ["равный", "Adjective", "equal", "igual", "adjetivos"]]
+VF_PT = [["тело", "Noun", "body", "corpo", "mecânica"], ["масса", "Noun", "mass", "massa", "mecânica"], ["сила", "Noun", "force", "força", "mecânica"], ["скорость", "Noun", "velocity", "velocidade", "mecânica"],
+         ["ускорение", "Noun", "acceleration", "aceleração", "mecânica"], ["время", "Noun", "time", "tempo", "mecânica"], ["путь", "Noun", "path", "caminho, trajeto percorrido", "mecânica"], ["расстояние", "Noun", "distance", "distância", "mecânica"],
+         ["движение", "Noun", "motion", "movimento", "mecânica"], ["энергия", "Noun", "energy", "energia", "mecânica"], ["работа", "Noun", "work", "trabalho", "mecânica"], ["мощность", "Noun", "power", "potência", "mecânica"],
+         ["импульс", "Noun", "momentum", "quantidade de movimento; impulso", "mecânica"], ["вес", "Noun", "weight", "peso", "mecânica"], ["трение", "Noun", "friction", "atrito", "mecânica"], ["тяжесть", "Noun", "gravity", "gravidade, peso", "mecânica"],
+         ["давление", "Noun", "pressure", "pressão", "calor e matéria"], ["плотность", "Noun", "density", "densidade", "calor e matéria"], ["температура", "Noun", "temperature", "temperatura", "calor e matéria"], ["теплота", "Noun", "heat", "calor", "calor e matéria"],
+         ["газ", "Noun", "gas", "gás", "calor e matéria"], ["жидкость", "Noun", "liquid", "líquido", "calor e matéria"], ["пар", "Noun", "steam", "vapor", "calor e matéria"], ["вода", "Noun", "water", "água", "calor e matéria"], ["лёд", "Noun", "ice", "gelo", "calor e matéria"],
+         ["поле", "Noun", "field", "campo", "eletricidade"], ["заряд", "Noun", "charge", "carga", "eletricidade"], ["ток", "Noun", "current", "corrente", "eletricidade"], ["напряжение", "Noun", "voltage", "tensão (voltagem)", "eletricidade"],
+         ["сопротивление", "Noun", "resistance", "resistência", "eletricidade"], ["проводник", "Noun", "conductor", "condutor", "eletricidade"], ["цепь", "Noun", "circuit", "circuito", "eletricidade"], ["магнит", "Noun", "magnet", "ímã", "eletricidade"],
+         ["волна", "Noun", "wave", "onda", "ondas e átomos"], ["частота", "Noun", "frequency", "frequência", "ondas e átomos"], ["период", "Noun", "period", "período", "ondas e átomos"], ["свет", "Noun", "light", "luz", "ondas e átomos"],
+         ["линза", "Noun", "lens", "lente", "ondas e átomos"], ["зеркало", "Noun", "mirror", "espelho", "ondas e átomos"], ["звук", "Noun", "sound", "som", "ondas e átomos"], ["атом", "Noun", "atom", "átomo", "ondas e átomos"],
+         ["ядро", "Noun", "nucleus", "núcleo", "ondas e átomos"], ["электрон", "Noun", "electron", "elétron", "ondas e átomos"], ["частица", "Noun", "particle", "partícula", "ondas e átomos"],
+         ["закон", "Noun", "law", "lei", "problema"], ["опыт", "Noun", "experiment", "experimento, experiência", "problema"], ["измерение", "Noun", "measurement", "medição, medida", "problema"], ["единица", "Noun", "unit", "unidade", "problema"],
+         ["величина", "Noun", "quantity", "grandeza", "problema"], ["система", "Noun", "system", "sistema", "problema"], ["нить", "Noun", "thread", "fio", "problema"], ["пружина", "Noun", "spring", "mola", "problema"],
+         ["шар", "Noun", "ball", "bola, esfera", "problema"], ["груз", "Noun", "weight, load", "carga, peso (o corpo pendurado)", "problema"], ["брусок", "Noun", "bar", "bloco, barra", "problema"],
+         ["наклонный", "Adjective", "inclined", "inclinado", "adjetivos"], ["горизонтальный", "Adjective", "horizontal", "horizontal", "adjetivos"], ["вертикальный", "Adjective", "vertical", "vertical", "adjetivos"],
+         ["постоянный", "Adjective", "constant", "constante", "adjetivos"], ["равномерный", "Adjective", "uniform", "uniforme", "adjetivos"], ["начальный", "Adjective", "initial", "inicial", "adjetivos"],
+         ["конечный", "Adjective", "final", "final", "adjetivos"], ["полный", "Adjective", "full, complete", "total, completo", "adjetivos"], ["средний", "Adjective", "average", "médio", "adjetivos"]]
+VOCM = le_vocab("vocabulario_matematica", VM_PT, "RL04"); VOCF = le_vocab("vocabulario_fisica", VF_PT, "RL05")
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM, "FRI": FRI, "COND_WP": COND_WP, "CONJ": CONJ, "FRC": FRC, "KOT": KOT}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM, "FRI": FRI, "COND_WP": COND_WP, "CONJ": CONJ, "FRC": FRC, "KOT": KOT, "VOCM": VOCM, "VOCF": VOCF}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -928,6 +988,7 @@ print("RG15:", len(PREP), "usos de", len({x["p"] for x in PREP}), "preposições
 print("RG16:", len(NUM), "cardinais;", len(ORD), "ordinais;", len(TEMPO), "palavras de tempo;", len(QUANDO), "expressões de dia e mês;", len(EX_NUM), "exemplos de numeral + substantivo")
 print("RG17:", len(FRI), "frases de modo;", len(COND_WP), "formas do condicional na tabela da Wikipedia:", COND_WP)
 print("RG18:", len(CONJ), "conjunções;", len(FRC), "frases;", "который:", KOT.get("который", {}).get("casos", {}).get("nom"))
+print("RL04:", len(VOCM), "termos de matemática,", sum(1 for x in VOCM if x["rot"]), "com rótulo de domínio; RL05:", len(VOCF), "de física,", sum(1 for x in VOCF if x["rot"]), "com rótulo")
 print("RG09:", len(ADJ), "adjetivos;", len(PARES_AS), "pares adjetivo + substantivo")
 print("RG10:", len(POSS), "possessivos e demonstrativos;", len(PARES_PS), "pares;", len(FRP), "frases")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})
