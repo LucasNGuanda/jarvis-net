@@ -968,11 +968,49 @@ VF_PT = [["тело", "Noun", "body", "corpo", "mecânica"], ["масса", "Nou
          ["конечный", "Adjective", "final", "final", "adjetivos"], ["полный", "Adjective", "full, complete", "total, completo", "adjetivos"], ["средний", "Adjective", "average", "médio", "adjetivos"]]
 VOCM = le_vocab("vocabulario_matematica", VM_PT, "RL04"); VOCF = le_vocab("vocabulario_fisica", VF_PT, "RL05")
 
+# ---------- Leitura RL08: falsos amigos (inglês × russo: Appendix:Glossary of false friends, Wiktionary) e palavras de dois sentidos (verbetes) ----------
+FA6 = DL["falsos_amigos"]; GLO = {sem_ac(str(v(x.get("palavra_russa")) or "")).lower(): x for x in FA6["wiktionary_Glossary_of_false_friends"] if v(x.get("palavra_russa"))}
+# [palavra, palavra inglesa com que se confunde, palavra do "sentido real" do glossário, palavra da definição do verbete, o que parece (tradução da inglesa), sentido real]
+FA_PT = [["актуальный", "actual", "current", "current", "real, de fato (inglês actual)", "atual, relevante"], ["адепт", "adept", "follower", "follower", "hábil, perito (inglês adept)", "adepto, seguidor"],
+         ["брат", "brat", "brother", "brother", "pirralho (inglês brat)", "irmão"], ["характер", "character", "temperament", "temper", "personagem; caractere (inglês character)", "temperamento, gênio"],
+         ["шеф", "chef", "boss", "boss", "chefe de cozinha (inglês chef)", "chefe, patrão"], ["фамилия", "family", "surname", "surname", "família (inglês family)", "sobrenome"],
+         ["кабинет", "cabinet", "office", "office", "armário; conselho de ministros (inglês cabinet)", "escritório, gabinete"], ["лист", "list", "leaf", "leaf", "lista (inglês list)", "folha"],
+         ["магазин", "magazine", "store", "shop", "revista (inglês magazine)", "loja"], ["проспект", "prospect", "avenue", "avenue", "perspectiva (inglês prospect)", "avenida"],
+         ["схема", "scheme", "diagram", "layout", "trama, plano ardiloso (inglês scheme)", "diagrama, esquema"]]
+def ent_fa(w, chave):
+    return next((x for x in FA6["verbetes"].get(w, {}).get("entradas") or [] if any(chave in d_ for d_ in defs_rl(x))), None)
+ARMA = []
+for w, ing, k_glo, k_vb, parece, real in FA_PT:
+    g_ = GLO.get(w); e = ent_fa(w, k_vb)
+    if not g_ or not e: erros.append(f"RL08 {w}: fora do glossário ou do verbete"); continue
+    if v(g_.get("palavra_inglesa_com_que_se_confunde")).split(" ")[0] != ing or k_glo not in str(v(g_.get("sentido_real"))): erros.append(f"RL08 {w}: glossário diz {v(g_.get('palavra_inglesa_com_que_se_confunde'))!r} / {v(g_.get('sentido_real'))!r}")
+    ARMA.append({"w": w, "ac": v(e["forma_acentuada"]), "pt": real, "grp": "falsos amigos", "tipo": "falso", "ing": ing, "parece": parece, "cl": "s" if v(e.get("classe")) == "Noun" else "a", "g": (str(v(e.get("genero")) or "").split(" ")[0] or None) if v(e.get("classe")) == "Noun" else None,
+                 "en": str(v(g_.get("sentido_real")))[:80], "en2": defs_rl(e)[0][:80]})
+# divergência entre as duas fontes (não entra na lista de treino): кедр
+gk = GLO.get("кедр"); ek = (FA6["verbetes"].get("кедр", {}).get("entradas") or [None])[0]
+DIVERG = {"w": "кедр", "ac": v(ek["forma_acentuada"]), "ing": "cedar", "glossario": str(v(gk.get("sentido_real"))), "verbete": defs_rl(ek)[0]} if gk and ek else None
+if not DIVERG or "Siberian" not in DIVERG["glossario"] or "cedar" not in DIVERG["verbete"]: erros.append("RL08: a divergência de кедр não está como esperado")
+# palavras de dois sentidos: [palavra, seção, palavra do sentido comum, sentido comum, palavra do sentido técnico, sentido técnico]
+DS_PT = [["произведение", "vocabulario_matematica", "work of art", "obra (de arte, de literatura)", "product", "produto (da multiplicação)"], ["корень", "vocabulario_matematica", "botany", "raiz (de planta)", "root, radical", "raiz (de um número)"],
+         ["степень", "vocabulario_matematica", "degree, extent", "grau", "power", "potência"], ["простой", "vocabulario_matematica", "simple", "simples", "prime", "primo (número)"],
+         ["целый", "vocabulario_matematica", "whole", "inteiro, todo", "integer", "inteiro (número)"], ["точка", "vocabulario_matematica", "full stop", "ponto final", "point", "ponto (geometria)"],
+         ["площадь", "vocabulario_matematica", "open area in a town", "praça", "area", "área"], ["угол", "vocabulario_matematica", "corner", "canto, esquina", "angle", "ângulo"],
+         ["множество", "vocabulario_matematica", "multitude", "multidão, grande quantidade", "set", "conjunto"], ["импульс", "vocabulario_fisica", "urge", "ímpeto, vontade súbita", "momentum", "quantidade de movimento"],
+         ["напряжение", "vocabulario_fisica", "effort", "esforço", "voltage", "tensão (voltagem)"], ["свет", "vocabulario_fisica", "world", "mundo", "light", "luz"],
+         ["единица", "vocabulario_fisica", "unit", "unidade (de medida)", "one, unity", "o número um"], ["мощность", "vocabulario_fisica", "power", "potência (mecânica)", "cardinality", "cardinalidade (de um conjunto)"],
+         ["работа", "vocabulario_fisica", "job", "emprego, serviço", "work", "trabalho (grandeza)"], ["тело", "vocabulario_fisica", "human or animal", "corpo (de pessoa ou animal)", "(physics) body", "corpo (objeto do problema)"]]
+for w, sec, kA, ptA, kB, ptB in DS_PT:
+    es = DL[sec].get(w, {}).get("entradas") or []; ds = [d_ for x in es for d_ in defs_rl(x)]
+    dA = next((d_ for d_ in ds if kA in d_), None); dB = next((d_ for d_ in ds if kB in d_), None)
+    if not dA or not dB: erros.append(f"RL08 {w}: sentido {kA!r} ou {kB!r} não achado em {ds[:4]}"); continue
+    e = es[0]
+    ARMA.append({"w": w, "ac": v(e["forma_acentuada"]), "pt": ptB, "grp": "dois sentidos", "tipo": "dois", "comum": ptA, "cl": "s" if v(e.get("classe")) == "Noun" else "a", "g": (str(v(e.get("genero")) or "").split(" ")[0] or None) if v(e.get("classe")) == "Noun" else None, "en": dB[:80], "en2": dA[:80]})
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM, "FRI": FRI, "COND_WP": COND_WP, "CONJ": CONJ, "FRC": FRC, "KOT": KOT, "VOCM": VOCM, "VOCF": VOCF}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM, "FRI": FRI, "COND_WP": COND_WP, "CONJ": CONJ, "FRC": FRC, "KOT": KOT, "VOCM": VOCM, "VOCF": VOCF, "ARMA": ARMA, "DIVERG": DIVERG}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -989,6 +1027,7 @@ print("RG16:", len(NUM), "cardinais;", len(ORD), "ordinais;", len(TEMPO), "palav
 print("RG17:", len(FRI), "frases de modo;", len(COND_WP), "formas do condicional na tabela da Wikipedia:", COND_WP)
 print("RG18:", len(CONJ), "conjunções;", len(FRC), "frases;", "который:", KOT.get("который", {}).get("casos", {}).get("nom"))
 print("RL04:", len(VOCM), "termos de matemática,", sum(1 for x in VOCM if x["rot"]), "com rótulo de domínio; RL05:", len(VOCF), "de física,", sum(1 for x in VOCF if x["rot"]), "com rótulo")
+print("RL08:", sum(1 for x in ARMA if x["tipo"] == "falso"), "falsos amigos;", sum(1 for x in ARMA if x["tipo"] == "dois"), "palavras de dois sentidos; divergência:", DIVERG)
 print("RG09:", len(ADJ), "adjetivos;", len(PARES_AS), "pares adjetivo + substantivo")
 print("RG10:", len(POSS), "possessivos e demonstrativos;", len(PARES_PS), "pares;", len(FRP), "frases")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})

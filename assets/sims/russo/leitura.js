@@ -16,7 +16,7 @@
   /* mapa mental de um grupo: cada ramo é uma tradução, a folha é a palavra russa (para esconder e lembrar) */
   SIM.ruVocMapa = (L, grp, pag = 0) => { const G = L.filter((x) => x.grp === grp), P = G.slice(pag * 8, pag * 8 + 8); return { centro: grp, sub: `${G.length} palavras`, ramos: P.map((x) => ({ nome: x.pt.split(/[,;(]/)[0].trim().slice(0, 18), sub: x.cl === "s" ? GEN[x.g] || "" : x.cl === "a" ? "adjetivo" : x.cl === "v" ? "verbo" : "", folhas: [{ rot: "", forma: sem(x.ac).length > 17 ? x.w : x.ac }] })), paginas: Math.ceil(G.length / 8) }; };
 
-  /* nome: "Cartões: palavra, sentido, gênero" · matéria: Russo · tema: RL04, RL05 */
+  /* nome: "Cartões: palavra, sentido, gênero" · matéria: Russo · tema: RL04, RL05, RL08 */
   SIM.ruVocCartoes = (el, F, op = {}) => { const L = op.lista; let r = rng(1), fila = [], x = null, ver = false, sabia = 0, vistos = 0, grp = "";
     el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${botoesGrupo(L)}<button class="bt peq" data-v="ver">mostrar</button><button class="bt peq" data-v="sim">eu sabia</button><button class="bt peq" data-v="nao">não sabia</button><button class="bt peq" data-v="ouvir" title="voz russa do navegador, se houver">ouvir</button></div><div data-v="semvoz" style="font-size:12.5px;color:var(--warn);min-height:16px"></div></div></div><div class="palco" data-v="pal" style="text-align:center;padding:18px 10px"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
     const q = (s) => el.querySelector(s), base = () => L.filter((y) => !grp || y.grp === grp);
@@ -24,12 +24,12 @@
     const mostra = () => { ver = true; desenha(); }, marca = (s) => { if (!ver) return; vistos++; if (s) sabia++; prox(); };
     const est = () => ({ ...x, ver, sabia, vistos, grupo: grp });
     const desenha = () => { q("[data-v=pal]").innerHTML = `<div style="${GRANDE}">${x.ac}</div><div style="font:600 22px/1.3 Inter,system-ui,sans-serif;margin-top:10px;color:${ver ? "var(--ink)" : "var(--ink3)"}">${ver ? x.pt : "?"}</div>`;
-      q("[data-v=lt]").innerHTML = vis("classe", ver ? (x.cl === "s" ? "substantivo " + (GEN[x.g] || "") : x.cl === "a" ? "adjetivo" : x.cl === "v" ? "verbo" : x.cl) : "?") + (x.cl === "s" ? vis("genitivo · plural", ver ? `${x.gen || "sem dado"} · ${x.pl || "sem dado"}` : "?") : "") + vis("nesta sessão", `sabia ${sabia} de ${vistos}`);
-      q("[data-v=st]").innerHTML = ver ? `Grupo: ${x.grp}. Definição do dicionário usada: "${x.en}". ${x.rot ? "O dicionário marca esse sentido com rótulo de domínio." : "O dicionário dá esse sentido sem rótulo de matemática ou de física: é o sentido geral da palavra, que serve também no enunciado."} Fonte: Wiktionary em inglês.` : "Diga o sentido em voz alta, clique em \"mostrar\" e depois marque se sabia. O placar vale só para esta sessão; para decorar a longo prazo, use o Anki."; };
+      q("[data-v=lt]").innerHTML = vis("classe", ver ? (x.cl === "s" ? "substantivo " + (GEN[x.g] || "") : x.cl === "a" ? "adjetivo" : x.cl === "v" ? "verbo" : x.cl) : "?") + (x.cl === "s" && "gen" in x ? vis("genitivo · plural", ver ? `${x.gen || "sem dado"} · ${x.pl || "sem dado"}` : "?") : "") + vis("nesta sessão", `sabia ${sabia} de ${vistos}`);
+      q("[data-v=st]").innerHTML = ver && op.nota ? op.nota(x) : ver ? `Grupo: ${x.grp}. Definição do dicionário usada: "${x.en}". ${x.rot ? "O dicionário marca esse sentido com rótulo de domínio." : "O dicionário dá esse sentido sem rótulo de matemática ou de física: é o sentido geral da palavra, que serve também no enunciado."} Fonte: Wiktionary em inglês.` : "Diga o sentido em voz alta, clique em \"mostrar\" e depois marque se sabia. O placar vale só para esta sessão; para decorar a longo prazo, use o Anki."; };
     q("[data-v=grp]").addEventListener("change", (ev) => { grp = ev.target.value; fila = []; prox(); }); q("[data-v=ver]").addEventListener("click", mostra); q("[data-v=sim]").addEventListener("click", () => marca(true)); q("[data-v=nao]").addEventListener("click", () => marca(false)); if (SIM.ruBotaoOuvir) SIM.ruBotaoOuvir(el, () => x.ac);
     SIM.ruVocCartoes._ult = { semente: (n) => { r = rng(n); fila = []; sabia = vistos = 0; prox(); }, mostra, marca, prox, est, grupo: (g) => { grp = g; fila = []; prox(); } }; prox(); };
 
-  /* nome: "Jogo de pares: termo e tradução" · matéria: Russo · tema: RL04, RL05 */
+  /* nome: "Jogo de pares: termo e tradução" · matéria: Russo · tema: RL04, RL05, RL08 */
   SIM.ruVocPares = (el, F, op = {}) => { const L = op.lista, N = 6; let r = rng(1), esq = [], dir = [], selE = null, selD = null, feitos = new Set(), tent = 0, erro = null, grp = "";
     el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${botoesGrupo(L)}<button class="bt peq" data-v="novo">novas palavras</button></div></div></div><div data-v="mesa" style="display:grid;grid-template-columns:1fr 1fr;gap:8px 28px;max-width:680px;margin:10px auto"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
     const q = (s) => el.querySelector(s), W = (w) => L.find((x) => x.w === w);
@@ -45,7 +45,7 @@
     q("[data-v=grp]").addEventListener("change", (ev) => { grp = ev.target.value; novo(); }); q("[data-v=novo]").addEventListener("click", novo);
     SIM.ruVocPares._ult = { semente: (n) => { r = rng(n); novo(); }, clica, est }; novo(); };
 
-  /* nome: "Escreva o termo em russo" · matéria: Russo · tema: RL04, RL05 */
+  /* nome: "Escreva o termo em russo" · matéria: Russo · tema: RL04, RL05, RL08 */
   SIM.ruVocEscreve = (el, F, op = {}) => { const L = op.lista; let r = rng(1), fila = [], x = null, res = null, certos = 0, feitos = 0, grp = "", dica = 0;
     el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${botoesGrupo(L)}<button class="bt peq" data-v="dica">dica: mais uma letra</button><button class="bt peq" data-v="prox">outra</button><button class="bt peq" data-v="ouvir" title="voz russa do navegador, se houver">ouvir (depois de conferir)</button></div><div data-v="semvoz" style="font-size:12.5px;color:var(--warn);min-height:16px"></div></div></div><div class="palco" data-v="pal" style="text-align:center;padding:16px 10px"></div>
       <div style="display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap"><input type="text" data-v="inp" lang="ru" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="escreva o termo em cirílico" style="font:600 24px Inter,system-ui,sans-serif;padding:6px 10px;min-width:320px;background:var(--card2);color:var(--ink);border:1.5px solid var(--line);border-radius:9px"><button class="bt peq" data-v="conf">conferir</button></div>
@@ -62,7 +62,7 @@
     F.ligaTecladoRu(el, inp); if (SIM.ruBotaoOuvir) SIM.ruBotaoOuvir(el, () => (res === null ? "" : x.ac));
     SIM.ruVocEscreve._ult = { semente: (n) => { r = rng(n); fila = []; certos = feitos = 0; prox(); }, digita: (s) => { inp.value = s; }, confere, prox, est }; prox(); };
 
-  /* nome: "Mapa mental do vocabulário, grupo por grupo" · matéria: Russo · tema: RL04, RL05 */
+  /* nome: "Mapa mental do vocabulário, grupo por grupo" · matéria: Russo · tema: RL04, RL05, RL08 */
   SIM.ruVocMapaLab = (el, F, op = {}) => { const L = op.lista, G = grupos(L); let g = G[0], pag = 0, ver = true, visto = [];
     el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><select data-v="g" class="bt peq" style="font-size:15px;padding:5px 8px">${G.map((x) => `<option value="${x}">${x}</option>`).join("")}</select><button class="bt peq" data-v="pag">próximas palavras</button><button class="bt peq" data-v="esc">esconder e lembrar</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0;overflow-x:auto"></div><div class="status" data-v="st"></div>`);
     const q = (s) => el.querySelector(s), mapa = () => SIM.ruVocMapa(L, g, pag), nf = () => mapa().ramos.length;
@@ -73,6 +73,20 @@
       q("[data-v=st]").innerHTML = `Grupo "${g}", parte ${pag + 1} de ${m.paginas}. ${ver ? "Cada ramo é o sentido; a folha é a palavra russa." : "Diga a palavra russa de cada sentido e clique no ponto de interrogação para conferir."} A divisão em grupos é do site; palavras e sentidos: Wiktionary em inglês.`; };
     q("[data-v=g]").addEventListener("change", (ev) => poe(ev.target.value, 0)); q("[data-v=pag]").addEventListener("click", () => poe(g, (pag + 1) % mapa().paginas)); q("[data-v=esc]").addEventListener("click", esconde);
     SIM.ruVocMapaLab._ult = { poe, esconde, revela, est }; poe(g, 0); };
+
+  /* nome: "Parece, mas não é: escolha o sentido certo" · matéria: Russo · tema: RL08 */
+  SIM.ruFalsoQuiz = (el, F) => { let r = rng(1), fila = [], x = null, clic = null, certos = 0, feitos = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts" data-v="ops"></div><div class="bts"><button class="bt peq" data-v="prox">outra palavra</button></div></div></div><div class="palco" data-v="pal" style="text-align:center;padding:18px 10px"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), L = () => SIM.RU.ARMA;
+    const prox = () => { if (!fila.length) fila = emb(L(), r); const f = fila.pop(), errado = f.tipo === "falso" ? f.parece.split(" (")[0] : f.comum, outras = emb([...new Set(L().filter((y) => y.w !== f.w).map((y) => y.pt))], r).slice(0, 2); x = { ...f, errado, ops: emb([f.pt, errado].concat(outras), r) }; clic = null; desenha(); };
+    const clica = (o) => { if (clic !== null) return; clic = o; feitos++; if (o === x.pt) certos++; desenha(); };
+    const est = () => ({ ...x, clic, certos, feitos });
+    const desenha = () => { q("[data-v=ops]").innerHTML = x.ops.map((o, i) => `<button class="bt peq" data-o="${i}" style="font-size:15px;border-color:${clic === null ? "" : o === x.pt ? "var(--ok)" : o === clic ? "var(--bad, #e06666)" : ""}">${o}</button>`).join(""); q("[data-v=ops]").querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => clica(x.ops[+b.dataset.o])));
+      q("[data-v=pal]").innerHTML = `<div style="${GRANDE}">${x.ac}</div><div style="font-size:14px;color:var(--ink2);margin-top:8px">${x.tipo === "falso" ? `lembra o inglês <b>${x.ing}</b>. O que quer dizer em russo?` : "num enunciado de matemática ou de física, o que quer dizer?"}</div>`;
+      q("[data-v=lt]").innerHTML = vis("resultado", clic === null ? "?" : clic === x.pt ? "certo" : "ainda não") + vis("tipo", clic === null ? "?" : x.grp) + vis("placar", `${certos} de ${feitos}`);
+      q("[data-v=st]").innerHTML = clic === null ? "Uma das alternativas é a armadilha: o sentido que a palavra parece ter." : x.tipo === "falso" ? `<b>${x.ac}</b> = ${x.pt}. Não é "${x.errado}", que é o sentido do inglês ${x.ing}. Fonte: glossário de falsos amigos do Wiktionary em inglês ("${x.en}") e o verbete da palavra ("${x.en2}").` : `<b>${x.ac}</b>: no texto técnico, ${x.pt}; fora dele, também "${x.comum}". Os dois sentidos estão no verbete do Wiktionary em inglês ("${x.en2}"; "${x.en}").`; };
+    q("[data-v=prox]").addEventListener("click", prox);
+    SIM.ruFalsoQuiz._ult = { semente: (n) => { r = rng(n); fila = []; certos = feitos = 0; prox(); }, clica, prox, est }; prox(); };
 
   /* página inteira de um tema de vocabulário (RL04 e RL05 usam a mesma, com listas diferentes) */
   SIM.ruPaginaVocab = (F, D, cfg) => { const R = String.raw, L = cfg.lista, S = L.filter((x) => x.cl === "s" && x.g), A = L.filter((x) => x.cl === "a"), P = SIM.ruPlacarVoc(L), G = grupos(L), cap = (s) => s[0].toUpperCase() + s.slice(1);

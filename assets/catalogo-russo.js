@@ -34,6 +34,6 @@ window.CATALOGO.push(
     ["RL05","Vocabulário de física em russo",["RL04"],true],
     ["RL06","Como ler um enunciado de olimpíada",[]],
     ["RL07","Enunciados da Fiztech comentados",[]],
-    ["RL08","Falsos amigos e armadilhas de tradução",[]],
+    ["RL08","Falsos amigos e armadilhas de tradução",["RL04","RL05"],true],
   ] },
 );
