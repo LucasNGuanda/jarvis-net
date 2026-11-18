@@ -1,4 +1,4 @@
-# Jarvis β 8.3
+# Jarvis β 8.8
 
 Sistema de estudo do Lucas. Abre na tela inicial (#/home), com uma matéria por botão. Hoje a Física está pronta (da mecânica clássica até Navier–Stokes, com simulações interativas, mais Cálculo e Experimentos); Química, Matemática e Russo aparecem como "em breve".
 

@@ -9,11 +9,11 @@ window.AREAS.push(
 window.CATALOGO.push(
   /* aba Matemática */
   { id:"MB", area:"mat", letra:"MB", cor:"--mF", nome:"Matemática Básica", desc:"Frações, potências, equações e funções: a base de tudo.", temas:[
-    ["MB01","Frações e Equações",[]],
-    ["MB02","Fatoração e Manipulações Algébricas",[]],
-    ["MB03","Potenciação e Radiciação",[]],
-    ["MB04","Razão e Proporção",[]],
-    ["MB05","Equações e Problemas",[]],
+    ["MB01","Frações e Equações",[],true],
+    ["MB02","Fatoração e Manipulações Algébricas",["MB01"],true],
+    ["MB03","Potenciação e Radiciação",["MB02"],true],
+    ["MB04","Razão e Proporção",["MB01"],true],
+    ["MB05","Equações e Problemas",["MB01","MB02"],true],
   ] },
   { id:"AR", area:"mat", letra:"AR", cor:"--mO", nome:"Aritmética", desc:"Divisibilidade, MDC, MMC, primos e congruências.", temas:[
     ["TN01","Divisibilidade, MDC e MMC",[]],
