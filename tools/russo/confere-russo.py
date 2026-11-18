@@ -30,6 +30,7 @@ for a in arqs:
         if len(S) == len(w) and (S <= V or not (S & (V - {"й"}))): isentas += 1; continue  # conjunto de letras (só vogais e sinais, ou só consoantes, sem repetição): não é palavra
         if len(w) == 2 and w[0].lower() in "гкхжчшщц" and w[1] in "ыиуюая": isentas += 1; continue
         if w in ("го", "му") and a.endswith("adjetivos.js"): isentas += 1; continue  # pedaços de terminação (-ого, -ому) montados pelo código da regra dos adjetivos  # combinação consoante + vogal das regras de ortografia
+        if w in ("надцать", "дцать", "десят", "сот") and a.endswith(("numeros.js", "RG16.js")): isentas += 1; continue  # pedaços com que a regra de formação dos numerais (medida contra o dicionário) monta 11 a 19, as dezenas e as centenas
         if "́" in w: ok = w in palavras_fonte
         else: ok = w in sem_acento or w.lower() in minus
         if not ok: erros += 1; print(f"ERRO {os.path.basename(a)}: {w!r} não está na fonte")

@@ -707,11 +707,112 @@ for w, caso, n in PARES_PREP:
     if not any(x["p"] == w and x["caso"] == caso for x in PREP): erros.append(f"RG15 par {w} + {caso}: uso fora da tabela")
     if n not in DECL or not DECL[n]["casos"][caso][0]: erros.append(f"RG15 par {w} + {n}: sem forma")
 
+# ---------- RG16: numerais e tempo (dadosR6.json: verbetes do Wiktionary; seção "Numerals" de Russian declension, Wikipedia) ----------
+N6 = D6["numerais"]["verbetes"]; T6 = D6["tempo"]["verbetes"]
+txt_num = json.dumps(D6["numerais"], ensure_ascii=False) + json.dumps(D6["tempo"], ensure_ascii=False)
+# cardinais: [palavra, valor, palavra em inglês que tem de estar na definição]
+N_NUM = [["ноль", 0, "zero"], ["один", 1, "one (1)"], ["два", 2, "two (2)"], ["три", 3, "three (3)"], ["четыре", 4, "four (4)"], ["пять", 5, "five (5)"], ["шесть", 6, "six (6)"], ["семь", 7, "seven (7)"],
+         ["восемь", 8, "eight (8)"], ["девять", 9, "nine (9)"], ["десять", 10, "ten (10)"], ["одиннадцать", 11, "eleven"], ["двенадцать", 12, "twelve"], ["тринадцать", 13, "thirteen"],
+         ["четырнадцать", 14, "fourteen"], ["пятнадцать", 15, "fifteen"], ["шестнадцать", 16, "sixteen"], ["семнадцать", 17, "seventeen"], ["восемнадцать", 18, "eighteen"], ["девятнадцать", 19, "nineteen"],
+         ["двадцать", 20, "twenty"], ["тридцать", 30, "thirty"], ["сорок", 40, "forty"], ["пятьдесят", 50, "fifty"], ["шестьдесят", 60, "sixty"], ["семьдесят", 70, "seventy"], ["восемьдесят", 80, "eighty"],
+         ["девяносто", 90, "ninety"], ["сто", 100, "hundred"], ["двести", 200, "two hundred"], ["триста", 300, "three hundred"], ["четыреста", 400, "four hundred"], ["пятьсот", 500, "five hundred"],
+         ["тысяча", 1000, "thousand"], ["миллион", 1000000, "million"]]
+def ent_num(w, classes):
+    return next((e for e in N6.get(w, {}).get("entradas", []) if v(e.get("classe")) in classes), None)
+NUM = []
+for w, n, chave in N_NUM:
+    e = ent_num(w, ("Numeral", "Noun"))
+    if not e: erros.append(f"RG16 {w}: sem entrada"); continue
+    gl = " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])])
+    if chave not in gl: erros.append(f"RG16 {w}: {chave!r} não está na definição ({gl[:60]!r})")
+    ac = v(e["forma_acentuada"])
+    if sem_ac(ac) != w: erros.append(f"RG16 {w}: forma acentuada {ac!r}")
+    x = {"w": w, "ac": ac, "n": n}
+    if n in (1, 2):
+        lin = str(v(e.get("linha_do_verbete")))
+        mf = re.search(r"feminine ([^\s,)]+)", lin); mn = re.search(r"neuter ([^\s,)]+)", lin)
+        if not mf: erros.append(f"RG16 {w}: feminino não achado na linha do verbete")
+        else: x["f"] = mf.group(1)
+        if mn: x["nt"] = mn.group(1)
+    NUM.append(x)
+# centenas de 600 a 900: só existem na tabela da Wikipedia ("200, 300, ... 900", linha Nominative)
+for c in D6["numerais"]["wikipedia"]["secoes"]["russian_declension_numerals"]["conteudo"]:
+    if c.get("tipo") == "tabela" and str(v(c.get("legenda_ou_linha_anterior"))).startswith("200, 300"):
+        g = c["grade_expandida"]["linhas"]; cab = [str(v(y)).strip() for y in g[0]]; nomi = next(l for l in g if str(v(l[0])).startswith("Nominative"))
+        for k, y in zip(cab, nomi):
+            if k.isdigit() and int(k) >= 600: NUM.append({"w": sem_ac(v(y)), "ac": v(y), "n": int(k), "wp": True})
+        # as que o Wiktionary também dá têm de bater com a tabela
+        for k, y in zip(cab, nomi):
+            if k.isdigit() and int(k) < 600 and sem_ac(v(y)) != next(x["w"] for x in NUM if x["n"] == int(k)): erros.append(f"RG16 centena {k}: Wikipedia {v(y)!r} diferente do Wiktionary")
+if len([x for x in NUM if 600 <= x["n"] <= 900]) != 4: erros.append("RG16: centenas de 600 a 900 não achadas na tabela da Wikipedia")
+NUM.sort(key=lambda x: x["n"])
+ORD = []
+for w, n, chave in [["первый", 1, "first"], ["второй", 2, "second"], ["третий", 3, "third"], ["четвёртый", 4, "fourth"], ["пятый", 5, "fifth"], ["шестой", 6, "sixth"], ["седьмой", 7, "seventh"], ["восьмой", 8, "eighth"], ["девятый", 9, "ninth"], ["десятый", 10, "tenth"]]:
+    e = next((e for e in N6.get(w, {}).get("entradas", []) if chave in str(v(e.get("glosa")))), None)
+    if not e: erros.append(f"RG16 ordinal {w}: {chave!r} não achado"); continue
+    ORD.append({"w": w, "ac": v(e["forma_acentuada"]), "n": n})
+# palavras de tempo: [palavra, palavra em inglês da definição, tradução, tipo]
+T_PT = [["секунда", "second", "segundo", "unid"], ["минута", "minute", "minuto", "unid"], ["час", "hour", "hora", "unid"], ["день", "day", "dia", "unid"], ["неделя", "week", "semana", "unid"],
+        ["месяц", "month", "mês", "unid"], ["год", "year", "ano", "unid"], ["век", "century", "século", "unid"],
+        ["понедельник", "Monday", "segunda-feira", "dia"], ["вторник", "Tuesday", "terça-feira", "dia"], ["среда", "Wednesday", "quarta-feira", "dia"], ["четверг", "Thursday", "quinta-feira", "dia"],
+        ["пятница", "Friday", "sexta-feira", "dia"], ["суббота", "Saturday", "sábado", "dia"], ["воскресенье", "Sunday", "domingo", "dia"],
+        ["январь", "January", "janeiro", "mes"], ["февраль", "February", "fevereiro", "mes"], ["март", "March", "março", "mes"], ["апрель", "April", "abril", "mes"], ["май", "May", "maio", "mes"],
+        ["июнь", "June", "junho", "mes"], ["июль", "July", "julho", "mes"], ["август", "August", "agosto", "mes"], ["сентябрь", "September", "setembro", "mes"], ["октябрь", "October", "outubro", "mes"],
+        ["ноябрь", "November", "novembro", "mes"], ["декабрь", "December", "dezembro", "mes"],
+        ["утро", "morning", "manhã", "parte"], ["вечер", "evening", "noite (até a hora de dormir), tarde", "parte"], ["ночь", "night", "noite (madrugada)", "parte"],
+        ["весна", "spring", "primavera", "est"], ["лето", "summer", "verão", "est"], ["осень", "autumn", "outono", "est"], ["зима", "winter", "inverno", "est"]]
+def um(x):
+    x = v(x)
+    if isinstance(x, list): x = x[0] if x else None
+    if isinstance(x, dict): x = v(next(iter(x.values()), None))
+    return x
+TEMPO = {}
+for w, chave, pt, tipo in T_PT:
+    e = T6.get(w)
+    if not e or not e.get("tabela"): erros.append(f"RG16 tempo {w}: sem verbete ou sem tabela"); continue
+    gl = " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])])
+    if chave not in gl: erros.append(f"RG16 tempo {w}: {chave!r} não está na definição ({gl[:60]!r})")
+    cs = e["tabela"]["casos"]; casos = {}
+    for k, en in CASOS:
+        c = cs.get(en) or {}
+        casos[k] = [um(c.get("singular")), um(c.get("plural"))]
+    if not casos["nom"][0] or not casos["gen"][0]: erros.append(f"RG16 tempo {w}: tabela incompleta {casos}")
+    TEMPO[w] = {"ac": v(e["forma_acentuada"]), "pt": pt, "tipo": tipo, "g": str(v(e.get("genero")) or "").split(" ")[0], "casos": casos}
+# formas especiais depois de número, ditas nas notas de uso
+nota_chas = " ".join(str(v(x)) for x in (T6["час"]["entradas"][0].get("notas_de_uso") or []))
+if "два часа́" not in nota_chas or "stress of the genitive singular moves" not in nota_chas: erros.append("RG16: nota de час (два часа́) não achada")
+else: TEMPO["час"]["cont"] = {"sg": "часа́"}
+nota_god = " ".join(str(v(x)) for x in (T6["год"]["entradas"][0].get("notas_de_uso") or []))
+if "пять лет" not in nota_god or "instead of годо́в" not in nota_god: erros.append("RG16: nota de год (пять лет) não achada")
+else: TEMPO["год"]["cont"] = {"pl": "лет"}
+# expressões "em tal dia" / "em tal mês" / "todo tal dia": linhas "X ― transliteração ― tradução" dos verbetes
+QUANDO = []
+for w, x in TEMPO.items():
+    if x["tipo"] not in ("dia", "mes"): continue
+    en_nome = next(c for ww, c, _, _ in T_PT if ww == w)
+    for l in (T6[w].get("linhas_com_expressao_de_tempo") or {}).get("linhas") or []:
+        ps = str(v(l)).split(" ― ")
+        if len(ps) != 3 or len(ps[0].split(" ")) != 2: continue
+        if ps[2] == ("on " if x["tipo"] == "dia" else "in ") + en_nome: QUANDO.append({"w": w, "ru": ps[0], "en": ps[2], "tipo": "em"})
+        elif x["tipo"] == "dia" and ps[2] == "on " + en_nome + "s": QUANDO.append({"w": w, "ru": ps[0], "en": ps[2], "tipo": "todo"})
+QUANDO = [q for i, q in enumerate(QUANDO) if not any(z["w"] == q["w"] and z["ru"] == q["ru"] for z in QUANDO[:i])]
+if sum(1 for q in QUANDO if q["tipo"] == "em") != 19 or sum(1 for q in QUANDO if q["tipo"] == "todo") != 7: erros.append(f"RG16: expressões de dia e mês incompletas ({len(QUANDO)}): " + "; ".join(q["tipo"] + " " + q["ru"] for q in QUANDO))
+# exemplos da fonte de numeral + substantivo: [número, frase literal, substantivo no nominativo se estiver no banco (senão None)]
+EX_NUM_PT = [[151, "сто пятьдеся́т оди́н челове́к", "человек"], [3, "три соба́ки", None], [42, "со́рок два окна́", "окно"], [5, "пять я́блок", "яблоко"], [10, "де́сять рубле́й", None],
+             [111, "сто оди́ннадцать ме́тров", None], [3, "три до́ма", "дом"], [2, "два ма́льчика", "мальчик"], [2, "две кни́ги", "книга"], [52, "пятьдеся́т два ма́льчика", "мальчик"],
+             [5, "пять ма́льчиков", "мальчик"], [55, "пятьдеся́т пять книг", "книга"], [40, "со́рок ма́льчиков", "мальчик"], [2, "два часа́", "час"], [23, "два́дцать три часа́", "час"],
+             [44, "со́рок четы́ре часа́", "час"], [1, "оди́н год", "год"], [2, "два го́да", "год"], [5, "пять лет", "год"], [153, "сто пятьдеся́т три ры́бы", None], [21, "два́дцать оди́н год", "год"], [25, "два́дцать пять лет", "год"]]
+EX_NUM = []
+for n, fr, w in EX_NUM_PT:
+    if fr not in txt_num: erros.append(f"RG16 exemplo fora da fonte: {fr!r}"); continue
+    if w and w not in DECL and w not in TEMPO: erros.append(f"RG16 exemplo {fr!r}: {w} fora do banco"); continue
+    ps = fr.split(" "); EX_NUM.append({"n": n, "ru": fr, "nome": " ".join(ps[:-1]), "subst": ps[-1], "w": w, "g": (DECL[w]["g"] if w in DECL else TEMPO[w]["g"]) if w else None})
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -724,6 +825,7 @@ print("RG04:", len(DECL), "declinações;", len(VERB), "verbos;", len(PRON), "pr
 print("RG11:", len(VERB), "verbos;", len(PARES_ASP), "pares de aspecto;", len(FRV), "frases de verbo")
 print("RG14:", len(MOV), "pares de movimento;", len(PREF), "prefixos;", len(FRM), "frases")
 print("RG15:", len(PREP), "usos de", len({x["p"] for x in PREP}), "preposições;", PREP_WP, "também nas listas da Wikipedia;", len(ONDE), "exemplos onde/para onde;", len(PARES_PREP), "pares;", sum(1 for x in PREP if x["ex"]), "com exemplo;", [x["alt"] for x in ALT_PREP])
+print("RG16:", len(NUM), "cardinais;", len(ORD), "ordinais;", len(TEMPO), "palavras de tempo;", len(QUANDO), "expressões de dia e mês;", len(EX_NUM), "exemplos de numeral + substantivo")
 print("RG09:", len(ADJ), "adjetivos;", len(PARES_AS), "pares adjetivo + substantivo")
 print("RG10:", len(POSS), "possessivos e demonstrativos;", len(PARES_PS), "pares;", len(FRP), "frases")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})

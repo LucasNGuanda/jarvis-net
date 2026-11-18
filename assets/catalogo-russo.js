@@ -22,7 +22,7 @@ window.CATALOGO.push(
     ["RG13","Aspecto verbal: perfectivo × imperfectivo",[],true],
     ["RG14","Verbos de movimento",["RG13"],true],
     ["RG15","Preposições e regência",["RG08"],true],
-    ["RG16","Numerais e expressões de tempo",[]],
+    ["RG16","Numerais e expressões de tempo",["RG05"],true],
     ["RG17","Imperativo e condicional",[]],
     ["RG18","Orações subordinadas e conjunções",[]],
   ] },
