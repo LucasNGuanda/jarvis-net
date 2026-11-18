@@ -23,7 +23,7 @@ window.CATALOGO.push(
     ["RG14","Verbos de movimento",["RG13"],true],
     ["RG15","Preposições e regência",["RG08"],true],
     ["RG16","Numerais e expressões de tempo",["RG05"],true],
-    ["RG17","Imperativo e condicional",[]],
+    ["RG17","Imperativo e condicional",["RG12"],true],
     ["RG18","Orações subordinadas e conjunções",[]],
   ] },
   { id:"RL", area:"rusleit", letra:"RL", cor:"--mC", nome:"Leitura", desc:"Textos A1–B1, vocabulário de exatas e enunciados de olimpíada.", temas:[

@@ -808,11 +808,47 @@ for n, fr, w in EX_NUM_PT:
     if w and w not in DECL and w not in TEMPO: erros.append(f"RG16 exemplo {fr!r}: {w} fora do banco"); continue
     ps = fr.split(" "); EX_NUM.append({"n": n, "ru": fr, "nome": " ".join(ps[:-1]), "subst": ps[-1], "w": w, "g": (DECL[w]["g"] if w in DECL else TEMPO[w]["g"]) if w else None})
 
+# ---------- RG17: imperativo e condicional (dadosR6.json: "Moods" de Russian grammar, "Imperative mood" e "Conditional mood" da Wikipedia; verbetes бы, пусть, давай, давайте, чтобы, если) ----------
+I6 = D6["imperativo_e_condicional"]
+trad6 = {}
+for f in D6["frases"]:
+    if isinstance(f, dict) and v(f.get("russo")) and v(f.get("traducao")): trad6[v(f["russo"])] = (v(f["traducao"]), f.get("verbete"))
+txt_modos = json.dumps(I6["wikipedia"]["secoes"], ensure_ascii=False)
+# [frase literal, palavra em inglês da tradução da fonte, tradução, tipo, fonte]
+FRI_PT = [["Пойди́те со мной.", "Come with me", "Venham comigo. / Venha comigo. (formal)", "imp", "wt"], ["Иди́ сюда́, и́ли тебя́ пойма́ю!", "Come here", "Vem cá, senão eu te pego!", "imp", "wt"],
+          ["Бу́дьте как до́ма.", "at home", "Fique à vontade. (Esteja como em casa.)", "imp", "wt"],
+          ["Дава́й чита́ть", "Let’s read", "Vamos ler.", "davai", "wt"], ["Дава́йте начина́ть", "get started", "Vamos começar.", "davai", "wt"], ["Дава́й встре́тимся до рабо́ты.", "meet before work", "Vamos nos encontrar antes do trabalho.", "davai", "wt"],
+          ["Дава́й я тебе́ помогу́", "Let me help", "Deixa eu te ajudar.", "davai", "wt"],
+          ["Пусть он пи́шет", "Let him write", "Que ele escreva. / Deixe que ele escreva.", "pust", "wt"], ["Пусть X (икс) равно́ двум.", "Let X be 2", "Seja X igual a 2.", "pust", "wt"],
+          ["Пусть она́ не ду́мает, что мы о ней забы́ли.", "Let her not think", "Que ela não pense que nos esquecemos dela.", "pust", "wt"],
+          ["Я бы пошёл в кино́, е́сли бы у меня́ бы́ло вре́мя.", "if I had had time", "Eu teria ido ao cinema, se tivesse tido tempo.", "cond", "wt"], ["Я бы сказа́л — э́то большо́е «да».", "I'd say", "Eu diria que é um grande \"sim\".", "cond", "wt"],
+          ["Я хотел бы петь", "I would like", "Eu gostaria de cantar.", "cond", "wp"], ["что́бы я не забы́л", "so that I won’t forget", "para que eu não esqueça", "cond", "wt"]]
+FRI = []
+for ru_, chave, pt, tipo, de in FRI_PT:
+    if de == "wt":
+        if ru_ not in trad6: erros.append(f"RG17 frase fora da fonte: {ru_!r}"); continue
+        en = trad6[ru_][0]
+        if chave not in en: erros.append(f"RG17 frase {ru_!r}: {chave!r} não está na tradução ({en!r})")
+    else:
+        if ru_ not in txt_modos or chave not in txt_modos: erros.append(f"RG17 frase fora da Wikipedia: {ru_!r}"); continue
+        en = chave
+    FRI.append({"ru": ru_, "pt": pt, "en": en, "tipo": tipo})
+# tabela do condicional de сказать (Wikipedia): células "я бы сказа́ л" (a página separa a terminação com espaço)
+COND_WP = []
+for c in I6["wikipedia"]["secoes"]["russian_grammar_moods"]["conteudo"]:
+    if c.get("tipo") == "tabela" and str(v(c.get("legenda_ou_linha_anterior"))).startswith("Conditional of the verb"):
+        for lin in c["grade_expandida"]["linhas"]:
+            for cel in lin:
+                s = str(v(cel)); m = re.match(r"^(я|ты|он|она́|оно́|мы|вы|они́) бы (сказа́) (л[аои]?)$", s)
+                if m: COND_WP.append([sem_ac(m.group(1)), m.group(1) + " бы " + m.group(2) + m.group(3)])
+COND_WP = [x for i, x in enumerate(COND_WP) if x not in COND_WP[:i]]
+if len(COND_WP) < 8: erros.append(f"RG17: tabela do condicional lida pela metade ({COND_WP})")
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM, "FRI": FRI, "COND_WP": COND_WP}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -826,6 +862,7 @@ print("RG11:", len(VERB), "verbos;", len(PARES_ASP), "pares de aspecto;", len(FR
 print("RG14:", len(MOV), "pares de movimento;", len(PREF), "prefixos;", len(FRM), "frases")
 print("RG15:", len(PREP), "usos de", len({x["p"] for x in PREP}), "preposições;", PREP_WP, "também nas listas da Wikipedia;", len(ONDE), "exemplos onde/para onde;", len(PARES_PREP), "pares;", sum(1 for x in PREP if x["ex"]), "com exemplo;", [x["alt"] for x in ALT_PREP])
 print("RG16:", len(NUM), "cardinais;", len(ORD), "ordinais;", len(TEMPO), "palavras de tempo;", len(QUANDO), "expressões de dia e mês;", len(EX_NUM), "exemplos de numeral + substantivo")
+print("RG17:", len(FRI), "frases de modo;", len(COND_WP), "formas do condicional na tabela da Wikipedia:", COND_WP)
 print("RG09:", len(ADJ), "adjetivos;", len(PARES_AS), "pares adjetivo + substantivo")
 print("RG10:", len(POSS), "possessivos e demonstrativos;", len(PARES_PS), "pares;", len(FRP), "frases")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})

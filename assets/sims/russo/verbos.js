@@ -51,19 +51,19 @@
     el.querySelectorAll("[data-p]").forEach((b) => b.addEventListener("click", () => clica(+b.dataset.p))); q("[data-v=prox]").addEventListener("click", prox); if (SIM.ruBotaoOuvir) SIM.ruBotaoOuvir(el, () => x.forma);
     SIM.ruQuemFala._ult = { semente: (n) => { r = rng(n); fila = []; certos = feitos = 0; prox(); }, clica, prox, est }; prox(); };
 
-  /* nome: "Escreva a forma do verbo" · matéria: Russo · tema: RG11, RG12, RG14 */
-  SIM.ruEscreveVerbo = (el, F, op = {}) => { const tempo = op.tempo || "pres", rot = tempo === "pres" ? PESS : PASS; let r = rng(1), fila = [], x = null, res = null, certos = 0, feitos = 0;
+  /* nome: "Escreva a forma do verbo" · matéria: Russo · tema: RG11, RG12, RG14, RG17 */
+  SIM.ruEscreveVerbo = (el, F, op = {}) => { const tempo = op.tempo || "pres", rot = tempo === "pres" ? PESS : tempo === "imp" ? ["ты", "вы"] : PASS; let r = rng(1), fila = [], x = null, res = null, certos = 0, feitos = 0;
     el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-v="ouvir" title="voz russa do navegador, se houver">ouvir</button><button class="bt peq" data-v="prox">outra forma</button></div><div data-v="semvoz" style="font-size:12.5px;color:var(--warn);min-height:16px"></div></div></div><div class="palco" data-v="pal" style="text-align:center;padding:16px 10px"></div>
       <div style="display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap"><input type="text" data-v="inp" lang="ru" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="escreva a forma do verbo em cirílico" style="font:600 24px Inter,system-ui,sans-serif;padding:6px 10px;min-width:280px;background:var(--card2);color:var(--ink);border:1.5px solid var(--line);border-radius:9px"><button class="bt peq" data-v="conf">conferir</button></div>
       <div style="display:flex;justify-content:center">${F.tecladoRu()}</div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
     const q = (s) => el.querySelector(s), inp = q("[data-v=inp]");
-    const base = () => { const o = []; (op.verbos || SIM.ruVerbos()).forEach((w) => { const v = SIM.RU.VERB[w], t = tempo === "pres" ? v.pres : v.pass; t.forEach((fs, i) => { if (fs.length) o.push({ w, i }); }); }); return o; };
-    const resp = () => { const v = SIM.RU.VERB[x.w]; return (tempo === "pres" ? v.pres : v.pass)[x.i]; };
+    const base = () => { const o = []; (op.verbos || SIM.ruVerbos()).forEach((w) => { const v = SIM.RU.VERB[w], t = tempo === "pres" ? v.pres : tempo === "imp" ? v.imp : v.pass; t.forEach((fs, i) => { if (fs.length) o.push({ w, i }); }); }); return o; };
+    const resp = () => { const v = SIM.RU.VERB[x.w]; return (tempo === "pres" ? v.pres : tempo === "imp" ? v.imp : v.pass)[x.i]; };
     const prox = () => { if (!fila.length) fila = emb(base(), r); x = fila.pop(); res = null; inp.value = ""; desenha(); };
     const confere = () => { const t = F.normTxt(inp.value); if (!t) return; res = resp().map((p) => F.normTxt(p)).includes(t); feitos++; if (res) certos++; desenha(); };
     const est = () => ({ ...x, resp: resp(), res, certos, feitos, digitado: inp.value });
     const desenha = () => { const v = SIM.RU.VERB[x.w];
-      q("[data-v=pal]").innerHTML = `<div style="${GRANDE}">${rot[x.i].split(",")[0]} + ${v.ac}</div><div style="font-size:13px;color:var(--ink2);margin-top:8px">${v.pt} · ${v.asp === "pf" ? "perfectivo" : "imperfectivo"} · escreva a forma do <b>${tempo === "pres" ? v.tempo : "passado"}</b> para ${rot[x.i]}</div>`;
+      q("[data-v=pal]").innerHTML = `<div style="${GRANDE}">${rot[x.i].split(",")[0]} + ${v.ac}</div><div style="font-size:13px;color:var(--ink2);margin-top:8px">${v.pt} · ${v.asp === "pf" ? "perfectivo" : "imperfectivo"} · escreva a forma do <b>${tempo === "pres" ? v.tempo : tempo === "imp" ? "imperativo" : "passado"}</b> para ${rot[x.i]}</div>`;
       inp.style.borderColor = res === null ? "var(--line)" : res ? "var(--ok)" : "var(--bad, #e06666)";
       q("[data-v=lt]").innerHTML = vis("resultado", res === null ? "?" : res ? "certo" : "ainda não") + vis("forma do dicionário", res === null ? "?" : resp().join(" ou ")) + vis("placar", `${certos} de ${feitos}`);
       q("[data-v=st]").innerHTML = res === null ? "Escreva só o verbo, sem o pronome. O acento não precisa ser digitado; o ё precisa." : res ? `Certo: ${resp().join(" ou ")}.` : `Você escreveu "${inp.value}"; a tabela do dicionário dá ${resp().join(" ou ")}.`; };
