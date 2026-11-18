@@ -628,11 +628,90 @@ for ru_, pt, chave, forma, w, caso, col, de in FRP_PT:
     if forma.replace("́", "").lower() not in [y.replace("́", "").lower() for y in POSS[w]["casos"][caso][col]] or forma not in ru_: erros.append(f"RG10 frase {ru_!r}: {forma!r} não é {caso} coluna {col} de {w} ({POSS[w]['casos'][caso][col]})")
     FRP.append({"ru": ru_, "pt": pt, "en": en, "forma": forma, "w": w, "caso": caso, "col": col})
 
+# ---------- RG15: preposições e o caso que cada uma pede (dadosR6.json: verbetes do Wiktionary; listas por caso da Wikipedia) ----------
+P6 = D6["preposicoes"]["verbetes"]
+CASO_EN = {"accusative": "acc", "genitive": "gen", "dative": "dat", "instrumental": "ins", "prepositional": "prep", "nominative": "nom"}
+def casos_da_marca(m):
+    # "[with instrumental or (rarely) genitive]" -> só o primeiro caso (o resto vem marcado como raro, literário ou alternativo)
+    achados = sorted((m.find(k), c) for k, c in CASO_EN.items() if k in m)
+    return [achados[0][1]] if achados else []
+def defs_prep(w):
+    ep = P6[w]["entradas"][0]; out = []
+    linha = [c for x in (ep.get("regencia_na_linha_do_verbete") or []) if x and v(x) for c in casos_da_marca(v(x))][:1]
+    def anda(defs, mae):
+        for df in defs or []:
+            mc = [c for m in (df.get("marcas_de_caso") or []) for c in casos_da_marca(v(m))] or mae
+            exs = [(v(e["russo"]), v(e["traducao"])) for e in (df.get("exemplos") or []) if e.get("traducao") and v(e.get("traducao")) and v(e.get("russo"))]
+            out.append((mc, str(v(df["definicao"])), exs)); anda(df.get("subdefinicoes"), mc)
+    anda(ep["definicoes"], linha); return ep, out
+# [preposição, caso, palavra em inglês que tem de estar na definição marcada com esse caso, sentido em português]
+PREP_PT = [["в", "prep", "(location) in", "em, dentro de (onde?)"], ["в", "acc", "(direction) to", "para, para dentro de (para onde?)"], ["в", "acc", "(time) at", "em, a (hora, dia)"],
+           ["на", "prep", "on, upon", "em, em cima de (onde?)"], ["на", "acc", "onto, on", "para, para cima de (para onde?)"], ["на", "acc", "divided by", "por (na divisão)"],
+           ["с", "ins", "with", "com"], ["с", "gen", "from, off", "de, de cima de (de onde?)"], ["к", "dat", "to, toward", "até, em direção a"],
+           ["у", "gen", "at, by, near", "junto de, perto de"], ["у", "gen", "in the possession of", "na posse de (construção de \"ter\")"], ["о", "prep", "about, of, on", "sobre, a respeito de"],
+           ["из", "gen", "from", "de, de dentro de (de onde?)"], ["от", "gen", "starting point", "de, a partir de (afastamento)"], ["до", "gen", "up to, till", "até"],
+           ["для", "gen", "for", "para (em benefício de)"], ["без", "gen", "without", "sem"], ["по", "dat", "across", "por, ao longo de"],
+           ["за", "ins", "behind", "atrás de, além de (onde?)"], ["за", "acc", "for; to; by", "por, a favor de"], ["над", "ins", "above, over", "acima de, sobre"],
+           ["под", "ins", "being beneath", "embaixo de (onde?)"], ["под", "acc", "movement to beneath", "para baixo de (para onde?)"], ["перед", "ins", "in front of", "diante de, antes de"],
+           ["между", "ins", "between", "entre"], ["при", "prep", "during", "em, durante, na presença de"], ["про", "acc", "about, concerning", "sobre, a respeito de"],
+           ["через", "acc", "through", "através de"], ["через", "acc", "(time) in, after", "daqui a, depois de (tempo)"], ["после", "gen", "after", "depois de"],
+           ["около", "gen", "near", "perto de, cerca de"], ["кроме", "gen", "except", "exceto, além de"], ["вокруг", "gen", "round", "em volta de"], ["против", "gen", "against", "contra"],
+           ["среди", "gen", "among", "entre, no meio de"], ["вместо", "gen", "instead of", "em vez de"], ["из-за", "gen", "because of", "por causa de"],
+           ["благодаря", "dat", "thanks to", "graças a"], ["сквозь", "acc", "through", "através de (atravessando)"]]
+PREP = []
+for w, caso, chave, pt in PREP_PT:
+    if w not in P6: erros.append(f"RG15 {w}: sem verbete"); continue
+    ep, ds = defs_prep(w)
+    d = next((x for x in ds if caso in x[0] and chave in x[1]), None)
+    if not d: erros.append(f"RG15 {w} + {caso}: definição com {chave!r} não achada"); continue
+    ex = next(([r_, e_] for r_, e_ in d[2] if len(r_) <= 34), None)
+    PREP.append({"p": w, "ac": v(ep["forma_acentuada"]), "caso": caso, "pt": pt, "en": d[1][:90], "ex": ex})
+# conferência cruzada com as listas por caso da Wikipedia: o que as duas fontes dão para a mesma preposição tem de ter um caso em comum
+WPC = D6["preposicoes"]["wikipedia_listas_por_caso_copiadas_de_dadosR4"]["casos"]
+wp_casos = {}
+for nome, bloco in WPC.items():
+    for x in bloco.get("preposicoes") or []: wp_casos.setdefault(v(x["preposicao"]) if isinstance(x["preposicao"], dict) else x["preposicao"], set()).add(CASO_EN.get(nome, nome))
+PREP_WP = 0
+for w in sorted({x["p"] for x in PREP}):
+    meus = {x["caso"] for x in PREP if x["p"] == w}
+    if w in wp_casos:
+        PREP_WP += 1
+        if not (meus & wp_casos[w]): erros.append(f"RG15 {w}: Wiktionary {sorted(meus)} e Wikipedia {sorted(wp_casos[w])} sem caso em comum")
+# formas alternativas (во, со, ко...): linha "X — used before ..." do verbete
+ALT_PREP = []
+for w in ("в", "с", "к", "о"):
+    for fa in P6[w].get("formas_alternativas") or []:
+        s = str(v(fa))
+        if "pre-1918" in s or "—" not in s: continue
+        ALT_PREP.append({"p": w, "alt": s.split(" ")[0], "en": s})
+# onde? para onde? de onde?: exemplos dos verbetes. [preposição, exemplo literal, palavra em inglês da tradução da fonte, tradução, pergunta]
+ONDE_PT = [["в", "Он в теа́тре", "at (in) the theater", "Ele está no teatro.", "onde"], ["в", "Он идёт в теа́тр", "going to", "Ele está indo ao teatro.", "para"],
+           ["на", "на столе́", "on the table", "em cima da mesa", "onde"], ["на", "на стол", "onto the table", "para cima da mesa", "para"],
+           ["на", "на по́чте", "at the post office", "no correio", "onde"], ["на", "на по́чту", "to the post office", "para o correio", "para"], ["с", "с по́чты", "from the post office", "do correio", "de"],
+           ["под", "пла́вать под водо́й", "swim underwater", "nadar embaixo d'água", "onde"], ["под", "нырну́ть под во́ду", "dive underwater", "mergulhar para debaixo d'água", "para"],
+           ["к", "к до́му", "to the house", "até a casa", "para"], ["из", "Он приезжа́ет из Москвы́", "from Moscow", "Ele vem de Moscou.", "de"], ["у", "сиде́ть у окна́", "by the window", "estar sentado junto à janela", "onde"],
+           ["за", "за столо́м", "at the table", "à mesa", "onde"], ["с", "с по́ля", "from the field", "do campo", "de"]]
+ONDE = []
+for w, ru_, chave, pt, perg in ONDE_PT:
+    ep, ds = defs_prep(w)
+    d = next((x for x in ds if any(r_ == ru_ and chave in e_ for r_, e_ in x[2])), None)
+    if not d or not d[0]: erros.append(f"RG15 exemplo {ru_!r}: não achado com {chave!r}"); continue
+    ONDE.append({"p": w, "ru": ru_, "pt": pt, "perg": perg, "caso": d[0][0]})
+# preposição + substantivo dos laboratórios: combinação montada por mim (não é citação); a forma sai da tabela do substantivo
+PARES_PREP = [["в", "prep", "школа"], ["в", "acc", "школа"], ["в", "prep", "город"], ["в", "acc", "город"], ["на", "prep", "стол"], ["на", "acc", "стол"], ["на", "prep", "работа"], ["на", "acc", "работа"],
+              ["из", "gen", "город"], ["из", "gen", "школа"], ["к", "dat", "брат"], ["к", "dat", "сестра"], ["с", "ins", "друг"], ["с", "ins", "сестра"], ["у", "gen", "окно"], ["у", "gen", "брат"],
+              ["о", "prep", "книга"], ["о", "prep", "работа"], ["без", "gen", "вода"], ["без", "gen", "друг"], ["для", "gen", "сестра"], ["для", "gen", "мама"], ["под", "ins", "стол"], ["над", "ins", "город"],
+              ["перед", "ins", "дом"], ["после", "gen", "урок"], ["около", "gen", "дом"], ["от", "gen", "дом"], ["до", "gen", "город"], ["по", "dat", "улица"], ["за", "ins", "дом"], ["про", "acc", "книга"],
+              ["вокруг", "gen", "стол"], ["через", "acc", "улица"], ["против", "gen", "сила"], ["вместо", "gen", "брат"]]
+for w, caso, n in PARES_PREP:
+    if not any(x["p"] == w and x["caso"] == caso for x in PREP): erros.append(f"RG15 par {w} + {caso}: uso fora da tabela")
+    if n not in DECL or not DECL[n]["casos"][caso][0]: erros.append(f"RG15 par {w} + {n}: sem forma")
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -644,6 +723,7 @@ print("RG03:", len(NOM), "substantivos;", sum(1 for x in NOM if x["pl"]), "com p
 print("RG04:", len(DECL), "declinações;", len(VERB), "verbos;", len(PRON), "pronomes;", len(FRASES), "frases")
 print("RG11:", len(VERB), "verbos;", len(PARES_ASP), "pares de aspecto;", len(FRV), "frases de verbo")
 print("RG14:", len(MOV), "pares de movimento;", len(PREF), "prefixos;", len(FRM), "frases")
+print("RG15:", len(PREP), "usos de", len({x["p"] for x in PREP}), "preposições;", PREP_WP, "também nas listas da Wikipedia;", len(ONDE), "exemplos onde/para onde;", len(PARES_PREP), "pares;", sum(1 for x in PREP if x["ex"]), "com exemplo;", [x["alt"] for x in ALT_PREP])
 print("RG09:", len(ADJ), "adjetivos;", len(PARES_AS), "pares adjetivo + substantivo")
 print("RG10:", len(POSS), "possessivos e demonstrativos;", len(PARES_PS), "pares;", len(FRP), "frases")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})
