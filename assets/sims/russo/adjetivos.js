@@ -17,27 +17,28 @@
   SIM.ruAdjRegra = (w, c, col, anim = false) => { const p = sem(w), b = p.slice(0, -2), T = SIM.ruAdjTipo(w), nom = [p, b + T.o + "е", b + T.a, b + T.y + "е"];
     const T4 = { gen: [T.o + "го", T.o + "го", T.o + "й", T.y + "х"], dat: [T.o + "му", T.o + "му", T.o + "й", T.y + "м"], ins: [T.y + "м", T.y + "м", T.o + "й", T.y + "ми"], prep: [T.o + "м", T.o + "м", T.o + "й", T.y + "х"] };
     if (c === "nom") return nom[col]; if (c === "acc") return col === 1 ? nom[1] : col === 2 ? b + T.u : anim ? b + T4.gen[col] : nom[col]; return b + T4[c][col]; };
-  const dic = (w, c, col, anim) => SIM.RU.ADJ[w].casos[c === "acc" && anim ? "accA" : c][col];
+  const B = (w) => SIM.RU.ADJ[w] || (SIM.RU.POSS || {})[w]; /* adjetivo ou possessivo/demonstrativo: mesmas tabelas */
+  const dic = (w, c, col, anim) => B(w).casos[c === "acc" && anim ? "accA" : c][col];
   SIM.ruAdjDic = dic;
   SIM.ruPlacarAdj = () => { let n = 0, ok = 0; const erradas = []; Object.keys(SIM.RU.ADJ).forEach((w) => { let tudo = true; CASOS.forEach((c) => [0, 1, 2, 3].forEach((col) => [false, true].forEach((an) => { if (an && c !== "acc") return; n++; if (dic(w, c, col, an).map(sem).includes(SIM.ruAdjRegra(w, c, col, an))) ok++; else tudo = false; }))); if (!tudo) erradas.push(w); }); return { n, ok, erradas, adj: Object.keys(SIM.RU.ADJ).length }; };
   const genCol = (n, num) => (num ? 3 : { m: 0, n: 1, f: 2 }[SIM.RU.DECL[n].g]);
   /* par no caso c e número num: { adj: [formas], subst: [formas] } */
   SIM.ruPar = (a, n, c, num) => { const d = SIM.RU.DECL[n], an = d.an === "anim"; return { adj: dic(a, c, genCol(n, num), an), subst: d.casos[c][num], col: genCol(n, num) }; };
 
-  /* nome: "Concorde o adjetivo com o substantivo" · matéria: Russo · tema: RG09 */
-  SIM.ruConcorda = (el, F) => { let r = rng(1), fila = [], x = null, clic = null, certos = 0, feitos = 0, ops = [];
+  /* nome: "Concorde o adjetivo com o substantivo" · matéria: Russo · tema: RG09, RG10 */
+  SIM.ruConcorda = (el, F, op = {}) => { let r = rng(1), fila = [], x = null, clic = null, certos = 0, feitos = 0, ops = []; const NA = op.pares ? "possessivo ou demonstrativo" : "adjetivo";
     el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-v="prox">outro par</button><button class="bt peq" data-v="ouvir" title="voz russa do navegador, se houver">ouvir</button></div><div data-v="semvoz" style="font-size:12.5px;color:var(--warn);min-height:16px"></div></div></div><div class="palco" data-v="pal" style="text-align:center;padding:16px 10px"></div><div data-v="ops" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:560px;margin:0 auto 10px"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
-    const q = (s) => el.querySelector(s), base = () => { const o = []; SIM.RU.PARES_AS.forEach(([a, n]) => [0, 1].forEach((num) => { if (SIM.RU.DECL[n].casos.nom[num].length) o.push({ a, n, num }); })); return o; };
+    const q = (s) => el.querySelector(s), base = () => { const o = []; (op.pares || SIM.RU.PARES_AS).forEach(([a, n]) => [0, 1].forEach((num) => { if (SIM.RU.DECL[n].casos.nom[num].length) o.push({ a, n, num }); })); return o; };
     const prox = () => { if (!fila.length) fila = emb(base(), r); x = fila.pop(); ops = emb([0, 1, 2, 3], r); clic = null; desenha(); };
     const certa = () => genCol(x.n, x.num), clica = (col) => { if (clic !== null) return; clic = col; feitos++; if (col === certa()) certos++; desenha(); };
-    const est = () => ({ ...x, certa: certa(), forma: SIM.RU.ADJ[x.a].casos.nom[certa()][0], subst: SIM.RU.DECL[x.n].casos.nom[x.num][0], clic, certos, feitos, ops: ops.slice() });
-    const desenha = () => { const A = SIM.RU.ADJ[x.a], d = SIM.RU.DECL[x.n], c = certa(), s = d.casos.nom[x.num][0];
-      q("[data-v=pal]").innerHTML = `<div style="${GRANDE}"><span style="color:var(--ink3)">${clic === null ? "____" : A.casos.nom[c][0]}</span> ${s}</div><div style="font-size:13px;color:var(--ink2);margin-top:8px">${A.pt} + ${d.pt}${x.num ? " (plural)" : ""} · adjetivo do dicionário: ${A.ac}</div>`;
+    const est = () => ({ ...x, certa: certa(), forma: B(x.a).casos.nom[certa()][0], subst: SIM.RU.DECL[x.n].casos.nom[x.num][0], clic, certos, feitos, ops: ops.slice() });
+    const desenha = () => { const A = B(x.a), d = SIM.RU.DECL[x.n], c = certa(), s = d.casos.nom[x.num][0];
+      q("[data-v=pal]").innerHTML = `<div style="${GRANDE}"><span style="color:var(--ink3)">${clic === null ? "____" : A.casos.nom[c][0]}</span> ${s}</div><div style="font-size:13px;color:var(--ink2);margin-top:8px">${A.pt} + ${d.pt}${x.num ? " (plural)" : ""} · ${NA} do dicionário: ${A.ac}</div>`;
       q("[data-v=ops]").innerHTML = ops.map((col) => `<button type="button" class="bt" data-o="${col}" style="padding:10px;font-size:19px;font-weight:600;border-color:${clic === null ? "" : col === c ? "var(--ok)" : col === clic ? "var(--bad, #e06666)" : ""}">${A.casos.nom[col][0]}</button>`).join("");
       q("[data-v=ops]").querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => clica(+b.dataset.o)));
       q("[data-v=lt]").innerHTML = vis("resultado", clic === null ? "?" : clic === c ? "certo" : "ainda não") + vis("o substantivo é", clic === null ? "?" : x.num ? "plural" : d.genPt.split(",")[0]) + vis("placar", `${certos} de ${feitos}`);
-      q("[data-v=st]").innerHTML = clic === null ? "O adjetivo copia o gênero e o número do substantivo. Descubra o gênero pela terminação (ou pela memória) e escolha a forma." : `${A.casos.nom[c][0]} ${s}: o substantivo é ${x.num ? "plural (no plural não há distinção de gênero)" : d.genPt.split(",")[0]}, e o adjetivo vai para a forma de ${COL[c]}. O par foi montado para o laboratório; as duas formas vêm das tabelas do Wiktionary em inglês.`; };
-    q("[data-v=prox]").addEventListener("click", prox); if (SIM.ruBotaoOuvir) SIM.ruBotaoOuvir(el, () => SIM.RU.ADJ[x.a].casos.nom[certa()][0] + " " + SIM.RU.DECL[x.n].casos.nom[x.num][0]);
+      q("[data-v=st]").innerHTML = clic === null ? `O ${NA} copia o gênero e o número do substantivo. Descubra o gênero pela terminação (ou pela memória) e escolha a forma.` : `${A.casos.nom[c][0]} ${s}: o substantivo é ${x.num ? "plural (no plural não há distinção de gênero)" : d.genPt.split(",")[0]}, e o ${NA} vai para a forma de ${COL[c]}. O par foi montado para o laboratório; as duas formas vêm das tabelas do Wiktionary em inglês.`; };
+    q("[data-v=prox]").addEventListener("click", prox); if (SIM.ruBotaoOuvir) SIM.ruBotaoOuvir(el, () => B(x.a).casos.nom[certa()][0] + " " + SIM.RU.DECL[x.n].casos.nom[x.num][0]);
     SIM.ruConcorda._ult = { semente: (n) => { r = rng(n); fila = []; certos = feitos = 0; prox(); }, clica, prox, est }; prox(); };
 
   /* nome: "A declinação do adjetivo contra o dicionário" · matéria: Russo · tema: RG09 */
@@ -58,18 +59,18 @@
       <div style="display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap"><input type="text" data-v="inp" lang="ru" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="escreva o adjetivo e o substantivo em cirílico" style="font:600 22px Inter,system-ui,sans-serif;padding:6px 10px;min-width:340px;background:var(--card2);color:var(--ink);border:1.5px solid var(--line);border-radius:9px"><button class="bt peq" data-v="conf">conferir</button></div>
       <div style="display:flex;justify-content:center">${F.tecladoRu()}</div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
     const q = (s) => el.querySelector(s), inp = q("[data-v=inp]");
-    const base = () => { const o = []; SIM.RU.PARES_AS.forEach(([a, n]) => casos.forEach((c) => [0, 1].forEach((num) => { const d = SIM.RU.DECL[n]; if (d.casos[c][num].length && d.casos.nom[num].length) o.push({ a, n, c, num }); }))); return o; };
+    const base = () => { const o = []; (op.pares || SIM.RU.PARES_AS).forEach(([a, n]) => casos.forEach((c) => [0, 1].forEach((num) => { const d = SIM.RU.DECL[n]; if (d.casos[c][num].length && d.casos.nom[num].length) o.push({ a, n, c, num }); }))); return o; };
     const resp = () => { const p = SIM.ruPar(x.a, x.n, x.c, x.num), o = []; p.adj.forEach((a) => p.subst.forEach((s) => o.push(a + " " + s))); return o; };
     const prox = () => { if (!fila.length) fila = emb(base(), r); x = fila.pop(); res = null; inp.value = ""; desenha(); };
     const confere = () => { const t = F.normTxt(inp.value); if (!t) return; res = resp().map((p) => F.normTxt(p)).includes(t); feitos++; if (res) certos++; desenha(); };
     const est = () => ({ ...x, resp: resp(), res, certos, feitos });
-    const desenha = () => { const A = SIM.RU.ADJ[x.a], d = SIM.RU.DECL[x.n];
+    const desenha = () => { const A = B(x.a), d = SIM.RU.DECL[x.n];
       q("[data-v=pal]").innerHTML = `<div style="${GRANDE}">${A.ac} + ${d.ac}</div><div style="font-size:13px;color:var(--ink2);margin-top:8px">${A.pt} + ${d.pt} (${d.genPt}) · escreva as duas palavras no <b>${NOME[x.c]} ${x.num ? "plural" : "singular"}</b></div>`;
       inp.style.borderColor = res === null ? "var(--line)" : res ? "var(--ok)" : "var(--bad, #e06666)";
       q("[data-v=lt]").innerHTML = vis("resultado", res === null ? "?" : res ? "certo" : "ainda não") + vis("resposta", res === null ? "?" : resp()[0]) + vis("placar", `${certos} de ${feitos}`);
       q("[data-v=st]").innerHTML = res === null ? "Primeiro decline o substantivo; depois ponha o adjetivo no mesmo gênero, número e caso. Escreva as duas palavras, com um espaço. O acento não precisa ser digitado." : res ? `Certo: ${resp()[0]}.` : `Você escreveu "${inp.value}"; as tabelas dão ${resp()[0]}.`; };
     q("[data-v=prox]").addEventListener("click", prox); q("[data-v=conf]").addEventListener("click", confere); inp.addEventListener("keydown", (ev) => { if (ev.key === "Enter") { ev.preventDefault(); confere(); } });
     F.ligaTecladoRu(el, inp);
-    if (SIM.ruBotaoOuvir) SIM.ruBotaoOuvir(el, () => (res === null ? SIM.RU.ADJ[x.a].ac + " " + SIM.RU.DECL[x.n].ac : resp()[0]));
+    if (SIM.ruBotaoOuvir) SIM.ruBotaoOuvir(el, () => (res === null ? B(x.a).ac + " " + SIM.RU.DECL[x.n].ac : resp()[0]));
     SIM.ruEscrevePar._ult = { semente: (n) => { r = rng(n); fila = []; certos = feitos = 0; prox(); }, digita: (t) => { inp.value = t; }, confere, prox, est }; prox(); };
 })();

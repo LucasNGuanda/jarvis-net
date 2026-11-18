@@ -511,11 +511,60 @@ for a_, n_ in PARES_AS:
     if a_ not in ADJ or n_ not in DECL: erros.append(f"RG09 par {a_} + {n_}: palavra fora do banco")
 if len(ADJ) < 40: erros.append(f"RG09: só {len(ADJ)} adjetivos")
 
+# ---------- RG10: possessivos e demonstrativos (dadosR5.json: tabelas do Wiktionary em inglês), no mesmo formato dos adjetivos ----------
+PS_PT = [["мой", "my", "meu"], ["твой", "your", "teu, seu (de você)"], ["наш", "our", "nosso"], ["ваш", "your", "de vocês; do senhor"], ["свой", "one's own", "o seu próprio"],
+         ["этот", "this", "este"], ["тот", "that", "aquele"], ["сам", "self", "mesmo, em pessoa"], ["чей", "whose", "de quem"]]
+POSS = {}
+for w, chave, pt in PS_PT:
+    es = (D5["possessivos_e_demonstrativos"].get(w) or {}).get("entradas") or []
+    e = next((x for x in es if ((x.get("tabela") or {}).get("casos") or {}).get("nominative", {}).get("masculine")), None)
+    if not e: erros.append(f"RG10 {w}: sem tabela"); continue
+    gl = " | ".join(str(v(x.get("glosa")) or "") for x in es)
+    if chave not in gl: erros.append(f"RG10 {w}: {chave!r} não está na definição ({gl[:70]!r})"); continue
+    t_ = e["tabela"]; notas = t_.get("notas"); cs = {}
+    for k, en in CASOS:
+        linha = t_["casos"][en]
+        if k == "acc":
+            cs["accA"] = [formas(linha[c].get("animate") if "animate" in linha[c] else linha[c], notas) for c in COLS]
+            cs["acc"] = [formas(linha[c].get("inanimate") if "inanimate" in linha[c] else linha[c], notas) for c in COLS]
+        else: cs[k] = [formas(linha[c], notas) for c in COLS]
+    if w not in [f.replace("́", "") for f in cs["nom"][0]] or any(not f for k in cs for f in cs[k]): erros.append(f"RG10 {w}: nominativo {cs['nom'][0]} ou célula vazia")
+    POSS[w] = {"ac": v(e["forma_acentuada"]), "pt": pt, "casos": cs, "curta": None, "ipa": v(e.get("ipa"))}
+# os de terceira pessoa: a fonte diz que se usa o genitivo do pronome pessoal (его, её, их); o gerador confere que são mesmo esse genitivo
+DONO = [["я", "мой"], ["ты", "твой"], ["мы", "наш"], ["вы", "ваш"]]
+DONO3 = []
+for pron, forma in [["он", "его"], ["она", "её"], ["они", "их"]]:
+    if forma not in [f.replace("́", "") for f in PRON[pron]["casos"]["gen"]]: erros.append(f"RG10: {forma} não é o genitivo de {pron}")
+    es = (D5["possessivos_e_demonstrativos"].get(forma) or {}).get("entradas") or []
+    if not any("possessive" in str(v(x.get("glosa"))) for x in es): erros.append(f"RG10: verbete {forma} sem a definição possessiva")
+    DONO3.append([pron, next(f for f in PRON[pron]["casos"]["gen"] if f.replace("́", "") == forma)])
+PARES_PS = [["мой", "брат"], ["мой", "сестра"], ["мой", "письмо"], ["твой", "книга"], ["твой", "друг"], ["твой", "окно"], ["наш", "школа"], ["наш", "город"], ["наш", "дело"],
+            ["ваш", "учитель"], ["ваш", "семья"], ["ваш", "письмо"], ["этот", "дом"], ["этот", "книга"], ["этот", "слово"], ["тот", "человек"], ["тот", "улица"], ["тот", "здание"],
+            ["мой", "мать"], ["наш", "врач"], ["этот", "задача"], ["тот", "день"], ["твой", "отец"], ["ваш", "дочь"]]
+for a_, n_ in PARES_PS:
+    if a_ not in POSS or n_ not in DECL: erros.append(f"RG10 par {a_} + {n_}: palavra fora do banco")
+# frases da fonte com um possessivo ou demonstrativo: [frase, tradução, palavra em inglês da tradução, forma, palavra, caso, coluna (0 m, 1 n, 2 f, 3 pl), fonte]
+FRP_PT = [["Я Том, а э́то моя́ ма́ма.", "Eu sou o Tom, e esta é a minha mãe.", "my mom", "моя́", "мой", "nom", 2, "wt"], ["У моего брата есть обед", "Meu irmão tem um almoço.", "My brother has a lunch", "моего", "мой", "gen", 0, "wp"],
+          ["Он у́чится у свои́х друзе́й.", "Ele aprende com os próprios amigos.", "his friends", "свои́х", "свой", "gen", 3, "wt"], ["Э́ти часы́ не иду́т.", "Este relógio não funciona.", "This clock", "Э́ти", "этот", "nom", 3, "wt"],
+          ["Э́тот костю́м ему́ идёт.", "Este terno fica bem nele.", "This suit", "Э́тот", "этот", "nom", 0, "wt"]]
+FRP = []
+for ru_, pt, chave, forma, w, caso, col, de in FRP_PT:
+    if de == "wt":
+        f = todas5.get(ru_) or todas_fr.get(ru_)
+        if not f: erros.append(f"RG10 frase não está na fonte: {ru_!r}"); continue
+        en = v(f["traducao"])
+        if chave not in en: erros.append(f"RG10 frase {ru_!r}: {chave!r} não está na tradução da fonte ({en!r})")
+    else:
+        if ru_ not in wp_txt or chave not in wp_txt: erros.append(f"RG10 frase fora da Wikipedia: {ru_!r}"); continue
+        en = chave
+    if forma.replace("́", "").lower() not in [y.replace("́", "").lower() for y in POSS[w]["casos"][caso][col]] or forma not in ru_: erros.append(f"RG10 frase {ru_!r}: {forma!r} não é {caso} coluna {col} de {w} ({POSS[w]['casos'][caso][col]})")
+    FRP.append({"ru": ru_, "pt": pt, "en": en, "forma": forma, "w": w, "caso": caso, "col": col})
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -527,4 +576,5 @@ print("RG03:", len(NOM), "substantivos;", sum(1 for x in NOM if x["pl"]), "com p
 print("RG04:", len(DECL), "declinações;", len(VERB), "verbos;", len(PRON), "pronomes;", len(FRASES), "frases")
 print("RG11:", len(VERB), "verbos;", len(PARES_ASP), "pares de aspecto;", len(FRV), "frases de verbo")
 print("RG09:", len(ADJ), "adjetivos;", len(PARES_AS), "pares adjetivo + substantivo")
+print("RG10:", len(POSS), "possessivos e demonstrativos;", len(PARES_PS), "pares;", len(FRP), "frases")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})

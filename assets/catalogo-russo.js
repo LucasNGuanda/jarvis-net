@@ -16,7 +16,7 @@ window.CATALOGO.push(
     ["RG07","Instrumental",["RG06"],true],
     ["RG08","Preposicional",["RG07"],true],
     ["RG09","Adjetivos: concordância e declinação",["RG08"],true],
-    ["RG10","Pronomes",[]],
+    ["RG10","Pronomes",["RG09"],true],
     ["RG11","Verbos no presente",["RG04"],true],
     ["RG12","Verbos no passado e no futuro",["RG11"],true],
     ["RG13","Aspecto verbal: perfectivo × imperfectivo",[]],

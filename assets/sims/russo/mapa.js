@@ -11,17 +11,19 @@
   SIM.ruCasos = CASOS;
   const junta = (f) => (f && f.length ? f.join(" / ") : null);
   /* estrutura do mapa de uma palavra: { centro, sub, tipo, ramos: [{ nome, sub, folhas: [{ rot, forma }] }] } */
-  SIM.ruMapaDe = (w) => { const R = SIM.RU, v = R.VERB && R.VERB[w], d = R.DECL && R.DECL[w];
+  SIM.ruMapaDe = (w, op = {}) => { const R = SIM.RU, v = R.VERB && R.VERB[w], d = R.DECL && R.DECL[w];
     if (v) return { w, centro: v.ac, sub: v.pt, tipo: "verbo", ramos: [
       { nome: "infinitivo", sub: v.asp === "impf" ? "imperfectivo" : v.asp === "pf" ? "perfectivo" : "", folhas: [{ rot: "forma do dicionário", forma: v.ac }].concat(v.par ? [{ rot: "par de aspecto", forma: v.par }] : []) },
       { nome: v.tempo, sub: "muda com a pessoa", folhas: PESS.map((p, i) => ({ rot: p, forma: junta(v.pres[i]) })) },
       { nome: "passado", sub: "muda com o gênero", folhas: [["он", 0], ["она", 1], ["оно", 2], ["они", 3]].map(([p, i]) => ({ rot: p, forma: junta(v.pass[i]) })) },
       { nome: "imperativo", sub: "ordem ou pedido", folhas: [["ты", 0], ["вы", 1]].map(([p, i]) => ({ rot: p, forma: junta(v.imp[i]) })) }] };
     if (d) return { w, centro: d.ac, sub: d.pt + " · " + d.genPt, tipo: "substantivo", ramos: CASOS.map(([k, nome, perg]) => ({ nome, sub: perg, folhas: [{ rot: "singular", forma: junta(d.casos[k][0]) }, { rot: "plural", forma: junta(d.casos[k][1]) }] })) };
-    const a = R.ADJ && R.ADJ[w];
+    const pr = R.PRON && R.PRON[w];
+    if (pr && !op.semPron) return { w, centro: w, sub: pr.pt, tipo: "pronome", ramos: CASOS.map(([k, nome, perg]) => ({ nome, sub: perg, folhas: (pr.casos[k].length ? pr.casos[k] : [null]).map((f, i) => ({ rot: !i || !f ? "" : ["он", "она", "оно", "они"].includes(w) && f[0] === "н" ? "depois de preposição" : "variante", forma: f })) })) };
+    const a = (R.ADJ && R.ADJ[w]) || (R.POSS && R.POSS[w]);
     if (a) return { w, centro: a.ac, sub: a.pt, tipo: "adjetivo", ramos: CASOS.map(([k, nome, perg]) => ({ nome, sub: k === "acc" ? "com substantivo inanimado" : perg, folhas: ["masc.", "neutro", "fem.", "plural"].map((rot, i) => ({ rot, forma: a.casos[k][i].length ? a.casos[k][i][0] : null })) })) };
     return null; };
-  SIM.ruMapaLista = (tipo) => { const R = SIM.RU, v = Object.keys(R.VERB || {}), s = Object.keys(R.DECL || {}), a = Object.keys(R.ADJ || {}); return tipo === "verbo" ? v : tipo === "substantivo" ? s : tipo === "adjetivo" ? a : v.concat(s, a); };
+  SIM.ruMapaLista = (tipo) => { const R = SIM.RU, v = Object.keys(R.VERB || {}), s = Object.keys(R.DECL || {}), a = Object.keys(R.ADJ || {}); return tipo === "verbo" ? v : tipo === "substantivo" ? s : tipo === "adjetivo" ? a : tipo === "pronome" ? Object.keys(R.PRON || {}).concat(Object.keys(R.POSS || {})) : v.concat(s, a); };
   /* desenho: metade dos ramos à direita, metade à esquerda; folhas em coluna; visto[] diz quais folhas estão reveladas */
   SIM.ruMapaSvg = (m, visto) => { const W = 900, n = m.ramos.length, dir = m.ramos.slice(0, Math.ceil(n / 2)), esq = m.ramos.slice(Math.ceil(n / 2)), LH = 25, alt = (r) => r.folhas.length * LH + 30;
     const H = Math.max(260, Math.max(dir.reduce((s, r) => s + alt(r), 0), esq.reduce((s, r) => s + alt(r), 0)) + 30), cx = W / 2, cy = H / 2; let k = 0, o = "";
@@ -36,7 +38,7 @@
     o += `<rect x="${cx - 88}" y="${cy - 34}" width="176" height="68" rx="18" style="fill:var(--card2);stroke:var(--ink);stroke-width:2.2"/><text x="${cx}" y="${cy + 1}" text-anchor="middle" style="font:700 23px Inter,system-ui,sans-serif;fill:var(--ink)">${esc(m.centro)}</text><text x="${cx}" y="${cy + 20}" text-anchor="middle" style="font:400 11.5px Inter,system-ui,sans-serif;fill:var(--ink2)">${esc(m.sub)}</text>`;
     return { svg: `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px" role="img" aria-label="mapa mental de ${esc(m.centro)}">${o}</svg>`, folhas: k }; };
 
-  /* nome: "Mapa mental: uma palavra em todas as formas" · matéria: Russo · tema: RG04, RG05, RG06, RG07, RG08, RG09, RG11, RG12 */
+  /* nome: "Mapa mental: uma palavra em todas as formas" · matéria: Russo · tema: RG04, RG05, RG06, RG07, RG08, RG09, RG10, RG11, RG12 */
   SIM.ruMapa = (el, F, op = {}) => { const tipo = op.tipo || "todos", L = (op.palavras || SIM.ruMapaLista(tipo)).filter((w) => SIM.ruMapaDe(w)); let k = Math.max(0, L.indexOf(op.inicio || L[0])), visto = [], m = null, treino = false;
     el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">palavra</p><div class="bts"><select data-v="sel" class="bt peq" style="font-size:15px;padding:5px 8px">${L.map((w, i) => `<option value="${i}">${w}</option>`).join("")}</select><button class="bt peq" data-v="ant">anterior</button><button class="bt peq" data-v="prox">próxima</button></div></div>
       <div><p style="margin:0 0 4px;font-size:13px;color:var(--ink2)">modo</p><div class="bts"><button class="bt peq" data-v="ver" aria-pressed="true">ver tudo</button><button class="bt peq" data-v="trn" aria-pressed="false">esconder e lembrar</button><button class="bt peq" data-v="ouvir" title="voz russa do navegador, se houver">ouvir</button></div><div data-v="semvoz" style="font-size:12.5px;color:var(--warn);min-height:16px"></div></div></div>
