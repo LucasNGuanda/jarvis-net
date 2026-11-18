@@ -409,11 +409,75 @@ for ru_, pt, chave, marcas, de in FR2_PT:
 for caso in ("gen", "dat", "ins", "prep"):
     if sum(1 for f in FRASES2 if any(m[1] == caso for m in f["marcas"])) < 3: erros.append(f"menos de 3 frases com {caso}")
 
+# ---------- RG11 e RG12: mais verbos e o futuro composto (tools/russo/dadosR5.json: tabelas de conjugação do Wiktionary em inglês) ----------
+D5 = json.load(open(os.path.join(R, "dadosR5.json"), encoding="utf-8"))
+V_PT2 = [["прочитать", 0, "to read", "ler (até o fim)"], ["написать", 0, "to write", "escrever (até o fim)"], ["сделать", 0, "to do", "fazer (até o fim)"], ["сказать", 0, "to say", "dizer"],
+         ["понять", 0, "to understand", "entender (de uma vez)"], ["увидеть", 0, "to see", "ver (avistar)"], ["купить", 0, "to buy", "comprar (uma vez)"], ["взять", 0, "to take", "pegar (uma vez)"],
+         ["брать", 0, "to take", "pegar"], ["спросить", 0, "to ask", "perguntar (uma vez)"], ["ответить", 0, "to answer", "responder (uma vez)"], ["помочь", 0, "to help", "ajudar (uma vez)"],
+         ["пойти", 0, "to go", "ir, partir (a pé)"], ["поехать", 0, "to go", "ir, partir (de veículo)"], ["прийти", 0, "to come", "chegar (a pé)"], ["начать", 0, "to begin", "começar (uma vez)"],
+         ["начинать", 0, "to begin", "começar"], ["получить", 0, "to receive", "receber (uma vez)"], ["получать", 0, "to receive", "receber"], ["найти", 0, "to find", "encontrar"],
+         ["нравиться", 0, "to please", "agradar"], ["называться", 0, "to be called", "chamar-se"], ["значить", 0, "to mean", "significar"],
+         ["двигаться", 0, "to move", "mover-se"], ["лежать", 0, "to lie", "estar deitado"], ["стоять", 0, "to stand", "estar de pé"], ["сидеть", 0, "to sit", "estar sentado"]]
+def le_verbo(fonte, inf, i, chave, pt):
+    es = fonte["verbos"].get(inf, {}).get("entradas_verb") or []
+    if len(es) <= i: erros.append(f"verbo {inf}: sem entrada"); return None
+    e = es[i]; gl = " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])][:6])
+    if chave not in gl: erros.append(f"verbo {inf}: {chave!r} não está na definição ({gl[:70]!r})"); return None
+    c = e.get("conjugacao") or {}; asp = v(e.get("aspecto"))
+    if asp not in ("impf", "pf") or not c.get("passado"): erros.append(f"verbo {inf}: aspecto ou conjugação ausente"); return None
+    seis = ("1sg", "2sg", "3sg", "1pl", "2pl", "3pl"); tab = c["presente"] if asp == "impf" else c["futuro"]
+    pres = [formas(tab.get(k), c.get("notas")) for k in seis]
+    if any(not f for f in pres): erros.append(f"verbo {inf}: célula vazia em {pres}"); return None
+    ac = v(e["forma_acentuada"])
+    if ac.replace("́", "") != inf: erros.append(f"verbo {inf}: forma acentuada {ac!r}")
+    tit = v(c.get("titulo")) or ""
+    fut = [formas(c["futuro"].get(k), c.get("notas")) for k in seis] if asp == "impf" and c.get("futuro") else None
+    return {"ac": ac, "pt": pt, "asp": asp, "par": v(e.get("par_aspectual")), "tempo": "presente" if asp == "impf" else "futuro", "pres": pres, "fut": fut,
+            "pass": [formas(c["passado"].get(k), c.get("notas")) for k in ("m", "f", "n", "pl")], "imp": [formas(c["imperativo"].get(k), c.get("notas")) for k in ("sg", "pl")],
+            "ipa": v(e.get("ipa")), "trans": "intransitive" not in tit and "transitive" in tit, "tit": tit}
+VERB = {}
+for inf, i, chave, pt in V_PT:
+    x = le_verbo(D5, inf, i, chave, pt)
+    if x: VERB[inf] = x
+for inf, i, chave, pt in V_PT2:
+    x = le_verbo(D5, inf, i, chave, pt)
+    if x: VERB[inf] = x
+# pares de aspecto em que os dois verbos estão no banco
+PARES_ASP = []
+for inf, x in VERB.items():
+    par = (x["par"] or "").replace("́", "")
+    if x["asp"] == "impf" and par in VERB and VERB[par]["asp"] == "pf": PARES_ASP.append([inf, par])
+if len(VERB) < 55: erros.append(f"RG11: só {len(VERB)} verbos")
+
+# frases com a forma do verbo marcada: [frase literal, tradução, palavra em inglês da tradução da fonte, forma, infinitivo, tempo ("pres", "pass" ou "fut"), índice da pessoa (ou do gênero, no passado), fonte]
+FRV_PT = [
+ ["Я говорю́ по-ру́сски.", "Eu falo russo.", "Russian", "говорю́", "говорить", "pres", 0, "wt"], ["Что она́ говори́т?", "O que ela está dizendo?", "saying", "говори́т", "говорить", "pres", 2, "wt"],
+ ["Она́ их ви́дит.", "Ela os vê.", "sees", "ви́дит", "видеть", "pres", 2, "wt"], ["Мы плохо ви́дим в темноте́.", "Nós enxergamos mal no escuro.", "poorly", "ви́дим", "видеть", "pres", 3, "wt"],
+ ["Я её хорошо́ зна́ю.", "Eu a conheço bem.", "know", "зна́ю", "знать", "pres", 0, "wt"], ["Я зна́ю, где он живёт.", "Eu sei onde ele mora.", "where he lives", "живёт", "жить", "pres", 2, "wt"],
+ ["Я не понима́ю, что вы говори́те.", "Eu não entendo o que vocês estão dizendo.", "understand", "понима́ю", "понимать", "pres", 0, "wt"],
+ ["Лека́рство помога́ет.", "O remédio está ajudando.", "medicine", "помога́ет", "помогать", "pres", 2, "wt"], ["Я дру́гу помога́ю де́ньгами.", "Eu ajudo um amigo com dinheiro.", "friend", "помога́ю", "помогать", "pres", 0, "wt"],
+ ["Вре́мя идёт бы́стро.", "O tempo passa depressa.", "Time", "идёт", "идти", "pres", 2, "wt"], ["Э́ти часы́ не иду́т.", "Este relógio não funciona.", "clock", "иду́т", "идти", "pres", 5, "wt"],
+ ["Я мно́гому учу́сь.", "Estou aprendendo muito.", "learning", "учу́сь", "учиться", "pres", 0, "wt"], ["Он у́чится в университе́те.", "Ele estuda na universidade.", "university", "у́чится", "учиться", "pres", 2, "wt"],
+ ["Я ему́ помога́л.", "Eu o ajudava.", "helping", "помога́л", "помогать", "pass", 0, "wt"], ["Он ел мя́со и сала́т.", "Ele comia carne e salada.", "meat", "ел", "есть", "pass", 0, "wt"],
+ ["Я не зна́ю, когда́ э́то бы́ло.", "Eu não sei quando isso foi.", "when it was", "бы́ло", "быть", "pass", 2, "wt"],
+]
+todas5 = {v(f["russo"]): f for f in D5["frases"] if isinstance(f, dict) and "russo" in f}
+FRV = []
+for ru_, pt, chave, forma, inf, tempo, i, de in FRV_PT:
+    f = todas5.get(ru_) or todas_fr.get(ru_)
+    if not f: erros.append(f"frase de verbo não está na fonte: {ru_!r}"); continue
+    en = v(f["traducao"])
+    if chave not in en: erros.append(f"frase {ru_!r}: {chave!r} não está na tradução da fonte ({en!r})")
+    vb = VERB.get(inf); tab = (vb["pres"] if tempo == "pres" else vb["pass"]) if vb else None
+    if not vb or forma.replace("\u0301", "") not in [y.replace("\u0301", "") for y in tab[i]]: erros.append(f"frase {ru_!r}: {forma!r} não é a forma {tempo} {i} de {inf} ({tab[i] if tab else None})")
+    if forma not in ru_.replace(",", "").replace(".", "").replace("?", "").split(" "): erros.append(f"frase {ru_!r}: {forma!r} não é palavra da frase")
+    FRV.append({"ru": ru_, "pt": pt, "en": en, "forma": forma, "inf": inf, "tempo": tempo, "i": i, "de": f["verbete"]})
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -423,4 +487,5 @@ print(f"gravado: {len(ALF)} letras, {len(PAL)} palavras, {len(PAR)} pares de ace
 print("RG02:", len(RED["akanye"]), "akanye,", len(RED["mole"]), "pares depois de mole,", len(RED["ikanye"]), "pares ikanye,", len(ENS), "ensurdecimento,", len(DEZ), "dezenas,", ESTR)
 print("RG03:", len(NOM), "substantivos;", sum(1 for x in NOM if x["pl"]), "com plural;", len(IRR), "irregulares conferidos com a Wikipedia")
 print("RG04:", len(DECL), "declinações;", len(VERB), "verbos;", len(PRON), "pronomes;", len(FRASES), "frases")
+print("RG11:", len(VERB), "verbos;", len(PARES_ASP), "pares de aspecto;", len(FRV), "frases de verbo")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})
