@@ -48,5 +48,43 @@ for _ in range(60):
     phi = 1 + 1 / phi
 ok(abs(phi - (1 + 5 ** 0.5) / 2) < 1e-12, "MB01 ponte: a fração contínua 1 + 1/(1 + 1/(1 + ...)) é a razão áurea")
 
+# ---------- MB02 ----------
+# Identidades de polinômios, sem biblioteca de álgebra: dois polinômios de grau no máximo 4 em cada variável que coincidem numa grade de
+# 6 valores por variável são o mesmo polinômio. Os valores são frações exatas (inclusive não inteiras), então não há erro de arredondamento.
+import itertools
+GRADE = [Fr(-2), Fr(-1), Fr(0), Fr(1, 2), Fr(1), Fr(3)]
+for nome, esq, dir_ in [
+    ("(a + b)² = a² + 2ab + b²", lambda a, b, c: (a + b) ** 2, lambda a, b, c: a ** 2 + 2 * a * b + b ** 2),
+    ("(a − b)² = a² − 2ab + b²", lambda a, b, c: (a - b) ** 2, lambda a, b, c: a ** 2 - 2 * a * b + b ** 2),
+    ("(a + b)(a − b) = a² − b²", lambda a, b, c: (a + b) * (a - b), lambda a, b, c: a ** 2 - b ** 2),
+    ("(a + b)³", lambda a, b, c: (a + b) ** 3, lambda a, b, c: a ** 3 + 3 * a ** 2 * b + 3 * a * b ** 2 + b ** 3),
+    ("(a + b + c)²", lambda a, b, c: (a + b + c) ** 2, lambda a, b, c: a ** 2 + b ** 2 + c ** 2 + 2 * (a * b + b * c + c * a)),
+    ("a³ + b³ = (a + b)(a² − ab + b²)", lambda a, b, c: a ** 3 + b ** 3, lambda a, b, c: (a + b) * (a ** 2 - a * b + b ** 2)),
+    ("a³ − b³ = (a − b)(a² + ab + b²)", lambda a, b, c: a ** 3 - b ** 3, lambda a, b, c: (a - b) * (a ** 2 + a * b + b ** 2)),
+    ("a³ + b³ = (a + b)³ − 3ab(a + b)", lambda a, b, c: a ** 3 + b ** 3, lambda a, b, c: (a + b) ** 3 - 3 * a * b * (a + b)),
+    ("Sophie Germain: a⁴ + 4b⁴", lambda a, b, c: a ** 4 + 4 * b ** 4, lambda a, b, c: (a ** 2 + 2 * a * b + 2 * b ** 2) * (a ** 2 - 2 * a * b + 2 * b ** 2)),
+    ("completar quadrado: x² + bx (a faz o papel de x)", lambda a, b, c: a ** 2 + b * a, lambda a, b, c: (a + b / 2) ** 2 - b ** 2 / 4),
+    ("x² + 6x + 5 = (x + 3)² − 4", lambda a, b, c: a ** 2 + 6 * a + 5, lambda a, b, c: (a + 3) ** 2 - 4),
+    ("x² + 5x + 6 = (x + 2)(x + 3)", lambda a, b, c: a ** 2 + 5 * a + 6, lambda a, b, c: (a + 2) * (a + 3)),
+    ("xy + 3x + 2y + 6 = (x + 2)(y + 3)", lambda a, b, c: a * b + 3 * a + 2 * b + 6, lambda a, b, c: (a + 2) * (b + 3)),
+    ("6x² + 15x = 3x(2x + 5)", lambda a, b, c: 6 * a ** 2 + 15 * a, lambda a, b, c: 3 * a * (2 * a + 5)),
+    ("n⁴ + 4 = (n² + 2n + 2)(n² − 2n + 2)", lambda a, b, c: a ** 4 + 4, lambda a, b, c: (a ** 2 + 2 * a + 2) * (a ** 2 - 2 * a + 2)),
+    ("n² − 2n + 2 = (n − 1)² + 1", lambda a, b, c: a ** 2 - 2 * a + 2, lambda a, b, c: (a - 1) ** 2 + 1),
+    ("x³ − 8 = (x − 2)(x² + 2x + 4)", lambda a, b, c: a ** 3 - 8, lambda a, b, c: (a - 2) * (a ** 2 + 2 * a + 4))]:
+    ok(all(esq(*v) == dir_(*v) for v in itertools.product(GRADE, repeat=3)), "MB02: " + nome)
+# o conferidor acusa identidade falsa? (prova de que o teste serve)
+ok(not all((a + b) ** 2 == a ** 2 + b ** 2 for a, b in itertools.product(GRADE, repeat=2)), "MB02: a identidade falsa (a + b)² = a² + b² é recusada pela grade")
+ok(13 ** 2 == 169 and 49 * 51 == 2499 and 101 * 99 == 9999, "MB02: 13² = 169; 49·51 = 2499; 101·99 = 9999")
+ok((3 + 4) ** 2 == 49 and 3 ** 2 + 4 ** 2 == 25 and 2 * 3 * 4 == 24, "MB02 chute: (3 + 4)² = 49, 3² + 4² = 25, diferença 24")
+ok(5 ** 4 + 4 == 629 == 37 * 17 and 4 ** 4 + 4 == 260 == 26 * 10 and 10 ** 4 + 4 == 10004 == 122 * 82, "MB02: 5⁴ + 4 = 629 = 37·17; 4⁴ + 4 = 260 = 26·10; 10⁴ + 4 = 10004 = 122·82")
+k = Fr(3)
+ok(k ** 2 - 2 == 7 and k ** 3 - 3 * k == 18, "MB02: x + 1/x = 3 dá x² + 1/x² = 7 e x³ + 1/x³ = 18")
+for m in (2, 3, 4, 10, 50):
+    prod = Fr(1)
+    for j in range(2, m + 1):
+        prod *= 1 - Fr(1, j * j)
+    ok(prod == Fr(m + 1, 2 * m), f"MB02 chefão: produto até {m} = {m + 1}/{2 * m}")
+ok(Fr(3, 4) * Fr(8, 9) == Fr(2, 3) and Fr(2, 3) * Fr(15, 16) == Fr(5, 8), "MB02 chefão (a): P₃ = 2/3 e P₄ = 5/8")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

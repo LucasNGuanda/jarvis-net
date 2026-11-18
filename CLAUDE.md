@@ -102,12 +102,15 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Ativar o GitHub Pages.
 
 ## Sessão de matemática (pedido do autor, 18/11/2026: "começa a fazer o 1 módulo de mat")
-- Ordem: módulo **MB (Matemática Básica)**, MB01 a MB05, um tema por vez, na branch `matematica-mb`; ZIP e aprovação antes do `main`. **MB01 (Frações e Equações) escrito na β 8.4.**
+- Ordem: módulo **MB (Matemática Básica)**, MB01 a MB05, um tema por vez, na branch `matematica-mb`; ZIP e aprovação antes do `main`. **MB01 (Frações e Equações) escrito na β 8.4 e MB02 (Fatoração e Manipulações Algébricas) na β 8.5.** Faltam MB03, MB04 e MB05.
 - Território: `temas/matematica/MB*.js`, `assets/sims/matematica/basica.js`, `tools/matematica/`, `tests/tlabsMB.js`, uma linha de `<script>` no `index.html` por arquivo de laboratório.
 - **Núcleo de frações `SIM.mb`** (em `basica.js`): `fr`, `soma`, `sub`, `mul`, `div`, `tex`, `txt`, `mdc`, `mmc`, `dizima`, `geratriz`, `lin` e os desenhos `figBarras`, `pizza`, `reta`, `balanca`, `cartao`. Aritmética exata com inteiros; **a geratriz usa inteiros grandes (BigInt)**, porque período comprido (1/17 tem 16 algarismos) passa da precisão dos números comuns (erro pego pelo `tlabsMB`, que testa as 1640 frações de denominador até 40).
 - Em matemática não há "fonte" a baixar: **toda conta escrita à mão no texto entra em `python3 tools/matematica/confere-mb.py`** (com `fractions.Fraction`), e todo exercício numérico sorteado leva `py`.
 - Padrão do tema: o completo (pergunta, chute, laboratórios, teoria com teoremas demonstrados "com números primeiro" e depois em geral, 3 exemplos, caixas, 16 exercícios com sorteio e figura, chefão). "Pense como matemático" = `F.caixa("fisico", html, "Pense como matemático")`.
 - **Regras de escrita que o `texemp` cobra nos exemplos:** nunca "1x" (usar o ajudante `cx`), nunca "+ −". Atenção: numa fração como (x + 1)/(x − 2), o texto renderizado junta "1" e "x" e o teste acusa "1x": nos EXEMPLOS, evitar constantes terminadas em 1 no numerador e no denominador.
+- **MB02:** `assets/sims/matematica/basica2.js` acrescenta ao núcleo `SIM.mb.pol`/`polTxt` (polinômio escrito sem "1x", sem "+ −" e sem termo nulo), `binom`, `polMul` e `areaFig` (retângulo cortado em partes, para produtos notáveis), e traz os laboratórios `SIM.mbArea`, `SIM.mbSomaProduto` e `SIM.mbExpande`.
+- **Identidade algébrica se confere sem biblioteca:** o `sympy` não está instalado no ambiente, e o `confere-mb.py` não depende dele. Dois polinômios de grau até 4 em cada variável que coincidem numa grade de 6 frações exatas por variável são iguais; o conferidor testa assim e prova que acusa uma identidade falsa. (Um comando encadeado com `&&` escondeu que o conferidor nem tinha rodado: conferir a contagem de linhas "ok", não só a ausência de FALHA.)
+- **Figura de exercício de fatoração não pode ter os fatores nos lados** (aconteceu no MB02.08: os lados do retângulo eram x, 2, y e 3; trocados por "?"). Nos exemplos, o termo independente também não pode terminar em 1 (o `texemp` lê "1x" no texto colado da fórmula).
 - Solução que depende de um caso (ex.: fração com denominador c − a) não pode ser calculada para todos os casos de uma vez: `fr(…, 0)` é `null` e quebra a página inteira (aconteceu no exercício 14).
 
 ## Publicação (decisão do autor, 18/11/2026)
