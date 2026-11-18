@@ -36,20 +36,20 @@
     el.querySelectorAll("[data-t]").forEach((b) => b.addEventListener("click", () => clica(b.dataset.t))); q("[data-v=prox]").addEventListener("click", prox); if (SIM.ruBotaoOuvir) SIM.ruBotaoOuvir(el, () => x.forma);
     SIM.ruQueTempo._ult = { semente: (n) => { r = rng(n); fila = []; certos = feitos = 0; prox(); }, clica, prox, est }; prox(); };
 
-  /* nome: "Jogo de pares: imperfectivo e perfectivo" · matéria: Russo · tema: RG13 */
-  SIM.ruParesAsp = (el, F) => { const N = 6; let r = rng(1), esq = [], dir = [], selE = null, selD = null, feitos = new Set(), tent = 0, erro = null;
+  /* nome: "Jogo de pares: imperfectivo e perfectivo" · matéria: Russo · tema: RG13, RG14 */
+  SIM.ruParesAsp = (el, F, op = {}) => { const P = op.pares || SIM.RU.PARES_ASP, N = Math.min(6, P.length), ROT = op.rot || ["imperfectivo", "perfectivo"]; let r = rng(1), esq = [], dir = [], selE = null, selD = null, feitos = new Set(), tent = 0, erro = null;
     el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-v="novo">novos pares</button></div></div></div><div data-v="mesa" style="display:grid;grid-template-columns:1fr 1fr;gap:8px 28px;max-width:620px;margin:10px auto"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
     const q = (s) => el.querySelector(s), V = SIM.RU.VERB;
-    const novo = () => { const ps = emb(SIM.RU.PARES_ASP, r).slice(0, N); esq = ps.map((p) => p[0]); dir = emb(ps.map((p) => p[1]), r); selE = selD = null; feitos = new Set(); tent = 0; erro = null; desenha(); };
-    const parDe = (impf) => SIM.RU.PARES_ASP.find((p) => p[0] === impf)[1];
+    const novo = () => { const ps = emb(P, r).slice(0, N); esq = ps.map((p) => p[0]); dir = emb(ps.map((p) => p[1]), r); selE = selD = null; feitos = new Set(); tent = 0; erro = null; desenha(); };
+    const parDe = (impf) => P.find((p) => p[0] === impf)[1];
     const tenta = () => { if (selE === null || selD === null) return; tent++; if (parDe(esq[selE]) === dir[selD]) { feitos.add(esq[selE]); erro = null; } else erro = [selE, selD]; selE = selD = null; };
     const clica = (lado, i) => { if (lado === "e") { if (feitos.has(esq[i])) return; selE = i; } else { if ([...feitos].some((k) => parDe(k) === dir[i])) return; selD = i; } erro = null; tenta(); desenha(); };
     const est = () => ({ esq: esq.slice(), dir: dir.slice(), feitos: feitos.size, tent, fim: feitos.size === N, erro, certoDe: esq.map(parDe) });
     const carta = (lado, i, txt, ok) => { const sel = (lado === "e" ? selE : selD) === i, ruim = erro && erro[lado === "e" ? 0 : 1] === i; return `<button type="button" data-c="${lado}${i}" ${ok ? "disabled" : ""} style="padding:9px 10px;border-radius:9px;cursor:${ok ? "default" : "pointer"};font:600 20px Inter,system-ui,sans-serif;color:var(--ink);background:${ok ? "color-mix(in srgb,var(--ok) 18%,var(--card2))" : "var(--card2)"};border:2px solid ${ok ? "var(--ok)" : ruim ? "var(--bad, #e06666)" : sel ? "var(--mod)" : "var(--line)"};opacity:${ok ? 0.75 : 1}">${txt}</button>`; };
-    const desenha = () => { q("[data-v=mesa]").innerHTML = `<div style="font-size:12.5px;color:var(--ink2);text-align:center">imperfectivo</div><div style="font-size:12.5px;color:var(--ink2);text-align:center">perfectivo</div>` + esq.map((k, i) => carta("e", i, V[k].ac, feitos.has(k)) + carta("d", i, V[dir[i]].ac, [...feitos].some((z) => parDe(z) === dir[i]))).join("");
+    const desenha = () => { q("[data-v=mesa]").innerHTML = `<div style="font-size:12.5px;color:var(--ink2);text-align:center">${ROT[0]}</div><div style="font-size:12.5px;color:var(--ink2);text-align:center">${ROT[1]}</div>` + esq.map((k, i) => carta("e", i, V[k].ac, feitos.has(k)) + carta("d", i, V[dir[i]].ac, [...feitos].some((z) => parDe(z) === dir[i]))).join("");
       q("[data-v=mesa]").querySelectorAll("[data-c]").forEach((b) => b.addEventListener("click", () => clica(b.dataset.c[0], +b.dataset.c.slice(1))));
       q("[data-v=lt]").innerHTML = vis("pares certos", `${feitos.size} de ${N}`) + vis("tentativas", tent);
-      q("[data-v=st]").innerHTML = feitos.size === N ? `Fechou os ${N} pares em ${tent} tentativas. Sentidos: ${esq.map((k) => V[k].ac + " (" + V[k].pt + ")").join(", ")}.` : "Clique num imperfectivo e depois no perfectivo que faz par com ele. Os pares são os que o dicionário indica (um verbete aponta para o outro)."; };
+      q("[data-v=st]").innerHTML = feitos.size === N ? `Fechou os ${N} pares em ${tent} tentativas. Sentidos: ${esq.map((k) => V[k].ac + " (" + V[k].pt + ")").join(", ")}.` : (op.ajuda || "Clique num imperfectivo e depois no perfectivo que faz par com ele. Os pares são os que o dicionário indica (um verbete aponta para o outro)."); };
     q("[data-v=novo]").addEventListener("click", novo);
     SIM.ruParesAsp._ult = { semente: (n) => { r = rng(n); novo(); }, clica, est }; novo(); };
 

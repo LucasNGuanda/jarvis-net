@@ -51,13 +51,13 @@
     el.querySelectorAll("[data-p]").forEach((b) => b.addEventListener("click", () => clica(+b.dataset.p))); q("[data-v=prox]").addEventListener("click", prox); if (SIM.ruBotaoOuvir) SIM.ruBotaoOuvir(el, () => x.forma);
     SIM.ruQuemFala._ult = { semente: (n) => { r = rng(n); fila = []; certos = feitos = 0; prox(); }, clica, prox, est }; prox(); };
 
-  /* nome: "Escreva a forma do verbo" · matéria: Russo · tema: RG11, RG12 */
+  /* nome: "Escreva a forma do verbo" · matéria: Russo · tema: RG11, RG12, RG14 */
   SIM.ruEscreveVerbo = (el, F, op = {}) => { const tempo = op.tempo || "pres", rot = tempo === "pres" ? PESS : PASS; let r = rng(1), fila = [], x = null, res = null, certos = 0, feitos = 0;
     el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-v="ouvir" title="voz russa do navegador, se houver">ouvir</button><button class="bt peq" data-v="prox">outra forma</button></div><div data-v="semvoz" style="font-size:12.5px;color:var(--warn);min-height:16px"></div></div></div><div class="palco" data-v="pal" style="text-align:center;padding:16px 10px"></div>
       <div style="display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap"><input type="text" data-v="inp" lang="ru" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="escreva a forma do verbo em cirílico" style="font:600 24px Inter,system-ui,sans-serif;padding:6px 10px;min-width:280px;background:var(--card2);color:var(--ink);border:1.5px solid var(--line);border-radius:9px"><button class="bt peq" data-v="conf">conferir</button></div>
       <div style="display:flex;justify-content:center">${F.tecladoRu()}</div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
     const q = (s) => el.querySelector(s), inp = q("[data-v=inp]");
-    const base = () => { const o = []; SIM.ruVerbos().forEach((w) => { const v = SIM.RU.VERB[w], t = tempo === "pres" ? v.pres : v.pass; t.forEach((fs, i) => { if (fs.length) o.push({ w, i }); }); }); return o; };
+    const base = () => { const o = []; (op.verbos || SIM.ruVerbos()).forEach((w) => { const v = SIM.RU.VERB[w], t = tempo === "pres" ? v.pres : v.pass; t.forEach((fs, i) => { if (fs.length) o.push({ w, i }); }); }); return o; };
     const resp = () => { const v = SIM.RU.VERB[x.w]; return (tempo === "pres" ? v.pres : v.pass)[x.i]; };
     const prox = () => { if (!fila.length) fila = emb(base(), r); x = fila.pop(); res = null; inp.value = ""; desenha(); };
     const confere = () => { const t = F.normTxt(inp.value); if (!t) return; res = resp().map((p) => F.normTxt(p)).includes(t); feitos++; if (res) certos++; desenha(); };

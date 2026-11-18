@@ -442,6 +442,72 @@ for inf, i, chave, pt in V_PT:
 for inf, i, chave, pt in V_PT2:
     x = le_verbo(D5, inf, i, chave, pt)
     if x: VERB[inf] = x
+# ---------- RG14: verbos de movimento (tools/russo/dadosR6.json: verbetes do Wiktionary e seção "Verbs of motion" de Russian grammar, Wikipedia) ----------
+D6 = json.load(open(os.path.join(R, "dadosR6.json"), encoding="utf-8"))
+VM6 = D6["verbos_de_movimento"]; F6 = {"verbos": VM6["verbetes"]}
+V_PT3 = [["ходить", 0, "to go", "ir, andar (a pé)"], ["ездить", 0, "to go", "ir (de veículo)"], ["бежать", 0, "to run", "correr"], ["бегать", 0, "to run", "correr"],
+         ["лететь", 0, "to fly", "voar"], ["летать", 0, "to fly", "voar"], ["плыть", 0, "to swim", "nadar, navegar"], ["плавать", 0, "to swim", "nadar, navegar"],
+         ["нести", 0, "to carry", "levar (a pé), carregar"], ["носить", 0, "to carry", "levar (a pé), carregar"], ["вести", 0, "to lead", "levar, conduzir"], ["водить", 0, "to lead", "levar, conduzir"],
+         ["везти", 0, "to convey", "levar (de veículo)"], ["возить", 0, "to convey", "levar (de veículo)"],
+         ["приходить", 0, "to come", "chegar (a pé)"], ["уйти", 0, "to leave", "ir embora (a pé)"], ["уходить", 0, "to leave", "ir embora (a pé)"],
+         ["войти", 0, "to enter", "entrar (a pé)"], ["входить", 0, "to enter", "entrar (a pé)"], ["выйти", 0, "to exit", "sair (a pé)"], ["выходить", 0, "to go out", "sair (a pé)"],
+         ["приехать", 0, "to arrive", "chegar (de veículo)"], ["приезжать", 0, "to arrive", "chegar (de veículo)"], ["уехать", 0, "to go away", "ir embora (de veículo)"], ["уезжать", 0, "to go away", "ir embora (de veículo)"]]
+for inf, i, chave, pt in V_PT3:
+    x = le_verbo(F6, inf, i, chave, pt)
+    if x: VERB[inf] = x
+sem_ac = lambda s: "".join(ch for ch in str(s) if ord(ch) != 0x301)
+# pares uma direção / várias direções: a nota de uso do Wiktionary de cada verbo tem de dizer a direção e apontar para o outro, e a tabela da Wikipedia tem de trazer o par
+tab_pares = [x for x in VM6["wikipedia"]["secoes"]["russian_grammar_verbs_of_motion"]["conteudo"] if x["tipo"] == "tabela"][0]["grade_expandida"]["linhas"]
+wp_pares = {(sem_ac(v(l[1])), sem_ac(v(l[2])).split(" ")[0]) for l in tab_pares[1:]}
+MOV = []
+for uni, multi in [["идти", "ходить"], ["ехать", "ездить"], ["бежать", "бегать"], ["лететь", "летать"], ["плыть", "плавать"], ["нести", "носить"], ["вести", "водить"], ["везти", "возить"]]:
+    for w, d, o in ((uni, "unidirectional", multi), (multi, "multidirectional", uni)):
+        e = VM6["verbetes"][w]["entradas_verb"][0]; fd = e.get("frase_de_direcao") or {}
+        if v(fd.get("direcao")) != d: erros.append(f"RG14 {w}: a nota do verbete não diz {d} ({v(fd.get('direcao'))!r})")
+        if o not in [sem_ac(v(c)) for c in (e.get("counterpart") or []) if c]: erros.append(f"RG14 {w}: a nota do verbete não aponta para {o}")
+    if (uni, multi) not in wp_pares: erros.append(f"RG14 par {uni}/{multi} fora da tabela da Wikipedia")
+    if uni not in VERB or multi not in VERB: erros.append(f"RG14 par {uni}/{multi}: verbo fora do banco"); continue
+    pf = next((sem_ac(c) for c in (VERB[uni]["par"] or "").split(" or ") if sem_ac(c) in VERB), None)
+    MOV.append({"uni": uni, "multi": multi, "pf": pf})
+# verbos com prefixo: [prefixo, palavra em inglês que tem de estar na linha do prefixo na tabela da Wikipedia, sentido, [perfectivo, imperfectivo] ..., frase da tabela (escrita junto), palavra em inglês da tradução, tradução]
+tab_pref = [x for x in VM6["wikipedia"]["secoes"]["russian_grammar_verbs_of_motion"]["conteudo"] if x["tipo"] == "tabela"][1]["grade_expandida"]["linhas"]
+PREF_PT = [["в-", "entering", "movimento para dentro, entrar", [["войти", "входить"]], "Трамвай остановился, и девушка вошла.", "the girl entered", "O bonde parou e a moça entrou."],
+           ["вы-", "exiting", "movimento para fora, sair", [["выйти", "выходить"]], "Она вышла из кабинета.", "exited the office", "Ela saiu do escritório."],
+           ["при-", "arrival", "chegada: a pessoa passa a estar no lugar", [["прийти", "приходить"], ["приехать", "приезжать"]], "Он приехал в Москву неделю назад.", "arrived in Moscow", "Ele chegou a Moscou há uma semana."],
+           ["у-", "departure", "partida: a pessoa deixa de estar no lugar", [["уйти", "уходить"], ["уехать", "уезжать"]], "Где Игорь? Он уже ушёл.", "already left", "Onde está o Igor? Ele já foi embora."],
+           ["по-", "Beginning of unidirectional", "começo do movimento numa direção", [["пойти", None], ["поехать", None]], "Я пошла в университет.", "went to the university", "Eu fui para a universidade."]]
+PREF = []
+for pre, chave, pt, pares_, fr, chave_fr, fr_pt in PREF_PT:
+    lin = next((l for l in tab_pref if v(l[0]).startswith(pre) and chave in v(l[0])), None)
+    if not lin: erros.append(f"RG14 prefixo {pre}: linha com {chave!r} não achada"); continue
+    ex = v(lin[1])
+    if fr.replace(" ", "") not in ex.replace(" ", "") or chave_fr not in ex: erros.append(f"RG14 prefixo {pre}: frase ou tradução fora da linha da tabela")
+    for pf_, impf_ in pares_:
+        if pf_ not in VERB or VERB[pf_]["asp"] != "pf" or not pf_.startswith(pre[:-1]): erros.append(f"RG14 prefixo {pre}: {pf_} não serve")
+        if impf_ and (impf_ not in VERB or VERB[impf_]["asp"] != "impf" or sem_ac(VERB[impf_]["par"] or "") != pf_ or sem_ac(VERB[pf_]["par"] or "") != impf_): erros.append(f"RG14 prefixo {pre}: {impf_}/{pf_} não é par nos verbetes")
+    PREF.append({"pre": pre, "pt": pt, "en": v(lin[0]), "pares": pares_, "ru": fr, "frPt": fr_pt, "prep": v(lin[2])})
+# frases da seção da Wikipedia (vêm sem acento): [frase, tradução, palavra em inglês da linha anterior da fonte, forma, infinitivo, tempo, índice, tipo, uso]
+lin_mov = [v(x["linha"]) for x in VM6["wikipedia"]["secoes"]["russian_grammar_verbs_of_motion"]["conteudo"] if "linha" in x]
+U = {"curso": "movimento em curso, numa direção", "hab": "capacidade ou hábito, sem direção", "var": "movimento em várias direções", "rep": "viagens repetidas (ida e volta)", "volta": "no passado: uma ida e volta", "ini": "perfectivo com по-: partiu (e não voltou ainda)"}
+FRM_PT = [["Мы идём в библиотеку.", "Estamos indo para a biblioteca.", "library", "идём", "идти", "pres", 3, "uni", "curso"], ["Я шла на работу.", "Eu estava a caminho do trabalho.", "on my way", "шла", "идти", "pass", 1, "uni", "curso"],
+          ["Птицы летят на юг.", "Os pássaros estão voando para o sul.", "south", "летят", "лететь", "pres", 5, "uni", "curso"], ["Ребёнок ходит шесть месяцев.", "A criança anda há seis meses.", "six months", "ходит", "ходить", "pres", 2, "multi", "hab"],
+          ["Мы ходили по городу весь день.", "Andamos pela cidade o dia todo.", "all day", "ходили", "ходить", "pass", 3, "multi", "var"], ["Она ходит в супермаркет каждую неделю.", "Ela vai ao supermercado toda semana.", "every week", "ходит", "ходить", "pres", 2, "multi", "rep"],
+          ["В прошлом году я ездил в Россию.", "No ano passado fui à Rússia (e voltei).", "returned", "ездил", "ездить", "pass", 0, "multi", "volta"], ["Он пошёл к другу.", "Ele foi à casa de um amigo (e ainda não voltou).", "not returned", "пошёл", "пойти", "pass", 0, "pf", "ini"],
+          ["Он шёл к другу.", "Ele estava indo à casa de um amigo.", "on his way", "шёл", "идти", "pass", 0, "uni", "curso"], ["Он ходил к другу.", "Ele costumava ir à casa de um amigo.", "used to", "ходил", "ходить", "pass", 0, "multi", "rep"],
+          ["Он носит портфель.", "Ele carrega uma pasta.", "briefcase", "носит", "носить", "pres", 2, "multi", "hab"], ["Она несёт домашнее задание на занятия.", "Ela está levando a tarefa para a aula.", "assignment", "несёт", "нести", "pres", 2, "uni", "curso"],
+          ["Учитель вёл школьников на экскурсию", "O professor estava levando os alunos a uma excursão.", "field trip", "вёл", "вести", "pass", 0, "uni", "curso"], ["Она водила свою подругу в театр.", "Ela levou a amiga ao teatro (e voltou).", "theatre", "водила", "водить", "pass", 1, "multi", "volta"],
+          ["Она везёт бабушку в инвалидном кресле.", "Ela está levando a avó na cadeira de rodas.", "wheelchair", "везёт", "везти", "pres", 2, "uni", "curso"], ["Поезд возил пассажиров в Англию.", "O trem levou os passageiros à Inglaterra (e voltou).", "and back", "возил", "возить", "pass", 0, "multi", "volta"]]
+FRM = []
+for ru_, pt, chave, forma, inf, tempo, i, tipo, uso in FRM_PT:
+    if ru_ not in lin_mov: erros.append(f"RG14 frase fora da fonte: {ru_!r}"); continue
+    en = lin_mov[lin_mov.index(ru_) - 1]
+    if chave not in en: erros.append(f"RG14 frase {ru_!r}: {chave!r} não está na linha anterior ({en!r})")
+    vb = VERB.get(inf); tab = (vb["pres"] if tempo == "pres" else vb["pass"]) if vb else None
+    if not vb or forma not in [sem_ac(y) for y in tab[i]] or forma not in ru_.replace(".", "").split(" "): erros.append(f"RG14 frase {ru_!r}: {forma!r} não é {tempo} {i} de {inf}")
+    d_ok = (tipo == "pf" and vb and vb["asp"] == "pf") or any(m[tipo] == inf for m in MOV if tipo in ("uni", "multi"))
+    if not d_ok: erros.append(f"RG14 frase {ru_!r}: {inf} não é {tipo}")
+    FRM.append({"ru": ru_, "pt": pt, "en": en, "forma": forma, "inf": inf, "tempo": tempo, "i": i, "tipo": tipo, "uso": U[uso]})
+
 # pares de aspecto em que os dois verbos estão no banco
 PARES_ASP = []
 for inf, x in VERB.items():
@@ -566,7 +632,7 @@ for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -577,6 +643,7 @@ print("RG02:", len(RED["akanye"]), "akanye,", len(RED["mole"]), "pares depois de
 print("RG03:", len(NOM), "substantivos;", sum(1 for x in NOM if x["pl"]), "com plural;", len(IRR), "irregulares conferidos com a Wikipedia")
 print("RG04:", len(DECL), "declinações;", len(VERB), "verbos;", len(PRON), "pronomes;", len(FRASES), "frases")
 print("RG11:", len(VERB), "verbos;", len(PARES_ASP), "pares de aspecto;", len(FRV), "frases de verbo")
+print("RG14:", len(MOV), "pares de movimento;", len(PREF), "prefixos;", len(FRM), "frases")
 print("RG09:", len(ADJ), "adjetivos;", len(PARES_AS), "pares adjetivo + substantivo")
 print("RG10:", len(POSS), "possessivos e demonstrativos;", len(PARES_PS), "pares;", len(FRP), "frases")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})
