@@ -4,3 +4,5 @@ node_modules/
 /fisica-com-home.png
 /calc-*.png
 /cor-*.png
+# dados pessoais: ficam só na máquina do autor
+*.local.md
