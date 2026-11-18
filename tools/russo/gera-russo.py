@@ -473,11 +473,49 @@ for ru_, pt, chave, forma, inf, tempo, i, de in FRV_PT:
     if forma not in ru_.replace(",", "").replace(".", "").replace("?", "").split(" "): erros.append(f"frase {ru_!r}: {forma!r} não é palavra da frase")
     FRV.append({"ru": ru_, "pt": pt, "en": en, "forma": forma, "inf": inf, "tempo": tempo, "i": i, "de": f["verbete"]})
 
+# ---------- RG09: adjetivos (tools/russo/dadosR5.json: tabelas de declinação do Wiktionary em inglês) ----------
+A_PT = [["новый", "new", "novo"], ["старый", "old", "velho"], ["большой", "big", "grande"], ["маленький", "small", "pequeno"], ["хороший", "good", "bom"], ["плохой", "bad", "ruim"],
+        ["красивый", "beautiful", "bonito"], ["русский", "Russian", "russo"], ["синий", "blue", "azul"], ["красный", "red", "vermelho"], ["белый", "white", "branco"], ["чёрный", "black", "preto"],
+        ["зелёный", "green", "verde"], ["молодой", "young", "jovem"], ["первый", "first", "primeiro"], ["последний", "last", "último"], ["длинный", "long", "comprido"], ["короткий", "short", "curto"],
+        ["быстрый", "fast", "rápido"], ["медленный", "slow", "lento"], ["лёгкий", "light", "leve, fácil"], ["трудный", "difficult", "difícil"], ["тяжёлый", "heavy", "pesado"], ["простой", "simple", "simples"],
+        ["сложный", "compl", "complexo"], ["важный", "important", "importante"], ["интересный", "interesting", "interessante"], ["правильный", "correct", "correto"], ["главный", "main", "principal"],
+        ["другой", "other", "outro"], ["каждый", "every", "cada"], ["целый", "whole", "inteiro"], ["равный", "equal", "igual"], ["постоянный", "constant", "constante"], ["средний", "middle", "médio"],
+        ["полный", "full", "cheio"], ["нужный", "necessary", "necessário"], ["высокий", "high", "alto"], ["низкий", "low", "baixo"], ["горячий", "hot", "quente"], ["холодный", "cold", "frio"],
+        ["тёплый", "warm", "morno"], ["дорогой", "expensive", "caro"], ["свободный", "free", "livre"]]
+COLS = ("masculine", "neuter", "feminine", "plural")
+ADJ = {}
+for w, chave, pt in A_PT:
+    e = D5["adjetivos"].get(w)
+    if not e or not (e.get("tabela") or {}).get("casos"): erros.append(f"RG09 {w}: sem tabela"); continue
+    gl = " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])][:8])
+    if chave not in gl: erros.append(f"RG09 {w}: {chave!r} não está na definição ({gl[:70]!r})"); continue
+    t_ = e["tabela"]; notas = t_.get("notas"); cs = {}
+    for k, en in CASOS:
+        linha = t_["casos"][en]
+        if k == "acc":
+            cs["accA"] = [formas(linha[c].get("animate") if "animate" in linha[c] else linha[c], notas) for c in COLS]
+            cs["acc"] = [formas(linha[c].get("inanimate") if "inanimate" in linha[c] else linha[c], notas) for c in COLS]
+        else: cs[k] = [formas(linha[c], notas) for c in COLS]
+    ac = v(e["forma_acentuada"])
+    if ac.replace("́", "") != w or w not in [f.replace("́", "") for f in cs["nom"][0]]: erros.append(f"RG09 {w}: forma acentuada {ac!r} ou nominativo masculino {cs['nom'][0]}")
+    if any(not f for k in cs for f in cs[k]): erros.append(f"RG09 {w}: célula vazia")
+    fc = t_.get("forma_curta") or {}
+    ADJ[w] = {"ac": ac, "pt": pt, "casos": cs, "curta": [formas(fc.get(c), notas) for c in COLS] if fc and all(v(fc.get(c)) for c in COLS) else None, "ipa": v(e.get("ipa"))}
+# pares adjetivo + substantivo dos laboratórios: combinação montada por mim (não é citação de fonte); todas as formas saem das duas tabelas
+PARES_AS = [["новый", "дом"], ["старый", "город"], ["большой", "стол"], ["маленький", "окно"], ["хороший", "друг"], ["плохой", "день"], ["красивый", "улица"], ["русский", "язык"],
+            ["синий", "море"], ["красный", "яблоко"], ["белый", "дверь"], ["чёрный", "кот"], ["зелёный", "лес"], ["молодой", "врач"], ["первый", "урок"], ["последний", "неделя"],
+            ["длинный", "письмо"], ["короткий", "ответ"], ["быстрый", "поезд"], ["лёгкий", "задача"], ["трудный", "вопрос"], ["тяжёлый", "книга"], ["простой", "решение"], ["сложный", "задача"],
+            ["важный", "дело"], ["интересный", "книга"], ["правильный", "ответ"], ["главный", "улица"], ["другой", "человек"], ["высокий", "здание"], ["горячий", "чай"], ["холодный", "вода"],
+            ["тёплый", "вечер"], ["дорогой", "словарь"], ["свободный", "место"], ["новый", "школа"], ["старый", "мать"], ["большой", "семья"], ["маленький", "девочка"], ["хороший", "учитель"]]
+for a_, n_ in PARES_AS:
+    if a_ not in ADJ or n_ not in DECL: erros.append(f"RG09 par {a_} + {n_}: palavra fora do banco")
+if len(ADJ) < 40: erros.append(f"RG09: só {len(ADJ)} adjetivos")
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -488,4 +526,5 @@ print("RG02:", len(RED["akanye"]), "akanye,", len(RED["mole"]), "pares depois de
 print("RG03:", len(NOM), "substantivos;", sum(1 for x in NOM if x["pl"]), "com plural;", len(IRR), "irregulares conferidos com a Wikipedia")
 print("RG04:", len(DECL), "declinações;", len(VERB), "verbos;", len(PRON), "pronomes;", len(FRASES), "frases")
 print("RG11:", len(VERB), "verbos;", len(PARES_ASP), "pares de aspecto;", len(FRV), "frases de verbo")
+print("RG09:", len(ADJ), "adjetivos;", len(PARES_AS), "pares adjetivo + substantivo")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})

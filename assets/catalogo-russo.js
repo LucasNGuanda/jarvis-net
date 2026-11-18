@@ -15,7 +15,7 @@ window.CATALOGO.push(
     ["RG06","Dativo",["RG05"],true],
     ["RG07","Instrumental",["RG06"],true],
     ["RG08","Preposicional",["RG07"],true],
-    ["RG09","Adjetivos: concordância e declinação",[]],
+    ["RG09","Adjetivos: concordância e declinação",["RG08"],true],
     ["RG10","Pronomes",[]],
     ["RG11","Verbos no presente",["RG04"],true],
     ["RG12","Verbos no passado e no futuro",["RG11"],true],
