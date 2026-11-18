@@ -1,0 +1,186 @@
+/* Catálogo de módulos e temas, na ordem de estudo.
+   pronto:true = o arquivo temas/<cod>.js existe.
+   marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
+window.VERSAO = "β 6.9";
+/* Áreas (abas do topo). Cada área pertence a uma matéria (assets/materias.js); o topo mostra só as abas da matéria atual.
+   inicio = rota da página inicial da aba; anim = desenho da página inicial (em app.js, F.ANIM); icone = SVG da aba. */
+window.AREAS = [
+  { id:"fisica", materia:"fisica", nome:"Física", inicio:"inicio", titulo:"Física", anim:"atomo", icone:`<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="5" style="stroke:var(--mC)"/><ellipse cx="16" cy="16" rx="13" ry="5" transform="rotate(60 16 16)" style="stroke:var(--mA)"/><ellipse cx="16" cy="16" rx="13" ry="5" transform="rotate(120 16 16)" style="stroke:var(--mU)"/><circle cx="16" cy="16" r="2.4" fill="currentColor" stroke="none"/></svg>` },
+  { id:"exp", materia:"fisica", nome:"Experimentos", inicio:"experimentos", titulo:"Experimentos físicos", anim:"pendulo", icone:`<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><line x1="6" y1="4" x2="26" y2="4" style="stroke:var(--ink3)" stroke-width="2"/><line x1="16" y1="4" x2="10" y2="16" style="stroke:currentColor" stroke-width="1.8"/><line x1="10" y1="16" x2="19" y2="25" style="stroke:currentColor" stroke-width="1.8"/><circle cx="10" cy="16" r="3" style="fill:var(--mA)"/><circle cx="19" cy="25" r="3.4" style="fill:var(--mU)"/></svg>` },
+  { id:"lab", materia:"fisica", nome:"Experimental", inicio:"experimental", titulo:"Física experimental", anim:"calculadora", icone:`<svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" aria-hidden="true"><path d="M16 5v14M9 12h14" style="stroke:var(--mN)" stroke-width="2.6"/><path d="M9 25h14" style="stroke:var(--mO)" stroke-width="2.6"/></svg>` },
+];
+window.CATALOGO = [
+  { id:"F", letra:"F", cor:"--mF", nome:"Fundamentos e a matemática do físico", desc:"Vetores, trigonometria, cálculo, aproximações e análise dimensional.", temas:[
+    ["F01","Fundamentos de Mecânica",[],true],
+    ["F02","Vetores",[],true],
+    ["F03","Trigonometria para física",[],true],
+    ["F04","Derivada e integral para física",["∫"],true],
+    ["F05","Séries, aproximações e ordens de grandeza",["★"],true],
+    ["A19","Análise Dimensional",["★","RU"],true],
+  ]},
+  { id:"A", letra:"A", cor:"--mA", nome:"Mecânica", desc:"Da cinemática à gravitação, fluidos e oscilações.", temas:[
+    ["A01","Introdução à Cinemática",[],true],
+    ["A02","Movimento Retilíneo Uniforme",[],true],
+    ["A03","Movimento Retilíneo Uniformemente Variado",[],true],
+    ["A04","Análise Gráfica",["★"],true],
+    ["A05","Cinemática Vetorial",[],true],
+    ["A06","Lançamentos",["★"],true],
+    ["A07","Movimento Circular",[],true],
+    ["A08","Leis de Newton",["★","ITA"],true],
+    ["A09","Atrito e Resistência do Ar",[],true],
+    ["A10","Dinâmica do Movimento Circular",[],true],
+    ["A11","Trabalho e Energia",["★"],true],
+    ["A12","Impulso e Quantidade de Movimento",[],true],
+    ["A12b","Centro de Massa",[],true],
+    ["A13","Colisões",["★"],true],
+    ["A14a","Rotação e Corpo Rígido",["!!","∫","ITA"],true],
+    ["A14","Equilíbrio de Corpo Extenso",[],true],
+    ["A15","Leis de Kepler",[],true],
+    ["A16","Gravitação",["★"],true],
+    ["A17","Hidrostática",[],true],
+    ["A18","Hidrodinâmica",[],true],
+    ["A20","Movimento Harmônico Simples e oscilações",["!","∫","ITA"],true],
+  ]},
+  { id:"T", letra:"T", cor:"--mT", nome:"Termodinâmica", desc:"Temperatura, calor, gases, as leis da termodinâmica e entropia.", temas:[
+    ["T01","Temperatura",[],true],
+    ["T02","Propagação do Calor",[],true],
+    ["T03","Dilatometria",[],true],
+    ["T04","Calorimetria",[],true],
+    ["T04b","Calorimetria (Aprofundamento)",[],true],
+    ["T05","Gases",[],true],
+    ["T05b","Teoria Cinética dos Gases",["∫"],true],
+    ["T06","Lei Zero da Termodinâmica",[],true],
+    ["T07","1ª Lei da Termodinâmica",["★"],true],
+    ["T08","2ª Lei da Termodinâmica",["★"],true],
+    ["T08b","Entropia",["!","∫"],true],
+  ]},
+  { id:"O", letra:"O", cor:"--mO", nome:"Ondas e Óptica", desc:"Ondulatória, acústica, óptica geométrica e ondulatória.", temas:[
+    ["O01","Introdução à Ondulatória",[],true],
+    ["O02","Fenômenos Ondulatórios",[],true],
+    ["O03","Ondas Estacionárias",[],true],
+    ["O04","Acústica e efeito Doppler",[],true],
+    ["O05","Fundamentos da Óptica Geométrica",[],true],
+    ["O06","Espelhos Planos",[],true],
+    ["O07","Espelhos Esféricos",[],true],
+    ["O08","Refração",["★"],true],
+    ["O09","Lentes",["★"],true],
+    ["O10","Instrumentos Ópticos e Olho Humano",[],true],
+    ["O10b","Óptica Ondulatória",["!"],true],
+  ]},
+  { id:"C", letra:"C", cor:"--mC", nome:"Eletricidade e Magnetismo", desc:"Eletrostática, circuitos, magnetismo, indução e Maxwell.", temas:[
+    ["C01","Carga Elétrica e Eletrização",[],true],
+    ["C02","Força Elétrica",["★"],true],
+    ["C03","Campo Elétrico",["★","∫"],true],
+    ["C03b","Lei de Gauss",["!","∫"],true],
+    ["C04","Potencial Elétrico",["★"],true],
+    ["C05","Condutores",["!"],true],
+    ["C11","Capacitores",["★"],true],
+    ["C06","Corrente Elétrica",[],true],
+    ["C07","Lei de Ohm e Resistores",["★","∫"],true],
+    ["C08","Associação de Resistores",["★"],true],
+    ["C09","Instrumentos de Medida Elétrica",[],true],
+    ["C10","Geradores e Receptores",["★"],true],
+    ["C10b","Leis de Kirchhoff e circuitos RC",["∫","ITA"],true],
+    ["C12","Campo Magnético",[],true],
+    ["C13","Força Magnética",["★"],true],
+    ["C14","Fontes de Campo Magnético",["∫","★"],true],
+    ["C15","Indução Eletromagnética",["★","!"],true],
+    ["C15b","Indutância, circuitos RL e LC",["∫"],true],
+    ["C15c","Corrente Alternada",[],true],
+    ["C15d","Equações de Maxwell e Ondas EM",["!!","∫"],true],
+  ]},
+  { id:"M", letra:"M", cor:"--mM", nome:"Física Moderna", desc:"Quântica, fotoelétrico, Bohr, relatividade, núcleo, energia nuclear, sólidos, partículas e cosmologia.", temas:[
+    ["C16","Física Quântica: corpo negro e Planck",["∫"],true],
+    ["C17","Efeito Fotoelétrico e Comportamento Dual",[],true],
+    ["C17b","Átomo de Bohr",[],true],
+    ["C18","Relatividade Especial",["!"],true],
+    ["C19","Física Nuclear",["★"],true],
+    ["C19b","Energia Nuclear: fissão e fusão",[],true],
+    ["C20","Sólidos e Semicondutores",[],true],
+    ["C21","Partículas e Cosmologia",["!"],true],
+  ]},
+  { id:"U", letra:"U", cor:"--mU", nome:"Universitária", desc:"Cálculo vetorial, Lagrange, Hamilton, Maxwell diferencial e Schrödinger.", temas:[
+    ["U01","Cálculo vetorial: grad, div, rot",["∫"],true],
+    ["U02","Teoremas de Gauss e de Stokes",["∫"],true],
+    ["U03","Mecânica analítica: Lagrange",["!!","∫"],true],
+    ["U04","Hamilton e a mínima ação",["!!","∫"],true],
+    ["U05","Maxwell na forma diferencial",["!!","∫"],true],
+    ["U06","Equação de Schrödinger",["!!","∫"],true],
+  ]},
+  { id:"N", letra:"N", cor:"--mN", nome:"Fluidos até Navier–Stokes", desc:"Do Bernoulli às equações de Navier–Stokes e ao Problema do Milênio.", temas:[
+    ["N01","Euler × Lagrange e derivada material",["∫"],true],
+    ["N02","Equação da continuidade",["∫"],true],
+    ["N03","Equação de Euler e Bernoulli",["∫"],true],
+    ["N04","Tensor de tensões e viscosidade",["!!","∫"],true],
+    ["N05","Dedução de Navier–Stokes",["!!","∫"],true],
+    ["N06","Couette, Poiseuille, Hagen–Poiseuille",["!","∫"],true],
+    ["N07","Reynolds, turbulência e o Problema do Milênio",["!"],true],
+  ]},
+  { id:"X", letra:"★", cor:"--mX", nome:"Bônus", desc:"Coisas inventadas e curiosidades fora da ordem.", temas:[
+    ["X01","Função gama fresco",["∫"],true],
+  ]},
+  { id:"S", letra:"S", cor:"--mS", nome:"Simulados", desc:"Questões escolhidas pelo Lucas, com a fonte de cada uma (ex.: [ITA 2010]).", temas:[
+    ["S00","Como funcionam os simulados",[],true],
+    ["S01","Exercícios da SOIF",[],true],
+    ["S02","Vestibulares militares",["ITA","IME"],true],
+    ["S03","Vestibulares ao redor do mundo",[],true],
+    ["S04","Olimpíadas de Física (BR e RU)",["RU"],true],
+  ]},
+
+  /* ===================== ÁREA CÁLCULO ===================== */
+  { id:"FEm", area:"lab", letra:"±", cor:"--mN", nome:"Medidas e incertezas", desc:"O que é medir, o que é incerteza e como ela se propaga nas contas.", temas:[
+    ["FE01","O que é medir: unidades e algarismos significativos",[],true],
+    ["FE02","O que é incerteza (tipo A e tipo B)",[],true],
+    ["FE03","Média, desvio padrão e incerteza da média",[],true],
+    ["FE04","Propagação de incertezas",["∫","★"],true],
+    ["FE05","Comparando resultados: discrepância e compatibilidade",[],true],
+  ]},
+  { id:"FEg", area:"lab", letra:"G", cor:"--mO", nome:"Gráficos e ajustes", desc:"Gráficos com barras de erro, linearização, log-log e mínimos quadrados.", temas:[
+    ["FE06","Gráficos com barras de erro",[],true],
+    ["FE07","Linearização: transformando curvas em retas",[],true],
+    ["FE08","Gráficos log-log e mono-log",["★"],true],
+    ["FE09","Mínimos quadrados (regressão linear)",["∫"],true],
+  ]},
+  { id:"FEr", area:"lab", letra:"R", cor:"--mM", nome:"Relatório e erros", desc:"Erros sistemáticos, como corrigir e como escrever um relatório.", temas:[
+    ["FE10","Erros sistemáticos e como corrigi-los",[],true],
+    ["FE11","Como escrever um relatório",[],true],
+  ]},
+
+  /* ===================== ÁREA EXPERIMENTOS ===================== */
+  { id:"EPd", area:"exp", letra:"P", cor:"--mA", nome:"Pêndulos", desc:"Simples, duplo e triplo, todos pela lagrangiana.", temas:[
+    ["EP01","Pêndulo simples pela lagrangiana",["∫","★"],true],
+    ["EP02","Pêndulo duplo e caos",["∫","!!"],true],
+    ["EP03","Pêndulo triplo",["∫","!!"],true],
+  ]},
+  { id:"EEm", area:"exp", letra:"⚡", cor:"--mC", nome:"Eletromagnetismo", desc:"A parte mais abstrata, para ver acontecer.", temas:[
+    ["EP04","O jogo da força de Lorentz",["!"],true],
+    ["EP05","Radiação de uma carga acelerada",["!!"],true],
+    ["EP06","Ímã caindo num tubo condutor",["!"],true],
+  ]},
+  { id:"EAt", area:"exp", letra:"F", cor:"--mM", nome:"Força de atração", desc:"Forças centrais que viram osciladores.", temas:[
+    ["EP07","A bolinha elétrica no fio",["★","ITA"],true],
+  ]},
+  { id:"EMo", area:"exp", letra:"M", cor:"--mU", nome:"Mola", desc:"Osciladores com molas: modos normais, batimento e discos rolando.", temas:[
+    ["EP08","Duas massas e três molas",["∫","★"],true],
+    ["EP10","Dois discos rolando ligados por molas",["∫","!!"],true],
+  ]},
+  { id:"EMi", area:"exp", letra:"∞", cor:"--mT", nome:"Mistos", desc:"Sistemas que juntam molas, pêndulos e o que mais vier.", temas:[
+    ["EP09","Pêndulo pendurado num bloco com mola",["∫","!"],true],
+  ]},
+  { id:"ETe", area:"exp", letra:"T", cor:"--mF", nome:"Termodinâmica", desc:"Motores, demônios e gases reais.", temas:[
+    ["EP11","Máquina de Carnot",["★"],true],
+    ["EP12","O demônio de Maxwell",["!"],true],
+    ["EP13","Gás de van der Waals",["!","∫"],true],
+  ]},
+  { id:"EQu", area:"exp", letra:"ψ", cor:"--mO", nome:"Ondas e quântica", desc:"Luz, fótons e o gato mais famoso da física.", temas:[
+    ["EP14","Fenda dupla",["★"],true],
+    ["EP15","Radiação de corpo negro",["!"],true],
+    ["EP17","O gato de Schrödinger",[],true],
+  ]},
+  { id:"ENu", area:"exp", letra:"☢", cor:"--mN", nome:"Nuclear", desc:"Reação em cadeia e energia de ligação.", temas:[
+    ["EP16","Fissão e fusão",["!"],true],
+  ]},
+  { id:"EFl", area:"exp", letra:"≈", cor:"--mK2", nome:"Fluidos", desc:"Navier–Stokes de verdade, num método leve.", temas:[
+    ["EP18","Escoamento ao redor de um cilindro",["!!"],true],
+  ]},
+];

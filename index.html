@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jarvis β 6.9 · Física, Química, Matemática e Russo para olimpíadas</title>
+<meta name="description" content="Jarvis: site de estudo em português com teoria passo a passo, laboratórios interativos e exercícios de Física, Química, Matemática e Russo, voltado a olimpíadas científicas e ao ITA. Parte do conteúdo abre com código de acesso.">
+<link rel="canonical" href="https://lucasnguanda.github.io/site-fisica/">
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/estilo.css">
+<script defer src="assets/katex/katex.min.js"></script>
+<script defer src="assets/katex/contrib/mhchem.min.js"></script>
+<script defer src="assets/katex/auto-render.min.js"></script>
+<script defer src="assets/catalogo.js"></script>
+<script defer src="assets/catalogo-matematica.js"></script>
+<script defer src="assets/catalogo-quimica.js"></script>
+<script defer src="assets/catalogo-russo.js"></script>
+<script defer src="assets/catalogo-idiomas.js"></script>
+<script defer src="assets/materias.js"></script>
+<script defer src="assets/acesso-config.js"></script>
+<script defer src="assets/acesso.js"></script>
+<script defer src="assets/figuras.js"></script>
+<script defer src="assets/home.js"></script>
+<script defer src="assets/adesivos.js"></script>
+<script defer src="assets/home-adesivos.js"></script>
+<script defer src="assets/codigos.js"></script>
+<script defer src="assets/jarvis-config.js"></script>
+<script defer src="assets/jarvis-busca.js"></script>
+<script defer src="assets/desenho.js"></script>
+<script defer src="assets/sims/circuito.js"></script>
+<script defer src="assets/sims/curvas.js"></script>
+<script defer src="assets/sims/fio.js"></script>
+<script defer src="assets/sims/cargas.js"></script>
+<script defer src="assets/sims/eletrostatica2.js"></script>
+<script defer src="assets/sims/circuitos2.js"></script>
+<script defer src="assets/sims/magnetismo.js"></script>
+<script defer src="assets/sims/experimentos.js"></script>
+<script defer src="assets/sims/experimentos2.js"></script>
+<script defer src="assets/sims/matematica/calculo.js"></script>
+<script defer src="assets/sims/optica.js"></script>
+<script defer src="assets/sims/moderna.js"></script>
+<script defer src="assets/sims/univ.js"></script>
+<script defer src="assets/sims/matematica/teoremas.js"></script>
+<script defer src="assets/sims/ondas.js"></script>
+<script defer src="assets/sims/fluidos.js"></script>
+<script defer src="assets/sims/discos.js"></script>
+<script defer src="assets/sims/fundamentos.js"></script>
+<script defer src="assets/sims/mecanica.js"></script>
+<script defer src="assets/sims/termo.js"></script>
+<script defer src="assets/sims/experimental.js"></script>
+<script defer src="assets/sims/quimica/introducao.js"></script>
+<script defer src="assets/sims/quimica/materia.js"></script>
+<script defer src="assets/sims/quimica/laboratorio.js"></script>
+<script defer src="assets/sims/quimica/atomistica.js"></script>
+<script defer src="assets/sims/quimica/ligacoes.js"></script>
+<script defer src="assets/sims/quimica/reacoes.js"></script>
+<script defer src="assets/sims/quimica/reacoes2.js"></script>
+<script defer src="assets/sims/quimica/moleculas.js"></script>
+<script defer src="assets/sims/quimica/gases.js"></script>
+<script defer src="assets/sims/quimica/solucoes.js"></script>
+<script defer src="assets/sims/quimica/cinetica.js"></script>
+<script defer src="assets/sims/quimica/termo.js"></script>
+<script defer src="assets/sims/quimica/acidobase.js"></script>
+<script defer src="assets/sims/quimica/eletro.js"></script>
+<script defer src="assets/sims/quimica/organica.js"></script>
+<script defer src="assets/sims/quimica/bio.js"></script>
+<script defer src="assets/sims/quimica/analitica.js"></script>
+<script defer src="assets/sims/quimica/exp-gases.js"></script>
+<script defer src="assets/sims/quimica/exp-reacoes.js"></script>
+<script defer src="assets/sims/quimica/exp-eletro.js"></script>
+<script defer src="assets/sims/quimica/exp-atomos.js"></script>
+<script defer src="assets/sims/quimica/exp-nuclear.js"></script>
+<script defer src="assets/sims/quimica/exp-atomos2.js"></script>
+<script defer src="assets/sims/quimica/exp-solucoes.js"></script>
+<script defer src="assets/sims/russo/dados.js"></script>
+<script defer src="assets/sims/russo/alfabeto.js"></script>
+<script defer src="assets/sims/russo/acento.js"></script>
+<script defer src="assets/sims/russo/treino.js"></script>
+<script defer src="assets/sims/russo/nomes.js"></script>
+<script defer src="assets/sims/russo/casos.js"></script>
+<script defer src="assets/sims/russo/mapa.js"></script>
+<script defer src="assets/detalhes.js"></script>
+<script defer src="assets/app.js"></script>
+<script defer src="assets/calc.js"></script>
+<script defer src="assets/calc2.js"></script>
+<script defer src="assets/tabela-dados.js"></script>
+<script defer src="assets/tabela.js"></script>
+</head>
+<body>
+<header class="topo">
+  <button class="btn-ic so-cel" id="bt-menu" aria-label="Abrir o menu de temas" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <nav class="abas" aria-label="Áreas">
+    <a class="aba aba-home" href="#/home" aria-label="Home (tela inicial do projeto)" title="Voltar para a tela inicial">
+    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15 16 5l11 10"/><path d="M8 13v13h6v-7h4v7h6V13"/></svg><span class="aba-txt">Home</span></a>
+    <span class="abas-materia"></span>
+  </nav>
+  <span class="versao" id="versao"></span>
+  <span class="esp"></span>
+  <nav class="links"><a class="so-pc" href="#/inicio">Início</a><a href="#/sumario">Sumário</a></nav>
+  <div class="detalhes" id="detalhes"><button class="bt peq" aria-haspopup="true" aria-label="Legenda, símbolos e alfabeto grego"><span class="so-pc">Legenda e símbolos ▾</span><span class="so-cel">Σα</span></button><div class="painel" id="detalhes-painel"></div></div>
+  <div class="config" id="config">
+    <button class="btn-ic" id="bt-config" title="Configurações" aria-label="Configurações" aria-haspopup="true" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M10.3 2.6h3.4l.5 2.6a7.4 7.4 0 0 1 1.9 1.1l2.5-.9 1.7 2.9-2 1.7a7.6 7.6 0 0 1 0 2.2l2 1.7-1.7 2.9-2.5-.9a7.4 7.4 0 0 1-1.9 1.1l-.5 2.6h-3.4l-.5-2.6a7.4 7.4 0 0 1-1.9-1.1l-2.5.9-1.7-2.9 2-1.7a7.6 7.6 0 0 1 0-2.2l-2-1.7 1.7-2.9 2.5.9a7.4 7.4 0 0 1 1.9-1.1z"/><circle cx="12" cy="12" r="3"/></svg>
+    </button>
+    <div class="painel-config" id="painel-config" role="dialog" aria-label="Configurações">
+      <div class="cfg-tit">Configurações</div>
+      <div class="cfg-grupo"><div class="cfg-rot">Aparência</div>
+        <div class="cfg-ops" data-cfg="tema"><button class="bt peq" data-v="escuro">Escuro</button><button class="bt peq" data-v="claro">Claro</button><button class="bt peq" data-v="sistema">Do sistema</button></div></div>
+      <div class="cfg-grupo"><div class="cfg-rot">Idioma</div>
+        <div class="cfg-ops" data-cfg="idioma"><button class="bt peq" data-v="pt">Português</button><button class="bt peq" data-v="en">English</button></div>
+        <p class="cfg-nota" id="nota-idioma" hidden>A versão em inglês escrita à mão fica para o final. Por enquanto, use o tradutor do navegador: <b>botão direito na página → "Traduzir para inglês"</b> (Chrome ou Edge). As fórmulas estão marcadas para o tradutor não mexer nelas.</p></div>
+      <div class="cfg-grupo"><div class="cfg-rot">Calculadora científica</div>
+        <div class="cfg-linha"><span class="cfg-dupla">Calculadora 1<small>estilo fx-991ES PLUS</small></span><button class="interruptor" id="cfg-calc" type="button" role="switch" aria-checked="false" aria-label="Mostrar a calculadora 1 (estilo fx-991ES PLUS)"><span></span></button></div>
+        <div class="cfg-linha"><span class="cfg-dupla">Calculadora 2<small>estilo fx-82LA CW (ClassWiz)</small></span><button class="interruptor" id="cfg-calc2" type="button" role="switch" aria-checked="false" aria-label="Mostrar a calculadora 2 (estilo fx-82LA CW)"><span></span></button></div>
+        <p class="cfg-nota">Só uma fica ligada por vez: ligar uma desliga a outra. Aparece no canto inferior esquerdo. Nos exercícios, tente sem!</p></div>
+    </div>
+  </div>
+</header>
+
+<div class="veu" id="veu" hidden></div>
+<aside class="menu" id="menu">
+  <input class="busca" id="busca" type="search" placeholder="Buscar tema…" aria-label="Buscar tema">
+  <button class="filtro-breve" id="bt-breve" type="button" aria-pressed="false">Mostrar temas em breve</button>
+  <div id="menu-mods"></div>
+  <div class="rodape">
+    <button id="bt-exp"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Exportar progresso (.json)</button>
+    <button id="bt-imp"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V9M7 13.5l5-5 5 5M5 4h14"/></svg>Importar progresso</button>
+    <input type="file" id="arq-imp" accept="application/json" hidden>
+  </div>
+</aside>
+
+<main class="principal"><div class="pagina" id="pagina"></div></main>
+</body>
+</html>

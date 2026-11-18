@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lucasnguanda.github.io/site-fisica/sitemap.xml
