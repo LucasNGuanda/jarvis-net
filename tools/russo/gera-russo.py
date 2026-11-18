@@ -367,11 +367,774 @@ for ru_, pt, suj, obj, chave in FR_PT:
     FRASES.append({"ru": ru_, "pt": pt, "en": en, "suj": suj, "obj": obj, "de": f["verbete"]})
 if len(DECL) < 90 or len(VERB) < 30 or len(PRON) != 10: erros.append(f"RG04: DECL {len(DECL)}, VERB {len(VERB)}, PRON {len(PRON)}")
 
+# ---------- RG05 a RG08: frases com o caso de cada palavra marcado. [frase literal, tradução, palavra em inglês da tradução da fonte, [[forma, caso], ...], fonte] ----------
+FR2_PT = [
+ ["У бра́та не́сколько часо́в.", "Meu irmão tem vários relógios.", "watches", [["бра́та", "gen"], ["часо́в", "gen"]], "wt"],
+ ["У меня́ вре́мени в обре́з.", "Estou com o tempo contado.", "time", [["меня́", "gen"], ["вре́мени", "gen"]], "wt"],
+ ["Э́то сто́ит больши́х де́нег.", "Isso custa muito dinheiro.", "money", [["де́нег", "gen"]], "wt"],
+ ["Он у́чится у свои́х друзе́й.", "Ele aprende com os amigos.", "friends", [["Он", "nom"], ["друзе́й", "gen"]], "wt"],
+ ["Я дру́гу помога́ю де́ньгами.", "Eu ajudo um amigo com dinheiro.", "friend", [["Я", "nom"], ["дру́гу", "dat"], ["де́ньгами", "ins"]], "wt"],
+ ["Я ему́ помога́л.", "Eu o ajudava.", "helping", [["Я", "nom"], ["ему́", "dat"]], "wt"],
+ ["Он преподнёс ей кни́гу.", "Ele deu um livro de presente a ela.", "book", [["Он", "nom"], ["ей", "dat"], ["кни́гу", "acc"]], "wt"],
+ ["Ему́ два́дцать оди́н год.", "Ele tem 21 anos.", "21", [["Ему́", "dat"], ["год", "nom"]], "wt"],
+ ["Ей не спи́тся.", "Ela não consegue dormir.", "sleep", [["Ей", "dat"]], "wt"],
+ ["Он живёт этажо́м вы́ше.", "Ele mora um andar acima.", "floor", [["Он", "nom"], ["этажо́м", "ins"]], "wt"],
+ ["Свеча́ горе́ла на столе́.", "Uma vela ardia sobre a mesa.", "table", [["столе́", "prep"]], "wt"],
+ ["Он э́то при ней сказа́л.", "Ele disse isso na presença dela.", "presence", [["Он", "nom"], ["ней", "prep"]], "wt"],
+ ["Я в де́ле!", "Estou dentro!", "in", [["Я", "nom"], ["де́ле", "prep"]], "wt"],
+ ["Я ви́жу её.", "Eu a vejo.", "see", [["Я", "nom"], ["её", "acc"]], "wt"],
+ ["Я хорошо́ зна́ю матема́тику.", "Eu sei bem matemática.", "math", [["Я", "nom"], ["матема́тику", "acc"]], "wt"],
+ ["У моего брата есть обед", "Meu irmão tem um almoço.", "My brother has a lunch", [["брата", "gen"]], "wp"],
+ ["Я напился воды", "Eu bebi água.", "I drank water", [["Я", "nom"], ["воды", "gen"]], "wp"],
+ ["мне двадцать лет", "Eu tenho 20 anos.", "I am 20", [["мне", "dat"]], "wp"],
+ ["мне холодно", "Estou com frio.", "I am cold", [["мне", "dat"]], "wp"],
+ ["я работаю утром", "Eu trabalho de manhã.", "I work in the morning", [["я", "nom"], ["утром", "ins"]], "wp"],
+ ["я хочу быть врачом", "Eu quero ser médico.", "I want to be a doctor", [["я", "nom"], ["врачом", "ins"]], "wp"],
+]
+wp_txt = json.dumps(D4["casos_wikipedia"], ensure_ascii=False)
+FRASES2 = []
+for ru_, pt, chave, marcas, de in FR2_PT:
+    if de == "wt":
+        f = todas_fr.get(ru_)
+        if not f: erros.append(f"frase não está nos exemplos do Wiktionary: {ru_!r}"); continue
+        en = v(f["traducao"]); fonte = f'exemplo do verbete "{f["verbete"]}" do Wiktionary em inglês'
+        if chave not in en: erros.append(f"frase {ru_!r}: {chave!r} não está na tradução da fonte ({en!r})")
+    else:
+        if ru_ not in wp_txt or chave not in wp_txt: erros.append(f"frase ou tradução não está nos trechos da Wikipedia: {ru_!r} / {chave!r}"); continue
+        en = chave; fonte = "exemplo da Wikipedia em inglês (páginas sobre os casos)"
+    for forma, caso in marcas:
+        if forma not in ru_.replace(".", "").replace("!", "").split(" "): erros.append(f"frase {ru_!r}: {forma!r} não é palavra da frase")
+        if not tem_forma(forma, caso): erros.append(f"frase {ru_!r}: {forma!r} não é {caso} de palavra do banco")
+    FRASES2.append({"ru": ru_, "pt": pt, "en": en, "marcas": marcas, "fonte": fonte})
+for caso in ("gen", "dat", "ins", "prep"):
+    if sum(1 for f in FRASES2 if any(m[1] == caso for m in f["marcas"])) < 3: erros.append(f"menos de 3 frases com {caso}")
+
+# ---------- RG11 e RG12: mais verbos e o futuro composto (tools/russo/dadosR5.json: tabelas de conjugação do Wiktionary em inglês) ----------
+D5 = json.load(open(os.path.join(R, "dadosR5.json"), encoding="utf-8"))
+V_PT2 = [["прочитать", 0, "to read", "ler (até o fim)"], ["написать", 0, "to write", "escrever (até o fim)"], ["сделать", 0, "to do", "fazer (até o fim)"], ["сказать", 0, "to say", "dizer"],
+         ["понять", 0, "to understand", "entender (de uma vez)"], ["увидеть", 0, "to see", "ver (avistar)"], ["купить", 0, "to buy", "comprar (uma vez)"], ["взять", 0, "to take", "pegar (uma vez)"],
+         ["брать", 0, "to take", "pegar"], ["спросить", 0, "to ask", "perguntar (uma vez)"], ["ответить", 0, "to answer", "responder (uma vez)"], ["помочь", 0, "to help", "ajudar (uma vez)"],
+         ["пойти", 0, "to go", "ir, partir (a pé)"], ["поехать", 0, "to go", "ir, partir (de veículo)"], ["прийти", 0, "to come", "chegar (a pé)"], ["начать", 0, "to begin", "começar (uma vez)"],
+         ["начинать", 0, "to begin", "começar"], ["получить", 0, "to receive", "receber (uma vez)"], ["получать", 0, "to receive", "receber"], ["найти", 0, "to find", "encontrar"],
+         ["нравиться", 0, "to please", "agradar"], ["называться", 0, "to be called", "chamar-se"], ["значить", 0, "to mean", "significar"],
+         ["двигаться", 0, "to move", "mover-se"], ["лежать", 0, "to lie", "estar deitado"], ["стоять", 0, "to stand", "estar de pé"], ["сидеть", 0, "to sit", "estar sentado"]]
+def le_verbo(fonte, inf, i, chave, pt):
+    es = fonte["verbos"].get(inf, {}).get("entradas_verb") or []
+    if len(es) <= i: erros.append(f"verbo {inf}: sem entrada"); return None
+    e = es[i]; gl = " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])][:6])
+    if chave not in gl: erros.append(f"verbo {inf}: {chave!r} não está na definição ({gl[:70]!r})"); return None
+    c = e.get("conjugacao") or {}; asp = v(e.get("aspecto"))
+    if asp not in ("impf", "pf") or not c.get("passado"): erros.append(f"verbo {inf}: aspecto ou conjugação ausente"); return None
+    seis = ("1sg", "2sg", "3sg", "1pl", "2pl", "3pl"); tab = c["presente"] if asp == "impf" else c["futuro"]
+    pres = [formas(tab.get(k), c.get("notas")) for k in seis]
+    if any(not f for f in pres): erros.append(f"verbo {inf}: célula vazia em {pres}"); return None
+    ac = v(e["forma_acentuada"])
+    if ac.replace("́", "") != inf: erros.append(f"verbo {inf}: forma acentuada {ac!r}")
+    tit = v(c.get("titulo")) or ""
+    fut = [formas(c["futuro"].get(k), c.get("notas")) for k in seis] if asp == "impf" and c.get("futuro") else None
+    return {"ac": ac, "pt": pt, "asp": asp, "par": v(e.get("par_aspectual")), "tempo": "presente" if asp == "impf" else "futuro", "pres": pres, "fut": fut,
+            "pass": [formas(c["passado"].get(k), c.get("notas")) for k in ("m", "f", "n", "pl")], "imp": [formas(c["imperativo"].get(k), c.get("notas")) for k in ("sg", "pl")],
+            "ipa": v(e.get("ipa")), "trans": "intransitive" not in tit and "transitive" in tit, "tit": tit}
+VERB = {}
+for inf, i, chave, pt in V_PT:
+    x = le_verbo(D5, inf, i, chave, pt)
+    if x: VERB[inf] = x
+for inf, i, chave, pt in V_PT2:
+    x = le_verbo(D5, inf, i, chave, pt)
+    if x: VERB[inf] = x
+# ---------- RG14: verbos de movimento (tools/russo/dadosR6.json: verbetes do Wiktionary e seção "Verbs of motion" de Russian grammar, Wikipedia) ----------
+D6 = json.load(open(os.path.join(R, "dadosR6.json"), encoding="utf-8"))
+VM6 = D6["verbos_de_movimento"]; F6 = {"verbos": VM6["verbetes"]}
+V_PT3 = [["ходить", 0, "to go", "ir, andar (a pé)"], ["ездить", 0, "to go", "ir (de veículo)"], ["бежать", 0, "to run", "correr"], ["бегать", 0, "to run", "correr"],
+         ["лететь", 0, "to fly", "voar"], ["летать", 0, "to fly", "voar"], ["плыть", 0, "to swim", "nadar, navegar"], ["плавать", 0, "to swim", "nadar, navegar"],
+         ["нести", 0, "to carry", "levar (a pé), carregar"], ["носить", 0, "to carry", "levar (a pé), carregar"], ["вести", 0, "to lead", "levar, conduzir"], ["водить", 0, "to lead", "levar, conduzir"],
+         ["везти", 0, "to convey", "levar (de veículo)"], ["возить", 0, "to convey", "levar (de veículo)"],
+         ["приходить", 0, "to come", "chegar (a pé)"], ["уйти", 0, "to leave", "ir embora (a pé)"], ["уходить", 0, "to leave", "ir embora (a pé)"],
+         ["войти", 0, "to enter", "entrar (a pé)"], ["входить", 0, "to enter", "entrar (a pé)"], ["выйти", 0, "to exit", "sair (a pé)"], ["выходить", 0, "to go out", "sair (a pé)"],
+         ["приехать", 0, "to arrive", "chegar (de veículo)"], ["приезжать", 0, "to arrive", "chegar (de veículo)"], ["уехать", 0, "to go away", "ir embora (de veículo)"], ["уезжать", 0, "to go away", "ir embora (de veículo)"]]
+for inf, i, chave, pt in V_PT3:
+    x = le_verbo(F6, inf, i, chave, pt)
+    if x: VERB[inf] = x
+sem_ac = lambda s: "".join(ch for ch in str(s) if ord(ch) != 0x301)
+# pares uma direção / várias direções: a nota de uso do Wiktionary de cada verbo tem de dizer a direção e apontar para o outro, e a tabela da Wikipedia tem de trazer o par
+tab_pares = [x for x in VM6["wikipedia"]["secoes"]["russian_grammar_verbs_of_motion"]["conteudo"] if x["tipo"] == "tabela"][0]["grade_expandida"]["linhas"]
+wp_pares = {(sem_ac(v(l[1])), sem_ac(v(l[2])).split(" ")[0]) for l in tab_pares[1:]}
+MOV = []
+for uni, multi in [["идти", "ходить"], ["ехать", "ездить"], ["бежать", "бегать"], ["лететь", "летать"], ["плыть", "плавать"], ["нести", "носить"], ["вести", "водить"], ["везти", "возить"]]:
+    for w, d, o in ((uni, "unidirectional", multi), (multi, "multidirectional", uni)):
+        e = VM6["verbetes"][w]["entradas_verb"][0]; fd = e.get("frase_de_direcao") or {}
+        if v(fd.get("direcao")) != d: erros.append(f"RG14 {w}: a nota do verbete não diz {d} ({v(fd.get('direcao'))!r})")
+        if o not in [sem_ac(v(c)) for c in (e.get("counterpart") or []) if c]: erros.append(f"RG14 {w}: a nota do verbete não aponta para {o}")
+    if (uni, multi) not in wp_pares: erros.append(f"RG14 par {uni}/{multi} fora da tabela da Wikipedia")
+    if uni not in VERB or multi not in VERB: erros.append(f"RG14 par {uni}/{multi}: verbo fora do banco"); continue
+    pf = next((sem_ac(c) for c in (VERB[uni]["par"] or "").split(" or ") if sem_ac(c) in VERB), None)
+    MOV.append({"uni": uni, "multi": multi, "pf": pf})
+# verbos com prefixo: [prefixo, palavra em inglês que tem de estar na linha do prefixo na tabela da Wikipedia, sentido, [perfectivo, imperfectivo] ..., frase da tabela (escrita junto), palavra em inglês da tradução, tradução]
+tab_pref = [x for x in VM6["wikipedia"]["secoes"]["russian_grammar_verbs_of_motion"]["conteudo"] if x["tipo"] == "tabela"][1]["grade_expandida"]["linhas"]
+PREF_PT = [["в-", "entering", "movimento para dentro, entrar", [["войти", "входить"]], "Трамвай остановился, и девушка вошла.", "the girl entered", "O bonde parou e a moça entrou."],
+           ["вы-", "exiting", "movimento para fora, sair", [["выйти", "выходить"]], "Она вышла из кабинета.", "exited the office", "Ela saiu do escritório."],
+           ["при-", "arrival", "chegada: a pessoa passa a estar no lugar", [["прийти", "приходить"], ["приехать", "приезжать"]], "Он приехал в Москву неделю назад.", "arrived in Moscow", "Ele chegou a Moscou há uma semana."],
+           ["у-", "departure", "partida: a pessoa deixa de estar no lugar", [["уйти", "уходить"], ["уехать", "уезжать"]], "Где Игорь? Он уже ушёл.", "already left", "Onde está o Igor? Ele já foi embora."],
+           ["по-", "Beginning of unidirectional", "começo do movimento numa direção", [["пойти", None], ["поехать", None]], "Я пошла в университет.", "went to the university", "Eu fui para a universidade."]]
+PREF = []
+for pre, chave, pt, pares_, fr, chave_fr, fr_pt in PREF_PT:
+    lin = next((l for l in tab_pref if v(l[0]).startswith(pre) and chave in v(l[0])), None)
+    if not lin: erros.append(f"RG14 prefixo {pre}: linha com {chave!r} não achada"); continue
+    ex = v(lin[1])
+    if fr.replace(" ", "") not in ex.replace(" ", "") or chave_fr not in ex: erros.append(f"RG14 prefixo {pre}: frase ou tradução fora da linha da tabela")
+    for pf_, impf_ in pares_:
+        if pf_ not in VERB or VERB[pf_]["asp"] != "pf" or not pf_.startswith(pre[:-1]): erros.append(f"RG14 prefixo {pre}: {pf_} não serve")
+        if impf_ and (impf_ not in VERB or VERB[impf_]["asp"] != "impf" or sem_ac(VERB[impf_]["par"] or "") != pf_ or sem_ac(VERB[pf_]["par"] or "") != impf_): erros.append(f"RG14 prefixo {pre}: {impf_}/{pf_} não é par nos verbetes")
+    PREF.append({"pre": pre, "pt": pt, "en": v(lin[0]), "pares": pares_, "ru": fr, "frPt": fr_pt, "prep": v(lin[2])})
+# frases da seção da Wikipedia (vêm sem acento): [frase, tradução, palavra em inglês da linha anterior da fonte, forma, infinitivo, tempo, índice, tipo, uso]
+lin_mov = [v(x["linha"]) for x in VM6["wikipedia"]["secoes"]["russian_grammar_verbs_of_motion"]["conteudo"] if "linha" in x]
+U = {"curso": "movimento em curso, numa direção", "hab": "capacidade ou hábito, sem direção", "var": "movimento em várias direções", "rep": "viagens repetidas (ida e volta)", "volta": "no passado: uma ida e volta", "ini": "perfectivo com по-: partiu (e não voltou ainda)"}
+FRM_PT = [["Мы идём в библиотеку.", "Estamos indo para a biblioteca.", "library", "идём", "идти", "pres", 3, "uni", "curso"], ["Я шла на работу.", "Eu estava a caminho do trabalho.", "on my way", "шла", "идти", "pass", 1, "uni", "curso"],
+          ["Птицы летят на юг.", "Os pássaros estão voando para o sul.", "south", "летят", "лететь", "pres", 5, "uni", "curso"], ["Ребёнок ходит шесть месяцев.", "A criança anda há seis meses.", "six months", "ходит", "ходить", "pres", 2, "multi", "hab"],
+          ["Мы ходили по городу весь день.", "Andamos pela cidade o dia todo.", "all day", "ходили", "ходить", "pass", 3, "multi", "var"], ["Она ходит в супермаркет каждую неделю.", "Ela vai ao supermercado toda semana.", "every week", "ходит", "ходить", "pres", 2, "multi", "rep"],
+          ["В прошлом году я ездил в Россию.", "No ano passado fui à Rússia (e voltei).", "returned", "ездил", "ездить", "pass", 0, "multi", "volta"], ["Он пошёл к другу.", "Ele foi à casa de um amigo (e ainda não voltou).", "not returned", "пошёл", "пойти", "pass", 0, "pf", "ini"],
+          ["Он шёл к другу.", "Ele estava indo à casa de um amigo.", "on his way", "шёл", "идти", "pass", 0, "uni", "curso"], ["Он ходил к другу.", "Ele costumava ir à casa de um amigo.", "used to", "ходил", "ходить", "pass", 0, "multi", "rep"],
+          ["Он носит портфель.", "Ele carrega uma pasta.", "briefcase", "носит", "носить", "pres", 2, "multi", "hab"], ["Она несёт домашнее задание на занятия.", "Ela está levando a tarefa para a aula.", "assignment", "несёт", "нести", "pres", 2, "uni", "curso"],
+          ["Учитель вёл школьников на экскурсию", "O professor estava levando os alunos a uma excursão.", "field trip", "вёл", "вести", "pass", 0, "uni", "curso"], ["Она водила свою подругу в театр.", "Ela levou a amiga ao teatro (e voltou).", "theatre", "водила", "водить", "pass", 1, "multi", "volta"],
+          ["Она везёт бабушку в инвалидном кресле.", "Ela está levando a avó na cadeira de rodas.", "wheelchair", "везёт", "везти", "pres", 2, "uni", "curso"], ["Поезд возил пассажиров в Англию.", "O trem levou os passageiros à Inglaterra (e voltou).", "and back", "возил", "возить", "pass", 0, "multi", "volta"]]
+FRM = []
+for ru_, pt, chave, forma, inf, tempo, i, tipo, uso in FRM_PT:
+    if ru_ not in lin_mov: erros.append(f"RG14 frase fora da fonte: {ru_!r}"); continue
+    en = lin_mov[lin_mov.index(ru_) - 1]
+    if chave not in en: erros.append(f"RG14 frase {ru_!r}: {chave!r} não está na linha anterior ({en!r})")
+    vb = VERB.get(inf); tab = (vb["pres"] if tempo == "pres" else vb["pass"]) if vb else None
+    if not vb or forma not in [sem_ac(y) for y in tab[i]] or forma not in ru_.replace(".", "").split(" "): erros.append(f"RG14 frase {ru_!r}: {forma!r} não é {tempo} {i} de {inf}")
+    d_ok = (tipo == "pf" and vb and vb["asp"] == "pf") or any(m[tipo] == inf for m in MOV if tipo in ("uni", "multi"))
+    if not d_ok: erros.append(f"RG14 frase {ru_!r}: {inf} não é {tipo}")
+    FRM.append({"ru": ru_, "pt": pt, "en": en, "forma": forma, "inf": inf, "tempo": tempo, "i": i, "tipo": tipo, "uso": U[uso]})
+
+# pares de aspecto em que os dois verbos estão no banco
+PARES_ASP = []
+for inf, x in VERB.items():
+    # a linha do verbete pode dar mais de um perfectivo ("X or Y"): entra o primeiro que está no banco e é perfectivo
+    cands = ["".join(ch for ch in c.strip() if ord(ch) != 0x301) for c in (x["par"] or "").split(" or ")]
+    par = next((c for c in cands if c in VERB and VERB[c]["asp"] == "pf"), None)
+    if x["asp"] == "impf" and par: PARES_ASP.append([inf, par])
+if len(VERB) < 55: erros.append(f"RG11: só {len(VERB)} verbos")
+
+# frases com a forma do verbo marcada: [frase literal, tradução, palavra em inglês da tradução da fonte, forma, infinitivo, tempo ("pres", "pass" ou "fut"), índice da pessoa (ou do gênero, no passado), fonte]
+FRV_PT = [
+ ["Я говорю́ по-ру́сски.", "Eu falo russo.", "Russian", "говорю́", "говорить", "pres", 0, "wt"], ["Что она́ говори́т?", "O que ela está dizendo?", "saying", "говори́т", "говорить", "pres", 2, "wt"],
+ ["Она́ их ви́дит.", "Ela os vê.", "sees", "ви́дит", "видеть", "pres", 2, "wt"], ["Мы плохо ви́дим в темноте́.", "Nós enxergamos mal no escuro.", "poorly", "ви́дим", "видеть", "pres", 3, "wt"],
+ ["Я её хорошо́ зна́ю.", "Eu a conheço bem.", "know", "зна́ю", "знать", "pres", 0, "wt"], ["Я зна́ю, где он живёт.", "Eu sei onde ele mora.", "where he lives", "живёт", "жить", "pres", 2, "wt"],
+ ["Я не понима́ю, что вы говори́те.", "Eu não entendo o que vocês estão dizendo.", "understand", "понима́ю", "понимать", "pres", 0, "wt"],
+ ["Лека́рство помога́ет.", "O remédio está ajudando.", "medicine", "помога́ет", "помогать", "pres", 2, "wt"], ["Я дру́гу помога́ю де́ньгами.", "Eu ajudo um amigo com dinheiro.", "friend", "помога́ю", "помогать", "pres", 0, "wt"],
+ ["Вре́мя идёт бы́стро.", "O tempo passa depressa.", "Time", "идёт", "идти", "pres", 2, "wt"], ["Э́ти часы́ не иду́т.", "Este relógio não funciona.", "clock", "иду́т", "идти", "pres", 5, "wt"],
+ ["Я мно́гому учу́сь.", "Estou aprendendo muito.", "learning", "учу́сь", "учиться", "pres", 0, "wt"], ["Он у́чится в университе́те.", "Ele estuda na universidade.", "university", "у́чится", "учиться", "pres", 2, "wt"],
+ ["Я ему́ помога́л.", "Eu o ajudava.", "helping", "помога́л", "помогать", "pass", 0, "wt"], ["Он ел мя́со и сала́т.", "Ele comia carne e salada.", "meat", "ел", "есть", "pass", 0, "wt"],
+ ["Я не зна́ю, когда́ э́то бы́ло.", "Eu não sei quando isso foi.", "when it was", "бы́ло", "быть", "pass", 2, "wt"],
+]
+todas5 = {v(f["russo"]): f for f in D5["frases"] if isinstance(f, dict) and "russo" in f}
+FRV = []
+for ru_, pt, chave, forma, inf, tempo, i, de in FRV_PT:
+    f = todas5.get(ru_) or todas_fr.get(ru_)
+    if not f: erros.append(f"frase de verbo não está na fonte: {ru_!r}"); continue
+    en = v(f["traducao"])
+    if chave not in en: erros.append(f"frase {ru_!r}: {chave!r} não está na tradução da fonte ({en!r})")
+    vb = VERB.get(inf); tab = (vb["pres"] if tempo == "pres" else vb["pass"]) if vb else None
+    if not vb or forma.replace("\u0301", "") not in [y.replace("\u0301", "") for y in tab[i]]: erros.append(f"frase {ru_!r}: {forma!r} não é a forma {tempo} {i} de {inf} ({tab[i] if tab else None})")
+    if forma not in ru_.replace(",", "").replace(".", "").replace("?", "").split(" "): erros.append(f"frase {ru_!r}: {forma!r} não é palavra da frase")
+    FRV.append({"ru": ru_, "pt": pt, "en": en, "forma": forma, "inf": inf, "tempo": tempo, "i": i, "de": f["verbete"]})
+
+# ---------- RG09: adjetivos (tools/russo/dadosR5.json: tabelas de declinação do Wiktionary em inglês) ----------
+A_PT = [["новый", "new", "novo"], ["старый", "old", "velho"], ["большой", "big", "grande"], ["маленький", "small", "pequeno"], ["хороший", "good", "bom"], ["плохой", "bad", "ruim"],
+        ["красивый", "beautiful", "bonito"], ["русский", "Russian", "russo"], ["синий", "blue", "azul"], ["красный", "red", "vermelho"], ["белый", "white", "branco"], ["чёрный", "black", "preto"],
+        ["зелёный", "green", "verde"], ["молодой", "young", "jovem"], ["первый", "first", "primeiro"], ["последний", "last", "último"], ["длинный", "long", "comprido"], ["короткий", "short", "curto"],
+        ["быстрый", "fast", "rápido"], ["медленный", "slow", "lento"], ["лёгкий", "light", "leve, fácil"], ["трудный", "difficult", "difícil"], ["тяжёлый", "heavy", "pesado"], ["простой", "simple", "simples"],
+        ["сложный", "compl", "complexo"], ["важный", "important", "importante"], ["интересный", "interesting", "interessante"], ["правильный", "correct", "correto"], ["главный", "main", "principal"],
+        ["другой", "other", "outro"], ["каждый", "every", "cada"], ["целый", "whole", "inteiro"], ["равный", "equal", "igual"], ["постоянный", "constant", "constante"], ["средний", "middle", "médio"],
+        ["полный", "full", "cheio"], ["нужный", "necessary", "necessário"], ["высокий", "high", "alto"], ["низкий", "low", "baixo"], ["горячий", "hot", "quente"], ["холодный", "cold", "frio"],
+        ["тёплый", "warm", "morno"], ["дорогой", "expensive", "caro"], ["свободный", "free", "livre"]]
+COLS = ("masculine", "neuter", "feminine", "plural")
+ADJ = {}
+for w, chave, pt in A_PT:
+    e = D5["adjetivos"].get(w)
+    if not e or not (e.get("tabela") or {}).get("casos"): erros.append(f"RG09 {w}: sem tabela"); continue
+    gl = " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])][:8])
+    if chave not in gl: erros.append(f"RG09 {w}: {chave!r} não está na definição ({gl[:70]!r})"); continue
+    t_ = e["tabela"]; notas = t_.get("notas"); cs = {}
+    for k, en in CASOS:
+        linha = t_["casos"][en]
+        if k == "acc":
+            cs["accA"] = [formas(linha[c].get("animate") if "animate" in linha[c] else linha[c], notas) for c in COLS]
+            cs["acc"] = [formas(linha[c].get("inanimate") if "inanimate" in linha[c] else linha[c], notas) for c in COLS]
+        else: cs[k] = [formas(linha[c], notas) for c in COLS]
+    ac = v(e["forma_acentuada"])
+    if ac.replace("́", "") != w or w not in [f.replace("́", "") for f in cs["nom"][0]]: erros.append(f"RG09 {w}: forma acentuada {ac!r} ou nominativo masculino {cs['nom'][0]}")
+    if any(not f for k in cs for f in cs[k]): erros.append(f"RG09 {w}: célula vazia")
+    fc = t_.get("forma_curta") or {}
+    ADJ[w] = {"ac": ac, "pt": pt, "casos": cs, "curta": [formas(fc.get(c), notas) for c in COLS] if fc and all(v(fc.get(c)) for c in COLS) else None, "ipa": v(e.get("ipa"))}
+# pares adjetivo + substantivo dos laboratórios: combinação montada por mim (não é citação de fonte); todas as formas saem das duas tabelas
+PARES_AS = [["новый", "дом"], ["старый", "город"], ["большой", "стол"], ["маленький", "окно"], ["хороший", "друг"], ["плохой", "день"], ["красивый", "улица"], ["русский", "язык"],
+            ["синий", "море"], ["красный", "яблоко"], ["белый", "дверь"], ["чёрный", "кот"], ["зелёный", "лес"], ["молодой", "врач"], ["первый", "урок"], ["последний", "неделя"],
+            ["длинный", "письмо"], ["короткий", "ответ"], ["быстрый", "поезд"], ["лёгкий", "задача"], ["трудный", "вопрос"], ["тяжёлый", "книга"], ["простой", "решение"], ["сложный", "задача"],
+            ["важный", "дело"], ["интересный", "книга"], ["правильный", "ответ"], ["главный", "улица"], ["другой", "человек"], ["высокий", "здание"], ["горячий", "чай"], ["холодный", "вода"],
+            ["тёплый", "вечер"], ["дорогой", "словарь"], ["свободный", "место"], ["новый", "школа"], ["старый", "мать"], ["большой", "семья"], ["маленький", "девочка"], ["хороший", "учитель"]]
+for a_, n_ in PARES_AS:
+    if a_ not in ADJ or n_ not in DECL: erros.append(f"RG09 par {a_} + {n_}: palavra fora do banco")
+if len(ADJ) < 40: erros.append(f"RG09: só {len(ADJ)} adjetivos")
+
+# ---------- RG10: possessivos e demonstrativos (dadosR5.json: tabelas do Wiktionary em inglês), no mesmo formato dos adjetivos ----------
+PS_PT = [["мой", "my", "meu"], ["твой", "your", "teu, seu (de você)"], ["наш", "our", "nosso"], ["ваш", "your", "de vocês; do senhor"], ["свой", "one's own", "o seu próprio"],
+         ["этот", "this", "este"], ["тот", "that", "aquele"], ["сам", "self", "mesmo, em pessoa"], ["чей", "whose", "de quem"]]
+POSS = {}
+for w, chave, pt in PS_PT:
+    es = (D5["possessivos_e_demonstrativos"].get(w) or {}).get("entradas") or []
+    e = next((x for x in es if ((x.get("tabela") or {}).get("casos") or {}).get("nominative", {}).get("masculine")), None)
+    if not e: erros.append(f"RG10 {w}: sem tabela"); continue
+    gl = " | ".join(str(v(x.get("glosa")) or "") for x in es)
+    if chave not in gl: erros.append(f"RG10 {w}: {chave!r} não está na definição ({gl[:70]!r})"); continue
+    t_ = e["tabela"]; notas = t_.get("notas"); cs = {}
+    for k, en in CASOS:
+        linha = t_["casos"][en]
+        if k == "acc":
+            cs["accA"] = [formas(linha[c].get("animate") if "animate" in linha[c] else linha[c], notas) for c in COLS]
+            cs["acc"] = [formas(linha[c].get("inanimate") if "inanimate" in linha[c] else linha[c], notas) for c in COLS]
+        else: cs[k] = [formas(linha[c], notas) for c in COLS]
+    if w not in [f.replace("́", "") for f in cs["nom"][0]] or any(not f for k in cs for f in cs[k]): erros.append(f"RG10 {w}: nominativo {cs['nom'][0]} ou célula vazia")
+    POSS[w] = {"ac": v(e["forma_acentuada"]), "pt": pt, "casos": cs, "curta": None, "ipa": v(e.get("ipa"))}
+# os de terceira pessoa: a fonte diz que se usa o genitivo do pronome pessoal (его, её, их); o gerador confere que são mesmo esse genitivo
+DONO = [["я", "мой"], ["ты", "твой"], ["мы", "наш"], ["вы", "ваш"]]
+DONO3 = []
+for pron, forma in [["он", "его"], ["она", "её"], ["они", "их"]]:
+    if forma not in [f.replace("́", "") for f in PRON[pron]["casos"]["gen"]]: erros.append(f"RG10: {forma} não é o genitivo de {pron}")
+    es = (D5["possessivos_e_demonstrativos"].get(forma) or {}).get("entradas") or []
+    if not any("possessive" in str(v(x.get("glosa"))) for x in es): erros.append(f"RG10: verbete {forma} sem a definição possessiva")
+    DONO3.append([pron, next(f for f in PRON[pron]["casos"]["gen"] if f.replace("́", "") == forma)])
+PARES_PS = [["мой", "брат"], ["мой", "сестра"], ["мой", "письмо"], ["твой", "книга"], ["твой", "друг"], ["твой", "окно"], ["наш", "школа"], ["наш", "город"], ["наш", "дело"],
+            ["ваш", "учитель"], ["ваш", "семья"], ["ваш", "письмо"], ["этот", "дом"], ["этот", "книга"], ["этот", "слово"], ["тот", "человек"], ["тот", "улица"], ["тот", "здание"],
+            ["мой", "мать"], ["наш", "врач"], ["этот", "задача"], ["тот", "день"], ["твой", "отец"], ["ваш", "дочь"]]
+for a_, n_ in PARES_PS:
+    if a_ not in POSS or n_ not in DECL: erros.append(f"RG10 par {a_} + {n_}: palavra fora do banco")
+# frases da fonte com um possessivo ou demonstrativo: [frase, tradução, palavra em inglês da tradução, forma, palavra, caso, coluna (0 m, 1 n, 2 f, 3 pl), fonte]
+FRP_PT = [["Я Том, а э́то моя́ ма́ма.", "Eu sou o Tom, e esta é a minha mãe.", "my mom", "моя́", "мой", "nom", 2, "wt"], ["У моего брата есть обед", "Meu irmão tem um almoço.", "My brother has a lunch", "моего", "мой", "gen", 0, "wp"],
+          ["Он у́чится у свои́х друзе́й.", "Ele aprende com os próprios amigos.", "his friends", "свои́х", "свой", "gen", 3, "wt"], ["Э́ти часы́ не иду́т.", "Este relógio não funciona.", "This clock", "Э́ти", "этот", "nom", 3, "wt"],
+          ["Э́тот костю́м ему́ идёт.", "Este terno fica bem nele.", "This suit", "Э́тот", "этот", "nom", 0, "wt"]]
+FRP = []
+for ru_, pt, chave, forma, w, caso, col, de in FRP_PT:
+    if de == "wt":
+        f = todas5.get(ru_) or todas_fr.get(ru_)
+        if not f: erros.append(f"RG10 frase não está na fonte: {ru_!r}"); continue
+        en = v(f["traducao"])
+        if chave not in en: erros.append(f"RG10 frase {ru_!r}: {chave!r} não está na tradução da fonte ({en!r})")
+    else:
+        if ru_ not in wp_txt or chave not in wp_txt: erros.append(f"RG10 frase fora da Wikipedia: {ru_!r}"); continue
+        en = chave
+    if forma.replace("́", "").lower() not in [y.replace("́", "").lower() for y in POSS[w]["casos"][caso][col]] or forma not in ru_: erros.append(f"RG10 frase {ru_!r}: {forma!r} não é {caso} coluna {col} de {w} ({POSS[w]['casos'][caso][col]})")
+    FRP.append({"ru": ru_, "pt": pt, "en": en, "forma": forma, "w": w, "caso": caso, "col": col})
+
+# ---------- RG15: preposições e o caso que cada uma pede (dadosR6.json: verbetes do Wiktionary; listas por caso da Wikipedia) ----------
+P6 = D6["preposicoes"]["verbetes"]
+CASO_EN = {"accusative": "acc", "genitive": "gen", "dative": "dat", "instrumental": "ins", "prepositional": "prep", "nominative": "nom"}
+def casos_da_marca(m):
+    # "[with instrumental or (rarely) genitive]" -> só o primeiro caso (o resto vem marcado como raro, literário ou alternativo)
+    achados = sorted((m.find(k), c) for k, c in CASO_EN.items() if k in m)
+    return [achados[0][1]] if achados else []
+def defs_prep(w):
+    ep = P6[w]["entradas"][0]; out = []
+    linha = [c for x in (ep.get("regencia_na_linha_do_verbete") or []) if x and v(x) for c in casos_da_marca(v(x))][:1]
+    def anda(defs, mae):
+        for df in defs or []:
+            mc = [c for m in (df.get("marcas_de_caso") or []) for c in casos_da_marca(v(m))] or mae
+            exs = [(v(e["russo"]), v(e["traducao"])) for e in (df.get("exemplos") or []) if e.get("traducao") and v(e.get("traducao")) and v(e.get("russo"))]
+            out.append((mc, str(v(df["definicao"])), exs)); anda(df.get("subdefinicoes"), mc)
+    anda(ep["definicoes"], linha); return ep, out
+# [preposição, caso, palavra em inglês que tem de estar na definição marcada com esse caso, sentido em português]
+PREP_PT = [["в", "prep", "(location) in", "em, dentro de (onde?)"], ["в", "acc", "(direction) to", "para, para dentro de (para onde?)"], ["в", "acc", "(time) at", "em, a (hora, dia)"],
+           ["на", "prep", "on, upon", "em, em cima de (onde?)"], ["на", "acc", "onto, on", "para, para cima de (para onde?)"], ["на", "acc", "divided by", "por (na divisão)"],
+           ["с", "ins", "with", "com"], ["с", "gen", "from, off", "de, de cima de (de onde?)"], ["к", "dat", "to, toward", "até, em direção a"],
+           ["у", "gen", "at, by, near", "junto de, perto de"], ["у", "gen", "in the possession of", "na posse de (construção de \"ter\")"], ["о", "prep", "about, of, on", "sobre, a respeito de"],
+           ["из", "gen", "from", "de, de dentro de (de onde?)"], ["от", "gen", "starting point", "de, a partir de (afastamento)"], ["до", "gen", "up to, till", "até"],
+           ["для", "gen", "for", "para (em benefício de)"], ["без", "gen", "without", "sem"], ["по", "dat", "across", "por, ao longo de"],
+           ["за", "ins", "behind", "atrás de, além de (onde?)"], ["за", "acc", "for; to; by", "por, a favor de"], ["над", "ins", "above, over", "acima de, sobre"],
+           ["под", "ins", "being beneath", "embaixo de (onde?)"], ["под", "acc", "movement to beneath", "para baixo de (para onde?)"], ["перед", "ins", "in front of", "diante de, antes de"],
+           ["между", "ins", "between", "entre"], ["при", "prep", "during", "em, durante, na presença de"], ["про", "acc", "about, concerning", "sobre, a respeito de"],
+           ["через", "acc", "through", "através de"], ["через", "acc", "(time) in, after", "daqui a, depois de (tempo)"], ["после", "gen", "after", "depois de"],
+           ["около", "gen", "near", "perto de, cerca de"], ["кроме", "gen", "except", "exceto, além de"], ["вокруг", "gen", "round", "em volta de"], ["против", "gen", "against", "contra"],
+           ["среди", "gen", "among", "entre, no meio de"], ["вместо", "gen", "instead of", "em vez de"], ["из-за", "gen", "because of", "por causa de"],
+           ["благодаря", "dat", "thanks to", "graças a"], ["сквозь", "acc", "through", "através de (atravessando)"]]
+PREP = []
+for w, caso, chave, pt in PREP_PT:
+    if w not in P6: erros.append(f"RG15 {w}: sem verbete"); continue
+    ep, ds = defs_prep(w)
+    d = next((x for x in ds if caso in x[0] and chave in x[1]), None)
+    if not d: erros.append(f"RG15 {w} + {caso}: definição com {chave!r} não achada"); continue
+    ex = next(([r_, e_] for r_, e_ in d[2] if len(r_) <= 34), None)
+    PREP.append({"p": w, "ac": v(ep["forma_acentuada"]), "caso": caso, "pt": pt, "en": d[1][:90], "ex": ex})
+# conferência cruzada com as listas por caso da Wikipedia: o que as duas fontes dão para a mesma preposição tem de ter um caso em comum
+WPC = D6["preposicoes"]["wikipedia_listas_por_caso_copiadas_de_dadosR4"]["casos"]
+wp_casos = {}
+for nome, bloco in WPC.items():
+    for x in bloco.get("preposicoes") or []: wp_casos.setdefault(v(x["preposicao"]) if isinstance(x["preposicao"], dict) else x["preposicao"], set()).add(CASO_EN.get(nome, nome))
+PREP_WP = 0
+for w in sorted({x["p"] for x in PREP}):
+    meus = {x["caso"] for x in PREP if x["p"] == w}
+    if w in wp_casos:
+        PREP_WP += 1
+        if not (meus & wp_casos[w]): erros.append(f"RG15 {w}: Wiktionary {sorted(meus)} e Wikipedia {sorted(wp_casos[w])} sem caso em comum")
+# formas alternativas (во, со, ко...): linha "X — used before ..." do verbete
+ALT_PREP = []
+for w in ("в", "с", "к", "о"):
+    for fa in P6[w].get("formas_alternativas") or []:
+        s = str(v(fa))
+        if "pre-1918" in s or "—" not in s: continue
+        ALT_PREP.append({"p": w, "alt": s.split(" ")[0], "en": s})
+# onde? para onde? de onde?: exemplos dos verbetes. [preposição, exemplo literal, palavra em inglês da tradução da fonte, tradução, pergunta]
+ONDE_PT = [["в", "Он в теа́тре", "at (in) the theater", "Ele está no teatro.", "onde"], ["в", "Он идёт в теа́тр", "going to", "Ele está indo ao teatro.", "para"],
+           ["на", "на столе́", "on the table", "em cima da mesa", "onde"], ["на", "на стол", "onto the table", "para cima da mesa", "para"],
+           ["на", "на по́чте", "at the post office", "no correio", "onde"], ["на", "на по́чту", "to the post office", "para o correio", "para"], ["с", "с по́чты", "from the post office", "do correio", "de"],
+           ["под", "пла́вать под водо́й", "swim underwater", "nadar embaixo d'água", "onde"], ["под", "нырну́ть под во́ду", "dive underwater", "mergulhar para debaixo d'água", "para"],
+           ["к", "к до́му", "to the house", "até a casa", "para"], ["из", "Он приезжа́ет из Москвы́", "from Moscow", "Ele vem de Moscou.", "de"], ["у", "сиде́ть у окна́", "by the window", "estar sentado junto à janela", "onde"],
+           ["за", "за столо́м", "at the table", "à mesa", "onde"], ["с", "с по́ля", "from the field", "do campo", "de"]]
+ONDE = []
+for w, ru_, chave, pt, perg in ONDE_PT:
+    ep, ds = defs_prep(w)
+    d = next((x for x in ds if any(r_ == ru_ and chave in e_ for r_, e_ in x[2])), None)
+    if not d or not d[0]: erros.append(f"RG15 exemplo {ru_!r}: não achado com {chave!r}"); continue
+    ONDE.append({"p": w, "ru": ru_, "pt": pt, "perg": perg, "caso": d[0][0]})
+# preposição + substantivo dos laboratórios: combinação montada por mim (não é citação); a forma sai da tabela do substantivo
+PARES_PREP = [["в", "prep", "школа"], ["в", "acc", "школа"], ["в", "prep", "город"], ["в", "acc", "город"], ["на", "prep", "стол"], ["на", "acc", "стол"], ["на", "prep", "работа"], ["на", "acc", "работа"],
+              ["из", "gen", "город"], ["из", "gen", "школа"], ["к", "dat", "брат"], ["к", "dat", "сестра"], ["с", "ins", "друг"], ["с", "ins", "сестра"], ["у", "gen", "окно"], ["у", "gen", "брат"],
+              ["о", "prep", "книга"], ["о", "prep", "работа"], ["без", "gen", "вода"], ["без", "gen", "друг"], ["для", "gen", "сестра"], ["для", "gen", "мама"], ["под", "ins", "стол"], ["над", "ins", "город"],
+              ["перед", "ins", "дом"], ["после", "gen", "урок"], ["около", "gen", "дом"], ["от", "gen", "дом"], ["до", "gen", "город"], ["по", "dat", "улица"], ["за", "ins", "дом"], ["про", "acc", "книга"],
+              ["вокруг", "gen", "стол"], ["через", "acc", "улица"], ["против", "gen", "сила"], ["вместо", "gen", "брат"]]
+for w, caso, n in PARES_PREP:
+    if not any(x["p"] == w and x["caso"] == caso for x in PREP): erros.append(f"RG15 par {w} + {caso}: uso fora da tabela")
+    if n not in DECL or not DECL[n]["casos"][caso][0]: erros.append(f"RG15 par {w} + {n}: sem forma")
+
+# ---------- RG16: numerais e tempo (dadosR6.json: verbetes do Wiktionary; seção "Numerals" de Russian declension, Wikipedia) ----------
+N6 = D6["numerais"]["verbetes"]; T6 = D6["tempo"]["verbetes"]
+txt_num = json.dumps(D6["numerais"], ensure_ascii=False) + json.dumps(D6["tempo"], ensure_ascii=False)
+# cardinais: [palavra, valor, palavra em inglês que tem de estar na definição]
+N_NUM = [["ноль", 0, "zero"], ["один", 1, "one (1)"], ["два", 2, "two (2)"], ["три", 3, "three (3)"], ["четыре", 4, "four (4)"], ["пять", 5, "five (5)"], ["шесть", 6, "six (6)"], ["семь", 7, "seven (7)"],
+         ["восемь", 8, "eight (8)"], ["девять", 9, "nine (9)"], ["десять", 10, "ten (10)"], ["одиннадцать", 11, "eleven"], ["двенадцать", 12, "twelve"], ["тринадцать", 13, "thirteen"],
+         ["четырнадцать", 14, "fourteen"], ["пятнадцать", 15, "fifteen"], ["шестнадцать", 16, "sixteen"], ["семнадцать", 17, "seventeen"], ["восемнадцать", 18, "eighteen"], ["девятнадцать", 19, "nineteen"],
+         ["двадцать", 20, "twenty"], ["тридцать", 30, "thirty"], ["сорок", 40, "forty"], ["пятьдесят", 50, "fifty"], ["шестьдесят", 60, "sixty"], ["семьдесят", 70, "seventy"], ["восемьдесят", 80, "eighty"],
+         ["девяносто", 90, "ninety"], ["сто", 100, "hundred"], ["двести", 200, "two hundred"], ["триста", 300, "three hundred"], ["четыреста", 400, "four hundred"], ["пятьсот", 500, "five hundred"],
+         ["тысяча", 1000, "thousand"], ["миллион", 1000000, "million"]]
+def ent_num(w, classes):
+    return next((e for e in N6.get(w, {}).get("entradas", []) if v(e.get("classe")) in classes), None)
+NUM = []
+for w, n, chave in N_NUM:
+    e = ent_num(w, ("Numeral", "Noun"))
+    if not e: erros.append(f"RG16 {w}: sem entrada"); continue
+    gl = " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])])
+    if chave not in gl: erros.append(f"RG16 {w}: {chave!r} não está na definição ({gl[:60]!r})")
+    ac = v(e["forma_acentuada"])
+    if sem_ac(ac) != w: erros.append(f"RG16 {w}: forma acentuada {ac!r}")
+    x = {"w": w, "ac": ac, "n": n}
+    if n in (1, 2):
+        lin = str(v(e.get("linha_do_verbete")))
+        mf = re.search(r"feminine ([^\s,)]+)", lin); mn = re.search(r"neuter ([^\s,)]+)", lin)
+        if not mf: erros.append(f"RG16 {w}: feminino não achado na linha do verbete")
+        else: x["f"] = mf.group(1)
+        if mn: x["nt"] = mn.group(1)
+    NUM.append(x)
+# centenas de 600 a 900: só existem na tabela da Wikipedia ("200, 300, ... 900", linha Nominative)
+for c in D6["numerais"]["wikipedia"]["secoes"]["russian_declension_numerals"]["conteudo"]:
+    if c.get("tipo") == "tabela" and str(v(c.get("legenda_ou_linha_anterior"))).startswith("200, 300"):
+        g = c["grade_expandida"]["linhas"]; cab = [str(v(y)).strip() for y in g[0]]; nomi = next(l for l in g if str(v(l[0])).startswith("Nominative"))
+        for k, y in zip(cab, nomi):
+            if k.isdigit() and int(k) >= 600: NUM.append({"w": sem_ac(v(y)), "ac": v(y), "n": int(k), "wp": True})
+        # as que o Wiktionary também dá têm de bater com a tabela
+        for k, y in zip(cab, nomi):
+            if k.isdigit() and int(k) < 600 and sem_ac(v(y)) != next(x["w"] for x in NUM if x["n"] == int(k)): erros.append(f"RG16 centena {k}: Wikipedia {v(y)!r} diferente do Wiktionary")
+if len([x for x in NUM if 600 <= x["n"] <= 900]) != 4: erros.append("RG16: centenas de 600 a 900 não achadas na tabela da Wikipedia")
+NUM.sort(key=lambda x: x["n"])
+ORD = []
+for w, n, chave in [["первый", 1, "first"], ["второй", 2, "second"], ["третий", 3, "third"], ["четвёртый", 4, "fourth"], ["пятый", 5, "fifth"], ["шестой", 6, "sixth"], ["седьмой", 7, "seventh"], ["восьмой", 8, "eighth"], ["девятый", 9, "ninth"], ["десятый", 10, "tenth"]]:
+    e = next((e for e in N6.get(w, {}).get("entradas", []) if chave in str(v(e.get("glosa")))), None)
+    if not e: erros.append(f"RG16 ordinal {w}: {chave!r} não achado"); continue
+    ORD.append({"w": w, "ac": v(e["forma_acentuada"]), "n": n})
+# palavras de tempo: [palavra, palavra em inglês da definição, tradução, tipo]
+T_PT = [["секунда", "second", "segundo", "unid"], ["минута", "minute", "minuto", "unid"], ["час", "hour", "hora", "unid"], ["день", "day", "dia", "unid"], ["неделя", "week", "semana", "unid"],
+        ["месяц", "month", "mês", "unid"], ["год", "year", "ano", "unid"], ["век", "century", "século", "unid"],
+        ["понедельник", "Monday", "segunda-feira", "dia"], ["вторник", "Tuesday", "terça-feira", "dia"], ["среда", "Wednesday", "quarta-feira", "dia"], ["четверг", "Thursday", "quinta-feira", "dia"],
+        ["пятница", "Friday", "sexta-feira", "dia"], ["суббота", "Saturday", "sábado", "dia"], ["воскресенье", "Sunday", "domingo", "dia"],
+        ["январь", "January", "janeiro", "mes"], ["февраль", "February", "fevereiro", "mes"], ["март", "March", "março", "mes"], ["апрель", "April", "abril", "mes"], ["май", "May", "maio", "mes"],
+        ["июнь", "June", "junho", "mes"], ["июль", "July", "julho", "mes"], ["август", "August", "agosto", "mes"], ["сентябрь", "September", "setembro", "mes"], ["октябрь", "October", "outubro", "mes"],
+        ["ноябрь", "November", "novembro", "mes"], ["декабрь", "December", "dezembro", "mes"],
+        ["утро", "morning", "manhã", "parte"], ["вечер", "evening", "noite (até a hora de dormir), tarde", "parte"], ["ночь", "night", "noite (madrugada)", "parte"],
+        ["весна", "spring", "primavera", "est"], ["лето", "summer", "verão", "est"], ["осень", "autumn", "outono", "est"], ["зима", "winter", "inverno", "est"]]
+def um(x):
+    x = v(x)
+    if isinstance(x, list): x = x[0] if x else None
+    if isinstance(x, dict): x = v(next(iter(x.values()), None))
+    return x
+TEMPO = {}
+for w, chave, pt, tipo in T_PT:
+    e = T6.get(w)
+    if not e or not e.get("tabela"): erros.append(f"RG16 tempo {w}: sem verbete ou sem tabela"); continue
+    gl = " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])])
+    if chave not in gl: erros.append(f"RG16 tempo {w}: {chave!r} não está na definição ({gl[:60]!r})")
+    cs = e["tabela"]["casos"]; casos = {}
+    for k, en in CASOS:
+        c = cs.get(en) or {}
+        casos[k] = [um(c.get("singular")), um(c.get("plural"))]
+    if not casos["nom"][0] or not casos["gen"][0]: erros.append(f"RG16 tempo {w}: tabela incompleta {casos}")
+    TEMPO[w] = {"ac": v(e["forma_acentuada"]), "pt": pt, "tipo": tipo, "g": str(v(e.get("genero")) or "").split(" ")[0], "casos": casos}
+# formas especiais depois de número, ditas nas notas de uso
+nota_chas = " ".join(str(v(x)) for x in (T6["час"]["entradas"][0].get("notas_de_uso") or []))
+if "два часа́" not in nota_chas or "stress of the genitive singular moves" not in nota_chas: erros.append("RG16: nota de час (два часа́) não achada")
+else: TEMPO["час"]["cont"] = {"sg": "часа́"}
+nota_god = " ".join(str(v(x)) for x in (T6["год"]["entradas"][0].get("notas_de_uso") or []))
+if "пять лет" not in nota_god or "instead of годо́в" not in nota_god: erros.append("RG16: nota de год (пять лет) não achada")
+else: TEMPO["год"]["cont"] = {"pl": "лет"}
+# expressões "em tal dia" / "em tal mês" / "todo tal dia": linhas "X ― transliteração ― tradução" dos verbetes
+QUANDO = []
+for w, x in TEMPO.items():
+    if x["tipo"] not in ("dia", "mes"): continue
+    en_nome = next(c for ww, c, _, _ in T_PT if ww == w)
+    for l in (T6[w].get("linhas_com_expressao_de_tempo") or {}).get("linhas") or []:
+        ps = str(v(l)).split(" ― ")
+        if len(ps) != 3 or len(ps[0].split(" ")) != 2: continue
+        if ps[2] == ("on " if x["tipo"] == "dia" else "in ") + en_nome: QUANDO.append({"w": w, "ru": ps[0], "en": ps[2], "tipo": "em"})
+        elif x["tipo"] == "dia" and ps[2] == "on " + en_nome + "s": QUANDO.append({"w": w, "ru": ps[0], "en": ps[2], "tipo": "todo"})
+QUANDO = [q for i, q in enumerate(QUANDO) if not any(z["w"] == q["w"] and z["ru"] == q["ru"] for z in QUANDO[:i])]
+if sum(1 for q in QUANDO if q["tipo"] == "em") != 19 or sum(1 for q in QUANDO if q["tipo"] == "todo") != 7: erros.append(f"RG16: expressões de dia e mês incompletas ({len(QUANDO)}): " + "; ".join(q["tipo"] + " " + q["ru"] for q in QUANDO))
+# exemplos da fonte de numeral + substantivo: [número, frase literal, substantivo no nominativo se estiver no banco (senão None)]
+EX_NUM_PT = [[151, "сто пятьдеся́т оди́н челове́к", "человек"], [3, "три соба́ки", None], [42, "со́рок два окна́", "окно"], [5, "пять я́блок", "яблоко"], [10, "де́сять рубле́й", None],
+             [111, "сто оди́ннадцать ме́тров", None], [3, "три до́ма", "дом"], [2, "два ма́льчика", "мальчик"], [2, "две кни́ги", "книга"], [52, "пятьдеся́т два ма́льчика", "мальчик"],
+             [5, "пять ма́льчиков", "мальчик"], [55, "пятьдеся́т пять книг", "книга"], [40, "со́рок ма́льчиков", "мальчик"], [2, "два часа́", "час"], [23, "два́дцать три часа́", "час"],
+             [44, "со́рок четы́ре часа́", "час"], [1, "оди́н год", "год"], [2, "два го́да", "год"], [5, "пять лет", "год"], [153, "сто пятьдеся́т три ры́бы", None], [21, "два́дцать оди́н год", "год"], [25, "два́дцать пять лет", "год"]]
+EX_NUM = []
+for n, fr, w in EX_NUM_PT:
+    if fr not in txt_num: erros.append(f"RG16 exemplo fora da fonte: {fr!r}"); continue
+    if w and w not in DECL and w not in TEMPO: erros.append(f"RG16 exemplo {fr!r}: {w} fora do banco"); continue
+    ps = fr.split(" "); EX_NUM.append({"n": n, "ru": fr, "nome": " ".join(ps[:-1]), "subst": ps[-1], "w": w, "g": (DECL[w]["g"] if w in DECL else TEMPO[w]["g"]) if w else None})
+
+# ---------- RG17: imperativo e condicional (dadosR6.json: "Moods" de Russian grammar, "Imperative mood" e "Conditional mood" da Wikipedia; verbetes бы, пусть, давай, давайте, чтобы, если) ----------
+I6 = D6["imperativo_e_condicional"]
+trad6 = {}
+for f in D6["frases"]:
+    if isinstance(f, dict) and v(f.get("russo")) and v(f.get("traducao")): trad6[v(f["russo"])] = (v(f["traducao"]), f.get("verbete"))
+txt_modos = json.dumps(I6["wikipedia"]["secoes"], ensure_ascii=False)
+# [frase literal, palavra em inglês da tradução da fonte, tradução, tipo, fonte]
+FRI_PT = [["Пойди́те со мной.", "Come with me", "Venham comigo. / Venha comigo. (formal)", "imp", "wt"], ["Иди́ сюда́, и́ли тебя́ пойма́ю!", "Come here", "Vem cá, senão eu te pego!", "imp", "wt"],
+          ["Бу́дьте как до́ма.", "at home", "Fique à vontade. (Esteja como em casa.)", "imp", "wt"],
+          ["Дава́й чита́ть", "Let’s read", "Vamos ler.", "davai", "wt"], ["Дава́йте начина́ть", "get started", "Vamos começar.", "davai", "wt"], ["Дава́й встре́тимся до рабо́ты.", "meet before work", "Vamos nos encontrar antes do trabalho.", "davai", "wt"],
+          ["Дава́й я тебе́ помогу́", "Let me help", "Deixa eu te ajudar.", "davai", "wt"],
+          ["Пусть он пи́шет", "Let him write", "Que ele escreva. / Deixe que ele escreva.", "pust", "wt"], ["Пусть X (икс) равно́ двум.", "Let X be 2", "Seja X igual a 2.", "pust", "wt"],
+          ["Пусть она́ не ду́мает, что мы о ней забы́ли.", "Let her not think", "Que ela não pense que nos esquecemos dela.", "pust", "wt"],
+          ["Я бы пошёл в кино́, е́сли бы у меня́ бы́ло вре́мя.", "if I had had time", "Eu teria ido ao cinema, se tivesse tido tempo.", "cond", "wt"], ["Я бы сказа́л — э́то большо́е «да».", "I'd say", "Eu diria que é um grande \"sim\".", "cond", "wt"],
+          ["Я хотел бы петь", "I would like", "Eu gostaria de cantar.", "cond", "wp"], ["что́бы я не забы́л", "so that I won’t forget", "para que eu não esqueça", "cond", "wt"]]
+FRI = []
+for ru_, chave, pt, tipo, de in FRI_PT:
+    if de == "wt":
+        if ru_ not in trad6: erros.append(f"RG17 frase fora da fonte: {ru_!r}"); continue
+        en = trad6[ru_][0]
+        if chave not in en: erros.append(f"RG17 frase {ru_!r}: {chave!r} não está na tradução ({en!r})")
+    else:
+        if ru_ not in txt_modos or chave not in txt_modos: erros.append(f"RG17 frase fora da Wikipedia: {ru_!r}"); continue
+        en = chave
+    FRI.append({"ru": ru_, "pt": pt, "en": en, "tipo": tipo})
+# tabela do condicional de сказать (Wikipedia): células "я бы сказа́ л" (a página separa a terminação com espaço)
+COND_WP = []
+for c in I6["wikipedia"]["secoes"]["russian_grammar_moods"]["conteudo"]:
+    if c.get("tipo") == "tabela" and str(v(c.get("legenda_ou_linha_anterior"))).startswith("Conditional of the verb"):
+        for lin in c["grade_expandida"]["linhas"]:
+            for cel in lin:
+                s = str(v(cel)); m = re.match(r"^(я|ты|он|она́|оно́|мы|вы|они́) бы (сказа́) (л[аои]?)$", s)
+                if m: COND_WP.append([sem_ac(m.group(1)), m.group(1) + " бы " + m.group(2) + m.group(3)])
+COND_WP = [x for i, x in enumerate(COND_WP) if x not in COND_WP[:i]]
+if len(COND_WP) < 8: erros.append(f"RG17: tabela do condicional lida pela metade ({COND_WP})")
+
+# ---------- RG18: conjunções e orações subordinadas (dadosR6.json: verbetes do Wiktionary; "Syntax" de Russian grammar, Wikipedia) ----------
+C6 = D6["conjuncoes"]; txt_sint = json.dumps(C6["wikipedia"]["secoes"], ensure_ascii=False)
+G_PT = {"soma": "coordenação: soma", "opos": "coordenação: oposição", "alt": "coordenação: alternativa", "sub": "subordinação"}
+# [palavra, classe da entrada, palavra em inglês da definição, tradução, grupo, função]
+CJ_PT = [["и", "Conjunction", "and", "e", "soma", "soma"], ["тоже", "Adverb", "also", "também", "soma", "soma"], ["также", "Adverb", "also", "também, igualmente", "soma", "soma"],
+         ["а", "Conjunction", "but, and, while", "e, mas (contraste fraco)", "opos", "contraste"], ["но", "Conjunction", "but", "mas", "opos", "oposição"], ["однако", "Adverb", "however", "porém, no entanto", "opos", "oposição"],
+         ["зато", "Adverb", "on the other hand", "em compensação", "opos", "compensação"], ["или", "Conjunction", "or", "ou", "alt", "alternativa"], ["либо", "Conjunction", "either", "ou (um ou outro)", "alt", "alternativa"],
+         ["что", "Conjunction", "that", "que", "sub", "conteúdo"], ["чтобы", "Conjunction", "in order", "para que, para", "sub", "finalidade"], ["потому что", "Conjunction", "because", "porque", "sub", "causa"],
+         ["так как", "Conjunction", "since", "já que, como", "sub", "causa"], ["если", "Conjunction", "if", "se (condição)", "sub", "condição"], ["когда", "Conjunction", "when", "quando", "sub", "tempo"],
+         ["пока", "Conjunction", "while", "enquanto", "sub", "tempo"], ["хотя", "Conjunction", "although", "embora", "sub", "concessão"], ["как", "Conjunction", "like", "como", "sub", "comparação"],
+         ["чем", "Conjunction", "than", "do que", "sub", "comparação"], ["где", "Conjunction", "where", "onde", "sub", "lugar"], ["ли", "Conjunction", "whether", "se (pergunta indireta)", "sub", "pergunta indireta"],
+         ["который", "Pronoun", "which", "que, o qual", "sub", "oração relativa"]]
+CONJ = []
+for w, cl, chave, pt, grp, fun in CJ_PT:
+    e = next((x for x in C6["verbetes"].get(w, {}).get("entradas", []) if v(x.get("classe")) == cl), None)
+    if not e: erros.append(f"RG18 {w}: sem entrada {cl}"); continue
+    gl = " | ".join([str(v(e.get("glosa")) or "")] + [str(v(g) or "") for g in (e.get("glosas_seguintes") or [])] + [str(v(d_.get("definicao")) or "") for d_ in (e.get("definicoes") or [])])
+    if chave not in gl: erros.append(f"RG18 {w}: {chave!r} não está na definição ({gl[:70]!r})")
+    CONJ.append({"w": w, "ac": v(e["forma_acentuada"]), "pt": pt, "grupo": grp, "fun": fun})
+# o grupo das coordenativas tem de ser o da Wikipedia ("Conjoining / Oppositional / Separative coordinations are formed with ... the conjunctions ...")
+for grp, marca in (("soma", "Conjoining coordinations are formed"), ("opos", "Oppositional coordinations are formed"), ("alt", "Separative coordinations are formed")):
+    i = txt_sint.find(marca); trecho = sem_ac(txt_sint[i:i + 400]) if i >= 0 else ""
+    for x in CONJ:
+        if x["grupo"] == grp and not re.search(r"(?<![Ѐ-ӿ])" + re.escape(x["w"]) + r"(?![Ѐ-ӿ])", trecho): erros.append(f"RG18 {x['w']}: não está entre as conjunções de {marca!r}")
+for w in ("если", "потому что", "так как", "чтобы", "хотя"):
+    if w + " [" not in sem_ac(txt_sint[txt_sint.find("Complementizers"):]): erros.append(f"RG18 {w}: fora da lista de subordinativas da Wikipedia")
+# frases com a conjunção marcada: [frase literal, palavra em inglês da tradução, tradução, conjunção, fonte]
+FRC_PT = [["Вот я́блоко и гру́ша.", "an apple and a pear", "Aqui estão uma maçã e uma pera.", "и", "wt"], ["Сего́дня тепло́, а вчера́ бы́ло хо́лодно.", "yesterday it was cold", "Hoje está quente, e ontem estava frio.", "а", "wt"],
+          ["Э́то не я́блоко, а гру́ша.", "not an apple", "Isto não é uma maçã, e sim uma pera.", "а", "wt"], ["Хо́чешь чай и́ли ко́фе?", "tea or coffee", "Quer chá ou café?", "или", "wt"],
+          ["Я ду́маю, что он до́ма.", "I think that", "Acho que ele está em casa.", "что", "wt"], ["Я не зна́ю, когда́ э́то бы́ло.", "when it was", "Não sei quando isso foi.", "когда", "wt"],
+          ["Я не зна́ю, где мои́ сапоги́.", "where my boots are", "Não sei onde estão as minhas botas.", "где", "wt"], ["Я хочу́ кни́гу, кото́рая лежи́т на столе́.", "the book that is on the table", "Quero o livro que está em cima da mesa.", "который", "wt"],
+          ["лу́чше по́здно, чем никогда́", "better late than never", "antes tarde do que nunca", "чем", "wt"], ["Я бы пошёл в кино́, е́сли бы у меня́ бы́ло вре́мя.", "if I had had time", "Eu teria ido ao cinema, se tivesse tido tempo.", "если", "wt"],
+          ["что́бы быть во́время", "in order to be on time", "para chegar na hora", "чтобы", "wt"], ["Я там был, Ива́н то́же.", "so was Ivan", "Eu estive lá, e o Ivan também.", "тоже", "wt"],
+          ["Хотя́ произведе́ние бы́ло просты́м, кри́тики хвали́ли его́.", "Although", "Embora a obra fosse simples, os críticos a elogiaram.", "хотя", "wt"], ["ли́бо я, ли́бо он", "either I or he", "ou eu, ou ele", "либо", "wt"],
+          ["Я не зна́ю англи́йского, зато́ я говорю́ по-калмы́цки.", "but I do speak", "Não sei inglês; em compensação, falo calmuco.", "зато", "wt"],
+          ["они́ уе́хали, и мы уезжа́ем", "and we are leaving", "eles foram embora, e nós estamos indo (também)", "и", "wp"], ["они́ уже́ уе́хали, а мы ещё нет", "haven't (left) yet", "eles já foram embora, e nós ainda não", "а", "wp"],
+          ["они уе́хали, но ненадо́лго", "but not for long", "eles foram embora, mas não por muito tempo", "но", "wp"]]
+FRC = []
+for ru_, chave, pt, w, de in FRC_PT:
+    if de == "wt":
+        if ru_ not in trad6: erros.append(f"RG18 frase fora da fonte: {ru_!r}"); continue
+        en = trad6[ru_][0]
+        if chave not in en: erros.append(f"RG18 frase {ru_!r}: {chave!r} não está na tradução ({en!r})")
+    else:
+        if ru_ not in txt_sint or chave not in txt_sint: erros.append(f"RG18 frase fora da Wikipedia: {ru_!r}"); continue
+        en = chave
+    cj = next((x for x in CONJ if x["w"] == w), None)
+    pal = [sem_ac(y).lower() for y in re.findall(r"[Ѐ-ӿ́-]+", ru_)]
+    forma = next((y for y in re.findall(r"[Ѐ-ӿ́-]+", ru_) if sem_ac(y).lower() == w or (w == "который" and sem_ac(y).lower().startswith("котор"))), None)
+    if not cj or not forma: erros.append(f"RG18 frase {ru_!r}: {w} não achada"); continue
+    FRC.append({"ru": ru_, "pt": pt, "en": en, "w": w, "forma": forma})
+# который: tabela de declinação, no mesmo formato dos adjetivos
+KOT = {}
+ek = next(x for x in C6["verbetes"]["который"]["entradas"] if v(x.get("classe")) == "Pronoun"); tk = ek["tabelas"][0]; csk = {}
+for k, en in CASOS:
+    linha = tk["casos"][en]
+    def cel(c, qual):
+        x = linha[c]
+        return formas(x.get(qual) if isinstance(x, dict) and qual in x else x, tk.get("notas"))
+    if k == "acc": csk["accA"] = [cel(c, "animate") for c in COLS]; csk["acc"] = [cel(c, "inanimate") for c in COLS]
+    else: csk[k] = [cel(c, "x") for c in COLS]
+if any(not f for k in csk for f in csk[k]): erros.append(f"RG18 который: célula vazia {csk}")
+KOT["который"] = {"ac": v(ek["forma_acentuada"]), "pt": "que, o qual", "casos": csk}
+
+# ---------- Leitura (RL04, RL05): vocabulário de matemática e de física (tools/russo/dadosRL.json: verbetes do Wiktionary em inglês) ----------
+DL = json.load(open(os.path.join(R, "dadosRL.json"), encoding="utf-8"))
+ROT_DOM = re.compile(r"\((?:[^)]*\b)?(mathematics|arithmetic|geometry|number theory|set theory|physics|engineering)\b[^)]*\)")
+def defs_rl(e):
+    o = [str(v(e.get("glosa")) or "")]
+    for x in e.get("definicoes") or []:
+        s = v(x.get("texto")) if isinstance(x, dict) else None
+        if s: o.append(str(s))
+    return list(dict.fromkeys(o))
+def le_vocab(sec, lista, nome):
+    out = []
+    for w, cl, chave, pt, grp in lista:
+        e0 = DL[sec].get(w) or {}
+        if "ver" in e0: e0 = DL[str(e0["ver"]).split("/")[0]].get(w) or {}
+        e = next((x for x in e0.get("entradas") or [] if str(v(x.get("classe"))) == cl and any(chave in d_ for d_ in defs_rl(x))), None)
+        if not e: erros.append(f"{nome} {w}: sem entrada {cl} com {chave!r}"); continue
+        d_ = next(x for x in defs_rl(e) if chave in x); ac = v(e["forma_acentuada"])
+        if sem_ac(ac) != w: erros.append(f"{nome} {w}: forma acentuada {ac!r}")
+        out.append({"w": w, "ac": ac, "pt": pt, "grp": grp, "cl": {"Noun": "s", "Adjective": "a", "Verb": "v", "Adverb": "adv", "Predicative": "pred"}.get(cl, cl), "g": (str(v(e.get("genero")) or "").split(" ")[0] or None) if cl == "Noun" else None,
+                    "gen": v(e.get("genitivo")) if cl == "Noun" else None, "pl": v(e.get("nominativo_plural")) if cl == "Noun" else None, "rot": bool(ROT_DOM.search(d_)), "en": d_[:110]})
+    return out
+VM_PT = [["число", "Noun", "number", "número", "aritmética"], ["цифра", "Noun", "digit", "algarismo", "aritmética"], ["сумма", "Noun", "sum", "soma", "aritmética"], ["разность", "Noun", "result of substraction", "diferença (resultado da subtração)", "aritmética"],
+         ["произведение", "Noun", "product", "produto", "aritmética"], ["частное", "Noun", "quotient", "quociente", "aritmética"], ["дробь", "Noun", "fraction", "fração", "aritmética"], ["числитель", "Noun", "numerator", "numerador", "aritmética"],
+         ["знаменатель", "Noun", "denominator", "denominador", "aritmética"], ["плюс", "Noun", "plus", "mais (sinal)", "aritmética"], ["минус", "Noun", "minus", "menos (sinal)", "aritmética"], ["умножить", "Verb", "to multiply", "multiplicar", "aritmética"], ["делить", "Verb", "to divide", "dividir", "aritmética"],
+         ["уравнение", "Noun", "equation", "equação", "álgebra"], ["неравенство", "Noun", "inequality", "desigualdade, inequação", "álgebra"], ["корень", "Noun", "root, radical", "raiz", "álgebra"], ["степень", "Noun", "power", "potência", "álgebra"],
+         ["квадрат", "Noun", "square", "quadrado", "álgebra"], ["куб", "Noun", "third power", "cubo", "álgebra"], ["функция", "Noun", "function", "função", "álgebra"], ["график", "Noun", "graph", "gráfico", "álgebra"],
+         ["переменная", "Noun", "variable", "variável", "álgebra"], ["постоянная", "Noun", "constant", "constante", "álgebra"], ["множество", "Noun", "set", "conjunto", "álgebra"], ["элемент", "Noun", "element", "elemento", "álgebra"],
+         ["равенство", "Noun", "equality", "igualdade", "álgebra"], ["выражение", "Noun", "expression", "expressão", "álgebra"], ["значение", "Noun", "value", "valor", "álgebra"], ["формула", "Noun", "formula", "fórmula", "álgebra"],
+         ["точка", "Noun", "point", "ponto", "geometria"], ["прямая", "Noun", "straight line", "reta", "geometria"], ["отрезок", "Noun", "segment", "segmento", "geometria"], ["луч", "Noun", "ray", "raio (semirreta; de luz)", "geometria"],
+         ["угол", "Noun", "angle", "ângulo", "geometria"], ["треугольник", "Noun", "triangle", "triângulo", "geometria"], ["прямоугольник", "Noun", "rectangle", "retângulo", "geometria"], ["окружность", "Noun", "circumference", "circunferência", "geometria"],
+         ["круг", "Noun", "circle", "círculo", "geometria"], ["радиус", "Noun", "radius", "raio (do círculo)", "geometria"], ["диаметр", "Noun", "diameter", "diâmetro", "geometria"], ["площадь", "Noun", "area", "área", "geometria"],
+         ["объём", "Noun", "volume", "volume", "geometria"], ["длина", "Noun", "length", "comprimento", "geometria"], ["ширина", "Noun", "width", "largura", "geometria"], ["высота", "Noun", "height", "altura", "geometria"],
+         ["сторона", "Noun", "side", "lado", "geometria"], ["вершина", "Noun", "vertex", "vértice", "geometria"], ["плоскость", "Noun", "plane", "plano", "geometria"], ["вектор", "Noun", "vector", "vetor", "geometria"],
+         ["координата", "Noun", "coordinate", "coordenada", "geometria"], ["ось", "Noun", "axis", "eixo", "geometria"],
+         ["производная", "Noun", "derivative", "derivada", "análise"], ["интеграл", "Noun", "integral", "integral", "análise"], ["предел", "Noun", "limit", "limite", "análise"], ["последовательность", "Noun", "sequence", "sequência", "análise"],
+         ["ряд", "Noun", "series", "série", "análise"], ["вероятность", "Noun", "probability", "probabilidade", "análise"],
+         ["задача", "Noun", "problem", "problema", "enunciado"], ["условие", "Noun", "condition", "condição (do problema)", "enunciado"], ["решение", "Noun", "solution", "solução, resolução", "enunciado"], ["ответ", "Noun", "answer", "resposta", "enunciado"],
+         ["пример", "Noun", "example", "exemplo", "enunciado"], ["доказательство", "Noun", "proof", "demonstração, prova", "enunciado"], ["теорема", "Noun", "theorem", "teorema", "enunciado"],
+         ["чётный", "Adjective", "even", "par", "adjetivos"], ["нечётный", "Adjective", "odd", "ímpar", "adjetivos"], ["простой", "Adjective", "prime", "primo; simples", "adjetivos"], ["целый", "Adjective", "integer", "inteiro", "adjetivos"],
+         ["натуральный", "Adjective", "natural", "natural", "adjetivos"], ["положительный", "Adjective", "positive", "positivo", "adjetivos"], ["отрицательный", "Adjective", "negative", "negativo", "adjetivos"],
+         ["параллельный", "Adjective", "parallel", "paralelo", "adjetivos"], ["перпендикулярный", "Adjective", "perpendicular", "perpendicular", "adjetivos"], ["равный", "Adjective", "equal", "igual", "adjetivos"]]
+VF_PT = [["тело", "Noun", "body", "corpo", "mecânica"], ["масса", "Noun", "mass", "massa", "mecânica"], ["сила", "Noun", "force", "força", "mecânica"], ["скорость", "Noun", "velocity", "velocidade", "mecânica"],
+         ["ускорение", "Noun", "acceleration", "aceleração", "mecânica"], ["время", "Noun", "time", "tempo", "mecânica"], ["путь", "Noun", "path", "caminho, trajeto percorrido", "mecânica"], ["расстояние", "Noun", "distance", "distância", "mecânica"],
+         ["движение", "Noun", "motion", "movimento", "mecânica"], ["энергия", "Noun", "energy", "energia", "mecânica"], ["работа", "Noun", "work", "trabalho", "mecânica"], ["мощность", "Noun", "power", "potência", "mecânica"],
+         ["импульс", "Noun", "momentum", "quantidade de movimento; impulso", "mecânica"], ["вес", "Noun", "weight", "peso", "mecânica"], ["трение", "Noun", "friction", "atrito", "mecânica"], ["тяжесть", "Noun", "gravity", "gravidade, peso", "mecânica"],
+         ["давление", "Noun", "pressure", "pressão", "calor e matéria"], ["плотность", "Noun", "density", "densidade", "calor e matéria"], ["температура", "Noun", "temperature", "temperatura", "calor e matéria"], ["теплота", "Noun", "heat", "calor", "calor e matéria"],
+         ["газ", "Noun", "gas", "gás", "calor e matéria"], ["жидкость", "Noun", "liquid", "líquido", "calor e matéria"], ["пар", "Noun", "steam", "vapor", "calor e matéria"], ["вода", "Noun", "water", "água", "calor e matéria"], ["лёд", "Noun", "ice", "gelo", "calor e matéria"],
+         ["поле", "Noun", "field", "campo", "eletricidade"], ["заряд", "Noun", "charge", "carga", "eletricidade"], ["ток", "Noun", "current", "corrente", "eletricidade"], ["напряжение", "Noun", "voltage", "tensão (voltagem)", "eletricidade"],
+         ["сопротивление", "Noun", "resistance", "resistência", "eletricidade"], ["проводник", "Noun", "conductor", "condutor", "eletricidade"], ["цепь", "Noun", "circuit", "circuito", "eletricidade"], ["магнит", "Noun", "magnet", "ímã", "eletricidade"],
+         ["волна", "Noun", "wave", "onda", "ondas e átomos"], ["частота", "Noun", "frequency", "frequência", "ondas e átomos"], ["период", "Noun", "period", "período", "ondas e átomos"], ["свет", "Noun", "light", "luz", "ondas e átomos"],
+         ["линза", "Noun", "lens", "lente", "ondas e átomos"], ["зеркало", "Noun", "mirror", "espelho", "ondas e átomos"], ["звук", "Noun", "sound", "som", "ondas e átomos"], ["атом", "Noun", "atom", "átomo", "ondas e átomos"],
+         ["ядро", "Noun", "nucleus", "núcleo", "ondas e átomos"], ["электрон", "Noun", "electron", "elétron", "ondas e átomos"], ["частица", "Noun", "particle", "partícula", "ondas e átomos"],
+         ["закон", "Noun", "law", "lei", "problema"], ["опыт", "Noun", "experiment", "experimento, experiência", "problema"], ["измерение", "Noun", "measurement", "medição, medida", "problema"], ["единица", "Noun", "unit", "unidade", "problema"],
+         ["величина", "Noun", "quantity", "grandeza", "problema"], ["система", "Noun", "system", "sistema", "problema"], ["нить", "Noun", "thread", "fio", "problema"], ["пружина", "Noun", "spring", "mola", "problema"],
+         ["шар", "Noun", "ball", "bola, esfera", "problema"], ["груз", "Noun", "weight, load", "carga, peso (o corpo pendurado)", "problema"], ["брусок", "Noun", "bar", "bloco, barra", "problema"],
+         ["наклонный", "Adjective", "inclined", "inclinado", "adjetivos"], ["горизонтальный", "Adjective", "horizontal", "horizontal", "adjetivos"], ["вертикальный", "Adjective", "vertical", "vertical", "adjetivos"],
+         ["постоянный", "Adjective", "constant", "constante", "adjetivos"], ["равномерный", "Adjective", "uniform", "uniforme", "adjetivos"], ["начальный", "Adjective", "initial", "inicial", "adjetivos"],
+         ["конечный", "Adjective", "final", "final", "adjetivos"], ["полный", "Adjective", "full, complete", "total, completo", "adjetivos"], ["средний", "Adjective", "average", "médio", "adjetivos"]]
+VOCM = le_vocab("vocabulario_matematica", VM_PT, "RL04"); VOCF = le_vocab("vocabulario_fisica", VF_PT, "RL05")
+
+# ---------- Leitura RL08: falsos amigos (inglês × russo: Appendix:Glossary of false friends, Wiktionary) e palavras de dois sentidos (verbetes) ----------
+FA6 = DL["falsos_amigos"]; GLO = {sem_ac(str(v(x.get("palavra_russa")) or "")).lower(): x for x in FA6["wiktionary_Glossary_of_false_friends"] if v(x.get("palavra_russa"))}
+# [palavra, palavra inglesa com que se confunde, palavra do "sentido real" do glossário, palavra da definição do verbete, o que parece (tradução da inglesa), sentido real]
+FA_PT = [["актуальный", "actual", "current", "current", "real, de fato (inglês actual)", "atual, relevante"], ["адепт", "adept", "follower", "follower", "hábil, perito (inglês adept)", "adepto, seguidor"],
+         ["брат", "brat", "brother", "brother", "pirralho (inglês brat)", "irmão"], ["характер", "character", "temperament", "temper", "personagem; caractere (inglês character)", "temperamento, gênio"],
+         ["шеф", "chef", "boss", "boss", "chefe de cozinha (inglês chef)", "chefe, patrão"], ["фамилия", "family", "surname", "surname", "família (inglês family)", "sobrenome"],
+         ["кабинет", "cabinet", "office", "office", "armário; conselho de ministros (inglês cabinet)", "escritório, gabinete"], ["лист", "list", "leaf", "leaf", "lista (inglês list)", "folha"],
+         ["магазин", "magazine", "store", "shop", "revista (inglês magazine)", "loja"], ["проспект", "prospect", "avenue", "avenue", "perspectiva (inglês prospect)", "avenida"],
+         ["схема", "scheme", "diagram", "layout", "trama, plano ardiloso (inglês scheme)", "diagrama, esquema"]]
+def ent_fa(w, chave):
+    return next((x for x in FA6["verbetes"].get(w, {}).get("entradas") or [] if any(chave in d_ for d_ in defs_rl(x))), None)
+ARMA = []
+for w, ing, k_glo, k_vb, parece, real in FA_PT:
+    g_ = GLO.get(w); e = ent_fa(w, k_vb)
+    if not g_ or not e: erros.append(f"RL08 {w}: fora do glossário ou do verbete"); continue
+    if v(g_.get("palavra_inglesa_com_que_se_confunde")).split(" ")[0] != ing or k_glo not in str(v(g_.get("sentido_real"))): erros.append(f"RL08 {w}: glossário diz {v(g_.get('palavra_inglesa_com_que_se_confunde'))!r} / {v(g_.get('sentido_real'))!r}")
+    ARMA.append({"w": w, "ac": v(e["forma_acentuada"]), "pt": real, "grp": "falsos amigos", "tipo": "falso", "ing": ing, "parece": parece, "cl": "s" if v(e.get("classe")) == "Noun" else "a", "g": (str(v(e.get("genero")) or "").split(" ")[0] or None) if v(e.get("classe")) == "Noun" else None,
+                 "en": str(v(g_.get("sentido_real")))[:80], "en2": defs_rl(e)[0][:80]})
+# divergência entre as duas fontes (não entra na lista de treino): кедр
+gk = GLO.get("кедр"); ek = (FA6["verbetes"].get("кедр", {}).get("entradas") or [None])[0]
+DIVERG = {"w": "кедр", "ac": v(ek["forma_acentuada"]), "ing": "cedar", "glossario": str(v(gk.get("sentido_real"))), "verbete": defs_rl(ek)[0]} if gk and ek else None
+if not DIVERG or "Siberian" not in DIVERG["glossario"] or "cedar" not in DIVERG["verbete"]: erros.append("RL08: a divergência de кедр não está como esperado")
+# palavras de dois sentidos: [palavra, seção, palavra do sentido comum, sentido comum, palavra do sentido técnico, sentido técnico]
+DS_PT = [["произведение", "vocabulario_matematica", "work of art", "obra (de arte, de literatura)", "product", "produto (da multiplicação)"], ["корень", "vocabulario_matematica", "botany", "raiz (de planta)", "root, radical", "raiz (de um número)"],
+         ["степень", "vocabulario_matematica", "degree, extent", "grau", "power", "potência"], ["простой", "vocabulario_matematica", "simple", "simples", "prime", "primo (número)"],
+         ["целый", "vocabulario_matematica", "whole", "inteiro, todo", "integer", "inteiro (número)"], ["точка", "vocabulario_matematica", "full stop", "ponto final", "point", "ponto (geometria)"],
+         ["площадь", "vocabulario_matematica", "open area in a town", "praça", "area", "área"], ["угол", "vocabulario_matematica", "corner", "canto, esquina", "angle", "ângulo"],
+         ["множество", "vocabulario_matematica", "multitude", "multidão, grande quantidade", "set", "conjunto"], ["импульс", "vocabulario_fisica", "urge", "ímpeto, vontade súbita", "momentum", "quantidade de movimento"],
+         ["напряжение", "vocabulario_fisica", "effort", "esforço", "voltage", "tensão (voltagem)"], ["свет", "vocabulario_fisica", "world", "mundo", "light", "luz"],
+         ["единица", "vocabulario_fisica", "unit", "unidade (de medida)", "one, unity", "o número um"], ["мощность", "vocabulario_fisica", "power", "potência (mecânica)", "cardinality", "cardinalidade (de um conjunto)"],
+         ["работа", "vocabulario_fisica", "job", "emprego, serviço", "work", "trabalho (grandeza)"], ["тело", "vocabulario_fisica", "human or animal", "corpo (de pessoa ou animal)", "(physics) body", "corpo (objeto do problema)"]]
+for w, sec, kA, ptA, kB, ptB in DS_PT:
+    es = DL[sec].get(w, {}).get("entradas") or []; ds = [d_ for x in es for d_ in defs_rl(x)]
+    dA = next((d_ for d_ in ds if kA in d_), None); dB = next((d_ for d_ in ds if kB in d_), None)
+    if not dA or not dB: erros.append(f"RL08 {w}: sentido {kA!r} ou {kB!r} não achado em {ds[:4]}"); continue
+    e = es[0]
+    ARMA.append({"w": w, "ac": v(e["forma_acentuada"]), "pt": ptB, "grp": "dois sentidos", "tipo": "dois", "comum": ptA, "cl": "s" if v(e.get("classe")) == "Noun" else "a", "g": (str(v(e.get("genero")) or "").split(" ")[0] or None) if v(e.get("classe")) == "Noun" else None, "en": dB[:80], "en2": dA[:80]})
+
+# ---------- Leitura RL01 a RL03: frases do Tatoeba (CC BY 2.0 FR, autor em cada frase) e fábulas de Esopo na versão de Tolstói (Wikisource) ----------
+TAT = {v(f["russo"]): f for f in DL["frases_tatoeba"]["frases"]}
+# [frase literal, palavra em inglês da tradução da fonte, tradução (minha, a partir do inglês), nível (classificação minha, pelo tamanho)]
+LT_PT = [["Где школа?", "Where is the school", "Onde fica a escola?", "A1"], ["Город большой.", "city is large", "A cidade é grande.", "A1"], ["Он математик.", "mathematician", "Ele é matemático.", "A1"],
+         ["Она физик.", "physicist", "Ela é física.", "A1"], ["Я физик.", "physicist", "Eu sou físico.", "A1"], ["Это книга?", "a book", "Isto é um livro?", "A1"], ["Это школа?", "a school", "Isto é uma escola?", "A1"],
+         ["Иду домой.", "going home", "Estou indo para casa.", "A1"], ["Мне семнадцать.", "seventeen", "Tenho dezessete anos.", "A1"], ["Можно выйти?", "May I", "Posso sair?", "A1"], ["Нужно работать.", "need to work", "É preciso trabalhar.", "A1"],
+         ["Сегодня среда?", "Wednesday", "Hoje é quarta-feira?", "A1"], ["Хороший ответ.", "Good answer", "Boa resposta.", "A1"], ["Решите уравнение.", "Solve the equation", "Resolvam a equação.", "A1"], ["Что потом?", "next", "E depois?", "A1"],
+         ["А завтра?", "tomorrow", "E amanhã?", "A1"], ["Если хочешь.", "If you want", "Se você quiser.", "A1"], ["Хочешь знать?", "Want to know", "Quer saber?", "A1"], ["Дети в школе?", "children at school", "As crianças estão na escola?", "A1"],
+         ["Часы на столе.", "on the table", "O relógio está em cima da mesa.", "A1"], ["Школа в городе.", "in the city", "A escola fica na cidade.", "A1"], ["Я люблю числа.", "numbers", "Eu gosto de números.", "A1"],
+         ["Он вчера пил.", "yesterday", "Ele bebeu ontem.", "A1"], ["Уже день.", "already", "Já é dia.", "A1"], ["Учись писать.", "Learn to write", "Aprenda a escrever.", "A1"],
+         ["Вы уже идёте домой?", "going home already", "Vocês já estão indo para casa?", "A2"], ["Вы уже решили задачу?", "solved the problem", "Vocês já resolveram o problema?", "A2"], ["Где ты будешь сидеть?", "going to sit", "Onde você vai se sentar?", "A2"],
+         ["Давай сделаем это завтра.", "do it tomorrow", "Vamos fazer isso amanhã.", "A2"], ["Его книга очень интересная.", "very interesting", "O livro dele é muito interessante.", "A2"], ["Ей нельзя туда ходить.", "not allowed", "Ela não pode ir lá.", "A2"],
+         ["Когда можешь, помогай другим.", "help others", "Quando puder, ajude os outros.", "A2"], ["На столе лежат часы?", "on the table", "Há um relógio em cima da mesa?", "A2"], ["На это ушли годы.", "took years", "Isso levou anos.", "A2"],
+         ["Он хочет вас видеть.", "wants to see you", "Ele quer ver vocês.", "A2"], ["Она его ещё любила.", "still loved", "Ela ainda o amava.", "A2"], ["Почему ты не вошёл?", "go inside", "Por que você não entrou?", "A2"],
+         ["Сколько мне тебе дать?", "How much should I give", "Quanto devo te dar?", "A2"], ["Сто — это большое число.", "big number", "Cem é um número grande.", "A2"], ["Ты ходила в школу?", "go to school", "Você foi à escola?", "A2"],
+         ["У меня масса дел.", "things to do", "Tenho um monte de coisas para fazer.", "A2"], ["Учитель идёт в школу.", "teacher is going", "O professor está indo para a escola.", "A2"], ["Что ты увидел потом?", "see next", "O que você viu depois?", "A2"],
+         ["Этот физик изучает волны.", "studies waves", "Este físico estuda ondas.", "A2"], ["Я люблю писать письма.", "writing letters", "Eu gosto de escrever cartas.", "A2"], ["Я начал писать письмо.", "started writing", "Comecei a escrever uma carta.", "A2"],
+         ["Я не понимаю математику.", "understand", "Eu não entendo matemática.", "A2"], ["Я тоже хочу знать.", "also want", "Eu também quero saber.", "A2"],
+         ["Если меня здесь нет, то где я?", "not here", "Se eu não estou aqui, então onde estou?", "B1"], ["Как это я не могу его увидеть?", "can't see him", "Como assim eu não consigo vê-lo?", "B1"],
+         ["Он вчера получил письмо от старого друга.", "from an old friend", "Ontem ele recebeu uma carta de um velho amigo.", "B1"], ["С чего вы решили, что я против?", "against", "Por que vocês acharam que eu sou contra?", "B1"],
+         ["Сколько у нас будет на это времени?", "How much time", "Quanto tempo teremos para isso?", "B1"], ["Так нам обычно мой учитель математики говорил.", "math teacher", "Era o que o meu professor de matemática costumava nos dizer.", "B1"],
+         ["У нас ещё масса времени для этого.", "plenty of time", "Ainda temos muito tempo para isso.", "B1"], ["Я люблю его, а он любит другую.", "loves someone else", "Eu o amo, mas ele ama outra.", "B1"],
+         ["Я сделал то, что вы мне сказали.", "what you told me", "Fiz o que vocês me disseram.", "B1"], ["Я хочу знать, что всё это значит.", "what this is all about", "Quero saber o que tudo isso significa.", "B1"],
+         ["Кто-то плохо учил физику в школе.", "learn physics well", "Alguém não estudou física direito na escola.", "B1"]]
+LEIT = []
+for ru_, chave, pt, niv in LT_PT:
+    f = TAT.get(ru_)
+    if not f: erros.append(f"Leitura: frase fora do Tatoeba: {ru_!r}"); continue
+    en = str(v(f["traducao"]))
+    if chave not in en: erros.append(f"Leitura {ru_!r}: {chave!r} não está na tradução ({en!r})")
+    if str(v(f.get("licenca"))) not in ("CC BY 2.0 FR", "CC0 1.0"): erros.append(f"Leitura {ru_!r}: licença inesperada {v(f.get('licenca'))!r}")
+    LEIT.append({"ru": ru_, "pt": pt, "en": en, "niv": niv, "autor": str(v(f["autor"])), "id": str(v(f["id"])), "lic": str(v(f["licenca"]))})
+# palavrinhas sem tabela no banco. [palavra, de onde vem o sentido, palavra em inglês que tem de estar lá, tradução]
+#   "t6", "n6", "c6", "i6", "ve": glosa de verbete do Wiktionary (tempo, numerais, conjunções, imperativo, verbos de enunciado);
+#   "tat:<frase>": só há a tradução de uma frase do Tatoeba (sentido tirado da frase, não de dicionário: a tela diz isso)
+MI_PT = [["сегодня", "t6", "today", "hoje"], ["завтра", "t6", "tomorrow", "amanhã"], ["вчера", "t6", "yesterday", "ontem"], ["сколько", "n6", "how much", "quanto, quantos"], ["много", "n6", "much", "muito, muitos"],
+         ["почему", "c6", "why", "por que"], ["бы", "i6", "conditional", "partícula do condicional"], ["тогда", "ve", "then", "então, naquele momento"], ["следовательно", "ve", "consequently", "consequentemente, logo"],
+         ["не", "tat:Я не понимаю математику.", "don't", "não"], ["уже", "tat:Уже день.", "already", "já"], ["очень", "tat:Его книга очень интересная.", "very", "muito"], ["потом", "tat:Что ты увидел потом?", "next", "depois"],
+         ["можно", "tat:Можно выйти?", "May I", "pode-se, é permitido"], ["нужно", "tat:Нужно работать.", "need to", "é preciso"], ["нельзя", "tat:Ей нельзя туда ходить.", "not allowed", "não se pode, é proibido"],
+         ["туда", "tat:Ей нельзя туда ходить.", "go there", "para lá"], ["домой", "tat:Иду домой.", "going home", "para casa"], ["здесь", "tat:Если меня здесь нет, то где я?", "here", "aqui"],
+         ["ещё", "tat:Она его ещё любила.", "still", "ainda"], ["обычно", "tat:Так нам обычно мой учитель математики говорил.", "used to", "geralmente, de costume"], ["всё", "tat:Я хочу знать, что всё это значит.", "all", "tudo"],
+         ["плохо", "tat:Кто-то плохо учил физику в школе.", "didn't learn physics well", "mal"], ["так", "tat:Так нам обычно мой учитель математики говорил.", "That's what", "assim"]]
+def glosa_de(onde, w):
+    if onde == "t6": return str(v((T6.get(w) or {}).get("glosa")) or "")
+    src = {"n6": N6, "c6": C6["verbetes"], "i6": I6["verbetes"], "ve": DL["verbos_de_enunciado"]}[onde]
+    return " | ".join(d_ for x in (src.get(w) or {}).get("entradas") or [] for d_ in ([str(v(x.get("glosa")) or "")] + defs_rl(x)))
+MIUDAS = {}
+for w, onde, chave, pt in MI_PT:
+    if onde.startswith("tat:"):
+        f = TAT.get(onde[4:]); en = str(v(f["traducao"])) if f else ""
+        if not f or chave not in en or w not in [sem_ac(x).lower() for x in re.findall(r"[Ѐ-ӿ]+", onde[4:])]: erros.append(f"Leitura palavrinha {w}: frase ou {chave!r} não confere ({en!r})"); continue
+        MIUDAS[w] = {"pt": pt, "de": "frase", "fr": onde[4:]}
+    else:
+        gl = glosa_de(onde, w)
+        if chave not in gl: erros.append(f"Leitura palavrinha {w}: {chave!r} não está na glosa ({gl[:60]!r})"); continue
+        MIUDAS[w] = {"pt": pt, "de": "verbete"}
+# fábulas: [título russo como na página, nível, parágrafos em português (tradução minha, seguindo o russo e conferindo com a inglesa de 1904)]
+FB_PT = [["КУРИЦА И ЗОЛОТЫЕ ЯЙЦА", "A2", ["Um dono tinha uma galinha que punha ovos de ouro. Ele quis mais ouro de uma vez só e matou a galinha (pensava que dentro dela havia um grande pedaço de ouro); mas ela era igual a todas as outras galinhas."]],
+         ["РЫБАК И РЫБКА", "A2", ["Um pescador pegou um peixinho. E o peixinho disse:", "«Pescador, solte-me na água; você vê que sou pequeno: pouco proveito terá de mim. Se me soltar, eu cresço, e então você me pega: terá mais proveito.»", "E o pescador disse:", "«Tolo será quem ficar esperando um proveito grande e deixar escapar das mãos o pequeno.»"]],
+         ["МУРАВЕЙ И ГОЛУБКА", "B1", ["Uma formiga desceu ao riacho: queria beber. Uma onda a cobriu e quase a afogou. Uma pomba carregava um ramo; viu que a formiga se afogava e jogou-lhe o ramo no riacho. A formiga subiu no ramo e se salvou. Depois um caçador armou uma rede para a pomba e ia fechá-la. A formiga rastejou até o caçador e mordeu-lhe a perna; o caçador gemeu e deixou cair a rede. A pomba bateu as asas e voou embora."]],
+         ["ЛЕВ И МЫШЬ", "B1", ["Um leão dormia. Um rato correu por cima do corpo dele. Ele acordou e o pegou. O rato começou a pedir que o soltasse; disse:", "— Se você me soltar, eu também lhe farei um bem.", "O leão riu de o rato prometer fazer-lhe um bem, e o soltou.", "Depois uns caçadores pegaram o leão e o amarraram com uma corda a uma árvore. O rato ouviu o rugido do leão, veio correndo, roeu a corda e disse:", "— Lembra? Você riu, não pensava que eu pudesse lhe fazer um bem, e agora vê: até de um rato pode vir um bem."]]]
+FABULAS = []
+fab_txt = {str(v(f["titulo_ru"])): f for f in DL["textos_dominio_publico"]["fabulas_tolstoi_wikisource"]["textos"]}
+for tit, niv, pts in FB_PT:
+    f = fab_txt.get(tit)
+    if not f: erros.append(f"Leitura: fábula {tit!r} não achada"); continue
+    ru_p = [str(v(x)) for x in f["paragrafos_ru"]]; en_p = [str(v(x)).replace("​", "").strip() for x in f["paragrafos_en"]]
+    if len(ru_p) != len(pts) or len(en_p) != len(pts): erros.append(f"Leitura: fábula {tit!r} com {len(ru_p)} parágrafos russos, {len(en_p)} ingleses e {len(pts)} portugueses"); continue
+    if str(v(f.get("tradutor"))) != "Leo Wiener" or str(v(f.get("ano_da_traducao"))) != "1904": erros.append(f"Leitura: fábula {tit!r}: tradutor ou ano diferente do esperado")
+    FABULAS.append({"tit": tit[0] + tit[1:].lower(), "titEn": str(v(f["titulo_en"])).title(), "niv": niv, "ru": ru_p, "en": en_p, "pt": pts, "ano": str(v(f.get("ano_do_original"))), "trad": "Leo Wiener, 1904"})
+
+# ---------- Leitura RL06: como ler um enunciado (verbos de pedido e palavras de estrutura: verbetes; frases: Tatoeba e exemplos de verbetes) ----------
+VE6 = DL["verbos_de_enunciado"]
+FVE = {"verbos": {w: {"entradas_verb": [x for x in (e.get("entradas") or []) if str(v(x.get("classe"))) == "Verb" and x.get("conjugacao")]} for w, e in VE6.items() if isinstance(e, dict)}}
+# verbos de pedido e de descrição: [infinitivo, palavra em inglês da definição, tradução, grupo]
+VEN_PT = [["найти", "to find", "achar, determinar", "pedido"], ["определить", "to determine", "determinar", "pedido"], ["вычислить", "to calculate", "calcular", "pedido"], ["доказать", "to prove", "provar, demonstrar", "pedido"],
+          ["показать", "to show", "mostrar", "pedido"], ["рассмотреть", "to examine", "examinar, considerar", "pedido"], ["сравнить", "to compare", "comparar", "pedido"], ["построить", "to build", "construir", "pedido"],
+          ["выразить", "to express", "expressar", "pedido"], ["записать", "to write down", "anotar, escrever", "pedido"], ["указать", "to indicate", "indicar", "pedido"], ["объяснить", "to explain", "explicar", "pedido"],
+          ["пренебречь", "to neglect", "desprezar (uma grandeza)", "pedido"], ["принять", "to assume", "adotar, supor", "pedido"],
+          ["зависеть", "to depend", "depender", "descrição"], ["падать", "to fall", "cair", "descrição"], ["бросить", "to throw", "lançar, jogar", "descrição"], ["составлять", "to amount to", "ser de, perfazer", "descrição"],
+          ["действовать", "to affect", "agir, atuar", "descrição"], ["равняться", "to be equal", "ser igual a", "descrição"]]
+VEN = {}
+for inf, chave, pt, grp in VEN_PT:
+    es = FVE["verbos"].get(inf, {}).get("entradas_verb") or []
+    i = next((k for k, x in enumerate(es) if any(chave in d_ for d_ in defs_rl(x))), None)
+    if i is None: erros.append(f"RL06 verbo {inf}: {chave!r} não achado"); continue
+    n_antes = len(erros); x = le_verbo(FVE, inf, i, defs_rl(es[i])[0][:6], pt)
+    if not x: continue
+    x["grp"] = grp; VEN[inf] = x
+# palavras de estrutura: [palavra, classe, palavra em inglês, tradução, papel no enunciado]
+EST_PT = [["пусть", "Particle", "(mathematics) let", "seja", "abre uma suposição"], ["если", "Conjunction", "if", "se", "abre a condição"], ["то", "Conjunction", "then", "então", "responde ao «если»"],
+          ["тогда", "Adverb", "then", "então, nesse caso", "tira a consequência"], ["следовательно", "Adverb", "consequently", "logo, portanto", "tira a consequência"], ["поэтому", "Adverb", "therefore", "por isso", "tira a consequência"],
+          ["причём", "Conjunction", "moreover", "sendo que, e além disso", "acrescenta um dado"], ["известно", "Predicative", "it is (well) known", "sabe-se, é sabido", "apresenta um dado"],
+          ["дано", "Verb", "passive past participle of дать", "dado, é dado", "apresenta os dados"], ["равен", "Adjective", "short masculine singular", "é igual a (masculino)", "dá o valor"],
+          ["сколько", "Pronoun", "how much", "quanto, quantos", "faz a pergunta"], ["каков", "Pronoun", "what", "qual é, como é", "faz a pergunta"], ["чему", "Pronoun", "dative of что", "a quê (igual a quê?)", "faz a pergunta"]]
+EST = []
+for w, cl, chave, pt, papel in EST_PT:
+    e = next((x for x in (VE6.get(w) or {}).get("entradas") or [] if str(v(x.get("classe"))) == cl and any(chave in d_ for d_ in defs_rl(x))), None)
+    if not e: erros.append(f"RL06 estrutura {w}: sem entrada {cl} com {chave!r}"); continue
+    EST.append({"w": w, "ac": v(e["forma_acentuada"]), "pt": pt, "papel": papel, "en": next(d_ for d_ in defs_rl(e) if chave in d_)[:110]})
+# frases com cara de enunciado: [frase literal, palavra em inglês da tradução, tradução, tipo, fonte]
+txt_d6 = json.dumps(D6["preposicoes"], ensure_ascii=False) + json.dumps(I6["verbetes"], ensure_ascii=False)
+EN_PT = [["Решите уравнение.", "Solve the equation", "Resolvam a equação.", "pedido", "tat"], ["Вы уже решили задачу?", "solved the problem", "Vocês já resolveram o problema?", "pergunta", "tat"],
+         ["Задача проста.", "task is simple", "O problema é simples.", "dado", "tat"], ["Он с лёгкостью решил все эти задачи.", "solved all those problems", "Ele resolveu todos esses problemas com facilidade.", "dado", "tat"],
+         ["Прямой угол равен девяноста градусам.", "right angle", "O ângulo reto é igual a noventa graus.", "dado", "tat"], ["Квадратный корень из двадцати пяти равен пяти.", "square root", "A raiz quadrada de vinte e cinco é igual a cinco.", "dado", "tat"],
+         ["Радиус Земли приблизительно равен шести тысячам километров.", "radius of the Earth", "O raio da Terra é aproximadamente igual a seis mil quilômetros.", "dado", "tat"], ["Доллар равен ста центам.", "hundred cents", "Um dólar é igual a cem centavos.", "dado", "tat"],
+         ["Предположим, что 𝑥 равен 1.", "Suppose", "Suponhamos que x é igual a 1.", "suposição", "tat"], ["Массу планет вычисляют по закону всемирного тяготения.", "is calculated", "A massa dos planetas é calculada pela lei da gravitação universal.", "dado", "tat"],
+         ["Атомная масса алюминия - 26,982.", "atomic mass", "A massa atômica do alumínio é 26,982.", "dado", "tat"], ["Атомное число железа - 26.", "atomic number of iron", "O número atômico do ferro é 26.", "dado", "tat"],
+         ["Сто — это большое число.", "big number", "Cem é um número grande.", "dado", "tat"], ["Если меня здесь нет, то где я?", "not here", "Se eu não estou aqui, então onde estou?", "suposição", "tat"],
+         ["Этот физик изучает волны.", "studies waves", "Este físico estuda ondas.", "dado", "tat"],
+         ["Пусть X (икс) равно́ двум.", "Let X be 2", "Seja X igual a 2.", "suposição", "wt"], ["Шесть де́лится на три — это два.", "Six divided by three is two", "Seis dividido por três é dois.", "dado", "wt"],
+         ["Пять на два не де́лится", "Five is not divisible by two", "Cinco não é divisível por dois.", "dado", "wt"]]
+ENUN = []
+for ru_, chave, pt, tipo, de in EN_PT:
+    if de == "tat":
+        f = TAT.get(ru_)
+        if not f: erros.append(f"RL06 frase fora do Tatoeba: {ru_!r}"); continue
+        en = str(v(f["traducao"]))
+        if chave not in en: erros.append(f"RL06 {ru_!r}: {chave!r} não está na tradução ({en!r})")
+        ENUN.append({"ru": ru_, "pt": pt, "en": en, "niv": "EN", "tipo": tipo, "autor": str(v(f["autor"])), "id": str(v(f["id"])), "lic": str(v(f["licenca"]))})
+    else:
+        if ru_ not in txt_d6 or chave not in txt_d6: erros.append(f"RL06 frase fora dos verbetes: {ru_!r}"); continue
+        ENUN.append({"ru": ru_, "pt": pt, "en": chave, "niv": "EN", "tipo": tipo, "autor": "Wiktionary em inglês", "id": "exemplo de verbete", "lic": "verbete"})
+
 for a in avisos: print("aviso:", a)
 if erros:
     for e in erros: print("ERRO:", e)
     print(f"{len(erros)} erro(s): nada gravado."); sys.exit(1)
-RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES}
+RU = {"ALF": ALF, "PAL": PAL, "PAR": PAR, "LISTA": LISTA, "VOG": VOG, "SONS": SONS, "DUR": DUR, "ITAL": ITAL, "WT": WT, "EXC": EXC, "RED": RED, "ENS": ENS, "DEZ": DEZ, "REG": REG, "ESTR": ESTR, "NOM": NOM, "IRR": IRR, "DECL": DECL, "VERB": VERB, "PRON": PRON, "FRASES": FRASES, "FRASES2": FRASES2, "PARES_ASP": PARES_ASP, "FRV": FRV, "ADJ": ADJ, "PARES_AS": PARES_AS, "POSS": POSS, "DONO": DONO, "DONO3": DONO3, "PARES_PS": PARES_PS, "FRP": FRP, "MOV": MOV, "PREF": PREF, "FRM": FRM, "PREP": PREP, "ALT_PREP": ALT_PREP, "ONDE": ONDE, "PARES_PREP": PARES_PREP, "PREP_WP": PREP_WP, "NUM": NUM, "ORD": ORD, "TEMPO": TEMPO, "QUANDO": QUANDO, "EX_NUM": EX_NUM, "FRI": FRI, "COND_WP": COND_WP, "CONJ": CONJ, "FRC": FRC, "KOT": KOT, "VOCM": VOCM, "VOCF": VOCF, "ARMA": ARMA, "DIVERG": DIVERG, "LEIT": LEIT, "MIUDAS": MIUDAS, "FABULAS": FABULAS, "VEN": VEN, "EST": EST, "ENUN": ENUN}
 saida = os.path.join(R, "..", "..", "assets", "sims", "russo", "dados.js")
 txt = ("/* GERADO por tools/russo/gera-russo.py a partir de tools/russo/dadosR.json. NÃO editar à mão: corrigir no gerador e rodar de novo.\n"
        "   Letras: tabela \"Letters\" da Wikipedia em inglês (Russian alphabet). Palavras: verbetes do Wiktionary em inglês. */\n"
@@ -381,4 +1144,16 @@ print(f"gravado: {len(ALF)} letras, {len(PAL)} palavras, {len(PAR)} pares de ace
 print("RG02:", len(RED["akanye"]), "akanye,", len(RED["mole"]), "pares depois de mole,", len(RED["ikanye"]), "pares ikanye,", len(ENS), "ensurdecimento,", len(DEZ), "dezenas,", ESTR)
 print("RG03:", len(NOM), "substantivos;", sum(1 for x in NOM if x["pl"]), "com plural;", len(IRR), "irregulares conferidos com a Wikipedia")
 print("RG04:", len(DECL), "declinações;", len(VERB), "verbos;", len(PRON), "pronomes;", len(FRASES), "frases")
+print("RG11:", len(VERB), "verbos;", len(PARES_ASP), "pares de aspecto;", len(FRV), "frases de verbo")
+print("RG14:", len(MOV), "pares de movimento;", len(PREF), "prefixos;", len(FRM), "frases")
+print("RG15:", len(PREP), "usos de", len({x["p"] for x in PREP}), "preposições;", PREP_WP, "também nas listas da Wikipedia;", len(ONDE), "exemplos onde/para onde;", len(PARES_PREP), "pares;", sum(1 for x in PREP if x["ex"]), "com exemplo;", [x["alt"] for x in ALT_PREP])
+print("RG16:", len(NUM), "cardinais;", len(ORD), "ordinais;", len(TEMPO), "palavras de tempo;", len(QUANDO), "expressões de dia e mês;", len(EX_NUM), "exemplos de numeral + substantivo")
+print("RG17:", len(FRI), "frases de modo;", len(COND_WP), "formas do condicional na tabela da Wikipedia:", COND_WP)
+print("RG18:", len(CONJ), "conjunções;", len(FRC), "frases;", "который:", KOT.get("который", {}).get("casos", {}).get("nom"))
+print("RL04:", len(VOCM), "termos de matemática,", sum(1 for x in VOCM if x["rot"]), "com rótulo de domínio; RL05:", len(VOCF), "de física,", sum(1 for x in VOCF if x["rot"]), "com rótulo")
+print("RL08:", sum(1 for x in ARMA if x["tipo"] == "falso"), "falsos amigos;", sum(1 for x in ARMA if x["tipo"] == "dois"), "palavras de dois sentidos; divergência:", DIVERG)
+print("RL01-03:", len(LEIT), "frases (" + ", ".join(n + " " + str(sum(1 for x in LEIT if x["niv"] == n)) for n in ("A1", "A2", "B1")) + ");", len(MIUDAS), "palavrinhas;", len(FABULAS), "fábulas")
+print("RL06:", len(VEN), "verbos de enunciado;", len(EST), "palavras de estrutura;", len(ENUN), "frases")
+print("RG09:", len(ADJ), "adjetivos;", len(PARES_AS), "pares adjetivo + substantivo")
+print("RG10:", len(POSS), "possessivos e demonstrativos;", len(PARES_PS), "pares;", len(FRP), "frases")
 print("grupos:", {g: "".join(x["M"] for x in ALF if x["grupo"] == g) for g in ("amiga", "falsa", "nova")})

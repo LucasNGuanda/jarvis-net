@@ -12,6 +12,9 @@ fonte = open(os.path.join(R, "tools", "russo", "dadosR.json"), encoding="utf-8")
 fonte = json.dumps(json.loads(fonte), ensure_ascii=False)  # desfaz \uXXXX, se houver
 fonte += json.dumps(json.load(open(os.path.join(R, "tools", "russo", "dadosR3.json"), encoding="utf-8")), ensure_ascii=False)  # RG03 em diante
 fonte += json.dumps(json.load(open(os.path.join(R, "tools", "russo", "dadosR4.json"), encoding="utf-8")), ensure_ascii=False)  # RG04 em diante
+fonte += json.dumps(json.load(open(os.path.join(R, "tools", "russo", "dadosR5.json"), encoding="utf-8")), ensure_ascii=False)  # RG09 em diante
+fonte += json.dumps(json.load(open(os.path.join(R, "tools", "russo", "dadosR6.json"), encoding="utf-8")), ensure_ascii=False)  # RG14 em diante
+fonte += json.dumps(json.load(open(os.path.join(R, "tools", "russo", "dadosRL.json"), encoding="utf-8")), ensure_ascii=False)  # aba Leitura
 CIR = r"Ѐ-ӿ́"
 palavras_fonte = set(re.findall(f"[{CIR}]+", fonte))
 sem_acento = {w.replace("́", "") for w in palavras_fonte}
@@ -24,9 +27,12 @@ for a in arqs:
     for w in re.findall(f"[{CIR}]{{2,}}", t):
         if w in vistos: continue
         vistos.add(w); total += 1
-        V = set("аеёиоуыэюяьъ"); S = set(w.lower())
-        if len(S) == len(w) and (S <= V or not (S & V)): isentas += 1; continue  # conjunto de letras (só vogais e sinais, ou só consoantes, sem repetição): não é palavra
-        if len(w) == 2 and w[0].lower() in "гкхжчшщц" and w[1] in "ыиуюая": isentas += 1; continue  # combinação consoante + vogal das regras de ortografia
+        V = set("аеёиоуыэюяьъй"); S = set(w.lower())
+        if len(S) == len(w) and (S <= V or not (S & (V - {"й"}))): isentas += 1; continue  # conjunto de letras (só vogais e sinais, ou só consoantes, sem repetição): não é palavra
+        if len(w) == 2 and w[0].lower() in "гкхжчшщц" and w[1] in "ыиуюая": isentas += 1; continue
+        if w in ("го", "му") and a.endswith("adjetivos.js"): isentas += 1; continue  # pedaços de terminação (-ого, -ому) montados pelo código da regra dos adjetivos  # combinação consoante + vogal das regras de ortografia
+        if w in ("надцать", "дцать", "десят", "сот") and a.endswith(("numeros.js", "RG16.js")): isentas += 1; continue  # pedaços com que a regra de formação dos numerais (medida contra o dicionário) monta 11 a 19, as dezenas e as centenas
+        if w == "ость" and a.endswith("leitura.js"): isentas += 1; continue  # sufixo contado pelo placar do gênero (quantos termos em -ость são femininos)
         if "́" in w: ok = w in palavras_fonte
         else: ok = w in sem_acento or w.lower() in minus
         if not ok: erros += 1; print(f"ERRO {os.path.basename(a)}: {w!r} não está na fonte")

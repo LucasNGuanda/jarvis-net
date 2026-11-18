@@ -1,0 +1,126 @@
+/* Russo RG10 · Pronomes.
+   Nada de memória: as formas dos pronomes pessoais e interrogativos (SIM.RU.PRON) e dos possessivos e demonstrativos (SIM.RU.POSS) vêm das tabelas
+   do Wiktionary em inglês (tools/russo/dadosR4.json e dadosR5.json); o uso de свой e dos possessivos de terceira pessoa (его, её, их, que são o
+   genitivo do pronome pessoal) vem de "Russian grammar" e "Russian declension" (Wikipedia em inglês); o gerador confere que его, её e их são mesmo
+   o genitivo de он, она e они. As frases (SIM.RU.FRP) são exemplos da fonte, com a forma do pronome conferida contra a tabela. Os pares
+   possessivo + substantivo (SIM.RU.PARES_PS) são combinações montadas para o site, com as formas das tabelas. Aqui não há regra medida: são poucas
+   palavras, irregulares, e o que se treina é a tabela (mapa mental e escrita). */
+F.registrar("russo/RG10", {
+  retoma: ["RG09"],
+  html(F) {
+    const R = String.raw, RU = SIM.RU, PR = RU.PRON, PS = RU.POSS, DE = RU.DECL, AC = "́", sem = (s) => String(s).split(AC).join(""), CASOS = SIM.ruCasos, NOME = SIM.ruNomeCaso, COL = SIM.ruCol, PE = SIM.ruPessoais;
+    const ru = (w, t = 20) => `<span style="font-size:${t}px;font-weight:600">${w}</span>`, cap = (s) => s[0].toUpperCase() + s.slice(1);
+    const cart = (w, sub = "", cor = "var(--ink)") => { const n = [...sem(w)].length, t = Math.min(48, Math.floor(820 / Math.max(n, 6))); return D.svg(560, 116, `<rect x="30" y="8" width="500" height="78" rx="12" style="fill:var(--card2);stroke:var(--line)"/><text x="280" y="${50 + t * 0.34}" text-anchor="middle" style="font:700 ${t}px Inter,system-ui,sans-serif;fill:${cor};letter-spacing:1px">${w}</text>` + (sub ? D.txt(280, 106, sub, "tx2", "middle") : ""), "figura"); };
+    const fp = (p, c) => PR[p].casos[c][0], f = (w, c, col, an = false) => SIM.ruAdjDic(w, c, col, an)[0], par = (a, n, c, num) => { const p = SIM.ruPar(a, n, c, num); return p.adj[0] + " " + p.subst[0]; }, colDe = (n) => SIM.ruPar("мой", n, "nom", 0).col;
+    const tabPess = D.svg(560, 212, SIM.dq.tab(6, 22, [96, 58, 58, 58, 58, 58, 58, 58], [["caso", ...PE.filter((p) => p !== "оно")], ...CASOS.map(([k, nome]) => [nome, ...PE.filter((p) => p !== "оно").map((p) => fp(p, k))])]), "figura");
+    const tabPoss = (w) => D.svg(560, 190, SIM.dq.tab(10, 22, [120, 105, 105, 105, 105], [["caso", ...COL], ...CASOS.map(([k, nome]) => [nome + (k === "acc" ? " (inan.)" : ""), ...[0, 1, 2, 3].map((c) => f(w, k, c))])]), "figura");
+    const donos = SIM.ruDonos(), W = Object.keys(PS), possProprios = ["мой", "твой", "наш", "ваш"], PP = RU.PARES_PS, FR = RU.FRP;
+    const mapaTema = SIM.ruMapaSvg({ centro: "pronomes", sub: "poucos e irregulares", ramos: [
+      { nome: "pessoais", sub: "seis casos cada", folhas: [{ rot: "", forma: "я → " + fp("я", "acc") + ", " + fp("я", "dat") }, { rot: "", forma: "он → " + fp("он", "acc") + ", " + fp("он", "dat") }] },
+      { nome: "possessivos", sub: "concordam com a coisa", folhas: [{ rot: "", forma: [0, 2, 3].map((c) => f("мой", "nom", c)).join(", ") }, { rot: "", forma: [0, 2, 3].map((c) => f("наш", "nom", c)).join(", ") }] },
+      { nome: "de 3ª pessoa", sub: "não mudam", folhas: [{ rot: "", forma: RU.DONO3.map((x) => x[1]).join(", ") }] },
+      { nome: "reflexivo", sub: "o dono é o sujeito", folhas: [{ rot: "", forma: [0, 2, 3].map((c) => f("свой", "nom", c)).join(", ") }] },
+      { nome: "demonstrativos", sub: "este, aquele", folhas: [{ rot: "", forma: [0, 2, 3].map((c) => f("этот", "nom", c)).join(", ") }, { rot: "", forma: [0, 2, 3].map((c) => f("тот", "nom", c)).join(", ") }] },
+      { nome: "interrogativos", sub: "quem? o quê? de quem?", folhas: [{ rot: "", forma: "кто → " + fp("кто", "acc") + ", " + fp("кто", "dat") }, { rot: "", forma: [0, 2, 3].map((c) => f("чей", "nom", c)).join(", ") }] }] }, Array(20).fill(true)).svg;
+    const pess7 = PE.filter((p) => p !== "оно"), outrasP = (p, certo) => [...new Set(pess7.flatMap((x) => ["acc", "gen", "dat", "ins", "prep"].map((c) => sem(fp(x, c)))))].filter((x) => x !== sem(certo));
+    const outrasF = (w, certo) => [...new Set(CASOS.flatMap(([k]) => [0, 1, 2, 3].map((c) => sem(f(w, k, c)))))].filter((x) => x !== sem(certo));
+    const sgPP = PP.filter(([a, n]) => !DE[n].soPl);
+
+    const exemplos = F.exemplo({ titulo: "Do pronome à frase", casos: [
+      { nome: "Fácil: o pronome num caso", gerar: (p) => { const x = p ? "я" : F.escolha(pess7), k = p ? "dat" : F.escolha(["acc", "gen", "dat", "ins", "prep"]);
+        return { enun: R`<p>Qual é o ${NOME[k]} de ${ru(x)} (${PR[x].pt})?</p>`, fig: cart(x + " → ?", NOME[k]), passos: [R`<p>(i) Pronome não segue a regra dos substantivos: é a tabela.</p>`, R`<p>(ii) Linha do ${NOME[k]}, coluna de ${x}: <b>${PR[x].casos[k].join(" ou ")}</b>.</p>`, R`<p>(iii) ${PR[x].casos[k].length > 1 && ["он", "она", "они"].includes(x) ? "A forma com н- é a que se usa depois de preposição." : "Confira no mapa mental do pronome."}</p>`], resp: fp(x, k) }; } },
+      { nome: "Médio: o possessivo concorda com a coisa", gerar: (p) => { const [a, n] = p ? ["мой", "сестра"] : F.escolha(sgPP), d = DE[n], c = colDe(n);
+        return { enun: R`<p>Junte ${ru(PS[a].ac)} (${PS[a].pt}) com ${ru(d.ac)} (${d.pt}).</p>`, fig: cart(PS[a].ac + " + " + d.ac, "possessivo + substantivo"), passos: [R`<p>(i) O que manda é a <b>coisa possuída</b>, não o dono: ${d.ac} é ${d.genPt.split(",")[0]}.</p>`, R`<p>(ii) Formas de ${PS[a].ac} no nominativo: ${[0, 1, 2, 3].map((k) => `${COL[k]} ${f(a, "nom", k)}`).join("; ")}.</p>`, R`<p>(iii) Resultado: <b>${par(a, n, "nom", 0)}</b>.</p>`], resp: par(a, n, "nom", 0) }; } },
+      { nome: "Difícil: achar o pronome numa frase", gerar: (p) => { const x = p ? FR[1] : F.escolha(FR);
+        return { enun: R`<p>Na frase abaixo, ache o possessivo ou demonstrativo, diga de que palavra ele é forma, e em que caso e gênero está.</p>`, fig: cart(x.ru, "frase da fonte"), passos: [R`<p>(i) A palavra é <b>${x.forma}</b>.</p>`, R`<p>(ii) É forma de ${ru(PS[x.w].ac)} (${PS[x.w].pt}).</p>`, R`<p>(iii) Está no ${NOME[x.caso]}, ${COL[x.col]}: concorda com o substantivo que acompanha.</p>`, R`<p>(iv) Tradução: <b>${x.pt}</b></p>`], resp: x.pt }; } }] });
+
+    const exs = [
+      F.exercicio({ n: 1, nivel: "Físico", gerar: (p) => { const x = SIM.pega(pess7, p, 0), k = p ? "acc" : F.escolha(["acc", "gen", "dat", "ins", "prep"]), certo = fp(x, k), a5 = SIM.alt5(sem(certo) + ".", outrasP(x, certo).map((y) => y + "."), p);
+        return { enun: R`<p>Qual é o ${NOME[k]} de ${ru(x)} (${PR[x].pt})? Alternativas sem acento.</p>`, fig: cart(x + " → ?", NOME[k]), ...a5, resp: certo, dicas: [R`<p>Lembre da tabela dos pronomes pessoais; as formas de я, ты, мы, вы se parecem duas a duas.</p>`], sol: R`<p>${ru(x)} → <b>${PR[x].casos[k].join(" ou ")}</b>.</p>` }; } }),
+      F.exercicio({ n: 2, nivel: "Físico", gerar: (p) => { const d = SIM.pega(donos, p, 2), a5 = SIM.alt5(sem(d[1]) + ".", donos.filter((y) => y !== d).map((y) => sem(y[1]) + "."), p);
+        return { enun: R`<p>Qual é o possessivo que corresponde ao pronome ${ru(d[0])} (${PR[d[0]].pt})?</p>`, fig: cart(d[0] + " → ?", "de quem é?"), ...a5, resp: d[1], dicas: [R`<p>Para ele, ela e eles, o possessivo é o genitivo do próprio pronome.</p>`], sol: R`<p>${ru(d[0])} → <b>${d[1]}</b>.</p>` }; } }),
+      F.exercicio({ n: 3, nivel: "Físico", gerar: (p) => { const [a, n] = SIM.pega(sgPP, p, 4), d = DE[n], c = colDe(n), alts = [0, 1, 2, 3].map((k) => sem(f(a, "nom", k)) + ".");
+        return { enun: R`<p>Qual forma de ${ru(PS[a].ac)} (${PS[a].pt}) combina com o substantivo abaixo (${d.pt})?</p>`, fig: cart("____ " + d.ac, "falta o pronome"), alts, certa: "ABCD"[c], resp: f(a, "nom", c), dicas: [R`<p>Concorda com a coisa: veja o gênero do substantivo.</p>`], sol: R`<p>${d.ac} é ${d.genPt.split(",")[0]}: <b>${par(a, n, "nom", 0)}</b>.</p>` }; } }),
+      F.exercicio({ n: 4, nivel: "Físico", gerar: (p) => { const k = p ? 0 : F.escolha([0, 1, 2]);
+        return { enun: [R`<p>Por que ${ru(RU.DONO3[0][1])}, ${ru(RU.DONO3[1][1])} e ${ru(RU.DONO3[2][1])} ("dele", "dela", "deles") não mudam de forma, seja qual for a coisa possuída?</p>`, R`<p>Quando se usa o possessivo ${ru(PS["свой"].ac)}?</p>`, R`<p>Com o que concorda o possessivo ${ru(PS["мой"].ac)}?</p>`][k], fig: cart([RU.DONO3.map((x) => x[1]).join(" · "), PS["свой"].ac, PS["мой"].ac][k], "possessivos"), alts: ["Porque são o genitivo do pronome pessoal, e não um possessivo que concorda.", "Quando o dono é o sujeito da própria oração, seja qual for a pessoa.", "Com a coisa possuída, em gênero, número e caso.", "Com o dono, em gênero e número.", "Só quando o dono é de terceira pessoa."], certa: "ABC"[k], resp: ["são genitivos", "o dono é o sujeito", "com a coisa possuída"][k], dicas: [R`<p>Releia a seção dos possessivos: há três comportamentos diferentes.</p>`], sol: [R`<p>São o <b>genitivo do pronome pessoal</b>: uma forma já declinada, que não concorda com mais nada.</p>`, R`<p>Quando o dono é o <b>sujeito da oração</b>, em qualquer pessoa: ${ru(FR.find((x) => x.w === "свой").ru)}</p>`, R`<p>Com a <b>coisa possuída</b>: ${[0, 1, 2, 3].map((c) => f("мой", "nom", c)).join(", ")}.</p>`][k] }; } }),
+      F.exercicio({ n: 5, nivel: "Físico", gerar: (p) => { const w = SIM.pega(W, p, 5), k = p ? "gen" : F.escolha(["gen", "dat", "ins", "prep"]), c = p ? 0 : F.escolha([0, 2, 3]), certo = f(w, k, c), a5 = SIM.alt5(sem(certo) + ".", outrasF(w, certo).map((y) => y + "."), p);
+        return { enun: R`<p>Qual é a forma de ${ru(PS[w].ac)} (${PS[w].pt}) no <b>${NOME[k]}</b>, ${COL[c]}? As alternativas são formas de verdade dessa palavra, sem acento.</p>`, fig: cart(PS[w].ac + " → ?", NOME[k] + ", " + COL[c]), ...a5, resp: certo, dicas: [R`<p>As terminações lembram as do adjetivo: -его ou -ого, -ему ou -ому, -им, -ем ou -ом; feminino em -ей ou -ой.</p>`], sol: R`<p><b>${SIM.ruAdjDic(w, k, c).join(" ou ")}</b>.</p>` }; } }),
+      F.exercicio({ n: 6, nivel: "Máximo", gerar: (p) => { const x = SIM.pega(FR, p, 0), ps = [...new Set(x.ru.split(" ").map((t) => t.replace(/[.,!?]/g, "")))];
+        return { enun: R`<p>Qual palavra da frase abaixo é um possessivo ou demonstrativo?</p>`, fig: cart(x.ru, "frase da fonte"), alts: ps.map((t) => t + "."), certa: "ABCDEFGH"[ps.indexOf(x.forma)], resp: x.forma, dicas: [R`<p>Procure a palavra que acompanha um substantivo e diz de quem ele é, ou qual é.</p>`], sol: R`<p><b>${x.forma}</b>, forma de ${ru(PS[x.w].ac)} (${NOME[x.caso]}, ${COL[x.col]}). A frase quer dizer: ${x.pt}</p>` }; } }),
+      F.exercicio({ n: 7, nivel: "Máximo", gerar: (p) => { const x = SIM.pega(["он", "она", "они"], p, 0), k = p ? "gen" : F.escolha(["gen", "dat", "ins"]), fs = PR[x].casos[k];
+        return { enun: R`<p>O ${NOME[k]} de ${ru(x)} tem duas formas: ${ru(fs[0])} e ${ru(fs[1])}. Quando se usa a segunda, com ${ru("н")}- na frente?</p>`, fig: cart(fs[0] + " / " + fs[1], NOME[k] + " de " + x), alts: ["Depois de preposição.", "No plural.", "Quando o pronome é o sujeito.", "Só na escrita formal.", "Com verbos reflexivos."], certa: "A", resp: "depois de preposição", dicas: [R`<p>Lembre da frase ${ru("Он э́то при ней сказа́л.")}</p>`], sol: R`<p><b>Depois de preposição</b>: a tabela do dicionário marca essas formas assim.</p>` }; } }),
+      F.exercicio({ n: 8, nivel: "Físico", gerar: (p) => { const w = SIM.pega(W, p, 6), a5 = SIM.alt5(cap(PS[w].pt) + ".", W.filter((y) => y !== w).map((y) => cap(PS[y].pt) + "."), p);
+        return { enun: R`<p>O que quer dizer a palavra abaixo?</p>`, fig: cart(PS[w].ac, "forma do dicionário"), ...a5, resp: PS[w].pt, dicas: [R`<p>Lembre do mapa mental do tema.</p>`], sol: R`<p>${ru(PS[w].ac)} = <b>${PS[w].pt}</b>.</p>` }; } }),
+      F.exercicio({ n: 9, nivel: "Máximo", gerar: (p) => { const x = SIM.pega(pess7, p, 3), v = new Set(["nom", "acc", "gen", "dat", "ins", "prep"].map((c) => sem(fp(x, c)))).size;
+        return { enun: R`<p>Olhando só a primeira forma de cada caso, quantas formas <b>diferentes</b> o pronome ${ru(x)} (${PR[x].pt}) tem nos seis casos?</p>`, fig: tabPess, num: { v, tol: 0.001, un: "", abs: 0.001 }, py: `${v}`, resp: String(v), dicas: [R`<p>Acusativo e genitivo coincidem em todos os pessoais; veja se dativo e preposicional também.</p>`], sol: R`<p>${["nom", "acc", "gen", "dat", "ins", "prep"].map((c) => `${NOME[c]} ${fp(x, c)}`).join("; ")}. Diferentes: <b>${v}</b>.</p>` }; } }),
+      F.exercicio({ n: 10, nivel: "Físico", gerar: (p) => { const [a, n] = SIM.pega(sgPP, p, 9), k = p ? "acc" : F.escolha(["gen", "dat", "acc", "ins", "prep"]), certo = sem(par(a, n, k, 0)), outros = [...new Set(["nom", "gen", "dat", "acc", "ins", "prep"].map((c) => sem(par(a, n, c, 0))))].filter((y) => y !== certo), a5 = SIM.alt5(certo + ".", outros.map((y) => y + "."), p);
+        return { enun: R`<p>Como fica ${ru(par(a, n, "nom", 0))} (${PS[a].pt} + ${DE[n].pt}) no <b>${NOME[k]}</b> singular? Alternativas sem acento.</p>`, fig: cart(par(a, n, "nom", 0) + " → ?", "o par inteiro muda"), ...a5, resp: par(a, n, k, 0), dicas: [R`<p>O possessivo declina junto com o substantivo, como um adjetivo.</p>`], sol: R`<p><b>${par(a, n, k, 0)}</b>.</p>` }; } }),
+      F.exercicio({ n: 11, nivel: "Físico", gerar: (p) => { const x = SIM.pega(pess7, p, 4), k = p ? "dat" : F.escolha(["acc", "gen", "dat", "ins", "prep"]);
+        return { enun: R`<p>Escreva, em cirílico, o pronome ${ru(x)} (${PR[x].pt}) no <b>${NOME[k]}</b>.</p>`, fig: cart(x + " → ?", NOME[k]), txt: { v: PR[x].casos[k], teclado: "ru", rot: NOME[k] }, resp: fp(x, k), dicas: [R`<p>É da tabela dos pronomes pessoais.</p>`], sol: R`<p><b>${PR[x].casos[k].join(" ou ")}</b>.</p>` }; } }),
+      F.exercicio({ n: 12, nivel: "Máximo", gerar: (p) => { const [a, n] = SIM.pega(sgPP, p, 1), r = SIM.ruPar(a, n, "nom", 0), aceitos = r.adj.flatMap((y) => r.subst.map((z) => y + " " + z));
+        return { enun: R`<p>Escreva, em cirílico, "${PS[a].pt.split(",")[0]} + ${DE[n].pt}": o possessivo ${ru(PS[a].ac)} na forma certa e o substantivo ${ru(DE[n].ac)}, com um espaço.</p>`, fig: cart(PS[a].ac + " + " + DE[n].ac, "concorde e escreva"), txt: { v: aceitos, teclado: "ru", rot: "o par" }, resp: aceitos[0], dicas: [R`<p>${DE[n].ac} é ${DE[n].genPt.split(",")[0]}.</p>`], sol: R`<p><b>${aceitos[0]}</b>.</p>` }; } }),
+      F.exercicio({ n: 13, nivel: "Máximo", gerar: (p) => { const [a, n] = SIM.pega(sgPP, p, 6), k = p ? "gen" : F.escolha(["gen", "dat", "ins", "prep"]), r = SIM.ruPar(a, n, k, 0), aceitos = r.adj.flatMap((y) => r.subst.map((z) => y + " " + z));
+        return { enun: R`<p>Escreva, em cirílico, ${ru(par(a, n, "nom", 0))} (${PS[a].pt} + ${DE[n].pt}) no <b>${NOME[k]}</b> singular. As duas palavras, com um espaço.</p>`, fig: cart(par(a, n, "nom", 0) + " → ?", "nominativo → " + NOME[k]), txt: { v: aceitos, teclado: "ru", rot: "o par" }, resp: aceitos[0], dicas: [R`<p>O substantivo fica ${DE[n].casos[k][0][0]}.</p>`], sol: R`<p><b>${aceitos[0]}</b>.</p>` }; } }),
+      F.exercicio({ n: 14, nivel: "Máximo", gerar: (p) => { const d = SIM.pega(donos, p, 5);
+        return { enun: R`<p>Escreva, em cirílico, o possessivo que corresponde a ${ru(d[0])} (${PR[d[0]].pt}), na forma do dicionário.</p>`, fig: cart(d[0] + " → ?", "de quem é?"), txt: { v: d[1], teclado: "ru", rot: "possessivo" }, resp: d[1], dicas: [R`<p>${["он", "она", "они"].includes(d[0]) ? "É o genitivo do próprio pronome." : "É um dos quatro possessivos que se declinam."}</p>`], sol: R`<p>${ru(d[0])} → <b>${d[1]}</b>.</p>` }; } }),
+    ];
+    const fsv = FR.find((x) => x.w === "свой"), fmo = FR.find((x) => x.forma === "моего");
+    const chefao = F.chefao({ titulo: "Quem, de quem, a quem",
+      enun: R`<p>(a) Escreva de memória a tabela dos pronomes pessoais: ${pess7.map((x) => ru(x)).join(", ")}, nos seis casos. (b) Dê o possessivo de cada um. (c) Decline ${ru(par("мой", "брат", "nom", 0))} e ${ru(par("мой", "сестра", "nom", 0))} nos seis casos do singular. (d) Na frase ${ru(fmo.ru)}, explique a forma ${ru(fmo.forma)}. (e) Na frase ${ru(fsv.ru)}, por que aparece ${ru(fsv.forma)} e não um possessivo de terceira pessoa? (f) ${ru(RU.DONO3[0][1])} pode ser "o" (objeto direto) e pode ser "dele". Como a mesma forma faz os dois papéis? (g) Desenhe o mapa mental de ${ru("я")} e confira no laboratório.</p>`,
+      fig: cart(pess7.join("  "), "os pronomes pessoais"),
+      dicas: [R`<p>(c) ${DE["брат"].ac} é animado: no acusativo, substantivo e possessivo copiam o genitivo.</p>`, R`<p>(f) Veja em que casos de ${ru("он")} essa forma aparece.</p>`],
+      sol: R`<p><b>(a)</b> ${CASOS.map(([k, n]) => `${n}: ${pess7.map((x) => fp(x, k)).join(", ")}`).join(" · ")}.</p>
+        <p><b>(b)</b> ${donos.map((d) => `${d[0]} → ${d[1]}`).join("; ")}.</p>
+        <p><b>(c)</b> ${CASOS.map(([k, n]) => `${n}: ${par("мой", "брат", k, 0)}; ${par("мой", "сестра", k, 0)}`).join(" · ")}.</p>
+        <p><b>(d)</b> ${fmo.forma} é o genitivo masculino de ${ru(PS["мой"].ac)}: concorda com ${ru("брата")}, que está no genitivo depois de ${ru("у")}.</p>
+        <p><b>(e)</b> Porque o dono dos amigos é o sujeito da oração (${ru("Он")}): nesse caso usa-se ${ru(PS["свой"].ac)}, aqui no genitivo plural (${fsv.forma}). Tradução: ${fsv.pt}</p>
+        <p><b>(f)</b> Acusativo e genitivo de ${ru("он")} têm a mesma forma (${fp("он", "acc")}); o possessivo de terceira pessoa é justamente esse genitivo.</p>
+        <p><b>(g)</b> ${CASOS.map(([k, n]) => `${n}: ${PR["я"].casos[k].join(" / ")}`).join("; ")}.</p>` });
+
+    return [
+      F.secao("abertura", "Pergunta", R`<div class="abertura"><div class="det">Gramática russa</div>
+        <div class="q">${ru(par("мой", "брат", "nom", 0), 22)}, ${ru(par("мой", "сестра", "nom", 0), 22)}: meu irmão, minha irmã. Até aí, como em português. Mas "o irmão dele" e "a irmã dele" usam a mesma palavra para "dele", ${ru(RU.DONO3[0][1], 22)}, que nunca muda. Por que um possessivo concorda e o outro não?</div>
+        <p>Porque são coisas diferentes. ${ru(PS["мой"].ac)} é um possessivo de verdade, que se declina como um adjetivo e concorda com a coisa possuída. ${ru(RU.DONO3[0][1])} é o <b>genitivo</b> do pronome ${ru("он")}: ao pé da letra, "dele". Este tema reúne os pronomes: os pessoais nos seis casos, os possessivos, os demonstrativos e os interrogativos.</p></div>
+        ${F.chute({ q: "книга (livro) é feminino. Como se diz \"meu livro\"?", ops: [0, 1, 2, 3].map((c) => sem(f("мой", "nom", c)) + " книга"), certa: 2, exp: "моя книга: o possessivo concorda com a coisa possuída, que é feminina. Não importa se quem fala é homem ou mulher." })}`),
+
+      F.secao("laboratorio", "Laboratório: de quem é?", R`<p>Aparece um pronome pessoal; escolha o possessivo que corresponde a ele.</p><div id="lab-dono"></div>`),
+
+      F.secao("pessoais", "Pronomes pessoais nos seis casos", R`
+        <p>Os pronomes pessoais mudam de forma em cada caso, e não seguem a regra dos substantivos. A tabela inteira (para ${ru("оно")}, neutro, valem as formas de ${ru("он")} fora do nominativo):</p>
+        ${F.fig(tabPess, "Pronomes pessoais nos seis casos (primeira forma de cada célula). Tabela do Wiktionary em inglês.")}
+        ${F.formula(R`\text{acusativo} = \text{genitivo, em todos os pronomes pessoais}\qquad\qquad \text{он, она, они}:\ \ \text{н- depois de preposição}`, "Duas regularidades da tabela")}
+        <p>Os de terceira pessoa ganham um ${ru("н")}- na frente quando vêm depois de preposição: ${ru(PR["он"].casos.gen.join(" / "))}, ${ru(PR["она"].casos.gen.join(" / "))}, ${ru(PR["они"].casos.gen.join(" / "))}. No preposicional, que só existe com preposição, a tabela traz só a forma com ${ru("н")}-: ${ru(fp("он", "prep"))}, ${ru(fp("она", "prep"))}, ${ru(fp("они", "prep"))}.</p>
+        ${F.caixa("pegadinha", R`<p>${ru("вы")} é "vocês" e é também o tratamento de respeito para uma pessoa só, como "o senhor, a senhora"; ${ru("ты")} é o tratamento íntimo. A fonte chama a forma em ${ru("-те")} do imperativo de "plural, incluindo o tratamento polido".</p>`)}`),
+
+      F.secao("possessivos", "Possessivos e demonstrativos", R`
+        <p>Há três comportamentos:</p>
+        <ul><li><b>${possProprios.map((w) => ru(PS[w].ac)).join(", ")}</b> (meu, teu, nosso, de vocês): declinam-se como adjetivos e concordam com a <b>coisa possuída</b> em gênero, número e caso.</li>
+        <li><b>${RU.DONO3.map((x) => ru(x[1])).join(", ")}</b> (dele, dela, deles): são o genitivo do pronome pessoal e <b>não mudam</b>. A fonte nota que, ao contrário dos outros genitivos de posse, estes vêm antes do substantivo.</li>
+        <li><b>${ru(PS["свой"].ac)}</b>: o possessivo reflexivo, usado quando o dono é o sujeito da própria oração, em qualquer pessoa: ${ru(fsv.ru)} (${fsv.pt})</li></ul>
+        ${F.fig(tabPoss("мой"), "Declinação de мой (meu). Tabela do Wiktionary em inglês.")}
+        ${F.formula(R`\text{possessivo} \leftrightarrow \text{coisa possuída (gênero, número, caso)}\qquad\qquad \text{его, её, их}:\ \ \text{invariáveis}`, "Com o que o possessivo concorda")}
+        ${F.demo("Regra 12: o dono não manda", R`<p><b>Afirmação.</b> A forma do possessivo depende só da coisa possuída.</p>
+          <p><b>Passo a passo.</b> (i) "Meu irmão": ${ru("брат")} é masculino → ${ru(par("мой", "брат", "nom", 0))}. (ii) "Minha irmã": ${ru("сестра́")} é feminino → ${ru(par("мой", "сестра", "nom", 0))}. Quem fala pode ser homem ou mulher: não muda nada. (iii) Num caso: "junto de meu irmão" pede o genitivo dos dois, ${ru(par("мой", "брат", "gen", 0))}, como na frase ${ru(fmo.ru)}. (iv) Com dono de terceira pessoa não há nada para concordar: ${ru(RU.DONO3[0][1] + " " + DE["брат"].ac)}, ${ru(RU.DONO3[0][1] + " " + DE["сестра"].ac)}.</p>`)}
+        <p><b>Demonstrativos.</b> ${ru(PS["этот"].ac)} (${PS["этот"].pt}) e ${ru(PS["тот"].ac)} (${PS["тот"].pt}) também concordam com o substantivo: ${[0, 1, 2, 3].map((c) => f("этот", "nom", c)).join(", ")}; ${[0, 1, 2, 3].map((c) => f("тот", "nom", c)).join(", ")}. A forma neutra ${ru(f("этот", "nom", 1))} serve sozinha para apresentar qualquer coisa: ${ru("Что э́то?")} (O que é isto?), ${ru("Кто э́то?")} (Quem é este?). <b>Interrogativo de posse:</b> ${ru(PS["чей"].ac)} (${PS["чей"].pt}): ${[0, 1, 2, 3].map((c) => f("чей", "nom", c)).join(", ")}.</p>
+        ${F.fig(mapaTema, "Mapa mental dos pronomes. Todas as formas vêm das tabelas do Wiktionary em inglês.")}
+        ${F.caixa("fisico", R`<p>Neste tema não há regra para medir: são ${pess7.length + 1} pronomes pessoais, ${W.length} possessivos e demonstrativos com tabela e três formas fixas, e quase tudo é irregular. O que ajuda é ver as regularidades <b>dentro</b> da tabela. Nos pessoais, acusativo e genitivo coincidem sempre. Nos possessivos, as terminações são as dos adjetivos: compare ${ru(f("мой", "gen", 0))}, ${ru(f("мой", "dat", 0))}, ${ru(f("мой", "ins", 0))} com ${ru(SIM.ruAdjDic("синий", "gen", 0)[0])}, ${ru(SIM.ruAdjDic("синий", "dat", 0)[0])}, ${ru(SIM.ruAdjDic("синий", "ins", 0)[0])}.</p>`, "Pense como quem mede")}`),
+
+      F.secao("mapa", "Mapa mental: o pronome inteiro", R`<p>Escolha um pronome pessoal (seis casos) ou um possessivo (seis casos por quatro colunas) e use "esconder e lembrar".</p><div id="lab-mapa"></div>
+        ${F.caixa("ponte", R`<p>A fonte registra que, na língua literária, não existe possessivo próprio para a terceira pessoa, e por isso se usa o genitivo do pronome pessoal; e que na fala coloquial aparecem formas "adjetivadas" desses genitivos. O dicionário chega a dar uma delas como sinônimo declinável de ${ru(RU.DONO3[2][1])}. É a língua tentando regularizar o que a gramática deixou sem forma.</p>`)}`),
+
+      F.secao("laboratorio2", "Laboratório: concorde o possessivo", R`<p>Agora com um substantivo: escolha a forma do possessivo ou do demonstrativo que combina com ele.</p><div id="lab-concorda"></div>`),
+
+      F.secao("treino", "Treino: escreva o pronome", R`<p>Aparecem um pronome e um caso; escreva a forma.</p><div id="lab-escreve"></div>
+        ${F.caixa("olimpiada", R`<p>Pronome é a palavra curta que mais confunde na leitura, porque a forma declinada não se parece com a do dicionário: ${ru(fp("я", "gen"))} é ${ru("я")}; ${ru(fp("мы", "gen"))} é ${ru("мы")}; ${ru(fp("он", "dat"))} é ${ru("он")}; ${ru(fp("они", "ins"))} é ${ru("они")}. Como são poucas, compensa saber a tabela inteira de cor: é o tipo de memória que o mapa mental com "esconder e lembrar" treina bem.</p>`)}`),
+
+      F.secao("exemplos", "Exemplos resolvidos", exemplos),
+      F.secao("desafios", "Exercícios", exs.join("") + chefao),
+    ].join("");
+  },
+  montar(F) {
+    let e = document.getElementById("lab-dono"); e.outerHTML = F.lab("De quem é? Do pronome ao possessivo", "lab-dono"); SIM.ruDono(document.getElementById("lab-dono"), F);
+    e = document.getElementById("lab-mapa"); e.outerHTML = F.lab("Mapa mental: uma palavra em todas as formas", "lab-mapa"); SIM.ruMapa(document.getElementById("lab-mapa"), F, { inicio: "я", tipo: "pronome" });
+    e = document.getElementById("lab-concorda"); e.outerHTML = F.lab("Concorde o adjetivo com o substantivo", "lab-concorda"); SIM.ruConcorda(document.getElementById("lab-concorda"), F, { pares: SIM.RU.PARES_PS });
+    e = document.getElementById("lab-escreve"); e.outerHTML = F.lab("Escreva o pronome no caso pedido", "lab-escreve"); SIM.ruEscrevePron(document.getElementById("lab-escreve"), F);
+  },
+});

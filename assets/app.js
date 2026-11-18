@@ -251,7 +251,7 @@
   /* β 6.7: texto digitado comparado sem maiúsculas, sem acento de sílaba tônica (U+0301) e sem espaços sobrando */
   F.normTxt = (s) => String(s || "").normalize("NFC").replace(/\u0301/g, "").trim().replace(/\s+/g, " ").toLowerCase();
   /* teclado cirílico na tela (ordem alfabética), para quem não tem o teclado russo instalado; serve a qualquer campo de texto */
-  F.tecladoRu = () => `<div class="tecl-ru" style="display:flex;flex-wrap:wrap;gap:4px;max-width:560px;margin:8px 0">${[..."абвгдеёжзийклмнопрстуфхцчшщъыьэюя"].map((c) => `<button type="button" class="bt peq" data-tecla="${c}" style="min-width:34px;padding:4px 0;font-size:16px">${c}</button>`).join("")}<button type="button" class="bt peq" data-tecla="apaga" title="apagar a última letra">⌫</button></div>`;
+  F.tecladoRu = () => `<div class="tecl-ru" style="display:flex;flex-wrap:wrap;gap:4px;max-width:560px;margin:8px 0">${[..."абвгдеёжзийклмнопрстуфхцчшщъыьэюя"].map((c) => `<button type="button" class="bt peq" data-tecla="${c}" style="min-width:34px;padding:4px 0;font-size:16px">${c}</button>`).join("")}<button type="button" class="bt peq" data-tecla=" " title="espaço" style="min-width:70px">espaço</button><button type="button" class="bt peq" data-tecla="apaga" title="apagar a última letra">⌫</button></div>`;
   F.ligaTecladoRu = (el, inp) => $$(".tecl-ru [data-tecla]", el).forEach((b) => b.addEventListener("click", () => { inp.value = b.dataset.tecla === "apaga" ? [...inp.value].slice(0, -1).join("") : inp.value + b.dataset.tecla; inp.focus(); inp.dispatchEvent(new Event("input")); }));
   F.exercicio = (e) => {
     const chave = `marca:${temaAtual}-${e.n}`, chaveRes = `resultado:${temaAtual}-${e.n}`;
