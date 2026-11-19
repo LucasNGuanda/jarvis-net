@@ -8,7 +8,7 @@ ORIGEM=$(git rev-parse --short HEAD)
 if [ -n "$(git status --porcelain)" ]; then echo "Há mudanças sem commit: faça o commit antes de publicar."; exit 1; fi
 TMP=$(mktemp -d); export GIT_INDEX_FILE="$TMP/index"
 git read-tree --empty
-for f in index.html .nojekyll robots.txt sitemap.xml; do git update-index --add --cacheinfo "$(git ls-tree HEAD "$f" | awk '{print $1","$3}'),$f"; done
+for f in index.html 404.html .nojekyll robots.txt sitemap.xml; do git update-index --add --cacheinfo "$(git ls-tree HEAD "$f" | awk '{print $1","$3}'),$f"; done
 git read-tree --prefix=assets/ HEAD:assets
 git read-tree --prefix=temas/ HEAD:temas
 ARVORE=$(git write-tree); unset GIT_INDEX_FILE; rm -rf "$TMP"
