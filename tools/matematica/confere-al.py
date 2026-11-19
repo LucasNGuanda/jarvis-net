@@ -138,5 +138,28 @@ ok(all(abs((2 + Decimal(float(x * x - 4 * x) + 4).sqrt()) - Decimal(float(x))) <
 ok((2 * 4 + 1) % (4 - 3) == 0 and Fr(2 * 4 + 1, 4 - 3) == 9, "FX06 exercício 10 (números fixos): f(4) = 9")
 ok(all(m * ((a * x + b) - b) + d == a * m * x + d for a in (2, 3) for b in G for m in G for d in G for x in G), "FX06 exercício 16: f(u) = m(u − b) + d satisfaz f(ax + b) = am·x + d")
 
+# ---------- LOG01 ----------
+ok([Fr(2) ** k for k in range(-2, 5)] == [Fr(1, 4), Fr(1, 2), 1, 2, 4, 8, 16], "LOG01: tabela de 2ˣ de −2 a 4")
+ok(Fr(1, 10) * 2 ** 30 / 10 ** 6 > 100 and 2 ** 10 == 1024, "LOG01 chute: 0,1 mm × 2³⁰ passa de 100 km (em mm: dividir por 10⁶)")
+ok(Fr(2 ** 3, 2 ** 0) == 8 and Fr(2 ** 5, 2 ** 2) == 8, "LOG01 teorema 1: f(3)/f(0) = f(5)/f(2) = 8")
+ok(all(k * a ** (x + h) / (k * a ** x) == a ** h for k in (Fr(3), Fr(1, 2)) for a in (Fr(2), Fr(1, 3), Fr(5, 4)) for x in range(-3, 4) for h in range(0, 4)), "LOG01 teorema 1: f(x + h)/f(x) = aʰ")
+ok(all((Fr(a) ** x < Fr(a) ** y) == (a > 1) for a in (Fr(2), Fr(3, 2), Fr(1, 2), Fr(9, 10)) for x in range(-4, 4) for y in range(x + 1, 5)), "LOG01 teorema 2: crescente para a > 1, decrescente para 0 < a < 1")
+ok(2 ** 10 == 1024 and 10 * 2 == 20 and 10 ** 2 == 100, "LOG01 pegadinha: em x = 10, 2ˣ = 1024, 2x = 20, x² = 100")
+ok(all(2 ** x + 2 ** x == 2 ** (x + 1) for x in range(0, 8)), "LOG01 pegadinha: 2ˣ + 2ˣ = 2^(x + 1)")
+ok(1.5 ** 2 == 2.25, "LOG01: 1,5² = 2,25")
+ok(all(sum(2 ** k for k in range(n)) == 2 ** n - 1 for n in range(1, 70)) and 1 + 2 + 4 + 8 == 15, "LOG01 teorema 3 e chefão (c): 1 + 2 + ... + 2^(n − 1) = 2ⁿ − 1 (até n = 69)")
+ok(all(8 ** (x - 2) == 4 ** (x + 3) for x in (12,)) and 3 * (12 - 2) == 2 * (12 + 3) == 30, "LOG01 exemplo 1: 8^(x − 2) = 4^(x + 3) em x = 12")
+ok(all((m * pp + n * q) % (m - n) == 0 and (b ** m) ** ((m * pp + n * q) // (m - n) - pp) == (b ** n) ** ((m * pp + n * q) // (m - n) + q) for b, m, n, pp, q in [(2, 3, 2, 2, 3), (2, 3, 2, 4, 2), (3, 3, 2, 2, 4), (2, 2, 1, 3, 2), (3, 2, 1, 2, 4), (2, 3, 1, 2, 6)]), "LOG01 exemplo 1: os seis casos têm solução inteira que fecha")
+ok(all((Fr(1, 2) ** (x - 3) > Fr(1, 4)) == (x < 5) for x in range(-5, 12)), "LOG01 exemplo 2: (1/2)^(x − 3) > 1/4 ⇔ x < 5")
+ok(100 * 2 ** 3 == 800 and 100 * 2 ** 6 == 6400 and 6 * 20 == 120, "LOG01 exemplo 3: 800 em 1 h; 6400 em 120 min")
+ok([x for x in range(-5, 6) if 4 ** x - 6 * 2 ** x + 8 == 0] == [1, 2], "LOG01: 4ˣ − 6·2ˣ + 8 = 0 em x = 1 e x = 2")
+ok([x for x in range(-5, 8) if x * x - 5 * x == -6] == [2, 3] and 2 ** 6 == 64, "LOG01 chefão (a): x² − 5x = −6 em 2 e 3")
+ok(2 ** 100 > 10 ** 30 and 1024 ** 10 == 2 ** 100, "LOG01 chefão (b): 2¹⁰⁰ = 1024¹⁰ > 10³⁰")
+ok(all((Decimal(2) ** Decimal(x) + Decimal(2) ** Decimal(-x)) / 2 >= 1 for x in (-3, -1, 0, 1, 2)) and (Decimal(2) ** 0 + Decimal(2) ** 0) / 2 == 1, "LOG01 chefão (d): (2ˣ + 2⁻ˣ)/2 ≥ 1, igualdade em 0")
+ok(3 ** 2 + 4 ** 2 == 5 ** 2 and Fr(9, 25) + Fr(16, 25) == 1 and all((Fr(3, 5) ** x + Fr(4, 5) ** x > 1) == (x < 2) for x in range(-3, 7) if x != 2), "LOG01 chefão (e): 3² + 4² = 5²; (3/5)ˣ + (4/5)ˣ é maior que 1 antes de 2 e menor depois")
+vs = [(1 + Fr(1, n)) ** n for n in (1, 2, 4, 12, 52, 365)]
+ok(vs[0] == 2 and vs[1] == Fr(9, 4) and all(vs[k] < vs[k + 1] for k in range(5)) and all(v < 3 for v in vs), "LOG01: (1 + 1/n)ⁿ cresce de 2 para 2,25 e continua crescendo, sempre abaixo de 3")
+ok(1000 * Fr(11, 10) ** 2 == 1210 and 50000 * Fr(9, 10) ** 2 == 40500, "LOG01: 1000 a 10% por 2 meses = 1210; 50 000 perdendo 10% por 2 anos = 40 500")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

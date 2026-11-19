@@ -78,7 +78,7 @@ window.CATALOGO.push(
     ["FX04","Função Modular",[],true],
     ["FX05","Outras Funções Clássicas",[],true],
     ["FX06","Função Composta e Inversa",[],true],
-    ["LOG01","Função Exponencial",[]],
+    ["LOG01","Função Exponencial",[],true],
     ["LOG02","Logaritmos e Propriedades",[]],
     ["LOG03","Função Logarítmica",[]],
     ["LOG04","Equações e Inequações Logarítmicas",[]],
