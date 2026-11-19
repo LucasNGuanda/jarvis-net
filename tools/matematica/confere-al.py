@@ -318,5 +318,34 @@ ok(all(mpot([[1, k], [0, 1]], n) == [[1, n * k], [0, 1]] for k in (1, 2, 3, 4) f
 Rg = [[0, -1], [1, 0]]
 ok(mpot(Rg, 2) == [[-1, 0], [0, -1]] and mpot(Rg, 4) == I2 and all(mpot(Rg, n) != I2 for n in (1, 2, 3)), "MD01 exercício 16: R² = −I, R⁴ = I e nenhum expoente menor serve")
 
+# ---------- MD02 ----------
+def det2(m):
+    return m[0][0] * m[1][1] - m[0][1] * m[1][0]
+def det3(m):
+    return sum((-1) ** j * m[0][j] * det2([[m[i][k] for k in range(3) if k != j] for i in (1, 2)]) for j in range(3))
+def sarrus(m):
+    (a, b, c), (d, e, f), (g, h, i) = m
+    return a * e * i + b * f * g + c * d * h - c * e * g - a * f * h - b * d * i
+GM3 = [[[a, 1, c], [2, e, -1], [g, 3, i]] for a in (-1, 2) for c in (0, 3) for e in (1, -2) for g in (2, 5) for i in (-3, 4)]
+ok(3 * 2 - 1 * 1 == 5 and 3 * 2 - 1 * 0 == 6, "MD02: det (3,1;1,2) = 5 e det (3,1;0,2) = 6 (base 3, altura 2)")
+ok(all((a * a + c * c) * (b * b + d * d) - (a * b + c * d) ** 2 == (a * d - b * c) ** 2 for a in G for b in G for c in G for d in G), "MD02 teorema 1: (a² + c²)(b² + d²) − (ab + cd)² = (ad − bc)² na grade")
+ok(mmul([[2, 1], [0, 3]], [[1, 2], [1, 1]]) == [[3, 5], [3, 3]] and det2([[3, 5], [3, 3]]) == -6 == det2([[2, 1], [0, 3]]) * det2([[1, 2], [1, 1]]), "MD02 teorema 2: exemplo numérico, det(AB) = −6 = 6 · (−1)")
+ok(all(det2(mmul(X, Y)) == det2(X) * det2(Y) for X in GM2 for Y in GM2), "MD02 teorema 2: det(AB) = det A · det B em 256 pares")
+ok(all((a * e + b * g) * (c * f + d * h) - (a * f + b * h) * (c * e + d * g) == (a * d - b * c) * (e * h - f * g) for a in G[:4] for b in G[:4] for c in G[:4] for d in G[:4] for e in G[:3] for f in G[:3] for g in G[:3] for h in G[:3]), "MD02 teorema 2: identidade em frações")
+ok(all(sarrus(X) == det3(X) for X in GM3), "MD02: Sarrus = expansão pela primeira linha (32 matrizes)")
+ok(sarrus([[2, 0, 3], [4, -2, 5], [3, 2, 0]]) == 22 and (2 * -2 * 0, 0 * 5 * 3, 3 * 4 * 2) == (0, 0, 24) and (3 * -2 * 3, 2 * 5 * 2, 0 * 4 * 0) == (-18, 20, 0), "MD02 exemplo 1: (0 + 0 + 24) − (−18 + 20 + 0) = 22")
+ok(det2([[2, 5], [3, 8]]) == 1 and mmul([[2, 5], [3, 8]], [[8, -5], [-3, 2]]) == I2 and mmul([[8, -5], [-3, 2]], [[2, 5], [3, 8]]) == I2, "MD02 exemplo 2 e teorema 3: inversa de (2,5;3,8) é (8,−5;−3,2)")
+ok(all(mmul([[a, b], [c, d]], [[d, -b], [-c, a]]) == [[a * d - b * c, 0], [0, a * d - b * c]] for a in G for b in G for c in G for d in G), "MD02 teorema 3: A · (matriz trocada) = (ad − bc) I")
+ok(4 * 5 - 2 * 2 == 16 and 16 // 2 == 8, "MD02 exemplo 3: triângulo (0,0), (4,2), (2,5) tem área 8")
+ok(3 * 4 - 1 * 1 == 11, "MD02 chefão (a): lados (3, 1) e (1, 4), det 11, área 11/2")
+ok(all(sarrus([[1, 1, 1], [a, b, c], [a * a, b * b, c * c]]) == (b - a) * (c - a) * (c - b) == b * c * c + c * a * a + a * b * b - a * a * b - b * b * c - c * c * a for a in G for b in G for c in G), "MD02 chefão (b): Vandermonde na grade")
+ok(18 + 3 + 4 - 2 - 12 - 9 == 2, "MD02 chefão (b): conferência com 1, 2, 3")
+ok(all(det2(mmul(X, Y)) == det2(mmul(Y, X)) for X in GM2 for Y in GM2), "MD02 chefão (c): det(AB) = det(BA)")
+ok(all(det2([[a, b], [c, d]]) in (0, 1) for a in range(-3, 4) for b in range(-3, 4) for c in range(-3, 4) for d in range(-3, 4) if mmul([[a, b], [c, d]], [[a, b], [c, d]]) == [[a, b], [c, d]]), "MD02 chefão (d): toda matriz inteira com A² = A (entradas de −3 a 3) tem det 0 ou 1")
+ok(all(sarrus([X[1], X[0], X[2]]) == -sarrus(X) and sarrus([[2 * v for v in l] for l in X]) == 8 * sarrus(X) and sarrus(mT(X)) == sarrus(X) and sarrus([X[0], X[1], [3 * v for v in X[0]]]) == 0 for X in GM3), "MD02 tabela de propriedades: troca, kA (k³), transposta, linhas proporcionais")
+ok(det2([[2, 1], [4, 2]]) == 0 and det2([[2, 1], [4, 3]]) == 2, "MD02 abertura: (2,1;4,2) tem det 0 e (2,1;4,3) tem det 2")
+ok(all(sarrus([[0, b, 1], [1, b + m, 1], [t, b + m * t, 1]]) == 0 for b in range(-3, 4) for m in range(-3, 4) for t in range(2, 8)), "MD02 exercício 16: (0, b), (1, b + m), (t, b + mt) alinhados")
+ok(all(sarrus([[p, 2, -3], [0, q, 4], [0, 0, r]]) == p * q * r for p in G for q in G for r in G), "MD02 exercício 13: triangular = produto da diagonal")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

@@ -86,7 +86,7 @@ window.CATALOGO.push(
     ["SPG02","Progressão Geométrica",[],true],
     ["SPG03","Progressão Harmônica",[],true],
     ["MD01","Matrizes",[],true],
-    ["MD02","Determinantes",[]],
+    ["MD02","Determinantes",[],true],
     ["MD03","Sistemas Lineares",[]],
     ["BW01","Binômio de Newton",[]],
     ["NCP01","Unidade Imaginária",[]],

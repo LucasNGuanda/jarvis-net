@@ -71,4 +71,54 @@
       q("[data-v=st]").innerHTML = resp < 0 ? `Escreva as ordens lado a lado: (${it.m} × ${it.n})(${it.p} × ${it.q}). Olhe os dois números de dentro.` : (resp === it.certa ? "Certo. " : "Ainda não: a certa está marcada. ") + (it.existe ? `Os números de dentro são iguais (${it.n} e ${it.p}): o produto existe, e a ordem é dada pelos de fora, ${it.m} × ${it.q}.` : `Os números de dentro são diferentes (${it.n} e ${it.p}): cada linha de A tem ${it.n} ${it.n === 1 ? "elemento" : "elementos"} e cada coluna de B tem ${it.p}; não dá para emparelhar. O produto não existe.`); };
     q("[data-v=novo]").addEventListener("click", novo);
     SIM.alMatDim._ult = { est, novo, responde, semente: (s) => { r = rng(s); pontos = 0; feitas = 0; novo(); } }; novo(); };
+
+  /* ---------- MD02 ---------- */
+  /* determinante por expansão na primeira linha (qualquer ordem pequena) e inversa 2 × 2 com frações exatas */
+  mat.det = (a) => (a.length === 1 ? a[0][0] : a.length === 2 ? a[0][0] * a[1][1] - a[0][1] * a[1][0] : a[0].reduce((s, v, j) => s + (j % 2 ? -1 : 1) * v * mat.det(a.slice(1).map((l) => l.filter((_, k) => k !== j))), 0));
+  mat.inv2 = (a) => { const d = mat.det(a); return d === 0 ? null : [[M.fr(a[1][1], d), M.fr(-a[0][1], d)], [M.fr(-a[1][0], d), M.fr(a[0][0], d)]]; };
+  /* Sarrus: as três diagonais que somam e as três que subtraem, com as posições das células */
+  mat.sarrus = (a) => { const pos = [0, 1, 2].map((k) => [[0, k], [1, (k + 1) % 3], [2, (k + 2) % 3]]), neg = [0, 1, 2].map((k) => [[0, k], [1, (k + 2) % 3], [2, (k + 1) % 3]]), val = (c) => c.reduce((s, [i, j]) => s * a[i][j], 1); return { pos, neg, vp: pos.map(val), vn: neg.map(val), det: pos.map(val).reduce((x, y) => x + y, 0) - neg.map(val).reduce((x, y) => x + y, 0) }; };
+
+  /* nome: "O determinante é uma área (com sinal)" · matéria: Matemática · tema: MD02 */
+  SIM.alDetArea = (el, F) => { let m = [3, 1, 1, 2];
+    const sl = (k, v) => `<label style="font-size:13px;color:var(--ink2)">${["a", "b", "c", "d"][k]} <input type="range" data-k="${k}" min="-4" max="4" step="1" value="${v}" style="vertical-align:middle;width:100px"> <b data-r="${k}" style="color:var(--ink);display:inline-block;width:24px"></b></label>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${m.map((v, k) => sl(k, v)).join("")}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    /* colunas u = (a, c) e v = (b, d); área do paralelogramo pela fórmula do "cadarço" */
+    const est = () => { const [a, b, c, d] = m, det = a * d - b * c, P = [[0, 0], [a, c], [a + b, c + d], [b, d]], cad = P.reduce((s, p, k) => { const n = P[(k + 1) % 4]; return s + p[0] * n[1] - n[0] * p[1]; }, 0) / 2; return { m: m.slice(), det, area: Math.abs(cad), cadarco: cad, sentido: det > 0 ? "anti-horário" : det < 0 ? "horário" : "alinhados" }; };
+    const poe = (o) => { m = (o.m || m).map((v) => Math.max(-4, Math.min(4, Math.round(+v)))); desenha(); };
+    const desenha = () => { const e = est(), [a, b, c, d] = m; m.forEach((v, k) => { el.querySelector(`[data-k="${k}"]`).value = String(v); el.querySelector(`[data-r="${k}"]`).textContent = mn(v); });
+      q("[data-v=pal]").innerHTML = A.plano({ x: [-9, 9], y: [-9, 9], h: 320, iso: true, px: 2, py: 2, fs: [], segs: [{ x1: a, y1: c, x2: a + b, y2: c + d, cor: "var(--ink3)" }, { x1: b, y1: d, x2: a + b, y2: c + d, cor: "var(--ink3)" }, { x1: 0, y1: 0, x2: a, y2: c, cor: "var(--ok)", tr: false, w: 3 }, { x1: 0, y1: 0, x2: b, y2: d, cor: "var(--warn)", tr: false, w: 3 }], pts: [{ x: a, y: c, cor: "var(--ok)", r: 4, rot: "1ª coluna" }, { x: b, y: d, cor: "var(--warn)", r: 4, rot: "2ª coluna", dx: -9 }] });
+      q("[data-v=lt]").innerHTML = vis("matriz", `[ ${mn(a)}  ${mn(b)} ; ${mn(c)}  ${mn(d)} ]`) + vis("ad − bc", mn(e.det)) + vis("área do paralelogramo", F.nt(e.area, 2)) + vis("da 1ª para a 2ª coluna", e.sentido);
+      q("[data-v=st]").innerHTML = e.det === 0 ? `As duas colunas estão na mesma reta: o paralelogramo <b>achatou</b>, e a área é zero. Determinante nulo é isso: uma coluna é múltipla da outra.` : `O paralelogramo formado pelas duas colunas tem área ${F.nt(e.area, 2)}, que é o <b>módulo</b> do determinante. O sinal diz o sentido: ${e.det > 0 ? "positivo, porque se vai da 1ª coluna para a 2ª girando no sentido anti-horário" : "negativo, porque se vai da 1ª coluna para a 2ª girando no sentido horário"}. Troque as duas colunas de lugar e o sinal inverte.`; };
+    el.querySelectorAll("[data-k]").forEach((s) => s.addEventListener("input", (ev) => { const n = m.slice(); n[+s.dataset.k] = ev.target.value; poe({ m: n }); }));
+    SIM.alDetArea._ult = { poe, est }; desenha(); };
+
+  /* nome: "A regra de Sarrus, diagonal por diagonal" · matéria: Matemática · tema: MD02 */
+  SIM.alSarrus = (el, F) => { let r = rng(8), P = [[2, 1, 3], [0, -1, 4], [1, 2, 5]], passo = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-v="novo">outra matriz</button><button class="bt peq" data-v="prox">próxima diagonal</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const z = mat.sarrus(P); return { P, passo, ...z, parcial: z.vp.slice(0, Math.min(passo, 3)).reduce((x, y) => x + y, 0) - z.vn.slice(0, Math.max(0, passo - 3)).reduce((x, y) => x + y, 0), laplace: mat.det(P) }; };
+    const novo = () => { P = mat.sorteia(r, 3, 3, -2, 4); passo = 0; desenha(); };
+    const avanca = () => { if (passo < 6) passo++; desenha(); };
+    const desenha = () => { const e = est(), k = passo - 1, diag = k < 0 ? null : k < 3 ? e.pos[k] : e.neg[k - 3], cor = k < 3 ? "var(--ok)" : "var(--warn)", prod = (c) => c.map(([i, j]) => (P[i][j] < 0 ? `(${mn(P[i][j])})` : P[i][j])).join(" · ");
+      q("[data-v=pal]").innerHTML = A.mFig([P], null, { dest: diag ? { 0: diag.map(([i, j]) => [i, j, cor]) } : {}, cw: 46 });
+      q("[data-v=lt]").innerHTML = vis("diagonais que somam", e.vp.map((v, i) => (i < passo ? mn(v) : "?")).join(" ; ")) + vis("diagonais que subtraem", e.vn.map((v, i) => (i + 3 < passo ? mn(v) : "?")).join(" ; ")) + vis("determinante", passo >= 6 ? mn(e.det) : "?");
+      q("[data-v=st]").innerHTML = k < 0 ? `São seis produtos de três números, um de cada linha e um de cada coluna: três diagonais "descendo para a direita", que somam, e três "descendo para a esquerda", que subtraem. Antes de clicar, calcule o primeiro: a diagonal principal.` : `${k < 3 ? "Soma" : "Subtrai"}: ${prod(diag)} = ${mn((k < 3 ? e.vp : e.vn)[k % 3])}.` + (passo >= 6 ? ` Determinante: (${e.vp.map(mn).join(" + ")}) − (${e.vn.map(mn).join(" + ")}) = ${mn(e.det)}.` : " As diagonais \"dão a volta\": quando acabam as colunas, continuam na primeira."); q("[data-v=prox]").disabled = passo >= 6; };
+    q("[data-v=novo]").addEventListener("click", novo); q("[data-v=prox]").addEventListener("click", avanca);
+    SIM.alSarrus._ult = { est, novo, avanca, poe: (o) => { P = o.P; passo = 0; desenha(); }, semente: (s) => { r = rng(s); novo(); } }; desenha(); };
+
+  /* nome: "A inversa 2 × 2 em quatro passos" · matéria: Matemática · tema: MD02 */
+  SIM.alInversa2 = (el, F) => { let r = rng(3), P = [[2, 1], [5, 3]], passo = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-v="novo">outra matriz</button><button class="bt peq" data-v="sing">uma sem inversa</button><button class="bt peq" data-v="prox">próximo passo</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const d = mat.det(P), inv = mat.inv2(P); let prod = null; if (inv) prod = [0, 1].map((i) => [0, 1].map((j) => M.txt(M.soma(M.mul(M.fr(P[i][0]), inv[0][j]), M.mul(M.fr(P[i][1]), inv[1][j]))))); return { P, passo, det: d, inv: inv && inv.map((l) => l.map(M.txt)), prod, tem: d !== 0 }; };
+    const novo = (sing) => { do { P = mat.sorteia(r, 2, 2, -3, 5); if (sing) { const k = [2, -1, 3][Math.floor(r() * 3)]; P[1] = P[0].map((v) => k * v); } } while (sing ? P[0][0] === 0 && P[0][1] === 0 : mat.det(P) === 0); passo = 0; desenha(); };
+    const avanca = () => { if (passo < (mat.det(P) === 0 ? 1 : 4)) passo++; desenha(); };
+    const desenha = () => { const e = est(), [[a, b], [c, d]] = P, adj = [[d, -b], [-c, a]], itens = ["A =", P]; if (e.tem && passo >= 2) itens.push(passo >= 3 ? "  troca e sinais:" : "  troca a diagonal:", passo >= 3 ? adj : [[d, b], [c, a]]); if (e.tem && passo >= 4) itens.push("  A⁻¹ =", e.inv);
+      q("[data-v=pal]").innerHTML = A.mFig(itens, null, { cw: 44 });
+      q("[data-v=lt]").innerHTML = vis("determinante", passo >= 1 ? mn(e.det) : "?") + vis("tem inversa?", passo >= 1 ? (e.tem ? "sim" : "não") : "?") + (e.tem && passo >= 4 ? vis("A · A⁻¹", `[ ${e.prod[0].join("  ")} ; ${e.prod[1].join("  ")} ]`) : "");
+      q("[data-v=st]").innerHTML = ["Primeiro passo de toda inversa: o determinante. Calcule ad − bc antes de clicar.", e.tem ? `ad − bc = ${mn(a * d)} − ${b * c < 0 ? "(" + mn(b * c) + ")" : mn(b * c)} = ${mn(e.det)}, diferente de zero: a inversa existe.` : `ad − bc = ${mn(e.det)}. Determinante zero: <b>não existe inversa</b>. Uma linha é múltipla da outra; como transformação, a matriz esmaga o plano numa reta, e isso não tem volta.`, "Troque de lugar os dois elementos da diagonal principal.", "Troque o sinal dos outros dois (sem mudá-los de lugar).", `Divida tudo pelo determinante (${mn(e.det)}). Conferência: o produto A · A⁻¹ tem de dar a identidade.`][passo]; q("[data-v=prox]").disabled = passo >= (e.tem ? 4 : 1); };
+    q("[data-v=novo]").addEventListener("click", () => novo(false)); q("[data-v=sing]").addEventListener("click", () => novo(true)); q("[data-v=prox]").addEventListener("click", avanca);
+    SIM.alInversa2._ult = { est, novo, avanca, poe: (o) => { P = o.P; passo = 0; desenha(); }, semente: (s, sing) => { r = rng(s); novo(!!sing); } }; desenha(); };
 })();
