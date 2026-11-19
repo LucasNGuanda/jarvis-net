@@ -347,5 +347,30 @@ ok(det2([[2, 1], [4, 2]]) == 0 and det2([[2, 1], [4, 3]]) == 2, "MD02 abertura: 
 ok(all(sarrus([[0, b, 1], [1, b + m, 1], [t, b + m * t, 1]]) == 0 for b in range(-3, 4) for m in range(-3, 4) for t in range(2, 8)), "MD02 exercício 16: (0, b), (1, b + m), (t, b + mt) alinhados")
 ok(all(sarrus([[p, 2, -3], [0, q, 4], [0, 0, r]]) == p * q * r for p in G for q in G for r in G), "MD02 exercício 13: triangular = produto da diagonal")
 
+# ---------- MD03 ----------
+def vale(co, b, sol):
+    return all(sum(c * s for c, s in zip(l, sol)) == bb for l, bb in zip(co, b))
+def troca_col(co, b, j):
+    return [[b[i] if k == j else v for k, v in enumerate(l)] for i, l in enumerate(co)]
+E1 = ([[1, 1, 1], [2, 1, -1], [1, -2, 2]], [3, 9, -8])
+ok(vale(E1[0], E1[1], (2, 3, -2)) and sarrus(E1[0]) != 0, "MD03 exemplo 1: (2, 3, −2) resolve o sistema e o determinante não é zero")
+ok([2 - 2 * 1, 1 - 2 * 1, -1 - 2 * 1, 9 - 2 * 3] == [0, -1, -3, 3] and [1 - 1, -2 - 1, 2 - 1, -8 - 3] == [0, -3, 1, -11] and [-3 - 3 * -1, 1 - 3 * -3, -11 - 3 * 3] == [0, 10, -20], "MD03 exemplo 1: as três operações do escalonamento, linha por linha")
+ok(-20 // 10 == -2 and -3 - 3 * -2 == 3 and 3 - 3 - (-2) == 2, "MD03 exemplo 1: subida, z = −2, y = 3, x = 2")
+E2 = ([[3, 2], [5, -2]], [12, 4])
+ok(det2(E2[0]) == -16 and det2(troca_col(E2[0], E2[1], 0)) == -32 and det2(troca_col(E2[0], E2[1], 1)) == -48 and vale(E2[0], E2[1], (2, 3)), "MD03 exemplo 2 e teorema 2: D = −16, Dx = −32, Dy = −48, solução (2, 3)")
+ok(all(det2([[2, 3], [4, k]]) == 2 * k - 12 for k in range(-5, 12)) and 2 * 5 == 10 and 2 * 3 == 6, "MD03 exemplo 3: D = 2k − 12; k = 6 e m = 10 são os valores críticos")
+ok(all((a * d - b * c) * (e * d - b * f) * a + (a * d - b * c) * (a * f - e * c) * b == e * (a * d - b * c) ** 2 and c * (e * d - b * f) + d * (a * f - e * c) == f * (a * d - b * c) for a in G[:4] for b in G[:4] for c in G[:4] for d in G[:4] for e in G[:3] for f in G[:3]), "MD03 teorema 2: (Dx/D, Dy/D) satisfaz as duas equações (identidade em frações)")
+ok(all(d * (a * x + b * y) - b * (c * x + d * y) == (a * d - b * c) * x and a * (c * x + d * y) - c * (a * x + b * y) == (a * d - b * c) * y for a in G[:4] for b in G[:4] for c in G[:4] for d in G[:4] for x in G[:3] for y in G[:3]), "MD03 teorema 2: as duas eliminações")
+ok(vale([[1, 1], [2, 3]], [5, 12], (3, 2)) and 12 - 2 * 5 == 2, "MD03 teorema 1: exemplo numérico, (3, 2)")
+ok(det2([[2, -5], [6, -15]]) == 0 and vale([[2, -5], [6, -15]], [0, 0], (5, 2)) and det2([[2, -5], [6, 1]]) == 32, "MD03 teorema 3: exemplos numéricos")
+ok(all(a * b - b * a == 0 and c * b - d * a == -(a * d - b * c) for a in G for b in G for c in G for d in G), "MD03 teorema 3: (b, −a) é solução quando ad − bc = 0")
+U = [[1, 1, 1]] * 3
+ok(sarrus(U) == 0 and all(sarrus(troca_col(U, [1, 2, 3], j)) == 0 for j in range(3)), "MD03 chefão (c): x + y + z = 1, 2, 3 tem D = Dx = Dy = Dz = 0")
+ok(all(vale([[1, 1, 1], [1, 2, 3], [1, 4, 7]], [6, 14, 30], (t - 2, 8 - 2 * t, t)) for t in G), "MD03 chefão (b): (t − 2, 8 − 2t, t) resolve o sistema com k = 7 e m = 30")
+ok(all(sarrus([[1, 1, 1], [1, 2, 3], [1, 4, k]]) == k - 7 for k in range(-4, 15)) and 4 - 1 == 3 and 14 - 6 == 8 and 6 + 3 * 8 == 30, "MD03 chefão (a): D = k − 7; (k − 1) − 3·2 = k − 7 e m − 6 − 3·8 = m − 30")
+ok(all(sarrus([[1, 1, 0], [0, 1, 1], [1, 0, 1]]) == 2 and (x + y) + (y + z) + (x + z) == 2 * (x + y + z) for x in G[:3] for y in G[:3] for z in G[:3]), "MD03 exercício 10: somar as três equações")
+ok(all(Fr(x + y + z + 2 * (x - y) + (y - z), 3) == x for x in range(-3, 6) for y in range(-3, 6) for z in range(-3, 6)), "MD03 exercício 14: x = (S + 2d₁ + d₂)/3")
+ok(vale([[1, 1], [2, 2]], [3, 6], (0, 3)) and vale([[1, 1], [2, 2]], [3, 6], (Fr(5, 2), Fr(1, 2))), "MD03 abertura e chute: (0, 3) e (2,5; 0,5) resolvem x + y = 3, 2x + 2y = 6")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

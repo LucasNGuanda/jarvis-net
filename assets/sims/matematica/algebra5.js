@@ -2,6 +2,8 @@
    Acrescenta a SIM.al: mat (operações com matrizes de inteiros ou frações: soma, esc, mul, T, id, pot, igual, tr), mTex (matriz em TeX)
    e mFig (matrizes e símbolos desenhados em SVG, com colchetes e células destacadas).
    MD01: SIM.alMatMul (linha vezes coluna, elemento por elemento), SIM.alMatPlano (a matriz 2 × 2 que mexe no plano) e SIM.alMatDim (dá para multiplicar?).
+   MD02: mat.det, mat.inv2, mat.sarrus; SIM.alDetArea, SIM.alSarrus, SIM.alInversa2.
+   MD03: eqT, eqS, escalona, cramer, sisSorteia; SIM.alDiscute, SIM.alEscalona, SIM.alCramer.
    Contas conferidas em Python (tools/matematica/confere-al.py). */
 (function () {
   const SIM = (window.SIM = window.SIM || {}), M = SIM.mb, A = SIM.al, { vis, rng, mn } = A;
@@ -121,4 +123,70 @@
       q("[data-v=st]").innerHTML = ["Primeiro passo de toda inversa: o determinante. Calcule ad − bc antes de clicar.", e.tem ? `ad − bc = ${mn(a * d)} − ${b * c < 0 ? "(" + mn(b * c) + ")" : mn(b * c)} = ${mn(e.det)}, diferente de zero: a inversa existe.` : `ad − bc = ${mn(e.det)}. Determinante zero: <b>não existe inversa</b>. Uma linha é múltipla da outra; como transformação, a matriz esmaga o plano numa reta, e isso não tem volta.`, "Troque de lugar os dois elementos da diagonal principal.", "Troque o sinal dos outros dois (sem mudá-los de lugar).", `Divida tudo pelo determinante (${mn(e.det)}). Conferência: o produto A · A⁻¹ tem de dar a identidade.`][passo]; q("[data-v=prox]").disabled = passo >= (e.tem ? 4 : 1); };
     q("[data-v=novo]").addEventListener("click", () => novo(false)); q("[data-v=sing]").addEventListener("click", () => novo(true)); q("[data-v=prox]").addEventListener("click", avanca);
     SIM.alInversa2._ult = { est, novo, avanca, poe: (o) => { P = o.P; passo = 0; desenha(); }, semente: (s, sing) => { r = rng(s); novo(!!sing); } }; desenha(); };
+
+  /* ---------- MD03 ---------- */
+  /* equação linear escrita sem "1x", sem "+ −" e sem termo nulo: eqT em TeX, eqS em texto */
+  const eqLado = (co, vs, tex) => { let s = ""; co.forEach((c, i) => { if (c === 0) return; const a = Math.abs(c), t = (a === 1 ? "" : String(a)) + vs[i]; s += s === "" ? (c < 0 ? (tex ? "-" : "−") : "") + t : (c < 0 ? (tex ? " - " : " − ") : " + ") + t; }); return s === "" ? "0" : s; };
+  A.eqT = (co, b, vs = ["x", "y", "z"]) => `${eqLado(co, vs, true)} = ${b}`;
+  A.eqS = (co, b, vs = ["x", "y", "z"]) => `${eqLado(co, vs, false)} = ${typeof b === "number" ? mn(b) : b}`;
+  /* escalonamento com frações exatas; aug = matriz aumentada n × (n + 1) de inteiros.
+     Devolve os passos (operação e matriz depois dela), o tipo (SPD, SPI, SI) e, no SPD, a solução. */
+  A.escalona = (aug) => { let m = aug.map((l) => l.map((v) => M.fr(v))); const n = m.length, passos = [], copia = () => m.map((l) => l.slice()), z = (v) => M.val(v) === 0; let lin = 0; const piv = [];
+    for (let c = 0; c < n && lin < n; c++) { let p = lin; while (p < n && z(m[p][c])) p++; if (p === n) continue;
+      if (p !== lin) { [m[p], m[lin]] = [m[lin], m[p]]; passos.push({ tipo: "troca", i: lin, k: p, op: `troca L${lin + 1} com L${p + 1}`, m: copia() }); }
+      for (let i = lin + 1; i < n; i++) { const f = M.div(m[i][c], m[lin][c]); if (z(f)) continue; const base = m[lin]; m[i] = m[i].map((v, j) => M.sub(v, M.mul(f, base[j]))); passos.push({ tipo: "soma", i, k: lin, f, op: `L${i + 1} ← L${i + 1} ${M.val(f) < 0 ? "+" : "−"} ${M.txt(M.fr(Math.abs(f.n), f.d)).replace(/^1$/, "")}${Math.abs(M.val(f)) === 1 ? "" : " · "}L${lin + 1}`, m: copia() }); }
+      piv.push(c); lin++; }
+    const nula = (l) => l.slice(0, n).every(z), tipo = m.some((l) => nula(l) && !z(l[n])) ? "SI" : piv.length === n ? "SPD" : "SPI"; let sol = null;
+    if (tipo === "SPD") { sol = Array(n); for (let i = n - 1; i >= 0; i--) { let s = m[i][n]; for (let j = i + 1; j < n; j++) s = M.sub(s, M.mul(m[i][j], sol[j])); sol[i] = M.div(s, m[i][i]); } }
+    return { passos, tipo, sol, fim: m }; };
+  /* Cramer: D e os determinantes com a coluna trocada */
+  A.cramer = (co, b) => { const D = mat.det(co), Ds = co[0].map((_, j) => mat.det(co.map((l, i) => l.map((v, k) => (k === j ? b[i] : v))))); return { D, Ds, sol: D === 0 ? null : Ds.map((d) => M.fr(d, D)) }; };
+  /* sistema sorteado n × n de solução inteira; tipo "SPD", "SPI" (última linha = soma das outras) ou "SI" (idem, com o termo independente errado) */
+  A.sisSorteia = (r, n, tipo = "SPD") => { const ri = (a, b) => a + Math.floor(r() * (b - a + 1)); let co, sol, b;
+    do { co = mat.sorteia(r, n, n, -2, 3); if (tipo !== "SPD") co[n - 1] = co[0].map((_, j) => co.slice(0, n - 1).reduce((s, l) => s + l[j], 0)); } while (tipo === "SPD" ? mat.det(co) === 0 || co.some((l) => l.every((v) => v === 0)) : co.slice(0, n - 1).some((l) => l.every((v) => v === 0)) || (n === 3 && co[0][0] * co[1][1] - co[0][1] * co[1][0] === 0));
+    sol = Array.from({ length: n }, () => ri(-3, 4)); b = co.map((l) => l.reduce((s, v, j) => s + v * sol[j], 0)); if (tipo === "SI") b[n - 1] += ri(1, 3); return { co, b, sol: tipo === "SPD" ? sol : null, aug: co.map((l, i) => [...l, b[i]]) }; };
+  const fT = (v) => M.txt(v);
+
+  /* nome: "Duas retas, um parâmetro: uma, nenhuma ou infinitas soluções" · matéria: Matemática · tema: MD03 */
+  SIM.alDiscute = (el, F) => { let k = 1, m = 6;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><label style="font-size:13px;color:var(--ink2)">k <input type="range" data-v="k" min="-4" max="6" step="1" value="1" style="vertical-align:middle;width:170px"> <b data-v="kr" style="color:var(--ink);display:inline-block;width:24px"></b></label><label style="font-size:13px;color:var(--ink2)">m <input type="range" data-v="m" min="0" max="12" step="1" value="6" style="vertical-align:middle;width:170px"> <b data-v="mr" style="color:var(--ink);display:inline-block;width:24px"></b></label></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    /* x + 2y = 4 e 2x + ky = m: determinante k − 4 */
+    const est = () => { const s = M.sis(1, 2, 4, 2, k, m); return { k, m, det: s.det, tipo: s.tipo, x: s.x && M.val(s.x), y: s.y && M.val(s.y), xs: s.x && M.txt(s.x), ys: s.y && M.txt(s.y) }; };
+    const poe = (o) => { if (o.k !== undefined) k = Math.max(-4, Math.min(6, Math.round(+o.k))); if (o.m !== undefined) m = Math.max(0, Math.min(12, Math.round(+o.m))); desenha(); };
+    const desenha = () => { const e = est(); q("[data-v=k]").value = String(k); q("[data-v=m]").value = String(m); q("[data-v=kr]").textContent = mn(k); q("[data-v=mr]").textContent = mn(m);
+      const r2 = k === 0 ? { x1: m / 2, y1: -7, x2: m / 2, y2: 7, cor: "var(--warn)", tr: false, w: 2.4 } : null, vis2 = e.tipo === "uma" && Math.abs(e.x) <= 7.5 && Math.abs(e.y) <= 5.5;
+      q("[data-v=pal]").innerHTML = A.plano({ x: [-8, 8], y: [-6, 6], h: 300, iso: true, px: 2, py: 2, fs: [{ f: (x) => (4 - x) / 2, cor: "var(--ok)" }, ...(k === 0 ? [] : [{ f: (x) => (m - 2 * x) / k, cor: "var(--warn)", tr: e.tipo === "infinitas" }])], segs: r2 ? [r2] : [], pts: vis2 ? [{ x: e.x, y: e.y, r: 5, rot: `(${e.xs}; ${e.ys})` }] : [] });
+      q("[data-v=lt]").innerHTML = vis("verde", "x + 2y = 4") + vis("laranja", A.eqS([2, k], m)) + vis("determinante", `${mn(k)} − 4 = ${mn(e.det)}`) + vis("soluções", e.tipo === "uma" ? "uma" : e.tipo);
+      q("[data-v=st]").innerHTML = e.tipo === "uma" ? `Determinante diferente de zero: as retas têm inclinações diferentes e se cruzam num único ponto, (${e.xs}; ${e.ys})${vis2 ? "" : ", que caiu fora da janela do desenho"}. Sistema <b>possível e determinado</b>. Mexer em m só desloca a reta laranja; não muda o tipo.` : e.tipo === "infinitas" ? `Determinante zero e a segunda equação é a primeira multiplicada por 2: é a <b>mesma reta</b> desenhada duas vezes. Todo ponto dela é solução. Sistema <b>possível e indeterminado</b>.` : `Determinante zero: as retas têm a mesma inclinação, mas são retas diferentes. <b>Paralelas</b>: nenhum ponto em comum. Sistema <b>impossível</b>. Só m = 8 faria as duas coincidirem.`; };
+    q("[data-v=k]").addEventListener("input", (ev) => poe({ k: ev.target.value })); q("[data-v=m]").addEventListener("input", (ev) => poe({ m: ev.target.value }));
+    SIM.alDiscute._ult = { poe, est }; desenha(); };
+
+  /* nome: "Escalonamento, uma operação por vez" · matéria: Matemática · tema: MD03 */
+  SIM.alEscalona = (el, F) => { let r = rng(4), S = { aug: [[1, 1, 1, 3], [2, 1, -1, 9], [1, -2, 2, -8]] }, E = A.escalona(S.aug), passo = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-v="spd">outro sistema</button><button class="bt peq" data-v="si">um impossível</button><button class="bt peq" data-v="spi">um indeterminado</button><button class="bt peq" data-v="prox">próxima operação</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), total = () => E.passos.length + 1, atual = () => { const i = Math.min(passo, E.passos.length); return i === 0 ? S.aug.map((l) => l.map((v) => M.fr(v))) : E.passos[i - 1].m; };
+    const est = () => ({ aug: S.aug, passo, total: total(), tipo: E.tipo, sol: E.sol && E.sol.map(M.val), ops: E.passos.map((x) => x.op), atual: atual().map((l) => l.map(M.val)) });
+    const novo = (tipo) => { S = A.sisSorteia(r, 3, tipo || "SPD"); E = A.escalona(S.aug); passo = 0; desenha(); };
+    const avanca = () => { if (passo < total()) passo++; desenha(); };
+    const desenha = () => { const fim = passo >= total(), mAt = atual(), co = mAt.map((l) => l.slice(0, 3).map(fT)), b = mAt.map((l) => [fT(l[3])]), pa = passo >= 1 && passo <= E.passos.length ? E.passos[passo - 1] : null;
+      q("[data-v=pal]").innerHTML = A.mFig([co, "|", b], null, { cw: 50, dest: pa ? { 0: [0, 1, 2].map((j) => [pa.i, j, "var(--warn)"]), 2: [[pa.i, 0, "var(--warn)"]] } : {}, sub: "coeficientes de x, y, z | termos independentes" });
+      q("[data-v=lt]").innerHTML = vis("operação", pa ? pa.op : passo === 0 ? "nenhuma ainda" : "terminou") + vis("passo", `${Math.min(passo, total())} de ${total()}`) + vis("tipo", fim ? E.tipo : "?") + (fim && E.sol ? vis("solução (x; y; z)", `(${E.sol.map(fT).join("; ")})`) : "");
+      q("[data-v=st]").innerHTML = passo === 0 ? `Cada linha é uma equação: os três primeiros números são os coeficientes de x, y e z, e o último é o termo independente. Objetivo: zerar tudo abaixo da diagonal, somando a uma linha um múltiplo de outra. Antes de clicar, diga qual operação zera o primeiro número da segunda linha.` : !fim ? `${pa.tipo === "troca" ? "Trocar duas equações de lugar não muda o sistema." : "A linha destacada foi trocada por ela mesma mais um múltiplo de outra: as soluções continuam as mesmas."} Operação: <b>${pa.op}</b>.` : E.tipo === "SPD" ? `Forma de escada: a última linha dá z; a segunda, com z, dá y; a primeira dá x. Solução única: (${E.sol.map(fT).join("; ")}). Sistema <b>possível e determinado</b>.` : E.tipo === "SI" ? `Apareceu uma linha com os três coeficientes nulos e o termo independente diferente de zero: ela diz "0 = número não nulo". Sistema <b>impossível</b>.` : `Uma linha virou só zeros ("0 = 0"): era uma equação repetida disfarçada. Sobram menos equações que incógnitas. Sistema <b>possível e indeterminado</b>: infinitas soluções.`; q("[data-v=prox]").disabled = fim; };
+    q("[data-v=spd]").addEventListener("click", () => novo("SPD")); q("[data-v=si]").addEventListener("click", () => novo("SI")); q("[data-v=spi]").addEventListener("click", () => novo("SPI")); q("[data-v=prox]").addEventListener("click", avanca);
+    SIM.alEscalona._ult = { est, novo, avanca, poe: (o) => { S = { aug: o.aug }; E = A.escalona(S.aug); passo = 0; desenha(); }, semente: (s, tipo) => { r = rng(s); novo(tipo); } }; desenha(); };
+
+  /* nome: "Regra de Cramer: trocando uma coluna por vez" · matéria: Matemática · tema: MD03 */
+  SIM.alCramer = (el, F) => { let r = rng(6), S = { co: [[3, 2], [5, -2]], b: [12, 4] }, passo = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-v="n2">outro 2 × 2</button><button class="bt peq" data-v="n3">outro 3 × 3</button><button class="bt peq" data-v="prox">próximo determinante</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), n = () => S.co.length, vs = ["x", "y", "z"];
+    const est = () => ({ ...A.cramer(S.co, S.b), co: S.co, b: S.b, passo, total: n() + 1, solN: A.cramer(S.co, S.b).sol.map(M.val) });
+    const novo = (k) => { const t = A.sisSorteia(r, k, "SPD"); S = { co: t.co, b: t.b }; passo = 0; desenha(); };
+    const avanca = () => { if (passo < n() + 1) passo++; desenha(); };
+    const desenha = () => { const e = A.cramer(S.co, S.b), j = passo - 2, tro = j >= 0 ? S.co.map((l, i) => l.map((v, k) => (k === j ? S.b[i] : v))) : S.co;
+      q("[data-v=pal]").innerHTML = A.mFig([passo <= 1 ? "D:" : `D${vs[j]}:`, tro], null, { cw: 46, dest: j >= 0 ? { 1: S.co.map((_, i) => [i, j, "var(--warn)"]) } : {}, sub: S.co.map((l, i) => A.eqS(l, S.b[i], vs.slice(0, n()))).join("   ;   ") });
+      q("[data-v=lt]").innerHTML = vis("D", passo >= 1 ? mn(e.D) : "?") + S.co.map((_, i) => vis("D" + vs[i], passo >= i + 2 ? mn(e.Ds[i]) : "?") + vis(vs[i], passo >= i + 2 ? fT(e.sol[i]) : "?")).join("");
+      q("[data-v=st]").innerHTML = passo === 0 ? `As equações estão embaixo da matriz. Primeiro, D: o determinante dos coeficientes. Calcule antes de clicar.` : passo === 1 ? `D = ${mn(e.D)}, diferente de zero: solução única. Agora troque a coluna de x pelos termos independentes e calcule Dx.` : `Coluna de ${vs[j]} trocada pelos termos independentes (em destaque): D${vs[j]} = ${mn(e.Ds[j])}, e ${vs[j]} = D${vs[j]} / D = ${fT(e.sol[j])}.` + (passo >= n() + 1 ? ` Solução: (${e.sol.map(fT).join("; ")}). Confira substituindo na primeira equação.` : ""); q("[data-v=prox]").disabled = passo >= n() + 1; };
+    q("[data-v=n2]").addEventListener("click", () => novo(2)); q("[data-v=n3]").addEventListener("click", () => novo(3)); q("[data-v=prox]").addEventListener("click", avanca);
+    SIM.alCramer._ult = { est, novo, avanca, poe: (o) => { S = { co: o.co, b: o.b }; passo = 0; desenha(); }, semente: (s, k) => { r = rng(s); novo(k || 2); } }; desenha(); };
 })();

@@ -87,7 +87,7 @@ window.CATALOGO.push(
     ["SPG03","Progressão Harmônica",[],true],
     ["MD01","Matrizes",[],true],
     ["MD02","Determinantes",[],true],
-    ["MD03","Sistemas Lineares",[]],
+    ["MD03","Sistemas Lineares",[],true],
     ["BW01","Binômio de Newton",[]],
     ["NCP01","Unidade Imaginária",[]],
     ["NCP02","Forma Algébrica do Número Complexo",[]],
