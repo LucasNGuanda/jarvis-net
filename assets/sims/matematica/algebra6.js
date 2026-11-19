@@ -152,4 +152,51 @@
       el.querySelectorAll("[data-k]").forEach((b) => b.addEventListener("click", () => responde(+b.dataset.k))); };
     q("[data-v=novo]").addEventListener("click", novo);
     SIM.alCicloI._ult = { est, novo, responde, semente: (s) => { r = rng(s); novo(); }, poe: (o) => { n = o.n; resp = null; desenha(); } }; desenha(); };
+
+  /* ---------- NCP02 ---------- */
+  const slC = (k, r, v, lo = -5, hi = 5) => `<label style="font-size:13px;color:var(--ink2)">${r} <input type="range" data-v="${k}" min="${lo}" max="${hi}" step="1" value="${v}" style="vertical-align:middle;width:92px"> <b data-v="${k}r" style="color:var(--ink);display:inline-block;width:22px"></b></label>`;
+  const lim = (v, lo = -5, hi = 5) => Math.max(lo, Math.min(hi, Math.round(+v)));
+  const par = (z) => `(${cx.txt(z)})`;
+
+  /* nome: "Soma e subtração: a regra do paralelogramo" · matéria: Matemática · tema: NCP02 */
+  SIM.alSomaC = (el, F) => { let z = [3, 1], w = [1, 3], op = "soma";
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${slC("a", "z: a", 3)}${slC("b", "b", 1)}${slC("c", "w: c", 1)}${slC("d", "d", 3)}<button class="bt peq" data-o="soma">z + w</button><button class="bt peq" data-o="sub">z − w</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const r = op === "soma" ? cx.soma(z, w) : cx.sub(z, w); return { z: z.slice(), w: w.slice(), op, r, dist2: cx.mod2(cx.sub(z, w)) }; };
+    const poe = (o) => { if (o.z) z = o.z.map((v) => lim(v)); if (o.w) w = o.w.map((v) => lim(v)); if (o.op) op = o.op; desenha(); };
+    const desenha = () => { const e = est(), mw = [-w[0], -w[1]], outro = op === "soma" ? w : mw; [["a", z[0]], ["b", z[1]], ["c", w[0]], ["d", w[1]]].forEach(([k, v]) => { q(`[data-v=${k}]`).value = String(v); q(`[data-v=${k}r]`).textContent = mn(v); });
+      el.querySelectorAll("[data-o]").forEach((b) => b.classList.toggle("on", b.dataset.o === op));
+      q("[data-v=pal]").innerHTML = A.planoC({ x: [-14, 14], y: [-10.5, 10.5], h: 330, px: 2, py: 2, segs: [{ x1: z[0], y1: z[1], x2: e.r[0], y2: e.r[1] }, { x1: outro[0], y1: outro[1], x2: e.r[0], y2: e.r[1] }, cx.vet(z, "var(--ok)"), cx.vet(w, "var(--mod)"), ...(op === "sub" ? [{ ...cx.vet(mw, "var(--mod)"), tr: undefined, w: 1.6 }] : []), { ...cx.vet(e.r), w: 3 }], pts: [cx.pt(z, { cor: "var(--ok)", rot: "z" }), cx.pt(w, { cor: "var(--mod)", rot: "w" }), ...(op === "sub" ? [cx.pt(mw, { cor: "var(--mod)", rot: "−w", r: 3.5 })] : []), cx.pt(e.r, { rot: op === "soma" ? "z + w" : "z − w" })] });
+      q("[data-v=lt]").innerHTML = vis("z", cx.txt(z)) + vis("w", cx.txt(w)) + vis(op === "soma" ? "z + w" : "z − w", cx.txt(e.r)) + (op === "sub" ? vis("|z − w|²", e.dist2) : "");
+      q("[data-v=st]").innerHTML = op === "soma" ? `Soma-se parte real com parte real e imaginária com imaginária: ${par(z)} + ${par(w)} = ${cx.txt(e.r)}. No plano, z + w é a ponta do paralelogramo de lados z e w: é a soma de vetores da física.` : `Subtrair w é somar −w, o oposto de w (o ponto tracejado): ${par(z)} − ${par(w)} = ${cx.txt(e.r)}. O tamanho de z − w é a <b>distância</b> entre os pontos z e w: aqui, √${e.dist2}.`; };
+    ["a", "b", "c", "d"].forEach((k, i) => q(`[data-v=${k}]`).addEventListener("input", (ev) => { const t = [z[0], z[1], w[0], w[1]]; t[i] = ev.target.value; poe({ z: t.slice(0, 2), w: t.slice(2) }); })); el.querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => poe({ op: b.dataset.o })));
+    SIM.alSomaC._ult = { poe, est }; desenha(); };
+
+  /* nome: "Conjugado e módulo: o espelho e a distância" · matéria: Matemática · tema: NCP02 */
+  SIM.alConjMod = (el, F) => { let z = [4, 3];
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${slC("a", "a", 4, -6, 6)}${slC("b", "b", 3, -6, 6)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const c = cx.conj(z), m2 = cx.mod2(z), s = M.raiz(m2); return { z: z.slice(), conj: c, mod2: m2, mod: Math.sqrt(m2), modTxt: m2 === 0 ? "0" : M.rzTxt(s.k, s.m), prod: cx.mul(z, c), soma: cx.soma(z, c), dif: cx.sub(z, c) }; };
+    const poe = (o) => { if (o.z) z = o.z.map((v) => lim(v, -6, 6)); desenha(); };
+    const desenha = () => { const e = est(); q("[data-v=a]").value = String(z[0]); q("[data-v=b]").value = String(z[1]); q("[data-v=ar]").textContent = mn(z[0]); q("[data-v=br]").textContent = mn(z[1]);
+      q("[data-v=pal]").innerHTML = A.planoC({ x: [-12, 12], y: [-9, 9], h: 320, px: 2, py: 2, circs: e.mod2 ? [{ x: 0, y: 0, r: e.mod }] : [], segs: [{ x1: z[0], y1: z[1], x2: z[0], y2: -z[1] }, cx.vet(z, "var(--ok)"), cx.vet(e.conj, "var(--mod)")], pts: [cx.pt(z, { cor: "var(--ok)", rot: "z = " + cx.txt(z) }), ...(z[1] ? [cx.pt(e.conj, { cor: "var(--mod)", rot: "conjugado = " + cx.txt(e.conj), dy: 18 })] : [])] });
+      q("[data-v=lt]").innerHTML = vis("z", cx.txt(z)) + vis("conjugado", cx.txt(e.conj)) + vis("|z|", e.modTxt) + vis("z · conjugado", cx.txt(e.prod)) + vis("z + conjugado", cx.txt(e.soma));
+      q("[data-v=st]").innerHTML = z[1] === 0 ? `Um número real é o seu próprio conjugado: está em cima do espelho (o eixo real). ${e.mod2 ? "O módulo é a distância até a origem, como o valor absoluto dos reais." : ""}` : `O conjugado é o reflexo de z no eixo real: troca o sinal da parte imaginária. Os dois estão à mesma distância da origem (a circunferência tracejada): |z| = √(${mn(z[0])}² + ${z[1] < 0 ? "(" + mn(z[1]) + ")" : z[1]}²) = ${e.modTxt}. Multiplicados, dão um número real, que é o módulo ao quadrado: ${e.mod2}. Somados, dão o dobro da parte real.`; };
+    q("[data-v=a]").addEventListener("input", (ev) => poe({ z: [ev.target.value, z[1]] })); q("[data-v=b]").addEventListener("input", (ev) => poe({ z: [z[0], ev.target.value] }));
+    SIM.alConjMod._ult = { poe, est }; desenha(); };
+
+  /* nome: "Divisão de complexos em quatro passos" · matéria: Matemática · tema: NCP02 */
+  SIM.alDivC = (el, F) => { let r = rng(14), z = [3, 2], w = [1, -2], passo = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-v="novo">outra divisão</button><button class="bt peq" data-v="prox">próximo passo</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const c = cx.conj(w), n = cx.mul(z, c), d = cx.mod2(w), res = cx.div(z, w); return { z: z.slice(), w: w.slice(), passo, conj: c, num: n, den: d, res: [M.val(res[0]), M.val(res[1])], resTxt: cx.txt(res), volta: [M.val(res[0]) * w[0] - M.val(res[1]) * w[1], M.val(res[0]) * w[1] + M.val(res[1]) * w[0]] }; };
+    const novo = () => { const ri = (a, b) => a + Math.floor(r() * (b - a + 1)), nzr = () => { let v; do v = ri(-4, 4); while (v === 0); return v; }; z = [ri(-5, 5), nzr()]; w = [nzr(), nzr()]; passo = 0; desenha(); };
+    const avanca = () => { if (passo < 4) passo++; desenha(); };
+    const desenha = () => { const e = est(), fr = (a, b) => `<span style="display:inline-block;vertical-align:middle;text-align:center"><span style="display:block;border-bottom:2px solid var(--ink);padding:0 8px 3px">${a}</span><span style="display:block;padding:3px 8px 0">${b}</span></span>`;
+      const partes = [fr(cx.txt(z), cx.txt(w))]; if (passo >= 1) partes.push(fr(`${par(z)} · ${par(e.conj)}`, `${par(w)} · ${par(e.conj)}`)); if (passo >= 2) partes.push(fr(cx.txt(e.num), passo >= 3 ? e.den : `${par(w)} · ${par(e.conj)}`)); if (passo >= 4) partes.push(e.resTxt);
+      q("[data-v=pal]").innerHTML = `<div style="text-align:center;font-size:17px;font-weight:650;color:var(--ink);padding:12px 0;line-height:1.3">${partes.join(' <span style="margin:0 8px">=</span> ')}</div>`;
+      q("[data-v=lt]").innerHTML = vis("conjugado do denominador", passo >= 1 ? cx.txt(e.conj) : "?") + vis("numerador novo", passo >= 2 ? cx.txt(e.num) : "?") + vis("denominador novo", passo >= 3 ? e.den : "?") + vis("resultado", passo >= 4 ? e.resTxt : "?");
+      q("[data-v=st]").innerHTML = ["O problema é o i no denominador. A ideia: multiplicar em cima e embaixo por um número que deixe o denominador real. Qual? Pense antes de clicar.", `Multiplique em cima e embaixo pelo <b>conjugado do denominador</b>, ${cx.txt(e.conj)}. O valor da fração não muda (é multiplicar por 1).`, `Em cima, distributiva e i² = −1: ${par(z)} · ${par(e.conj)} = ${cx.txt(e.num)}.`, `Embaixo, um número vezes o seu conjugado é o módulo ao quadrado: ${mn(w[0])}² + ${w[1] < 0 ? "(" + mn(w[1]) + ")" : w[1]}² = ${e.den}. O i sumiu do denominador.`, `Agora é só dividir a parte real e a imaginária por ${e.den}: ${e.resTxt}. Conferência: multiplique o resultado pelo denominador original e veja voltar ${cx.txt(z)}.`][passo]; q("[data-v=prox]").disabled = passo >= 4; };
+    q("[data-v=novo]").addEventListener("click", novo); q("[data-v=prox]").addEventListener("click", avanca);
+    SIM.alDivC._ult = { est, novo, avanca, poe: (o) => { z = o.z; w = o.w; passo = 0; desenha(); }, semente: (s) => { r = rng(s); novo(); } }; desenha(); };
 })();

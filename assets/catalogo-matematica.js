@@ -90,7 +90,7 @@ window.CATALOGO.push(
     ["MD03","Sistemas Lineares",[],true],
     ["BW01","Binômio de Newton",[],true],
     ["NCP01","Unidade Imaginária",[],true],
-    ["NCP02","Forma Algébrica do Número Complexo",[]],
+    ["NCP02","Forma Algébrica do Número Complexo",[],true],
     ["NCP03","Forma Trigonométrica",[]],
     ["NCP04","Lugares Geométricos (complexos)",[]],
     ["PL01","Introdução aos Polinômios",[]],

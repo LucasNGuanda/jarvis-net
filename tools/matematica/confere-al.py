@@ -442,5 +442,33 @@ ok(Fr(1, 2) * 2 == 1 and cm((1, 1), (1, 1)) == (0, 2), "NCP01 chefão (b): [(√
 ok(all(cp(z, 4) == (1, 0) for z in CIC) and cm((1, -1 * 0), (1, 0)) == (1, 0), "NCP01 chefão (c): 1, i, −1, −i elevados à quarta dão 1")
 ok(all(Fr(b * b, 4) + Fr(4 * c - b * b, 4) == c for b in range(-6, 7) for c in range(-4, 14)), "NCP01 chefão (d): p² + q² = c")
 
+# ---------- NCP02 ----------
+def cj(z):
+    return (z[0], -z[1])
+def m2(z):
+    return z[0] * z[0] + z[1] * z[1]
+def cdiv(z, w):
+    n = cm(z, cj(w))
+    return (Fr(n[0], m2(w)), Fr(n[1], m2(w)))
+GC = [(a, b) for a in (-3, -1, 0, 2, 5) for b in (-4, -1, 0, 1, 3)]
+ok(cm((2, 3), (4, -1)) == (11, 10) and (2 * 4, 2 * -1, 3 * 4, 3 * -1) == (8, -2, 12, -3), "NCP02 exemplo 1: (2 + 3i)(4 − i) = 11 + 10i e as quatro parcelas")
+ok(cm((3, 2), (1, 2)) == (-1, 8) and m2((1, -2)) == 5 and cdiv((3, 2), (1, -2)) == (Fr(-1, 5), Fr(8, 5)) and cm(cdiv((3, 2), (1, -2)), (1, -2)) == (3, 2), "NCP02 exemplo 2: (3 + 2i)/(1 − 2i) = −1/5 + (8/5)i, com a volta")
+ok(m2((3, -4)) == 25 and cdiv((1, 0), (3, -4)) == (Fr(3, 25), Fr(4, 25)) and cm((3, -4), (Fr(3, 25), Fr(4, 25))) == (1, 0), "NCP02 exemplo 3 e teorema 1: |3 − 4i| = 5 e o inverso 3/25 + (4/25)i")
+ok(all(cm(z, cj(z)) == (m2(z), 0) for z in GC), "NCP02 teorema 1: z·conj(z) = |z|²")
+ok(all(cj(cm(z, w)) == cm(cj(z), cj(w)) and cj(cs(z, w)) == cs(cj(z), cj(w)) and m2(cm(z, w)) == m2(z) * m2(w) for z in GC for w in GC), "NCP02 teorema 2: conjugado da soma e do produto, |zw|² = |z|²|w|² (625 pares)")
+ok(cm((2, 1), (3, 2)) == (4, 7) and cm((2, -1), (3, -2)) == (4, -7) and 5 * 13 == 65 == 16 + 49, "NCP02 teorema 2: exemplo numérico")
+ok(all((m2(cm(z, w)) == 0) == (z == (0, 0) or w == (0, 0)) for z in GC for w in GC), "NCP02 teorema 3: zw = 0 exatamente quando z = 0 ou w = 0 (na grade)")
+ok(cm((3, 4), (3, -4)) == (25, 0), "NCP02 chute: (3 + 4i)(3 − 4i) = 25")
+ok(all(a * a + b * b == c * c for a, b, c in ((3, 4, 5), (5, 12, 13), (6, 8, 10), (8, 15, 17), (7, 24, 25))), "NCP02: ternos pitagóricos usados nos módulos")
+ok(all(m2(cdiv(z, w)) == Fr(m2(z), m2(w)) for z in GC for w in GC if w != (0, 0)), "NCP02 chefão (a) e exercício 16: |z/w|² = |z|²/|w|²")
+ok(cp((2, 1), 2) == (3, 4) and cp((-2, -1), 2) == (3, 4) and m2((3, 4)) == 25, "NCP02 chefão (b): (±(2 + i))² = 3 + 4i")
+ok(all((a * a + b * b) * (c * c + d * d) == (a * c - b * d) ** 2 + (a * d + b * c) ** 2 for a in G for b in G for c in G for d in G), "NCP02 chefão (c): identidade das somas de dois quadrados")
+ok(cm((2, 1), (3, 2)) == (4, 7) and cm((2, 1), (3, -2)) == (8, -1) and 16 + 49 == 65 == 64 + 1, "NCP02 chefão (c): 65 = 4² + 7² = 8² + 1²")
+ok(all(m2(cs(z, w)) == m2(z) + m2(w) + 2 * cm(z, cj(w))[0] for z in GC for w in GC), "NCP02 chefão (d): |z + w|² = |z|² + |w|² + 2Re(z·conj(w))")
+ok(all(m2(cs(z, w)) <= m2(z) + m2(w) + 2 * (Decimal(m2(z) * m2(w)).sqrt()) + Decimal("1e-20") for z in GC for w in GC), "NCP02 chefão (e): desigualdade triangular na grade (50 casas)")
+ok(all(cm((-q * m, q), (m * b, b))[1] == 0 for q in range(-4, 6) for m in (2, 3, -2, 4) for b in (1, 2, -1, -2)), "NCP02 exercício 14: com k = −qm o produto é real")
+ok(all(cm((-q * m, q), (a, -m * a))[0] == 0 for q in range(-4, 6) for m in (1, 2, 3, -2) for a in (1, 2, -1)), "NCP02 exercício 15: com k = −qm o quociente é imaginário puro")
+ok(all(cs((x, y), (k * x, -k * y)) == ((1 + k) * x, (1 - k) * y) for x in range(-5, 6) for y in range(-5, 6) for k in (2, 3)), "NCP02 exercício 13: z + k·conj(z)")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)
