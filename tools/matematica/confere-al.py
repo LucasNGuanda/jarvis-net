@@ -372,5 +372,38 @@ ok(all(sarrus([[1, 1, 0], [0, 1, 1], [1, 0, 1]]) == 2 and (x + y) + (y + z) + (x
 ok(all(Fr(x + y + z + 2 * (x - y) + (y - z), 3) == x for x in range(-3, 6) for y in range(-3, 6) for z in range(-3, 6)), "MD03 exercício 14: x = (S + 2d₁ + d₂)/3")
 ok(vale([[1, 1], [2, 2]], [3, 6], (0, 3)) and vale([[1, 1], [2, 2]], [3, 6], (Fr(5, 2), Fr(1, 2))), "MD03 abertura e chute: (0, 3) e (2,5; 0,5) resolvem x + y = 3, 2x + 2y = 6")
 
+# ---------- BW01 ----------
+from math import comb as Cb, factorial as fat
+def pol_mul(a, b):
+    r = [0] * (len(a) + len(b) - 1)
+    for i, x in enumerate(a):
+        for j, y in enumerate(b):
+            r[i + j] += x * y
+    return r
+def pol_pot(a, n):
+    r = [1]
+    for _ in range(n):
+        r = pol_mul(r, a)
+    return r
+ok(all(Cb(n, k) == Cb(n - 1, k - 1) + Cb(n - 1, k) for n in range(2, 31) for k in range(1, n)), "BW01 teorema 1: relação de Stifel até n = 30")
+ok(Cb(5, 2) == 10 == Cb(4, 1) + Cb(4, 2) and (5 * 4) // 2 == 10, "BW01: C(5, 2) = 10 = 4 + 6")
+ok(all(fat(n - 1) * (k + (n - k)) * fat(k) * fat(n - k) == fat(n) * fat(k) * fat(n - k) for n in range(2, 15) for k in range(1, n)), "BW01 teorema 1 pela fórmula: (n − 1)!·[k + (n − k)] = n!")
+ok(pol_pot([2, 3], 4) == [16, 96, 216, 216, 81] and sum([16, 96, 216, 216, 81]) == 625 == 5 ** 4, "BW01 exemplo 1: (2x + 3)⁴ e a conferência com x = 1")
+ok(all(pol_pot([p, q], n) == [Cb(n, k) * p ** (n - k) * q ** k for k in range(n + 1)] for p in (1, 2, 3) for q in (-3, -2, 1, 2, 3) for n in range(1, 8)), "BW01 teorema 2: coeficientes de (px + q)ⁿ por multiplicação direta")
+ok(2 * 6 - 3 * 4 == 0 and Cb(6, 4) * 2 ** 4 == 240, "BW01 exemplo 2: k = 4 e termo independente 240")
+ok(all(2 * n - 3 * (2 * n // 3) == 0 for n in (3, 6, 9)), "BW01 exemplo 2 e exercício 13: k = 2n/3 zera o expoente")
+ok(Cb(5, 2) * 3 ** 3 * (-2) ** 2 == 1080 and pol_pot([3, -2], 5)[2] == 1080, "BW01 exemplo 3: coeficiente de x³ em (3x − 2)⁵")
+ok(all(sum(Cb(n, k) for k in range(n + 1)) == 2 ** n and sum((-1) ** k * Cb(n, k) for k in range(n + 1)) == 0 and sum(Cb(n, k) for k in range(0, n + 1, 2)) == 2 ** (n - 1) for n in range(1, 31)), "BW01 teorema 3 e exercício 14: soma, soma alternada e soma das colunas pares")
+ok(Cb(4, 1) * 2 ** 3 * 3 == 96, "BW01 pegadinha: coeficiente de x³ em (2x + 3)⁴ é 96")
+ok(all(k * Cb(n, k) == n * Cb(n - 1, k - 1) for n in range(1, 25) for k in range(1, n + 1)) and all(sum(k * Cb(n, k) for k in range(n + 1)) == n * 2 ** (n - 1) for n in range(1, 25)) and 4 + 12 + 12 + 4 == 32, "BW01 chefão (a)")
+ok(all(sum(Cb(n, k) ** 2 for k in range(n + 1)) == Cb(2 * n, n) for n in range(0, 20)) and 1 + 9 + 9 + 1 == 20 == Cb(6, 3), "BW01 chefão (b): soma dos quadrados")
+c8 = [Cb(8, k) * 2 ** k for k in range(9)]
+ok(max(c8) == 1792 and [k for k in range(9) if c8[k] == 1792] == [5, 6] and 56 * 32 == 1792 == 28 * 64 and all(Fr(c8[k + 1], c8[k]) == Fr(2 * (8 - k), k + 1) for k in range(8)), "BW01 chefão (c): maior coeficiente de (1 + 2x)⁸")
+ok(11 ** 10 % 100 == 1 and Cb(10, 1) * 10 == 100, "BW01 chefão (d): 11¹⁰ termina em 01")
+ok(all((1 + x) ** n >= 1 + n * x for n in range(1, 12) for x in G if x >= 0), "BW01 chefão (e): (1 + x)ⁿ ≥ 1 + nx na grade, x ≥ 0")
+ok(all(pol_mul([1, c], pol_pot([1, 1], n))[j] == Cb(n, j) + c * Cb(n, j - 1) for n in range(5, 9) for c in (2, 3, -1, -2) for j in (2, 3, 4)), "BW01 exercício 15: coeficiente no produto (1 + cx)(1 + x)ⁿ")
+ok(101 ** 3 == 1030301 and 99 ** 3 == 970299, "BW01 exercício 12: 101³ e 99³")
+ok(sum([1, 5, 10, 10, 5, 1]) == 32, "BW01 chute: soma da linha 5")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)
