@@ -97,4 +97,54 @@
       q("[data-v=st]").innerHTML = resp < 0 ? `Faça a pergunta certa: "${it.base} elevado a quanto dá ${it.arg}?"` : (resp === it.certa ? "Certo. " : "Ainda não: a certa está marcada. ") + (it.i === 1 ? `${it.base} elevado a ${mn(it.j)} dá ${it.arg}.` : `Tudo é potência de ${it.raiz}: ${it.base} = ${it.raiz}${M.sup(it.i)} e ${it.arg} = ${it.raiz}${M.sup(it.j)}. De (${it.raiz}${M.sup(it.i)})ˣ = ${it.raiz}${M.sup(it.j)} vem ${it.i}x = ${mn(it.j)}, x = ${it.val}.`); };
     q("[data-v=novo]").addEventListener("click", novo);
     SIM.alLogQuiz._ult = { est, novo, responde, semente: (s) => { r = rng(s); pontos = 0; feitas = 0; novo(); } }; novo(); };
+
+  /* ---------- LOG03 ---------- */
+  A.logb = (a, x) => Math.log(x) / Math.log(a);
+  /* nome: "Exponencial e logaritmo: uma é o espelho da outra" · matéria: Matemática · tema: LOG03 */
+  SIM.alLogGraf = (el, F) => { let a = 2, x = 4;
+    const sl = (n, d, lo, hi, v, st, w) => `<label style="font-size:13px;color:var(--ink2)">${n} <input type="range" data-v="${d}" min="${lo}" max="${hi}" step="${st}" value="${v}" style="vertical-align:middle;width:${w}px"> <b data-r="${d}" style="color:var(--ink);display:inline-block;width:34px"></b></label>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("base a", "a", 0.2, 4, 2, 0.1, 170)}${sl("x", "x", 0.25, 8, 4, 0.25, 190)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => ({ a, x, y: A.logb(a, x), tipo: a > 1 ? "crescente" : "decrescente", volta: a ** A.logb(a, x) });
+    const poe = (o) => { ({ a, x } = { a, x, ...o }); a = Math.max(0.2, Math.min(4, Math.round(+a * 10) / 10)); if (a === 1) a = 1.1; x = Math.max(0.25, Math.min(8, Math.round(+x * 4) / 4)); desenha(); };
+    const desenha = () => { const e = est(), dentro = Math.abs(e.y) <= 6; q("[data-v=a]").value = String(a); q("[data-v=x]").value = String(x); q("[data-r=a]").textContent = F.nt(a, 1); q("[data-r=x]").textContent = F.nt(x, 2);
+      q("[data-v=pal]").innerHTML = A.plano({ x: [-6, 8.5], y: [-6, 8.5], h: 330, iso: true, fs: [{ f: (t) => t, cor: "var(--ink3)", tr: true }, { f: (t) => a ** t, cor: "var(--ok)" }, { f: (t) => (t > 0.004 ? A.logb(a, t) : NaN), cor: "var(--mod)" }], pts: dentro ? [{ x, y: e.y, rot: "log", dy: 16 }, { x: e.y, y: x, cor: "var(--ok)", rot: "exp", dx: -9 }] : [], segs: dentro ? [{ x1: x, y1: e.y, x2: e.y, y2: x }] : [] });
+      q("[data-v=lt]").innerHTML = vis("x", F.nt(x, 2)) + vis(`log de x na base ${F.nt(a, 1)}`, F.nt(e.y, 4)) + vis("é", e.tipo) + vis("domínio", "x > 0");
+      q("[data-v=st]").innerHTML = `A curva verde é y = ${F.nt(a, 1)}ˣ; a roxa é o logaritmo de base ${F.nt(a, 1)}, a sua inversa: uma é o espelho da outra na reta tracejada y = x. O ponto (${F.nt(x, 2)}; ${F.nt(e.y, 2)}) do logaritmo é o ponto (${F.nt(e.y, 2)}; ${F.nt(x, 2)}) da exponencial. Por isso o que era "a exponencial nunca toca o eixo x" vira "o logaritmo nunca toca o eixo y": ele só existe para x > 0. ${a > 1 ? "Base maior que 1: as duas crescem." : "Base entre 0 e 1: as duas decrescem."}`; };
+    ["a", "x"].forEach((n) => q(`[data-v=${n}]`).addEventListener("input", (ev) => poe({ [n]: ev.target.value })));
+    SIM.alLogGraf._ult = { poe, est }; desenha(); };
+
+  /* funções de dentro do logaritmo, com o domínio de log(g(x)) escrito e os zeros de g */
+  A.LDOM = [
+    { n: "x − 2", g: (x) => x - 2, dom: "x > 2", z: [2] }, { n: "4 − x", g: (x) => 4 - x, dom: "x < 4", z: [4] },
+    { n: "x² − 4", g: (x) => x * x - 4, dom: "x < −2 ou x > 2", z: [-2, 2] }, { n: "9 − x²", g: (x) => 9 - x * x, dom: "−3 < x < 3", z: [-3, 3] },
+    { n: "x² + 1", g: (x) => x * x + 1, dom: "todo x real", z: [] }, { n: "2x + 6", g: (x) => 2 * x + 6, dom: "x > −3", z: [-3] },
+    { n: "x² − 5x + 4", g: (x) => x * x - 5 * x + 4, dom: "x < 1 ou x > 4", z: [1, 4] }, { n: "−x² − 1", g: (x) => -x * x - 1, dom: "nenhum x", z: [] }];
+  /* nome: "Onde o logaritmo existe? O domínio de log(g(x))" · matéria: Matemática · tema: LOG03 */
+  SIM.alLogDominio = (el, F) => { let i = 2, ver = false, x = 3;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><label style="font-size:13px;color:var(--ink2)">f(x) = log ( <select data-v="g" class="bt peq" style="font-size:14px">${A.LDOM.map((d, k) => `<option value="${k}">${d.n}</option>`).join("")}</select> )</label><label style="font-size:13px;color:var(--ink2)">teste x <input type="range" data-v="x" min="-6" max="6" step="0.5" value="3" style="vertical-align:middle;width:150px"></label><button class="bt peq" data-v="ver">mostrar o domínio</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const d = A.LDOM[i], g = d.g(x); return { i, nome: d.n, x, g, existe: g > 0, dom: d.dom, ver, valor: g > 0 ? Math.log10(g) : null }; };
+    const poe = (o) => { if (o.i !== undefined && +o.i !== i) ver = false; ({ i, ver, x } = { i, ver, x, ...o }); i = Math.max(0, Math.min(A.LDOM.length - 1, Math.round(+i))); x = Math.max(-6, Math.min(6, Math.round(+x * 2) / 2)); ver = !!ver; desenha(); };
+    const desenha = () => { const e = est(), d = A.LDOM[i]; q("[data-v=g]").value = String(i); q("[data-v=x]").value = String(x);
+      const faixa = []; if (ver) for (let t = -6; t < 6; t += 0.1) if (d.g(t + 0.05) > 0) faixa.push({ x1: t, y1: 0, x2: t + 0.1, y2: 0, cor: "var(--ok)", tr: false, w: 6 });
+      q("[data-v=pal]").innerHTML = A.plano({ x: [-6.5, 6.5], y: [-8, 10], h: 250, py: 2, fs: [{ f: d.g }], segs: faixa, pts: (ver ? d.z.map((z) => ({ x: z, y: 0, oco: true, cor: "var(--ok)", r: 5 })) : []).concat(Math.abs(e.g) <= 10 ? [{ x, y: e.g, cor: e.existe ? "var(--ok)" : "var(--warn)" }] : []) });
+      q("[data-v=lt]").innerHTML = vis("x testado", F.nt(x, 1)) + vis(`valor de ${d.n}`, F.nt(e.g, 2)) + vis("log existe aqui?", e.existe ? "sim" : "não") + vis("domínio", ver ? d.dom : "?");
+      q("[data-v=st]").innerHTML = `O gráfico é o do que está <b>dentro</b> do logaritmo. O log só existe onde esse valor é positivo: onde a curva está acima do eixo x. ` + (ver ? `A faixa verde no eixo é o domínio: ${d.dom}. As bolinhas vazias são os zeros, que <b>não</b> entram (log de 0 não existe).` : `Teste alguns valores de x, decida qual é o domínio e clique em "mostrar o domínio".`); };
+    q("[data-v=g]").addEventListener("change", (ev) => poe({ i: ev.target.value })); q("[data-v=x]").addEventListener("input", (ev) => poe({ x: ev.target.value })); q("[data-v=ver]").addEventListener("click", () => poe({ ver: true }));
+    SIM.alLogDominio._ult = { poe, est }; desenha(); };
+
+  /* nome: "Escala comum e escala logarítmica" · matéria: Matemática · tema: LOG03 */
+  SIM.alEscalaLog = (el, F) => { let log = false; const NS = [1, 10, 100, 1000, 10000, 100000];
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-m="0">escala comum</button><button class="bt peq" data-m="1">escala logarítmica</button></div></div></div><div class="palco" data-v="pal" style="padding:10px 0"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const pos = (v) => (log ? Math.log10(v) / 5 : (v - 1) / 99999);
+    const est = () => ({ log, pos: NS.map(pos), espacos: NS.slice(1).map((v, k) => pos(v) - pos(NS[k])) });
+    const poe = (o) => { log = !!o.log; desenha(); };
+    const desenha = () => { el.querySelectorAll("[data-m]").forEach((b) => b.setAttribute("aria-pressed", String(!!+b.dataset.m === log))); const X = (v) => 40 + pos(v) * 480;
+      let o = `<line x1="40" y1="50" x2="520" y2="50" style="stroke:var(--ink2);stroke-width:1.6"/>`; NS.forEach((v, k) => { o += `<circle cx="${X(v)}" cy="50" r="6" style="fill:${A.COR[k % 4]}"/>` + (log || v >= 10000 ? A.T(X(v), k % 2 ? 80 : 30, F.nt(v, 0), { f: 12, w: 600 }) : ""); }); if (!log) o += A.T(40, 84, "1, 10, 100 e 1000 (um por cima do outro)", { f: 12, w: 600, a: "start" });
+      q("[data-v=pal]").innerHTML = `<svg viewBox="0 0 560 96" width="100%" style="max-width:560px">${o}</svg>`;
+      q("[data-v=st]").innerHTML = log ? `Na escala logarítmica, a posição é o <b>logaritmo</b> do número: 1, 10, 100, 1000... ficam igualmente espaçados, porque cada um é 10 vezes o anterior e log 10 = 1. Distâncias iguais significam <b>razões</b> iguais.` : `Na escala comum, distâncias iguais significam <b>diferenças</b> iguais. Com números de tamanhos tão diferentes, 1, 10, 100 e 1000 ficam todos amontoados no começo: não dá para vê-los.`; };
+    el.querySelectorAll("[data-m]").forEach((b) => b.addEventListener("click", () => poe({ log: !!+b.dataset.m })));
+    SIM.alEscalaLog._ult = { poe, est }; desenha(); };
 })();

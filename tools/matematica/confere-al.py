@@ -188,5 +188,24 @@ for k in range(1, 100):
     pr *= Fr(k, k + 1)
 ok(pr == Fr(1, 100), "LOG02: (1/2)(2/3)···(99/100) = 1/100")
 
+# ---------- LOG03 ----------
+lb = lambda a, x: Decimal(x).ln() / Decimal(a).ln()
+ok(2 ** 20 == 1048576 and 2 ** 30 > 10 ** 9 and abs(lb(2, 10 ** 6) - 20) < Decimal("0.1") and abs(lb(2, 10 ** 9) - 30) < Decimal("0.2"), "LOG03 chute: log₂ de um milhão ≈ 20 e de um bilhão ≈ 30")
+ok([Fr(2) ** k for k in (-2, -1, 0, 1, 2, 3, 4)] == [Fr(1, 4), Fr(1, 2), 1, 2, 4, 8, 16], "LOG03: tabela de log₂ x (linhas de 2ˣ trocadas)")
+XS = [Decimal("0.125"), Decimal(1), Decimal(3), Decimal(10)]
+ok(all(lb(2, x) < lb(2, y) and lb("0.5", x) > lb("0.5", y) for x in XS for y in (11, 40, 1000)), "LOG03 teorema 2: log₂ crescente e log na base 1/2 decrescente")
+ok(all(abs(lb("0.5", x) + lb(2, x)) < Decimal("1e-40") for x in (3, 8, 100)) and Fr(1, 2) ** -3 == 8, "LOG03 teorema 3: log na base 1/2 é o oposto do log na base 2; (1/2)⁻³ = 8")
+ok(all(((x * x - 5 * x + 4) > 0) == (x < 1 or x > 4) for x in [Fr(k, 4) for k in range(-20, 40)]), "LOG03: x² − 5x + 4 > 0 ⇔ x < 1 ou x > 4")
+ok(all(((x - 2) * (x - 5) > 0) == (x < 2 or x > 5) for x in [Fr(k, 4) for k in range(-20, 40)]) and (6 - 2) * (6 - 5) == 4 and (3 - 2) * (3 - 5) == -2, "LOG03 exemplo 1: domínio de log(x² − 7x + 10); valores em 6 e em 3")
+ok(Fr(3 * 4 + 1, 4) == Fr(13, 4) and Fr(13, 4) - 3 == Fr(1, 4) and lb(2, 1) + 2 == 2, "LOG03 exemplo 2: log₂(x − 3) + 2 zera em 13/4 e vale 2 em x = 4")
+ok(all((lb("0.5", x - 2) > -3) == (x < 10) for x in (Decimal("2.5"), 3, 5, 9, Decimal("9.9"), Decimal("10.5"), 12, 30)) and lb("0.5", 2) == -1, "LOG03 exemplo 3: log na base 1/2 de (x − 2) > −3 ⇔ 2 < x < 10; em x = 4 vale −1")
+ok([x for x in range(-5, 30) if x > 0 and lb("0.5", x) > -3] == list(range(1, 8)), "LOG03: log na base 1/2 de x > −3 tem os inteiros 1 a 7")
+ok(all((x - 1 > 0 and x - 1 != 1 and 5 - x > 0) == (1 < x < 5 and x != 2) for x in [Fr(k, 4) for k in range(-8, 32)]), "LOG03 chefão (a): domínio 1 < x < 5, x ≠ 2")
+ok(abs(lb(2, 2)) == 1 and abs(lb(2, "0.5")) == 1, "LOG03 chefão (b): |log₂ x| = 1 em 2 e em 1/2")
+ok(3 ** 2 == 9 > 8 == 2 ** 3 and lb(2, 3) > Decimal("1.5"), "LOG03 chefão (c): 9 > 8, logo log₂ 3 > 3/2")
+ok(all(abs((Decimal(x) + (Decimal(x) ** 2 + 1).sqrt()) * ((Decimal(x) ** 2 + 1).sqrt() - Decimal(x)) - 1) < Decimal("1e-40") for x in (0, 1, 3, 7)), "LOG03 chefão (d): (x + √(x² + 1))(√(x² + 1) − x) = 1")
+ok(len([n for n in range(1, 100) if 8 <= n <= 32]) == 25, "LOG03 chefão (e): 25 inteiros de 8 a 32")
+ok(all(b ** n * c % (b ** n - 1) == 0 and b ** n * c // (b ** n - 1) > c for b, n, c in [(2, 2, 3), (2, 1, 3), (2, 1, 5), (3, 1, 2), (3, 1, 4), (2, 2, 6), (2, 3, 7), (3, 2, 8), (2, 1, 7)]), "LOG03 exercício 16: os nove casos têm cruzamento inteiro dentro do domínio")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

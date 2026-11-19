@@ -80,7 +80,7 @@ window.CATALOGO.push(
     ["FX06","Função Composta e Inversa",[],true],
     ["LOG01","Função Exponencial",[],true],
     ["LOG02","Logaritmos e Propriedades",[],true],
-    ["LOG03","Função Logarítmica",[]],
+    ["LOG03","Função Logarítmica",[],true],
     ["LOG04","Equações e Inequações Logarítmicas",[]],
     ["SPG01","Progressão Aritmética",[]],
     ["SPG02","Progressão Geométrica",[]],
