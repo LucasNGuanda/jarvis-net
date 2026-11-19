@@ -93,7 +93,7 @@ window.CATALOGO.push(
     ["NCP02","Forma Algébrica do Número Complexo",[],true],
     ["NCP03","Forma Trigonométrica",[],true],
     ["NCP04","Lugares Geométricos (complexos)",[],true],
-    ["PL01","Introdução aos Polinômios",[]],
+    ["PL01","Introdução aos Polinômios",[],true],
     ["PL02","Operações com Polinômios",[]],
     ["PL03","Equações Algébricas",[]],
     ["PL04","Aprofundamento em Polinômios",[]],

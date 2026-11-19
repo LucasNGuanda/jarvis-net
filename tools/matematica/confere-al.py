@@ -526,5 +526,38 @@ ok(all(abs(abs(cmath.exp(1j * t) - cmath.exp(1j * (t + 2 * cmath.pi / 3))) - mat
 ok([sum(1 for x in range(-r, r + 1) for y in range(-r, r + 1) if x * x + y * y <= r * r) for r in range(1, 6)] == [5, 13, 29, 49, 81], "NCP04 exercício 16: pontos inteiros no disco de raio 1 a 5")
 ok(all((x0 + u - x0) ** 2 + v * v == (x0 - v - x0) ** 2 + u * u for x0 in range(-3, 4) for u in range(-4, 5) for v in range(-4, 5)), "NCP04 exercício 14: (x₀, 0) é equidistante de (x₀ + u, v) e (x₀ − v, u)")
 
+# ---------- PL01 ----------
+# polinômios como listas de coeficientes, da maior potência para a menor
+def pv(p, x):
+    r = 0
+    for c in p:
+        r = r * x + c
+    return r
+def phorner(p, x):
+    l = [p[0]]
+    for c in p[1:]:
+        l.append(l[-1] * x + c)
+    return l
+def padd(p, q):
+    n = max(len(p), len(q))
+    a = [0] * (n - len(p)) + list(p)
+    b = [0] * (n - len(q)) + list(q)
+    return [x + y for x, y in zip(a, b)]
+ok(phorner([2, -3, 0, 5], 2) == [2, 1, 2, 9] and 2 * 8 + (-3) * 4 + 0 * 2 + 5 * 1 == 9, "PL01 exemplo 1: 2x³ − 3x² + 5 em x = 2, linha 2, 1, 2, 9")
+ok(pv([2, -3, 0, 5], 0) == 5 and pv([2, -3, 0, 5], 1) == 4 and pv([2, -3, 0, 5], -1) == 0, "PL01 teorema 1: P(0) = 5, P(1) = 4, P(−1) = 0")
+ok(all(pv(p, 1) == sum(p) and pv(p, 0) == p[-1] and pv(p, -1) == sum(c * (-1) ** (len(p) - 1 - i) for i, c in enumerate(p)) for p in ([3, -5, 0, 2, -7], [1, 2, 3], [4, 0, 0, -1], [2, 5, -1, 3, 4])), "PL01 teorema 1 em quatro polinômios")
+ok(pol_mul([2, 0, 1], [3, -4]) == [6, -8, 3, -4] and padd([1, 3, 0], [-1, 0, 5]) == [0, 3, 5], "PL01 teorema 2: exemplos numéricos de produto e de soma")
+ok(all(padd([2, 2], [3, -6])[k] == [5, -4][k] for k in (0, 1)) and 2 + 3 == 5 and 2 * 1 + 3 * (-2) == -4, "PL01 exemplo 2: 2(x + 1) + 3(x − 2) = 5x − 4")
+ok(3 * (-3) == 5 * (-1) + (-4) and 2 * 3 == 5 * 2 + (-4), "PL01 exemplo 2: atalho com x = −1 e x = 2")
+ok(all((a + b == 0 and a - b == 0) == (a == 0 and b == 0) for a in G for b in G), "PL01 teorema 3 e chefão (e): a + b = 0 e a − b = 0 só com a = b = 0")
+ok(3 - 5 + 2 - 7 == -7, "PL01 chute: soma dos coeficientes de 3x⁴ − 5x³ + 2x − 7")
+P10 = pol_pot([1, 1, 1], 10)
+ok(sum(P10) == 3 ** 10 == 59049 and pv(P10, -1) == 1 and sum(P10[::-1][0::2]) == 29525 == (59049 + 1) // 2, "PL01 chefão (b): (x² + x + 1)¹⁰, soma 59 049 e índices pares 29 525")
+ok(all(sum(p[::-1][0::2]) * 2 == pv(p, 1) + pv(p, -1) for p in ([3, -5, 0, 2, -7], [1, 2, 3], [4, 0, 0, -1, 6, 2])), "PL01 chefão (a): soma dos coeficientes de índice par = (P(1) + P(−1))/2")
+ok(all((x + 1) ** 2 - x ** 2 == 2 * x + 1 for x in G) and all(a * (2 * x + 1) + b == 2 * a * x + (a + b) for a in G[:3] for b in G[:3] for x in G), "PL01 chefão (c): (x + 1)² − x² = 2x + 1")
+ok(all(pv(p, x) - pv(p, -x) == 2 * sum(c * x ** (len(p) - 1 - i) for i, c in enumerate(p) if (len(p) - 1 - i) % 2) for p in ([3, -5, 0, 2, -7], [1, 2, 3, 4]) for x in G), "PL01 chefão (d): P(x) − P(−x) é o dobro da parte ímpar")
+ok(all(Fr((s1 + s2) * (-v) + (s1 * u + s2 * v), u - v) == s1 for u in (1, -3, 4) for v in (-2, 2, 3) if u != v for s1 in (-5, 2, 4) for s2 in (3, -1)), "PL01 exercício 8: A pelo valor que zera o outro parêntese")
+ok(all(Fr((s1 + s2) * a - (s1 * b + s2 * a), a - b) == s1 for a in (1, -2, 0, 3) for b in (-2, 4, 1) if a != b for s1 in (3, -4) for s2 in (2, 5)), "PL01 exercício 16: frações parciais, A = N(a)/(a − b)")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)
