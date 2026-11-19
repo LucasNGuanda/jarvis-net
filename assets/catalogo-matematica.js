@@ -75,7 +75,7 @@ window.CATALOGO.push(
     ["FX01","Intuição e Definições",[],true],
     ["FX02","Função Afim",[],true],
     ["FX03","Função Quadrática",[],true],
-    ["FX04","Função Modular",[]],
+    ["FX04","Função Modular",[],true],
     ["FX05","Outras Funções Clássicas",[]],
     ["FX06","Função Composta e Inversa",[]],
     ["LOG01","Função Exponencial",[]],

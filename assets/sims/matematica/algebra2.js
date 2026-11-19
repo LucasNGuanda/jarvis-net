@@ -63,4 +63,43 @@
       q("[data-v=st]").innerHTML = `Com 40 m de cerca, largura e altura somam sempre 20. A área, x · (20 − x), é uma função quadrática de boca para baixo: ` + (x === 10 ? `você está no vértice. O quadrado de lado 10 dá a maior área possível, 100 m².` : `tem um ponto mais alto. Você está em ${F.nt(e.area, 2)} m²; continue procurando o topo da parábola.`); };
     q("[data-v=x]").addEventListener("input", (ev) => poe({ x: ev.target.value }));
     SIM.alCerca._ult = { poe, est }; desenha(); };
+
+  /* ---------- FX04 ---------- */
+  /* reta numérica com um intervalo pintado. o = { min, max, a, b, fora (pinta fora de [a, b]), fa, fb (extremo fechado?), semRot } */
+  A.intervalo = (o, D) => { const W = 560, x0 = 40, x1 = 520, X = (v) => x0 + ((v - o.min) / (o.max - o.min)) * (x1 - x0), y = 34; let s = `<line x1="${x0 - 10}" y1="${y}" x2="${x1 + 10}" y2="${y}" style="stroke:var(--ink3);stroke-width:1.4"/>`;
+    for (let v = Math.ceil(o.min); v <= o.max; v++) s += `<line x1="${X(v)}" y1="${y - 3}" x2="${X(v)}" y2="${y + 3}" style="stroke:var(--ink3)"/>`;
+    const seg = (p, q2) => `<line x1="${p}" y1="${y}" x2="${q2}" y2="${y}" style="stroke:var(--mod);stroke-width:5;stroke-linecap:round"/>`;
+    s += o.fora ? seg(x0 - 10, X(o.a)) + seg(X(o.b), x1 + 10) : seg(X(o.a), X(o.b));
+    [[o.a, o.fa], [o.b, o.fb]].forEach(([v, f]) => (s += `<circle cx="${X(v)}" cy="${y}" r="6" style="fill:${f ? "var(--mod)" : "var(--card)"};stroke:var(--mod);stroke-width:2.4"/>` + (o.semRot ? "" : A.T(X(v), y + 24, mn(v), { w: 600 }))));
+    return D ? D.svg(W, 68, s, "figura") : `<svg viewBox="0 0 ${W} 68" width="100%" style="max-width:${W}px">${s}</svg>`; };
+
+  /* nome: "O módulo é uma distância: |x − a| na reta" · matéria: Matemática · tema: FX04 */
+  SIM.alModulo = (el, F) => { let a = 2, r = 3, maior = false;
+    const sl = (n, lo, hi, v) => `<label style="font-size:13px;color:var(--ink2)">${n} <input type="range" data-v="${n}" min="${lo}" max="${hi}" step="1" value="${v}" style="vertical-align:middle;width:150px"> <b data-r="${n}" style="color:var(--ink);display:inline-block;width:26px"></b></label>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("a", -4, 4, 2)}${sl("r", 0, 5, 3)}<button class="bt peq" data-m="0">|x − a| &lt; r</button><button class="bt peq" data-m="1">|x − a| &gt; r</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => ({ a, r, maior, esq: a - r, dir: a + r, inteiros: maior ? null : Math.max(0, 2 * r - 1), sol: r === 0 && !maior ? "nenhum x" : maior ? `x < ${mn(a - r)} ou x > ${mn(a + r)}` : `${mn(a - r)} < x < ${mn(a + r)}` });
+    const poe = (o) => { ({ a, r, maior } = { a, r, maior, ...o }); a = Math.max(-4, Math.min(4, Math.round(+a))); r = Math.max(0, Math.min(5, Math.round(+r))); maior = !!maior; desenha(); };
+    const desenha = () => { const e = est(); q("[data-v=a]").value = String(a); q("[data-v=r]").value = String(r); q("[data-r=a]").textContent = mn(a); q("[data-r=r]").textContent = r; el.querySelectorAll("[data-m]").forEach((b) => b.setAttribute("aria-pressed", String(!!+b.dataset.m === maior)));
+      q("[data-v=pal]").innerHTML = A.plano({ x: [-10, 10], y: [-1, 8], h: 210, px: 2, fs: [{ f: (x) => Math.abs(x - a) }, { f: () => r, cor: "var(--warn)", tr: true }], pts: [{ x: a - r, y: r, r: 4 }, { x: a + r, y: r, r: 4 }, { x: a, y: 0, cor: "var(--ok)", rot: "a", dy: 18 }] }) + (r === 0 && !maior ? "" : A.intervalo({ min: -10, max: 10, a: a - r, b: a + r, fora: maior, fa: false, fb: false }));
+      q("[data-v=lt]").innerHTML = vis("centro a", mn(a)) + vis("raio r", r) + vis("solução", e.sol);
+      q("[data-v=st]").innerHTML = `|x − ${a < 0 ? "(" + mn(a) + ")" : a}| é a <b>distância</b> de x até ${mn(a)}. ` + (maior ? `Distância maior que ${r}: os pontos que ficam <b>fora</b> do intervalo de centro ${mn(a)} e raio ${r}. São dois pedaços, um de cada lado.` : r === 0 ? `Distância menor que 0 não existe: nenhum x serve.` : `Distância menor que ${r}: os pontos a menos de ${r} de ${mn(a)}, isto é, entre ${mn(a - r)} e ${mn(a + r)}. No gráfico, é onde o V fica abaixo da linha tracejada.`); };
+    ["a", "r"].forEach((n) => q(`[data-v=${n}]`).addEventListener("input", (ev) => poe({ [n]: ev.target.value }))); el.querySelectorAll("[data-m]").forEach((b) => b.addEventListener("click", () => poe({ maior: !!+b.dataset.m })));
+    SIM.alModulo._ult = { poe, est }; desenha(); };
+
+  A.DOBRA = [
+    { n: "x − 2", f: (x) => x - 2 }, { n: "x² − 4", f: (x) => x * x - 4 }, { n: "−x² + 2x + 3", f: (x) => -x * x + 2 * x + 3 },
+    { n: "x³/4 − x", f: (x) => (x * x * x) / 4 - x }, { n: "−2x + 1", f: (x) => -2 * x + 1 }, { n: "x² + 1", f: (x) => x * x + 1 }];
+  /* nome: "Dobre o gráfico: de f(x) para |f(x)|" · matéria: Matemática · tema: FX04 */
+  SIM.alDobra = (el, F) => { let i = 1, mod = false;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><label style="font-size:13px;color:var(--ink2)">f(x) = <select data-v="f" class="bt peq" style="font-size:14px">${A.DOBRA.map((d, k) => `<option value="${k}">${d.n}</option>`).join("")}</select></label><button class="bt peq" data-v="m">aplicar o módulo</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const f = A.DOBRA[i].f; let neg = false, mi = Infinity; for (let x = -5; x <= 5.0001; x += 0.01) { const y = f(x); if (y < -1e-9) neg = true; mi = Math.min(mi, mod ? Math.abs(y) : y); } return { i, mod, temNegativo: neg, minimo: mi, muda: neg }; };
+    const poe = (o) => { ({ i, mod } = { i, mod, ...o }); i = Math.max(0, Math.min(A.DOBRA.length - 1, Math.round(+i))); mod = !!mod; desenha(); };
+    const desenha = () => { const e = est(), f = A.DOBRA[i].f; q("[data-v=f]").value = String(i); q("[data-v=m]").textContent = mod ? "tirar o módulo" : "aplicar o módulo"; q("[data-v=m]").setAttribute("aria-pressed", String(mod));
+      q("[data-v=pal]").innerHTML = A.plano({ x: [-5, 5], y: [-6, 8], h: 250, py: 2, fs: mod ? [{ f, cor: "var(--ink3)", tr: true }, { f: (x) => Math.abs(f(x)) }] : [{ f }] });
+      q("[data-v=lt]").innerHTML = vis("gráfico de", mod ? `|${A.DOBRA[i].n}|` : A.DOBRA[i].n) + vis("tem parte abaixo do eixo?", mod ? "não" : e.temNegativo ? "sim" : "não");
+      q("[data-v=st]").innerHTML = mod ? (e.muda ? `O módulo deixa como está o que já era positivo e <b>rebate para cima</b>, como uma dobra de papel no eixo x, tudo o que era negativo (a curva tracejada é a original). Onde a função cruzava o eixo aparece um bico.` : `Esta função nunca é negativa: o módulo não muda nada, e |f(x)| = f(x).`) : `Antes de clicar: que parte deste gráfico vai mudar quando se aplicar o módulo, e para onde ela vai?`; };
+    q("[data-v=f]").addEventListener("change", (ev) => poe({ i: ev.target.value, mod: false })); q("[data-v=m]").addEventListener("click", () => poe({ mod: !mod }));
+    SIM.alDobra._ult = { poe, est }; desenha(); };
 })();

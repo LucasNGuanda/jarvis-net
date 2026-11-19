@@ -71,5 +71,33 @@ ok(30 ** 2 / 20 == 45 and 30 * 3 - 5 * 9 == 45 and 40 / 5 == 8, "FX03: h = 30t �
 ok(all(2 * x * x - 2 * S * x + S * S == x * x + (S - x) ** 2 for x in G for S in (4, 10, 30)) and 2 * 5 ** 2 == 50, "FX03: x² + (S − x)² = 2x² − 2Sx + S²; para S = 10, mínimo 50")
 ok(25 * (100 - 2 * 25) == 1250 and max(q * (100 - 2 * q) for q in range(0, 51)) == 1250, "FX03: receita p(100 − 2p) máxima em p = 25")
 
+# ---------- FX04 ----------
+GM = [Fr(-7), Fr(-3), Fr(-1, 2), Fr(0), Fr(2), Fr(5)]
+ok(abs(3 - 8) == 5 and abs(-5) == 5 and abs(0) == 0, "FX04: |3 − 8| = 5, |−5| = 5, |0| = 0")
+ok(all(abs(a) ** 2 == a * a and abs(a * b) == abs(a) * abs(b) for a in GM for b in GM), "FX04 teorema 1: |a|² = a² e |ab| = |a||b|")
+ok(all(Decimal(float(a * a)).sqrt() == abs(float(a)) for a in GM) and math.isqrt((-3) ** 2) == 3, "FX04 teorema 1: √(a²) = |a|; √((−3)²) = 3")
+ok(all((abs(Fr(x, 4) - a) < r) == (a - r < Fr(x, 4) < a + r) for a in (-2, 0, 2) for r in (1, 3) for x in range(-40, 41)), "FX04 teorema 2: |x − a| < r ⇔ a − r < x < a + r")
+ok([x for x in range(-10, 11) if abs(x - 2) < 3] == [0, 1, 2, 3, 4], "FX04 teorema 2: |x − 2| < 3 tem os inteiros 0 a 4 (−1 < x < 5)")
+ok(all(abs(a + b) <= abs(a) + abs(b) and ((abs(a + b) == abs(a) + abs(b)) == (a * b >= 0)) for a in GM for b in GM), "FX04 teorema 3: desigualdade triangular, com igualdade só quando ab ≥ 0")
+ok(abs(7 - 4) == 3 and abs(7) + abs(-4) == 11, "FX04 teorema 3: |7 + (−4)| = 3 e |7| + |−4| = 11")
+ok(abs(-3 + 3) == 0 and abs(-3) + 3 == 6, "FX04 pegadinha: em x = −3, |x + 3| = 0 e |x| + 3 = 6")
+ok(abs(2 * 5 - 4) == 6 and abs(2 * (-1) - 4) == 6, "FX04 exemplo 1: |2x − 4| = 6 tem soluções 5 e −1")
+ok(abs(2 * 10 - 8) == 10 + 2 and abs(2 * 2 - 8) == 2 + 2, "FX04 exemplo 3: |2x − 8| = x + 2 tem soluções 10 e 2")
+ok([x for x in range(-20, 21) if abs(x - 1) + abs(x - 3) == 4] == [0, 4], "FX04 chefão (a): |x − 1| + |x − 3| = 4 → 0 e 4")
+ok(all((abs(Fr(x, 4) - 2) < abs(Fr(x, 4) + 4)) == (Fr(x, 4) > -1) for x in range(-60, 61)), "FX04 chefão (b): |x − 2| < |x + 4| ⇔ x > −1")
+ok(min((abs(Fr(x, 4) - 1) + abs(Fr(x, 4) - 2) + abs(Fr(x, 4) - 6), Fr(x, 4)) for x in range(-40, 60)) == (5, 2), "FX04 chefão (c): mínimo 5, em x = 2")
+n4 = sum(1 for x in range(-200, 200) for y in range(-200, 200) if abs(x + 0.5) + abs(y + 0.5) <= 200)
+ok(4 * Fr(2 * 2, 2) == 8 and abs(n4 / 100 ** 2 - 8) < 0.05, "FX04 chefão (d): área de |x| + |y| ≤ 2 é 4 triângulos de área 2 = 8 (a contagem em grade de 1/100 dá 8,04: a borda entra inteira)")
+ok(all(abs(abs(a) - abs(b)) <= abs(a - b) for a in GM for b in GM), "FX04 chefão (e): ||a| − |b|| ≤ |a − b|")
+def nsol(k):
+    s = set()
+    for v in (4 + k, 4 - k):
+        if v > 0:
+            s |= {round(v ** 0.5, 9), -round(v ** 0.5, 9)}
+        elif v == 0:
+            s.add(0.0)
+    return len(s)
+ok([nsol(k) for k in (0, 1, 2, 3, 4, 5, 7)] == [2, 4, 4, 4, 3, 2, 2], "FX04: |x² − 4| = k tem 2, 4, 4, 4, 3, 2, 2 soluções para k = 0, 1, 2, 3, 4, 5, 7")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)
