@@ -96,7 +96,7 @@ window.CATALOGO.push(
     ["PL01","Introdução aos Polinômios",[],true],
     ["PL02","Operações com Polinômios",[],true],
     ["PL03","Equações Algébricas",[],true],
-    ["PL04","Aprofundamento em Polinômios",[]],
+    ["PL04","Aprofundamento em Polinômios",[],true],
     ["IC01","Introdução ao Cálculo",[]],
   ] },
   /* aba Cálculo (β 4.0: os 5 módulos vieram da física com os mesmos ids, códigos e ordem; Cálculo 3 e 4 continuam "em breve") */

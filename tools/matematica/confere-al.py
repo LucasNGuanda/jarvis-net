@@ -627,5 +627,38 @@ ok(all(pv([1, 0, -2], x) != 0 for x in (1, -1, 2, -2)), "PL03 chefão (d): x² �
 ok(2 ** 2 - 2 * 3 == -2, "PL03 chefão (e): soma dos quadrados das raízes de x³ − 2x² + 3x − 4")
 ok(praizes([-1, 3, 4]) == [1, -6, 5, 12], "PL03 chute: (x + 1)(x − 3)(x − 4) = x³ − 6x² + 5x + 12")
 
+# ---------- PL04 ----------
+def pder(p):
+    n = len(p) - 1
+    return [c * (n - i) for i, c in enumerate(p[:-1])] or [0]
+P_d = [1, 0, -3, 2]
+ok(pol_mul(pol_mul([1, -1], [1, -1]), [1, 2]) == P_d and pder(P_d) == [3, 0, -3] and pv(P_d, 1) == 0 and pv(pder(P_d), 1) == 0 and pv(P_d, -2) == 0 and pv(pder(P_d), -2) == 9, "PL04 teorema 1 e exemplo 1: x³ − 3x + 2 = (x − 1)²(x + 2), P(1) = P′(1) = 0, P′(−2) = 9")
+ok(all(pder(praizes([a, a, b])) == pol_mul([1, -a], [3, -(a + 2 * b)]) for a in range(-3, 4) for b in range(-4, 5)), "PL04 exemplo 1: a derivada de (x − a)²(x − b) é (x − a)(3x − a − 2b)")
+ok(all((pv(praizes([a] * m + [b] * (3 - m)), a) == 0) and [pv(d, a) == 0 for d in (pder(praizes([a] * m + [b] * (3 - m))), pder(pder(praizes([a] * m + [b] * (3 - m)))))] == [m >= 2, m >= 3] for a in (1, -1, 2, -2) for b in (3, -3, 4) for m in (1, 2, 3)), "PL04 exercício 2: a multiplicidade pelo número de derivadas nulas")
+R4 = [2, -9, 14, -9, 2]
+ok(pol_mul(pol_mul([1, -1], [1, -1]), pol_mul([2, -1], [1, -2])) == R4 and 2 * 4 - 9 * 2 + 10 == 0 and 2 * Fr(25, 4) - 9 * Fr(5, 2) + 10 == 0 and 2 + Fr(1, 2) == Fr(5, 2) and 1 + 1 == 2 and 14 - 2 * 2 == 10, "PL04 exemplo 2 e teorema 3: 2x⁴ − 9x³ + 14x² − 9x + 2 e a equação em t, 2t² − 9t + 10 = 0")
+ok(all((x + 1 / x) ** 2 - 2 == x ** 2 + 1 / x ** 2 and (x + 1 / x) ** 3 - 3 * (x + 1 / x) == x ** 3 + 1 / x ** 3 for x in G if x != 0), "PL04: x² + 1/x² = t² − 2 e x³ + 1/x³ = t³ − 3t")
+def rec4(p, q):
+    return pol_mul([p, -(p * p + 1), p], [q, -(q * q + 1), q])
+ok(all(rec4(p, q) == rec4(p, q)[::-1] and all(pv(rec4(p, q), x) == 0 for x in (Fr(p), Fr(1, p), Fr(q), Fr(1, q))) for p in (1, 2, 3, -2, 4) for q in (2, 3, -3, 5)), "PL04: recíprocas de grau 4 montadas com raízes p, 1/p, q, 1/q")
+ok(all(pv(rec4(p, q), x) * 1 == (p * q * (x + 1 / x) ** 2 - (p * (q * q + 1) + q * (p * p + 1)) * (x + 1 / x) + (p * p + 1) * (q * q + 1)) * x * x for p in (2, 3) for q in (2, -3) for x in G if x != 0), "PL04 teorema 3: dividir por x² e trocar por t reproduz a equação (identidade em frações)")
+Pt = [1, -2, -5, 6]
+ok(praizes([-2, 1, 3]) == Pt and all(pv(Pt[::-1], Fr(1, r)) == 0 for r in (-2, 1, 3)) and Fr(6, 27) - Fr(5, 9) - Fr(2, 3) + 1 == 0, "PL04 teorema 2: inverter os coeficientes de x³ − 2x² − 5x + 6 dá as raízes inversas")
+def pdesloca(p, k):
+    q = [0]
+    for c in p:
+        q = ptrim(padd(pol_mul(q, [1, -k]), [c]))
+    return q
+ok(all(pdesloca(praizes(rs), k) == praizes([r + k for r in rs]) and [c * k ** i for i, c in enumerate(praizes(rs))] == praizes([k * r for r in rs]) for rs in ((-2, 1, 3), (1, -2, 3), (2, 2, -1)) for k in (2, 3, -2, -1)), "PL04 teorema 2: somar k (trocar x por x − k) e multiplicar por k (potências crescentes de k)")
+C6 = [6, -35, 62, -35, 6]
+ok(pol_mul([2, -5, 2], [3, -10, 3]) == C6 and all(pv(C6, x) == 0 for x in (2, Fr(1, 2), 3, Fr(1, 3))) and 62 - 12 == 50 and 35 * 35 - 4 * 6 * 50 == 25 and Fr(35 + 5, 12) == Fr(10, 3) and Fr(35 - 5, 12) == Fr(5, 2), "PL04 chefão (a): 6x⁴ − 35x³ + 62x² − 35x + 6")
+ok([pv([1, 0, -3, 1], x) for x in (-2, -1, 0, 1, 2)] == [-1, 3, 1, -1, 3], "PL04 chefão (b): x³ − 3x + 1 em −2, −1, 0, 1, 2")
+ok(pv([1, 0, -3, 2], 1) == 0 and pv([1, 0, -3, -2], -1) == 0 and all((pv([1, 0, -3, k], 1) == 0) == (k == 2) and (pv([1, 0, -3, k], -1) == 0) == (k == -2) for k in range(-6, 7)), "PL04 chefão (d): x³ − 3x + k tem raiz dupla só com k = ±2")
+ok([c * 2 ** i for i, c in enumerate([1, -2, 3, -4])] == [1, -4, 12, -32] and [1, -2, 3, -4][::-1] == [-4, 3, -2, 1], "PL04 chefão (e): raízes dobradas e invertidas de x³ − 2x² + 3x − 4")
+ok(all(pv([1, 0, 1, -(m ** 3 + m + 1)], m) == -1 and pv([1, 0, 1, -(m ** 3 + m + 1)], m + 1) == 3 * m * m + 3 * m + 1 > 0 for m in range(-2, 3)), "PL04 exercício 8: x³ + x − (m³ + m + 1) muda de sinal entre m e m + 1")
+ok(all(sum((r + k) ** 2 for r in rs) == (sum(rs) ** 2 - 2 * (rs[0] * rs[1] + rs[0] * rs[2] + rs[1] * rs[2])) + 2 * k * sum(rs) + 3 * k * k for rs in ((1, -2, 3), (2, 2, -1), (-3, 1, 1)) for k in range(-3, 4)), "PL04 exercício 15: soma dos quadrados das raízes deslocadas")
+ok(all(praizes([a, a, a]) == [1, -3 * a, 3 * a * a, -a ** 3] for a in range(-4, 5)), "PL04 exercício 16: (x − a)³ = x³ − 3ax² + 3a²x − a³")
+ok(all(praizes([a, a, -2 * a]) == [1, 0, -3 * a * a, 2 * a ** 3] for a in range(-3, 4)), "PL04 exercício 3: (x − a)²(x + 2a) = x³ − 3a²x + 2a³")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)
