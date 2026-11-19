@@ -91,7 +91,7 @@ window.CATALOGO.push(
     ["BW01","Binômio de Newton",[],true],
     ["NCP01","Unidade Imaginária",[],true],
     ["NCP02","Forma Algébrica do Número Complexo",[],true],
-    ["NCP03","Forma Trigonométrica",[]],
+    ["NCP03","Forma Trigonométrica",[],true],
     ["NCP04","Lugares Geométricos (complexos)",[]],
     ["PL01","Introdução aos Polinômios",[]],
     ["PL02","Operações com Polinômios",[]],

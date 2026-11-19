@@ -470,5 +470,44 @@ ok(all(cm((-q * m, q), (m * b, b))[1] == 0 for q in range(-4, 6) for m in (2, 3,
 ok(all(cm((-q * m, q), (a, -m * a))[0] == 0 for q in range(-4, 6) for m in (1, 2, 3, -2) for a in (1, 2, -1)), "NCP02 exercício 15: com k = −qm o quociente é imaginário puro")
 ok(all(cs((x, y), (k * x, -k * y)) == ((1 + k) * x, (1 - k) * y) for x in range(-5, 6) for y in range(-5, 6) for k in (2, 3)), "NCP02 exercício 13: z + k·conj(z)")
 
+# ---------- NCP03 ----------
+# números da forma p + q√3 (p, q racionais), exatos: par (p, q); complexos com essas coordenadas: par de pares
+def r3m(x, y):
+    return (x[0] * y[0] + 3 * x[1] * y[1], x[0] * y[1] + x[1] * y[0])
+def r3s(x, y):
+    return (x[0] + y[0], x[1] + y[1])
+def r3n(x):
+    return (-x[0], -x[1])
+def c3m(z, w):
+    return (r3s(r3m(z[0], w[0]), r3n(r3m(z[1], w[1]))), r3s(r3m(z[0], w[1]), r3m(z[1], w[0])))
+def c3p(z, n):
+    r = ((1, 0), (0, 0))
+    for _ in range(n):
+        r = c3m(r, z)
+    return r
+R0 = (0, 0)
+ok(all(mc + ms == 4 for mc, ms in ((4, 0), (3, 1), (2, 2), (1, 3), (0, 4))), "NCP03: tabela dos notáveis, cos² + sen² = (m_c + m_s)/4 = 1")
+ok(all(abs(math.cos(math.radians(g)) ** 2 * 4 - m) < 1e-12 for g, m in ((0, 4), (30, 3), (45, 2), (60, 1), (90, 0), (120, 1), (135, 2), (150, 3), (180, 4))), "NCP03: 4cos²θ = 4, 3, 2, 1, 0 nos ângulos notáveis")
+Z120 = ((-1, 0), (0, 1))
+ok(r3s(r3m(Z120[0], Z120[0]), r3m(Z120[1], Z120[1])) == (4, 0), "NCP03 exemplo 1: |−1 + √3 i|² = 1 + 3 = 4")
+ok(6 * 2 == 12 and 150 + 30 == 180 and 6 // 2 == 3 and 150 - 30 == 120, "NCP03 exemplo 2: módulos e argumentos do produto e do quociente")
+Z150, W30 = ((0, -3), (3, 0)), ((0, 1), (1, 0))  # 6 cis 150° = −3√3 + 3i ; 2 cis 30° = √3 + i
+ok(c3m(Z150, W30) == ((-12, 0), R0), "NCP03 exemplo 2: (−3√3 + 3i)(√3 + i) = −12, exato")
+ok(c3m(((Fr(-3, 2), 0), (0, Fr(3, 2))), W30) == Z150, "NCP03 exemplo 2: (−3/2 + (3√3/2)i)(√3 + i) = −3√3 + 3i (o quociente confere)")
+ok(c3p(W30, 6) == ((-64, 0), R0), "NCP03 exemplo 3: (√3 + i)⁶ = −64, exato")
+ok(cp((1, 1), 8) == (16, 0) and 8 * 45 == 360, "NCP03 teorema 2: (1 + i)⁸ = 16")
+ok(cm((0, 1), (1, 1)) == (-1, 1) and 90 + 45 == 135, "NCP03 teorema 1: i(1 + i) = −1 + i, a 135°")
+ok(c3p(((-1, 0), (0, 1)), 3) == ((8, 0), R0) and c3p(((-1, 0), (0, -1)), 3) == ((8, 0), R0), "NCP03 teorema 3: (−1 ± √3 i)³ = 8, exato")
+ok(c3p(((1, 0), (0, 1)), 12) == ((4096, 0), R0), "NCP03 chefão (a): (1 + √3 i)¹² = 4096, exato")
+ok(c3p(((1, 0), (0, 1)), 3) == ((-8, 0), R0) and c3p(((1, 0), (0, -1)), 3) == ((-8, 0), R0) and (-2) ** 3 == -8, "NCP03 chefão (b): raízes cúbicas de −8")
+import cmath
+ok(all(abs(sum(cmath.exp(2j * cmath.pi * k / n) for k in range(n))) < 1e-12 for n in range(2, 40)), "NCP03 chefão (c): soma das raízes n-ésimas da unidade = 0 (numérico, n até 39)")
+ok(all(abs(math.cos(3 * t) - (4 * math.cos(t) ** 3 - 3 * math.cos(t))) < 1e-12 and abs(math.sin(3 * t) - (3 * math.sin(t) - 4 * math.sin(t) ** 3)) < 1e-12 for t in [k * 0.1 for k in range(-40, 41)]), "NCP03 chefão (d): cos 3θ e sen 3θ (numérico)")
+ok(all(c ** 3 - 3 * c * (1 - c * c) == 4 * c ** 3 - 3 * c for c in G), "NCP03 chefão (d): c³ − 3c(1 − c²) = 4c³ − 3c")
+ok(Fr(9, 4) + Fr(3, 4) == 3, "NCP03 chefão (e): |ω − 1|² = 9/4 + 3/4 = 3")
+ok(all((180 // math.gcd(180, g)) * g % 180 == 0 and all(n * g % 180 != 0 for n in range(1, 180 // math.gcd(180, g))) for g in (12, 15, 20, 24, 30, 36, 40, 45, 50, 72, 100, 108, 135, 150)), "NCP03 exercício 14: 180/mdc(180, g) é o menor expoente que dá número real")
+ok(all(n * g % 180 == 0 for g, n in ((60, 3), (30, 6), (45, 4), (90, 2), (120, 3), (60, 6), (45, 8), (36, 5), (20, 9), (72, 5))), "NCP03 exercício 10: n·θ múltiplo de 180° em todos os pares")
+ok(cp((1, 1), 2) == (0, 2), "NCP03 chute: (1 + i)² = 2i")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

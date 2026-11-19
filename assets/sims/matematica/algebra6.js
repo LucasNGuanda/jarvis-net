@@ -199,4 +199,71 @@
       q("[data-v=st]").innerHTML = ["O problema é o i no denominador. A ideia: multiplicar em cima e embaixo por um número que deixe o denominador real. Qual? Pense antes de clicar.", `Multiplique em cima e embaixo pelo <b>conjugado do denominador</b>, ${cx.txt(e.conj)}. O valor da fração não muda (é multiplicar por 1).`, `Em cima, distributiva e i² = −1: ${par(z)} · ${par(e.conj)} = ${cx.txt(e.num)}.`, `Embaixo, um número vezes o seu conjugado é o módulo ao quadrado: ${mn(w[0])}² + ${w[1] < 0 ? "(" + mn(w[1]) + ")" : w[1]}² = ${e.den}. O i sumiu do denominador.`, `Agora é só dividir a parte real e a imaginária por ${e.den}: ${e.resTxt}. Conferência: multiplique o resultado pelo denominador original e veja voltar ${cx.txt(z)}.`][passo]; q("[data-v=prox]").disabled = passo >= 4; };
     q("[data-v=novo]").addEventListener("click", novo); q("[data-v=prox]").addEventListener("click", avanca);
     SIM.alDivC._ult = { est, novo, avanca, poe: (o) => { z = o.z; w = o.w; passo = 0; desenha(); }, semente: (s) => { r = rng(s); novo(); } }; desenha(); };
+
+  /* ---------- NCP03 ---------- */
+  /* ângulos notáveis: cos g = sinal · √m / 2, com m em {0, 1, 2, 3, 4}; só múltiplos de 30° e de 45° */
+  const COSM = { 0: [4, 1], 30: [3, 1], 45: [2, 1], 60: [1, 1], 90: [0, 1], 120: [1, -1], 135: [2, -1], 150: [3, -1], 180: [4, -1], 210: [3, -1], 225: [2, -1], 240: [1, -1], 270: [0, 1], 300: [1, 1], 315: [2, 1], 330: [3, 1] };
+  const norm = (g) => ((g % 360) + 360) % 360, rad = (g) => (g * Math.PI) / 180;
+  cx.norm = norm; cx.NOTAVEIS = Object.keys(COSM).map(Number);
+  cx.cosm = (g) => COSM[norm(g)]; cx.senm = (g) => COSM[norm(g - 90)];
+  /* ρ · (sinal · √m / 2) escrito de forma exata: em TeX (t = true) ou em texto */
+  const termo = (rho, [m, s], t) => { if (m === 0) return { z: true, neg: false, s: "0" }; const neg = s < 0, f = m === 4 ? M.fr(rho) : M.fr(rho, 2), rz = m === 2 || m === 3 ? (t ? `\\sqrt{${m}}` : `√${m}`) : ""; let c;
+    if (f.d === 1) c = (f.n === 1 && rz ? "" : String(f.n)) + rz; else c = t ? `\\dfrac{${f.n === 1 && rz ? "" : f.n}${rz}}{${f.d}}` : `${f.n === 1 && rz ? "" : f.n}${rz}/${f.d}`; return { z: false, neg, s: c, um: f.d === 1 && f.n === 1 && !rz }; };
+  /* forma algébrica exata de ρ(cos g + i sen g), g notável */
+  cx.exato = (rho, g, t = true) => { const a = termo(rho, cx.cosm(g), t), b = termo(rho, cx.senm(g), t), me = t ? "-" : "−", ib = b.um ? "i" : !t && /\//.test(b.s) ? `(${b.s})i` : `${b.s}i`; if (b.z) return (a.neg ? me : "") + a.s; if (a.z) return (b.neg ? me : "") + ib; return `${a.neg ? me : ""}${a.s} ${b.neg ? me : "+"} ${ib}`; };
+  /* ρ cos g e ρ sen g exatos, em TeX */
+  cx.cosT = (g, rho = 1) => { const a = termo(rho, cx.cosm(g), true); return (a.neg ? "-" : "") + a.s; };
+  cx.senT = (g, rho = 1) => { const a = termo(rho, cx.senm(g), true); return (a.neg ? "-" : "") + a.s; };
+  cx.dePolar = (rho, g) => [rho * Math.cos(rad(g)), rho * Math.sin(rad(g))];
+  cx.polar = (z) => ({ rho: Math.hypot(z[0], z[1]), g: norm((Math.atan2(z[1], z[0]) * 180) / Math.PI) });
+  /* as n raízes n-ésimas de ρ(cos g + i sen g): módulo ρ^(1/n), argumentos (g + 360k)/n */
+  cx.raizes = (rho, g, n) => Array.from({ length: n }, (_, k) => ({ rho: Math.pow(rho, 1 / n), g: (norm(g) + 360 * k) / n }));
+  cx.trigT = (rho, g) => `${rho === 1 ? "" : rho}${rho === 1 ? "" : "("}\\cos ${g}^\\circ + i\\operatorname{sen} ${g}^\\circ${rho === 1 ? "" : ")"}`;
+  cx.trigS = (rho, g) => `${rho === 1 ? "" : mn(rho) + " "}(cos ${mn(g)}° + i sen ${mn(g)}°)`;
+  /* arco de circunferência como uma lista de segmentos, para o A.plano */
+  cx.arco = (r, g0, g1, cor) => { const n = Math.max(2, Math.ceil(Math.abs(g1 - g0) / 8)), s = []; for (let k = 0; k < n; k++) { const a = rad(g0 + ((g1 - g0) * k) / n), b = rad(g0 + ((g1 - g0) * (k + 1)) / n); s.push({ x1: r * Math.cos(a), y1: r * Math.sin(a), x2: r * Math.cos(b), y2: r * Math.sin(b), cor: cor || "var(--warn)", tr: false, w: 2 }); } return s; };
+  const slG = (k, r, lo, hi, st, v, w = 130) => `<label style="font-size:13px;color:var(--ink2)">${r} <input type="range" data-v="${k}" min="${lo}" max="${hi}" step="${st}" value="${v}" style="vertical-align:middle;width:${w}px"> <b data-v="${k}r" style="color:var(--ink);display:inline-block;width:38px"></b></label>`;
+  const n2 = (F, v) => F.nt(Math.abs(v) < 5e-10 ? 0 : v, 2);
+  const algN = (F, z) => { const a = Math.abs(z[0]) < 5e-10 ? 0 : z[0], b = Math.abs(z[1]) < 5e-10 ? 0 : z[1]; return b === 0 ? F.nt(a, 2) : a === 0 ? `${F.nt(b, 2)}i` : `${F.nt(a, 2)} ${b < 0 ? "−" : "+"} ${F.nt(Math.abs(b), 2)}i`; };
+
+  /* nome: "Módulo e argumento: o endereço polar de z" · matéria: Matemática · tema: NCP03 */
+  SIM.alPolar = (el, F) => { let rho = 2, g = 60;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${slG("rho", "módulo ρ", 1, 5, 1, 2)}${slG("g", "argumento θ", 0, 345, 15, 60, 200)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const z = cx.dePolar(rho, g), notavel = cx.NOTAVEIS.includes(g); return { rho, g, z, notavel, exato: notavel ? cx.exato(rho, g, false) : null, quadrante: g % 90 === 0 ? "sobre um eixo" : `${Math.floor(g / 90) + 1}º` }; };
+    const poe = (o) => { if (o.rho !== undefined) rho = Math.max(1, Math.min(5, Math.round(+o.rho))); if (o.g !== undefined) g = Math.max(0, Math.min(345, Math.round(+o.g / 15) * 15)); desenha(); };
+    const desenha = () => { const e = est(); q("[data-v=rho]").value = String(rho); q("[data-v=g]").value = String(g); q("[data-v=rhor]").textContent = String(rho); q("[data-v=gr]").textContent = g + "°";
+      q("[data-v=pal]").innerHTML = A.planoC({ x: [-8, 8], y: [-5.6, 5.6], h: 310, circs: [{ x: 0, y: 0, r: rho }], segs: [{ x1: e.z[0], y1: e.z[1], x2: e.z[0], y2: 0 }, { x1: e.z[0], y1: e.z[1], x2: 0, y2: e.z[1] }, ...cx.arco(0.8, 0, g, "var(--mod)"), cx.vet(e.z, "var(--warn)")], pts: [{ x: e.z[0], y: e.z[1], r: 5, rot: "z" }] });
+      q("[data-v=lt]").innerHTML = vis("forma trigonométrica", cx.trigS(rho, g)) + vis("a = ρ cos θ", n2(F, e.z[0])) + vis("b = ρ sen θ", n2(F, e.z[1])) + vis("forma algébrica", e.exato || algN(F, e.z)) + vis("quadrante", e.quadrante);
+      q("[data-v=st]").innerHTML = `O ponto z fica a distância ρ = ${rho} da origem (o módulo), na direção que faz ${g}° com o eixo real positivo, medidos no sentido anti-horário (o argumento, o arco roxo). As duas coordenadas saem do triângulo retângulo tracejado: a = ρ cos θ e b = ρ sen θ.${e.notavel ? "" : " Este ângulo não é notável: os valores estão arredondados."}`; };
+    q("[data-v=rho]").addEventListener("input", (ev) => poe({ rho: ev.target.value })); q("[data-v=g]").addEventListener("input", (ev) => poe({ g: ev.target.value }));
+    SIM.alPolar._ult = { poe, est }; desenha(); };
+
+  /* nome: "Multiplicar é girar e esticar" · matéria: Matemática · tema: NCP03 */
+  SIM.alProdPolar = (el, F) => { let r1 = 2, g1 = 30, r2 = 1.5, g2 = 60, op = "mul";
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${slG("r1", "|z|", 0.5, 3, 0.5, 2, 90)}${slG("g1", "arg z", 0, 345, 15, 30, 150)}${slG("r2", "|w|", 0.5, 3, 0.5, 1.5, 90)}${slG("g2", "arg w", 0, 345, 15, 60, 150)}<button class="bt peq" data-o="mul">z · w</button><button class="bt peq" data-o="div">z ÷ w</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const z = cx.dePolar(r1, g1), w = cx.dePolar(r2, g2), rr = op === "mul" ? r1 * r2 : r1 / r2, gg = norm(op === "mul" ? g1 + g2 : g1 - g2), d = w[0] * w[0] + w[1] * w[1], direto = op === "mul" ? [z[0] * w[0] - z[1] * w[1], z[0] * w[1] + z[1] * w[0]] : [(z[0] * w[0] + z[1] * w[1]) / d, (z[1] * w[0] - z[0] * w[1]) / d]; return { r1, g1, r2, g2, op, rho: rr, g: gg, z, w, res: cx.dePolar(rr, gg), direto }; };
+    const poe = (o) => { const lr = (v) => Math.max(0.5, Math.min(3, Math.round(+v * 2) / 2)), lg = (v) => Math.max(0, Math.min(345, Math.round(+v / 15) * 15)); if (o.r1 !== undefined) r1 = lr(o.r1); if (o.r2 !== undefined) r2 = lr(o.r2); if (o.g1 !== undefined) g1 = lg(o.g1); if (o.g2 !== undefined) g2 = lg(o.g2); if (o.op) op = o.op; desenha(); };
+    const desenha = () => { const e = est(); [["r1", r1, ""], ["g1", g1, "°"], ["r2", r2, ""], ["g2", g2, "°"]].forEach(([k, v, u]) => { q(`[data-v=${k}]`).value = String(v); q(`[data-v=${k}r]`).textContent = F.nt(v) + u; });
+      el.querySelectorAll("[data-o]").forEach((b) => b.classList.toggle("on", b.dataset.o === op));
+      q("[data-v=pal]").innerHTML = A.planoC({ x: [-13, 13], y: [-9.3, 9.3], h: 330, px: 2, py: 2, circs: [{ x: 0, y: 0, r: e.rho }], segs: [cx.vet(e.z, "var(--ok)"), cx.vet(e.w, "var(--mod)"), { ...cx.vet(e.res), w: 3 }, ...cx.arco(Math.min(1.6, e.rho * 0.6), 0, e.g, "var(--warn)")], pts: [{ x: e.z[0], y: e.z[1], r: 4.5, cor: "var(--ok)", rot: "z" }, { x: e.w[0], y: e.w[1], r: 4.5, cor: "var(--mod)", rot: "w" }, { x: e.res[0], y: e.res[1], r: 5, rot: op === "mul" ? "z · w" : "z ÷ w" }] });
+      q("[data-v=lt]").innerHTML = vis("módulos", `${F.nt(r1)} ${op === "mul" ? "·" : "÷"} ${F.nt(r2)} = ${F.nt(e.rho, 2)}`) + vis("argumentos", `${g1}° ${op === "mul" ? "+" : "−"} ${g2}° = ${mn(op === "mul" ? g1 + g2 : g1 - g2)}°${(op === "mul" ? g1 + g2 : g1 - g2) !== e.g ? ` → ${e.g}°` : ""}`) + vis(op === "mul" ? "z · w" : "z ÷ w", algN(F, e.res));
+      q("[data-v=st]").innerHTML = op === "mul" ? `No produto, os módulos se <b>multiplicam</b> e os argumentos se <b>somam</b>: multiplicar por w gira z de ${g2}° e estica (ou encolhe) ${F.nt(r2)} vez(es). Ponha |w| = 1 e veja um giro puro; ponha arg w = 0° e veja só o esticão.` : `Na divisão, os módulos se <b>dividem</b> e os argumentos se <b>subtraem</b>: dividir por w desfaz o que multiplicar por w faria (gira ${g2}° no sentido horário e divide o tamanho por ${F.nt(r2)}).`; };
+    ["r1", "g1", "r2", "g2"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value }))); el.querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => poe({ op: b.dataset.o })));
+    SIM.alProdPolar._ult = { poe, est }; desenha(); };
+
+  /* nome: "As n raízes de um número complexo" · matéria: Matemática · tema: NCP03 */
+  SIM.alRaizes = (el, F) => { let n = 3, rho = 8, g = 0, sel = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${slG("n", "n", 2, 8, 1, 3, 100)}${slG("rho", "|w|", 1, 16, 1, 8, 110)}${slG("g", "arg w", 0, 345, 15, 0, 150)}<button class="bt peq" data-v="prox">outra raiz</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const pot = (z, k) => { let r = [1, 0]; for (let i = 0; i < k; i++) r = [r[0] * z[0] - r[1] * z[1], r[0] * z[1] + r[1] * z[0]]; return r; };
+    const est = () => { const rs = cx.raizes(rho, g, n), pts = rs.map((r) => cx.dePolar(r.rho, r.g)); return { n, rho, g, sel, raizes: rs, pts, w: cx.dePolar(rho, g), volta: pts.map((z) => pot(z, n)), soma: pts.reduce((s, z) => [s[0] + z[0], s[1] + z[1]], [0, 0]), passo: 360 / n }; };
+    const poe = (o) => { if (o.n !== undefined) n = Math.max(2, Math.min(8, Math.round(+o.n))); if (o.rho !== undefined) rho = Math.max(1, Math.min(16, Math.round(+o.rho))); if (o.g !== undefined) g = Math.max(0, Math.min(345, Math.round(+o.g / 15) * 15)); sel = o.sel === undefined ? Math.min(sel, n - 1) : o.sel % n; desenha(); };
+    const desenha = () => { const e = est(), r = e.raizes[0].rho; [["n", n, ""], ["rho", rho, ""], ["g", g, "°"]].forEach(([k, v, u]) => { q(`[data-v=${k}]`).value = String(v); q(`[data-v=${k}r]`).textContent = v + u; });
+      q("[data-v=pal]").innerHTML = A.planoC({ x: [-3.7, 3.7], y: [-2.65, 2.65], h: 330, circs: [{ x: 0, y: 0, r }], segs: [...e.pts.map((z, k) => ({ x1: z[0], y1: z[1], x2: e.pts[(k + 1) % n][0], y2: e.pts[(k + 1) % n][1], cor: "var(--mod)", tr: false, w: 1.6 })), cx.vet(e.pts[sel]), ...cx.arco(0.45, 0, e.raizes[sel].g, "var(--warn)")], pts: e.pts.map((z, k) => ({ x: z[0], y: z[1], r: k === sel ? 5.5 : 4, cor: k === sel ? "var(--warn)" : "var(--ok)", rot: k === sel ? "k = " + k : "" })) });
+      q("[data-v=lt]").innerHTML = vis("w", cx.trigS(rho, g)) + vis("módulo das raízes", `${rho}^(1/${n}) = ${F.nt(r, 3)}`) + vis(`raiz k = ${sel}`, `argumento ${F.nt(e.raizes[sel].g, 2)}°`) + vis(`ela elevada a ${n}`, algN(F, e.volta[sel])) + vis("entre vizinhas", `${F.nt(e.passo, 2)}°`);
+      q("[data-v=st]").innerHTML = `São exatamente ${n} números que, elevados a ${n}, dão w. Todos têm o mesmo módulo (a raiz ${n}-ésima de ${rho}) e ficam igualmente espaçados na circunferência, de ${F.nt(e.passo, 2)}° em ${F.nt(e.passo, 2)}°: ${n === 2 ? "dois pontos opostos" : `os vértices de um polígono regular de ${n} lados`}. O primeiro argumento é o de w dividido por ${n}: ${g}° ÷ ${n} = ${F.nt(g / n, 2)}°. Elevar a ${n} multiplica o argumento por ${n}: ${F.nt(e.raizes[sel].g, 2)}° · ${n} = ${F.nt(e.raizes[sel].g * n, 2)}°, que é ${g}° mais ${sel} volta(s).`; };
+    ["n", "rho", "g"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value }))); q("[data-v=prox]").addEventListener("click", () => poe({ sel: sel + 1 }));
+    SIM.alRaizes._ult = { poe, est }; desenha(); };
 })();
