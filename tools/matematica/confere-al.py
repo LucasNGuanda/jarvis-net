@@ -287,5 +287,36 @@ ok(all(3 / (Fr(1, a) + Fr(1, b) + Fr(1, c)) == m for a, b, c, m in [(20, 30, 60,
 ok(all(Fr(2 * Q) / (Fr(Q, p1) + Fr(Q, p2)) == m for p1, p2, m, Q in [(2, 3, Fr(12, 5), 60), (4, 6, Fr(24, 5), 120), (5, 20, 8, 500), (3, 6, 4, 90), (4, 12, 6, 240), (2, 6, 3, 60)]), "SPG03 exercício 9: preço médio = média harmônica dos preços")
 ok(all((a + b) * (Fr(1, a) + Fr(1, b)) >= 4 and (a + b + c) * (Fr(1, a) + Fr(1, b) + Fr(1, c)) >= 9 for a in range(1, 8) for b in range(1, 8) for c in range(1, 8)), "SPG03 exercício 16: (soma)(soma dos inversos) ≥ 4 e ≥ 9")
 
+# ---------- MD01 ----------
+def mmul(a, b):
+    return [[sum(a[i][k] * b[k][j] for k in range(len(b))) for j in range(len(b[0]))] for i in range(len(a))]
+def mpot(a, n):
+    r = [[1 if i == j else 0 for j in range(len(a))] for i in range(len(a))]
+    for _ in range(n):
+        r = mmul(r, a)
+    return r
+def mT(a):
+    return [list(l) for l in zip(*a)]
+def madd(a, b):
+    return [[a[i][j] + b[i][j] for j in range(len(a[0]))] for i in range(len(a))]
+I2 = [[1, 0], [0, 1]]
+ok(2 * 5 + 3 * 4 == 22, "MD01: linha (2 3) vezes coluna (5, 4) = 22")
+ok(mmul([[2, 3], [-1, 4]], [[5, -2], [3, 6]]) == [[19, 14], [7, 26]], "MD01 exemplo 1: produto 2 × 2")
+ok(mmul([[2, 0], [3, 4]], [[0, 5], [2, 3]]) == [[0, 10], [8, 27]] and mmul([[0, 5], [2, 3]], [[2, 0], [3, 4]]) == [[15, 20], [13, 12]], "MD01 exemplo 2: AB e BA diferentes")
+ok(3 * 6 + 2 * 8 + 4 * 3 == 46 and 5 * 6 + 0 * 8 + 2 * 3 == 36, "MD01 exemplo 3: contas de 46 e 36 reais")
+GM2 = [[[a, b], [c, d]] for a in (-1, 2) for b in (0, 3) for c in (1, -2) for d in (2, 5)]
+ok(all(mmul(X, I2) == X == mmul(I2, X) for X in GM2), "MD01 teorema 2: AI = IA = A")
+ok(all(mT(mmul(X, Y)) == mmul(mT(Y), mT(X)) for X in GM2 for Y in GM2), "MD01 chefão (e): (AB)ᵀ = BᵀAᵀ em 256 pares")
+ok(all(mmul(X, mmul(Y, [[x], [y]])) == mmul(mmul(X, Y), [[x], [y]]) for X in GM2 for Y in GM2[:6] for x, y in ((1, 1), (2, -3))), "MD01 teorema 1: A(Bv) = (AB)v")
+ok(mmul([[1, 2], [0, 1]], [[1], [1]]) == [[3], [1]] and mmul([[2, 0], [1, 1]], [[3], [1]]) == [[6], [4]] and mmul([[2, 0], [1, 1]], [[1, 2], [0, 1]]) == [[2, 4], [1, 3]] and mmul([[2, 4], [1, 3]], [[1], [1]]) == [[6], [4]], "MD01 teorema 1: (1, 1) → (3, 1) → (6, 4), e AB = [[2, 4], [1, 3]] leva direto")
+ok(all(mmul(X, [[1], [0]]) == [[X[0][0]], [X[1][0]]] and mmul(X, [[0], [1]]) == [[X[0][1]], [X[1][1]]] for X in GM2), "MD01 teorema 3: as colunas são as imagens de (1, 0) e (0, 1)")
+ok([mpot([[1, 1], [1, 0]], n) for n in (2, 3, 4, 5)] == [[[2, 1], [1, 1]], [[3, 2], [2, 1]], [[5, 3], [3, 2]], [[8, 5], [5, 3]]], "MD01 chefão (a): potências de [[1, 1], [1, 0]]")
+ok(all(mmul(madd(X, Y), madd(X, Y)) == madd(madd(mmul(X, X), mmul(X, Y)), madd(mmul(Y, X), mmul(Y, Y))) for X in GM2 for Y in GM2), "MD01 chefão (b): (A + B)² = A² + AB + BA + B²")
+ok(mmul([[0, 1], [0, 0]], [[0, 1], [0, 0]]) == [[0, 0], [0, 0]], "MD01 chefão (c): [[0, 1], [0, 0]]² = 0")
+ok(all((mmul([[a, b], [c, d]], [[1, 1], [0, 1]]) == mmul([[1, 1], [0, 1]], [[a, b], [c, d]])) == (c == 0 and a == d) for a in range(-2, 3) for b in range(-2, 3) for c in range(-2, 3) for d in range(-2, 3)), "MD01 chefão (d): comuta com [[1, 1], [0, 1]] exatamente quando c = 0 e a = d (625 matrizes)")
+ok(all(mpot([[1, k], [0, 1]], n) == [[1, n * k], [0, 1]] for k in (1, 2, 3, 4) for n in range(0, 30)), "MD01 exercício 14: [[1, k], [0, 1]]ⁿ = [[1, nk], [0, 1]]")
+Rg = [[0, -1], [1, 0]]
+ok(mpot(Rg, 2) == [[-1, 0], [0, -1]] and mpot(Rg, 4) == I2 and all(mpot(Rg, n) != I2 for n in (1, 2, 3)), "MD01 exercício 16: R² = −I, R⁴ = I e nenhum expoente menor serve")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)
