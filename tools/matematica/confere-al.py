@@ -161,5 +161,32 @@ vs = [(1 + Fr(1, n)) ** n for n in (1, 2, 4, 12, 52, 365)]
 ok(vs[0] == 2 and vs[1] == Fr(9, 4) and all(vs[k] < vs[k + 1] for k in range(5)) and all(v < 3 for v in vs), "LOG01: (1 + 1/n)ⁿ cresce de 2 para 2,25 e continua crescendo, sempre abaixo de 3")
 ok(1000 * Fr(11, 10) ** 2 == 1210 and 50000 * Fr(9, 10) ** 2 == 40500, "LOG01: 1000 a 10% por 2 meses = 1210; 50 000 perdendo 10% por 2 anos = 40 500")
 
+# ---------- LOG02 ----------
+lg10 = lambda x: Decimal(x).log10()
+ok(2 ** 3 == 8 and 10 ** 2 == 100 and Fr(2) ** -3 == Fr(1, 8) and 2 ** 5 == 32 == 8 * 4, "LOG02: 2³ = 8, 10² = 100, 2⁻³ = 1/8; log₂ 8 + log₂ 4 = 3 + 2 = 5 = log₂ 32")
+ok(abs(lg10(2) - Decimal("0.3010")) < Decimal("0.0001") and abs(lg10(3) - Decimal("0.4771")) < Decimal("0.0001") and round(float(lg10(2)), 2) == 0.30 and round(float(lg10(3)), 2) == 0.48, "LOG02: log 2 = 0,3010 e log 3 = 0,4771; com duas casas, 0,30 e 0,48")
+ok(all(abs((Decimal(x) * Decimal(y)).log10() - lg10(x) - lg10(y)) < Decimal("1e-40") for x in (2, 7, 30) for y in (3, 5, 11)), "LOG02 teorema 1: log(xy) = log x + log y")
+ok(all(abs((Decimal(x) ** n).log10() - n * lg10(x)) < Decimal("1e-40") for x in (2, 7, 30) for n in (2, 3, 5)) and 8 ** 2 == 64 == 2 ** 6, "LOG02 teorema 2: log xⁿ = n log x; log₂ 64 = 6")
+ok(4 ** 3 == 64 and Fr(6, 2) == 3 and abs(1 / lg10(2) - Decimal("3.32")) < Decimal("0.005"), "LOG02 teorema 3: log₄ 64 = 6/2 = 3; log₂ 10 = 1/log 2 ≈ 3,32")
+ok(all((r ** i) ** Fr(1) == r ** i and Fr(j, i) * i == j for r, i, j in [(2, 3, 5), (2, 2, 5), (2, 3, 2), (3, 2, 3), (3, 3, 2), (2, 4, 3), (5, 2, 3), (2, 3, 4)]) and 8 ** 5 == 32 ** 3, "LOG02 exemplo 1: log₈ 32 = 5/3 (8⁵ = 32³)")
+ok(72 == 2 ** 3 * 3 ** 2 and abs(3 * 0.30 + 2 * 0.48 - 1.86) < 1e-9 and abs(float(lg10(72)) - 1.857) < 0.001, "LOG02 exemplo 2: log 72 ≈ 1,86 com os valores dados (real: 1,857)")
+ok(abs(1.3 / 0.48 - 2.71) < 0.005 and abs(float(lg10(20) / lg10(3)) - 2.727) < 0.001 and 3 ** 2 == 9 < 20 < 27 == 3 ** 3, "LOG02 exemplo 3: 3ˣ = 20 → x ≈ 2,71 com os valores dados (real: 2,727), entre 2 e 3")
+ok(all(len(str(2 ** n)) == int(n * 0.301) + 1 for n in (20, 30, 40, 50, 70, 100, 200)) and [len(str(2 ** n)) for n in (20, 30, 50, 100)] == [7, 10, 16, 31], "LOG02: número de algarismos de 2ⁿ pela conta com log 2 = 0,301 bate com a contagem direta (n = 20 a 200)")
+ok(len(str(3 ** 100)) == 48 and int(100 * 0.4771) + 1 == 48, "LOG02 chefão (a): 3¹⁰⁰ tem 48 algarismos")
+ok([x for x in range(3, 50) if x * (x - 2) == 8] == [4] and 4 * 2 == 8 and (-2) * (-4) == 8, "LOG02 chefão (b): x(x − 2) = 8 com x > 2 só em x = 4")
+prod = Decimal(1)
+for k in range(2, 8):
+    prod *= lg10(k + 1) / lg10(k)
+ok(abs(prod - 3) < Decimal("1e-40"), "LOG02 chefão (c): log₂ 3 · log₃ 4 ··· log₇ 8 = 3")
+ok((2 ** 2) ** 3 == 2 ** 6, "LOG02 chefão (d): (a²)³ = a⁶")
+ok(all(2 ** pp % 2 == 0 and 3 ** q % 2 == 1 for pp in range(1, 40) for q in range(1, 40)), "LOG02 chefão (e): 2ᵖ é par e 3^q é ímpar")
+ok(all(-(-la // lt) == math.ceil(la / lt) for la in (0.301, 0.4771) for lt in (0.0414, 0.0792)) and [math.ceil(la / lt) for la in (0.301, 0.4771) for lt in (0.0414, 0.0792)] == [8, 4, 12, 7] and [math.ceil(float(lg10(a) / lg10(Decimal(t)))) for a in (2, 3) for t in ("1.1", "1.2")] == [8, 4, 12, 7], "LOG02: meses para dobrar e triplicar a 10% e 20%: 8, 4, 12, 7 (com os logs dados e com os exatos)")
+ok(abs(lg10("1.1") - Decimal("0.0414")) < Decimal("0.0001") and abs(lg10("1.2") - Decimal("0.0792")) < Decimal("0.0001"), "LOG02: log 1,1 = 0,0414 e log 1,2 = 0,0792")
+ok(all(abs(float(lg10(N)) - lN) < 0.012 for N, lN in [(5, 0.7), (20, 1.3), (50, 1.7), (40, 1.6), (25, 1.4), (200, 2.3), (80, 1.9)]), "LOG02: os logaritmos montados com log 2 = 0,30 (5, 20, 25, 40, 50, 80, 200) diferem do valor real em menos de 0,012")
+pr = Fr(1)
+for k in range(1, 100):
+    pr *= Fr(k, k + 1)
+ok(pr == Fr(1, 100), "LOG02: (1/2)(2/3)···(99/100) = 1/100")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

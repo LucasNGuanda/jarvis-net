@@ -46,4 +46,55 @@
       q("[data-v=st]").innerHTML = `Com 100% ao ano pagos de uma vez, 1 real vira 2. ${e.n === 1 ? "Dividindo os mesmos 100% em vários pagamentos" : "Dividindo os mesmos 100% em " + F.nt(e.n, 0) + " pagamentos"}, cada um rende sobre o anterior, e o total cresce. Mas <b>não cresce sem limite</b>: quanto mais se divide, mais o resultado se aproxima de um número fixo, e ≈ ${F.nt(Math.E, 6)}. Esse número é a base "natural" das exponenciais.`; };
     q("[data-v=i]").addEventListener("input", (ev) => poe({ i: ev.target.value }));
     SIM.alNumeroE._ult = { poe, est }; desenha(); };
+
+  /* ---------- LOG02 ---------- */
+  const fracTxt = (n, d) => { const f = M.fr(n, d); return M.txt(f); };
+  /* nome: "Logaritmo é expoente: aˣ = b" · matéria: Matemática · tema: LOG02 */
+  SIM.alLogDef = (el, F) => { let a = 2, x = 3;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><label style="font-size:13px;color:var(--ink2)">base <select data-v="a" class="bt peq" style="font-size:15px">${[2, 3, 5, 10].map((v) => `<option>${v}</option>`).join("")}</select></label><label style="font-size:13px;color:var(--ink2)">expoente x <input type="range" data-v="x" min="-3" max="6" step="0.5" value="3" style="vertical-align:middle;width:240px"></label></div></div></div><div class="palco" data-v="pal" style="padding:8px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => ({ a, x, b: a ** x, log: Math.log(a ** x) / Math.log(a), inteiro: Number.isInteger(x) });
+    const poe = (o) => { ({ a, x } = { a, x, ...o }); a = [2, 3, 5, 10].includes(+a) ? +a : 2; x = Math.max(-3, Math.min(6, Math.round(+x * 2) / 2)); desenha(); };
+    const desenha = () => { const e = est(), X = (k) => 40 + ((k + 3) / 9) * 480; q("[data-v=a]").value = String(a); q("[data-v=x]").value = String(x);
+      let o = `<line x1="30" y1="60" x2="530" y2="60" style="stroke:var(--ink3);stroke-width:1.4"/>`; for (let k = -3; k <= 6; k++) { const val = k >= 0 ? String(a ** k) : `1/${a ** -k}`; o += `<line x1="${X(k)}" y1="54" x2="${X(k)}" y2="66" style="stroke:var(--ink3)"/>` + A.T(X(k), 44, val, { f: val.length > 6 ? 9 : val.length > 4 ? 11 : 13, w: 600 }) + A.T(X(k), 84, mn(k), { f: 12, c: "var(--ink2)" }); }
+      o += `<circle cx="${X(x)}" cy="60" r="7" style="fill:var(--warn)"/>` + A.T(22, 44, "b", { f: 12, c: "var(--ink2)" }) + A.T(22, 84, "x", { f: 12, c: "var(--ink2)" });
+      q("[data-v=pal]").innerHTML = `<svg viewBox="0 0 560 96" width="100%" style="max-width:560px">${o}</svg>`;
+      const bt = e.inteiro && x < 0 ? `1/${a ** -x}` : F.nt(e.b, 4);
+      q("[data-v=lt]").innerHTML = vis("potência", `${a} elevado a ${F.nt(x, 1)} = ${bt}`) + vis("logaritmo", `log de ${bt} na base ${a} = ${F.nt(x, 1)}`);
+      q("[data-v=st]").innerHTML = `São a <b>mesma informação</b> escrita de dois jeitos. A linha de cima da régua tem os números b; a de baixo, os expoentes x. O logaritmo lê a régua de cima para baixo: dado o número, devolve o expoente. ` + (e.inteiro ? (x < 0 ? `Logaritmo negativo não é erro: quer dizer que o número é menor que 1.` : x === 0 ? `O logaritmo de 1 é 0 em qualquer base.` : ``) : `Entre duas potências inteiras, o logaritmo é um número "quebrado": ${F.nt(e.b, 4)} está entre ${a ** Math.floor(x) >= 1 ? a ** Math.floor(x) : "1/" + a ** -Math.floor(x)} e ${a ** Math.ceil(x) >= 1 ? a ** Math.ceil(x) : "1/" + a ** -Math.ceil(x)}.`); };
+    q("[data-v=a]").addEventListener("change", (ev) => poe({ a: ev.target.value })); q("[data-v=x]").addEventListener("input", (ev) => poe({ x: ev.target.value }));
+    SIM.alLogDef._ult = { poe, est }; desenha(); };
+
+  /* nome: "A régua de cálculo: somar logaritmos para multiplicar" · matéria: Matemática · tema: LOG02 */
+  SIM.alReguaLog = (el, F) => { let m = 2, n = 3;
+    const sl = (k, v) => `<label style="font-size:13px;color:var(--ink2)">${k} <input type="range" data-v="${k}" min="1" max="10" step="1" value="${v}" style="vertical-align:middle;width:170px"> <b data-r="${k}" style="color:var(--ink);display:inline-block;width:22px"></b></label>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("m", 2)}${sl("n", 3)}</div></div></div><div class="palco" data-v="pal" style="padding:8px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), L = (v) => Math.log10(v);
+    const est = () => ({ m, n, lm: L(m), ln: L(n), soma: L(m) + L(n), prod: m * n, volta: 10 ** (L(m) + L(n)) });
+    const poe = (o) => { ({ m, n } = { m, n, ...o }); m = Math.max(1, Math.min(10, Math.round(+m))); n = Math.max(1, Math.min(10, Math.round(+n))); desenha(); };
+    const desenha = () => { const e = est(), X = (v) => 40 + (L(v) / 2) * 480; q("[data-v=m]").value = String(m); q("[data-v=n]").value = String(n); q("[data-r=m]").textContent = m; q("[data-r=n]").textContent = n;
+      let o = `<line x1="40" y1="96" x2="520" y2="96" style="stroke:var(--ink2);stroke-width:1.6"/>`; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].forEach((v) => { const g = [1, 2, 3, 5, 10, 20, 30, 50, 100].includes(v); o += `<line x1="${X(v)}" y1="${g ? 86 : 90}" x2="${X(v)}" y2="96" style="stroke:var(--ink3)"/>` + (g ? A.T(X(v), 112, v, { f: 11, c: "var(--ink2)" }) : ""); });
+      o += `<rect x="${X(1)}" y="28" width="${X(m) - X(1)}" height="16" rx="3" style="fill:var(--mod);opacity:.8"/>` + (m > 1 ? A.T((X(1) + X(m)) / 2, 22, `log ${m}`, { f: 11 }) : "") + `<rect x="${X(m)}" y="52" width="${X(m * n) - X(m)}" height="16" rx="3" style="fill:var(--ok);opacity:.8"/>` + (n > 1 ? A.T((X(m) + X(m * n)) / 2, 82, `log ${n}`, { f: 11 }) : "") + `<line x1="${X(m * n)}" y1="26" x2="${X(m * n)}" y2="96" style="stroke:var(--warn);stroke-width:2"/><circle cx="${X(m * n)}" cy="96" r="5" style="fill:var(--warn)"/>`;
+      q("[data-v=pal]").innerHTML = `<svg viewBox="0 0 560 120" width="100%" style="max-width:560px">${o}</svg>`;
+      q("[data-v=lt]").innerHTML = vis(`log ${m}`, F.nt(e.lm, 4)) + vis(`log ${n}`, F.nt(e.ln, 4)) + vis("soma", F.nt(e.soma, 4)) + vis(`log ${m * n}`, F.nt(L(m * n), 4));
+      q("[data-v=st]").innerHTML = `Nesta régua, a distância do 1 até um número é o logaritmo dele (base 10). Emendando a barra de comprimento log ${m} com a de comprimento log ${n}, chega-se exatamente em <b>${m * n}</b>: somar logaritmos é multiplicar números. É esse o princípio da régua de cálculo, e é por isso que, nesta escala, de 1 a 10 há o mesmo espaço que de 10 a 100.`; };
+    ["m", "n"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
+    SIM.alReguaLog._ult = { poe, est }; desenha(); };
+
+  /* nome: "De cabeça: quanto vale este logaritmo?" · matéria: Matemática · tema: LOG02 */
+  SIM.alLogQuiz = (el, F) => { let r = rng(7), it = null, resp = -1, pontos = 0, feitas = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="palco" data-v="pal" style="text-align:center;padding:14px 10px"></div><div class="ctrls"><div><div class="bts" data-v="ops" style="justify-content:center"></div><div class="bts" style="margin-top:6px;justify-content:center"><button class="bt peq" data-v="novo">outro</button></div></div></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), ri = (lo, hi) => lo + Math.floor(r() * (hi - lo + 1));
+    const novo = () => { let raiz, i, j; do { raiz = [2, 3, 5, 10][ri(0, 3)]; i = ri(1, raiz === 2 ? 4 : raiz === 10 ? 1 : 2); j = ri(-3, raiz === 2 ? 6 : raiz === 10 ? 4 : 4); } while (j === 0 && r() < 0.7 || raiz ** Math.abs(j) > 100000);
+      const base = raiz ** i, arg = j >= 0 ? String(raiz ** j) : `1/${raiz ** -j}`, val = M.fr(j, i), cand = [M.fr(i, j || 1), M.fr(-j, i), M.fr(j * i, 1), M.fr(j - i, 1), M.fr(j + 1, i), M.fr(j, i + 1)].map(M.txt).filter((t, k, a2) => t !== M.txt(val) && a2.indexOf(t) === k).slice(0, 3);
+      const ops = [M.txt(val), ...cand].map((t, k) => [t, k === 0, r()]).sort((p, s) => p[2] - s[2]); it = { base, arg, raiz, i, j, val: M.txt(val), ops: ops.map((o) => o[0]), certa: ops.findIndex((o) => o[1]) }; resp = -1; desenha(); };
+    const responde = (k) => { if (resp >= 0) return; resp = k; feitas++; if (k === it.certa) pontos++; desenha(); };
+    const est = () => ({ ...it, resp, pontos, feitas, num: it.j / it.i });
+    const desenha = () => { q("[data-v=pal]").innerHTML = `<div style="font:700 38px/1.3 Inter,system-ui,sans-serif">log<sub style="font-size:20px">${it.base}</sub> ${it.arg} = ?</div>`;
+      q("[data-v=ops]").innerHTML = it.ops.map((t, k) => `<button class="bt peq" data-o="${k}" style="font-size:16px;min-width:56px${resp >= 0 && k === it.certa ? ";border-color:var(--ok);color:var(--ok)" : resp === k ? ";border-color:var(--warn);color:var(--warn)" : ""}">${t}</button>`).join("");
+      el.querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => responde(+b.dataset.o)));
+      q("[data-v=lt]").innerHTML = vis("acertos nesta sessão", `${pontos} de ${feitas}`);
+      q("[data-v=st]").innerHTML = resp < 0 ? `Faça a pergunta certa: "${it.base} elevado a quanto dá ${it.arg}?"` : (resp === it.certa ? "Certo. " : "Ainda não: a certa está marcada. ") + (it.i === 1 ? `${it.base} elevado a ${mn(it.j)} dá ${it.arg}.` : `Tudo é potência de ${it.raiz}: ${it.base} = ${it.raiz}${M.sup(it.i)} e ${it.arg} = ${it.raiz}${M.sup(it.j)}. De (${it.raiz}${M.sup(it.i)})ˣ = ${it.raiz}${M.sup(it.j)} vem ${it.i}x = ${mn(it.j)}, x = ${it.val}.`); };
+    q("[data-v=novo]").addEventListener("click", novo);
+    SIM.alLogQuiz._ult = { est, novo, responde, semente: (s) => { r = rng(s); pontos = 0; feitas = 0; novo(); } }; novo(); };
 })();

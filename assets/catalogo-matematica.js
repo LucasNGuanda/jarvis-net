@@ -79,7 +79,7 @@ window.CATALOGO.push(
     ["FX05","Outras Funções Clássicas",[],true],
     ["FX06","Função Composta e Inversa",[],true],
     ["LOG01","Função Exponencial",[],true],
-    ["LOG02","Logaritmos e Propriedades",[]],
+    ["LOG02","Logaritmos e Propriedades",[],true],
     ["LOG03","Função Logarítmica",[]],
     ["LOG04","Equações e Inequações Logarítmicas",[]],
     ["SPG01","Progressão Aritmética",[]],
