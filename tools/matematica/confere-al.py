@@ -559,5 +559,45 @@ ok(all(pv(p, x) - pv(p, -x) == 2 * sum(c * x ** (len(p) - 1 - i) for i, c in enu
 ok(all(Fr((s1 + s2) * (-v) + (s1 * u + s2 * v), u - v) == s1 for u in (1, -3, 4) for v in (-2, 2, 3) if u != v for s1 in (-5, 2, 4) for s2 in (3, -1)), "PL01 exercício 8: A pelo valor que zera o outro parêntese")
 ok(all(Fr((s1 + s2) * a - (s1 * b + s2 * a), a - b) == s1 for a in (1, -2, 0, 3) for b in (-2, 4, 1) if a != b for s1 in (3, -4) for s2 in (2, 5)), "PL01 exercício 16: frações parciais, A = N(a)/(a − b)")
 
+# ---------- PL02 ----------
+def pdiv(p, d):
+    """divisão exata com frações: devolve (q, r), listas de Fraction, da maior potência para a menor"""
+    r = [Fr(c) for c in p]
+    q = []
+    while len(r) >= len(d):
+        c = r[0] / d[0]
+        q.append(c)
+        for i in range(len(d)):
+            r[i] -= c * d[i]
+        r.pop(0)
+    while len(r) > 1 and r[0] == 0:
+        r.pop(0)
+    return q or [Fr(0)], r or [Fr(0)]
+def ptrim(p):
+    p = list(p)
+    while len(p) > 1 and p[0] == 0:
+        p.pop(0)
+    return p
+ok(pdiv([2, 1, -4, 3], [1, -1, 2]) == ([2, 3], [-5, -3]) and ptrim(padd(pol_mul([1, -1, 2], [2, 3]), [-5, -3])) == [2, 1, -4, 3], "PL02 exemplo 1 e teorema 1: (2x³ + x² − 4x + 3) ÷ (x² − x + 2) = 2x + 3, resto −5x − 3")
+ok(padd([2, 1, -4, 3], [-2, 2, -4, 0]) == [0, 3, -8, 3] and padd([3, -8, 3], [-3, 3, -6]) == [0, -5, -3], "PL02 exemplo 1: as duas subtrações")
+ok(phorner([2, -3, -8, 7], 3) == [2, 3, 1, 10] and 54 - 27 - 24 + 7 == 10 and pdiv([2, -3, -8, 7], [1, -3]) == ([2, 3, 1], [10]), "PL02 exemplo 2 e teorema 2: Briot-Ruffini com a = 3, resto 10 = P(3)")
+ok(pv([1, -3, 4, -4], 2) == 0 and all(pv([1, k, 4, -4], 2) == 4 * k + 12 for k in range(-6, 7)), "PL02 exemplo 3: P(2) = 4k + 12, k = −3")
+import random as _rd
+_rd.seed(7)
+POLS = [[_rd.randint(-5, 5) or 1] + [_rd.randint(-6, 6) for _ in range(_rd.randint(2, 5))] for _ in range(60)]
+ok(all(pdiv(p, [1, -a])[1] == [pv(p, a)] and pdiv(p, [1, -a])[0] == phorner(p, a)[:-1] for p in POLS for a in range(-4, 5)), "PL02 teorema 2: resto por x − a é P(a) e o quociente é a linha de Briot-Ruffini (60 polinômios, 9 valores de a)")
+ok(all((pv(p, a) == 0) == (pdiv(p, [1, -a])[1] == [0]) for p in POLS + [[1, 0, -7, 6], [1, -2, -5, 6]] for a in range(-4, 5)), "PL02 teorema 3: divisível por x − a exatamente quando P(a) = 0")
+ok(pv([1, 0, -7, 6], 1) == 0 and pdiv([1, 0, -7, 6], [1, -1]) == ([1, 1, -6], [0]) and pv([1, 1, -6], 2) == 0 and pv([1, 1, -6], -3) == 0, "PL02 teorema 3: x³ − 7x + 6 = (x − 1)(x² + x − 6), raízes 1, 2, −3")
+ok(1 - 2 + 1 == 0, "PL02 chute: resto de x¹⁰⁰ − 2x⁵¹ + 1 por x − 1")
+ok(all(pdiv([1] + [0] * (n - 1) + [-a ** n], [1, -a]) == ([a ** k for k in range(n)], [0]) for n in range(1, 9) for a in (2, -3, 5)), "PL02 chefão (a): (xⁿ − aⁿ) ÷ (x − a) = xⁿ⁻¹ + axⁿ⁻² + … + aⁿ⁻¹")
+ok(all(((-a) ** n + a ** n == 0) == (n % 2 == 1) for n in range(1, 12) for a in (1, 2, -3)), "PL02 chefão (b): xⁿ + aⁿ divisível por x + a só com n ímpar")
+ok(all(pdiv(pol_mul(pol_mul([1, -a], [1, -b]), s), pol_mul([1, -a], [1, -b]))[1] == [0] for a, b in ((1, 2), (-3, 0), (2, 5)) for s in ([1, 4], [2, 0, -1])), "PL02 chefão (c): produto por (x − a)(x − b) é divisível")
+ok(2 * 1 + 1 == 3 and 2 * 2 + 1 == 5, "PL02 chefão (d): resto 2x + 1")
+qx, rx = pdiv([1] + [0] * 100, [1, -3, 2])
+ok(rx == [2 ** 100 - 1, 2 - 2 ** 100], "PL02 chefão (e): resto de x¹⁰⁰ por x² − 3x + 2, pela divisão completa")
+ok(all(pdiv(padd(pol_mul(pol_mul([1, -a], [1, -b]), [1, 2, -1]), [m, n]), pol_mul([1, -a], [1, -b]))[1] in ([m, n], [n]) for a, b in ((1, 3), (-1, 2), (0, -2)) for m in (2, -3, 0) for n in (1, -4)), "PL02 exercícios 13 e 14: o resto por (x − a)(x − b) é a reta pelos dois pontos")
+ok(all(pdiv([1] + [0] * (n - m - 1) + [pp] + [0] * (m - 1) + [q], [1, 0, -1])[1] in ([pp, 1 + q], [1 + q]) for n in (20, 100) for m in (11, 51) if m < n for pp in (-2, 3) for q in (1, -4, 0)), "PL02 exercício 16: resto de xⁿ + p·xᵐ + q por x² − 1 é p·x + (1 + q), n par e m ímpar")
+ok(all(pv(pol_mul(pol_mul([1, -a], [1, -b]), [1, -c]), 0) == -a * b * c for a in (1, -2, 3) for b in (2, -3) for c in (3, -4, 1)), "PL02 exercício 15: termo independente −abc")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

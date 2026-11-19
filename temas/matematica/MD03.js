@@ -20,14 +20,16 @@ F.registrar("matematica/MD03", {
     const rowT = (l) => { let s = ""; l.slice(0, 3).forEach((c, i) => { const v = M.val(c); if (v === 0) return; const a = fr(Math.abs(c.n), c.d), t = (M.val(a) === 1 ? "" : tex(a)) + vs[i]; s += s === "" ? (v < 0 ? "-" : "") + t : (v < 0 ? " - " : " + ") + t; }); return `${s} = ${tex(l[3])}`; };
     const opTx = (x) => (x.tipo === "troca" ? R`L_${x.i + 1} \leftrightarrow L_${x.k + 1}` : R`L_${x.i + 1} \leftarrow L_${x.i + 1} ${M.val(x.f) < 0 ? "+" : "-"} ${Math.abs(M.val(x.f)) === 1 ? "" : tex(fr(Math.abs(x.f.n), x.f.d))}L_${x.k + 1}`);
     const num = (v) => ({ v, tol: 0.001, un: "", abs: 0.001 });
+    /* nos EXEMPLOS sorteados: nada de termo independente nem de valor de x terminado em 1 (o texto colado das fórmulas viraria "1x", que o texemp acusa) */
+    const u1 = (v) => Math.abs(v) % 10 === 1;
 
     const exemplos = F.exemplo({ titulo: "Sistemas lineares, passo a passo", casos: [
-      { nome: "Escalonar um sistema 3 × 3", gerar: (p) => { const S = s3(p, { co: [[1, 1, 1], [2, 1, -1], [1, -2, 2]], b: [3, 9, -8] }), aug = S.co.map((l, i) => [...l, S.b[i]]), E = A.escalona(aug), rom = ["ii", "iii", "iv", "v", "vi", "vii", "viii"];
+      { nome: "Escalonar um sistema 3 × 3", gerar: (p) => { let S, nn = 0; do S = s3(p, { co: [[1, 1, 1], [2, 1, -1], [1, -2, 2]], b: [3, 9, -8] }); while (!p && ++nn < 400 && (S.b.some(u1) || u1(S.sol[0]))); const aug = S.co.map((l, i) => [...l, S.b[i]]), E = A.escalona(aug), rom = ["ii", "iii", "iv", "v", "vi", "vii", "viii"];
         const passos = [R`<p>(i) Escreva só os números, na <b>matriz aumentada</b> (coeficientes e, depois da barra, os termos independentes): $${augT(aug)}$.</p>`];
         E.passos.forEach((x, k) => passos.push(R`<p>(${rom[k]}) $${opTx(x)}$: $${augT(x.m)}$.</p>`));
         const n0 = E.passos.length; passos.push(R`<p>(${rom[n0]}) A matriz está em escada. A última linha diz $${rowT(E.fim[2])}$, logo $z = ${tex(E.sol[2])}$.</p>`, R`<p>(${rom[n0 + 1]}) A segunda linha diz $${rowT(E.fim[1])}$; com o valor de $z$, sai $y = ${tex(E.sol[1])}$. A primeira, $${rowT(E.fim[0])}$, dá $x = ${tex(E.sol[0])}$.</p>`, R`<p>(${rom[n0 + 2]}) Conferência na última equação original: o lado esquerdo vale $${tex(S.co[2].reduce((s, c, j) => M.soma(s, M.mul(fr(c), E.sol[j])), fr(0)))}$, que é o termo independente. Sempre confira numa equação que não foi a última usada.</p>`);
         return { enun: R`<p>Resolva o sistema $${sisT(S.co, S.b)}$</p>`, fig: figS(S.co, S.b), passos, resp: R`$(x, y, z) = (${E.sol.map(tex).join(";\\ ")})$` }; } },
-      { nome: "Regra de Cramer num sistema 2 × 2", gerar: (p) => { const S = s2(p, { co: [[3, 2], [5, -2]], b: [12, 4], sol: [2, 3] }), c = A.cramer(S.co, S.b), [[a, b], [cc, d]] = S.co, [e, f] = S.b;
+      { nome: "Regra de Cramer num sistema 2 × 2", gerar: (p) => { let S, nn = 0; do S = s2(p, { co: [[3, 2], [5, -2]], b: [12, 4], sol: [2, 3] }); while (!p && ++nn < 400 && (S.b.some(u1) || u1(S.sol[0]))); const c = A.cramer(S.co, S.b), [[a, b], [cc, d]] = S.co, [e, f] = S.b;
         return { enun: R`<p>Resolva pela regra de Cramer: $${sisT(S.co, S.b)}$</p>`, fig: M.figSis(A.eqS(S.co[0], e), A.eqS(S.co[1], f), D),
           passos: [R`<p>(i) Determinante dos coeficientes: $D = ${ps(a)}\cdot${ps(d)} - ${ps(b)}\cdot${ps(cc)} = ${c.D}$. Diferente de zero: há solução única.</p>`, R`<p>(ii) Troque a coluna de $x$ pelos termos independentes: $D_x = ${ps(e)}\cdot${ps(d)} - ${ps(b)}\cdot${ps(f)} = ${c.Ds[0]}$.</p>`,
             R`<p>(iii) Troque a coluna de $y$: $D_y = ${ps(a)}\cdot${ps(f)} - ${ps(e)}\cdot${ps(cc)} = ${c.Ds[1]}$.</p>`, R`<p>(iv) Divida: $x = \dfrac{D_x}{D} = ${tex(c.sol[0])}$ e $y = \dfrac{D_y}{D} = ${tex(c.sol[1])}$.</p>`,

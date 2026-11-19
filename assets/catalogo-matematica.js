@@ -94,7 +94,7 @@ window.CATALOGO.push(
     ["NCP03","Forma Trigonométrica",[],true],
     ["NCP04","Lugares Geométricos (complexos)",[],true],
     ["PL01","Introdução aos Polinômios",[],true],
-    ["PL02","Operações com Polinômios",[]],
+    ["PL02","Operações com Polinômios",[],true],
     ["PL03","Equações Algébricas",[]],
     ["PL04","Aprofundamento em Polinômios",[]],
     ["IC01","Introdução ao Cálculo",[]],
