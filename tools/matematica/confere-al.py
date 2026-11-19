@@ -225,5 +225,24 @@ ok(all(abs(n / 0.30 - v) < 0.01 for n, v in [(1, 3.33), (2, 6.67), (3, 10)]) and
 ok(all(x * y == 10 ** round(math.log10(x * y)) for x, y in [(20, 5), (25, 4), (50, 2), (40, 25), (100, 10), (125, 8), (200, 5)]), "LOG04 exercício 15: os produtos são potências de 10")
 ok(all(Fr(5, 2) == t + 1 / Fr(t) for t in (2, Fr(1, 2))), "LOG04 exercício 14: t + 1/t = 5/2 em t = 2 e t = 1/2")
 
+# ---------- SPG01 ----------
+pa = lambda a1, r, n: [a1 + k * r for k in range(n)]
+ok(pa(5, 3, 4) == [5, 8, 11, 14] and 5 + 99 * 3 == 302, "SPG01: (5, 8, 11, 14, ...) tem 100º termo 302")
+ok(all(sum(pa(a1, r, n)) * 2 == (a1 + a1 + (n - 1) * r) * n for a1 in range(-5, 6) for r in range(-4, 5) for n in range(1, 30)), "SPG01 teorema 2: Sₙ = (a₁ + aₙ)n/2, em 2871 casos")
+ok(sum(range(1, 101)) == 5050 and 101 * 100 == 10100, "SPG01: 1 + 2 + ... + 100 = 5050")
+ok(all(sum(2 * k - 1 for k in range(1, n + 1)) == n * n for n in range(1, 200)) and 1 + 3 + 5 + 7 + 9 == 25, "SPG01 teorema 3: soma dos n primeiros ímpares = n²")
+ok(len(pa(7, 3, 31)) == 31 and pa(7, 3, 31)[-1] == 97 and (97 - 7) // 3 == 30, "SPG01 chute: (7, 10, ..., 97) tem 31 termos")
+ok(all(a + 2 * d == 2 * (a + d) - a for a in G for d in G) and all((am - d * r) + (am + d * r) == 2 * am for am in G for d in (1, 2, 3) for r in G), "SPG01: termo do meio e termos equidistantes")
+ok((35 - 15) // 5 == 4 and 15 - 2 * 4 == 7 and 7 + 19 * 4 == 83, "SPG01 exemplo 1: a₃ = 15, a₈ = 35 → r = 4, a₁ = 7, a₂₀ = 83")
+ok(len(pa(5, 3, 100)) == 100 and pa(5, 3, 100)[-1] == 302 and sum(pa(5, 3, 100)) == 15350, "SPG01 exemplo 2: 5 + 8 + ... + 302 tem 100 termos e soma 15 350")
+ok(2 + 5 + 8 == 15 and 2 * 5 * 8 == 80 and 25 - 9 == 16 == 80 // 5, "SPG01 exemplo 3: soma 15 e produto 80 → 2, 5, 8")
+ok(sum(x for x in range(1, 101) if x % 3) == 3367 and sum(range(3, 100, 3)) == 1683 and len(range(3, 100, 3)) == 33, "SPG01 chefão (a): 5050 − 1683 = 3367")
+ok(sum(range(1, 21)) == 210 and 20 * 20 + 20 - 420 == 0, "SPG01 chefão (b): n = 20")
+ok(all((3 * r) ** 2 + (4 * r) ** 2 == (5 * r) ** 2 for r in (1, 2, Fr(7, 3))), "SPG01 chefão (c): 3r, 4r, 5r")
+ok(all((b * b - a * c) - (a * a - b * c) == (b - a) * (a + b + c) and (c * c - a * b) - (b * b - a * c) == (c - b) * (a + b + c) for a in G for b in G for c in G), "SPG01 chefão (d): as duas diferenças fatoram com (a + b + c)")
+ok(sum(Fr(1, k * (k + 3)) for k in range(1, 29, 3)) == Fr(10, 31), "SPG01 chefão (e): 1/(1·4) + ... + 1/(28·31) = 10/31")
+ok(all((a * k * k + b * k) - (a * (k - 1) ** 2 + b * (k - 1)) == 2 * a * k - a + b for a in (1, 2, 3) for b in range(-3, 4) for k in range(2, 20)), "SPG01 exercício 11: aₖ = Sₖ − Sₖ₋₁ = 2ak − a + b (PA de razão 2a)")
+ok(all(a1 + (a1 // -r + 1) * r < 0 <= a1 + (a1 // -r) * r for a1 in range(20, 201, 7) for r in range(-9, -1)), "SPG01 exercício 15: o primeiro termo negativo está na posição ⌊a₁/|r|⌋ + 2")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)
