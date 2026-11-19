@@ -34,5 +34,23 @@ ok(3 * 0 == 0 and 3 * 5 == 15 and 3 * (-2) == -6, "FX01 chefão (d): f(x) = 3x d
 ok(2 ** 4 - 3 * 4 == 4 and 8 - 6 == 2 and -8 + 6 == -2 and 4 + 6 == 10 and 4 - 6 == -2, "FX01 exemplo 3: valores em 2 e −2 de x⁴ − 3x², x³ − 3x e x² + 3x")
 ok(2 * (-2) + 3 == -1 and 0 - 4 == -4 and 9 - 4 == 5 and -1 - 4 + 5 == 0, "FX01 exemplo 2: f(−2) = −1, f(0) = −4, f(3) = 5, soma 0")
 
+# ---------- FX02 ----------
+g2 = lambda x: 2 * x - 3
+ok([g2(x) for x in range(5)] == [-3, -1, 1, 3, 5] and g2(Fr(3, 2)) == 0, "FX02: tabela de 2x − 3 e zero 3/2")
+ok(Fr(g2(4) - g2(1), 3) == 2 and Fr(g2(2) - g2(0), 2) == 2, "FX02 teorema 1: taxa 2 de 1 a 4 e de 0 a 2")
+ok(all(((a * x2 + b) - (a * x1 + b)) / (x2 - x1) == a for a in G for b in G for x1 in G for x2 in G if x1 != x2), "FX02 teorema 1: taxa de variação constante, em geral")
+ok(Fr(5 - 1, 3 - 1) == 2 and 1 - 2 * 1 == -1 and 2 * 3 - 1 == 5, "FX02 teorema 3: por (1, 1) e (3, 5), a = 2 e b = −1")
+ok(all(Fr(y2 - y1, x2 - x1) * x1 + (y1 - Fr(y2 - y1, x2 - x1) * x1) == y1 and Fr(y2 - y1, x2 - x1) * x2 + (y1 - Fr(y2 - y1, x2 - x1) * x1) == y2 for x1 in range(-3, 3) for x2 in range(3, 6) for y1 in range(-2, 3) for y2 in range(-2, 3)), "FX02 teorema 3: a e b das fórmulas passam pelos dois pontos")
+ok(5 + 3 * 5 == 20 and 5 + 3 * 10 == 35 and 35 < 2 * 20, "FX02 chute: táxi, 5 km = 20 reais, 10 km = 35 reais")
+ok(Fr(11 - 5, 5 - 2) == 2 and 5 - 2 * 2 == 1, "FX02 chefão (a): f(x) = 2x + 1")
+ok(all(a * 1 + b == b * 1 + a for a in G for b in G), "FX02 chefão (b): ax + b e bx + a coincidem em x = 1")
+ok([m for m in range(-4, 5) if m * m - 4 < 0] == [-1, 0, 1], "FX02 chefão (c): m² − 4 < 0 só para −2 < m < 2")
+f3 = lambda x: 2 * x + 3
+ok(all(f3(f3(x)) == 4 * x + 9 and f3(f3(f3(x))) == 8 * x + 21 for x in G) and 2 ** 3 == 8 and 7 * 3 == 21, "FX02 chefão (e): f(x) = 2x + 3 dá f(f(x)) = 4x + 9 e f(f(f(x))) = 8x + 21")
+ok(all(a * (a * x + b) + b == a * a * x + (a + 1) * b for a in G for b in G for x in G), "FX02: f(f(x)) = a²x + (a + 1)b")
+ok(2 * 2 - 5 == -1 and 2 * 5 - 5 == 5 and Fr(5 - (-1), 3) == 2, "FX02 exemplo 1: por (2, −1) e (5, 5), a = 2 e b = −5")
+ok(-2 * 3 + 6 == 0 and 6 - 2 * 5 == -4 and -2 * 7 + 6 == -8, "FX02 exemplo 2: −2x + 6 zera em 3; −2x + 6 ≥ −4 dá x ≤ 5; f(7) = −8")
+ok(abs((50 - 20) / (0.5 - 0.2) - 100) < 1e-9 and 20 + 0.5 * 100 == 70, "FX02 exemplo 3: planos empatam em 100 minutos, a 70 reais")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)
