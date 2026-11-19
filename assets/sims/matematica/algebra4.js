@@ -71,4 +71,54 @@
       q("[data-v=st]").innerHTML = `A soma é 1 + ${F.nt(qq, 1)} + ${F.nt(qq * qq, 2)} + ${F.nt(qq ** 3, 3)} + ... Cada parcela nova tapa uma fração fixa do que <b>faltava</b> para o teto, e por isso a soma chega tão perto dele quanto se queira, sem nunca passar: depois de ${n} ${n === 1 ? "parcela" : "parcelas"} falta ${e.falta < 1e-6 ? "menos de 0,000001" : F.nt(e.falta, 6)}. É isso que significa dizer que a soma dos infinitos termos <b>é</b> ${F.nt(e.teto, 4)}.`; };
     ["q", "n"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
     SIM.alSomaInfinita._ult = { poe, est }; desenha(); };
+
+  /* ---------- SPG03 ---------- */
+  A.medias = (a, b) => ({ ma: (a + b) / 2, mg: Math.sqrt(a * b), mh: (2 * a * b) / (a + b) });
+  /* nome: "Os inversos em fila: da PA para a PH" · matéria: Matemática · tema: SPG03 */
+  SIM.alPH = (el, F) => { let a = 2, d = 3, n = 6;
+    const sl = (k, t, lo, hi, v) => `<label style="font-size:13px;color:var(--ink2)">${t} <input type="range" data-v="${k}" min="${lo}" max="${hi}" step="1" value="${v}" style="vertical-align:middle;width:130px"> <b data-r="${k}" style="color:var(--ink);display:inline-block;width:22px"></b></label>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("a", "1º termo da PA", 1, 6, 2)}${sl("d", "razão da PA", 1, 4, 3)}${sl("n", "n", 3, 8, 6)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const pa = A.pa(a, d, n); return { a, d, n, pa, ph: pa.map((v) => M.fr(1, v)), phTxt: pa.map((v) => (v === 1 ? "1" : `1/${v}`)), difs: pa.slice(1).map((v, k) => 1 / v - 1 / pa[k]) }; };
+    const poe = (o) => { ({ a, d, n } = { a, d, n, ...o }); a = Math.max(1, Math.min(6, Math.round(+a))); d = Math.max(1, Math.min(4, Math.round(+d))); n = Math.max(3, Math.min(8, Math.round(+n))); desenha(); };
+    const desenha = () => { const e = est(); ["a", "d", "n"].forEach((k) => { q(`[data-v=${k}]`).value = String({ a, d, n }[k]); q(`[data-r=${k}]`).textContent = { a, d, n }[k]; });
+      q("[data-v=pal]").innerHTML = `<div style="font-size:12px;color:var(--ink2);text-align:center">PA (os inversos)</div>` + A.barras(e.pa, null, { h: 120, idx: false }) + `<div style="font-size:12px;color:var(--ink2);text-align:center">PH (os termos)</div>` + A.barras(e.pa.map((v) => 1 / v), null, { h: 120, rot: false, idx: false, cor: () => "var(--ok)" });
+      q("[data-v=lt]").innerHTML = vis("PA", e.pa.join(", ")) + vis("PH", e.phTxt.join(", "));
+      q("[data-v=st]").innerHTML = `Uma progressão harmônica é uma sequência cujos <b>inversos</b> formam uma PA. Na PA de cima, os degraus são iguais (${d}); na PH de baixo, <b>não</b>: as diferenças entre termos vizinhos vão encolhendo. Por isso nunca se trabalha direto na PH: inverte-se, resolve-se na PA e inverte-se de volta.`; };
+    ["a", "d", "n"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
+    SIM.alPH._ult = { poe, est }; desenha(); };
+
+  /* nome: "As três médias de dois números" · matéria: Matemática · tema: SPG03 */
+  SIM.alMedias = (el, F) => { let a = 4, b = 16;
+    const sl = (k, v) => `<label style="font-size:13px;color:var(--ink2)">${k} <input type="range" data-v="${k}" min="1" max="20" step="1" value="${v}" style="vertical-align:middle;width:200px"> <b data-r="${k}" style="color:var(--ink);display:inline-block;width:22px"></b></label>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("a", 4)}${sl("b", 16)}</div></div></div><div class="palco" data-v="pal" style="padding:8px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const m = A.medias(a, b); return { a, b, ...m, produto: m.ma * m.mh, mg2: m.mg * m.mg, ordem: m.mh <= m.mg + 1e-12 && m.mg <= m.ma + 1e-12 }; };
+    const poe = (o) => { ({ a, b } = { a, b, ...o }); a = Math.max(1, Math.min(20, Math.round(+a))); b = Math.max(1, Math.min(20, Math.round(+b))); desenha(); };
+    const desenha = () => { const e = est(), X = (v) => 40 + (v / 20) * 480; q("[data-v=a]").value = String(a); q("[data-v=b]").value = String(b); q("[data-r=a]").textContent = a; q("[data-r=b]").textContent = b;
+      let s = `<line x1="40" y1="60" x2="520" y2="60" style="stroke:var(--ink3);stroke-width:1.4"/>`; for (let v = 0; v <= 20; v += 2) s += `<line x1="${X(v)}" y1="56" x2="${X(v)}" y2="64" style="stroke:var(--ink3)"/>` + A.T(X(v), 80, v, { f: 10, c: "var(--ink3)" });
+      s += `<line x1="${X(Math.min(a, b))}" y1="60" x2="${X(Math.max(a, b))}" y2="60" style="stroke:var(--ink2);stroke-width:4"/>`;
+      [[e.mh, "MH", A.COR[1], 22], [e.mg, "MG", A.COR[2], 36], [e.ma, "MA", A.COR[0], 22]].forEach(([v, t, c, y]) => (s += `<line x1="${X(v)}" y1="${y + 4}" x2="${X(v)}" y2="60" style="stroke:${c};stroke-width:2"/><circle cx="${X(v)}" cy="60" r="5" style="fill:${c}"/>` + A.T(X(v), y, t, { f: 12, w: 700, c })));
+      q("[data-v=pal]").innerHTML = `<svg viewBox="0 0 560 90" width="100%" style="max-width:560px">${s}</svg>`;
+      q("[data-v=lt]").innerHTML = vis("harmônica MH", F.nt(e.mh, 4)) + vis("geométrica MG", F.nt(e.mg, 4)) + vis("aritmética MA", F.nt(e.ma, 4)) + vis("MA × MH", F.nt(e.produto, 4));
+      q("[data-v=st]").innerHTML = a === b ? `Com os dois números iguais, as três médias coincidem com eles.` : `As três médias ficam entre ${Math.min(a, b)} e ${Math.max(a, b)}, sempre na mesma ordem: MH &lt; MG &lt; MA. A harmônica puxa para o número menor; a aritmética fica bem no meio. E repare na última caixa: MA × MH = ${F.nt(e.produto, 4)} = ${a} × ${b}, que é MG ao quadrado. A média geométrica é a média geométrica das outras duas.`; };
+    ["a", "b"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
+    SIM.alMedias._ult = { poe, est }; desenha(); };
+
+  /* nome: "A soma harmônica: cresce devagar, mas não para" · matéria: Matemática · tema: SPG03 */
+  SIM.alSerieHarm = (el, F) => { let k = 3;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><label style="font-size:13px;color:var(--ink2)">número de parcelas: 2 elevado a <input type="range" data-v="k" min="0" max="20" step="1" value="3" style="vertical-align:middle;width:220px"> <b data-r="k" style="color:var(--ink)"></b></label></div></div></div><div class="palco" data-v="pal" style="padding:8px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const H = (n) => { let s = 0; for (let j = n; j >= 1; j--) s += 1 / j; return s; };
+    /* blocos: 1 | 1/2 | 1/3 + 1/4 | 1/5 + ... + 1/8 | ...: cada bloco depois do primeiro soma pelo menos 1/2 */
+    const est = () => { const n = 2 ** k, blocos = [1]; for (let j = 1; j <= k; j++) { let s = 0; for (let t = 2 ** (j - 1) + 1; t <= 2 ** j; t++) s += 1 / t; blocos.push(s); } return { k, n, H: H(n), blocos, piso: 1 + k / 2 }; };
+    const poe = (o) => { k = Math.max(0, Math.min(20, Math.round(+o.k))); desenha(); };
+    const desenha = () => { const e = est(), X = (v) => 40 + (v / 15) * 480; q("[data-v=k]").value = String(k); q("[data-r=k]").textContent = `${k} = ${F.nt(e.n, 0)}`; let s = `<line x1="40" y1="64" x2="520" y2="64" style="stroke:var(--ink3);stroke-width:1.2"/>`, ac = 0;
+      for (let v = 0; v <= 15; v++) s += `<line x1="${X(v)}" y1="60" x2="${X(v)}" y2="68" style="stroke:var(--ink3)"/>` + A.T(X(v), 82, v, { f: 10, c: "var(--ink3)" });
+      e.blocos.forEach((b, j) => { s += `<rect x="${X(ac).toFixed(1)}" y="30" width="${(X(ac + b) - X(ac)).toFixed(1)}" height="24" style="fill:${A.COR[j % 4]};opacity:.82;stroke:var(--bg);stroke-width:1"/>`; ac += b; });
+      q("[data-v=pal]").innerHTML = `<svg viewBox="0 0 560 92" width="100%" style="max-width:560px">${s}</svg>`;
+      q("[data-v=lt]").innerHTML = vis("parcelas", F.nt(e.n, 0)) + vis("soma", F.nt(e.H, 4)) + vis("garantido: 1 + k/2", F.nt(e.piso, 1));
+      q("[data-v=st]").innerHTML = `Soma de 1 + 1/2 + 1/3 + ... até 1/${F.nt(e.n, 0)}. Cada bloco colorido termina numa potência de 2: (1), (1/2), (1/3 + 1/4), (1/5 + ... + 1/8)... Cada bloco, depois do primeiro, soma <b>pelo menos 1/2</b>. Então, dobrando o número de parcelas, a soma ganha sempre mais meio: ela passa de qualquer número, mas a um custo absurdo. Com mais de um milhão de parcelas, ainda não chegou a 15.`; };
+    q("[data-v=k]").addEventListener("input", (ev) => poe({ k: ev.target.value }));
+    SIM.alSerieHarm._ult = { poe, est }; desenha(); };
 })();
