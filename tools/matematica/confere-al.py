@@ -509,5 +509,22 @@ ok(all((180 // math.gcd(180, g)) * g % 180 == 0 and all(n * g % 180 != 0 for n i
 ok(all(n * g % 180 == 0 for g, n in ((60, 3), (30, 6), (45, 4), (90, 2), (120, 3), (60, 6), (45, 8), (36, 5), (20, 9), (72, 5))), "NCP03 exercício 10: n·θ múltiplo de 180° em todos os pares")
 ok(cp((1, 1), 2) == (0, 2), "NCP03 chute: (1 + i)² = 2i")
 
+# ---------- NCP04 ----------
+ok(all((x - 3) ** 2 + (y + 2) ** 2 - 16 == x * x + y * y - 6 * x + 4 * y - 3 for x in G for y in G), "NCP04 exemplo 1: (x − 3)² + (y + 2)² = 16 ⇔ x² + y² − 6x + 4y − 3 = 0")
+ok(m2(cs((7, -2), (-3, 2))) == 16, "NCP04 exemplo 1: 7 − 2i está a distância 4 de 3 − 2i")
+ok(all(((x - 2) ** 2 + y * y) - (x * x + (y - 4) ** 2) == -4 * x + 4 + 8 * y - 16 for x in G for y in G) and 1 - 2 * 2 == -3, "NCP04 exemplo 2 e teorema 3: |z − 2| = |z − 4i| ⇔ x − 2y = −3, que passa por 1 + 2i")
+ok(all(((x - a1) ** 2 + (y - a2) ** 2) - ((x - b1) ** 2 + (y - b2) ** 2) == 2 * (b1 - a1) * x + 2 * (b2 - a2) * y - ((b1 * b1 + b2 * b2) - (a1 * a1 + a2 * a2)) for x in G[:4] for y in G[:4] for a1 in (-2, 3) for a2 in (0, 5) for b1 in (1, -4) for b2 in (2, -1)), "NCP04 teorema 3: |z − a|² − |z − b|² = 2(b₁ − a₁)x + 2(b₂ − a₂)y − (|b|² − |a|²)")
+ok(3 * 3 - 2 * 2 == 5, "NCP04 exemplo 3: coroa de raios 2 e 3 tem área 5π")
+ok(all(((x - 2) ** 2 + (y - 1) ** 2 == 9) == (m2((x - 2, y - 1)) == 9) for x in range(-3, 8) for y in range(-4, 6)), "NCP04 teorema 1: |z − (2 + i)| = 3 ⇔ (x − 2)² + (y − 1)² = 9 nos pontos inteiros")
+ok(m2((3, 4)) == 25 and m2((Fr(21, 5), Fr(28, 5))) == 49 and m2((Fr(9, 5), Fr(12, 5))) == 9 and m2((Fr(21, 5) - 3, Fr(28, 5) - 4)) == 4 and m2((Fr(9, 5) - 3, Fr(12, 5) - 4)) == 4, "NCP04 teorema 2 e chefão (b): em |z − 3 − 4i| = 2, os pontos (7/5)(3 + 4i) e (3/5)(3 + 4i) têm módulos 7 e 3")
+ok(all(3 - 1e-9 <= math.hypot(3 + 2 * math.cos(t), 4 + 2 * math.sin(t)) <= 7 + 1e-9 for t in [k * 0.01 for k in range(629)]), "NCP04 teorema 2: 3 ≤ |z| ≤ 7 em 629 pontos da circunferência")
+ok(all((x * x + y * y) - 4 * ((x - 3) ** 2 + y * y) == -3 * ((x - 4) ** 2 + y * y - 4) for x in G for y in G) and 2 == 2 * abs(2 - 3) and 6 == 2 * abs(6 - 3), "NCP04 chefão (a): |z| = 2|z − 3| ⇔ (x − 4)² + y² = 4")
+ok(all(k * d % (k * k - 1) == 0 and all((x * x + y * y) - k * k * ((x - d) ** 2 + y * y) == -(k * k - 1) * ((x - Fr(k * k * d, k * k - 1)) ** 2 + y * y - Fr(k * d, k * k - 1) ** 2) for x in G[:4] for y in G[:4]) for k in (2, 3) for d in [(k * k - 1) * t for t in (1, 2, 3)]), "NCP04 exercício 15: |z| = k|z − d| é a circunferência de centro k²d/(k² − 1) e raio kd/(k² − 1)")
+ok(abs(abs(2 - 1) + abs(2 + 1) - 4) == 0 and 2 * Decimal(1 + 3).sqrt() == 4 and Fr(4, 4) + Fr(0, 3) == 1 and Fr(0, 4) + Fr(3, 3) == 1, "NCP04 chefão (d): 2 e √3 i estão na elipse x²/4 + y²/3 = 1 e somam distâncias 4")
+ok(all(abs(math.hypot(2 * math.cos(t) - 1, math.sqrt(3) * math.sin(t)) + math.hypot(2 * math.cos(t) + 1, math.sqrt(3) * math.sin(t)) - 4) < 1e-12 for t in [k * 0.05 for k in range(126)]), "NCP04 chefão (d): soma das distâncias aos focos = 4 em 126 pontos da elipse")
+ok(all(abs(abs(cmath.exp(1j * t) - cmath.exp(1j * (t + 2 * cmath.pi / 3))) - math.sqrt(3)) < 1e-12 for t in (0, 0.3, 1.1, 2.5)), "NCP04 chefão (e): pontos a 120° na circunferência unitária distam √3")
+ok([sum(1 for x in range(-r, r + 1) for y in range(-r, r + 1) if x * x + y * y <= r * r) for r in range(1, 6)] == [5, 13, 29, 49, 81], "NCP04 exercício 16: pontos inteiros no disco de raio 1 a 5")
+ok(all((x0 + u - x0) ** 2 + v * v == (x0 - v - x0) ** 2 + u * u for x0 in range(-3, 4) for u in range(-4, 5) for v in range(-4, 5)), "NCP04 exercício 14: (x₀, 0) é equidistante de (x₀ + u, v) e (x₀ − v, u)")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

@@ -92,7 +92,7 @@ window.CATALOGO.push(
     ["NCP01","Unidade Imaginária",[],true],
     ["NCP02","Forma Algébrica do Número Complexo",[],true],
     ["NCP03","Forma Trigonométrica",[],true],
-    ["NCP04","Lugares Geométricos (complexos)",[]],
+    ["NCP04","Lugares Geométricos (complexos)",[],true],
     ["PL01","Introdução aos Polinômios",[]],
     ["PL02","Operações com Polinômios",[]],
     ["PL03","Equações Algébricas",[]],
