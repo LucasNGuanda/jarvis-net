@@ -405,5 +405,42 @@ ok(all(pol_mul([1, c], pol_pot([1, 1], n))[j] == Cb(n, j) + c * Cb(n, j - 1) for
 ok(101 ** 3 == 1030301 and 99 ** 3 == 970299, "BW01 exercício 12: 101³ e 99³")
 ok(sum([1, 5, 10, 10, 5, 1]) == 32, "BW01 chute: soma da linha 5")
 
+# ---------- NCP01 ----------
+# complexos exatos: pares (a, b) de inteiros ou frações, sem ponto flutuante
+def cm(z, w):
+    return (z[0] * w[0] - z[1] * w[1], z[0] * w[1] + z[1] * w[0])
+def cp(z, n):
+    r = (1, 0)
+    for _ in range(n):
+        r = cm(r, z)
+    return r
+def cs(z, w):
+    return (z[0] + w[0], z[1] + w[1])
+I_ = (0, 1)
+CIC = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+ok([cp(I_, n) for n in range(5)] == CIC + [(1, 0)], "NCP01: i⁰ a i⁴ = 1, i, −1, −i, 1")
+ok(all(cp(I_, n) == CIC[n % 4] for n in range(0, 200)), "NCP01 teorema 1: iⁿ = i^(n mod 4) até n = 199")
+ok(all(cm(cp(I_, n), CIC[(-n) % 4]) == (1, 0) for n in range(0, 60)), "NCP01 teorema 1: i⁻ⁿ é o inverso de iⁿ pela tabela dos restos")
+ok(cm(I_, (0, -1)) == (1, 0), "NCP01: 1/i = −i")
+ok(103 == 4 * 25 + 3 and cp(I_, 103) == (0, -1) and 103 % 100 == 3, "NCP01 exemplo 1: i¹⁰³ = −i")
+ok((-4) ** 2 - 4 * 13 == -36 and cs(cs(cp((2, 3), 2), cm((-4, 0), (2, 3))), (13, 0)) == (0, 0) and cs(cs(cp((2, -3), 2), cm((-4, 0), (2, -3))), (13, 0)) == (0, 0) and cm((2, 3), (2, -3)) == (13, 0), "NCP01 exemplo 2 e teorema 3: 2 ± 3i resolvem x² − 4x + 13 = 0; produto 13")
+ok(all(cs(cs(cp((a, q), 2), cm((-2 * a, 0), (a, q))), (a * a + q * q, 0)) == (0, 0) for a in range(-5, 6) for q in range(1, 7)), "NCP01: a ± qi resolve x² − 2ax + (a² + q²) = 0 (exemplo 2, exercícios 6, 7 e 15)")
+ok(cp((1, 1), 2) == (0, 2) and cp((1, -1), 2) == (0, -2) and cp((1, 1), 8) == (16, 0), "NCP01 exemplo 3: (1 + i)² = 2i, (1 − i)² = −2i, (1 + i)⁸ = 16")
+ok(all(cp((1, s), n) == ((2 * s) ** (n // 2) * CIC[(n // 2) % 4][0], (2 * s) ** (n // 2) * CIC[(n // 2) % 4][1]) for s in (1, -1) for n in (4, 6, 8, 10, 12, 16, 20)), "NCP01 exemplo 3 e exercício 13: (1 ± i)ⁿ = (±2)^(n/2)·i^(n/2)")
+ok(cm((3, 1), I_) == (-1, 3) and cm((2, 3), I_) == (-3, 2), "NCP01 teorema 2: (3 + i)·i = −1 + 3i e (2 + 3i)·i = −3 + 2i")
+ok(all(cm((a, b), I_) == (-b, a) and a * (-b) + b * a == 0 for a in G for b in G), "NCP01 teorema 2: (a + bi)·i = −b + ai, perpendicular")
+ok(cm((0, 2), (0, 3)) == (-6, 0) and cp((0, 3), 2) == (-9, 0) and cp((0, -3), 2) == (-9, 0), "NCP01 pegadinha: 2i·3i = −6; (±3i)² = −9")
+def soma_i(n):
+    s = (0, 0)
+    for k in range(1, n + 1):
+        s = cs(s, cp(I_, k % 4 + 4))
+    return s
+ok(all(soma_i(n) == [(0, 0), (0, 1), (-1, 1), (-1, 0)][n % 4] for n in range(1, 120)) and 2026 % 4 == 2, "NCP01 exercícios 3 e 14: soma i + i² + ... + iⁿ pelos restos")
+ok(all(len([n for n in range(1, N + 1) if n % 4 == 2]) == (N + 2) // 4 for N in range(1, 200)), "NCP01 exercício 16: contagem dos n com iⁿ = −1")
+ok(cp((1, 1), 20) == (-1024, 0), "NCP01 chefão (a): (1 + i)²⁰ = −1024")
+ok(Fr(1, 2) * 2 == 1 and cm((1, 1), (1, 1)) == (0, 2), "NCP01 chefão (b): [(√2/2)(1 + i)]² = (1/2)·2i = i")
+ok(all(cp(z, 4) == (1, 0) for z in CIC) and cm((1, -1 * 0), (1, 0)) == (1, 0), "NCP01 chefão (c): 1, i, −1, −i elevados à quarta dão 1")
+ok(all(Fr(b * b, 4) + Fr(4 * c - b * b, 4) == c for b in range(-6, 7) for c in range(-4, 14)), "NCP01 chefão (d): p² + q² = c")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

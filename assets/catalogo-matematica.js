@@ -89,7 +89,7 @@ window.CATALOGO.push(
     ["MD02","Determinantes",[],true],
     ["MD03","Sistemas Lineares",[],true],
     ["BW01","Binômio de Newton",[],true],
-    ["NCP01","Unidade Imaginária",[]],
+    ["NCP01","Unidade Imaginária",[],true],
     ["NCP02","Forma Algébrica do Número Complexo",[]],
     ["NCP03","Forma Trigonométrica",[]],
     ["NCP04","Lugares Geométricos (complexos)",[]],

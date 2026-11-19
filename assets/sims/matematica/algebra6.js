@@ -2,6 +2,8 @@
    Acrescenta a SIM.al: comb (número binomial), pascal (linhas do triângulo), binCoefs (coeficientes de (px + q)ⁿ), pascalFig (triângulo desenhado)
    e caminhos (número de caminhos numa grade).
    BW01: SIM.alPascal (o triângulo, a relação de Stifel e a paridade), SIM.alBinomio ((px + q)ⁿ termo a termo) e SIM.alCaminhos (caminhos numa grade).
+   NCP01: cx (complexos como pares [a, b]: soma, sub, mul, div exata, conj, mod2, pot, ipot, tex, txt, pt, vet), planoC (plano de Argand-Gauss);
+          SIM.alGiraI (multiplicar por i é girar 90°), SIM.alDeltaNeg (as raízes quando Δ fica negativo) e SIM.alCicloI (quiz de iⁿ).
    Contas conferidas em Python (tools/matematica/confere-al.py). */
 (function () {
   const SIM = (window.SIM = window.SIM || {}), M = SIM.mb, A = SIM.al, { vis, rng, mn } = A;
@@ -79,4 +81,75 @@
       el.querySelectorAll("[data-p]").forEach((g) => g.addEventListener("click", () => { const [a, b] = g.dataset.p.split(",").map(Number); poe({ alvo: [a, b] }); })); };
     q("[data-v=outra]").addEventListener("click", () => { sorteia(); desenha(); });
     SIM.alCaminhos._ult = { poe, est, outra: () => { sorteia(); desenha(); } }; desenha(); };
+
+  /* ---------- NCP01 ---------- */
+  /* núcleo de complexos: um complexo é [a, b] = a + bi, com a e b números comuns (inteiros nos temas) */
+  const cx = (A.cx = {});
+  cx.soma = (z, w) => [z[0] + w[0], z[1] + w[1]]; cx.sub = (z, w) => [z[0] - w[0], z[1] - w[1]];
+  cx.mul = (z, w) => [z[0] * w[0] - z[1] * w[1], z[0] * w[1] + z[1] * w[0]];
+  cx.conj = (z) => [z[0], -z[1]]; cx.mod2 = (z) => z[0] * z[0] + z[1] * z[1]; cx.ig = (z, w) => z[0] === w[0] && z[1] === w[1];
+  cx.pot = (z, n) => { let r = [1, 0]; for (let k = 0; k < n; k++) r = cx.mul(r, z); return r; };
+  /* iⁿ para qualquer inteiro n (inclusive negativo): depende só do resto de n por 4 */
+  cx.ipot = (n) => [[1, 0], [0, 1], [-1, 0], [0, -1]][((n % 4) + 4) % 4];
+  /* escrita de a + bi sem "1i", sem "+ −" e sem termo nulo; em TeX (tex) e em texto (txt). Aceita frações do SIM.mb */
+  const cxEscr = (z, t) => { const ehFr = (v) => typeof v === "object", val = (v) => (ehFr(v) ? M.val(v) : v), abs = (v) => (ehFr(v) ? M.fr(Math.abs(v.n), v.d) : Math.abs(v)), sh = (v) => (ehFr(v) ? (t ? M.tex(v) : M.txt(v)) : t ? String(v) : mn(v)), [a, b] = z, va = val(a), vb = val(b), me = t ? "-" : "−";
+    if (vb === 0) return sh(a); const fracB = ehFr(b) && b.d !== 1, ib = Math.abs(vb) === 1 ? "i" : fracB && !t ? `(${sh(abs(b))})i` : `${sh(abs(b))}i`;
+    return va === 0 ? (vb < 0 ? me : "") + ib : `${sh(a)} ${vb < 0 ? me : "+"} ${ib}`; };
+  cx.tex = (z) => cxEscr(z, true); cx.txt = (z) => cxEscr(z, false);
+  /* divisão exata: (a + bi)/(c + di), com frações */
+  cx.div = (z, w) => { const d = cx.mod2(w), n = cx.mul(z, cx.conj(w)); return d === 0 ? null : [M.fr(n[0], d), M.fr(n[1], d)]; };
+  /* plano de Argand-Gauss: o mesmo A.plano, com os eixos Re e Im e escala igual nos dois */
+  A.planoC = (o, D) => A.plano({ iso: true, rx: "Re", ry: "Im", fs: [], ...o }, D);
+  cx.pt = (z, o = {}) => ({ x: z[0], y: z[1], r: 5, rot: o.rot === undefined ? cx.txt(z) : o.rot, ...o });
+  cx.vet = (z, cor) => ({ x1: 0, y1: 0, x2: z[0], y2: z[1], cor: cor || "var(--warn)", tr: false, w: 2.4 });
+
+  /* nome: "Multiplicar por i é girar 90°" · matéria: Matemática · tema: NCP01 */
+  SIM.alGiraI = (el, F) => { let z0 = [3, 1], n = 0;
+    const sl = (k, r, v) => `<label style="font-size:13px;color:var(--ink2)">${r} <input type="range" data-v="${k}" min="-4" max="4" step="1" value="${v}" style="vertical-align:middle;width:110px"> <b data-v="${k}r" style="color:var(--ink);display:inline-block;width:24px"></b></label>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("a", "a", 3)}${sl("b", "b", 1)}<button class="bt peq" data-v="vez">multiplicar por i</button><button class="bt peq" data-v="zera">voltar ao começo</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const f = cx.ipot(n), z = cx.mul(z0, f); return { z0: z0.slice(), n, fator: f, z, mod2: cx.mod2(z), escalar: z0[0] * cx.mul(z0, [0, 1])[0] + z0[1] * cx.mul(z0, [0, 1])[1] }; };
+    const poe = (o) => { if (o.a !== undefined) z0[0] = Math.max(-4, Math.min(4, Math.round(+o.a))); if (o.b !== undefined) z0[1] = Math.max(-4, Math.min(4, Math.round(+o.b))); n = o.n === undefined ? 0 : o.n; desenha(); };
+    const vez = () => { n++; desenha(); };
+    const desenha = () => { const e = est(), cores = ["var(--ok)", "var(--warn)", "var(--mod)", "var(--ink2)"], vistos = Math.min(n, 3); q("[data-v=a]").value = String(z0[0]); q("[data-v=b]").value = String(z0[1]); q("[data-v=ar]").textContent = mn(z0[0]); q("[data-v=br]").textContent = mn(z0[1]);
+      const segs = [], pts = []; for (let k = 0; k <= vistos; k++) { const w = cx.mul(z0, cx.ipot(n - vistos + k)), atual = k === vistos; segs.push({ ...cx.vet(w, atual ? "var(--warn)" : "var(--ink3)"), w: atual ? 3 : 1.6, tr: atual ? false : undefined }); pts.push(cx.pt(w, { cor: atual ? "var(--warn)" : "var(--ink3)", r: atual ? 5 : 3.5, rot: atual ? cx.txt(w) : "" })); }
+      q("[data-v=pal]").innerHTML = A.planoC({ x: [-6, 6], y: [-5, 5], h: 300, segs, pts, circs: cx.mod2(z0) ? [{ x: 0, y: 0, r: Math.sqrt(cx.mod2(z0)) }] : [] });
+      q("[data-v=lt]").innerHTML = vis("z", cx.txt(z0)) + vis("vezes multiplicado por i", n) + vis(`i${supN(n)}`, cx.txt(e.fator)) + vis(`z · i${supN(n)}`, cx.txt(e.z));
+      q("[data-v=st]").innerHTML = cx.mod2(z0) === 0 ? `O zero não sai do lugar: 0 · i = 0. Escolha outro z.` : n === 0 ? `O ponto laranja é z = ${cx.txt(z0)}: parte real no eixo horizontal, parte imaginária no vertical. Antes de clicar: para onde ele vai quando for multiplicado por i?` : `(${cx.txt(cx.mul(z0, cx.ipot(n - 1)))}) · i = ${cx.txt(e.z)}: o ponto girou 90° no sentido anti-horário, sem mudar a distância até a origem (continua na circunferência tracejada). ${n % 4 === 0 ? "Quatro giros de 90° dão uma volta inteira: i⁴ = 1, e o ponto voltou ao começo." : n % 4 === 2 ? "Dois giros de 90° são meia-volta: i² = −1, e o ponto está no oposto de z." : "Mais dois cliques e ele chega ao lado oposto."}`; };
+    q("[data-v=a]").addEventListener("input", (ev) => poe({ a: ev.target.value })); q("[data-v=b]").addEventListener("input", (ev) => poe({ b: ev.target.value })); q("[data-v=vez]").addEventListener("click", vez); q("[data-v=zera]").addEventListener("click", () => poe({}));
+    SIM.alGiraI._ult = { poe, est, vez }; desenha(); };
+
+  /* nome: "Para onde vão as raízes quando Δ fica negativo" · matéria: Matemática · tema: NCP01 */
+  SIM.alDeltaNeg = (el, F) => { let b = -4, c = 3;
+    const sl = (k, r, lo, hi, v) => `<label style="font-size:13px;color:var(--ink2)">${r} <input type="range" data-v="${k}" min="${lo}" max="${hi}" step="1" value="${v}" style="vertical-align:middle;width:150px"> <b data-v="${k}r" style="color:var(--ink);display:inline-block;width:24px"></b></label>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("b", "b", -6, 6, -4)}${sl("c", "c", -4, 13, 3)}</div></div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><div class="palco" data-v="p1" style="flex:1 1 300px;padding:6px 0"></div><div class="palco" data-v="p2" style="flex:1 1 300px;padding:6px 0"></div></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    /* x² + bx + c = 0: raízes (−b ± √Δ)/2; com Δ < 0, −b/2 ± i·√(−Δ)/2 */
+    const est = () => { const d = b * b - 4 * c, re = -b / 2, rz = Math.sqrt(Math.abs(d)) / 2, r = d >= 0 ? [[re + rz, 0], [re - rz, 0]] : [[re, rz], [re, -rz]], ex = M.quad(1, b, c); return { b, c, delta: d, raizes: r, soma: r[0][0] + r[1][0], produto: d >= 0 ? r[0][0] * r[1][0] : re * re + rz * rz, tipo: d > 0 ? "duas reais" : d === 0 ? "uma real (dupla)" : "duas complexas", exato: ex }; };
+    const poe = (o) => { if (o.b !== undefined) b = Math.max(-6, Math.min(6, Math.round(+o.b))); if (o.c !== undefined) c = Math.max(-4, Math.min(13, Math.round(+o.c))); desenha(); };
+    const escr = (e) => { if (e.delta >= 0) return e.raizes.map((r) => F.nt(r[0], 2)).filter((v, i, l) => l.indexOf(v) === i).join(" e "); const s = M.raiz(-e.delta), im = s.m === 1 ? M.txt(M.fr(s.k, 2)) : null, re = M.txt(M.fr(-b, 2)); return im ? `${re === "0" ? "" : re + " "}± ${im === "1" ? "" : im}i` : `${re === "0" ? "" : re + " "}± ${F.nt(e.raizes[0][1], 2)}i`; };
+    const desenha = () => { const e = est(); q("[data-v=b]").value = String(b); q("[data-v=c]").value = String(c); q("[data-v=br]").textContent = mn(b); q("[data-v=cr]").textContent = mn(c);
+      q("[data-v=p1]").innerHTML = A.plano({ x: [-6, 6], y: [-6, 14], h: 300, py: 2, px: 2, fs: [{ f: (x) => x * x + b * x + c, cor: "var(--ok)" }], pts: e.delta >= 0 ? e.raizes.map((r) => ({ x: r[0], y: 0, r: 5 })) : [], sub: `y = ${M.polTxt([1, b, c])}` });
+      q("[data-v=p2]").innerHTML = A.planoC({ x: [-6, 6], y: [-4.5, 4.5], h: 300, px: 2, py: 2, pts: e.raizes.map((r) => ({ x: r[0], y: r[1], r: 5 })), segs: e.delta < 0 ? [{ x1: e.raizes[0][0], y1: e.raizes[0][1], x2: e.raizes[1][0], y2: e.raizes[1][1] }] : [], sub: "as raízes no plano complexo" });
+      q("[data-v=lt]").innerHTML = vis("Δ = b² − 4c", mn(e.delta)) + vis("raízes", escr(e)) + vis("tipo", e.tipo) + vis("soma ; produto", `${F.nt(e.soma, 2)} ; ${F.nt(e.produto, 2)}`);
+      q("[data-v=st]").innerHTML = e.delta > 0 ? `Δ positivo: a parábola corta o eixo x em dois pontos, e as duas raízes estão no eixo real do plano da direita. Aumente c devagar e veja as duas se aproximarem.` : e.delta === 0 ? `Δ = 0: a parábola encosta no eixo x, e as duas raízes se encontraram num ponto só. Aumente c mais um pouco.` : `Δ negativo: a parábola não toca o eixo x, e as raízes <b>não sumiram</b>: saíram do eixo real, uma para cima e outra para baixo, na mesma vertical (parte real −b/2 = ${F.nt(-b / 2, 2)}). São conjugadas: ${escr(e)}. A soma continua −b = ${mn(-b)} e o produto continua c = ${mn(c)}.`; };
+    q("[data-v=b]").addEventListener("input", (ev) => poe({ b: ev.target.value })); q("[data-v=c]").addEventListener("input", (ev) => poe({ c: ev.target.value }));
+    SIM.alDeltaNeg._ult = { poe, est }; desenha(); };
+
+  /* nome: "Quanto vale iⁿ? Treino contra o ciclo de 4" · matéria: Matemática · tema: NCP01 */
+  SIM.alCicloI = (el, F) => { let r = rng(12), n = 23, pontos = 0, feitas = 0, resp = null;
+    const OPS = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts" data-v="ops"></div></div><div><div class="bts"><button class="bt peq" data-v="novo">outro expoente</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => ({ n, resto: ((n % 4) + 4) % 4, certa: ((n % 4) + 4) % 4, valor: cx.ipot(n), pontos, feitas, resp });
+    const novo = () => { n = 10 + Math.floor(r() * 990); if (r() < 0.2) n = -n; resp = null; desenha(); };
+    const responde = (k) => { if (resp !== null) return; resp = k; feitas++; if (k === est().certa) pontos++; desenha(); };
+    const desenha = () => { const e = est();
+      q("[data-v=ops]").innerHTML = OPS.map((z, k) => `<button class="bt peq" data-k="${k}" ${resp !== null ? "disabled" : ""} style="${resp !== null && k === e.certa ? "border-color:var(--ok);color:var(--ok)" : resp === k ? "border-color:var(--bad, #e06c75);color:var(--bad, #e06c75)" : ""}">${cx.txt(z)}</button>`).join("");
+      q("[data-v=pal]").innerHTML = `<div style="text-align:center;font-size:30px;font-weight:700;padding:14px 0;color:var(--ink)">i${supN(Math.abs(n)).replace(/^/, n < 0 ? "⁻" : "")} = ?</div>`;
+      q("[data-v=lt]").innerHTML = vis("expoente", mn(n)) + vis("resto na divisão por 4", resp === null ? "?" : e.resto) + vis("acertos", `${pontos} de ${feitas}`);
+      q("[data-v=st]").innerHTML = resp === null ? `Só os dois últimos algarismos do expoente importam para o resto por 4 (porque 100 é múltiplo de 4).${n < 0 ? " Expoente negativo: some múltiplos de 4 até ficar positivo; o valor não muda, porque i⁴ = 1." : ""}` : `${resp === e.certa ? "Certo." : "Não."} ${mn(n)} deixa resto ${e.resto} na divisão por 4, então i${supN(Math.abs(n)).replace(/^/, n < 0 ? "⁻" : "")} = i${supN(e.resto)} = ${cx.txt(e.valor)}.`;
+      el.querySelectorAll("[data-k]").forEach((b) => b.addEventListener("click", () => responde(+b.dataset.k))); };
+    q("[data-v=novo]").addEventListener("click", novo);
+    SIM.alCicloI._ult = { est, novo, responde, semente: (s) => { r = rng(s); novo(); }, poe: (o) => { n = o.n; resp = null; desenha(); } }; desenha(); };
 })();
