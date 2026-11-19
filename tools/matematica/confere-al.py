@@ -660,5 +660,23 @@ ok(all(sum((r + k) ** 2 for r in rs) == (sum(rs) ** 2 - 2 * (rs[0] * rs[1] + rs[
 ok(all(praizes([a, a, a]) == [1, -3 * a, 3 * a * a, -a ** 3] for a in range(-4, 5)), "PL04 exercício 16: (x − a)³ = x³ − 3ax² + 3a²x − a³")
 ok(all(praizes([a, a, -2 * a]) == [1, 0, -3 * a * a, 2 * a ** 3] for a in range(-3, 4)), "PL04 exercício 3: (x − a)²(x + 2a) = x³ − 3a²x + 2a³")
 
+# ---------- IC01 ----------
+ok(all(Fr(x * x - a * a, 1) / (x - a) == x + a for a in G for x in G if x != a), "IC01 teorema 1: (x² − a²)/(x − a) = x + a para x ≠ a")
+ok(Fr(961, 100) - 9 == Fr(61, 100) and Fr(61, 100) / Fr(1, 10) == Fr(61, 10) and (Fr(301, 100) ** 2 - 9) / Fr(1, 100) == Fr(601, 100), "IC01 teorema 1: valores em 3,1 e 3,01 (6,1 e 6,01)")
+ok(all(((a + h) ** 2 + b * (a + h) - (a * a + b * a)) / h == 2 * a + b + h for a in G for b in G[:3] for h in G if h != 0), "IC01 exemplo 1: [f(a + h) − f(a)]/h = 2a + b + h para f = x² + bx")
+ok(2 * 2 - 3 == 1 and 4 - 6 == -2, "IC01 exemplo 1: f = x² − 3x em a = 2, derivada 1 e f(2) = −2")
+ok(all(((a + h) ** n - a ** n) / h == sum(Cb(n, k) * a ** (n - k) * h ** (k - 1) for k in range(1, n + 1)) for n in range(1, 7) for a in G[:4] for h in G if h != 0), "IC01 teorema 2: [(a + h)ⁿ − aⁿ]/h pelo binômio (o termo sem h é n·aⁿ⁻¹)")
+ok(all(((a + h) ** 3 - a ** 3) / h == 3 * a * a + 3 * a * h + h * h for a in G for h in G if h != 0), "IC01 chefão (a): [(a + h)³ − a³]/h = 3a² + 3ah + h²")
+ok(pv([1, 0, -3, 0], 2) == 2 and pv(pder([1, 0, -3, 0]), 2) == 9 and pdiv([1, 0, -3, 0], [1, -4, 4]) == ([1, 4], [9, -16]) and 2 + 9 * (0 - 2) == -16, "IC01 exemplo 2 e teorema 3: tangente a x³ − 3x em 2 é y = 9x − 16, igual ao resto por (x − 2)²")
+ok(all(pdiv(p, [1, -2 * a, a * a])[1] in ([pv(pder(p), a), pv(p, a) - pv(pder(p), a) * a], [pv(p, a) - pv(pder(p), a) * a]) for p in POLS[:40] for a in (-2, -1, 1, 2, 3) if len(p) >= 3), "IC01 teorema 3: resto por (x − a)² = P(a) + P′(a)(x − a) em 40 polinômios")
+ok(all(pol_mul([1, 0], pol_mul([-2, L], [-2, L])) == [4, -4 * L, L * L, 0] and pder([4, -4 * L, L * L, 0]) == [12, -8 * L, L * L] and pv([12, -8 * L, L * L], Fr(L, 6)) == 0 and pv([12, -8 * L, L * L], Fr(L, 2)) == 0 for L in (6, 12, 18, 24, 30, 36, 42)), "IC01 exemplo 3 e exercício 13: V = x(L − 2x)², V′ = 12x² − 8Lx + L², raízes L/6 e L/2")
+ok(2 * (12 - 4) ** 2 == 128 and all(pv([4, -48, 144, 0], x) <= 128 for x in [Fr(k, 20) for k in range(0, 121)]), "IC01 exemplo 3: volume máximo 128 em x = 2 (comparado com 121 valores entre 0 e 6)")
+ok(all(Fr(L, 4) * (L - 2 * Fr(L, 4)) == Fr(L * L, 8) and all(x * (L - 2 * x) <= Fr(L * L, 8) for x in [Fr(L * k, 40) for k in range(0, 21)]) for L in (12, 40, 100)), "IC01 exercício 16: cerca de três lados, área máxima L²/8")
+ok(all(a * a + 2 * a * (Fr(a, 2) - a) == 0 for a in G if a != 0), "IC01 chefão (b): a tangente a x² em a corta o eixo em a/2")
+ok(pv(pder([1, 0, -3, 0]), 1) == 0 and pv(pder([1, 0, -3, 0]), -1) == 0 and pv([1, 0, -3, 0], 1) == -2 and pv([1, 0, -3, 0], -1) == 2, "IC01 chefão (c): tangente horizontal em (1, −2) e (−1, 2)")
+ok(2 * 1 + 0 == 2 and 1 + 0 - 2 == 2 * 1 - 3 and pdiv(padd([1, 0, -2], [-2, 3]), [1, -1])[1] == [0] and ptrim(padd([1, 0, -2], [0, -2, 3])) == [1, -2, 1], "IC01 chefão (d): x² − 2 e 2x − 3 se tocam em x = 1 (a diferença é (x − 1)²)")
+ok(all(x * (pp - x) <= Fr(pp * pp, 4) for pp in (2, 5, 10) for x in [Fr(pp * k, 20) for k in range(0, 21)]), "IC01 chefão (e): entre retângulos de perímetro 2p, área máxima p²/4")
+ok(all(((1 + h) ** 2 - 1) / h == 2 + h for h in G if h != 0), "IC01 chute: secante de x² entre 1 e 1 + h tem inclinação 2 + h")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

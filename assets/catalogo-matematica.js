@@ -97,7 +97,7 @@ window.CATALOGO.push(
     ["PL02","Operações com Polinômios",[],true],
     ["PL03","Equações Algébricas",[],true],
     ["PL04","Aprofundamento em Polinômios",[],true],
-    ["IC01","Introdução ao Cálculo",[]],
+    ["IC01","Introdução ao Cálculo",[],true],
   ] },
   /* aba Cálculo (β 4.0: os 5 módulos vieram da física com os mesmos ids, códigos e ordem; Cálculo 3 e 4 continuam "em breve") */
   { id:"K1", area:"matcalc", letra:"1", cor:"--mK1", nome:"Cálculo 1", desc:"Limites, derivadas e integrais de uma variável.", temas:[
