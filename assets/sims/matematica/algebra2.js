@@ -146,4 +146,47 @@
       q("[data-v=st]").innerHTML = `A curva tracejada é a original, f(x) = ${b.n}. <b>h</b> desloca para os lados: trocar x por x − ${Math.abs(h) || "h"} anda para a ${h < 0 ? "esquerda (porque h é negativo)" : "<b>direita</b>, ao contrário do que o sinal de menos sugere"}. <b>k</b> desloca para cima e para baixo. <b>c</b> estica na vertical${c < 0 ? " e, por ser negativo, espelha o gráfico no eixo x" : ""}.`; };
     q("[data-v=f]").addEventListener("change", (ev) => poe({ i: ev.target.value })); ["h", "k", "c"].forEach((n) => q(`[data-v=${n}]`).addEventListener("input", (ev) => poe({ [n]: ev.target.value })));
     SIM.alTransforma._ult = { poe, est, g: (x) => g(x) }; desenha(); };
+
+  /* ---------- FX06 ---------- */
+  A.MAQ = [
+    { n: "2x + 3", f: (x) => 2 * x + 3 }, { n: "x²", f: (x) => x * x }, { n: "x − 4", f: (x) => x - 4 },
+    { n: "3x", f: (x) => 3 * x }, { n: "√x", f: (x) => (x < 0 ? NaN : Math.sqrt(x)) }, { n: "1/x", f: (x) => (x === 0 ? NaN : 1 / x) }];
+  /* nome: "Duas máquinas em série: g(f(x)) e f(g(x))" · matéria: Matemática · tema: FX06 */
+  SIM.alComposta = (el, F) => { let i = 0, j = 1, x = 2;
+    const se = (n, v) => `<label style="font-size:13px;color:var(--ink2)">${n}(x) = <select data-v="${n}" class="bt peq" style="font-size:14px">${A.MAQ.map((m, k) => `<option value="${k}"${k === v ? " selected" : ""}>${m.n}</option>`).join("")}</select></label>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${se("f", 0)}${se("g", 1)}<label style="font-size:13px;color:var(--ink2)">x <input type="range" data-v="x" min="-4" max="6" step="1" value="2" style="vertical-align:middle;width:170px"></label></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), num = (v) => (Number.isFinite(v) ? F.nt(v, 3) : "não existe");
+    const est = () => { const f = A.MAQ[i].f, g = A.MAQ[j].f, fx = f(x), gx = g(x), gf = Number.isFinite(fx) ? g(fx) : NaN, fg = Number.isFinite(gx) ? f(gx) : NaN, v = (t) => (Number.isFinite(t) ? t : null); return { f: A.MAQ[i].n, g: A.MAQ[j].n, x, fx: v(fx), gx: v(gx), gf: v(gf), fg: v(fg), iguais: Number.isFinite(gf) && Number.isFinite(fg) && Math.abs(gf - fg) < 1e-9 }; };
+    const poe = (o) => { ({ i, j, x } = { i, j, x, ...o }); i = Math.max(0, Math.min(5, Math.round(+i))); j = Math.max(0, Math.min(5, Math.round(+j))); x = Math.max(-4, Math.min(6, Math.round(+x))); desenha(); };
+    const cx = (x0, y, t, cor) => `<rect x="${x0}" y="${y}" width="84" height="40" rx="8" style="fill:var(--card2);stroke:${cor};stroke-width:2"/>${A.T(x0 + 42, y + 25, t, { w: 700, f: 15 })}`, seta = (x0, y, t) => `<line x1="${x0}" y1="${y}" x2="${x0 + 46}" y2="${y}" style="stroke:var(--ink3);stroke-width:1.6"/><path d="M${x0 + 46} ${y} l-7 -4 v8 z" style="fill:var(--ink3)"/>${A.T(x0 + 23, y - 7, t, { f: 12, c: "var(--ink2)" })}`;
+    const linha = (y, a, b, m, r, c1, c2) => A.T(30, y + 25, mn(x), { w: 700, f: 16 }) + seta(50, y + 20, "") + cx(104, y, a, c1) + seta(196, y + 20, m) + cx(250, y, b, c2) + seta(342, y + 20, "") + A.T(440, y + 26, r, { w: 700, f: 17, c: "var(--warn)" });
+    const desenha = () => { const e = est(); q("[data-v=f]").value = String(i); q("[data-v=g]").value = String(j); q("[data-v=x]").value = String(x);
+      q("[data-v=pal]").innerHTML = `<svg viewBox="0 0 560 130" width="100%" style="max-width:560px">${linha(8, "f", "g", num(e.fx === null ? NaN : e.fx), "g(f(x)) = " + num(e.gf === null ? NaN : e.gf), A.COR[0], A.COR[1])}${linha(74, "g", "f", num(e.gx === null ? NaN : e.gx), "f(g(x)) = " + num(e.fg === null ? NaN : e.fg), A.COR[1], A.COR[0])}</svg>`;
+      q("[data-v=lt]").innerHTML = vis("x", mn(x)) + vis("f(x)", num(e.fx === null ? NaN : e.fx)) + vis("g(f(x))", num(e.gf === null ? NaN : e.gf)) + vis("g(x)", num(e.gx === null ? NaN : e.gx)) + vis("f(g(x))", num(e.fg === null ? NaN : e.fg));
+      q("[data-v=st]").innerHTML = `Em g(f(x)), o x passa <b>primeiro pela f</b> e a saída dela entra na g: lê-se de dentro para fora. ` + (e.gf === null || e.fg === null ? `Aqui uma das composições não existe: a saída da primeira máquina está fora do domínio da segunda.` : e.iguais ? `Neste x as duas ordens deram o mesmo valor; mude o x e veja se isso se mantém.` : `As duas ordens deram valores diferentes: compor funções <b>não é comutativo</b>.`); };
+    ["f", "g"].forEach((n) => q(`[data-v=${n}]`).addEventListener("change", (ev) => poe(n === "f" ? { i: ev.target.value } : { j: ev.target.value }))); q("[data-v=x]").addEventListener("input", (ev) => poe({ x: ev.target.value }));
+    SIM.alComposta._ult = { poe, est }; desenha(); };
+
+  A.INV = [
+    { n: "2x + 1", f: (x) => 2 * x + 1, inv: (y) => (y - 1) / 2, invN: "(x − 1)/2", dom: [-5, 5] },
+    { n: "x³", f: (x) => x * x * x, inv: (y) => Math.cbrt(y), invN: "∛x", dom: [-5, 5] },
+    { n: "x² (com x ≥ 0)", f: (x) => (x < 0 ? NaN : x * x), inv: (y) => (y < 0 ? NaN : Math.sqrt(y)), invN: "√x", dom: [0, 5] },
+    { n: "x² (todos os reais)", f: (x) => x * x, inv: null, dom: [-5, 5] },
+    { n: "1/x", f: (x) => (Math.abs(x) < 0.03 ? NaN : 1 / x), inv: (y) => (Math.abs(y) < 0.03 ? NaN : 1 / y), invN: "1/x (ela mesma)", dom: [-5, 5] },
+    { n: "|x| − 2", f: (x) => Math.abs(x) - 2, inv: null, dom: [-5, 5] }];
+  A.injetora = (c) => { const ys = []; for (let x = c.dom[0]; x <= c.dom[1] + 1e-9; x += 0.05) { const y = c.f(x); if (!Number.isFinite(y)) continue; if (ys.some((v) => Math.abs(v - y) < 1e-9)) return false; ys.push(y); } return true; };
+  /* nome: "O espelho na reta y = x: a função e a sua inversa" · matéria: Matemática · tema: FX06 */
+  SIM.alInversa = (el, F) => { let i = 0, ver = false, t = 1;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><label style="font-size:13px;color:var(--ink2)">f(x) = <select data-v="f" class="bt peq" style="font-size:14px">${A.INV.map((c, k) => `<option value="${k}">${c.n}</option>`).join("")}</select></label><label style="font-size:13px;color:var(--ink2)">ponto <input type="range" data-v="t" min="-2" max="2" step="0.25" value="1" style="vertical-align:middle;width:140px"></label><button class="bt peq" data-v="ver">espelhar</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const c = A.INV[i], y = c.f(t); return { i, nome: c.n, ver, t, y: Number.isFinite(y) ? y : null, injetora: A.injetora(c), temInversa: !!c.inv, invN: c.invN || null, volta: c.inv && Number.isFinite(y) ? c.inv(y) : null }; };
+    const poe = (o) => { if (o.i !== undefined && +o.i !== i) ver = false; ({ i, ver, t } = { i, ver, t, ...o }); i = Math.max(0, Math.min(A.INV.length - 1, Math.round(+i))); t = Math.max(-2, Math.min(2, +t)); ver = !!ver; desenha(); };
+    const desenha = () => { const e = est(), c = A.INV[i], ok = e.y !== null && Math.abs(e.y) <= 5; q("[data-v=f]").value = String(i); q("[data-v=t]").value = String(t); q("[data-v=ver]").textContent = ver ? "esconder o espelho" : "espelhar";
+      /* a curva espelhada é desenhada como pontos (y, x): assim aparece mesmo quando não é função */
+      const esp = []; if (ver) for (let x = c.dom[0]; x <= c.dom[1] + 1e-9; x += 0.04) { const y = c.f(x); if (Number.isFinite(y) && Math.abs(y) <= 5) esp.push({ x: y, y: x, r: 1.3, cor: "var(--ok)" }); }
+      q("[data-v=pal]").innerHTML = A.plano({ x: [-5, 5], y: [-5, 5], h: 320, iso: true, fs: [{ f: (x) => x, cor: "var(--ink3)", tr: true }, ...(c.n === "1/x" ? [{ f: (x) => (x < -0.03 ? 1 / x : NaN), cor: "var(--mod)" }, { f: (x) => (x > 0.03 ? 1 / x : NaN), cor: "var(--mod)" }] : [{ f: c.f, cor: "var(--mod)", dom: c.dom }])], pts: esp.concat(ok ? [{ x: t, y: e.y, r: 5 }].concat(ver ? [{ x: e.y, y: t, r: 5, cor: "var(--ok)" }] : []) : []), segs: ok && ver ? [{ x1: t, y1: e.y, x2: e.y, y2: t }] : [] });
+      q("[data-v=lt]").innerHTML = vis("ponto de f", ok ? `(${F.nt(t, 2)}; ${F.nt(e.y, 2)})` : "fora") + vis("ponto espelhado", ver && ok ? `(${F.nt(e.y, 2)}; ${F.nt(t, 2)})` : "?") + vis("inversa", ver ? (e.temInversa ? e.invN : "não existe") : "?");
+      q("[data-v=st]").innerHTML = !ver ? `A reta tracejada é y = x. Antes de espelhar: se você trocar x por y em cada ponto do gráfico, a curva nova ainda será o gráfico de uma função?` : e.temInversa ? `Cada ponto (a, b) de f virou (b, a): a curva verde é o gráfico da inversa, ${e.invN}. Ela passa no teste da reta vertical porque f passava no da reta <b>horizontal</b> (f é injetora).` : `A curva verde <b>não é função</b>: há retas verticais que a cortam duas vezes. Isso acontece porque f repete valores (não é injetora): duas entradas diferentes com a mesma saída não dá para desfazer.`; };
+    q("[data-v=f]").addEventListener("change", (ev) => poe({ i: ev.target.value })); q("[data-v=t]").addEventListener("input", (ev) => poe({ t: ev.target.value })); q("[data-v=ver]").addEventListener("click", () => poe({ ver: !ver }));
+    SIM.alInversa._ult = { poe, est }; desenha(); };
 })();
