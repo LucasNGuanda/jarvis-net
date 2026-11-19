@@ -76,7 +76,7 @@ window.CATALOGO.push(
     ["FX02","Função Afim",[],true],
     ["FX03","Função Quadrática",[],true],
     ["FX04","Função Modular",[],true],
-    ["FX05","Outras Funções Clássicas",[]],
+    ["FX05","Outras Funções Clássicas",[],true],
     ["FX06","Função Composta e Inversa",[]],
     ["LOG01","Função Exponencial",[]],
     ["LOG02","Logaritmos e Propriedades",[]],

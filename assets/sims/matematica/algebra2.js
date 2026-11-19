@@ -102,4 +102,48 @@
       q("[data-v=st]").innerHTML = mod ? (e.muda ? `O módulo deixa como está o que já era positivo e <b>rebate para cima</b>, como uma dobra de papel no eixo x, tudo o que era negativo (a curva tracejada é a original). Onde a função cruzava o eixo aparece um bico.` : `Esta função nunca é negativa: o módulo não muda nada, e |f(x)| = f(x).`) : `Antes de clicar: que parte deste gráfico vai mudar quando se aplicar o módulo, e para onde ela vai?`; };
     q("[data-v=f]").addEventListener("change", (ev) => poe({ i: ev.target.value, mod: false })); q("[data-v=m]").addEventListener("click", () => poe({ mod: !mod }));
     SIM.alDobra._ult = { poe, est }; desenha(); };
+
+  /* ---------- FX05 ---------- */
+  const cb = (x) => Math.cbrt(x);
+  A.CLASS = [
+    { n: "x²", tex: "x^2", f: (x) => x * x, dom: "todos os reais", im: "y ≥ 0", par: "par", cres: "decresce até 0, cresce depois" },
+    { n: "x³", tex: "x^3", f: (x) => x * x * x, dom: "todos os reais", im: "todos os reais", par: "ímpar", cres: "crescente sempre" },
+    { n: "√x", tex: "\\sqrt{x}", f: (x) => (x < 0 ? NaN : Math.sqrt(x)), dom: "x ≥ 0", im: "y ≥ 0", par: "nem par nem ímpar", cres: "crescente sempre" },
+    { n: "∛x", tex: "\\sqrt[3]{x}", f: cb, dom: "todos os reais", im: "todos os reais", par: "ímpar", cres: "crescente sempre" },
+    { n: "1/x", tex: "\\dfrac{1}{x}", f: (x) => (x === 0 ? NaN : 1 / x), dom: "x ≠ 0", im: "y ≠ 0", par: "ímpar", cres: "decrescente em cada ramo" },
+    { n: "1/x²", tex: "\\dfrac{1}{x^2}", f: (x) => (x === 0 ? NaN : 1 / (x * x)), dom: "x ≠ 0", im: "y > 0", par: "par", cres: "cresce até 0, decresce depois" },
+    { n: "|x|", tex: "|x|", f: (x) => Math.abs(x), dom: "todos os reais", im: "y ≥ 0", par: "par", cres: "decresce até 0, cresce depois" },
+    { n: "⌊x⌋", tex: "\\lfloor x \\rfloor", f: (x) => Math.floor(x + 1e-12), dom: "todos os reais", im: "os inteiros", par: "nem par nem ímpar", cres: "nunca decresce (sobe em degraus)" }];
+  /* curva de uma função clássica, com o corte em x = 0 das hipérboles (dois ramos) e os degraus do piso */
+  A.ramos = (c, g) => { const f = g || c.f; if (c.n === "1/x" || c.n === "1/x²") return [{ f: (x) => (x < -0.02 ? f(x) : NaN) }, { f: (x) => (x > 0.02 ? f(x) : NaN), cor: "var(--mod)" }]; return [{ f }]; };
+  A.figClass = (c, D, o = {}) => A.plano({ x: [-5, 5], y: [-5, 5], h: 230, iso: true, ...(c.n === "⌊x⌋" ? { fs: [], segs: [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4].map((k) => ({ x1: k, y1: k, x2: k + 1, y2: k, cor: "var(--mod)", tr: false, w: 2.4 })), pts: [-4, -3, -2, -1, 0, 1, 2, 3, 4].map((k) => ({ x: k, y: k, r: 3, cor: "var(--mod)" })) } : { fs: A.ramos(c).map((r) => ({ ...r, cor: "var(--mod)" })) }), ...o }, D);
+
+  /* nome: "A galeria das funções clássicas" · matéria: Matemática · tema: FX05 */
+  SIM.alGaleria = (el, F) => { let i = 4, x = 2;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><label style="font-size:13px;color:var(--ink2)">f(x) = <select data-v="f" class="bt peq" style="font-size:14px">${A.CLASS.map((c, k) => `<option value="${k}">${c.n}</option>`).join("")}</select></label><label style="font-size:13px;color:var(--ink2)">x <input type="range" data-v="x" min="-5" max="5" step="0.25" value="2" style="vertical-align:middle;width:220px"></label></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const c = A.CLASS[i], y = c.f(x); return { i, nome: c.n, x, y: Number.isFinite(y) ? y : null, dom: c.dom, im: c.im, par: c.par, cres: c.cres }; };
+    const poe = (o) => { ({ i, x } = { i, x, ...o }); i = Math.max(0, Math.min(A.CLASS.length - 1, Math.round(+i))); x = Math.max(-5, Math.min(5, Math.round(+x * 4) / 4)); desenha(); };
+    const desenha = () => { const e = est(), c = A.CLASS[i], vis2 = e.y !== null && Math.abs(e.y) <= 5; q("[data-v=f]").value = String(i); q("[data-v=x]").value = String(x);
+      q("[data-v=pal]").innerHTML = A.figClass(c, null, { h: 300, pts: (c.n === "⌊x⌋" ? [-4, -3, -2, -1, 0, 1, 2, 3, 4].map((k) => ({ x: k, y: k, r: 3, cor: "var(--mod)" })) : []).concat(vis2 ? [{ x, y: e.y }] : []), segs: (c.n === "⌊x⌋" ? [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4].map((k) => ({ x1: k, y1: k, x2: k + 1, y2: k, cor: "var(--mod)", tr: false, w: 2.4 })) : []).concat(vis2 ? [{ x1: x, y1: 0, x2: x, y2: e.y }] : []) });
+      q("[data-v=lt]").innerHTML = vis("x", F.nt(x, 2)) + vis("f(x)", e.y === null ? "não existe" : F.nt(e.y, 3)) + vis("domínio", c.dom) + vis("imagem", c.im) + vis("simetria", c.par);
+      q("[data-v=st]").innerHTML = `f(x) = ${c.n}: ${c.cres}. ` + ({ "1/x": "Quanto mais perto de 0 está x, maior fica 1/x em tamanho; quanto maior o x, mais perto de 0 fica 1/x, sem nunca chegar. O gráfico (hipérbole) tem dois ramos e nunca toca os eixos.", "1/x²": "Parecida com 1/x, mas o quadrado deixa tudo positivo: os dois ramos ficam acima do eixo.", "√x": "Só existe para x ≥ 0 e cresce cada vez mais devagar: é a metade de cima de uma parábola deitada.", "∛x": "Existe para todo x, inclusive negativo: ∛(−8) = −2. É o gráfico de x³ com os eixos trocados.", "x³": "Negativa à esquerda, positiva à direita, e crescente o tempo todo, mesmo passando por 0 quase na horizontal.", "⌊x⌋": "O maior inteiro que não passa de x. Cuidado com os negativos: ⌊−2,5⌋ = −3, não −2. Em cada degrau, a bolinha cheia fica na esquerda.", "x²": "A parábola: simétrica em relação ao eixo y.", "|x|": "O V do módulo." })[c.n]; };
+    q("[data-v=f]").addEventListener("change", (ev) => poe({ i: ev.target.value })); q("[data-v=x]").addEventListener("input", (ev) => poe({ x: ev.target.value }));
+    SIM.alGaleria._ult = { poe, est }; desenha(); };
+
+  /* nome: "Transforme o gráfico: desloque, estique, espelhe" · matéria: Matemática · tema: FX05 */
+  SIM.alTransforma = (el, F) => { let i = 0, h = 2, k = 1, c = 1; const BASES = [0, 2, 4, 6, 1];
+    const sl = (n, lo, hi, v, st) => `<label style="font-size:13px;color:var(--ink2)">${n} <input type="range" data-v="${n}" min="${lo}" max="${hi}" step="${st}" value="${v}" style="vertical-align:middle;width:120px"> <b data-r="${n}" style="color:var(--ink);display:inline-block;width:30px"></b></label>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><label style="font-size:13px;color:var(--ink2)">f(x) = <select data-v="f" class="bt peq" style="font-size:14px">${BASES.map((b, j) => `<option value="${j}">${A.CLASS[b].n}</option>`).join("")}</select></label>${sl("h", -4, 4, 2, 1)}${sl("k", -4, 4, 1, 1)}${sl("c", -2, 2, 1, 0.5)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const g = (x) => c * A.CLASS[BASES[i]].f(x - h) + k;
+    const est = () => ({ base: A.CLASS[BASES[i]].n, h, k, c, g0: g(h + 1), ponto: [1 + h, c * A.CLASS[BASES[i]].f(1) + k] });
+    const poe = (o) => { ({ i, h, k, c } = { i, h, k, c, ...o }); i = Math.max(0, Math.min(BASES.length - 1, Math.round(+i))); h = Math.max(-4, Math.min(4, Math.round(+h))); k = Math.max(-4, Math.min(4, Math.round(+k))); c = Math.max(-2, Math.min(2, Math.round(+c * 2) / 2)); if (c === 0) c = 0.5; desenha(); };
+    const desenha = () => { const e = est(), b = A.CLASS[BASES[i]]; q("[data-v=f]").value = String(i); ["h", "k", "c"].forEach((n) => { q(`[data-v=${n}]`).value = String({ h, k, c }[n]); q(`[data-r=${n}]`).textContent = F.nt({ h, k, c }[n], 1); });
+      q("[data-v=pal]").innerHTML = A.plano({ x: [-7, 7], y: [-7, 7], h: 300, iso: true, fs: [...A.ramos(b).map((r) => ({ ...r, cor: "var(--ink3)", tr: true })), ...A.ramos(b, null).map((r) => ({ f: (x) => { const y = r.f(x - h); return c * y + k; }, cor: "var(--mod)" }))], pts: [{ x: 1, y: b.f(1), r: 4, cor: "var(--ink3)" }, { x: e.ponto[0], y: e.ponto[1], r: 5 }] });
+      const arg = h === 0 ? "x" : `x ${h > 0 ? "−" : "+"} ${Math.abs(h)}`;
+      q("[data-v=lt]").innerHTML = vis("nova função", `${c === 1 ? "" : c === -1 ? "−" : F.nt(c, 1) + " · "}f(${arg})${k === 0 ? "" : k > 0 ? ` + ${k}` : ` − ${-k}`}`) + vis("o ponto (1; " + F.nt(b.f(1), 2) + ") foi para", `(${F.nt(e.ponto[0], 2)}; ${F.nt(e.ponto[1], 2)})`);
+      q("[data-v=st]").innerHTML = `A curva tracejada é a original, f(x) = ${b.n}. <b>h</b> desloca para os lados: trocar x por x − ${Math.abs(h) || "h"} anda para a ${h < 0 ? "esquerda (porque h é negativo)" : "<b>direita</b>, ao contrário do que o sinal de menos sugere"}. <b>k</b> desloca para cima e para baixo. <b>c</b> estica na vertical${c < 0 ? " e, por ser negativo, espelha o gráfico no eixo x" : ""}.`; };
+    q("[data-v=f]").addEventListener("change", (ev) => poe({ i: ev.target.value })); ["h", "k", "c"].forEach((n) => q(`[data-v=${n}]`).addEventListener("input", (ev) => poe({ [n]: ev.target.value })));
+    SIM.alTransforma._ult = { poe, est, g: (x) => g(x) }; desenha(); };
 })();
