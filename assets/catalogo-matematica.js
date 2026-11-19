@@ -74,7 +74,7 @@ window.CATALOGO.push(
   { id:"AL", area:"mat", letra:"AL", cor:"--mC", nome:"Álgebra", desc:"Polinômios, sequências, matrizes, complexos e combinatória.", temas:[
     ["FX01","Intuição e Definições",[],true],
     ["FX02","Função Afim",[],true],
-    ["FX03","Função Quadrática",[]],
+    ["FX03","Função Quadrática",[],true],
     ["FX04","Função Modular",[]],
     ["FX05","Outras Funções Clássicas",[]],
     ["FX06","Função Composta e Inversa",[]],

@@ -52,5 +52,24 @@ ok(2 * 2 - 5 == -1 and 2 * 5 - 5 == 5 and Fr(5 - (-1), 3) == 2, "FX02 exemplo 1:
 ok(-2 * 3 + 6 == 0 and 6 - 2 * 5 == -4 and -2 * 7 + 6 == -8, "FX02 exemplo 2: −2x + 6 zera em 3; −2x + 6 ≥ −4 dá x ≤ 5; f(7) = −8")
 ok(abs((50 - 20) / (0.5 - 0.2) - 100) < 1e-9 and 20 + 0.5 * 100 == 70, "FX02 exemplo 3: planos empatam em 100 minutos, a 70 reais")
 
+# ---------- FX03 ----------
+ok(all(x * x - 6 * x + 5 == (x - 3) ** 2 - 4 == (x - 1) * (x - 5) for x in G), "FX03: x² − 6x + 5 = (x − 3)² − 4 = (x − 1)(x − 5)")
+GA = [Fr(-2), Fr(-1, 2), Fr(1), Fr(3)]
+ok(all(a * x * x + b * x + c == a * (x + b / (2 * a)) ** 2 - (b * b - 4 * a * c) / (4 * a) for a in GA for b in G for c in G for x in G), "FX03 teorema 1: ax² + bx + c = a(x + b/2a)² − Δ/4a, em 500 casos")
+ok(all(a * ((h + t) - h) ** 2 + k == a * ((h - t) - h) ** 2 + k for a in GA for h in G for k in G for t in G), "FX03 teorema 2: f(h + t) = f(h − t)")
+ok((3 - 1) * (3 - 5) == -4 and (6 - 1) * (6 - 5) == 5 and (0 - 1) * (0 - 5) == 5, "FX03 teorema 3: (x − 1)(x − 5) em 3, 6 e 0")
+ok(max(x * (20 - x) for x in range(1, 20)) == 100 and 19 * 1 == 19 and 10 * 10 == 100, "FX03 chute: cerca de 40 m, máximo 100 no quadrado; 19 × 1 = 19")
+ok(max(Fr(x, 4) * (20 - 2 * Fr(x, 4)) for x in range(0, 41)) == 50 and 5 * 10 == 50, "FX03 exemplo 3: 20 m de tela com muro, máximo 50 m² (5 por 10)")
+ok(all(L * L / 8 == Fr(L, 4) * Fr(L, 2) for L in (20, 24, 28, 32, 40)), "FX03: com muro, área máxima L²/8 = (L/4)(L/2)")
+p3 = lambda x: x * x - 4 * x + 3
+ok(p3(0) == 3 and p3(1) == 0 and p3(2) == -1, "FX03 chefão (a): x² − 4x + 3 passa por (0, 3), (1, 0), (2, −1)")
+ok([m for m in range(-6, 7) if m * m - 16 < 0] == list(range(-3, 4)), "FX03 chefão (b): Δ = m² − 16 < 0 para −4 < m < 4")
+ok(all((x - 1) ** 2 + (x - 3) ** 2 + (x - 8) ** 2 == 3 * x * x - 24 * x + 74 for x in G) and 9 + 1 + 16 == 26 and Fr(1 + 3 + 8, 3) == 4, "FX03 chefão (c): 3x² − 24x + 74, mínimo 26 em x = 4 (a média)")
+ok(max(Fr(x, 10) * (6 - Fr(3, 4) * Fr(x, 10)) for x in range(0, 81)) == 12 and 4 * 3 == 12 and 6 * 8 // 2 == 24, "FX03 chefão (d): retângulo de área máxima 12 (4 por 3)")
+ok(all(x * x == -x * x + 4 * x + 6 for x in (-1, 3)) and (-1) ** 2 == 1 and 3 ** 2 == 9, "FX03 chefão (e): cruzam em (−1, 1) e (3, 9)")
+ok(30 ** 2 / 20 == 45 and 30 * 3 - 5 * 9 == 45 and 40 / 5 == 8, "FX03: h = 30t − 5t² tem máximo 45 m em t = 3 s; 40t − 5t² volta ao chão em 8 s")
+ok(all(2 * x * x - 2 * S * x + S * S == x * x + (S - x) ** 2 for x in G for S in (4, 10, 30)) and 2 * 5 ** 2 == 50, "FX03: x² + (S − x)² = 2x² − 2Sx + S²; para S = 10, mínimo 50")
+ok(25 * (100 - 2 * 25) == 1250 and max(q * (100 - 2 * q) for q in range(0, 51)) == 1250, "FX03: receita p(100 − 2p) máxima em p = 25")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)
