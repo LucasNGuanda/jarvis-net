@@ -147,4 +147,35 @@
       q("[data-v=st]").innerHTML = log ? `Na escala logarítmica, a posição é o <b>logaritmo</b> do número: 1, 10, 100, 1000... ficam igualmente espaçados, porque cada um é 10 vezes o anterior e log 10 = 1. Distâncias iguais significam <b>razões</b> iguais.` : `Na escala comum, distâncias iguais significam <b>diferenças</b> iguais. Com números de tamanhos tão diferentes, 1, 10, 100 e 1000 ficam todos amontoados no começo: não dá para vê-los.`; };
     el.querySelectorAll("[data-m]").forEach((b) => b.addEventListener("click", () => poe({ log: !!+b.dataset.m })));
     SIM.alEscalaLog._ult = { poe, est }; desenha(); };
+
+  /* ---------- LOG04 ---------- */
+  /* nome: "Resolva e confira: a raiz que não serve" · matéria: Matemática · tema: LOG04 */
+  SIM.alEqLog = (el, F) => { let c = 2, k = 3, passo = 0, r = rng(2);
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-v="novo">outra equação</button><button class="bt peq" data-v="prox">próximo passo</button></div></div></div><div class="palco" data-v="pal" style="padding:12px 16px"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    /* log₂ x + log₂(x − c) = k  →  x(x − c) = 2^k. Com x = 2^m e x − c = 2^(k − m): raízes 2^m (serve) e −2^(k − m) (não serve) */
+    const est = () => { const N = 2 ** k, D = c * c + 4 * N, s = Math.sqrt(D), boa = (c + s) / 2, falsa = (c - s) / 2; return { c, k, N, delta: D, boa, falsa, passo, eq: `log₂ x + log₂ (x − ${c}) = ${k}`, existeBoa: boa > 0 && boa - c > 0, existeFalsa: falsa > 0 && falsa - c > 0 }; };
+    const novo = () => { let m; do { k = 3 + Math.floor(r() * 5); m = 1 + Math.floor(r() * k); } while (2 * m <= k); c = 2 ** m - 2 ** (k - m); passo = 0; desenha(); };
+    const avanca = () => { if (passo < 4) passo++; desenha(); };
+    const desenha = () => { const e = est(), L = [e.eq, `junte os logaritmos (soma vira produto): log₂ [x(x − ${c})] = ${k}`, `volte para a potência: x(x − ${c}) = 2${M.sup(k)} = ${e.N}, isto é, x² − ${c}x − ${e.N} = 0`, `resolva: Δ = ${e.delta}, x = ${mn(e.falsa)} ou x = ${e.boa}`, `confira a existência (x > 0 e x − ${c} > 0): ${e.boa} serve; ${mn(e.falsa)} não serve, porque não existe log de número negativo`];
+      q("[data-v=pal]").innerHTML = `<ol style="max-width:540px;margin:0 auto;font-size:16px;line-height:1.9;text-align:left">${L.slice(0, passo + 1).map((x, i) => `<li style="${i === passo ? "font-weight:700" : "color:var(--ink2)"}">${x}</li>`).join("")}</ol>`;
+      q("[data-v=lt]").innerHTML = vis("candidatos", passo >= 3 ? `${mn(e.falsa)} e ${e.boa}` : "?") + vis("solução", passo >= 4 ? `x = ${e.boa}` : "?");
+      q("[data-v=st]").innerHTML = passo < 4 ? `Tente dar o próximo passo no papel antes de clicar. Ao juntar os logaritmos, a equação "esquece" que x e x − ${c} precisavam ser positivos: é aí que a raiz falsa entra.` : `Só uma das duas raízes da equação do 2º grau resolve a equação original. A condição de existência não é burocracia: ela decide a resposta.`; q("[data-v=prox]").disabled = passo >= 4; };
+    q("[data-v=novo]").addEventListener("click", novo); q("[data-v=prox]").addEventListener("click", avanca);
+    SIM.alEqLog._ult = { est, novo, avanca, poe: (o) => { ({ c, k } = { c, k, ...o }); passo = 0; desenha(); }, semente: (s) => { r = rng(s); novo(); } }; desenha(); };
+
+  /* nome: "A inequação no gráfico: acima ou abaixo da linha" · matéria: Matemática · tema: LOG04 */
+  SIM.alIneqLog = (el, F) => { let a = 2, c = 1, k = 2, maior = true;
+    const sl = (n, lo, hi, v) => `<label style="font-size:13px;color:var(--ink2)">${n} <input type="range" data-v="${n}" min="${lo}" max="${hi}" step="1" value="${v}" style="vertical-align:middle;width:120px"> <b data-r="${n}" style="color:var(--ink);display:inline-block;width:26px"></b></label>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-a="2">base 2</button><button class="bt peq" data-a="0.5">base 1/2</button><button class="bt peq" data-m="1">log &gt; k</button><button class="bt peq" data-m="0">log &lt; k</button>${sl("c", -3, 3, 1)}${sl("k", -2, 3, 2)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    /* log_a(x − c) ? k. Fronteira: x = c + a^k. Depois da fronteira o log é maior se a > 1 e menor se a < 1 */
+    const est = () => { const f = c + a ** k, depois = (a > 1) === maior; return { a, c, k, maior, fronteira: f, tipo: depois ? "depois" : "entre", sol: depois ? `x > ${F.nt(f, 3)}` : `${mn(c)} < x < ${F.nt(f, 3)}`, lo: depois ? f : c, hi: depois ? null : f }; };
+    const poe = (o) => { ({ a, c, k, maior } = { a, c, k, maior, ...o }); a = +a === 0.5 ? 0.5 : 2; c = Math.max(-3, Math.min(3, Math.round(+c))); k = Math.max(-2, Math.min(3, Math.round(+k))); maior = !!maior; desenha(); };
+    const desenha = () => { const e = est(); q("[data-v=c]").value = String(c); q("[data-v=k]").value = String(k); q("[data-r=c]").textContent = mn(c); q("[data-r=k]").textContent = mn(k); el.querySelectorAll("[data-a]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.a === a))); el.querySelectorAll("[data-m]").forEach((b) => b.setAttribute("aria-pressed", String(!!+b.dataset.m === maior)));
+      q("[data-v=pal]").innerHTML = A.plano({ x: [-4, 12], y: [-5, 5], h: 230, fs: [{ f: (x) => (x - c > 0.004 ? A.logb(a, x - c) : NaN) }, { f: () => k, cor: "var(--warn)", tr: true }], segs: [{ x1: c, y1: -5, x2: c, y2: 5, cor: "var(--ok)" }], pts: e.fronteira <= 12 ? [{ x: e.fronteira, y: k }] : [] }) + A.intervalo({ min: -4, max: 12, a: e.lo, b: e.hi === null ? 30 : e.hi, fa: false, fb: false, semRot: true });
+      q("[data-v=lt]").innerHTML = vis("inequação", `log de (x − ${c < 0 ? "(" + mn(c) + ")" : c}) na base ${a === 2 ? "2" : "1/2"} ${maior ? ">" : "<"} ${mn(k)}`) + vis("fronteira", F.nt(e.fronteira, 3)) + vis("solução", e.sol);
+      q("[data-v=st]").innerHTML = `A reta verde (x = ${mn(c)}) é a parede do domínio: à esquerda dela o logaritmo não existe. A curva cruza a linha tracejada em x = ${mn(c)} + ${a === 2 ? "2" : "(1/2)"}${M.sup(k)} = ${F.nt(e.fronteira, 3)}. ` + (a > 1 ? `Base maior que 1: a curva sobe, e fica ${maior ? "acima" : "abaixo"} da linha ${maior ? "depois" : "antes"} do cruzamento.` : `Base menor que 1: a curva <b>desce</b>, e fica ${maior ? "acima" : "abaixo"} da linha ${maior ? "antes" : "depois"} do cruzamento. É a inversão do sinal, vista no gráfico.`) + (e.tipo === "entre" ? ` A parede do domínio fecha a solução pela esquerda.` : ``); };
+    ["c", "k"].forEach((n) => q(`[data-v=${n}]`).addEventListener("input", (ev) => poe({ [n]: ev.target.value }))); el.querySelectorAll("[data-a]").forEach((b) => b.addEventListener("click", () => poe({ a: b.dataset.a }))); el.querySelectorAll("[data-m]").forEach((b) => b.addEventListener("click", () => poe({ maior: !!+b.dataset.m })));
+    SIM.alIneqLog._ult = { poe, est }; desenha(); };
 })();

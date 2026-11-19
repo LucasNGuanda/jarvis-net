@@ -207,5 +207,23 @@ ok(all(abs((Decimal(x) + (Decimal(x) ** 2 + 1).sqrt()) * ((Decimal(x) ** 2 + 1).
 ok(len([n for n in range(1, 100) if 8 <= n <= 32]) == 25, "LOG03 chefão (e): 25 inteiros de 8 a 32")
 ok(all(b ** n * c % (b ** n - 1) == 0 and b ** n * c // (b ** n - 1) > c for b, n, c in [(2, 2, 3), (2, 1, 3), (2, 1, 5), (3, 1, 2), (3, 1, 4), (2, 2, 6), (2, 3, 7), (3, 2, 8), (2, 1, 7)]), "LOG03 exercício 16: os nove casos têm cruzamento inteiro dentro do domínio")
 
+# ---------- LOG04 ----------
+ok([x for x in range(-10, 20) if x * (x - 2) == 8] == [-2, 4] and math.log2(4) + math.log2(2) == 3, "LOG04 abertura e exemplo 1: x(x − 2) = 8 em −2 e 4; log₂ 4 + log₂ 2 = 3")
+ok(all(x * (x - c) == 2 ** k and x > c and -(2 ** k) // x * 1 == -(2 ** k // x) and (2 ** k // x) * x == 2 ** k and math.log2(x) + math.log2(x - c) == k for c, k, x in [(2, 3, 4), (6, 4, 8), (7, 3, 8), (4, 5, 8), (12, 6, 16), (14, 5, 16)]), "LOG04 exemplo 1: os seis casos fecham (raiz boa maior que c, raiz falsa negativa)")
+ok(3 ** 2 == 9 and 3 ** 3 == 27 and 2 + 3 == 5 and 2 * 3 == 6, "LOG04 exemplo 2: (log₃ x)² − 5 log₃ x + 6 = 0 → 9 e 27")
+ok(all((2 * x - 4 > 0 and x + 3 > 0 and 2 * x - 4 <= x + 3) == (2 < x <= 7) for x in [Fr(k, 4) for k in range(-20, 60)]), "LOG04 exemplo 3: log₃(2x − 4) ≤ log₃(x + 3) ⇔ 2 < x ≤ 7")
+ok(3 * 5 - 4 == 11 == 5 + 6 and (-2 - 5) < 0 and 2 * (-2) - 3 < 0, "LOG04 teorema 1: 3x − 4 = x + 6 em x = 5 (valor 11); log(x − 5) = log(2x − 3) daria x = −2, sem logaritmo")
+ok(2 ** 3 == 8 and Fr(1, 2) ** -3 == 8 and abs(1 / lg10(2) - Decimal("3.32")) < Decimal("0.005") and 8 < 10 < 16, "LOG04 teoremas 2 e 3: fronteiras em 8; 2ˣ = 10 → x ≈ 3,32")
+ok(len([x for x in (10, -10) if x * x == 100]) == 2, "LOG04: log(x²) = 2 tem duas soluções (10 e −10); 2 log x = 2 tem só a positiva")
+ok((3 + 1) * (3 - 1) == 8, "LOG04 chefão (a): (x + 1)(x − 1) = 8 em x = 3")
+ok(4 ** 2 == 16 and Fr(1, 4) ** -2 == 16, "LOG04 chefão (b): 4² = 16 e (1/4)⁻² = 16")
+ok(all((lb(3, x) > lb(9, x + 2)) == (x > 2) for x in (Decimal("0.5"), 1, Decimal("1.9"), Decimal("2.1"), 3, 10)), "LOG04 chefão (c): log₃ x > log₉(x + 2) ⇔ x > 2")
+xd = Decimal("0.4771") / (Decimal("0.4771") - Decimal("0.3010"))
+ok(abs(xd - Decimal("2.71")) < Decimal("0.005") and abs(Decimal(2) ** xd - Decimal(3) ** (xd - 1)) < Decimal("0.01"), "LOG04 chefão (d): x = 0,4771/0,1761 ≈ 2,71, e 2ˣ ≈ 3^(x − 1)")
+ok(math.log2(1) == 1 - 1 and math.log2(2) == 2 - 1, "LOG04 chefão (e): log₂ x = x − 1 em 1 e 2")
+ok(all(abs(n / 0.30 - v) < 0.01 for n, v in [(1, 3.33), (2, 6.67), (3, 10)]) and abs(float(lb("0.5", "0.1")) - 3.32) < 0.01, "LOG04: meias-vidas para restar 10%, 1% e 0,1%: 3,33; 6,67; 10 com log 2 = 0,30 (valor real para 10%: 3,32)")
+ok(all(x * y == 10 ** round(math.log10(x * y)) for x, y in [(20, 5), (25, 4), (50, 2), (40, 25), (100, 10), (125, 8), (200, 5)]), "LOG04 exercício 15: os produtos são potências de 10")
+ok(all(Fr(5, 2) == t + 1 / Fr(t) for t in (2, Fr(1, 2))), "LOG04 exercício 14: t + 1/t = 5/2 em t = 2 e t = 1/2")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

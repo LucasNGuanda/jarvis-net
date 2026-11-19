@@ -81,7 +81,7 @@ window.CATALOGO.push(
     ["LOG01","Função Exponencial",[],true],
     ["LOG02","Logaritmos e Propriedades",[],true],
     ["LOG03","Função Logarítmica",[],true],
-    ["LOG04","Equações e Inequações Logarítmicas",[]],
+    ["LOG04","Equações e Inequações Logarítmicas",[],true],
     ["SPG01","Progressão Aritmética",[]],
     ["SPG02","Progressão Geométrica",[]],
     ["SPG03","Progressão Harmônica",[]],
