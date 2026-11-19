@@ -1,4 +1,7 @@
+# Jarvis (https://lucasnguanda.github.io/site-fisica/)
+# Atenção: buscadores só leem o robots.txt da RAIZ do domínio (lucasnguanda.github.io/robots.txt).
+# Em subpasta, este arquivo serve de registro; o sitemap deve ser informado no Google Search Console.
 User-agent: *
-Allow: /
+Allow: /site-fisica/
 
 Sitemap: https://lucasnguanda.github.io/site-fisica/sitemap.xml
