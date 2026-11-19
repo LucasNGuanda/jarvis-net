@@ -599,5 +599,33 @@ ok(all(pdiv(padd(pol_mul(pol_mul([1, -a], [1, -b]), [1, 2, -1]), [m, n]), pol_mu
 ok(all(pdiv([1] + [0] * (n - m - 1) + [pp] + [0] * (m - 1) + [q], [1, 0, -1])[1] in ([pp, 1 + q], [1 + q]) for n in (20, 100) for m in (11, 51) if m < n for pp in (-2, 3) for q in (1, -4, 0)), "PL02 exercício 16: resto de xⁿ + p·xᵐ + q por x² − 1 é p·x + (1 + q), n par e m ímpar")
 ok(all(pv(pol_mul(pol_mul([1, -a], [1, -b]), [1, -c]), 0) == -a * b * c for a in (1, -2, 3) for b in (2, -3) for c in (3, -4, 1)), "PL02 exercício 15: termo independente −abc")
 
+# ---------- PL03 ----------
+def praizes(rs, a=1):
+    p = [a]
+    for r in rs:
+        p = pol_mul(p, [1, -r])
+    return p
+ok(pol_mul(pol_mul([1, -2], [1, 2]), [2, -3]) == [2, -3, -8, 12] and pv([2, -3, -8, 12], 2) == 0 and phorner([2, -3, -8, 12], 2) == [2, 1, -6, 0] and 1 + 48 == 49 and pv([2, 1, -6], -2) == 0 and pv([2, 1, -6], Fr(3, 2)) == 0, "PL03 exemplo 1 e teorema 1: 2x³ − 3x² − 8x + 12 = (x − 2)(x + 2)(2x − 3)")
+ok(Fr(-2) + Fr(3, 2) + 2 == Fr(3, 2) == Fr(3, 2) and pv([2, -3, -8, 12], 1) == 3, "PL03 exemplo 1: soma das raízes 3/2 = −b/a; P(1) = 3 (1 não é raiz)")
+ok(praizes([-1, 2, 4]) == [1, -5, 2, 8] and (-1) ** 2 + 2 ** 2 + 4 ** 2 == 21 == 5 ** 2 - 2 * 2 and Fr(1, -1) + Fr(1, 2) + Fr(1, 4) == Fr(-1, 4) == Fr(2, -8), "PL03 exemplo 2: Girard em x³ − 5x² + 2x + 8, soma dos quadrados 21 e dos inversos −1/4")
+ok(pol_mul([1, -4, 5], [1, -3]) == [1, -7, 17, -15] and cs(cs(cs(cp((2, 1), 3), cm((-7, 0), cp((2, 1), 2))), cm((17, 0), (2, 1))), (-15, 0)) == (0, 0), "PL03 exemplo 3 e teorema 2: x³ − 7x² + 17x − 15 tem a raiz 2 + i")
+ok(all(pol_mul([1, -2 * a, a * a + b * b], [1, -r])[2] == a * a + b * b + 2 * a * r for a in range(-3, 4) for b in range(1, 5) for r in range(-5, 6)), "PL03 exercício 13: coeficiente de x = a² + b² + 2ar")
+ok(praizes([1, 2, -3]) == [1, 0, -7, 6] and 1 * 2 + 1 * -3 + 2 * -3 == -7, "PL03 teorema 3: (x − 1)(x − 2)(x + 3) = x³ − 7x + 6")
+TR = [(a, b, c) for a in range(-4, 5) for b in range(-4, 5) for c in range(-4, 5)]
+ok(all(praizes(t) == [1, -(t[0] + t[1] + t[2]), t[0] * t[1] + t[0] * t[2] + t[1] * t[2], -t[0] * t[1] * t[2]] for t in TR), "PL03 teorema 3: Girard do 3º grau em 729 trios de raízes")
+ok(all(sum(x * x for x in t) == (sum(t)) ** 2 - 2 * (t[0] * t[1] + t[0] * t[2] + t[1] * t[2]) for t in TR), "PL03 exercício 10: soma dos quadrados = S₁² − 2S₂")
+ok(all(sum(x ** 3 for x in (a, b, -a - b)) == 3 * a * b * (-a - b) == -3 * praizes((a, b, -a - b))[3] for a in range(-4, 5) for b in range(-4, 5)), "PL03 exercício 16: com soma zero, a soma dos cubos é −3d")
+ok(all(praizes((m - d, m, m + d))[1] == -3 * m for m in range(-4, 6) for d in range(1, 5)), "PL03 exercícios 12 e 14: em PA, a raiz do meio é −b/3")
+def cand(p):
+    a0, an = abs(p[-1]), abs(p[0])
+    return {s * Fr(x, y) for x in range(1, a0 + 1) if a0 % x == 0 for y in range(1, an + 1) if an % y == 0 for s in (1, -1)}
+ok(len(cand([2, -3, -8, 12])) == 16 and all(len(cand([an, 0, 0, a0])) == 2 * sum(1 for x in range(1, a0 + 1) if a0 % x == 0 for y in range(1, an + 1) if an % y == 0 and math.gcd(x, y) == 1) for an in (1, 2, 3, 4) for a0 in (2, 3, 4, 5, 6, 9)), "PL03 teorema 4 e exercício 8: contagem dos candidatos (pares primos entre si)")
+ok(all(Fr(n, d) in cand(pol_mul(pol_mul([d, -n], [1, 2]), [3, -1])) for n in (1, -1, 3, -3, 5) for d in (1, 2)), "PL03 teorema 4: a raiz n/d está entre os candidatos")
+ok(praizes([1, -1, 3, -2]) == [1, -1, -7, 1, 6] and 1 - 1 - 7 + 1 + 6 == 0 and pdiv([1, -1, -7, 1, 6], [1, -1]) == ([1, 0, -7, -6], [0]) and -1 + 7 - 6 == 0 and pdiv([1, 0, -7, -6], [1, 1]) == ([1, -1, -6], [0]), "PL03 chefão (a): x⁴ − x³ − 7x² + x + 6")
+ok(pol_mul([1, -1], [1, -2, 2]) == [1, -3, 4, -2] and 4 - 8 == -4 and cs(cs(cp((1, 1), 2), cm((-2, 0), (1, 1))), (2, 0)) == (0, 0), "PL03 chefão (b): x³ − 3x² + 4x − 2 = (x − 1)(x² − 2x + 2), raízes 1 e 1 ± i")
+ok(all(pv([1, 0, -2], x) != 0 for x in (1, -1, 2, -2)), "PL03 chefão (d): x² − 2 não tem raiz racional")
+ok(2 ** 2 - 2 * 3 == -2, "PL03 chefão (e): soma dos quadrados das raízes de x³ − 2x² + 3x − 4")
+ok(praizes([-1, 3, 4]) == [1, -6, 5, 12], "PL03 chute: (x + 1)(x − 3)(x − 4) = x³ − 6x² + 5x + 12")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)

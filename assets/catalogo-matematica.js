@@ -95,7 +95,7 @@ window.CATALOGO.push(
     ["NCP04","Lugares Geométricos (complexos)",[],true],
     ["PL01","Introdução aos Polinômios",[],true],
     ["PL02","Operações com Polinômios",[],true],
-    ["PL03","Equações Algébricas",[]],
+    ["PL03","Equações Algébricas",[],true],
     ["PL04","Aprofundamento em Polinômios",[]],
     ["IC01","Introdução ao Cálculo",[]],
   ] },
