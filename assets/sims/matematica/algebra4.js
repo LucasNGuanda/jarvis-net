@@ -40,4 +40,35 @@
       q("[data-v=st]").innerHTML = dupla ? `A escada verde é a mesma soma escrita ao contrário: ${n} + ... + 2 + 1. Encaixadas, as duas formam um retângulo de ${n} por ${n + 1}, com ${e.retangulo} quadradinhos. A soma é a metade: ${e.soma}. Cada coluna tem "um termo do começo mais um termo do fim", e essa soma é sempre a mesma.` : `A escada roxa tem 1 + 2 + ... + ${n} quadradinhos. Somar um por um dá trabalho. Antes de clicar: o que acontece se uma cópia da escada, de cabeça para baixo, for encaixada em cima dela?`; };
     q("[data-v=n]").addEventListener("input", (ev) => poe({ n: ev.target.value, dupla: false })); q("[data-v=d]").addEventListener("click", () => poe({ dupla: !dupla }));
     SIM.alEscadas._ult = { poe, est }; desenha(); };
+
+  /* ---------- SPG02 ---------- */
+  /* nome: "A PG: multiplicar sempre pela mesma razão" · matéria: Matemática · tema: SPG02 */
+  SIM.alPG = (el, F) => { let a1 = 2, qq = 2, n = 6;
+    const sl = (k, t, lo, hi, v, st) => `<label style="font-size:13px;color:var(--ink2)">${t} <input type="range" data-v="${k}" min="${lo}" max="${hi}" step="${st}" value="${v}" style="vertical-align:middle;width:130px"> <b data-r="${k}" style="color:var(--ink);display:inline-block;width:34px"></b></label>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("a", "a₁", 1, 8, 2, 1)}${sl("q", "razão q", -2, 3, 2, 0.25)}${sl("n", "n", 2, 10, 6, 1)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const t = A.pg(a1, qq, n), soma = t.reduce((x, y) => x + y, 0); return { a1, q: qq, n, termos: t, an: t[n - 1], soma, formula: qq === 1 ? a1 * n : (a1 * (qq ** n - 1)) / (qq - 1), tipo: qq > 1 ? "crescente" : qq === 1 ? "constante" : qq > 0 ? "decrescente" : qq === 0 ? "zera" : "alternada" }; };
+    const poe = (o) => { ({ a1, q: qq, n } = { a1, q: qq, n, ...o }); a1 = Math.max(1, Math.min(8, Math.round(+a1))); qq = Math.max(-2, Math.min(3, Math.round(+qq * 4) / 4)); n = Math.max(2, Math.min(10, Math.round(+n))); desenha(); };
+    const desenha = () => { const e = est(); q("[data-v=a]").value = String(a1); q("[data-v=q]").value = String(qq); q("[data-v=n]").value = String(n); q("[data-r=a]").textContent = a1; q("[data-r=q]").textContent = F.nt(qq, 2); q("[data-r=n]").textContent = n;
+      q("[data-v=pal]").innerHTML = A.barras(e.termos.map((v) => +v.toFixed(2)), null, { h: 230 });
+      q("[data-v=lt]").innerHTML = vis("último termo", F.nt(e.an, 3)) + vis("soma dos " + n, F.nt(e.soma, 3)) + vis("é", e.tipo);
+      q("[data-v=st]").innerHTML = `Cada barra é a anterior <b>vezes</b> ${F.nt(qq, 2)}. ` + ({ crescente: "Razão maior que 1: cada passo aumenta mais que o anterior, e o último termo sozinho pesa mais do que parece na soma.", constante: "Razão 1: todos os termos são iguais.", decrescente: "Razão entre 0 e 1: os termos encolhem e nunca chegam a zero. A soma cresce cada vez menos: está se aproximando de um teto.", zera: "Razão 0: depois do primeiro, tudo zera.", alternada: "Razão negativa: os sinais se alternam, um para cima, um para baixo." })[e.tipo] + ` Uma PG é uma função exponencial olhada só nos inteiros.`; };
+    ["a", "q", "n"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [{ a: "a1", q: "q", n: "n" }[k]]: ev.target.value })));
+    SIM.alPG._ult = { poe, est }; desenha(); };
+
+  /* nome: "A soma infinita que não passa do teto" · matéria: Matemática · tema: SPG02 */
+  SIM.alSomaInfinita = (el, F) => { let qq = 0.5, n = 4;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts"><label style="font-size:13px;color:var(--ink2)">razão q <input type="range" data-v="q" min="0.1" max="0.9" step="0.1" value="0.5" style="vertical-align:middle;width:150px"> <b data-r="q" style="color:var(--ink);display:inline-block;width:30px"></b></label><label style="font-size:13px;color:var(--ink2)">parcelas somadas <input type="range" data-v="n" min="1" max="40" step="1" value="4" style="vertical-align:middle;width:200px"> <b data-r="n" style="color:var(--ink)"></b></label></div></div></div><div class="palco" data-v="pal" style="padding:8px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    /* primeiro termo 1: parcial = (1 − qⁿ)/(1 − q); teto = 1/(1 − q) */
+    const est = () => { const parcial = (1 - qq ** n) / (1 - qq), teto = 1 / (1 - qq); return { q: qq, n, parcial, teto, falta: teto - parcial, direta: Array.from({ length: n }, (_, k) => qq ** k).reduce((x, y) => x + y, 0) }; };
+    const poe = (o) => { ({ q: qq, n } = { q: qq, n, ...o }); qq = Math.max(0.1, Math.min(0.9, Math.round(+qq * 10) / 10)); n = Math.max(1, Math.min(40, Math.round(+n))); desenha(); };
+    const desenha = () => { const e = est(), W = 480, X = (v) => 40 + (v / e.teto) * W; q("[data-v=q]").value = String(qq); q("[data-v=n]").value = String(n); q("[data-r=q]").textContent = F.nt(qq, 1); q("[data-r=n]").textContent = n;
+      let s = `<rect x="40" y="26" width="${W}" height="34" rx="4" style="fill:none;stroke:var(--ink3);stroke-width:1.4"/>`, ac = 0; for (let k = 0; k < n; k++) { const v = qq ** k; if ((v / e.teto) * W > 0.4) s += `<rect x="${X(ac).toFixed(2)}" y="26" width="${((v / e.teto) * W).toFixed(2)}" height="34" style="fill:${A.COR[k % 4]};opacity:.82;stroke:var(--bg);stroke-width:1"/>`; ac += v; }
+      s += `<line x1="${X(e.teto)}" y1="18" x2="${X(e.teto)}" y2="68" style="stroke:var(--warn);stroke-width:2.4"/>` + A.T(X(e.teto), 12, `teto: ${F.nt(e.teto, 4)}`, { f: 12, w: 600, a: "end" }) + A.T(40, 82, "0", { f: 11, c: "var(--ink2)" });
+      q("[data-v=pal]").innerHTML = `<svg viewBox="0 0 560 90" width="100%" style="max-width:560px">${s}</svg>`;
+      q("[data-v=lt]").innerHTML = vis("soma de " + n + (n === 1 ? " parcela" : " parcelas"), F.nt(e.parcial, 6)) + vis("teto 1/(1 − q)", F.nt(e.teto, 6)) + vis("falta", e.falta < 1e-6 ? "menos de 0,000001" : F.nt(e.falta, 6));
+      q("[data-v=st]").innerHTML = `A soma é 1 + ${F.nt(qq, 1)} + ${F.nt(qq * qq, 2)} + ${F.nt(qq ** 3, 3)} + ... Cada parcela nova tapa uma fração fixa do que <b>faltava</b> para o teto, e por isso a soma chega tão perto dele quanto se queira, sem nunca passar: depois de ${n} ${n === 1 ? "parcela" : "parcelas"} falta ${e.falta < 1e-6 ? "menos de 0,000001" : F.nt(e.falta, 6)}. É isso que significa dizer que a soma dos infinitos termos <b>é</b> ${F.nt(e.teto, 4)}.`; };
+    ["q", "n"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
+    SIM.alSomaInfinita._ult = { poe, est }; desenha(); };
 })();

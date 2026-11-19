@@ -83,7 +83,7 @@ window.CATALOGO.push(
     ["LOG03","Função Logarítmica",[],true],
     ["LOG04","Equações e Inequações Logarítmicas",[],true],
     ["SPG01","Progressão Aritmética",[],true],
-    ["SPG02","Progressão Geométrica",[]],
+    ["SPG02","Progressão Geométrica",[],true],
     ["SPG03","Progressão Harmônica",[]],
     ["MD01","Matrizes",[]],
     ["MD02","Determinantes",[]],

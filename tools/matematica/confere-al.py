@@ -244,5 +244,25 @@ ok(sum(Fr(1, k * (k + 3)) for k in range(1, 29, 3)) == Fr(10, 31), "SPG01 chefã
 ok(all((a * k * k + b * k) - (a * (k - 1) ** 2 + b * (k - 1)) == 2 * a * k - a + b for a in (1, 2, 3) for b in range(-3, 4) for k in range(2, 20)), "SPG01 exercício 11: aₖ = Sₖ − Sₖ₋₁ = 2ak − a + b (PA de razão 2a)")
 ok(all(a1 + (a1 // -r + 1) * r < 0 <= a1 + (a1 // -r) * r for a1 in range(20, 201, 7) for r in range(-9, -1)), "SPG01 exercício 15: o primeiro termo negativo está na posição ⌊a₁/|r|⌋ + 2")
 
+# ---------- SPG02 ----------
+pgl = lambda a1, q, n: [a1 * Fr(q) ** k for k in range(n)]
+ok(pgl(3, 2, 4) == [3, 6, 12, 24] and 3 * 2 ** 9 == 1536, "SPG02: (3, 6, 12, 24, ...) tem 10º termo 1536")
+ok(all(sum(pgl(a1, q, n)) == a1 * (Fr(q) ** n - 1) / (Fr(q) - 1) for a1 in (1, 3, 5) for q in (2, 3, -2, Fr(1, 2), Fr(-2, 3)) for n in range(1, 15)), "SPG02 teorema 2: soma finita, em 210 casos (inclusive razões negativas e fracionárias)")
+ok(1 + 2 + 4 + 8 + 16 == 31 == 32 - 1, "SPG02: 1 + 2 + 4 + 8 + 16 = 31")
+ok(all(abs(sum(pgl(a1, q, 400)) - a1 / (1 - Fr(q))) < Fr(1, 10 ** 30) for a1 in (1, 12) for q in (Fr(1, 2), Fr(1, 3), Fr(-1, 2), Fr(3, 4))), "SPG02 teorema 3: 400 parcelas ficam a menos de 10⁻³⁰ de a₁/(1 − q)")
+ok([sum(Fr(1, 2 ** k) for k in range(1, n + 1)) for n in (1, 2, 3, 4)] == [Fr(1, 2), Fr(3, 4), Fr(7, 8), Fr(15, 16)], "SPG02 teorema 3: parciais 1/2, 3/4, 7/8, 15/16")
+ok(all(Fr(a1) / (1 - Fr(n, d)) == S for a1, n, d, S in [(12, 1, 2, 24), (18, 1, 3, 27), (6, 2, 3, 18), (24, 1, 4, 32), (10, 1, 2, 20), (12, -1, 2, 8), (8, 1, 3, 12), (9, 2, 3, 27), (20, 3, 4, 80), (15, -1, 2, 10)]), "SPG02 exercício 6: as dez somas infinitas da lista")
+ok(48 // 6 == 8 == 2 ** 3 and 6 // 2 == 3 and 3 * 2 ** 7 == 384, "SPG02 exemplo 1: a₂ = 6, a₅ = 48 → q = 2, a₁ = 3, a₈ = 384")
+ok(sum(pgl(2, 3, 7)) == 2186 and pgl(2, 3, 7)[-1] == 1458 and 3 * 1458 - 2 == 4372 == 2 * 2186, "SPG02 exemplo 2: 2 + 6 + ... + 1458 = 2186 (7 termos); 3S − S = 4372")
+ok(all(Fr(ab, 100) / (1 - Fr(1, 100)) == Fr(ab, 99) for ab in (27, 36, 45, 18, 54, 63, 12, 15, 24)) and Fr(27, 99) == Fr(3, 11) and abs(3 / 11 - 0.272727) < 1e-6, "SPG02 exemplo 3: 0,2727... = 27/99 = 3/11")
+ok(all(h + 2 * (h * Fr(fn, fd)) / (1 - Fr(fn, fd)) == h * m for h in (4, 6, 9, 12) for fn, fd, m in [(1, 2, 3), (1, 3, 2), (2, 3, 5), (3, 4, 7)]), "SPG02 exercício 11: distância total da bola = h(1 + f)/(1 − f)")
+ok(all(Fr(L * L) / (1 - Fr(1, 2)) == 2 * L * L for L in (2, 4, 6, 10, 20)), "SPG02 exercício 16: soma das áreas dos quadrados = 2L²")
+ok(Fr(9, 10) / (1 - Fr(1, 10)) == 1, "SPG02 chefão (a): 0,9 + 0,09 + ... = 1")
+ok(Fr(100) / (1 - Fr(1, 10)) == Fr(1000, 9) and abs(1000 / 9 - 111.1) < 0.02, "SPG02 chefão (b): 100 + 10 + 1 + ... = 1000/9 ≈ 111,1")
+ok(1 / (1 - Fr(2, 3)) == 3, "SPG02 chefão (c): q = 2/3")
+ok(all(abs(sum((x - 2) ** k for k in range(300)) - 1 / (3 - x)) < Fr(1, 10 ** 20) for x in (Fr(3, 2), Fr(2), Fr(5, 2), Fr(11, 4))), "SPG02 chefão (d): soma = 1/(3 − x) para 1 < x < 3")
+ok(abs(sum((k + 1) * Fr(1, 2) ** k for k in range(300)) - 4) < Fr(1, 10 ** 20) and 1 / (1 - Fr(1, 2)) ** 2 == 4, "SPG02 chefão (e): 1 + 2·(1/2) + 3·(1/4) + ... = 4")
+ok(all((x // q) * x * (x * q) == x ** 3 and x % q == 0 for x, q in [(6, 3), (4, 2), (6, 2), (10, 2), (9, 3), (8, 2), (12, 2), (4, 4), (12, 3), (10, 5)]), "SPG02 exercício 8: os dez trios são inteiros e têm produto x³")
+
 print("\ntudo certo" if not falhas else f"\n{falhas} FALHA(S)")
 sys.exit(1 if falhas else 0)
