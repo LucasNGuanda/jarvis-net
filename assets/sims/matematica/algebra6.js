@@ -4,6 +4,8 @@
    BW01: SIM.alPascal (o triângulo, a relação de Stifel e a paridade), SIM.alBinomio ((px + q)ⁿ termo a termo) e SIM.alCaminhos (caminhos numa grade).
    NCP01: cx (complexos como pares [a, b]: soma, sub, mul, div exata, conj, mod2, pot, ipot, tex, txt, pt, vet), planoC (plano de Argand-Gauss);
           SIM.alGiraI (multiplicar por i é girar 90°), SIM.alDeltaNeg (as raízes quando Δ fica negativo) e SIM.alCicloI (quiz de iⁿ).
+   NCP02: SIM.alSomaC, SIM.alConjMod, SIM.alDivC. NCP03: cosm/senm/exato (ângulos notáveis), dePolar, polar, raizes, trigT, arco; SIM.alPolar, SIM.alProdPolar, SIM.alRaizes.
+   NCP04: modT, mediatriz, retaSeg, semiplano; SIM.alLugarCirc, SIM.alMediatriz, SIM.alLugarQuiz.
    Contas conferidas em Python (tools/matematica/confere-al.py). */
 (function () {
   const SIM = (window.SIM = window.SIM || {}), M = SIM.mb, A = SIM.al, { vis, rng, mn } = A;

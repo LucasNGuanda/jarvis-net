@@ -2,6 +2,10 @@
    Acrescenta a SIM.al: pl (polinômios como listas de coeficientes, da maior potência para a menor: grau, val, horner, soma, sub, mul, esc, div com frações,
    deriv, deRaizes, igual), ruffiniFig (o dispositivo de Briot-Ruffini desenhado) e plGraf (gráfico com janela automática).
    PL01: SIM.alPolGraf (coeficientes, gráfico e valor numérico), SIM.alHorner (valor numérico passo a passo) e SIM.alIdentidade (ache A e B).
+   PL02: ruffini, divPassos, monoTxt; SIM.alDivChave, SIM.alRuffini, SIM.alRestoGraf.
+   PL03: candidatos, racionais, girard, raizesNum, valFr, fatTxt; SIM.alRaizesRac, SIM.alGirard, SIM.alConjugadas.
+   PL04: mult, desloca, escala, inverte, reciproca, bissec; SIM.alMultiplicidade, SIM.alBolzano, SIM.alRaizesTransf.
+   IC01: tangente, taxa; SIM.alSecante, SIM.alLimite, SIM.alDerivaGraf.
    Contas conferidas em Python (tools/matematica/confere-al.py). */
 (function () {
   const SIM = (window.SIM = window.SIM || {}), M = SIM.mb, A = SIM.al, { vis, rng, mn } = A;
