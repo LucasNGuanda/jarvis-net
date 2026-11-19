@@ -72,7 +72,7 @@ window.CATALOGO.push(
     ["GAAL","Geometria Analítica e Álgebra Linear",[]],
   ] },
   { id:"AL", area:"mat", letra:"AL", cor:"--mC", nome:"Álgebra", desc:"Polinômios, sequências, matrizes, complexos e combinatória.", temas:[
-    ["FX01","Intuição e Definições",[]],
+    ["FX01","Intuição e Definições",[],true],
     ["FX02","Função Afim",[]],
     ["FX03","Função Quadrática",[]],
     ["FX04","Função Modular",[]],

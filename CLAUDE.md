@@ -118,6 +118,14 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - **Teste de quiz que compara equações precisa de faixa larga:** comparar a alternativa errada com a certa em poucos valores de x deu falso "equivalente" (as duas eram falsas em todos os pontos testados); o `tlabsMB` testa de −80 a 80.
 - Solução que depende de um caso (ex.: fração com denominador c − a) não pode ser calculada para todos os casos de uma vez: `fr(…, 0)` é `null` e quebra a página inteira (aconteceu no exercício 14).
 
+## Sessão de álgebra (pedido do autor, 19/11/2026: "faça o tema de álgebra da matemática do Jarvis ... trabalhe direto na main")
+- Módulo **AL (Álgebra)**, 26 temas, na ordem do catálogo: FX01–FX06, LOG01–LOG04, SPG01–SPG03, MD01–MD03, BW01, NCP01–NCP04, PL01–PL04, IC01. **Direto no `main`** (decisão do autor para este módulo; a regra de branch + ZIP continua valendo para o que ele não liberar). Um commit por tema; cada tema soma 0,1 na versão.
+- O pedido: cada tema com figura, exemplo resolvido, 15 a 20 exercícios e laboratório com etiqueta; rodar `gera-indice` e os testes de matemática e a regressão básica antes de cada commit; tema que depender de decisão dele: parar nele e registrar no PROGRESSO.md; não inventar dado nem citar questão de vestibular de memória.
+- Território: `temas/matematica/<COD>.js`, `assets/sims/matematica/algebra*.js`, `tools/matematica/confere-al.py`, `tests/tlabsAL.js` e `tests/al/<COD>.js`, uma linha de `<script>` no `index.html` por arquivo de laboratório.
+- **Núcleo `SIM.al`** (em `algebra.js`): `plano(o, D)` (plano cartesiano em SVG com curvas, pontos e segmentos; com `D` devolve a figura do tema, sem `D` devolve o `<svg>` para laboratório; `iso: true` põe a mesma escala nos dois eixos, senão a circunferência sai oval), `lin`/`linT` (ax + b sem "1x" e sem "+ −"), `ri`, `nz`, `ps`, `sn`, `opT` (alternativas em TeX), `opS` (em texto), `vis`, `rng`, `T`. Os temas de álgebra usam também o `SIM.mb` (frações, polinômios, `cartao`, `tabela`, `reta`).
+- **Teste de laboratório por tema:** `node tests/tlabsAL.js [códigos]` carrega `tests/al/<COD>.js` (exporta `async (p, ok) => …`) e, depois, confere os gabaritos de alternativas em 3 recargas. Tema novo = arquivo novo nessa pasta.
+- Padrão do tema: o do módulo MB (pergunta, chute, laboratórios, teoremas "com números primeiro" e depois em geral, 3 exemplos, caixas, 16 exercícios com sorteio e figura, chefão).
+
 ## Publicação (decisão do autor, 18/11/2026)
 - O repositório é **público** e o site é publicado pelo GitHub Pages em https://lucasnguanda.github.io/site-fisica/.
 - O Pages serve a branch **`gh-pages`**, que tem SÓ os arquivos do site: `index.html`, `assets/`, `temas/`, `.nojekyll`, `robots.txt`, `sitemap.xml`. Ela é GERADA: nunca editar à mão. Para atualizar, rodar `bash tools/publica-site.sh` a partir da branch que tem o site aprovado.
