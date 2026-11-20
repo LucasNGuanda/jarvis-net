@@ -33,7 +33,7 @@
 
   /* ---------- dados: só chegam quando alguém abre a página ---------- */
   let prom = null;
-  const carrega = () => prom || (prom = new Promise((ok, erro) => { if (window.MOLECULAS) return ok(window.MOLECULAS); const s = document.createElement("script"); s.src = "assets/moleculas-dados.js"; s.onload = () => ok(window.MOLECULAS); s.onerror = () => { prom = null; erro(new Error("catálogo não carregou")); }; document.head.appendChild(s); }));
+  const carrega = () => prom || (prom = new Promise((ok, erro) => { if (window.MOLECULAS) return ok(window.MOLECULAS); const s = document.createElement("script"); s.src = "assets/moleculas-dados.js" + (window.VERSAO ? "?v=" + String(window.VERSAO).replace(/[^0-9.]/g, "") : ""); s.onload = () => ok(window.MOLECULAS); s.onerror = () => { prom = null; erro(new Error("catálogo não carregou")); }; document.head.appendChild(s); }));
   SIM.qMolCarrega = carrega;
 
   /* ---------- modelo: do registro do catálogo para o que o desenho usa ---------- */
