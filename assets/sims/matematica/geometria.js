@@ -124,4 +124,48 @@
       leitor: (P) => { const th = G.dir(P.Q, P.P); return vis("ângulos vermelhos", G.gr(th)) + vis("ângulos azuis", G.gr(180 - th)) + vis("vermelho + azul", "180°"); },
       status: (P) => { const th = G.dir(P.Q, P.P); return `Arraste P ou Q para inclinar a transversal. Dos oito ângulos, só existem <b>dois valores</b>: ${G.gr(th)} (vermelhos) e ${G.gr(180 - th)} (azuis). Em volta de P, os opostos pelo vértice são iguais; e o que acontece em P se repete em Q, porque r e s são paralelas: correspondentes iguais, alternos internos iguais, colaterais internos somando 180°.${Math.abs(th - 90) < 0.6 ? " Com a transversal perpendicular, os oito são retos." : ""}`; } });
     SIM.geParalelas._ult = { poe: pa.poe, est: () => { const th = G.dir(pa.P.Q, pa.P.P); return { P: pa.P.P.slice(), Q: pa.P.Q.slice(), agudoOuObtuso: th, outro: 180 - th, marcas: el.querySelectorAll("[data-v=cena] path").length }; } }; };
+
+  /* ---------- GP02 ---------- */
+  /* parâmetro t da projeção de P sobre AB (0 em A, 1 em B) e o ponto de parâmetro t */
+  G.param = (P, Pa, Pb) => { const d = G.sub(Pb, Pa); return G.pint(G.sub(P, Pa), d) / (G.pint(d, d) || 1); };
+  G.em = (Pa, Pb, t) => G.soma(Pa, G.esc(G.sub(Pb, Pa), t));
+  /* feixe de três paralelas cortado por duas transversais, EM ESCALA: na da esquerda os segmentos medem a e b; na da direita, c e d (com c/a = d/b).
+     rot = [texto de a, de b, de c, de d] */
+  G.tales = (a, b, c, d, rot, D, o = {}) => { const r = c / a, S75 = Math.sin(75 * RAD), al = r >= 1 ? 75 : Math.asin(S75 * r) / RAD, be = r >= 1 ? Math.asin(S75 / r) / RAD : 75, h1 = a * Math.sin(al * RAD), h2 = b * Math.sin(al * RAD), larg = 0.9 * (h1 + h2) + 0.5;
+      const Ht = h1 + h2, Wd = 0.9 * Ht + 0.5, esq = (y) => [y / Math.tan(al * RAD), y], dirt = (y) => [Wd - y / Math.tan(be * RAD), y];
+      const E0 = esq(0), E1 = esq(-h1), E2 = esq(-h1 - h2), D0 = dirt(0), D1 = dirt(-h1), D2 = dirt(-h1 - h2), xs = [E0, E2, D0, D2].map((p) => p[0]), x0 = Math.min(...xs) - 0.12 * larg, x1 = Math.max(...xs) + 0.12 * larg, u = 0.1 * (h1 + h2);
+      const ext = (P, Q) => [G.em(P, Q, -0.12), G.em(P, Q, 1.12)];
+      return G.fig({ segs: [0, -h1, -h1 - h2].map((y) => [[x0, y], [x1, y], {}]).concat([[...ext(E0, E2), { cor: "var(--mod)" }], [...ext(D0, D2), { cor: "var(--mod)" }]]), meds: [[E0, E1, rot[0], { lado: 1 }], [E1, E2, rot[1], { lado: 1 }], [D0, D1, rot[2], { lado: -1 }], [D1, D2, rot[3], { lado: -1 }]], pts: [E0, E1, E2, D0, D1, D2].map((P) => [P, "", { r: 3 }]), txt: [[[x1 + u * 0.4, 0], "r", { a: "start" }], [[x1 + u * 0.4, -h1], "s", { a: "start" }], [[x1 + u * 0.4, -h1 - h2], "t", { a: "start" }]], hmax: o.hmax || 250, vista: [x0, x1 + u * 1.5, -h1 - h2 - u * 1.6, u * 1.6] }, D); };
+  /* triângulo ABC (dado pelos vértices) com DE paralelo a BC, D em AB e E em AC, AD = k · AB. rot = { AD, DB, AE, EC, DE, BC } (só os que vierem) */
+  G.triPar = (ps, k, rot, D, o = {}) => { const [Pa, Pb, Pc] = ps, Dd = G.em(Pa, Pb, k), E = G.em(Pa, Pc, k), cen = G.baricentro(Pa, Pb, Pc), ld = G.vet(G.sub(Pb, Pa), G.sub(Pc, Pa)) > 0 ? -1 : 1, meds = [];
+      const m = (P, Q, t, lado) => { if (t !== undefined) meds.push([P, Q, t, { lado }]); };
+      m(Pa, Dd, rot.AD, ld); m(Dd, Pb, rot.DB, ld); m(Pa, E, rot.AE, -ld); m(E, Pc, rot.EC, -ld); m(Dd, E, rot.DE, ld); m(Pb, Pc, rot.BC, ld); if (rot.AB !== undefined) meds.push([Pa, Pb, rot.AB, { lado: ld, af: 30 }]);
+      return G.fig({ pols: [{ pts: ps }, { pts: [Pa, Dd, E], cor: "var(--warn)", op: 0.18 }], segs: [[Dd, E, { cor: "var(--warn)" }]], meds, pts: G.vertices(ps, o.nomes || ["A", "B", "C"], { r: 0.1 }).concat([[Dd, (o.nomes2 || ["D", "E"])[0], { pos: G.fora(Dd, cen, 15), r: 3 }], [E, (o.nomes2 || ["D", "E"])[1], { pos: G.fora(E, cen, 15), r: 3 }]]), hmax: o.hmax || 250 }, D); };
+  /* dois triângulos semelhantes lado a lado, em escala: lados (a, b, c) e razão k. rot1 e rot2 = textos dos lados [a (BC), b (CA), c (AB)] */
+  G.semelhantes = (a, b, c, k, rot1, rot2, D, o = {}) => { const t1 = G.deLados(a, b, c), t2 = G.deLados(a * k, b * k, c * k).map((P) => [P[0] + c + Math.max(c, c * k) * 0.25, P[1]]), lados = (t, r) => [[t[1], t[2], r[0]], [t[2], t[0], r[1]], [t[0], t[1], r[2]]].filter((x) => x[2] !== undefined && x[2] !== "").map(([P, Q, tx]) => [P, Q, tx, { lado: -1 }]);
+      const marcas = (t) => [[t[1], t[0], t[2], { rot: "", cor: "#e5484d", r: 16 }], [t[2], t[1], t[0], { rot: "", cor: "#4c8dff", r: 16 }]];
+      return G.fig({ pols: [{ pts: t1 }, { pts: t2, cor: "var(--warn)" }], meds: lados(t1, rot1).concat(lados(t2, rot2)), angs: marcas(t1).concat(marcas(t2)), hmax: o.hmax || 230 }, D); };
+
+  /* nome: "Tales: arraste as retas e compare as razões" · matéria: Matemática · tema: GP02 */
+  SIM.geTales = (el, F) => { const yT = 5.3, yB = 0.7; let tB = 0.4;
+    const pa = G.arrasta(el, { vista: [0, 10, 0, 6], pts: { A: [2.2, yT], C: [1, yB], D: [6.6, yT], F: [8.8, yB], B: [0, 0] }, rot: { A: "A", C: "C", D: "D", F: "F", B: "B" },
+      limita: (k, p, P) => { if (k === "A" || k === "D") return [Math.max(0.6, Math.min(9.4, p[0])), yT]; if (k === "C" || k === "F") return [Math.max(0.6, Math.min(9.4, p[0])), yB]; tB = Math.max(0.12, Math.min(0.88, (yT - p[1]) / (yT - yB))); return G.em(P.A, P.C, tB); },
+      cena: (P) => { P.B = G.em(P.A, P.C, tB); const E = G.em(P.D, P.F, tB), y = P.B[1];
+        return { segs: [[[0.2, yT], [9.8, yT], {}], [[0.2, y], [9.8, y], {}], [[0.2, yB], [9.8, yB], {}], [P.A, P.B, { cor: "#e5484d", larg: 3 }], [P.B, P.C, { cor: "#4c8dff", larg: 3 }], [P.D, E, { cor: "#e5484d", larg: 3 }], [E, P.F, { cor: "#4c8dff", larg: 3 }]], pts: [[E, "E", { pos: [16, 12], r: 4 }]], meds: [[P.A, P.B, nt(G.dist(P.A, P.B)), { lado: P.A[0] <= P.C[0] ? 1 : -1, cor: "#e5484d" }], [P.B, P.C, nt(G.dist(P.B, P.C)), { lado: P.A[0] <= P.C[0] ? 1 : -1, cor: "#4c8dff" }], [P.D, E, nt(G.dist(P.D, E)), { lado: P.D[0] <= P.F[0] ? -1 : 1, cor: "#e5484d" }], [E, P.F, nt(G.dist(E, P.F)), { lado: P.D[0] <= P.F[0] ? -1 : 1, cor: "#4c8dff" }]] }; },
+      posRot: (k) => (k === "B" ? [-18, 14] : k === "A" || k === "D" ? [0, 18] : [0, -20]),
+      leitor: (P) => { const e = est(P); return vis("AB ÷ BC", nt(e.r1, 3)) + vis("DE ÷ EF", nt(e.r2, 3)) + vis("AB ÷ DE", nt(e.q1, 3)) + vis("BC ÷ EF", nt(e.q2, 3)); },
+      status: (P) => { const e = est(P); return `Arraste B para subir ou descer a paralela do meio; arraste A, C, D, F para inclinar as transversais. Os comprimentos mudam todos, mas a razão entre os pedaços vermelho e azul é a <b>mesma nas duas transversais</b>: ${nt(e.AB)} ÷ ${nt(e.BC)} = ${nt(e.r1, 3)} e ${nt(e.DE)} ÷ ${nt(e.EF)} = ${nt(e.r2, 3)}. É o teorema de Tales. Repare que a razão só depende da altura da paralela do meio, não da inclinação das transversais.`; } });
+    function est(P) { P = P || pa.P; const E = G.em(P.D, P.F, tB), AB = G.dist(P.A, P.B), BC = G.dist(P.B, P.C), DE = G.dist(P.D, E), EF = G.dist(E, P.F); return { A: P.A.slice(), B: P.B.slice(), C: P.C.slice(), D: P.D.slice(), E, F: P.F.slice(), AB, BC, DE, EF, r1: AB / BC, r2: DE / EF, q1: AB / DE, q2: BC / EF }; };
+    pa.redesenha(); SIM.geTales._ult = { poe: pa.poe, est: () => est() }; };
+
+  /* nome: "Triângulos semelhantes: arraste e compare lados e áreas" · matéria: Matemática · tema: GP02 */
+  SIM.geSemelhanca = (el, F) => { let t = 0.6;
+    const pa = G.arrasta(el, { vista: [0, 10, 0, 6], pts: { A: [4.6, 5.4], B: [1.2, 0.8], C: [8.6, 0.8], D: [0, 0] }, rot: { A: "A", B: "B", C: "C", D: "D" },
+      limita: (k, p, P) => { if (k !== "D") return p; t = Math.max(0.1, Math.min(0.95, G.param(p, P.A, P.B))); return G.em(P.A, P.B, t); },
+      cena: (P) => { P.D = G.em(P.A, P.B, t); const E = G.em(P.A, P.C, t); return { pols: [{ pts: [P.A, P.B, P.C] }, { pts: [P.A, P.D, E], cor: "var(--warn)", op: 0.2 }], segs: [[P.D, E, { cor: "var(--warn)", larg: 3 }]], pts: [[E, "E", { pos: G.fora(E, G.baricentro(P.A, P.B, P.C), 16), r: 4 }]], meds: [[P.D, E, nt(G.dist(P.D, E)), { lado: G.vet(G.sub(P.B, P.A), G.sub(P.C, P.A)) > 0 ? 1 : -1, cor: "var(--warn)" }], [P.B, P.C, nt(G.dist(P.B, P.C)), { lado: G.vet(G.sub(P.B, P.A), G.sub(P.C, P.A)) > 0 ? 1 : -1 }]] }; },
+      posRot: (k, P) => G.fora(P[k], G.baricentro(P.A, P.B, P.C), 20),
+      leitor: (P) => { const e = est(P); return vis("AD ÷ AB", nt(e.k1, 3)) + vis("AE ÷ AC", nt(e.k2, 3)) + vis("DE ÷ BC", nt(e.k3, 3)) + vis("área ADE ÷ área ABC", nt(e.ka, 3)) + vis("k²", nt(e.k1 * e.k1, 3)); },
+      status: (P) => { const e = est(P); return e.area < 0.3 ? "Os pontos A, B e C estão quase alinhados: não há triângulo." : `DE é sempre paralelo a BC. Arraste D sobre o lado AB (ou mexa em A, B, C): o triângulo laranja ADE é uma <b>cópia reduzida</b> de ABC. Os três lados encolhem na mesma razão k = ${nt(e.k1, 3)}, e a área encolhe em k² = ${nt(e.k1 * e.k1, 3)} (não em k!). ${Math.abs(t - 0.5) < 0.012 ? "Com D no ponto médio, DE é a base média: metade de BC, e a área é um quarto." : ""}`; } });
+    function est(P) { P = P || pa.P; const E = G.em(P.A, P.C, t), ar = G.area([P.A, P.B, P.C]); return { A: P.A.slice(), B: P.B.slice(), C: P.C.slice(), D: P.D.slice(), E, t, k1: G.dist(P.A, P.D) / G.dist(P.A, P.B), k2: G.dist(P.A, E) / G.dist(P.A, P.C), k3: G.dist(P.D, E) / G.dist(P.B, P.C), ka: ar ? G.area([P.A, P.D, E]) / ar : 0, area: ar, paralelo: Math.abs(G.vet(G.sub(E, P.D), G.sub(P.C, P.B))) }; };
+    pa.redesenha(); SIM.geSemelhanca._ult = { poe: pa.poe, est: () => est() }; };
 })();
