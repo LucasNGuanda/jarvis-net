@@ -24,7 +24,7 @@
     const un = [], voc = new Map(), formulas = [];
     const poe = (u, campos) => { const i = un.push(u) - 1; u.i = i; campos.forEach(([txt, w]) => { for (const t of toks(txt, false)) { if (t.length < 2 && !/\d/.test(t)) continue; let m = voc.get(t); if (!m) voc.set(t, (m = new Map())); const a = m.get(i); if (!a || a[0] < w) m.set(i, [w, 1]); else if (a[0] === w) a[1]++; } }); }; /* [peso do campo, quantas vezes aparece nele] */
     for (const mid of (window.MATERIAS || []).map((m) => m.id)) { const m = window.MATERIAS.find((x) => x.id === mid); poe({ tipo: "materia", grupo: "mat:" + mid, mat: mid, area: null, titulo: m.nome, href: m.rota }, [[m.nome, 6]]); }
-    for (const a of window.AREAS || []) poe({ tipo: "aba", grupo: "aba:" + a.id, mat: a.materia || "fisica", area: a.id, titulo: a.titulo, aba: a.nome, href: "#/" + a.inicio }, [[a.nome, 4], [a.titulo, 4]]);
+    for (const a of window.AREAS || []) poe({ tipo: "aba", ferramenta: !!a.pagina, grupo: "aba:" + a.id, mat: a.materia || "fisica", area: a.id, titulo: a.titulo, aba: a.nome, href: "#/" + a.inicio }, [[a.nome, a.pagina ? 8 : 4], [a.titulo, a.pagina ? 8 : 4], [a.chaves || "", 7]]); /* aba-ferramenta (campo "pagina"): pesa como um tema; "chaves" = palavras a mais */
     for (const m of window.CATALOGO || []) {
       const mat = materiaDe(m.area), ar = (window.AREAS || []).find((x) => x.id === m.area) || {};
       poe({ tipo: "modulo", grupo: "mod:" + m.id, mat, area: m.area, mod: m, titulo: m.nome, href: m.temas.length ? F.href(m.temas[0][0], mat) : "#/" + (ar.inicio || "home") }, [[m.nome, 5], [m.desc || "", 1], [m.id, 2]]);
@@ -84,7 +84,7 @@
       const n = v.t.length, minimo = folga ? 0.5 : n <= 2 ? 1 : 0.6, frase = v.t.join(" ");
       for (const [i, [s, ac, ws]] of porUn) {
         const cob = ac / n; if (cob < minimo) continue; const u = B.un[i];
-        let nota = s * cob * cob * v.peso; if (n > 1 && norm([u.titulo, u.nome, u.secaoTit].join(" ")).includes(frase)) nota *= 1.5; if (u.tipo === "tema" && !u.pronto) nota *= 0.85;
+        let nota = s * cob * cob * v.peso; if (n > 1 && norm([u.titulo, u.nome, u.secaoTit].join(" ")).includes(frase)) nota *= 1.5; if (u.tipo === "tema" && !u.pronto) nota *= 0.85; if (u.ferramenta) nota *= 1.25; /* aba-ferramenta: empata com os temas no peso; o empurrão a deixa entre os primeiros */
         const g = grupos.get(u.grupo); if (!g) grupos.set(u.grupo, { u, nota, palavras: ws, soma: nota }); else { g.soma += nota; if (g.nota < nota) Object.assign(g, { u, nota, palavras: ws }); }
       }
     }

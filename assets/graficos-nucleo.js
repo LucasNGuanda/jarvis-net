@@ -1,4 +1,4 @@
-/* Gráficos de funções (β 11.5): NÚCLEO, sem tela. Leitor de expressões próprio (sem eval e sem new Function), avaliador,
+/* Gráficos de funções (β 11.6): NÚCLEO, sem tela. Leitor de expressões próprio (sem eval e sem new Function), avaliador,
    escrita em TeX e a análise numérica (descontinuidades, raízes, extremos, interseções, derivada e integral).
    Serve ao navegador (window.GRAF) e ao Node (module.exports), para os testes conferirem as contas fora da página.
 
