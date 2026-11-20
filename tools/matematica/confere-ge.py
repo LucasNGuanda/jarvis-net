@@ -143,5 +143,51 @@ ok([(k, n) for k in range(3, 50) for n in range(3, 50) if k * (n - 2) * 180 == 3
 pen_ = [polar((0, 0), 1, 90 + 72 * i) for i in range(5)]
 ok(perto(ang(pen_[2], pen_[0], pen_[3]), 36) and perto(ang(pen_[1], pen_[0], pen_[2]), 36) and perto(ang(pen_[4], pen_[0], pen_[1]), 108), "GP03 chefão (e): no pentágono regular, o ângulo CAD medido é 36°")
 
+# ---------- GP04 ----------
+O_ = (0.0, 0.0)
+def pc_(g, r=1.0): return polar(O_, r, g)
+def insc_():
+    ga, gb, gp = (random.uniform(0, 360) for _ in range(3)); ab = (gb - ga) % 360; ap = (gp - ga) % 360
+    if min(ab, 360 - ab) < 5 or min(ap, 360 - ap) < 3 or min((gp - gb) % 360, (gb - gp) % 360) < 3: return True
+    arco = 360 - ab if ap < ab else ab
+    return perto(ang(pc_(ga), pc_(gp), pc_(gb)), arco / 2, 1e-6)
+ok(all(insc_() for _ in range(2000)), "GP04 teorema 1: em 2000 posições sorteadas de A, B e P na circunferência, o ângulo APB medido é a metade do arco AB que não contém P")
+ok(all(perto(ang(pc_(180), pc_(g), pc_(0)), 90) for g in range(5, 176, 5)) and all(perto(ang(pc_(215), pc_(215 + 2 * a + (360 - 2 * a) / 2), pc_(215 + 2 * a)), a) and perto(ang(pc_(215), pc_(215 + a), pc_(215 + 2 * a)), 180 - a) for a in range(55, 126)), "GP04 exercícios 3 e 5: inscrito na semicircunferência mede 90°; no quadrilátero inscrito desenhado, o ângulo em A é o do enunciado e o oposto é o suplemento")
+def tang_(r, d):
+    al = degrees(acos(r / d)); t = pc_(al, r); p = (d, 0)
+    return perto(ang(O_, t, p), 90) and perto(dist(p, t), sqrt(d * d - r * r)) and perto(ang(t, p, pc_(-al, r)) + 2 * al, 180)
+ok(all(tang_(r, d) for r, d in [(3, 5), (5, 13), (6, 10), (8, 17), (9, 15), (12, 13), (4, 5), (1, 2.3)]) and sqrt(25 - 9) == 4, "GP04 teorema 2, exemplo 3 e exercícios 6 e 7: tangente perpendicular ao raio, PT = √(OP² − r²), e ângulo entre as tangentes + ângulo central = 180°")
+def pot_():
+    r = random.uniform(1, 3); p = (random.uniform(-6, 6), random.uniform(-6, 6)); op2 = p[0] ** 2 + p[1] ** 2
+    if abs(sqrt(op2) - r) < 0.2: return True
+    vals = []
+    for _ in range(3):
+        g = random.uniform(0, 180); u = (cos(radians(g)), sin(radians(g))); b = 2 * (p[0] * u[0] + p[1] * u[1]); dl = b * b - 4 * (op2 - r * r)
+        if dl <= 1e-6: continue
+        t1, t2 = (-b - sqrt(dl)) / 2, (-b + sqrt(dl)) / 2; vals.append(abs(t1) * abs(t2))
+    return all(perto(v, abs(op2 - r * r), 1e-6) for v in vals)
+ok(all(pot_() for _ in range(2000)) and 3 * 8 == 4 * 6, "GP04 teorema 3: em 2000 pontos sorteados (dentro e fora), o produto das distâncias aos dois cortes é |OP² − r²| para toda reta por P; 3 · 8 = 4 · 6")
+def seg_(c): return perto(ang((1, -1), (0, -1), pc_(270 + c)), c / 2)
+def exc_(m, n):
+    a, c, b, d = pc_(180 - m / 2), pc_(180 + m / 2), pc_(360 - n / 2), pc_(n / 2); i = inter(a, b, c, d); return perto(ang(a, i, c), (m + n) / 2)
+def exf_(m, n):
+    a, c, b, d = pc_(180 - n / 2), pc_(180 + n / 2), pc_(m / 2), pc_(360 - m / 2); q = inter(a, b, c, d); return q[0] < -1 and perto(ang(b, q, d), (m - n) / 2)
+ok(all(seg_(c) for c in range(60, 151, 10)) and all(exc_(m, n) for m in range(40, 111, 10) for n in range(20, 61, 10)) and all(exf_(m, n) for m in range(90, 141, 10) for n in range(20, 61, 10)), "GP04 teorema 4 e exercícios 8, 12 e 13: ângulo de segmento (metade do arco), ângulo excêntrico interior (semissoma) e exterior (semidiferença), medidos nas mesmas construções das figuras")
+ok(110 / 2 == 55 and (180 - 110) / 2 == 35 and 3 * 8 / 4 == 6 and 180 - 50 == 130 and 84 / 2 == 42 and 2 * 35 == 70 and 90 - 32 == 58 and 180 - 75 == 105 and 180 - 70 == 110 and 130 / 2 == 65 and 4 * 6 / 3 == 8 and 4 * 9 / 3 - 3 == 9 and sqrt(4 * 9) == 6 and (80 + 40) / 2 == 60 and (110 - 40) / 2 == 35 and 360 * 4 / 9 / 2 == 80 and 5 + 7 - 7 == 5 and sqrt(25 - 16) == 3, "GP04 exemplos e exercícios (primeiro acesso): 55° e 35°; 6; 130°; 42°; 70°; 58°; 40°; 105°; 4; 110°; 65°; 8; 9; 6; 60°; 35°; 80°; 5; 3")
+def pitot_(t):
+    lo, hi = 0.01, 50.0
+    for _ in range(100):
+        m = (lo + hi) / 2
+        if sum(2 * atan2(x, m) for x in t) > 2 * pi: lo = m
+        else: hi = m
+    r = (lo + hi) / 2; a = 90.0; v = []
+    for x in t:
+        h = degrees(atan2(x, r)); a += h; v.append(pc_(a, hypot(r, x))); a += h
+    lados = [dist(v[i], v[(i + 1) % 4]) for i in range(4)]
+    def d_reta(p, q): return abs((q[0] - p[0]) * (-p[1]) - (q[1] - p[1]) * (-p[0])) / dist(p, q)
+    return all(perto(lados[i], t[i] + t[(i + 1) % 4], 1e-6) for i in range(4)) and all(perto(d_reta(v[i], v[(i + 1) % 4]), r, 1e-6) for i in range(4)) and perto(lados[0] + lados[2], lados[1] + lados[3], 1e-6)
+ok(all(pitot_(t) for t in [(2, 3, 4, 3), (3, 3, 5, 2), (2, 4, 3, 5), (4, 2, 3, 3), (3, 5, 4, 2)]), "GP04 exercício 15: os cinco quadriláteros circunscritos das figuras têm os lados pedidos, os quatro lados à mesma distância do centro (tangentes) e AB + CD = BC + DA")
+ok(all(perto(sqrt(r * r - h * h), d) for h, d, r in [(4, 3, 5), (12, 5, 13), (6, 8, 10), (5, 12, 13), (15, 8, 17), (3, 4, 5), (8, 6, 10)]) and (3 - 1) + (4 - 1) == 5 and all(perto(abs(a * 1 + b * 1 - c) / hypot(a, b), 1) for a, b, c in [(1, 0, 0), (0, 1, 0), (3, 4, 12)]), "GP04 exercício 16 e chefão (e): corda e distância ao centro; o círculo de centro (1, 1) e raio 1 é tangente aos três lados do triângulo 3, 4, 5")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)

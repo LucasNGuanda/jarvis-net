@@ -207,4 +207,42 @@
     const poe = (o) => { if (o.n !== undefined) n = Math.max(3, Math.min(12, Math.round(+o.n))); if (o.V) pa.poe({ V: o.V }); else pa.redesenha(); };
     el.querySelector("[data-b=menos]").addEventListener("click", () => poe({ n: n - 1 })); el.querySelector("[data-b=mais]").addEventListener("click", () => poe({ n: n + 1 }));
     SIM.geRegular._ult = { poe, est }; };
+
+  /* ---------- GP04 ---------- */
+  /* prende um ponto à circunferência de centro C e raio r */
+  G.naCirc = (p, C, r) => { const d = G.dist(p, C); return d < 1e-9 ? [C[0] + r, C[1]] : G.soma(C, G.esc(G.sub(p, C), r / d)); };
+  /* segunda interseção da reta PQ com a circunferência (Q já está nela); null se a reta for tangente em Q */
+  G.outra = (P, Q, C, r) => { const d = G.sub(Q, P), L2 = G.pint(d, d); if (L2 < 1e-18) return null; const t = -2 * G.pint(G.sub(Q, C), d) / L2; return Math.abs(t) < 1e-9 ? null : G.soma(Q, G.esc(d, t)); };
+  /* interseções da reta AB com a circunferência (0, 1 ou 2 pontos, em ordem ao longo de AB) */
+  G.retaCirc = (Pa, Pb, C, r) => { const d = G.sub(Pb, Pa), f = G.sub(Pa, C), a = G.pint(d, d), b = 2 * G.pint(f, d), c = G.pint(f, f) - r * r, dl = b * b - 4 * a * c; if (dl < -1e-12) return []; const s = Math.sqrt(Math.max(0, dl)); return (s < 1e-9 ? [-b / (2 * a)] : [(-b - s) / (2 * a), (-b + s) / (2 * a)]).map((t) => G.soma(Pa, G.esc(d, t))); };
+  /* arco AB (em graus, de 0 a 360) que NÃO contém P, com os três pontos na circunferência de centro C */
+  G.arcoSem = (Pa, Pb, P, C) => { const a = G.dir(C, Pa), b = G.dir(C, Pb), p = G.dir(C, P), ab = (((b - a) % 360) + 360) % 360, ap = (((p - a) % 360) + 360) % 360; return ap < ab ? 360 - ab : ab; };
+  /* pontos de tangência das tangentes traçadas de P (fora) à circunferência */
+  G.tangentes = (P, C, r) => { const d = G.dist(P, C); if (d <= r) return []; const base = G.dir(C, P), al = Math.acos(r / d) / RAD; return [G.polar(C, r, base + al), G.polar(C, r, base - al)]; };
+  /* figura numa circunferência de raio 1 e centro O: pos = { nome: graus }; o como em G.fig, mas com os pontos dados por nome.
+     cordas: [[a, b, estilo]], raios: [a], angs: [[a, v, b, estilo]] (v pode ser "O"), meds: [[a, b, texto, estilo]], extra: objeto G.fig a juntar */
+  G.circulo = (pos, o, D) => { const O = [0, 0], Pt = (k) => (k === "O" ? O : Array.isArray(k) ? k : pos[k] === undefined ? (o.fora || {})[k] : G.polar(O, 1, pos[k])), x = o.extra || {};
+    const nomes = Object.keys(pos).filter((k) => !(o.semNome || []).includes(k)).map((k) => [Pt(k), k, { pos: G.fora(Pt(k), O, 14), r: 3 }]).concat(Object.keys(o.fora || {}).map((k) => [Pt(k), k, { pos: (o.posFora || {})[k] || [0, 14], r: 3 }]));
+    return G.fig({ circs: [[O, 1, { cor: "var(--mod)", op: 0.06 }]].concat(x.circs || []), pols: x.pols || [], segs: (o.cordas || []).map(([a, b, e]) => [Pt(a), Pt(b), e || { cor: "var(--mod)" }]).concat((o.raios || []).map((a) => [O, Pt(a), { cor: "var(--ink3)", larg: 1.5 }])).concat(x.segs || []), retas: (o.retas || []).map(([a, b, e]) => [Pt(a), Pt(b), e || {}]), angs: (o.angs || []).map(([a, v, b, e]) => [Pt(a), Pt(v), Pt(b), e || {}]), meds: (o.meds || []).map(([a, b, t, e]) => [Pt(a), Pt(b), t, e || {}]), arcos: x.arcos || [], pts: nomes.concat(o.centro === false ? [] : [[O, "O", { pos: o.posO || [-10, -10], r: 3 }]]), txt: x.txt || [], hmax: o.hmax || 260, vista: o.vista || [-1.45, 1.45, -1.3, 1.3] }, D); };
+
+  /* nome: "Ângulo inscrito × ângulo central: arraste os pontos" · matéria: Matemática · tema: GP04 */
+  SIM.geInscrito = (el, F) => { const C = [5, 3], r = 2.5;
+    const pa = G.arrasta(el, { vista: [0, 10, 0, 6], pts: { A: G.polar(C, r, 215), B: G.polar(C, r, 325), P: G.polar(C, r, 80) }, limita: (k, p) => G.naCirc(p, C, r),
+      cena: (P) => { const e = est(P), reflexo = e.arco > 180; return { circs: [[C, r, { cor: "var(--mod)", op: 0.06 }]], segs: [[C, P.A, { cor: "#e5484d" }], [C, P.B, { cor: "#e5484d" }], [P.P, P.A, { cor: "#4c8dff" }], [P.P, P.B, { cor: "#4c8dff" }]], angs: [[P.A, P.P, P.B, { rot: G.gr(e.inscrito), cor: "#4c8dff", r: 30, dr: 18 }]].concat(reflexo ? [] : [[P.A, C, P.B, { rot: G.gr(e.arco), cor: "#e5484d", r: 22, dr: 18 }]]), pts: [[C, "O", { pos: [-12, -8], r: 3 }]], txt: reflexo ? [[G.soma(C, [0, -0.45]), "arco de " + G.gr(e.arco), { cor: "#e5484d", f: 11, w: 700 }]] : [] }; },
+      posRot: (k, P) => G.fora(P[k], C, 20),
+      leitor: (P) => { const e = est(P); return vis("arco AB visto de P", G.gr(e.arco)) + vis("ângulo inscrito APB", G.gr(e.inscrito)) + vis("arco ÷ 2", G.gr(e.arco / 2)); },
+      status: (P) => { const e = est(P); return `Arraste P pela circunferência: enquanto ele não passar por A nem por B, o ângulo inscrito <b>não muda</b>. Ele é sempre a metade do arco AB que fica do outro lado (o arco que P "enxerga"): ${G.gr(e.arco)} ÷ 2 = ${G.gr(e.inscrito)}. ${Math.abs(e.arco - 180) < 1.2 ? "Com AB (quase) um diâmetro, o arco é de 180° e o inscrito é reto." : e.arco > 180 ? "Aqui P está no arco menor, e enxerga o arco maior, de mais de 180°: o inscrito é obtuso." : "Arraste A ou B para mudar o arco; leve P para o outro lado da corda AB e veja o ângulo virar o suplemento."}`; } });
+    function est(P) { P = P || pa.P; const arco = G.arcoSem(P.A, P.B, P.P, C); return { A: P.A.slice(), B: P.B.slice(), P: P.P.slice(), arco, inscrito: G.ang(P.A, P.P, P.B), central: G.ang(P.A, C, P.B) }; }
+    SIM.geInscrito._ult = { poe: pa.poe, est: () => est() }; };
+
+  /* nome: "Potência de um ponto: arraste P para dentro e para fora" · matéria: Matemática · tema: GP04 */
+  SIM.gePotencia = (el, F) => { const C = [5, 3], r = 2.2;
+    const pa = G.arrasta(el, { vista: [0, 10, 0, 6], pts: { P: [5.9, 3.5], A: G.polar(C, r, 150), C: G.polar(C, r, 250) }, limita: (k, p) => (k === "P" ? p : G.naCirc(p, C, r)),
+      cena: (P) => { const e = est(P), s = []; if (e.B) s.push([P.A, e.B, { cor: "#e5484d" }], [P.P, P.A, { cor: "#e5484d", larg: 1.4, trac: true }], [P.P, e.B, { cor: "#e5484d", larg: 1.4, trac: true }]); if (e.D) s.push([P.C, e.D, { cor: "#4c8dff" }], [P.P, P.C, { cor: "#4c8dff", larg: 1.4, trac: true }], [P.P, e.D, { cor: "#4c8dff", larg: 1.4, trac: true }]);
+        return { circs: [[C, r, { cor: "var(--mod)", op: 0.06 }]], segs: s, pts: [[C, "O", { pos: [-12, -8], r: 3 }]].concat(e.B ? [[e.B, "B", { pos: G.fora(e.B, C, 16), r: 4, cor: "#e5484d" }]] : []).concat(e.D ? [[e.D, "D", { pos: G.fora(e.D, C, 16), r: 4, cor: "#4c8dff" }]] : []) }; },
+      posRot: (k, P) => (k === "P" ? [14, 14] : G.fora(P[k], C, 20)),
+      leitor: (P) => { const e = est(P); return vis("PA · PB", e.B ? nt(e.PA * e.PB, 3) : "—") + vis("PC · PD", e.D ? nt(e.PC * e.PD, 3) : "—") + vis("|OP² − r²|", nt(Math.abs(e.OP * e.OP - r * r), 3)) + vis("P está", e.OP < r - 0.01 ? "dentro" : e.OP > r + 0.01 ? "fora" : "na circunferência"); },
+      status: (P) => { const e = est(P); return `Por P passam duas retas: a vermelha corta a circunferência em A e B, a azul em C e D. Arraste P, A ou C: as quatro distâncias mudam, mas os produtos <b>PA · PB</b> e <b>PC · PD</b> são sempre iguais${e.B && e.D ? ` (${nt(e.PA, 2)} · ${nt(e.PB, 2)} = ${nt(e.PA * e.PB, 2)} e ${nt(e.PC, 2)} · ${nt(e.PD, 2)} = ${nt(e.PC * e.PD, 2)})` : ""}. Esse valor só depende de P: é a diferença entre OP² e r². ${e.OP > r ? "Com P fora, o mesmo valor é o quadrado da tangente traçada de P." : "Com P dentro, as retas são duas cordas que se cruzam."}`; } });
+    function est(P) { P = P || pa.P; const B = G.outra(P.P, P.A, C, r), Dd = G.outra(P.P, P.C, C, r); return { P: P.P.slice(), A: P.A.slice(), C: P.C.slice(), B, D: Dd, PA: G.dist(P.P, P.A), PB: B ? G.dist(P.P, B) : null, PC: G.dist(P.P, P.C), PD: Dd ? G.dist(P.P, Dd) : null, OP: G.dist(P.P, C), r }; }
+    SIM.gePotencia._ult = { poe: pa.poe, est: () => est() }; };
 })();
