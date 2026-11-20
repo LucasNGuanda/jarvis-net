@@ -289,5 +289,18 @@ precisa = [c for c in "AK47" if any((vogal(c) and not par(o)) or (vogal(o) and c
 ok(precisa == ["A", "7"], "RLM01 chefão (e): só A e 7 podem esconder uma violação da regra 'vogal → par'")
 ok(len([1 for p_ in (True, False) for q_ in (True, False) for r_ in (True, False) if imp(p_ or q_, r_)]) == 5 and all(any((x - y) % 10 == 0 for i, x in enumerate(L11) for y in L11[i + 1:]) for L11 in ([3, 14, 25, 36, 47, 58, 69, 70, 81, 92, 103], list(range(100, 111)))), "RLM01 exercício 14 (primeiro acesso): (p ∨ q) → r é verdadeira em 5 linhas; chefão (c) em dois exemplos de 11 inteiros")
 
+# ---------- EF01 ----------
+f_ = lambda p_: 1 + Fr(p_, 100)
+ok(80 * f_(15) == 92 and 80 * f_(-15) == 68 and f_(20) * f_(-20) == Fr(96, 100) == f_(-20) * f_(20), "EF01: 80 com +15% dá 92 e com −15% dá 68; +20% e −20% dá 0,96 nas duas ordens")
+ok(250 * f_(-20) == 200 and 200 * f_(-10) == 180 and 250 * Fr(72, 100) == 180 and 250 * f_(-10) == 225 and 225 * f_(-20) == 180 and 1 - f_(-20) * f_(-10) == Fr(28, 100), "EF01 teorema 1 e exemplo 1: 250 → 200 → 180; desconto único de 28%")
+ok(all(f_(p_) * f_(-p_) == 1 - Fr(p_ * p_, 10000) for p_ in range(0, 101)), "EF01 teorema 2 e chefão (a): (1 + p/100)(1 − p/100) = 1 − p²/10 000")
+ok(all(f_(p_) * (1 - Fr(100 * p_, 100 + p_) / 100) == 1 for p_ in range(1, 400)) and Fr(100 * 25, 125) == 20 and all(f_(-p_) * (1 + Fr(100 * p_, 100 - p_) / 100) == 1 for p_ in range(1, 100)), "EF01 teorema 3: o desconto 100p/(100 + p)% desfaz +p%; o aumento 100p/(100 − p)% desfaz −p%")
+ok(150 / f_(25) == 120 and 150 * f_(-25) == Fr(225, 2) and Fr(30, 150) == Fr(20, 100) and Fr(100 * 20, 80) == 25 and Fr(100 * 50, 50) == 100, "EF01 exemplo 2: 150 ÷ 1,25 = 120 (e não 112,50); −20% pede +25%; −50% pede +100%")
+ok(Fr(10, 100) * 2 == Fr(2, 10) and Fr(40, 100) * 3 == Fr(12, 10) and (Fr(2, 10) + Fr(12, 10)) / 5 == Fr(28, 100) and Fr(10 + 40, 2) == 25, "EF01 teorema 4 e exemplo 3: 2 L a 10% com 3 L a 40% dão 28% (a média simples seria 25%)")
+ok(all(min(c1, c2) <= Fr(c1 * m1 + c2 * m2, m1 + m2) <= max(c1, c2) for c1 in range(0, 101, 10) for c2 in range(0, 101, 10) for m1 in range(1, 6) for m2 in range(1, 6)), "EF01 teorema 4: a concentração da mistura fica entre as duas")
+ok(Fr(55, 100) * Fr(80, 100) == Fr(44, 100) and Fr(11, 10) ** 3 == Fr(1331, 1000) and Fr(20, 100) * 5 == 1 and 1 / Fr(25, 100) == 4 and Fr(20, 80) == Fr(25, 100), "EF01 chefão (b) a (e): 1,1³ = 1,331; 1 kg de sal em 4 kg é 25%; 20/80 = 25%; 55% de 80% = 44%")
+ok(100 * Fr(1, 100) / Fr(2, 100) == 50 and Fr(16 * 25, 100) == 4 and f_(10) * f_(20) == Fr(132, 100) and f_(25) * f_(-20) == 1 and (f_(10) ** 3 - 1) * 100 == Fr(331, 10), "EF01 exercícios 12 a 16 (primeiro acesso): 33,1%; área +32%; 16% de 25 = 4; carga de 50 kg; gasto igual")
+ok(Fr(35 * 240, 100) == 84 and 350 * f_(-20) == 280 and Fr(92 - 80, 80) == Fr(15, 100) and Fr(14, 40) == Fr(35, 100) and 80 * f_(25) == 100 and Fr(20, 100) == Fr(100 - 80, 100) and Fr(3 * 20 + 2 * 45, 5) == 30 and Fr(12 - 10, 10) == Fr(20, 100) and Fr(101, 100) * Fr(102, 100) == Fr(10302, 10000), "EF01 exercícios 1 a 11 (primeiro acesso) e a conta 1,01·1,02 = 1,0302")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)
