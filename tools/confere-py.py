@@ -7,7 +7,7 @@ import json, math, sys
 from fractions import Fraction
 from math import gcd
 dados = json.load(open(sys.argv[1], encoding='utf8'))
-amb = {'__builtins__': {}, 'math': math, 'sqrt': math.sqrt, 'log10': math.log10, 'log': math.log, 'exp': math.exp, 'pi': math.pi, 'abs': abs, 'min': min, 'max': max, 'round': round, 'gcd': gcd, 'Fraction': Fraction, 'float': float, 'int': int, 'sum': sum, 'range': range, 'len': len}
+amb = {'__builtins__': {}, 'math': math, 'sqrt': math.sqrt, 'log10': math.log10, 'log': math.log, 'exp': math.exp, 'pi': math.pi, 'abs': abs, 'min': min, 'max': max, 'round': round, 'gcd': gcd, 'Fraction': Fraction, 'float': float, 'int': int, 'sum': sum, 'range': range, 'len': len, 'sorted': sorted}
 ok = falha = sem = 0; vistos = {}; maior = 0.0
 for d in dados:
     if d['v'] is None: continue

@@ -316,5 +316,33 @@ ok(1000 * Fr(95, 100) == 950 and abs(float(500 + 500 / g_(2)) - 990.196) < 0.001
 ok(Fr(600 * 2 * 8, 100) == 96 and 1500 * (1 + Fr(12, 100) * 3) == 2040 and Fr(2000 * 15 * 10, 1000) == 300 and Fr(200, 5) == 40 and 2000 * g_(10) ** 2 == 2420 and 5000 * g_(20) ** 3 - 5000 == 3640 and 4000 * g_(10) ** 2 == 4840, "EF02 exercícios 1 a 7 (primeiro acesso)")
 ok([t for t in range(1, 200) if g_(10) ** t >= 2][0] == 8 and 1000 * Fr(97, 100) == 970 and abs(float(500 + 500 / g_(4)) - 980.769) < 0.001 and (2000 * g_(10) - 1200) * g_(10) == 1100 and abs(float(g_(10) / g_(4) - 1) * 100 - 5.769) < 0.001 and abs(float(1000 / (1 / g_(10) + 1 / g_(10) ** 2)) - 576.19) < 0.005 and 2100 / (1 / g_(10) + 1 / g_(10) ** 2) == 1210, "EF02 exercícios 11 a 16 (primeiro acesso): dobra em 8 anos; 970 × 980,77; saldo 1100; ganho real 5,77%; parcela 576,19")
 
+# ---------- EF03 ----------
+from itertools import product as prod_
+def est_(v):
+    n = len(v); m = Fr(sum(v), n); o = sorted(v)
+    med = o[n // 2] if n % 2 else Fr(o[n // 2 - 1] + o[n // 2], 2)
+    return dict(m=m, med=med, amp=o[-1] - o[0], dm=sum(abs(x - m) for x in v) / n, var=sum((x - m) ** 2 for x in v) / n)
+e_ = est_([2, 4, 4, 5, 7, 8])
+ok(e_["m"] == 5 and e_["med"] == Fr(9, 2) and e_["amp"] == 6 and e_["dm"] == Fr(5, 3) and e_["var"] == 4 and abs(float(e_["dm"]) - 1.67) < 0.005 and sum(x * x for x in [2, 4, 4, 5, 7, 8]) == 174 and Fr(174, 6) - 25 == 4, "EF03: 2, 4, 4, 5, 7, 8: média 5, mediana 4,5, amplitude 6, desvio médio 5/3 ≈ 1,67, variância 4; quadrados somam 174 e 29 − 25 = 4")
+ok(all(sum(x - Fr(sum(v), 4) for x in v) == 0 and est_(list(v))["var"] == Fr(sum(x * x for x in v), 4) - Fr(sum(v), 4) ** 2 for v in prod_(range(7), repeat=4)), "EF03 teoremas 1 e 2: desvios somam zero e variância = média dos quadrados − quadrado da média (as 2401 listas de 4 inteiros de 0 a 6)")
+ok(all(est_([x + c for x in v])["var"] == est_(list(v))["var"] and est_([k * x for x in v])["var"] == k * k * est_(list(v))["var"] and est_([x + c for x in v])["m"] == est_(list(v))["m"] + c for v in prod_(range(5), repeat=4) for c in (3, -2) for k in (2, -3, Fr(1, 2))), "EF03 teorema 3: somar c não muda a variância; multiplicar por k multiplica por k²")
+ok(est_([5, 7, 7, 8, 10, 11])["m"] == 8 and est_([5, 7, 7, 8, 10, 11])["var"] == 4 and est_([4, 8, 8, 10, 14, 16])["m"] == 10 and est_([4, 8, 8, 10, 14, 16])["var"] == 16 and 36 + 4 + 4 + 0 + 16 + 36 == 96, "EF03 teorema 3, números: somando 3, média 8 e variância 4; dobrando, média 10 e variância 16")
+xs_, fs_ = [4, 5, 6, 7, 8, 9], [1, 3, 6, 5, 3, 2]
+tab_ = [x for x, f in zip(xs_, fs_) for _ in range(f)]
+ok(len(tab_) == 20 and sum(tab_) == 132 and est_(tab_)["m"] == Fr(66, 10) and sum(x * x for x in tab_) == 906 and est_(tab_)["var"] == Fr(174, 100) and Fr(906, 20) == Fr(453, 10) and Fr(66, 10) ** 2 == Fr(4356, 100), "EF03 exemplo 2 (primeiro acesso): 20 alunos, soma 132, média 6,6, soma dos quadrados 906 (média 45,3), variância 45,3 − 43,56 = 1,74")
+ok(Fr(20 * 6 + 30 * 7, 50) == Fr(66, 10) and 20 * 6 == 120 and 30 * 7 == 210, "EF03 teorema 4: 20 alunos com 6 e 30 com 7 dão média 6,6")
+e1_ = est_([8, 4, 2, 7, 4, 5])
+ok(e1_["m"] == 5 and e1_["med"] == Fr(9, 2) and e1_["amp"] == 6 and e1_["dm"] == Fr(5, 3) and e1_["var"] == 4 and Fr(5 * 2 + 6 * 3 + 9 * 5, 10) == Fr(73, 10) and Fr(7 * 10 - 10 - 18, 5) == Fr(42, 5), "EF03 exemplos 1 e 3 (primeiro acesso): 8, 4, 2, 7, 4, 5 tem as mesmas medidas; terceira nota 8,4")
+ok(Fr(7 + 3 + 9 + 5 + 6, 5) == 6 and est_([9, 2, 7, 4, 12, 5])["med"] == 6 and Fr(6 * 1 + 8 * 2 + 5 * 3, 6) == Fr(37, 6) and est_([12, 7, 19, 4, 15])["amp"] == 15 and est_([2, 6, 7, 9])["dm"] == 2 and est_([3, 5, 5, 7, 10])["var"] == Fr(28, 5) and est_([2, 4, 4, 4, 5, 5, 7, 9])["var"] == 4, "EF03 exercícios 1 a 8 (primeiro acesso): média 6; mediana 6; ponderada 37/6; amplitude 15; desvio médio 2; variância 5,6; desvio padrão 2")
+ok(Fr(0 * 3 + 1 * 8 + 2 * 6 + 3 * 3, 20) == Fr(29, 20) and est_([1, 1, 2, 2, 2, 2, 3, 3])["var"] == Fr(1, 2) and 7 * 4 - 6 * 3 == 10 and 4 * 3 ** 2 == 36 and Fr(4 * 5, 5) == 4 and Fr(10 * 15 - 51 + 15, 10) == Fr(114, 10), "EF03 exercícios 9 a 16 (primeiro acesso): 1,45 irmão; variância 0,5; nota 10; variância 36; variância 4; média corrigida 11,4")
+ch_ = [2, 5, 7, 8, 8]
+ok(est_(ch_)["m"] == 6 and est_(ch_)["med"] == 7 and est_(ch_)["amp"] == 6 and 150 - 9 * 14 == 24 and Fr(20 * (4 + 36) + 30 * (1 + 49), 50) == 46 and 46 - Fr(66, 10) ** 2 == Fr(244, 100), "EF03 chefão: 2, 5, 7, 8, 8; saiu o 24; variância conjunta 46 − 43,56 = 2,44")
+# o item (c) do chefão tem solução única: todas as listas ordenadas de 5 inteiros
+sol_ = [v for v in prod_(range(0, 15), repeat=5) if list(v) == sorted(v) and sum(v) == 30 and v[2] == 7 and v[4] - v[0] == 6 and v.count(8) > max([v.count(x) for x in set(v) if x != 8] + [0])]
+ok(sol_ == [(2, 5, 7, 8, 8)], "EF03 chefão (c): busca exaustiva (inteiros de 0 a 14) acha uma única lista, 2, 5, 7, 8, 8")
+# variância conjunta conferida numa realização concreta das duas turmas
+A_ = [4] * 10 + [8] * 10; B_ = [6] * 15 + [8] * 15
+ok(est_(A_)["m"] == 6 and est_(A_)["var"] == 4 and est_(B_)["m"] == 7 and est_(B_)["var"] == 1 and est_(A_ + B_)["m"] == Fr(66, 10) and est_(A_ + B_)["var"] == Fr(244, 100), "EF03 chefão (e): turmas concretas (média 6, variância 4; média 7, variância 1) juntas dão 6,6 e 2,44")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)

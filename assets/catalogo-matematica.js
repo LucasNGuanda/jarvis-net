@@ -27,7 +27,7 @@ window.CATALOGO.push(
     ["RLM01","Raciocínio Lógico",["CNJ01","TN02"],true],
     ["EF01","Porcentagem",["MB04","MB01"],true],
     ["EF02","Juros",["EF01","SPG01","SPG02"],true],
-    ["EF03","Estatística",[]],
+    ["EF03","Estatística",["EF01","MB01"],true],
     ["EF04","Desigualdade das Médias",[]],
     ["CB01","Princípio Fundamental da Contagem",[]],
     ["CB02","Fatorial e Permutações",[]],

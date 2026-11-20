@@ -83,4 +83,44 @@
       q("[data-v=st]").innerHTML = `O produto custa ${nt(P)} reais em duas parcelas de ${nt(P / 2)} (uma hoje, outra em 30 dias), ou ${nt(e.avista)} à vista. Não se somam reais de datas diferentes: a segunda parcela, de ${nt(P / 2)}, vale <b>hoje</b> só ${nt(e.segundaHoje)}, porque essa quantia, rendendo ${i}% ao mês, vira ${nt(P / 2)} daqui a um mês. Em valor de hoje, o plano a prazo custa ${nt(e.prazoHoje)}. ${e.melhor === "empate" ? "As duas opções empatam." : e.melhor === "à vista" ? `À vista sai ${nt(e.sobra)} reais mais barato.` : `A prazo sai ${nt(-e.sobra)} reais mais barato.`}`; };
     ["d", "i"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
     SIM.arPresente._ult = { poe, est }; desenha(); };
+
+  /* ---------- EF03 ---------- */
+  /* resumo de uma lista de números (variância e desvio padrão POPULACIONAIS: divide-se por n) */
+  R.est = (v) => { const n = v.length, o = v.slice().sort((a, b) => a - b), soma = v.reduce((a, b) => a + b, 0), media = soma / n, mediana = n % 2 ? o[(n - 1) / 2] : (o[n / 2 - 1] + o[n / 2]) / 2, cont = new Map(); v.forEach((x) => cont.set(x, (cont.get(x) || 0) + 1)); const mx = Math.max(...cont.values()), modas = mx === 1 ? [] : [...cont.entries()].filter(([, c]) => c === mx).map(([x]) => x).sort((a, b) => a - b);
+    const dm = v.reduce((t, x) => t + Math.abs(x - media), 0) / n, vari = v.reduce((t, x) => t + (x - media) ** 2, 0) / n; return { n, soma, ord: o, media, mediana, modas, freqMax: mx, amp: o[n - 1] - o[0], dm, var: vari, dp: Math.sqrt(vari), desvios: v.map((x) => x - media) }; };
+  /* o mesmo, a partir de valores e frequências */
+  R.estF = (xs, fs) => R.est(xs.flatMap((x, i) => Array(fs[i]).fill(x)));
+  /* pontos empilhados sobre uma reta, com a média (triângulo) e a mediana (traço). o = { min, max, media, mediana, h, semMarcas } */
+  R.pontosFig = (v, D, o = {}) => { const W = 560, H = o.h || 150, x0 = 40, x1 = 520, mn0 = o.min === undefined ? Math.floor(Math.min(...v)) - 1 : o.min, mx0 = o.max === undefined ? Math.ceil(Math.max(...v)) + 1 : o.max, X = (x) => x0 + ((x - mn0) / (mx0 - mn0)) * (x1 - x0), y0 = H - 40, pilha = new Map(); let s = `<line x1="${x0 - 10}" y1="${y0}" x2="${x1 + 10}" y2="${y0}" style="stroke:var(--ink2);stroke-width:1.5"/>`;
+    const passo = Math.max(1, Math.ceil((mx0 - mn0) / 20)); for (let k = Math.ceil(mn0); k <= mx0; k += passo) s += `<line x1="${X(k)}" y1="${y0 - 3}" x2="${X(k)}" y2="${y0 + 3}" style="stroke:var(--ink3)"/>` + T(X(k), y0 + 16, mn(k), { f: 10, c: "var(--ink3)" });
+    v.forEach((x) => { const k = pilha.get(x) || 0; pilha.set(x, k + 1); s += `<circle cx="${X(x).toFixed(1)}" cy="${y0 - 10 - k * 15}" r="6.5" style="fill:var(--mod);fill-opacity:.85;stroke:var(--bg);stroke-width:1.5"/>`; });
+    if (!o.semMarcas) { const e = R.est(v); s += `<polygon points="${X(e.media)},${y0 + 20} ${X(e.media) - 8},${y0 + 34} ${X(e.media) + 8},${y0 + 34}" style="fill:var(--warn)"/>` + T(X(e.media) + 12, y0 + 34, "média", { f: 10, c: "var(--warn)", a: "start" }) + `<line x1="${X(e.mediana)}" y1="${y0 - 6}" x2="${X(e.mediana)}" y2="${12}" style="stroke:var(--ok);stroke-width:2;stroke-dasharray:5 4"/>` + T(X(e.mediana), 10, "mediana", { f: 10, c: "var(--ok)" }); }
+    return D ? D.svg(W, H, s, "figura") : `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block;margin:0 auto">${s}</svg>`; };
+
+  /* nome: "Seis números: mexa num e veja o que muda" · matéria: Matemática · tema: EF03 */
+  SIM.arDados = (el, F) => { let v = [2, 4, 4, 5, 7, 8];
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${v.map((x, i) => sl("x" + i, "x" + R.sub(i + 1), 0, 20, x, 90)).join("")}</div><div class="bts" style="margin-top:6px"><button class="bt peq" data-b="mais">somar 3 a todos</button><button class="bt peq" data-b="vezes">dobrar todos</button><button class="bt peq" data-b="zera">voltar ao começo</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => Object.assign({ v: v.slice() }, R.est(v));
+    const poe = (o) => { if (o.v) v = o.v.slice(0, 6); v = v.map((x) => Math.max(0, Math.min(20, Math.round(+x)))); while (v.length < 6) v.push(0); desenha(); };
+    const desenha = () => { const e = est(); v.forEach((x, i) => { q(`[data-v=x${i}]`).value = String(x); q(`[data-r=x${i}]`).textContent = x; });
+      q("[data-v=pal]").innerHTML = R.pontosFig(v, null, { min: 0, max: 20, h: 170 });
+      q("[data-v=lt]").innerHTML = vis("média", nt(e.media)) + vis("mediana", nt(e.mediana)) + vis("moda", e.modas.length ? e.modas.join(" e ") : "não há") + vis("amplitude", nt(e.amp)) + vis("desvio médio", nt(e.dm)) + vis("variância", nt(e.var)) + vis("desvio padrão", nt(e.dp));
+      q("[data-v=st]").innerHTML = `Em ordem: ${e.ord.join(", ")}. A média (${nt(e.media)}) é o ponto de equilíbrio: os desvios ${e.desvios.map((d) => (d > 0 ? "+" : d < 0 ? "−" : "") + nt(Math.abs(d))).join(", ")} somam zero. A mediana (${nt(e.mediana)}) deixa três valores de cada lado. Amplitude é a distância entre o maior e o menor; desvio médio é a distância média <b>até a média</b>: são coisas diferentes. Puxe um valor para longe: a média vai atrás, a mediana quase não se mexe.`; };
+    v.forEach((_, i) => q(`[data-v=x${i}]`).addEventListener("input", (ev) => { const n = v.slice(); n[i] = ev.target.value; poe({ v: n }); }));
+    el.querySelectorAll("[data-b]").forEach((b) => b.addEventListener("click", () => poe({ v: b.dataset.b === "mais" ? v.map((x) => x + 3) : b.dataset.b === "vezes" ? v.map((x) => x * 2) : [2, 4, 4, 5, 7, 8] })));
+    SIM.arDados._ult = { poe, est }; desenha(); };
+
+  /* nome: "Tabela de frequências: média e variância com pesos" · matéria: Matemática · tema: EF03 */
+  SIM.arFreq = (el, F) => { const xs = [4, 5, 6, 7, 8, 9]; let fs = [1, 3, 6, 5, 3, 2];
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${xs.map((x, i) => sl("f" + i, `nota ${x}: quantos`, 0, 12, fs[i], 80)).join("")}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const n = fs.reduce((a, b) => a + b, 0); if (!n) return { fs: fs.slice(), n: 0, vazio: true }; const e = R.estF(xs, fs), sxf = xs.reduce((t, x, i) => t + x * fs[i], 0), sx2f = xs.reduce((t, x, i) => t + x * x * fs[i], 0); return Object.assign({ fs: fs.slice(), xs, sxf, sx2f, atalho: sx2f / n - (sxf / n) ** 2 }, e); };
+    const poe = (o) => { if (o.fs) fs = o.fs.slice(0, 6); fs = fs.map((x) => Math.max(0, Math.min(12, Math.round(+x)))); desenha(); };
+    const desenha = () => { const e = est(); fs.forEach((f, i) => { q(`[data-v=f${i}]`).value = String(f); q(`[data-r=f${i}]`).textContent = f; });
+      q("[data-v=pal]").innerHTML = R.colunas({ vals: fs, rots: xs.map((x) => "nota " + x), max: Math.max(...fs, 1) * 1.15, txt: fs.map(String) }, null);
+      q("[data-v=lt]").innerHTML = e.vazio ? vis("alunos", 0) : vis("alunos", e.n) + vis("soma das notas", e.sxf) + vis("média", nt(e.media)) + vis("mediana", nt(e.mediana)) + vis("moda", e.modas.length ? e.modas.join(" e ") : "não há") + vis("variância", nt(e.var)) + vis("desvio padrão", nt(e.dp));
+      q("[data-v=st]").innerHTML = e.vazio ? "Ponha pelo menos um aluno." : `Cada nota conta tantas vezes quantos alunos a tiraram: soma = ${xs.map((x, i) => (fs[i] ? `${x} · ${fs[i]}` : null)).filter(Boolean).join(" + ")} = ${e.sxf}, e a média é ${e.sxf} ÷ ${e.n} = ${nt(e.media)}. Divide-se pelo número de <b>alunos</b> (${e.n}), não pelo número de linhas da tabela (6). Para a variância, o atalho: média dos quadrados menos o quadrado da média = ${nt(e.sx2f / e.n)} − ${nt(e.media ** 2)} = ${nt(e.atalho)}.`; };
+    xs.forEach((_, i) => q(`[data-v=f${i}]`).addEventListener("input", (ev) => { const n = fs.slice(); n[i] = ev.target.value; poe({ fs: n }); }));
+    SIM.arFreq._ult = { poe, est }; desenha(); };
 })();
