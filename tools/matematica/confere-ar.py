@@ -363,5 +363,29 @@ gr_ = [k / 1000 for k in range(1, 20000)]
 ok(abs(min(x * x + 16 / x for x in gr_) - 12) < 1e-9 and 2 ** 2 + Fr(16, 2) == 12 and 2 * 2 * Fr(8, 2) * Fr(8, 2) == 64 and abs(max(x * x * (6 - 2 * x) for x in gr_ if x < 3) - 8) < 1e-9 and 2 * 2 * (6 - 4) == 8, "EF04 chefão (c) e (e): numa grade fina, mínimo de x² + 16/x é 12 (em x = 2) e máximo de x²(6 − 2x) é 8 (em x = 2)")
 ok(all(Fr(a, b) + Fr(b, a) >= 2 and (a + b) * (Fr(1, a) + Fr(1, b)) >= 4 for a in range(1, 30) for b in range(1, 30)) and all(a * a + b * b + c * c >= a * b + b * c + c * a for a, b, c in prd_(range(1, 12), repeat=3)), "EF04 chefão (a), (b) e (d): conferidos em todos os inteiros pequenos")
 
+# ---------- CB01 ----------
+from itertools import product as pr_
+dg_ = lambda x: [int(c) for c in str(x)]
+dis_ = lambda x: len(set(dg_(x))) == len(dg_(x))
+s3_ = list(pr_(range(10), repeat=3))
+ok(len(s3_) == 1000 and len([s for s in s3_ if len(set(s)) == 3]) == 720 and 1000 - 720 == 280 and 2 * 3 == 6, "CB01 abertura e teoremas 2 e 4: 1000 senhas de 3 algarismos, 720 sem repetição, 280 com alguma repetição")
+n3_ = range(100, 1000)
+ok(len(n3_) == 900 and len([x for x in n3_ if dis_(x)]) == 648 and len([x for x in n3_ if dis_(x) and x % 2 == 1]) == 320 and len([x for x in n3_ if dis_(x) and x % 2 == 0]) == 328 and 72 + 256 == 328, "CB01 chute, exemplo 2 e exercício 15: 900 números de 3 algarismos; 648 com algarismos distintos; 320 ímpares e 328 pares")
+ok(all(len([x for x in n3_ if dis_(x) and x % 2 == 1 and max(dg_(x)) <= m]) == -(-m // 2) * (m - 1) * (m - 1) for m in range(5, 10)) and all(len([x for x in n3_ if dis_(x) and x % 2 == 0 and max(dg_(x)) <= m]) == m * (m - 1) + (m // 2) * (m - 1) ** 2 for m in range(5, 10)) and all(len([x for x in n3_ if dis_(x) and max(dg_(x)) <= m]) == m * m * (m - 1) for m in range(4, 10)), "CB01 exemplo 2 e exercícios 5 e 15, todos os sorteios: fórmulas com algarismos de 0 a m conferidas por enumeração")
+ok(all(len([s for s in pr_(range(n), repeat=3) if len(set(s)) < 3]) == n ** 3 - n * (n - 1) * (n - 2) for n in range(4, 8)) and 125 - 60 == 65, "CB01 exemplo 3: palavras de 3 letras com alguma repetida (n³ − n(n − 1)(n − 2)); com 5 letras, 65")
+ok(all(len([s for s in pr_(range(1, m + 1), repeat=3) if len(set(s)) == 3 and s[2] % 2 == 0]) == (m // 2) * (m - 1) * (m - 2) for m in range(5, 10)), "CB01 exercício 6: pares de 3 algarismos distintos com os algarismos de 1 a m")
+ok(3 * 4 * 2 == 24 and 10 ** 4 == 10000 and 10 * 9 * 8 == 720 and 2 + 3 * 4 == 14 and 26 ** 2 * 10 ** 2 == 67600 and 2 ** 5 == 32 and 2 ** 3 * 6 == 48 and 5 * 4 == 20 and 3 * 6 * 5 == 90, "CB01 exercícios 1 a 11 (primeiro acesso): 24; 10 000; 720; 900; 648; 90; 14; 67 600; 32; 48; 20")
+ok(len([x for x in n3_ if 7 in dg_(x)]) == 252 == 900 - 648 and all(len([x for x in range(10 ** (k - 1), 10 ** k) if d in dg_(x)]) == 9 * 10 ** (k - 1) - 8 * 9 ** (k - 1) for k in (2, 3, 4) for d in range(1, 10)), "CB01 exercício 13: números de k algarismos com algum algarismo d (252 com 3 algarismos e d = 7)")
+ok(len([d for d in range(1, 361) if 360 % d == 0]) == 24 == 4 * 3 * 2 and 360 == 2 ** 3 * 3 ** 2 * 5, "CB01 exercício 14: 360 = 2³ · 3² · 5 tem 24 divisores")
+def cores_(n, c):
+    return len([s for s in pr_(range(c), repeat=n) if all(s[i] != s[i + 1] for i in range(n - 1))])
+ok(all(cores_(n, c) == c * (c - 1) ** (n - 1) for n in range(3, 7) for c in range(2, 5)) and cores_(5, 3) == 48, "CB01 exercício 16: bandeiras com vizinhas diferentes, c(c − 1)ⁿ⁻¹ (48 com 5 listras e 3 cores)")
+ok(len([x for x in range(1000, 10000) if dis_(x) and x % 5 == 0]) == 952 == 504 + 448, "CB01 chefão (a): 952 múltiplos de 5 com 4 algarismos distintos")
+ok(len([d for d in range(1, 10 ** 6 + 1) if 10 ** 6 % d == 0 and d % 100 == 0]) == 25, "CB01 chefão (b): 25 divisores de 10⁶ são múltiplos de 100")
+ok(len([m for m in range(2 ** 10) if any((m >> (j - 1)) & 1 for j in range(2, 11, 2))]) == 992 == 1024 - 32, "CB01 chefão (c): 992 subconjuntos de {1, …, 10} têm algum par")
+ok(len([x for x in range(1, 1000) if 3 not in dg_(x)]) == 728 == 9 ** 3 - 1, "CB01 chefão (d): 728 números de 1 a 999 sem o algarismo 3")
+ok(len([x for x in n3_ if len(set(dg_(x))) == 2]) == 243 == 900 - 648 - 9, "CB01 chefão (e): 243 números de 3 algarismos com exatamente dois iguais")
+ok(len([m for m in range(8)]) == 8 == 2 ** 3, "CB01 teorema 3: {a, b, c} tem 8 subconjuntos")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)

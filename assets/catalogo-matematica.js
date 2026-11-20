@@ -29,7 +29,7 @@ window.CATALOGO.push(
     ["EF02","Juros",["EF01","SPG01","SPG02"],true],
     ["EF03","Estatística",["EF01","MB01"],true],
     ["EF04","Desigualdade das Médias",["EF03","MB03"],true],
-    ["CB01","Princípio Fundamental da Contagem",[]],
+    ["CB01","Princípio Fundamental da Contagem",["TN01","MB03"],true],
     ["CB02","Fatorial e Permutações",[]],
     ["CB03","Arranjos e Combinações",[]],
     ["CB04","Aprofundamento em Combinatória",[]],
