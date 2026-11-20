@@ -302,5 +302,19 @@ ok(Fr(55, 100) * Fr(80, 100) == Fr(44, 100) and Fr(11, 10) ** 3 == Fr(1331, 1000
 ok(100 * Fr(1, 100) / Fr(2, 100) == 50 and Fr(16 * 25, 100) == 4 and f_(10) * f_(20) == Fr(132, 100) and f_(25) * f_(-20) == 1 and (f_(10) ** 3 - 1) * 100 == Fr(331, 10), "EF01 exercícios 12 a 16 (primeiro acesso): 33,1%; área +32%; 16% de 25 = 4; carga de 50 kg; gasto igual")
 ok(Fr(35 * 240, 100) == 84 and 350 * f_(-20) == 280 and Fr(92 - 80, 80) == Fr(15, 100) and Fr(14, 40) == Fr(35, 100) and 80 * f_(25) == 100 and Fr(20, 100) == Fr(100 - 80, 100) and Fr(3 * 20 + 2 * 45, 5) == 30 and Fr(12 - 10, 10) == Fr(20, 100) and Fr(101, 100) * Fr(102, 100) == Fr(10302, 10000), "EF01 exercícios 1 a 11 (primeiro acesso) e a conta 1,01·1,02 = 1,0302")
 
+# ---------- EF02 ----------
+g_ = lambda i_: 1 + Fr(i_, 100)
+ok([1000 * (1 + Fr(10, 100) * k) for k in range(4)] == [1000, 1100, 1200, 1300] and [1000 * g_(10) ** k for k in range(4)] == [1000, 1100, 1210, 1331] and 1331 - 1300 == 31, "EF02: 1000 a 10% por 3 períodos: 1300 (simples) e 1331 (compostos)")
+ok(all(g_(i_) ** t >= 1 + Fr(i_, 100) * t and ((g_(i_) ** t == 1 + Fr(i_, 100) * t) == (t <= 1)) for i_ in range(1, 60) for t in range(0, 25)), "EF02 teorema 3 e chefão (a): (1 + i)ᵗ ≥ 1 + it, com igualdade só em t = 0 e t = 1")
+ok(all(float(g_(i_)) ** 0.5 < 1 + i_ / 200 for i_ in range(1, 100)), "EF02 teorema 3: para meio período a reta fica acima da curva (√(1 + i) < 1 + i/2)")
+ok(abs(float(g_(2) ** 12 - 1) * 100 - 26.82) < 0.005 and g_(10) ** 2 == Fr(121, 100) and g_(20) ** 2 == Fr(144, 100) and 12 * 2 == 24, "EF02 teorema 4, abertura e chute: 1,02¹² − 1 ≈ 26,82%; 1,1² = 1,21; 1,2² = 1,44")
+ok(Fr(200, 5) == 40 and 1210 / g_(10) ** 2 == 1000 and 1000 * (g_(10) ** 3 + g_(10) ** 2 + g_(10)) == 3641, "EF02 chefão (b) e (e) e valor presente: 40 meses; 1210 vale 1000 hoje; três depósitos somam 3641")
+x_ = (-1 + 8.2 ** 0.5) / 2
+ok(abs(0.5 * x_ + 0.5 * x_ * x_ - 0.9) < 1e-12 and abs(x_ - 0.9318) < 5e-5 and abs((1 / x_ - 1) * 100 - 7.32) < 0.005, "EF02 chefão (d): x ≈ 0,9318 resolve 0,5x + 0,5x² = 0,9; taxa de cerca de 7,32% ao mês")
+ok(800 * (1 + Fr(3, 100) * 5) == 920 and Fr(100, 3) == Fr(100, 3) and 1000 * g_(10) ** 3 == 1331 and (g_(10) ** 3 - 1) * 100 == Fr(331, 10), "EF02 exemplos 1 e 2 (primeiro acesso): 920 reais; 1331 reais e taxa de 33,1%")
+ok(1000 * Fr(95, 100) == 950 and abs(float(500 + 500 / g_(2)) - 990.196) < 0.001 and 950 < 500 + 500 / g_(2), "EF02 exemplo 3 (primeiro acesso): 950 à vista contra 990,20 a prazo")
+ok(Fr(600 * 2 * 8, 100) == 96 and 1500 * (1 + Fr(12, 100) * 3) == 2040 and Fr(2000 * 15 * 10, 1000) == 300 and Fr(200, 5) == 40 and 2000 * g_(10) ** 2 == 2420 and 5000 * g_(20) ** 3 - 5000 == 3640 and 4000 * g_(10) ** 2 == 4840, "EF02 exercícios 1 a 7 (primeiro acesso)")
+ok([t for t in range(1, 200) if g_(10) ** t >= 2][0] == 8 and 1000 * Fr(97, 100) == 970 and abs(float(500 + 500 / g_(4)) - 980.769) < 0.001 and (2000 * g_(10) - 1200) * g_(10) == 1100 and abs(float(g_(10) / g_(4) - 1) * 100 - 5.769) < 0.001 and abs(float(1000 / (1 / g_(10) + 1 / g_(10) ** 2)) - 576.19) < 0.005 and 2100 / (1 / g_(10) + 1 / g_(10) ** 2) == 1210, "EF02 exercícios 11 a 16 (primeiro acesso): dobra em 8 anos; 970 × 980,77; saldo 1100; ganho real 5,77%; parcela 576,19")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)

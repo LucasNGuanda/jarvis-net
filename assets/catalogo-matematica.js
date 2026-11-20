@@ -26,7 +26,7 @@ window.CATALOGO.push(
     ["CNJ02","Conjuntos Numéricos",["CNJ01","MB01","MB03"],true],
     ["RLM01","Raciocínio Lógico",["CNJ01","TN02"],true],
     ["EF01","Porcentagem",["MB04","MB01"],true],
-    ["EF02","Juros",[]],
+    ["EF02","Juros",["EF01","SPG01","SPG02"],true],
     ["EF03","Estatística",[]],
     ["EF04","Desigualdade das Médias",[]],
     ["CB01","Princípio Fundamental da Contagem",[]],
