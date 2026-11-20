@@ -34,7 +34,7 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
   await p.dblclick('.jv-materias a.sem-acesso', { force: true }); await p.waitForTimeout(400);
   conf((await p.evaluate(() => location.hash)) === '#/codigos' && !!(await p.$('.cod-linha[data-linha=adm]')), 'duplo clique leva à página de códigos (3 linhas)', await p.evaluate(() => document.querySelectorAll('.cod-linha').length));
   for (const h of ['#/inicio', '#/A01', '#/experimentos', '#/experimental', '#/matematica', '#/matematica/CI07', '#/quimica', '#/russo', '#/alemao', '#/sanscrito-leitura']) conf(await bloqueada(h), `visitante: ${h} trancada`);
-  conf(/β \d+\.\d+$/.test((await versao()).trim()) && !/\.(ADM|tester)/.test(await versao()), 'visitante: versão sem sufixo', await versao()); /* β 5.0: a versão deixou de começar por 4 */
+  conf(/α \d+\.\d+$/.test((await versao()).trim()) && !/\.(ADM|tester)/.test(await versao()), 'visitante: versão sem sufixo', await versao()); /* β 5.0: a versão deixou de começar por 4 */
 
   // 2. código errado: aviso discreto, nada de animação, nada gravado
   for (const [linha, txt] of [['adm', 'senha123'], ['tester', COD.adm], ['avulso', COD.tester], ['adm', COD.quimica]]) {
@@ -99,7 +99,7 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
     conf(r.esquerda >= 1 && r.circulo && r.quadrantes.every((n) => n >= 3), 'tester: livro aberto desde o começo, círculo de energia e símbolos verdes nos 4 cantos da tela', JSON.stringify(r)); }
   await p.waitForTimeout(1500); await p.keyboard.press('Escape'); await p.waitForTimeout(600);
   conf(await p.evaluate(() => !document.querySelector('.anim-acesso') && location.hash === '#/home'), 'tester: Esc pula a animação e vai para a tela inicial', await p.evaluate(() => location.hash));
-  conf(/β \d+\.\d+\.tester$/.test((await versao()).trim()), 'tester: versão com .tester', await versao());
+  conf(/α \d+\.\d+\.tester$/.test((await versao()).trim()), 'tester: versão com .tester', await versao());
   conf(await p.evaluate(() => document.querySelector('.jv-ver .jv-suf').classList.contains('tester')), 'tester: ".tester" verde');
   /* β 4.5: cor esmeralda (título + figura) só para o tester (e o ADM); o tester não ganha o arco-íris */
   await p.hover('.jv-titulo h1'); await p.waitForTimeout(200);
@@ -128,7 +128,7 @@ const COD = { adm: '55_admfreee_will', tester: 'beta8976_@freewill_choise', fisi
   conf(quadros2 > 40, 'ADM: não congela no auge (quadros em 2 s, entre 2 e 4 s)', quadros2);
   await p.waitForTimeout(5800); /* a animação dura 9,1 s */
   conf(await p.evaluate(() => !document.querySelector('.anim-acesso') && location.hash === '#/home'), 'ADM: animação termina sozinha na tela inicial');
-  conf(/β \d+\.\d+\.ADM$/.test((await versao()).trim()), 'ADM: versão com .ADM', await versao());
+  conf(/α \d+\.\d+\.ADM$/.test((await versao()).trim()), 'ADM: versão com .ADM', await versao());
   conf(await p.evaluate(() => document.querySelector('.jv-ver .jv-suf').classList.contains('adm') && JARVIS.figuraCfg().id === 'buraconegro' && !!document.querySelector('.jv-ilu svg.jv-bn') && document.querySelector('.jv-ilu').style.visibility !== 'hidden' && !document.getElementById('pagina').style.transform), 'ADM (β 4.4): o buraco negro vira a figura central, ".ADM" dourado, nada escondido nem tremendo no fim');
   conf(await p.evaluate(() => !document.querySelector('.jv-ilu svg.jv-bn').classList.contains('real')), 'ADM (β 4.6): sem o título dourado, depois da explosão fica o buraco negro de arame');
   const adm = await p.evaluate(() => ({ cards: document.querySelectorAll('.jv-materias a.sem-acesso').length, tr: document.querySelectorAll('.jv .trancado').length, ling: !!document.querySelector('.jv-linguas') }));

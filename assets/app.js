@@ -902,7 +902,7 @@
       const infoAc = arIni ? null : cod === "sumario" || cod === "legenda" ? null : F.achar(cod, mid), aid = arIni ? arIni.id : infoAc ? areaDe(infoAc.mod) : cod === "sumario" ? F.area : null;
       if (aid && !ACESSO.area(aid)) { const ar = AREA(aid), m = (window.MATERIAS || []).find((x) => x.id === (ar.materia || "fisica")); document.body.classList.add("modo-home"); J.bloqueado(pag, m ? m.nome : ar.titulo); window.scrollTo(0, 0); return; }
     }
-    if (arIni) { F.area = arIni.id; pgInicio(pag, F.area); }
+    if (arIni) { F.area = arIni.id; const ferr = arIni.pagina && window.PAGINAS && window.PAGINAS[arIni.pagina]; /* campo opcional "pagina": a aba é uma página-ferramenta (window.PAGINAS[nome](elemento, F)), sem lista de módulos */ if (ferr) ferr(pag, F, arIni); else pgInicio(pag, F.area); }
     else if (cod === "legenda") { location.replace("#/" + AREA(F.area).inicio); setTimeout(() => { const d = $("#detalhes"); if (d) d.classList.add("aberto"); }, 50); return; } /* a legenda agora fica só no painel do topo */
     else if (cod === "sumario") pgSumario(pag);
     else {
