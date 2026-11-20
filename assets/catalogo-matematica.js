@@ -23,7 +23,7 @@ window.CATALOGO.push(
     ["TN03","Aritmética Modular",["TN01","TN02"],true],
     ["BN01","Bases de Numeração",["TN01","MB03"],true],
     ["CNJ01","Teoria de Conjuntos",["TN01","TN02"],true],
-    ["CNJ02","Conjuntos Numéricos",[]],
+    ["CNJ02","Conjuntos Numéricos",["CNJ01","MB01","MB03"],true],
     ["RLM01","Raciocínio Lógico",[]],
     ["EF01","Porcentagem",[]],
     ["EF02","Juros",[]],

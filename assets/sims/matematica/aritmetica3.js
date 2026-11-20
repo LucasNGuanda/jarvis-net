@@ -65,4 +65,75 @@
       q("[data-v=st]").innerHTML = `Cada número do diagrama é a quantidade de elementos daquela região (os de fora não estão em nenhum conjunto). Somar n(A) + n(B) + n(C) = ${e.nA + e.nB + e.nC} conta duas vezes quem está em dois conjuntos e três vezes quem está nos três. Corrigindo: ${e.nA + e.nB + e.nC} − (${e.nAB} + ${e.nAC} + ${e.nBC}) + ${e.nABC} = ${e.formula}, exatamente o número de elementos da união (${e.uniao}). Em só um conjunto: ${e.soUm}; em exatamente dois: ${e.exatDois}.`; };
     ["N", "a", "b", "c"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
     SIM.arTres._ult = { poe, est }; desenha(); };
+
+  /* ---------- CNJ02 ---------- */
+  /* números para classificar: menor = menor conjunto a que pertence ("N", "Z", "Q" ou "I" de irracional) */
+  R.NUMS = [
+    { txt: "7", tex: "7", v: 7, menor: "N", porque: "é um número de contar" },
+    { txt: "0", tex: "0", v: 0, menor: "N", porque: "aqui o zero é contado entre os naturais" },
+    { txt: "−3", tex: "-3", v: -3, menor: "Z", porque: "é inteiro, mas negativo: não é natural" },
+    { txt: "√9", tex: "\\sqrt{9}", v: 3, menor: "N", porque: "√9 = 3, um natural: a raiz é só o jeito de escrever" },
+    { txt: "2/3", tex: "\\dfrac{2}{3}", v: 2 / 3, menor: "Q", porque: "é razão de dois inteiros e não é inteiro" },
+    { txt: "0,75", tex: "0{,}75", v: 0.75, menor: "Q", porque: "decimal que termina: 0,75 = 3/4" },
+    { txt: "0,333…", tex: "0{,}\\overline{3}", v: 1 / 3, menor: "Q", porque: "dízima periódica: 0,333… = 1/3" },
+    { txt: "−12/4", tex: "-\\dfrac{12}{4}", v: -3, menor: "Z", porque: "−12/4 = −3: está escrito como fração, mas é inteiro" },
+    { txt: "√2", tex: "\\sqrt{2}", v: Math.SQRT2, menor: "I", porque: "não é razão de inteiros (Teorema 1); a escrita decimal não termina nem se repete" },
+    { txt: "π", tex: "\\pi", v: Math.PI, menor: "I", porque: "é irracional (fato conhecido, não demonstrado aqui)" },
+    { txt: "−√5", tex: "-\\sqrt{5}", v: -Math.sqrt(5), menor: "I", porque: "5 não é quadrado perfeito, então √5 é irracional, e o oposto também" },
+    { txt: "1,41", tex: "1{,}41", v: 1.41, menor: "Q", porque: "decimal que termina: 141/100. Parece √2, mas não é" },
+    { txt: "22/7", tex: "\\dfrac{22}{7}", v: 22 / 7, menor: "Q", porque: "é razão de inteiros. Parece π, mas não é" },
+    { txt: "√2 · √8", tex: "\\sqrt{2}\\cdot\\sqrt{8}", v: 4, menor: "N", porque: "√2 · √8 = √16 = 4: produto de dois irracionais que dá natural" },
+  ];
+  R.pertence = (menor) => ({ N: menor === "N", Z: menor === "N" || menor === "Z", Q: menor !== "I", I: menor === "I", R: true });
+  /* caixas encaixadas ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ, com um número posto na região certa. o = { onde: "N"|"Z"|"Q"|"I", rot } */
+  R.encaixe = (D, o = {}) => { const W = 560, H = 190, cx = { N: [150, 104], Z: [150, 62], Q: [150, 34], I: [440, 100] }, on = (k) => o.onde === k; let s = `<rect x="20" y="8" width="520" height="174" rx="14" style="fill:${on("I") ? "color-mix(in srgb,var(--warn) 16%,transparent)" : "none"};stroke:var(--ink3);stroke-width:1.5"/>` + T(516, 28, "ℝ", { f: 16, w: 700, c: "var(--ink2)" }) + T(440, 150, "irracionais", { f: 12, c: "var(--ink3)" });
+    s += `<rect x="34" y="18" width="300" height="154" rx="12" style="fill:${on("Q") ? "color-mix(in srgb,var(--mod) 22%,var(--bg))" : "var(--bg)"};stroke:var(--ink3);stroke-width:1.5"/>` + T(312, 38, "ℚ", { f: 16, w: 700, c: "var(--ink2)" });
+    s += `<rect x="48" y="46" width="230" height="116" rx="10" style="fill:${on("Z") ? "color-mix(in srgb,var(--mod) 22%,var(--bg))" : "var(--bg)"};stroke:var(--ink3);stroke-width:1.5"/>` + T(258, 66, "ℤ", { f: 16, w: 700, c: "var(--ink2)" });
+    s += `<rect x="62" y="80" width="160" height="72" rx="9" style="fill:${on("N") ? "color-mix(in srgb,var(--mod) 22%,var(--bg))" : "var(--bg)"};stroke:var(--ink3);stroke-width:1.5"/>` + T(204, 100, "ℕ", { f: 16, w: 700, c: "var(--ink2)" });
+    if (o.onde && o.rot) s += T(o.onde === "N" ? 130 : o.onde === "Z" ? 130 : o.onde === "Q" ? 130 : 440, o.onde === "N" ? 126 : o.onde === "Z" ? 70 : o.onde === "Q" ? 38 : 100, o.rot, { f: 17, w: 700, c: o.onde === "I" ? "var(--warn)" : "var(--mod)" }); void cx;
+    return D ? D.svg(W, H, s, "figura") : `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block;margin:0 auto">${s}</svg>`; };
+
+  /* nome: "Em que conjuntos este número mora?" · matéria: Matemática · tema: CNJ02 */
+  SIM.arClassifica = (el, F) => { let i = 0;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts escolha">${R.NUMS.map((n, k) => `<button class="bt peq" data-k="${k}" aria-pressed="${k === 0}">${n.txt}</button>`).join("")}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const n = R.NUMS[i], p = R.pertence(n.menor); return { i, txt: n.txt, v: n.v, menor: n.menor, N: p.N, Z: p.Z, Q: p.Q, I: p.I, R: true }; };
+    const poe = (o) => { ({ i } = { i, ...o }); i = Math.max(0, Math.min(R.NUMS.length - 1, Math.round(+i))); desenha(); };
+    const desenha = () => { const n = R.NUMS[i], e = est(); el.querySelectorAll("[data-k]").forEach((b) => b.setAttribute("aria-pressed", +b.dataset.k === i));
+      q("[data-v=pal]").innerHTML = R.encaixe(null, { onde: n.menor, rot: n.txt });
+      q("[data-v=lt]").innerHTML = ["N", "Z", "Q", "R"].map((k) => vis({ N: "natural (ℕ)", Z: "inteiro (ℤ)", Q: "racional (ℚ)", R: "real (ℝ)" }[k], e[k] ? "sim" : "não")).join("") + vis("irracional", e.I ? "sim" : "não");
+      q("[data-v=st]").innerHTML = `${n.txt}: ${n.porque}. ${n.menor === "I" ? "Irracional é o real que não é racional: fica dentro de ℝ e fora de ℚ." : `Como ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ, quem está num conjunto está também em todos os maiores${n.menor === "N" ? ": todo natural é inteiro, racional e real" : n.menor === "Z" ? ": todo inteiro é racional e real" : ": todo racional é real"}.`}`; };
+    el.querySelectorAll("[data-k]").forEach((b) => b.addEventListener("click", () => poe({ i: +b.dataset.k })));
+    SIM.arClassifica._ult = { poe, est }; desenha(); };
+
+  /* intervalos: { a, b, fa, fb } (fa, fb = extremo incluído?). a pode ser −Infinity e b, +Infinity. Operações devolvem lista de intervalos disjuntos. */
+  R.dentro = (I, x) => (x > I.a || (x === I.a && I.fa)) && (x < I.b || (x === I.b && I.fb));
+  R.vazio = (I) => I.a > I.b || (I.a === I.b && !(I.fa && I.fb));
+  R.iInter = (P, Q) => { const a = Math.max(P.a, Q.a), b = Math.min(P.b, Q.b), fa = (P.a > Q.a ? P.fa : Q.a > P.a ? Q.fa : P.fa && Q.fa), fb = (P.b < Q.b ? P.fb : Q.b < P.b ? Q.fb : P.fb && Q.fb), I = { a, b, fa, fb }; return R.vazio(I) ? [] : [I]; };
+  /* A − B = (A ∩ o que fica à esquerda de B) ∪ (A ∩ o que fica à direita de B); na borda, o tipo do extremo de B se inverte */
+  R.iDif = (P, Q) => { if (R.vazio(P)) return []; if (R.vazio(Q)) return [P]; return R.iInter(P, { a: -Infinity, b: Q.a, fa: false, fb: !Q.fa }).concat(R.iInter(P, { a: Q.b, b: Infinity, fa: !Q.fb, fb: false })); };
+  R.iUni = (P, Q) => { if (R.vazio(P)) return R.vazio(Q) ? [] : [Q]; if (R.vazio(Q)) return [P]; const [X, Y] = P.a < Q.a || (P.a === Q.a && P.fa >= Q.fa) ? [P, Q] : [Q, P]; /* X começa antes */ if (Y.a < X.b || (Y.a === X.b && (X.fb || Y.fa))) { const fimX = X.b > Y.b || (X.b === Y.b && X.fb >= Y.fb); return [{ a: X.a, fa: X.fa, b: fimX ? X.b : Y.b, fb: fimX ? X.fb : Y.fb }]; } return [X, Y]; };
+  const num = (v) => (v === Infinity ? "+∞" : v === -Infinity ? "−∞" : mn(v));
+  R.iTxt = (I) => `${I.fa && Number.isFinite(I.a) ? "[" : "]"}${num(I.a)}, ${num(I.b)}${I.fb && Number.isFinite(I.b) ? "]" : "["}`;
+  R.iLista = (L) => (L.length ? L.map(R.iTxt).join(" ∪ ") : "∅");
+  /* reta com intervalos. o = { min, max, linhas: [{ ints: [...], rot, cor }] } */
+  R.retaInt = (o, D) => { const W = 560, x0 = 70, x1 = 520, X = (v) => (v === -Infinity ? x0 - 14 : v === Infinity ? x1 + 14 : x0 + ((v - o.min) / (o.max - o.min)) * (x1 - x0)), H = 34 + o.linhas.length * 30; let s = "";
+    o.linhas.forEach((l, k) => { const y = 16 + k * 30, cor = l.cor || "var(--mod)"; s += `<line x1="${x0 - 14}" y1="${y}" x2="${x1 + 14}" y2="${y}" style="stroke:var(--line2);stroke-width:1.2"/>` + T(8, y + 4, l.rot || "", { f: 12, w: 600, c: "var(--ink2)", a: "start" });
+      l.ints.forEach((I) => { s += `<line x1="${X(I.a)}" y1="${y}" x2="${X(I.b)}" y2="${y}" style="stroke:${cor};stroke-width:5;stroke-linecap:butt"/>`; [[I.a, I.fa], [I.b, I.fb]].forEach(([v, f]) => { if (Number.isFinite(v)) s += `<circle cx="${X(v)}" cy="${y}" r="5" style="fill:${f ? cor : "var(--bg)"};stroke:${cor};stroke-width:2"/>`; }); }); });
+    const yb = 16 + o.linhas.length * 30 - 8; for (let v = Math.ceil(o.min); v <= o.max; v++) s += T(X(v), yb + 14, mn(v), { f: 10, c: "var(--ink3)" }) + `<line x1="${X(v)}" y1="${yb - 4}" x2="${X(v)}" y2="${yb + 2}" style="stroke:var(--ink3)"/>`;
+    return D ? D.svg(W, H, s, "figura") : `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block;margin:0 auto">${s}</svg>`; };
+
+  /* nome: "Intervalos na reta: união, interseção e diferença" · matéria: Matemática · tema: CNJ02 */
+  SIM.arIntervalos = (el, F) => { let P = { a: -3, b: 2, fa: true, fb: false }, Q = { a: 0, b: 5, fa: true, fb: true };
+    const linha = (k, I) => `<div class="bts" style="margin-top:6px"><b style="width:18px">${k}</b>${sl(k + "a", "de", -8, 8, I.a, 110)}${sl(k + "b", "até", -8, 8, I.b, 110)}<button class="bt peq" data-f="${k}a" aria-pressed="${I.fa}">inclui o começo</button><button class="bt peq" data-f="${k}b" aria-pressed="${I.fb}">inclui o fim</button></div>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div>${linha("A", P)}${linha("B", Q)}</div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => ({ A: { ...P }, B: { ...Q }, uni: R.iUni(P, Q), int: R.iInter(P, Q), dif: R.iDif(P, Q), txt: { A: R.iTxt(P), B: R.iTxt(Q), uni: R.iLista(R.iUni(P, Q)), int: R.iLista(R.iInter(P, Q)), dif: R.iLista(R.iDif(P, Q)) } });
+    const poe = (o) => { if (o.A) P = { ...P, ...o.A }; if (o.B) Q = { ...Q, ...o.B }; [P, Q].forEach((I) => { I.a = Math.max(-8, Math.min(8, Math.round(+I.a))); I.b = Math.max(-8, Math.min(8, Math.round(+I.b))); if (I.b < I.a) I.b = I.a; I.fa = !!I.fa; I.fb = !!I.fb; }); desenha(); };
+    const desenha = () => { const e = est(); [["A", P], ["B", Q]].forEach(([k, I]) => { q(`[data-v=${k}a]`).value = String(I.a); q(`[data-v=${k}b]`).value = String(I.b); q(`[data-r=${k}a]`).textContent = mn(I.a); q(`[data-r=${k}b]`).textContent = mn(I.b); q(`[data-f=${k}a]`).setAttribute("aria-pressed", I.fa); q(`[data-f=${k}b]`).setAttribute("aria-pressed", I.fb); });
+      q("[data-v=pal]").innerHTML = R.retaInt({ min: -9, max: 9, linhas: [{ ints: R.vazio(P) ? [] : [P], rot: "A", cor: "var(--mod)" }, { ints: R.vazio(Q) ? [] : [Q], rot: "B", cor: "var(--ok)" }, { ints: e.uni, rot: "A ∪ B", cor: "var(--warn)" }, { ints: e.int, rot: "A ∩ B", cor: "var(--warn)" }, { ints: e.dif, rot: "A − B", cor: "var(--warn)" }] }, null);
+      q("[data-v=lt]").innerHTML = vis("A", e.txt.A) + vis("B", e.txt.B) + vis("A ∪ B", e.txt.uni) + vis("A ∩ B", e.txt.int) + vis("A − B", e.txt.dif);
+      q("[data-v=st]").innerHTML = `Bolinha cheia: o extremo pertence ao intervalo (colchete virado para dentro). Bolinha vazia: não pertence (colchete virado para fora). Na <b>interseção</b> um extremo só fica se pertencer aos dois; na <b>união</b>, basta pertencer a um; na <b>diferença</b> A − B, os extremos de B trocam de tipo: onde B incluía o ponto, A − B exclui, e vice-versa.`; };
+    ["A", "B"].forEach((k) => { ["a", "b"].forEach((x) => { q(`[data-v=${k}${x}]`).addEventListener("input", (ev) => poe({ [k]: { [x]: ev.target.value } })); q(`[data-f=${k}${x}]`).addEventListener("click", () => poe({ [k]: { ["f" + x]: !(k === "A" ? P : Q)["f" + x] } })); }); });
+    SIM.arIntervalos._ult = { poe, est }; desenha(); };
 })();

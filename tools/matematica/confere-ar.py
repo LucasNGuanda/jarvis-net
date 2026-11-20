@@ -201,5 +201,53 @@ r = {7: 5, 3: 7, 5: 4, 6: 6, 1: 12, 2: 9, 4: 10, 0: 8}
 ok(sum(r.values()) == 61 and r[1] + r[3] + r[5] + r[7] == 28 and r[2] + r[3] + r[6] + r[7] == 27 and r[4] + r[5] + r[6] + r[7] == 25 and 28 - 7 - 4 - 5 == 12, "CNJ01 exemplo 3 (primeiro acesso): 61 estudantes; 28, 27 e 25; só a primeira: 12")
 ok(15 + 8 + 10 + 7 == 40 and 28 + 25 - 40 == 13 and 100 - (50 + 33 - 16) == 33 and 4 * 3 == 12 and 2 ** 5 - 1 == 31, "CNJ01 exemplo 2 e exercícios 7, 13, 14 e 15 (primeiro acesso)")
 
+# ---------- CNJ02 ----------
+from decimal import Decimal, getcontext
+getcontext().prec = 60
+ok(not any(Fr(p_, q_) ** 2 == 2 or Fr(p_, q_) ** 2 == 3 for q_ in range(1, 2001) for p_ in (int(q_ * 1.41421356), int(q_ * 1.41421356) + 1, int(q_ * 1.7320508), int(q_ * 1.7320508) + 1)), "CNJ02 teorema 1 e chefão (a): nenhuma fração de denominador até 2000 tem quadrado 2 ou 3")
+ok(Fr(141, 100) ** 2 == Fr(19881, 10000) and Fr(142, 100) ** 2 == Fr(20164, 10000) and abs(Fr(99, 70) ** 2 - 2) < abs(Fr(141, 100) ** 2 - 2) and Fr(99, 70) ** 2 != 2, "CNJ02: 1,41² = 1,9881; 1,42² = 2,0164; 99/70 aproxima melhor que 141/100 e não é exata")
+ok(all((round(n ** 0.5) ** 2 == n) == any(Fr(a, b) ** 2 == n for b in range(1, 40) for a in range(1, 800)) for n in range(1, 200)), "CNJ02 teorema 1: até 199, √n só é fração (denominador até 39) quando n é quadrado perfeito")
+
+
+def geratriz(per, k):
+    return Fr(per, 10 ** k - 1)
+
+
+def expande(fr_, casas=40):
+    n, d, s = fr_.numerator, fr_.denominator, ""
+    r = n % d
+    for _ in range(casas):
+        r *= 10
+        s += str(r // d)
+        r %= d
+    return s
+
+
+ok(geratriz(3, 1) == Fr(1, 3) and geratriz(27, 2) == Fr(3, 11) and geratriz(9, 1) == 1 and Fr(11, 90) == Fr(1, 10) + Fr(2, 90) and expande(Fr(11, 90)).startswith("12222222"), "CNJ02 teorema 2 e chefão (c): 0,333… = 1/3; 0,(27) = 3/11; 0,999… = 1; 0,1222… = 11/90")
+ok(all(expande(geratriz(per, 2)) == (str(per).zfill(2) * 20) for per in range(10, 99)), "CNJ02 teorema 2: per/99 volta a ser 0,(per) para todo período de 2 algarismos")
+ok(Fr(36, 99) == Fr(4, 11) and Fr(27, 99).denominator == 11, "CNJ02 exemplo 2 e exercício 3 (primeiro acesso): 27/99 = 3/11 e 36/99 = 4/11")
+
+
+def periodo10(d):
+    return [k for k in range(1, 100) if (10 ** k - 1) % d == 0][0]
+
+
+ok([periodo10(d) for d in (7, 11, 13, 27, 37, 41, 21, 33)] == [6, 2, 6, 3, 3, 5, 6, 2] and expande(Fr(1, 7)).startswith("142857142857"), "CNJ02 exercício 14: períodos de 1/7, 1/11, 1/13, 1/27, 1/37, 1/41, 1/21, 1/33")
+ok(all(a < (a + b) / 2 < b for a in [Fr(1, 3), Fr(-2, 5), Fr(7, 9)] for b in [Fr(1, 2), Fr(5, 6), Fr(8, 9)] if a < b) and (Fr(1, 3) + Fr(1, 2)) / 2 == Fr(5, 12), "CNJ02 teorema 3: a média fica entre os dois; entre 1/3 e 1/2 está 5/12")
+r2, r3, r7, r8 = Decimal(2).sqrt(), Decimal(3).sqrt(), Decimal(7).sqrt(), Decimal(8).sqrt()
+ok(abs(r2 * r8 - 4) < Decimal("1e-50") and abs((r7 + r3) * (r7 - r3) - 4) < Decimal("1e-50") and Fr(1, 3) < Fr(4714, 10000) < Fr(1, 2) and abs(r2 / 3 - Decimal("0.4714045")) < Decimal("1e-6") and abs(3 + r2 - Decimal("4.4142135")) < Decimal("1e-6"), "CNJ02: √2·√8 = 4; (√7 + √3)(√7 − √3) = 4; √2/3 ≈ 0,4714 fica entre 1/3 e 1/2; 3 + √2 ≈ 4,41421")
+
+
+def dentro(I, x):
+    a, b, fa, fb = I
+    return (x > a or (x == a and fa)) and (x < b or (x == b and fb))
+
+
+A_, B_ = (-3, 2, True, False), (0, 5, True, True)
+xs = [Fr(k, 2) for k in range(-12, 16)]
+ok(all((dentro(A_, x) or dentro(B_, x)) == dentro((-3, 5, True, True), x) and (dentro(A_, x) and dentro(B_, x)) == dentro((0, 2, True, False), x) and (dentro(A_, x) and not dentro(B_, x)) == dentro((-3, 0, True, False), x) for x in xs), "CNJ02 figura e exemplo 3: [−3, 2[ e [0, 5]: união [−3, 5], interseção [0, 2[, diferença [−3, 0[")
+ok(len([x for x in range(-2, 6) if dentro((-2, 5, False, True), x)]) == 7 and len([x for x in range(2, 6)]) == 4 and 3 - 1 == 2, "CNJ02 exercícios 5 e 6 e pegadinha (primeiro acesso): ]−2, 5] tem 7 inteiros; [2, 5] tem 4; ]1, 3] mede 2")
+ok(len([n for n in range(1, 101) if round(n ** 0.5) ** 2 == n]) == 10 and 50 - 7 == 43 and 7 * 7 < 50 < 8 * 8 and (0.2 + 0.25) / 2 == 0.225, "CNJ02 exercícios 8, 10, 12 e 16 (primeiro acesso)")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)
