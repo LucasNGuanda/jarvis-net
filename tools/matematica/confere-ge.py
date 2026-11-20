@@ -219,5 +219,33 @@ ok(all(bisP_(a, b) for a in range(8, 15) for b in range(3, 8)) and all(retO_(th)
 ok(180 - 65 == 115 and 28 / 2 - 9 == 5 and 2 * 5 + 2 * 3.5 == 17 and 4 * 5 == 20 and 70 / 2 == 35 and (11 + 5) / 2 == 8 and 2 * 10 - 7 == 13 and 180 - 68 == 112 and abs(5 * sqrt(2) - 7.07) < 0.005 and (15 - 7) / 2 == 4 and 10 + 7 == 17 and 10 - 6 == 4 and (180 - 50) / 2 == 65 and hypot(9 - 6, 4) == 5 and sqrt(25 - 9) == 4, "GP05 exercícios (primeiro acesso): 115°; 5; 17; 5; 20; 35°; 8; 13; 112°; 7,07; 4; 17; 4; 65°; 5; 4")
 ok(2 * 35 + 10 == 80 and 3 * 35 - 5 == 100 and 80 + 100 == 180 and perto(ang((0, 0), inter((0, 0), (8, 8), (10, 0), (2, 8)), (10, 0)), 90) and dist((0, 0), (2, 8)) == dist((10, 0), (8, 8)), "GP05 exemplo 1 (primeiro acesso) e chefão (e): ângulos 80° e 100°; o trapézio isósceles de bases 10 e 6 e altura 8 tem diagonais perpendiculares")
 
+# ---------- GP06 ----------
+ok(all(len([x for x in range(1, 200) if x < a + b and a < x + b and b < x + a]) == a + b - 1 - abs(a - b) for a in range(1, 20) for b in range(1, 20)) and 3 + 4 < 8 and 3 + 4 > 6, "GP06 teorema 1 e exercício 1: o número de terceiros lados inteiros é (a + b − 1) − |a − b| (contado um a um); 3, 4, 8 não fecha e 3, 4, 6 fecha")
+def maior_():
+    t = tri_sorteado(); ls = [dist(t[1], t[2]), dist(t[0], t[2]), dist(t[0], t[1])]; an = [ang(t[1], t[0], t[2]), ang(t[0], t[1], t[2]), ang(t[0], t[2], t[1])]
+    return ls.index(max(ls)) == an.index(max(an))
+ok(all(maior_() for _ in range(1000)), "GP06 exercício 2: em 1000 triângulos sorteados, o maior lado fica em frente ao maior ângulo")
+def circun_(a, b, c):
+    d = 2 * (a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1])); q = lambda p: p[0] ** 2 + p[1] ** 2
+    return ((q(a) * (b[1] - c[1]) + q(b) * (c[1] - a[1]) + q(c) * (a[1] - b[1])) / d, (q(a) * (c[0] - b[0]) + q(b) * (a[0] - c[0]) + q(c) * (b[0] - a[0])) / d)
+def notav_():
+    a, b, c = tri_sorteado(); g = ((a[0] + b[0] + c[0]) / 3, (a[1] + b[1] + c[1]) / 3); m = ((b[0] + c[0]) / 2, (b[1] + c[1]) / 2); o = circun_(a, b, c); h = (a[0] + b[0] + c[0] - 2 * o[0], a[1] + b[1] + c[1] - 2 * o[1])
+    alt = abs((h[0] - a[0]) * (c[0] - b[0]) + (h[1] - a[1]) * (c[1] - b[1])) < 1e-6 and abs((h[0] - b[0]) * (c[0] - a[0]) + (h[1] - b[1]) * (c[1] - a[1])) < 1e-6
+    s = area([a, b, c]); seis = all(perto(area([g, p, q]), s / 3, 1e-6) for p, q in [(a, b), (b, c), (a, c)])
+    return perto(dist(a, g), 2 * dist(g, m)) and perto(dist(o, a), dist(o, b)) and perto(dist(o, a), dist(o, c)) and alt and perto(dist(g, h), 2 * dist(o, g), 1e-6) and seis and perto(ang(a, o, b) if ang(a, c, b) < 90 else 360 - ang(a, o, b), 2 * ang(a, c, b), 1e-6)
+ok(all(notav_() for _ in range(1000)), "GP06 teoremas 2 e 4 e exercícios 3, 9, 13 e 14: em 1000 triângulos, G a 2/3 da mediana, GBC com um terço da área, O equidistante dos vértices, central AOB = 2 · C, H = A + B + C − 2 · O está nas alturas e GH = 2 · OG")
+def inc_():
+    a, b, c = tri_sorteado(); i = incentro(a, b, c); dr = lambda p, q: abs((q[0] - p[0]) * (p[1] - i[1]) - (p[0] - i[0]) * (q[1] - p[1])) / dist(p, q); r = dr(a, b)
+    return perto(r, dr(b, c), 1e-6) and perto(r, dr(a, c), 1e-6) and perto(r * (dist(a, b) + dist(b, c) + dist(a, c)) / 2, area([a, b, c]), 1e-6)
+ok(all(inc_() for _ in range(1000)) and all(perto(incentro((0, 0), (c, 0), (0, b))[0], (b + c - a) / 2) and circun_((0, 0), (c, 0), (0, b)) == (c / 2, b / 2) for b, c, a in [(3, 4, 5), (6, 8, 10), (5, 12, 13), (8, 15, 17), (9, 12, 15), (12, 16, 20)]), "GP06 teorema 3, exemplo 3 e exercícios 5, 6 e 11: incentro equidistante dos lados e r · p = área (1000 triângulos); no retângulo, r = (b + c − a)/2 e O no meio da hipotenusa")
+def orto_(a):
+    t = de_angs(180 - a - 55, 55); A, B, C = t[2], t[0], t[1]; o = circun_(A, B, C); h = (A[0] + B[0] + C[0] - 2 * o[0], A[1] + B[1] + C[1] - 2 * o[1]); return perto(ang(B, A, C), a) and perto(ang(B, h, C), 180 - a, 1e-6)
+def altbis_(b, c):
+    t = de_angs(b, c); A, B, C = t[2], t[0], t[1]; hh = (A[0], 0.0); i = incentro(A, B, C); d = inter(A, i, B, C); return perto(ang(hh, A, d), abs(b - c) / 2, 1e-6)
+ok(all(orto_(a) for a in range(45, 81)) and all(altbis_(b, c) for b, c in [(70, 40), (80, 30), (65, 45), (75, 35), (60, 50), (85, 45)]), "GP06 exercícios 10 e 16 e chefão (c): BHC = 180° − A, e o ângulo entre altura e bissetriz é |B − C|/2, medidos")
+ok(5 ** 2 + 7 ** 2 == 74 < 81 and 2 * 12 / 3 == 8 and hypot(3, 4) / 2 == 2.5 and (3 + 4 - 5) / 2 == 1 and 5 + 9 - 1 - 4 == 9 and 180 - 50 - 60 == 70 and 2 * 9 / 3 == 6 and 3 * 2.5 == 7.5 and 10 / 2 == 5 and 13 / 2 == 6.5 and sqrt(13 ** 2 - 5 ** 2) == 12 and abs(6 * sqrt(3) / 2 - 5.196) < 0.001 and 2 * 55 == 110 and 180 - 65 == 115 and (6 + 8 - 10) / 2 == 2 and 2 * 9 / 3 == 6 and 48 / 3 == 16 and 2 * 12 / 3 == 8 and (70 - 40) / 2 == 15, "GP06 exemplos e exercícios (primeiro acesso): obtusângulo; 8 e 4; 2,5 e 1; 9; AB; 6; 7,5; 5; 6,5; 12; 5,20; 110°; 115°; 2; 6; 16; 8; 15°")
+ok(len([a for a in range(1, 15) if 15 - 2 * a >= 1 and 15 - 2 * a < 2 * a]) == 4 and all(len([a for a in range(1, P) if P - 2 * a >= 1 and P - 2 * a < 2 * a]) == len(set(tuple(sorted((x, x, P - 2 * x))) for x in range(1, P) if 0 < P - 2 * x < 2 * x)) for P in range(9, 25)), "GP06 exercício 15: triângulos isósceles de lados inteiros e perímetro 15 são 4 (4, 4, 7; 5, 5, 5; 6, 6, 3; 7, 7, 1)")
+ok(13 ** 2 - 5 ** 2 == 15 ** 2 - 9 ** 2 == 144 and 14 * 12 / 2 == 84 and 84 / 21 == 4 and dist((0, 0), (5, 12)) == 13 and dist((14, 0), (5, 12)) == 15 and (2 / 3 * 3, 2 / 3 * 4.5) == (2.0, 3.0) and (6 - 2 / 3 * 6, 2 / 3 * 4.5) == (2.0, 3.0), "GP06 chefão (e) e teorema 4: triângulo 13, 14, 15 com altura 12, área 84 e raio inscrito 4; baricentro (2, 3) no exemplo numérico")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)
