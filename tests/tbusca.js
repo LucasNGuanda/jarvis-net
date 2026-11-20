@@ -37,7 +37,7 @@ const falhas = []; const conf = (ok, txt, extra) => { console.log((ok ? 'ok     
   r = await R('EP17'); conf(r.tipo === 'codigo' && r.alvo.href === '#/EP17', 'código: "EP17" → #/EP17');
   r = await R('ZZ99'); conf(r.tipo === 'nada', 'código que não existe: não inventa', r.tipo);
   r = await R('xyzzy blorft'); conf(r.tipo === 'nada' && !r.chaves.length, 'nada parecido: diz que não achou, sem inventar', r.tipo);
-  r = await R('teorema de pitagoras'); conf(r.tipo === 'nada', 'tema que não existe no site ("teorema de pitagoras"): "não achei"', r.tipo + ' ' + r.chaves.slice(0, 3));
+  r = await R('filosofia medieval'); conf(r.tipo === 'nada', 'tema que não existe no site ("filosofia medieval"): "não achei"', r.tipo + ' ' + r.chaves.slice(0, 3));
   r = await R('onde fica a legenda?'); conf(r.tipo === 'navegacao' && r.nav === 'legenda', 'navegação: "onde fica a legenda?"', r.nav);
   r = await R('onde exporto meu progresso?'); conf(r.tipo === 'navegacao' && r.nav === 'exportar', 'navegação: "onde exporto meu progresso?"', r.nav);
   r = await R('qual a fórmula de Bernoulli?'); conf(r.tipo === 'duvida' && ['N03', 'A18'].includes(r.alvo.chave) && r.perto.length === 3 && r.perto.every((t) => t === 'tema'), 'dúvida: "qual a fórmula de Bernoulli?" → personagem + link + 3 temas', JSON.stringify(r.alvo) + ' ' + r.perto);
