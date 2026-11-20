@@ -48,7 +48,7 @@ window.CATALOGO.push(
     ["TG09","Funções Trigonométricas",[]],
     ["TG10","Funções Trigonométricas Inversas",[]],
     ["TG11","Desigualdades Trigonométricas",[]],
-    ["GP01","Ângulos e Conceitos Iniciais",[]],
+    ["GP01","Ângulos e Conceitos Iniciais",["MB05","MB04"],true],
     ["GP02","Semelhança e Teorema de Tales",[]],
     ["GP03","Polígonos",[]],
     ["GP04","Circunferência",[]],
