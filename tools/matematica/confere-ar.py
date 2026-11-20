@@ -422,5 +422,34 @@ ok(ft_(8) // (ft_(3) * ft_(5)) == 56 and 10 * 9 == 90 and 6 * 7 == 42 and ft_(6)
 ok(len([x for x in pm_("12345") if int(x[-1]) % 2 == 0]) == 48 and all(len([x for x in pm_(range(1, n + 1)) if x[-1] % 2 == 0]) == (n // 2) * ft_(n - 1) for n in range(4, 8)), "CB02 exercício 10: números pares formados com 1, …, n (48 para n = 5), enumerado")
 ok(all(ft_(n) > 2 ** n for n in range(4, 41)) and ft_(3) < 2 ** 3 and ft_(10) // (ft_(5) * ft_(3)) == 5040 and 3628800 // 720 == 5040 and len("ARARAQUARA") == 10 and "ARARAQUARA".count("A") == 5 and "ARARAQUARA".count("R") == 3 and all(sum(k * ft_(k) for k in range(1, n + 1)) == ft_(n + 1) - 1 for n in range(1, 30)), "CB02 chefão (a), (c) e (e): n! > 2ⁿ de 4 a 40 (e falso em 3); ARARAQUARA 5040; soma k · k! = (n + 1)! − 1")
 
+# ---------- CB03 ----------
+from itertools import combinations as cb_, permutations as pe_
+from math import comb as cm_, factorial as fa_
+ok(len(list(pe_("ABCDE", 3))) == 60 and len(list(cb_("ABCDE", 3))) == 10 and ["".join(c) for c in cb_("ABCDE", 3)] == "ABC ABD ABE ACD ACE ADE BCD BCE BDE CDE".split() and len(list(cb_(range(10), 2))) == 45, "CB03 abertura, chute e teorema 1: 60 pódios e 10 comissões com 5 pessoas (enumerados, com a lista); 45 apertos de mão entre 10")
+ok(all(len(list(cb_(range(n), k))) == cm_(n, k) == len(list(pe_(range(n), k))) // fa_(k) and cm_(n, k) == cm_(n, n - k) for n in range(1, 10) for k in range(0, n + 1)) and all(cm_(n, k) == cm_(n - 1, k - 1) + cm_(n - 1, k) for n in range(2, 30) for k in range(1, n)) and all(sum(cm_(n, k) for k in range(n + 1)) == 2 ** n for n in range(0, 30)), "CB03 teoremas 1 a 4: C = A/k! (enumerado até n = 9), simetria, Stifel e soma da linha = 2ⁿ")
+ok(cm_(5, 2) == 10 and cm_(4, 2) == 6 and cm_(4, 3) == 4 and 1 + 4 + 6 + 4 + 1 == 16 and cm_(20, 18) == 190, "CB03 teoremas, números: C(5, 2) = 10; 6 + 4 = 10; linha 4 soma 16; C(20, 18) = 190")
+H_, Mu_ = ["h%d" % i for i in range(5)], ["m%d" % i for i in range(4)]
+ok(len([c for c in cb_(H_ + Mu_, 4) if len([x for x in c if x[0] == "h"]) == 2]) == 60 == cm_(5, 2) * cm_(4, 2) and cm_(9, 4) == 126, "CB03 exemplo 2 (primeiro acesso): 60 comissões com 2 homens e 2 mulheres (enumerado); C(9, 4) = 126")
+ok(len([c for c in cb_(H_ + Mu_, 3) if any(x[0] == "m" for x in c)]) == 74 == cm_(9, 3) - cm_(5, 3) == 4 * cm_(5, 2) + cm_(4, 2) * 5 + cm_(4, 3), "CB03 exemplo 3 (primeiro acesso): 74 comissões com pelo menos uma mulher, pelos dois caminhos e por enumeração")
+ok(8 * 7 * 6 == 336 and cm_(8, 3) == 56 and cm_(10, 2) == 45 and cm_(10, 3) == 120 and 12 * 11 * 10 == 1320 and cm_(6, 2) * 5 == 75 and 8 * 5 // 2 == 20 and cm_(7, 3) == 35 and cm_(20, 2) == 190 and cm_(9, 4) == 126 and cm_(7, 4) == 35, "CB03 exercícios 1 a 11 (primeiro acesso): 336; 56; 45; 120; 1320; 75; 20; 35; 190; 126; 35")
+ok(all(len([1 for a in range(n) for b in range(a + 1, n) if b - a not in (1, n - 1)]) == n * (n - 3) // 2 for n in range(4, 30)), "CB03 exercício 7: diagonais de um polígono de n lados, n(n − 3)/2 (contadas par a par)")
+ok(cm_(10, 3) - cm_(6, 3) == 100 and cm_(5, 2) * 4 + cm_(4, 2) * 5 == 70 and cm_(12, 2) == 66 and cm_(8, 4) - cm_(6, 2) == 55 and cm_(6, 3) // 2 == 10, "CB03 exercícios 12 a 16 (primeiro acesso): 100; 70; 66 partidas com 12 jogadores; 55; 10")
+ok(len([c for c in cb_(range(8), 4) if not (0 in c and 1 in c)]) == 55 and len(set(frozenset([frozenset(c), frozenset(set(range(6)) - set(c))]) for c in cb_(range(6), 3))) == 10, "CB03 exercícios 15 e 16: comissões sem os dois brigados (55) e divisões de 6 em dois times (10), enumeradas")
+def area2_(a, b, c):
+    return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+P1_ = [(i, 0) for i in range(5)]; P2_ = [(i, 1) for i in range(4)]
+ok(len([t for t in cb_(P1_ + P2_, 3) if area2_(*t) != 0]) == 70, "CB03 exercício 13: 5 pontos numa reta e 4 na paralela dão 70 triângulos (enumerado com coordenadas)")
+Q_ = [(0, 0), (1, 0), (2, 0), (3, 0), (0, 1), (1, 3), (2, 7), (3, 13), (5, 2), (7, 5)]
+ok(len([t for t in cb_(Q_, 3) if area2_(*t) == 0]) == 4 and len([t for t in cb_(Q_, 3) if area2_(*t) != 0]) == 116 == cm_(10, 3) - cm_(4, 3), "CB03 chefão (c): 10 pontos com 4 alinhados dão 116 triângulos (enumerado com coordenadas)")
+def part_(n):
+    s = set()
+    for a in cb_(range(n), 3):
+        r = [x for x in range(n) if x not in a]
+        for b in cb_(r, 3):
+            c = tuple(x for x in r if x not in b)
+            s.add(frozenset([a, b, c]))
+    return len(s)
+ok(part_(9) == 280 == cm_(9, 3) * cm_(6, 3) // 6 and 60 * 59 * 58 * 57 * 56 * 55 == 36045979200 and cm_(60, 6) == 50063860 and all(k * cm_(n, k) == n * cm_(n - 1, k - 1) for n in range(1, 30) for k in range(1, n + 1)), "CB03 chefão (b), (d) e (e): C(60, 6) = 50 063 860; 9 pessoas em 3 grupos de 3: 280 (enumerado); k · C(n, k) = n · C(n − 1, k − 1)")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)

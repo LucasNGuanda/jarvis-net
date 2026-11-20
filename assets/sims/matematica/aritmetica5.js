@@ -1,4 +1,4 @@
-/* Matemática · módulo AR (Aritmética): laboratórios da combinatória: CB01 (princípio fundamental da contagem) e CB02 (fatorial e permutações: soLetras, anagramas, permDist, posicao, expFat, grade, roda).
+/* Matemática · módulo AR (Aritmética): laboratórios da combinatória: CB01 (princípio fundamental da contagem), CB02 (fatorial e permutações: soLetras, anagramas, permDist, posicao, expFat, grade, roda) e CB03 (arranjos e combinações: combs, perms, circPts).
    Acrescenta ao núcleo SIM.ar: fat (fatorial), arr (arranjos), cmb (combinações), prod, arvore (árvore de possibilidades em SVG),
    casas (casinhas com o número de opções de cada posição) e senha (contagem de sequências de algarismos com ou sem repetição e uma restrição).
    Contas conferidas em Python (tools/matematica/confere-ar.py) e, no teste, por enumeração de todas as sequências. */
@@ -113,4 +113,42 @@
       q("[data-v=st]").innerHTML = `Em fila, ${n} pessoas se arrumam de ${n}! = ${nt(e.fila, 0)} jeitos. Numa roda não existe "primeiro lugar": girar todo mundo uma cadeira não muda quem está ao lado de quem. Cada roda corresponde a ${n} filas (uma para cada pessoa em que se "corta" a roda), então as rodas são ${nt(e.fila, 0)} ÷ ${n} = <b>${nt(e.roda, 0)}</b> = ${n - 1}!. Outro jeito de ver: sente a pessoa A em qualquer cadeira e arrume as outras ${n - 1} em fila a partir dela.`; };
     q("[data-v=n]").addEventListener("input", (ev) => poe({ n: ev.target.value }));
     SIM.arRoda._ult = { poe, est }; desenha(); };
+
+  /* ---------- CB03 ---------- */
+  /* todos os grupos de k elementos tirados de 0 … n − 1, em ordem (cada grupo é uma lista crescente de índices) */
+  R.combs = (n, k) => { const sai = [], at = []; const vai = (ini) => { if (at.length === k) { sai.push(at.slice()); return; } for (let i = ini; i <= n - (k - at.length); i++) { at.push(i); vai(i + 1); at.pop(); } }; vai(0); return sai; };
+  /* todas as ordens de uma lista */
+  R.perms = (v) => { const sai = [], at = [], us = v.map(() => false); const vai = () => { if (at.length === v.length) { sai.push(at.slice()); return; } for (let i = 0; i < v.length; i++) if (!us[i]) { us[i] = true; at.push(v[i]); vai(); at.pop(); us[i] = false; } }; vai(); return sai; };
+  /* n pontos numa circunferência. o = { cordas: desenha todas, tri: [i, j, k] destaca um triângulo, h } */
+  R.circPts = (n, D, o = {}) => { const W = 560, H = o.h || 220, cx = W / 2, cy = H / 2, r = H / 2 - 26, P = Array.from({ length: n }, (_, i) => { const a = -Math.PI / 2 + (2 * Math.PI * i) / n; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; }); let s = `<circle cx="${cx}" cy="${cy}" r="${r}" style="fill:none;stroke:var(--line);stroke-width:1.2"/>`;
+    if (o.cordas) for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) { const lado = j - i === 1 || (i === 0 && j === n - 1); s += `<line data-t="${lado ? "lado" : "diag"}" x1="${P[i][0].toFixed(1)}" y1="${P[i][1].toFixed(1)}" x2="${P[j][0].toFixed(1)}" y2="${P[j][1].toFixed(1)}" style="stroke:${lado ? "var(--mod)" : "var(--ok)"};stroke-width:${lado ? 2.2 : 1};stroke-opacity:${lado ? 1 : 0.8}"/>`; }
+    if (o.tri) s += `<polygon points="${o.tri.map((i) => P[i][0].toFixed(1) + "," + P[i][1].toFixed(1)).join(" ")}" style="fill:var(--ok);fill-opacity:.25;stroke:var(--ok);stroke-width:2"/>`;
+    P.forEach(([x, y], i) => { s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5" style="fill:var(--ink)"/>` + T(cx + (r + 14) * Math.cos(-Math.PI / 2 + (2 * Math.PI * i) / n), cy + (r + 14) * Math.sin(-Math.PI / 2 + (2 * Math.PI * i) / n) + 4, "ABCDEFGHIJKL"[i], { f: 11, c: "var(--ink3)" }); });
+    return svg(W, H, s, D); };
+
+  /* nome: "Pódio ou comissão: a ordem importa?" · matéria: Matemática · tema: CB03 */
+  SIM.arEscolhe = (el, F) => { let n = 5, k = 3; const L = "ABCDEFG";
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("n", "pessoas disponíveis", 2, 7, n, 150)}${sl("k", "quantas são escolhidas", 1, 4, k, 150)}</div></div></div><div class="leitor" data-v="lt"></div><div class="palco" data-v="pal" style="padding:10px 14px"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const g = R.combs(n, k).map((c) => c.map((i) => L[i]).join("")), o = R.perms((g[0] || "").split("")).map((x) => x.join("")); return { n, k, arranjos: R.arr(n, k), combinacoes: R.cmb(n, k), ordens: R.fat(k), grupos: g, ordensDoPrimeiro: o }; };
+    const poe = (o) => { ({ n, k } = { n, k, ...o }); n = Math.max(2, Math.min(7, Math.round(+n))); k = Math.max(1, Math.min(4, n, Math.round(+k))); desenha(); };
+    const desenha = () => { const e = est(); q("[data-v=k]").max = String(Math.min(4, n)); ["n", "k"].forEach((c) => { q(`[data-v=${c}]`).value = String({ n, k }[c]); q(`[data-r=${c}]`).textContent = { n, k }[c]; });
+      q("[data-v=lt]").innerHTML = vis("com ordem (arranjos)", nt(e.arranjos, 0)) + vis("ordens de cada grupo", `${k}! = ${e.ordens}`) + vis("sem ordem (combinações)", nt(e.combinacoes, 0));
+      const chip = (t, forte) => `<span style="display:inline-block;margin:2px 3px;padding:2px 7px;border-radius:6px;border:1px solid ${forte ? "var(--warn)" : "var(--line)"};font:700 12px Inter,sans-serif;letter-spacing:.06em;color:${forte ? "var(--warn)" : "var(--ink2)"}">${t}</span>`;
+      q("[data-v=pal]").innerHTML = `<div style="font-size:12px;color:var(--ink3);margin-bottom:4px">Os ${e.combinacoes} grupos de ${k} (a ordem das letras não importa):</div><div>${e.grupos.map((g, i) => chip(g, i === 0)).join("")}</div><div style="font-size:12px;color:var(--ink3);margin:10px 0 4px">O grupo ${e.grupos[0]} pode subir ao pódio em ${e.ordens} orde${e.ordens > 1 ? "ns" : "m"}:</div><div>${e.ordensDoPrimeiro.map((g) => chip(g, true)).join("")}</div>`;
+      q("[data-v=st]").innerHTML = `Com ordem (1º, 2º, … lugar): ${Array.from({ length: k }, (_, j) => n - j).join(" × ")} = <b>${nt(e.arranjos, 0)}</b>. Cada grupo de ${k} pessoas aparece aí ${e.ordens} vez${e.ordens > 1 ? "es" : ""}, uma para cada ordem. Se a ordem não importa (uma comissão), divide-se: ${nt(e.arranjos, 0)} ÷ ${e.ordens} = <b>${nt(e.combinacoes, 0)}</b>.${k === 1 ? " Com uma pessoa só, não há ordem para descontar: as duas contagens coincidem." : ""}`; };
+    ["n", "k"].forEach((c) => q(`[data-v=${c}]`).addEventListener("input", (ev) => poe({ [c]: ev.target.value })));
+    SIM.arEscolhe._ult = { poe, est }; desenha(); };
+
+  /* nome: "Pontos na circunferência: cordas, diagonais e triângulos" · matéria: Matemática · tema: CB03 */
+  SIM.arPontos = (el, F) => { let n = 6;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("n", "pontos", 3, 12, n, 200)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => ({ n, cordas: R.cmb(n, 2), lados: n, diagonais: (n * (n - 3)) / 2, triangulos: R.cmb(n, 3), quadrilateros: R.cmb(n, 4), ladosDesenhados: el.querySelectorAll("[data-t=lado]").length, diagonaisDesenhadas: el.querySelectorAll("[data-t=diag]").length });
+    const poe = (o) => { ({ n } = { n, ...o }); n = Math.max(3, Math.min(12, Math.round(+n))); desenha(); };
+    const desenha = () => { q("[data-v=n]").value = String(n); q("[data-r=n]").textContent = n; q("[data-v=pal]").innerHTML = R.circPts(n, null, { cordas: true, h: 280 }); const e = est();
+      q("[data-v=lt]").innerHTML = vis("segmentos", e.cordas) + vis("lados", e.lados) + vis("diagonais", e.diagonais) + vis("triângulos", e.triangulos) + vis("quadriláteros", e.quadrilateros);
+      q("[data-v=st]").innerHTML = `Cada segmento é um <b>par</b> de pontos, e AB é o mesmo segmento que BA: são C(${n}, 2) = ${n} × ${n - 1} ÷ 2 = <b>${e.cordas}</b>. Desses, ${n} são lados do polígono; os outros ${e.cordas} − ${n} = <b>${e.diagonais}</b> são diagonais. Cada triângulo é um <b>trio</b> de pontos (três pontos de uma circunferência nunca ficam alinhados): C(${n}, 3) = <b>${e.triangulos}</b>.${n >= 4 ? ` E cada quarteto de pontos dá um quadrilátero: C(${n}, 4) = <b>${e.quadrilateros}</b>.` : ""}`; };
+    q("[data-v=n]").addEventListener("input", (ev) => poe({ n: ev.target.value }));
+    SIM.arPontos._ult = { poe, est }; desenha(); };
 })();
