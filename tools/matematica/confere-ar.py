@@ -504,5 +504,37 @@ pr23_ = 1.0
 for i_ in range(23): pr23_ *= (365 - i_) / 365
 ok(abs(pr23_ - 0.4927) < 0.00005 and abs(1 - pr23_ - 0.5073) < 0.00005 and pk_(23, 2) == 253 and 365 - 22 == 343, "PB01 chefão (e): 23 aniversários (modelo de 365 dias iguais): 1 − 0,4927 = 0,5073; 253 pares")
 
+# ---------- PB02 ----------
+from itertools import product as qp_, permutations as qm_, combinations as qc_
+from math import comb as qk_
+d2_ = list(qp_(range(1, 7), repeat=2))
+cond_ = lambda fa, fb: Fr(len([d for d in d2_ if fa(d) and fb(d)]), len([d for d in d2_ if fb(d)]))
+ok(Fr(len([x for x in (4, 5, 6) if x % 2 == 0]), 3) == Fr(2, 3) and cond_(lambda d: sum(d) == 8, lambda d: d[0] % 2 == 0) == Fr(1, 6) and len([d for d in d2_ if d[0] % 2 == 0]) == 18 and len([d for d in d2_ if d[0] % 2 == 0 and sum(d) == 8]) == 3 and cond_(lambda d: d[0] == d[1], lambda d: sum(d) == 8) == Fr(1, 5), "PB02 teorema 1, figura e exemplo 1: P(par | maior que 3) = 2/3; P(soma 8 | primeiro par) = 3/18 = 1/6; P(iguais | soma 8) = 1/5")
+ok(cond_(lambda d: sum(d) >= 10, lambda d: d[0] == 6) == Fr(1, 2) and cond_(lambda d: 6 in d, lambda d: sum(d) == 9) == Fr(1, 2) and cond_(lambda d: sum(d) == 7, lambda d: d[0] != d[1]) == Fr(1, 5) and cond_(lambda d: sum(d) % 2 == 0, lambda d: d[0] % 2 == 1) == Fr(1, 2) and cond_(lambda d: d[0] == d[1], lambda d: sum(d) <= 6) == Fr(1, 5), "PB02 exercício 2 e exemplo 1: as outras condicionais com dois dados (1/2, 1/2, 1/5, 1/2, 1/5)")
+def ur_(a, b, rep):
+    bolas = ["V"] * a + ["A"] * b
+    return list(qp_(bolas, repeat=2)) if rep else [(bolas[i], bolas[j]) for i, j in qm_(range(a + b), 2)]
+pu_ = lambda a, b, rep, f: Fr(len([x for x in ur_(a, b, rep) if f(x)]), len(ur_(a, b, rep)))
+ok(pu_(3, 2, False, lambda x: x == ("V", "V")) == Fr(3, 10) and pu_(3, 2, False, lambda x: x[0] != x[1]) == Fr(3, 5) and pu_(3, 2, False, lambda x: x[1] == "V") == Fr(3, 5) and Fr(3, 5) * Fr(2, 4) + Fr(2, 5) * Fr(3, 4) == Fr(3, 5), "PB02 chute e exemplo 2: urna 3 + 2 sem reposição: VV 3/10, cores diferentes 3/5, segunda vermelha 3/5")
+ok(all(pu_(a, b, False, lambda x: x == ("V", "V")) == Fr(a * (a - 1), (a + b) * (a + b - 1)) and pu_(a, b, True, lambda x: x == ("V", "V")) == Fr(a * a, (a + b) ** 2) and pu_(a, b, False, lambda x: x[0] != x[1]) == Fr(2 * a * b, (a + b) * (a + b - 1)) and pu_(a, b, False, lambda x: x[1] == "V") == Fr(a, a + b) for a, b in [(3, 2), (4, 6), (5, 3), (2, 4), (6, 4), (3, 5), (4, 4), (5, 5), (2, 3), (3, 7)]), "PB02 exercícios 5, 6, 9 e 15: fórmulas das duas retiradas conferidas por enumeração em todas as urnas dos sorteios")
+ok(Fr(21, 30) == Fr(7, 10) and Fr(3, 9) == Fr(1, 3) and Fr(5 * 4, 8 * 7) == Fr(5, 14) and Fr(4, 25) == Fr(2 * 2, 5 * 5) and Fr(40, 100) * Fr(25, 100) == Fr(10, 100) and 1 - Fr(50, 100) * Fr(60, 100) == Fr(70, 100) and Fr(2 * 3 * 5, 8 * 7) == Fr(15, 28) and Fr(4 * 3, 52 * 51) == Fr(1, 221) and 52 * 51 == 2652, "PB02 exercícios 3 a 10 (primeiro acesso): 70%; 1/3; 5/14; 4/25; 10%; 70%; 15/28; 1/221")
+nai2_ = "CPEO"; val2_ = ["A"] + [str(k) for k in range(2, 11)] + ["J", "Q", "K"]; bar2_ = [(v, n) for n in nai2_ for v in val2_]
+ok(Fr(len([p for p in qm_(bar2_, 2) if p[0][0] == "A" and p[1][0] == "A"]), 52 * 51) == Fr(1, 221) and Fr(len([c for c in bar2_ if c[1] == "C" and c[0] == "K"]), 52) == Fr(13, 52) * Fr(4, 52) and Fr(13 * 12, 2652) == Fr(1, 17) and Fr(12 * 11, 2652) == Fr(11, 221) and Fr(26 * 25, 2652) == Fr(25, 102), "PB02 exercício 10 e teorema 2: dois ases 1/221 (pares ordenados enumerados); copas e rei independentes; duas copas 1/17; duas figuras 11/221; duas vermelhas 25/102")
+ok(Fr(60, 100) * Fr(3, 100) + Fr(40, 100) * Fr(4, 100) == Fr(34, 1000) and abs(float(Fr(60 * 2, 1) / (60 * 2 + 40 * Fr(11, 2))) * 100 - 35.29) < 0.005 and abs(float(Fr(2 * 90, 2 * 90 + 98 * 10)) * 100 - 15.52) < 0.005, "PB02 exercícios 11 a 13 (primeiro acesso): 3,4%; 35,29%; 15,52%")
+ok(Fr(1 * 99, 1 * 99 + 99 * 5) == Fr(1, 6) and 99 + 495 == 594 and abs(100 / 6 - 16.67) < 0.005, "PB02 abertura, teorema 4 e exemplo 3: doença em 1%, teste 99% e 95%: 99 em 594, 1/6 ≈ 16,7%")
+ok(all(Fr(len([s for s in qp_(range(1, 7), repeat=n) if s.count(6) == k]), 6 ** n) == qk_(n, k) * Fr(1, 6) ** k * Fr(5, 6) ** (n - k) for n in range(1, 6) for k in range(n + 1)) and Fr(75, 216) == 3 * Fr(25, 216) and abs(75 / 216 * 100 - 34.72) < 0.005, "PB02 teorema 3 e exercício 14: k seis em n lançamentos (enumerado até n = 5); um 6 em três: 75/216 ≈ 34,72%")
+ok(Fr(60, 100) * Fr(70, 100) + Fr(30, 100) * Fr(40, 100) == Fr(54, 100), "PB02 exercício 16 (primeiro acesso): exatamente um de dois eventos independentes de 60% e 30%: 54%")
+# três portas: enumeração de (porta do prêmio, porta escolhida); o apresentador abre uma vazia que não é a escolhida
+gan_ = 0; tot_ = 0
+for premio in range(3):
+    for esc in range(3):
+        abre = [x for x in range(3) if x != esc and x != premio]
+        for a in abre:
+            peso = Fr(1, 9) / len(abre); troca = [x for x in range(3) if x != esc and x != a][0]
+            tot_ += peso; gan_ += peso if troca == premio else 0
+ok(tot_ == 1 and gan_ == Fr(2, 3), "PB02 chefão (b): nas três portas, trocar ganha com probabilidade 2/3 (enumeração com pesos)")
+ok(Fr(len([c for c in qc_(["V"] * 5 + ["A"] * 3, 3) if c.count("V") == 2]), qk_(8, 3)) == Fr(15, 28) and (Fr(1, 2) * Fr(3, 4)) / (Fr(1, 2) * Fr(3, 4) + Fr(1, 2) * Fr(1, 4)) == Fr(3, 4) and Fr(len([f for f in qp_("HM", repeat=2) if f == ("H", "H")]), len([f for f in qp_("HM", repeat=2) if "H" in f])) == Fr(1, 3), "PB02 chefão (c), (d) e (e): 15/28; 3/4; 1/3")
+ok(Fr(len([c for c in bar2_ if c[1] == "C" and c[0] != "K"]), 52) == Fr(13, 52) * Fr(48, 52) and Fr(len([d for d in d2_ if d[0] % 2 == 0 and d[1] <= 4]), 36) == Fr(1, 2) * Fr(2, 3) and Fr(len([d for d in d2_ if d[0] % 2 == 0 and d[1] > 4]), 36) == Fr(1, 2) * Fr(1, 3), "PB02 chefão (a), em exemplos: copas e não-rei são independentes (12/52 = 1/4 · 12/13); com dois dados, primeiro par e segundo até 4, e os complementares")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)

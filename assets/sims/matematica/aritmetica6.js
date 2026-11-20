@@ -1,4 +1,4 @@
-/* Matemática · módulo AR (Aritmética): laboratórios de probabilidade, PB01 (teoria das probabilidades).
+/* Matemática · módulo AR (Aritmética): laboratórios de probabilidade: PB01 (teoria das probabilidades) e PB02 (probabilidade condicional: duasRetiradas, arvoreP, teste).
    Acrescenta ao núcleo SIM.ar: pfr (fração simplificada), pTxt e pTex (escrita de uma probabilidade), EVT (eventos com dois dados), contaDados,
    dadosFig (a tabela 6 × 6), urna (bolas coloridas numa caixa) e EXPS (experimentos do laboratório de lançamentos).
    Contas conferidas em Python (tools/matematica/confere-ar.py). Os sorteios usam gerador com semente (SIM.ar.gera), para o teste poder repetir. */
@@ -74,4 +74,43 @@
     el.querySelectorAll("[data-k]").forEach((b) => b.addEventListener("click", () => lanca(+b.dataset.k)));
     q("[data-b=zera]").addEventListener("click", () => { zera(); desenha(); }); q("[data-b=exp]").addEventListener("click", () => poe({ exp: R.EXPS[(x + 1) % R.EXPS.length].id }));
     SIM.arLanca._ult = { poe, est, semente, lanca }; desenha(); };
+
+  /* ---------- PB02 ---------- */
+  /* duas retiradas de uma urna com a bolas vermelhas e b azuis: probabilidades (frações [num, den]) de cada ramo e de cada caminho */
+  R.duasRetiradas = (a, b, rep) => { const t = a + b, t2 = rep ? t : t - 1, a2 = rep ? a : a - 1, b2 = rep ? b : b - 1, fr = (x, y) => (y > 0 ? R.pfr(x, y) : [0, 1]);
+    return { p1: { V: fr(a, t), A: fr(b, t) }, p2: { VV: fr(a2, t2), VA: fr(b, t2), AV: fr(a, t2), AA: fr(b2, t2) }, cam: { VV: fr(a * a2, t * t2), VA: fr(a * b, t * t2), AV: fr(b * a, t * t2), AA: fr(b * b2, t * t2) }, mesmaCor: fr(a * a2 + b * b2, t * t2), segundaV: fr(a * a2 + b * a, t * t2) }; };
+  /* árvore de probabilidades de dois níveis. o = { n1: [nomes], p1: [textos], n2: [[nomes], [nomes]], p2: [[textos], [textos]], fim: [[textos], [textos]], cores } */
+  R.arvoreP = (o, D) => { const W = 560, H = o.h || 230, x0 = 40, x1 = 200, x2 = 380, ys1 = [H * 0.27, H * 0.75], dy = H * 0.14, y0 = H / 2, cor = o.cores || ["var(--mod)", "var(--mod)"]; let s = `<circle cx="${x0}" cy="${y0}" r="5" style="fill:var(--ink2)"/>`;
+    o.n1.forEach((nome, i) => { const y = ys1[i]; s += `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y}" style="stroke:var(--ink3);stroke-width:1.3"/>` + T((x0 + x1) / 2 - 6, (y0 + y) / 2 + (i ? 16 : -8), o.p1[i], { f: 12, w: 700, c: "var(--warn)" }) + `<circle cx="${x1}" cy="${y}" r="9" style="fill:${cor[i]}"/>` + T(x1, y - 14, nome, { f: 10, c: "var(--ink2)" });
+      o.n2[i].forEach((n2, j) => { const yy = y + (j ? dy : -dy); s += `<line x1="${x1 + 9}" y1="${y}" x2="${x2}" y2="${yy}" style="stroke:var(--ink3);stroke-width:1.3"/>` + T((x1 + x2) / 2 + 6, (y + yy) / 2 + (j ? 15 : -7), o.p2[i][j], { f: 12, w: 700, c: "var(--warn)" }) + `<circle cx="${x2}" cy="${yy}" r="8" style="fill:${(o.cores2 || cor)[j]}"/>` + T(x2 + 16, yy + 4, n2 + (o.fim ? "   →   " + o.fim[i][j] : ""), { f: 11, c: "var(--ink)", a: "start" }); }); });
+    return svg(W, H, s, D); };
+  /* teste diagnóstico numa população de N pessoas: contagens esperadas */
+  R.teste = (prev, sens, esp, N = 100000) => { const doentes = (N * prev) / 100, saos = N - doentes, VP = (doentes * sens) / 100, FN = doentes - VP, VN = (saos * esp) / 100, FP = saos - VN; return { N, doentes, saos, VP, FN, VN, FP, positivos: VP + FP, ppv: VP + FP > 0 ? VP / (VP + FP) : null, vpn: VN + FN > 0 ? VN / (VN + FN) : null }; };
+
+  /* nome: "Duas retiradas: com ou sem reposição?" · matéria: Matemática · tema: PB02 */
+  SIM.arUrna2 = (el, F) => { let a = 3, b = 2, rep = false;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("a", "bolas vermelhas", 1, 8, a, 140)}${sl("b", "bolas azuis", 1, 8, b, 140)}</div><div class="bts" style="margin-top:6px"><button class="bt peq" data-b="rep"></button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), f = (x) => R.pTxt(x[0], x[1]);
+    const est = () => Object.assign({ a, b, rep }, R.duasRetiradas(a, b, rep));
+    const poe = (o) => { ({ a, b, rep } = { a, b, rep, ...o }); a = Math.max(1, Math.min(8, Math.round(+a))); b = Math.max(1, Math.min(8, Math.round(+b))); rep = !!rep; desenha(); };
+    const desenha = () => { const e = est(); ["a", "b"].forEach((k) => { q(`[data-v=${k}]`).value = String({ a, b }[k]); q(`[data-r=${k}]`).textContent = { a, b }[k]; }); q("[data-b=rep]").textContent = "devolver a 1ª bola antes de tirar a 2ª: " + (rep ? "sim (com reposição)" : "não (sem reposição)");
+      q("[data-v=pal]").innerHTML = R.arvoreP({ n1: ["1ª vermelha", "1ª azul"], p1: [f(e.p1.V), f(e.p1.A)], n2: [["2ª vermelha", "2ª azul"], ["2ª vermelha", "2ª azul"]], p2: [[f(e.p2.VV), f(e.p2.VA)], [f(e.p2.AV), f(e.p2.AA)]], fim: [[f(e.cam.VV), f(e.cam.VA)], [f(e.cam.AV), f(e.cam.AA)]], cores: [R.CORES.vermelha, R.CORES.azul], h: 250 }, null);
+      q("[data-v=lt]").innerHTML = vis("duas vermelhas", f(e.cam.VV)) + vis("cores iguais", f(e.mesmaCor)) + vis("cores diferentes", R.pTxt(e.mesmaCor[1] - e.mesmaCor[0], e.mesmaCor[1])) + vis("2ª vermelha (sem saber a 1ª)", f(e.segundaV));
+      q("[data-v=st]").innerHTML = `Em cada galho está a probabilidade <b>daquele passo, dado o que já aconteceu</b>; a probabilidade de um caminho inteiro é o <b>produto</b> dos galhos. ${rep ? "Com reposição, a urna volta a ser a mesma: os galhos da 2ª retirada não dependem da 1ª (as retiradas são independentes)." : `Sem reposição, a 1ª bola muda a urna: depois de uma vermelha sobram ${a - 1} vermelha${a - 1 === 1 ? "" : "s"} em ${a + b - 1} bolas, e a probabilidade de outra vermelha cai de ${f(e.p1.V)} para ${f(e.p2.VV)}.`} As quatro pontas somam 1. E um fato curioso: a chance de a 2ª bola ser vermelha, sem saber qual foi a 1ª, é ${f(e.segundaV)}, a mesma da 1ª.`; };
+    ["a", "b"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
+    q("[data-b=rep]").addEventListener("click", () => poe({ rep: !rep }));
+    SIM.arUrna2._ult = { poe, est }; desenha(); };
+
+  /* nome: "Teste positivo: qual é a chance de estar doente?" · matéria: Matemática · tema: PB02 */
+  SIM.arBayes = (el, F) => { let prev = 1, sens = 99, esp = 95;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("prev", "doentes na população (%)", 1, 50, prev, 150)}${sl("sens", "o teste acerta nos doentes (%)", 50, 100, sens, 150)}${sl("esp", "o teste acerta nos sãos (%)", 50, 100, esp, 150)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => Object.assign({ prev, sens, esp }, R.teste(prev, sens, esp));
+    const poe = (o) => { ({ prev, sens, esp } = { prev, sens, esp, ...o }); prev = Math.max(1, Math.min(50, Math.round(+prev))); sens = Math.max(50, Math.min(100, Math.round(+sens))); esp = Math.max(50, Math.min(100, Math.round(+esp))); desenha(); };
+    const desenha = () => { const e = est(); ["prev", "sens", "esp"].forEach((k) => { q(`[data-v=${k}]`).value = String({ prev, sens, esp }[k]); q(`[data-r=${k}]`).textContent = { prev, sens, esp }[k]; });
+      q("[data-v=pal]").innerHTML = M.tabela(["resultado do teste", "doentes", "sãos", "total"], [["positivo", nt(e.VP, 0), nt(e.FP, 0), nt(e.positivos, 0)], ["negativo", nt(e.FN, 0), nt(e.VN, 0), nt(e.FN + e.VN, 0)], ["total", nt(e.doentes, 0), nt(e.saos, 0), nt(e.N, 0)]], window.D, { larg: 150, w: 110 });
+      q("[data-v=lt]").innerHTML = vis("positivos", nt(e.positivos, 0)) + vis("positivos doentes", nt(e.VP, 0)) + vis("P(doente | positivo)", e.ppv === null ? "—" : nt(100 * e.ppv, 1) + "%") + vis("P(são | negativo)", e.vpn === null ? "—" : nt(100 * e.vpn, 2) + "%");
+      q("[data-v=st]").innerHTML = `Em ${nt(e.N, 0)} pessoas, ${nt(e.doentes, 0)} estão doentes e ${nt(e.saos, 0)} não. O teste dá positivo em ${nt(e.VP, 0)} doentes (acertos) e em ${nt(e.FP, 0)} pessoas sãs (alarmes falsos). Quem recebe um positivo é uma das ${nt(e.positivos, 0)} pessoas da coluna "positivo", e só ${nt(e.VP, 0)} delas estão doentes: ${e.ppv === null ? "—" : `${nt(e.VP, 0)} ÷ ${nt(e.positivos, 0)} = <b>${nt(100 * e.ppv, 1)}%</b>`}. ${e.ppv !== null && e.ppv < 0.5 ? "Menos da metade! A doença é rara, e os poucos alarmes falsos, tirados de uma multidão de sãos, superam os doentes de verdade." : "Quanto mais comum a doença e menos alarmes falsos, mais um positivo quer dizer doente."} (Números de um teste hipotético, para estudar a conta.)`; };
+    ["prev", "sens", "esp"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
+    SIM.arBayes._ult = { poe, est }; desenha(); };
 })();

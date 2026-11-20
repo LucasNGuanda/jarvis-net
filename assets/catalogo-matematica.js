@@ -34,7 +34,7 @@ window.CATALOGO.push(
     ["CB03","Arranjos e Combinações",["CB02","CB01"],true],
     ["CB04","Aprofundamento em Combinatória",["CB03","CNJ01"],true],
     ["PB01","Teoria das Probabilidades",["CB03","CNJ01"],true],
-    ["PB02","Probabilidade Condicional",[]],
+    ["PB02","Probabilidade Condicional",["PB01","CB03"],true],
   ] },
   { id:"GE", area:"mat", letra:"GE", cor:"--mU", nome:"Geometria", desc:"Plana, espacial e analítica.", temas:[
     ["TG01","Arcos e Ângulos",[]],
