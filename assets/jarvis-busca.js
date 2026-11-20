@@ -51,7 +51,7 @@
   J.carregaIndice = () => new Promise((ok) => {
     if (window.INDICE_BUSCA) return ok(true);
     if (B.carregando) return B.carregando.push(ok);
-    B.carregando = [ok]; const s = document.createElement("script"); s.src = "assets/indice-busca.js";
+    B.carregando = [ok]; const s = document.createElement("script"); s.src = "assets/indice-busca.js" + (window.VERSAO ? "?v=" + String(window.VERSAO).replace(/[^0-9.]/g, "") : "");
     const fim = (v) => { const l = B.carregando; B.carregando = null; l.forEach((f) => f(v)); };
     s.onload = () => fim(true); s.onerror = () => fim(false); document.head.appendChild(s);
   });

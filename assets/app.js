@@ -807,7 +807,7 @@
     if (F.temas && F.temas[k]) return true;
     pendente = k;
     const s = document.createElement("script");
-    s.src = arq;
+    s.src = arq + (window.VERSAO ? "?v=" + String(window.VERSAO).replace(/[^0-9.]/g, "") : ""); /* carimbo da versão: obriga o navegador a buscar o tema de novo depois de uma publicação */
     s.onerror = () => { $("#pagina").innerHTML = `<p>Não achei o arquivo <code>${arq}</code>.</p>`; };
     document.body.appendChild(s);
     return false;
