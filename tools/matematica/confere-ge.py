@@ -120,5 +120,28 @@ def med_():
     return perto(dist(d, e), dist(b, c) / 2) and abs((e[0] - d[0]) * (c[1] - b[1]) - (e[1] - d[1]) * (c[0] - b[0])) < 1e-9
 ok(all(med_() for _ in range(300)) and 90 * Fr(1, 9) == 10 and 90 * Fr(4, 9) - 10 == 30 and 90 - 40 == 50 and Fr(27, 12) == Fr(9, 4) == Fr(3, 2) ** 2 and Fr(4, 10) == Fr(6, 15), "GP02 chefão (b) e (e) e teorema 4: base média em 300 triângulos; áreas 10, 30 e 50; 27/12 = 1,5²")
 
+# ---------- GP03 ----------
+def conv_(n):
+    """polígono convexo sorteado: pontos em ângulos crescentes sobre uma circunferência"""
+    gs = sorted(random.uniform(0, 360) for _ in range(n))
+    return [polar((0, 0), 1, g) for g in gs] if min((gs[(i + 1) % n] - gs[i]) % 360 for i in range(n)) > 3 and max((gs[(i + 1) % n] - gs[i]) % 360 for i in range(n)) < 177 else conv_(n)
+ok(all(perto(sum(ang(q[i - 1], q[i], q[(i + 1) % n]) for i in range(n)), (n - 2) * 180) for n in range(3, 13) for q in [conv_(n) for _ in range(40)]), "GP03 teorema 1: em 400 polígonos convexos sorteados (3 a 12 lados), os ângulos internos medidos somam (n − 2) · 180°")
+ok(all(perto(sum(180 - ang(q[i - 1], q[i], q[(i + 1) % n]) for i in range(n)), 360) for n in range(3, 13) for q in [conv_(n) for _ in range(40)]), "GP03 teorema 2: nos mesmos tamanhos, os externos medidos somam 360°")
+ok(all(len([1 for a in range(n) for b in range(a + 1, n) if (b - a) not in (1, n - 1)]) == n * (n - 3) // 2 == n * (n - 1) // 2 - n for n in range(3, 40)), "GP03 teorema 3: diagonais contadas par a par, n(n − 3)/2 = n(n − 1)/2 − n")
+def reg_(n):
+    q = [polar((0, 0), 1, 90 + 360 * i / n) for i in range(n)]
+    return perto(ang(q[0], q[1], q[2]), 180 - 360 / n) and perto(ang(q[0], (0, 0), q[1]), 360 / n)
+ok(all(reg_(n) for n in range(3, 25)) and 180 - 360 / 12 == 150 and 180 - 360 / 8 == 135 and 6 * 180 == 1080 and 8 * 5 // 2 == 20, "GP03 teorema 4 e exemplos 1 e 2: interno e central medidos em polígonos regulares de 3 a 24 lados; octógono: 1080°, 135°, 45° e 20 diagonais; interno de 150° dá 12 lados")
+ok(5 * 180 == 900 and 1260 // 180 + 2 == 9 and 180 - 72 == 108 and 360 // 9 == 40 and 360 // 24 == 15 and 360 // 36 == 10 and 8 * 5 // 2 == 20 and 11 * 8 // 2 == 44 and 360 - 80 - 100 - 110 == 70 and 7 * 70 + 50 == 540 and max(70, 140, 140, 100, 90) == 140 and 360 // 8 == 45, "GP03 exercícios 1 a 11 (primeiro acesso): 900°; 9; 108°; 40°; 15; 10; 20; 11 (44 diagonais); 70°; 140°; 45°")
+ok(2 * (3 + 1) == 8 and 3 * 45 == 135 and 360 - 90 - 108 == 162 and 180 * 9 == 7 * 180 + 360 and 180 - 360 // 3 == 60 and 360 // 60 == 6 and 7 * 4 // 2 == 2 * 7, "GP03 exercícios 12 a 16 (primeiro acesso): 8; 162°; 9; 6; 7")
+ok(all(sum(k * x + c for k, c in e) == 540 for x, e in [(88, [(1, 0), (1, 10), (1, 20), (1, 30), (1, 40)]), (70, [(1, 0), (2, 0), (2, 0), (1, 30), (1, 20)]), (45, [(2, 0), (2, 0), (3, 0), (3, 0), (2, 0)]), (96, [(1, 10), (1, 10), (1, 20), (1, 20), (1, 0)])]) and all(sum(q) == 360 for q in [(80, 100, 110, 70), (90, 120, 60, 90), (70, 110, 95, 85), (100, 80, 120, 60), (65, 115, 100, 80), (75, 105, 90, 90)]), "GP03 exemplo 3 e exercícios 9 e 10: os quatro pentágonos somam 540° e os seis quadriláteros somam 360°")
+def colado_(n):
+    rr = 1 / (2 * sin(pi / n)); c = (0.5, rr * cos(pi / n)); d0 = degrees(atan2(-c[1], 1 - c[0])); q = [polar(c, rr, d0 + 360 * i / n) for i in range(n)]
+    return perto(dist(q[0], (1, 0)), 0) and perto(dist(q[-1], (0, 0)), 0, 1e-6) and perto(ang((1, -1), (1, 0), q[1]), 360 - 90 - (180 - 360 / n))
+ok(all(colado_(n) for n in (5, 6, 8, 10, 12)), "GP03 exercício 13: quadrado e polígono regular colados por um lado (o polígono construído tem mesmo o lado comum), ângulo medido 360° − 90° − interno")
+ok([(k, n) for k in range(3, 50) for n in range(3, 50) if k * (n - 2) * 180 == 360 * n] == [(3, 6), (4, 4), (6, 3)], "GP03 exercício 15 e chefão (d): só (3, 6), (4, 4) e (6, 3) fecham a volta (busca até 50)")
+pen_ = [polar((0, 0), 1, 90 + 72 * i) for i in range(5)]
+ok(perto(ang(pen_[2], pen_[0], pen_[3]), 36) and perto(ang(pen_[1], pen_[0], pen_[2]), 36) and perto(ang(pen_[4], pen_[0], pen_[1]), 108), "GP03 chefão (e): no pentágono regular, o ângulo CAD medido é 36°")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)
