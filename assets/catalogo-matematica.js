@@ -57,7 +57,7 @@ window.CATALOGO.push(
     ["GP07","Triângulo Retângulo",["GP02","GP06"],true],
     ["GP08","Trigonometria em Triângulos Quaisquer",[]],
     ["GP09","Área de Polígonos",["GP05","GP07"],true],
-    ["GP10","Área de Círculo",[]],
+    ["GP10","Área de Círculo",["GP09","GP04"],true],
     ["GE07","Geometria de Posição",[]],
     ["GE01","Prismas",[]],
     ["GE02","Pirâmides",[]],

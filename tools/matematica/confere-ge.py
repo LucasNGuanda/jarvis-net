@@ -302,5 +302,24 @@ ok([cad_(m) for m in MAL_] == [16.5, 14.0, 16.0, 18.0, 11.5], "GP09 exemplo 3 e 
 ok((10 + 6) * 4 / 2 == 32 and 7 * 4 == 28 and 9 * 6 / 2 == 27 and 8 * 4 == 32 and (12 + 8) * 5 / 2 == 50 and 10 * 6 / 2 == 30 and 6 * 8 / 2 == 24 and abs(16 * sqrt(3) / 4 - 6.93) < 0.005 and abs(6 * 4 * sqrt(3) / 4 - 10.39) < 0.005 and 80 - 12 == 68 and 2 * 42 / 12 == 7 and 60 / 18 == 10 / 3 and 40 * 2 / 5 == 16 and (10 + 4) * 4 / 2 == 28 and 3 * 64 / 8 == 24, "GP09 exemplo 1 e exercícios 1 a 6, 8 a 11 e 13 a 16 (primeiro acesso): 32; 28; 27; 32; 50; 30; 24; 6,93; 10,39; 68; 7; 3,33; 16; 28; 24")
 ok(perto(cad_([(0, 0), (8, 4), (4, 8)]), 24) and sqrt(21 * 8 * 7 * 6) == 84 and 168 / 14 == 12 and 168 / 15 == 11.2 and abs(168 / 13 - 12.92) < 0.005 and 84 / 21 == 4 and all(perto(cad_([(0, 0), (8 * m / (m + n), 0), (3, 5)]) / cad_([(0, 0), (8, 0), (3, 5)]), m / (m + n)) for m, n in [(2, 3), (1, 2), (3, 1), (1, 4), (3, 2), (1, 1), (5, 3)]), "GP09 exercícios 14 e 16 e chefão (e): razão de áreas = razão das bases (medido); triângulo AMN no quadrado de lado 8 tem área 24; triângulo 13, 14, 15: área 84, alturas 12,92, 12 e 11,2, raio 4")
 
+# ---------- GP10 ----------
+def insc_(n, r=1.0): return cad_([polar((0, 0), r, 360 * i / n) for i in range(n)])
+def perim_(n, r=1.0): return sum(dist(polar((0, 0), r, 360 * i / n), polar((0, 0), r, 360 * (i + 1) / n)) for i in range(n))
+seq_ = [insc_(6 * 2 ** k) for k in range(10)]
+ok(all(seq_[i] < seq_[i + 1] < pi for i in range(9)) and abs(seq_[-1] - pi) < 1e-5 and abs(insc_(6) - 2.598) < 0.0005 and perto(insc_(12), 3) and abs(insc_(24) - 3.106) < 0.0005 and abs(insc_(96) - 3.139) < 0.0005 and abs(perim_(3072) - 2 * pi) < 1e-5 and all(perto(insc_(96, r) / insc_(96), r * r) for r in (2, 3.5, 7)), "GP10 teorema 1: a área do polígono regular inscrito (cadarço) sobe de 2,598 (6 lados) para 3, 3,106, …, e a de 3072 lados está a menos de 0,00001 de π; o perímetro chega a 2π; a área vai com r²")
+def setor_num(r, g, n=20000):
+    """área do setor somando n triângulos finos"""
+    return sum(cad_([(0, 0), polar((0, 0), r, g * i / n), polar((0, 0), r, g * (i + 1) / n)]) for i in range(n))
+ok(all(abs(setor_num(r, g) - g / 360 * pi * r * r) < 1e-5 * r * r for r, g in [(6, 60), (6, 120), (9, 40), (10, 72), (2, 90), (3, 300)]) and 60 / 360 * 12 == 2 and 60 / 360 * 36 == 6 and 2 * 6 / 2 == 6, "GP10 teorema 2 e exemplo 2: a área do setor, somada em 20 000 triângulos finos, é a fração g/360 de π r²; raio 6 e 60°: arco 2π e setor 6π (= arco · raio / 2)")
+ok(all(perto(R * R - r * r, h * h) for h, r, R in [(4, 3, 5), (12, 5, 13), (8, 6, 10), (15, 8, 17), (6, 8, 10), (5, 12, 13), (3, 4, 5)]) and 25 - 9 == 16 == 8 ** 2 / 4, "GP10 teorema 3, exemplo 3 e exercício 16: a meia corda tangente ao círculo interno satisfaz R² − r² = (c/2)² em todos os pares dos sorteios")
+def seg_num(r, g, n=20000):
+    return setor_num(r, g, n) - cad_([(0, 0), (r, 0), polar((0, 0), r, g)])
+ok(abs(seg_num(10, 90) - (25 * pi - 50)) < 1e-4 and abs(25 * 3.14 - 50 - 28.5) < 1e-9 and abs(seg_num(6, 60) - (6 * pi - 9 * sqrt(3))) < 1e-4 and abs(6 * pi - 9 * sqrt(3) - 3.26) < 0.005 and abs(6 * pi - 18.85) < 0.005 and abs(9 * sqrt(3) - 15.59) < 0.005, "GP10 teorema 4, exercício 11 e chefão (e): segmentos de 90° (25π − 50) e de 60° (6π − 9√3 ≈ 3,26), conferidos por soma de triângulos finos")
+ok(all(perto(x, y) for x, y in [(2 * 7, 14), (6 ** 2, 36), ((10 / 2) ** 2, 25), (18 / 2, 9), (80 / 360 * 18, 4), (100 / 360 * 36, 10), (49 - 16, 33), (3.14 * 10 + 20, 51.4), (3.14 * 70 * 100 / 100, 219.8), (100 - 3.14 * 25, 21.5), (3.14 * 100 / 4 - 50, 28.5), (8 ** 2, 64), ((36 + 64) / 4, 25), (5 / 24 * 360, 75), (100 - 3.14 * 100 / 4, 21.5), (12 ** 2, 144)]), "GP10 exercícios (primeiro acesso): 14; 36; 25; 9; 4; 10; 33; 51,4 m; 219,8 m; 21,5; 28,5; 64; 25; 75°; 21,5; 144")
+ok(perto(2 * 5 * 3.14, 31.4) and perto(25 * 3.14, 78.5) and pi * 20 ** 2 == 2 * (2 * pi * 10 ** 2), "GP10 exemplo 1 e chute: raio 5: 31,4 cm e 78,5 cm²; a pizza de 40 cm tem o dobro da área de duas de 20 cm")
+def lun_(b, c):
+    a = hypot(b, c); sc = lambda d: pi * d * d / 8; return perto(sc(b) + sc(c) + b * c / 2 - sc(a), b * c / 2)
+ok(all(lun_(b, c) for b, c in [(3, 4), (5, 12), (1, 1), (2.5, 7.1)]), "GP10 chefão (d): as duas luas sobre os catetos somam a área do triângulo (quatro triângulos)")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)
