@@ -32,7 +32,7 @@ window.CATALOGO.push(
     ["CB01","Princípio Fundamental da Contagem",["TN01","MB03"],true],
     ["CB02","Fatorial e Permutações",["CB01","TN01"],true],
     ["CB03","Arranjos e Combinações",["CB02","CB01"],true],
-    ["CB04","Aprofundamento em Combinatória",[]],
+    ["CB04","Aprofundamento em Combinatória",["CB03","CNJ01"],true],
     ["PB01","Teoria das Probabilidades",[]],
     ["PB02","Probabilidade Condicional",[]],
   ] },

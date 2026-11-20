@@ -1,4 +1,4 @@
-/* Matemática · módulo AR (Aritmética): laboratórios da combinatória: CB01 (princípio fundamental da contagem), CB02 (fatorial e permutações: soLetras, anagramas, permDist, posicao, expFat, grade, roda) e CB03 (arranjos e combinações: combs, perms, circPts).
+/* Matemática · módulo AR (Aritmética): laboratórios da combinatória: CB01 (princípio fundamental da contagem), CB02 (fatorial e permutações: soLetras, anagramas, permDist, posicao, expFat, grade, roda), CB03 (arranjos e combinações: combs, perms, circPts) e CB04 (aprofundamento: reparte, caoticas, gera, bolas).
    Acrescenta ao núcleo SIM.ar: fat (fatorial), arr (arranjos), cmb (combinações), prod, arvore (árvore de possibilidades em SVG),
    casas (casinhas com o número de opções de cada posição) e senha (contagem de sequências de algarismos com ou sem repetição e uma restrição).
    Contas conferidas em Python (tools/matematica/confere-ar.py) e, no teste, por enumeração de todas as sequências. */
@@ -78,6 +78,7 @@
     for (let i = 0; i <= a; i++) s += `<line x1="${x0 + i * c}" y1="${y0}" x2="${x0 + i * c}" y2="${y0 - gh}" style="stroke:var(--ink3);stroke-width:1.2"/>`;
     for (let j = 0; j <= b; j++) s += `<line x1="${x0}" y1="${y0 - j * c}" x2="${x0 + gw}" y2="${y0 - j * c}" style="stroke:var(--ink3);stroke-width:1.2"/>`;
     if (o.caminho) { let x = x0, y = y0, d = `M ${x} ${y}`; o.caminho.split("").forEach((m) => { if (m === "D") x += c; else y -= c; d += ` L ${x} ${y}`; }); s += `<path d="${d}" style="fill:none;stroke:var(--warn);stroke-width:3.5;stroke-linejoin:round"/>`; }
+    if (o.marca) s += `<circle cx="${x0 + o.marca[0] * c}" cy="${y0 - o.marca[1] * c}" r="10" style="fill:var(--bg);stroke:var(--warn);stroke-width:2"/>` + T(x0 + o.marca[0] * c, y0 - o.marca[1] * c + 4.5, "✕", { f: 12, w: 700, c: "var(--warn)" });
     s += `<circle cx="${x0}" cy="${y0}" r="5.5" style="fill:var(--mod)"/><circle cx="${x0 + gw}" cy="${y0 - gh}" r="5.5" style="fill:var(--ok)"/>` + T(x0 - 10, y0 + 16, "A", { f: 12, w: 700, c: "var(--mod)" }) + T(x0 + gw + 10, y0 - gh - 8, "B", { f: 12, w: 700, c: "var(--ok)" });
     return svg(W, H, s, D); };
   /* roda: letras em volta de um círculo */
@@ -151,4 +152,48 @@
       q("[data-v=st]").innerHTML = `Cada segmento é um <b>par</b> de pontos, e AB é o mesmo segmento que BA: são C(${n}, 2) = ${n} × ${n - 1} ÷ 2 = <b>${e.cordas}</b>. Desses, ${n} são lados do polígono; os outros ${e.cordas} − ${n} = <b>${e.diagonais}</b> são diagonais. Cada triângulo é um <b>trio</b> de pontos (três pontos de uma circunferência nunca ficam alinhados): C(${n}, 3) = <b>${e.triangulos}</b>.${n >= 4 ? ` E cada quarteto de pontos dá um quadrilátero: C(${n}, 4) = <b>${e.quadrilateros}</b>.` : ""}`; };
     q("[data-v=n]").addEventListener("input", (ev) => poe({ n: ev.target.value }));
     SIM.arPontos._ult = { poe, est }; desenha(); };
+
+  /* ---------- CB04 ---------- */
+  /* todas as maneiras de repartir n objetos iguais entre k caixas (cada caixa com pelo menos min), em ordem */
+  R.reparte = (n, k, min = 0) => { const sai = [], at = []; const vai = (resto, faltam) => { if (faltam === 1) { if (resto >= min) sai.push(at.concat([resto])); return; } for (let x = min; x <= resto - min * (faltam - 1); x++) { at.push(x); vai(resto - x, faltam - 1); at.pop(); } }; if (k >= 1) vai(n, k); return sai; };
+  /* permutações caóticas (ninguém no próprio lugar), pela recorrência D(n) = (n − 1)(D(n − 1) + D(n − 2)) */
+  R.caoticas = (n) => { let a = 1, b = 0; if (n === 0) return 1; for (let i = 2; i <= n; i++) [a, b] = [b, (i - 1) * (a + b)]; return b; };
+  /* gerador com semente (para sorteios que o teste consegue repetir) */
+  R.gera = (s) => { let x = (s >>> 0) || 1; return () => { x = (Math.imul(x, 1664525) + 1013904223) >>> 0; return x / 4294967296; }; };
+  /* bolas e barras: vals = quantas bolas em cada caixa. o = { rots } */
+  R.bolas = (vals, D, o = {}) => { const n = vals.reduce((a, b) => a + b, 0), k = vals.length, itens = n + k - 1, passo = Math.min(34, 480 / Math.max(itens, 1)), W = 560, H = o.rots ? 86 : 62, x0 = (W - itens * passo) / 2 + passo / 2, y = 30; let s = "", x = x0;
+    vals.forEach((v, i) => { const ini = x; for (let j = 0; j < v; j++) { s += `<circle cx="${x.toFixed(1)}" cy="${y}" r="${Math.min(10, passo * 0.36).toFixed(1)}" style="fill:var(--mod)"/>`; x += passo; } if (o.rots) s += T(v ? (ini + x - passo) / 2 : x - passo / 2, y + 36, o.rots[i], { f: 10, c: "var(--ink3)" }); if (i < k - 1) { s += `<line x1="${x.toFixed(1)}" y1="${y - 18}" x2="${x.toFixed(1)}" y2="${y + 18}" style="stroke:var(--warn);stroke-width:3.5;stroke-linecap:round"/>`; x += passo; } });
+    return svg(W, H, s, D); };
+
+  /* nome: "Bolas e barras: repartir balas entre crianças" · matéria: Matemática · tema: CB04 */
+  SIM.arBarras = (el, F) => { let n = 7, k = 3, min = 0, i = 19;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("n", "balas (iguais)", 1, 12, n, 150)}${sl("k", "crianças", 2, 5, k, 120)}</div><div class="bts" style="margin-top:6px"><button class="bt peq" data-b="min"></button><button class="bt peq" data-b="ant">◀ divisão anterior</button><button class="bt peq" data-b="prox">próxima divisão ▶</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const lista = R.reparte(n, k, min), total = min ? R.cmb(n - 1, k - 1) : R.cmb(n + k - 1, k - 1); return { n, k, min, i, total, listadas: lista.length, atual: lista[i] || null, simbolos: n + k - 1, barras: k - 1 }; };
+    const poe = (o) => { ({ n, k, min, i } = { n, k, min, i, ...o }); n = Math.max(1, Math.min(12, Math.round(+n))); k = Math.max(2, Math.min(5, Math.round(+k))); min = min ? 1 : 0; const t = R.reparte(n, k, min).length; i = t ? ((Math.round(+i) % t) + t) % t : 0; desenha(); };
+    const desenha = () => { const e = est(); ["n", "k"].forEach((c) => { q(`[data-v=${c}]`).value = String({ n, k }[c]); q(`[data-r=${c}]`).textContent = { n, k }[c]; }); q("[data-b=min]").textContent = "cada criança ganha pelo menos uma: " + (min ? "sim" : "não");
+      q("[data-v=pal]").innerHTML = e.atual ? R.bolas(e.atual, null, {}) : `<div style="text-align:center;color:var(--ink3);padding:18px 0">não há balas suficientes</div>`;
+      q("[data-v=lt]").innerHTML = vis("divisão mostrada", e.atual ? `${e.atual.join(" + ")}` : "nenhuma") + vis("ela é a", e.atual ? `${i + 1}ª de ${nt(e.total, 0)}` : "—") + vis("conta", min ? `C(${n - 1}, ${k - 1})` : `C(${n + k - 1}, ${k - 1})`) + vis("divisões possíveis", nt(e.total, 0));
+      q("[data-v=st]").innerHTML = min ? (e.total ? `Com todo mundo ganhando pelo menos uma: ponha as ${n} balas em fila. Entre elas há ${n - 1} espaços, e basta escolher ${k - 1} deles para pôr as barras (nenhuma barra nas pontas, nunca duas no mesmo espaço): C(${n - 1}, ${k - 1}) = <b>${nt(e.total, 0)}</b>.` : `Com ${n} bala${n > 1 ? "s" : ""} não dá para ${k} crianças ganharem pelo menos uma cada: <b>0</b> divisões.`) : `Cada divisão é uma fila de ${n} bolas e ${k - 1} barras (as barras separam uma criança da outra). São ${n + k - 1} símbolos, e a divisão fica decidida quando se escolhem as ${k - 1} posições das barras: C(${n + k - 1}, ${k - 1}) = <b>${nt(e.total, 0)}</b>. Duas barras vizinhas ou uma barra na ponta significam uma criança sem bala.`; };
+    ["n", "k"].forEach((c) => q(`[data-v=${c}]`).addEventListener("input", (ev) => poe({ [c]: ev.target.value, i: 0 })));
+    q("[data-b=min]").addEventListener("click", () => poe({ min: !min, i: 0 })); q("[data-b=prox]").addEventListener("click", () => poe({ i: i + 1 })); q("[data-b=ant]").addEventListener("click", () => poe({ i: i - 1 }));
+    SIM.arBarras._ult = { poe, est }; desenha(); };
+
+  /* nome: "Amigo secreto: ninguém pode tirar o próprio nome" · matéria: Matemática · tema: CB04 */
+  SIM.arCaos = (el, F) => { let n = 5, sem = 1, perm = [], rnd = R.gera(sem); const L = "ABCDEFGH";
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("n", "pessoas", 1, 8, n, 160)}</div><div class="bts" style="margin-top:6px"><button class="bt peq" data-b="sort">sortear de novo</button></div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const sorteia = () => { perm = Array.from({ length: n }, (_, j) => j); for (let j = n - 1; j > 0; j--) { const r = Math.floor(rnd() * (j + 1)); [perm[j], perm[r]] = [perm[r], perm[j]]; } };
+    const est = () => { const fixos = perm.filter((v, j) => v === j).length, tot = R.fat(n), d = R.caoticas(n); return { n, total: tot, caoticas: d, fracao: d / tot, perm: perm.slice(), fixos, valido: fixos === 0 }; };
+    const poe = (o) => { if (o.n !== undefined) { n = Math.max(1, Math.min(8, Math.round(+o.n))); sorteia(); } if (o.perm) perm = o.perm.slice(0, n); desenha(); };
+    const semente = (s) => { sem = s; rnd = R.gera(s); sorteia(); desenha(); };
+    const desenha = () => { const e = est(); q("[data-v=n]").value = String(n); q("[data-r=n]").textContent = n;
+      const W = 560, passo = Math.min(60, 480 / n), x0 = (W - (n - 1) * passo) / 2; let s = T(x0 - 44, 36, "quem tira", { f: 10, c: "var(--ink3)", a: "end" }) + T(x0 - 44, 106, "nome tirado", { f: 10, c: "var(--ink3)", a: "end" });
+      perm.forEach((v, j) => { const x = x0 + j * passo, fixo = v === j, cor = fixo ? "var(--err, #e5484d)" : "var(--mod)"; s += `<circle cx="${x}" cy="32" r="14" style="fill:var(--bg);stroke:var(--ink3);stroke-width:1.5"/>` + T(x, 37, L[j], { f: 13, w: 700 }) + `<line x1="${x}" y1="48" x2="${x}" y2="84" style="stroke:${cor};stroke-width:${fixo ? 2.6 : 1.4}"/><rect data-f="${fixo ? 1 : 0}" x="${x - 14}" y="86" width="28" height="28" rx="6" style="fill:${cor};fill-opacity:${fixo ? 0.3 : 0.14};stroke:${cor};stroke-width:1.6"/>` + T(x, 105, L[v], { f: 13, w: 700 }); });
+      q("[data-v=pal]").innerHTML = `<svg viewBox="0 0 ${W} 124" style="width:100%;max-width:${W}px;display:block;margin:0 auto">${s}</svg>`;
+      q("[data-v=lt]").innerHTML = vis("sorteios possíveis", `${n}! = ${nt(e.total, 0)}`) + vis("sorteios que valem", nt(e.caoticas, 0)) + vis("fração que vale", nt(e.fracao, 4)) + vis("neste sorteio", e.fixos ? `${e.fixos} tirou o próprio nome` : "vale");
+      q("[data-v=st]").innerHTML = `Cada sorteio é uma ordem dos ${n} nomes: ${n}! = ${nt(e.total, 0)}. Só <b>${nt(e.caoticas, 0)}</b> deles servem (ninguém com o próprio nome): são as permutações caóticas. ${e.fixos ? `Neste, ${perm.map((v, j) => (v === j ? L[j] : null)).filter(Boolean).join(" e ")} tir${e.fixos > 1 ? "aram" : "ou"} o próprio nome: é preciso sortear de novo.` : "Este sorteio vale."} ${n >= 4 ? `Repare na fração: com 4 pessoas ou mais ela quase não muda, fica perto de 0,37. Com 100 pessoas, a chance de o sorteio valer de primeira continua sendo perto de 37%.` : "Aumente o número de pessoas e veja a fração se estabilizar."}`; };
+    q("[data-v=n]").addEventListener("input", (ev) => poe({ n: ev.target.value }));
+    q("[data-b=sort]").addEventListener("click", () => { sorteia(); desenha(); });
+    SIM.arCaos._ult = { poe, est, semente }; sorteia(); desenha(); };
 })();

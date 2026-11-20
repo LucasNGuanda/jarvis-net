@@ -1,0 +1,28 @@
+// CB04: bolas e barras e amigo secreto. Contagens comparadas com a enumeração.
+module.exports = async (p, ok) => {
+  const a = await p.evaluate(() => { const u = SIM.arBarras._ult, ruins = []; let n = 0;
+    /* enumeração independente: todas as k-uplas de 0 a nn, ficando as que somam nn (e respeitam o mínimo) */
+    const conta = (nn, k, min) => { let c = 0; const at = []; const vai = (i, soma) => { if (i === k) { if (soma === nn) c++; return; } for (let x = min; x + soma <= nn; x++) { at.push(x); vai(i + 1, soma + x); at.pop(); } }; vai(0, 0); return c; };
+    for (let nn = 1; nn <= 12; nn++) for (let k = 2; k <= 5; k++) for (const min of [0, 1]) { u.poe({ n: nn, k, min, i: 0 }); const e = u.est(), c = conta(nn, k, min); n++; if (e.total !== c || e.listadas !== c || (c && (e.atual.length !== k || e.atual.reduce((x, y) => x + y, 0) !== nn || e.atual.some((x) => x < min)))) ruins.push([nn, k, min, e.total, c].join()); }
+    u.poe({ n: 7, k: 3, min: 0, i: 0 }); const e = u.est(), bolas = document.querySelectorAll('#lab-bar svg circle').length, barras = document.querySelectorAll('#lab-bar svg line').length;
+    /* percorrer todas as divisões com o botão: todas diferentes, e depois da última volta à primeira */
+    const vistas = new Set(); for (let j = 0; j < 36; j++) { vistas.add(u.est().atual.join('+')); document.querySelector('#lab-bar [data-b=prox]').click(); } const volta = u.est().i;
+    document.querySelector('#lab-bar [data-b=ant]').click(); const ant = u.est().i; document.querySelector('#lab-bar [data-b=min]').click(); const m = u.est(), st = document.querySelector('#lab-bar .status').textContent;
+    u.poe({ n: 2, k: 4, min: 1, i: 0 }); const z = u.est(), stz = document.querySelector('#lab-bar .status').textContent; u.poe({ n: 7, k: 3, min: 0, i: 0 });
+    return { ruins, n, e: [e.total, e.simbolos, e.barras].join('|'), bolas, barras, vistas: vistas.size, volta, ant, m: m.total + '|' + m.i, st, z: z.total + '|' + (z.atual === null), stz }; });
+  ok(a.ruins.length === 0 && a.e === '36|9|2' && a.bolas === 7 && a.barras === 2 && a.vistas === 36 && a.volta === 0 && a.ant === 35 && a.m === '15|0' && /espaços/.test(a.st) && a.z === '0|true' && /0 divisões/.test(a.stz), `laboratório das bolas e barras: nas ${a.n} combinações (1 a 12 balas, 2 a 5 crianças, com e sem mínimo) o total e a lista coincidem com a enumeração de todas as k-uplas; 7 balas e 3 crianças: 36 divisões (7 bolas e 2 barras desenhadas), 15 se todas ganham; o botão percorre as 36 divisões sem repetir e volta ao começo; 2 balas para 4 crianças com mínimo: 0` + (a.ruins.length ? ' → ' + a.ruins.slice(0, 4).join('; ') : ''));
+  const c = await p.evaluate(() => { const u = SIM.arCaos._ult, ruins = [];
+    /* enumeração: todas as permutações, contando as que não têm ponto fixo */
+    const caoticas = (n) => { let c = 0, t = 0; const at = [], us = Array(n).fill(false); const vai = () => { if (at.length === n) { t++; if (at.every((v, j) => v !== j)) c++; return; } for (let i = 0; i < n; i++) if (!us[i]) { us[i] = true; at.push(i); vai(); at.pop(); us[i] = false; } }; vai(); return { c, t }; };
+    for (let n = 1; n <= 8; n++) { u.poe({ n }); const e = u.est(), k = caoticas(n); if (e.caoticas !== k.c || e.total !== k.t || Math.abs(e.fracao - k.c / k.t) > 1e-12) ruins.push(n + ' ' + e.caoticas + '×' + k.c); }
+    /* sorteios com semente: sempre uma permutação de verdade, e a contagem de pontos fixos confere com o desenho */
+    let sorteios = 0, validos = 0; u.poe({ n: 6 }); u.semente(12345); const primeira = u.est().perm.join('');
+    for (let j = 0; j < 400; j++) { const e = u.est(), ord = e.perm.slice().sort((x, y) => x - y).join(''), fx = e.perm.filter((v, i) => v === i).length, des = document.querySelectorAll('#lab-cao rect[data-f="1"]').length; sorteios++; if (ord !== '012345' || e.fixos !== fx || des !== fx || e.valido !== (fx === 0)) ruins.push('sorteio ' + j); if (e.valido) validos++; document.querySelector('#lab-cao [data-b=sort]').click(); }
+    u.semente(12345); const repete = u.est().perm.join('');
+    u.poe({ perm: [0, 1, 2, 3, 4, 5] }); const todos = u.est(), st = document.querySelector('#lab-cao .status').textContent; u.poe({ perm: [1, 0, 3, 2, 5, 4] }); const nenhum = u.est();
+    u.poe({ n: 4 }); const q = u.est(); u.poe({ n: 5 }); u.semente(1);
+    return { ruins, sorteios, validos, primeira, repete, todos: todos.fixos + '|' + todos.valido, st, nenhum: nenhum.fixos + '|' + nenhum.valido, q: [q.total, q.caoticas, q.fracao].join('|') }; });
+  ok(c.ruins.length === 0 && c.primeira === c.repete && c.todos === '6|false' && /sortear de novo/.test(c.st) && c.nenhum === '0|true' && c.q === '24|9|0.375' && c.validos > 110 && c.validos < 185, `laboratório do amigo secreto: de 1 a 8 pessoas, o número de sorteios que valem coincide com a enumeração de todas as permutações (1, 0... até 14 833); 4 pessoas: 9 de 24 (0,375); com semente fixa o sorteio se repete; em ${c.sorteios} sorteios seguidos de 6 pessoas, todos são permutações de verdade, os pontos fixos contados batem com os destacados no desenho, e ${c.validos} valeram (esperado: perto de 147, que é 400 × 265/720)` + (c.ruins.length ? ' → ' + c.ruins.slice(0, 4).join('; ') : ''));
+  const n = await p.evaluate(() => { const Z = SIM.ar; return { d: [0, 1, 2, 3, 4, 5, 6, 7, 8].map(Z.caoticas).join(), r: Z.reparte(7, 3).length + '|' + Z.reparte(7, 3, 1).length + '|' + Z.reparte(3, 2).map((x) => x.join('+')).join(' ') }; });
+  ok(n.d === '1,0,1,2,9,44,265,1854,14833' && n.r === '36|15|0+3 1+2 2+1 3+0', 'núcleo: permutações caóticas 1, 0, 1, 2, 9, 44, 265, 1854, 14 833; 7 em 3 parcelas: 36 (15 positivas); 3 em 2 parcelas: 0+3, 1+2, 2+1, 3+0');
+};

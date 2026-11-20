@@ -451,5 +451,33 @@ def part_(n):
     return len(s)
 ok(part_(9) == 280 == cm_(9, 3) * cm_(6, 3) // 6 and 60 * 59 * 58 * 57 * 56 * 55 == 36045979200 and cm_(60, 6) == 50063860 and all(k * cm_(n, k) == n * cm_(n - 1, k - 1) for n in range(1, 30) for k in range(1, n + 1)), "CB03 chefão (b), (d) e (e): C(60, 6) = 50 063 860; 9 pessoas em 3 grupos de 3: 280 (enumerado); k · C(n, k) = n · C(n − 1, k − 1)")
 
+# ---------- CB04 ----------
+from itertools import product as pd4_, permutations as pm4_, combinations as cb4_
+from math import comb as c4_, factorial as f4_, e as e4_
+sol_ = lambda n, k, mn=0: len([v for v in pd4_(range(mn, n + 1), repeat=k) if sum(v) == n])
+ok(sol_(7, 3) == 36 == c4_(9, 2) and sol_(7, 3, 1) == 15 == c4_(6, 2) and all(sol_(n, k) == c4_(n + k - 1, k - 1) and sol_(n, k, 1) == c4_(n - 1, k - 1) for n in range(1, 11) for k in range(2, 5)), "CB04 abertura e teorema 1: x + y + z = 7 tem 36 soluções não negativas e 15 positivas; fórmulas conferidas por enumeração (n até 10, k até 4)")
+ok(len([x for x in range(1, 61) if x % 2 == 0 or x % 3 == 0 or x % 5 == 0]) == 44 == 30 + 20 + 12 - 10 - 6 - 4 + 2 and 30 + 20 + 12 == 62 and 62 - 20 == 42, "CB04 teorema 2 e exemplo 2: 44 múltiplos de 2, 3 ou 5 de 1 a 60")
+der_ = lambda n: len([p for p in pm4_(range(n)) if all(p[i] != i for i in range(n))])
+D_ = [1, 0, 1, 2, 9, 44, 265, 1854, 14833]
+ok([der_(n) for n in range(9)] == D_ and all(D_[n] == (n - 1) * (D_[n - 1] + D_[n - 2]) for n in range(2, 9)) and all(D_[n] == round(f4_(n) * sum((-1) ** k / f4_(k) for k in range(n + 1))) for n in range(9)) and 24 - 24 + 12 - 4 + 1 == 9, "CB04 teorema 3 e tabela: permutações caóticas enumeradas até n = 8 (1, 0, 1, 2, 9, 44, 265, 1854, 14 833), fórmula e recorrência")
+ok(sorted("".join(str(x + 1) for x in p) for p in pm4_(range(4)) if all(p[i] != i for i in range(4))) == "2143 2341 2413 3142 3412 3421 4123 4312 4321".split() and 24 - 9 == 15 and 9 / 24 == 0.375 and all(abs(D_[n] / f4_(n) - 1 / e4_) < 0.01 for n in range(4, 9)) and abs(1 / e4_ - 0.3679) < 0.00005, "CB04 exemplo 3, chute e ponte: as nove permutações caóticas de 1234 (lista); 15 das 24 têm ponto fixo; a fração fica a menos de 0,01 de 1/e ≈ 0,3679 a partir de n = 4")
+sv_ = lambda n, k: len([c for c in cb4_(range(n), k) if all(c[i + 1] - c[i] > 1 for i in range(k - 1))])
+ok(all(sv_(n, k) == c4_(n - k + 1, k) for n in range(2, 13) for k in range(1, 5) if n - k + 1 >= 0) and [tuple(x + 1 for x in c) for c in cb4_(range(5), 2) if c[1] - c[0] > 1] == [(1, 3), (1, 4), (1, 5), (2, 4), (2, 5), (3, 5)], "CB04 teorema 4: escolhas sem vizinhos, C(n − k + 1, k) (enumerado até n = 12), com a lista de 5 cadeiras")
+ok(c4_(8, 2) == 28 and c4_(7, 2) == 21 and c4_(8, 3) == 56 and c4_(6, 3) == 20 and 30 + 20 - 10 == 40 and len([x for x in range(1, 91) if x % 3 and x % 5]) == 48 and D_[4] == 9 and c4_(5, 3) == 10 and len([x for x in range(1, 91) if x % 2 == 0 or x % 3 == 0 or x % 5 == 0]) == 66 and 5 * D_[4] == 45, "CB04 exercícios 1 a 11 (primeiro acesso): 28; 21; 56; 56; 20; 40; 48; 9; 10; 66; 45")
+ok(c4_(8, 3) == 56 == sol_(5, 4) and c4_(6, 3) == 20, "CB04 exercícios 3 e 5 (primeiro acesso): 5 bombons para 4 crianças, 56; pote de 3 bolas com 4 sabores, 20")
+um_ = lambda n, j: len([p for p in pm4_(range(n)) if len([i for i in range(n) if p[i] == i]) == j])
+ok(all(um_(n, 1) == n * D_[n - 1] for n in range(3, 8)) and all(um_(n, 2) == c4_(n, 2) * D_[n - 2] for n in range(4, 8)) and um_(5, 2) == 20, "CB04 exercícios 11 e 16: exatamente um ponto fixo (n · D(n − 1)) e exatamente dois (C(n, 2) · D(n − 2)), enumerados até n = 7")
+sob_ = lambda n: len([f for f in pd4_(range(3), repeat=n) if len(set(f)) == 3])
+ok(all(sob_(n) == 3 ** n - 3 * 2 ** n + 3 for n in range(3, 8)) and sob_(4) == 36 and 3 ** 7 == 2187, "CB04 exercício 13 e pegadinha: distribuições de n tarefas a 3 funcionários sem ninguém ocioso (36 para n = 4), enumeradas; 3⁷ = 2187")
+def cam_(a, b, proib=None):
+    def vai(x, y):
+        if (x, y) == proib: return 0
+        if (x, y) == (a, b): return 1
+        return (vai(x + 1, y) if x < a else 0) + (vai(x, y + 1) if y < b else 0)
+    return vai(0, 0)
+ok(all(cam_(a, b, (i, j)) == c4_(a + b, a) - c4_(i + j, i) * c4_(a - i + b - j, a - i) for a, b, i, j in [(4, 4, 2, 2), (4, 3, 2, 1), (5, 3, 2, 2), (4, 4, 1, 2), (5, 4, 3, 2), (3, 3, 1, 1), (5, 3, 3, 1)]) and cam_(4, 4, (2, 2)) == 34, "CB04 exercício 14: caminhos que evitam uma esquina, contados passo a passo (34 na grade 4 × 4 evitando o centro)")
+ok(c4_(9, 2) == 36 and len([1 for x in range(3, 11) for y in range(11 - x)]) == 36 and len([1 for x in range(6) for y in range(6) for z in range(6) if x + y + z <= 5]) == 56 == c4_(8, 3), "CB04 exercícios 12 e 15 (primeiro acesso): 36; 56")
+ok(len([1 for x in range(1, 11) for y in range(1, 11) for z in range(1, 11) if x + y + z == 20]) == 63 == c4_(19, 2) - 3 * c4_(9, 2) and len([x for x in range(1, 1001) if x % 2 and x % 3 and x % 5]) == 266 and 500 + 333 + 200 - 166 - 100 - 66 + 33 == 734 and D_[6] == 5 * (44 + 9) == 265, "CB04 chefão (b), (c) e (e): 63 soluções; 266 números; D(6) = 265")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)
