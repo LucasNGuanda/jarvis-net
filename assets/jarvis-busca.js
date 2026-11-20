@@ -104,7 +104,7 @@
       const n = v.t.length, minimo = folga ? 0.5 : n <= 2 ? 1 : 0.6, frase = v.t.join(" ");
       for (const [i, [s, ac, ws]] of porUn) {
         const cob = ac / n; if (cob < minimo) continue; const u = B.un[i];
-        let nota = s * cob * cob * v.peso; if (n > 1 && norm([u.titulo, u.nome, u.secaoTit].join(" ")).includes(frase)) nota *= 1.5; if (u.tipo === "tema" && !u.pronto) nota *= 0.85; if (u.ferramenta) nota *= 1.25; /* aba-ferramenta: empata com os temas no peso; o empurrão a deixa entre os primeiros */
+        let nota = s * cob * cob * v.peso; if (n > 1 && norm([u.titulo, u.nome, u.secaoTit].join(" ")).includes(frase)) nota *= 1.5; if (u.tipo === "tema" && !u.pronto) nota *= 0.85; if (u.ferramenta) nota *= 1.5; /* aba-ferramenta: empata com os temas no peso; o empurrão a deixa entre os primeiros */
         /* o TÍTULO vale mais que o corpo: título igual ao que foi digitado sobe bastante; título que começa assim, um pouco */
         if (!u.secao && !v.sin) { const tit = toks(u.tipo === "tema" ? u.nome : u.titulo).join(" "); if (tit === frase) nota *= 1.6; else if (tit.startsWith(frase + " ")) nota *= 1.3; else if (n === 1 && (" " + tit + " ").includes(" " + frase + " ")) nota *= 1.1; }
         if (v.sin && u.secao) nota *= 0.8; /* sinônimo aponta para temas, não para um trecho solto */

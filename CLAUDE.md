@@ -149,7 +149,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 - Convenções do leitor (decididas aqui): −x² = −(x²); x^2^3 = x^(2^3); 1/2x = (1/2)·x; sen 2x = sen(2x); vírgula entre dois algarismos é decimal (log(2,8) = log de 2,8; base e valor se separam com espaço ou ponto e vírgula); letra sozinha é parâmetro, menos x, e, π e, numa sequência, n; fora do domínio o valor é "sem valor" e nada é desenhado.
 - Salvo só em `mat:graficos` (funções, parâmetros em uso e vista). "Limpar tudo" remove essa chave e mais nada.
 - Aviso de celular: mesmo texto e mesma chave (`fisica:aviso-cel`, campo `graficos`) das outras ferramentas. O `TABELA.avisoCel` só existe na branch `jarvis-melhorias`; aqui o aviso é escrito na própria página, para não depender dela. Quando as duas branches estiverem no `main`, dá para trocar pela função comum.
-- Busca: unidade de aba com `pagina` pesa como tema e ganha um fator 1,25 (`u.ferramenta`), para aparecer entre os primeiros sem passar na frente do tema de título igual à busca.
+- Busca: unidade de aba com `pagina` pesa como tema e ganha um fator 1,5 (`u.ferramenta`; era 1,25 antes de a busca dar peso extra ao título, na α 0.1), para aparecer entre os primeiros sem passar na frente do tema de título igual à busca.
 
 ## Publicação (decisão do autor, 18/11/2026)
 - O repositório é **público** e o site é publicado pelo GitHub Pages em https://lucasnguanda.github.io/site-fisica/.
@@ -164,7 +164,7 @@ Leia este arquivo e o `PROGRESSO.md` antes de qualquer coisa. Não pergunte de n
 ## Regra fixa
 - Sempre que eu decidir algo novo, atualize o CLAUDE.md na mesma hora. Sempre que terminar um tema ou tarefa, atualize o PROGRESSO.md. Nunca termine uma sessão sem os dois atualizados.
 - Entregas grandes (pedido de 15/11/2026, como na mudança do Cálculo e no acesso/Jarvis): trabalhar numa branch, mandar o ZIP com a lista do que testar e só juntar ao `main` depois que o autor aprovar.
-- Versão: cada entrega soma 0,1 (`VERSAO` em `assets/catalogo.js`, título do `index.html`, `README.md`). Commit e push no `main` de LucasNGuanda/site-fisica.
+- **Versão ALFA (decisão do autor, 20/11/2026: "já está na hora de sairmos da versão beta e irmos para a alfa ... coloque versão alfa 0.1 ... a cada coisa que você colocar no main some 0.1"):** o site deixou a β (a última foi a β 11.6) e passou a **α 0.1**. A partir daí, **cada coisa que entra no `main` soma 0,1** (α 0.2, α 0.3, …); trabalho em branch não mexe na versão: ela só muda na hora de entrar no `main`. Três lugares: `VERSAO` em `assets/catalogo.js`, título do `index.html`, `README.md`. O `tacesso` confere o formato "α x.y". As menções antigas a "β x.y" neste arquivo e no PROGRESSO são história e ficam como estão.
 
 ## Sessão de química (regras combinadas em 15/11/2026)
 - Ordem: módulos A → B → C → D → E → F (Modalidade A da OBQ); depois eletroquímica, orgânica, analítica e os experimentos. Um tema por vez.
