@@ -344,5 +344,24 @@ ok(sol_ == [(2, 5, 7, 8, 8)], "EF03 chefão (c): busca exaustiva (inteiros de 0 
 A_ = [4] * 10 + [8] * 10; B_ = [6] * 15 + [8] * 15
 ok(est_(A_)["m"] == 6 and est_(A_)["var"] == 4 and est_(B_)["m"] == 7 and est_(B_)["var"] == 1 and est_(A_ + B_)["m"] == Fr(66, 10) and est_(A_ + B_)["var"] == Fr(244, 100), "EF03 chefão (e): turmas concretas (média 6, variância 4; média 7, variância 1) juntas dão 6,6 e 2,44")
 
+# ---------- EF04 ----------
+from itertools import product as prd_
+from math import isqrt as isq_
+ok(Fr(4 + 16, 2) == 10 and isq_(4 * 16) == 8 and Fr(2 * 4 * 16, 20) == Fr(64, 10) and Fr(16 + 256, 2) == 136 and abs(136 ** 0.5 - 11.66) < 0.005 and (4 - 2) ** 2 == 4 and 20 - 16 == 4, "EF04: 4 e 16: aritmética 10, geométrica 8, harmônica 6,4, quadrática √136 ≈ 11,66")
+# cadeia com inteiros, sem raiz: MH ≤ MG ⇔ 4a²b² ≤ ab(a+b)²; MG ≤ MA ⇔ 4ab ≤ (a+b)²; MA ≤ MQ ⇔ (a+b)² ≤ 2(a²+b²)
+ok(all((4 * a * a * b * b <= a * b * (a + b) ** 2) and (4 * a * b <= (a + b) ** 2) and ((a + b) ** 2 <= 2 * (a * a + b * b)) and ((4 * a * b == (a + b) ** 2) == (a == b)) and (((a + b) ** 2 == 2 * (a * a + b * b)) == (a == b)) and ((4 * a * a * b * b == a * b * (a + b) ** 2) == (a == b)) for a in range(1, 41) for b in range(1, 41)), "EF04 teoremas 1 e 2: harmônica ≤ geométrica ≤ aritmética ≤ quadrática nos 1600 pares de 1 a 40, com igualdade só em a = b")
+ok(all(Fr(a + b, 2) ** 2 - Fr(a - b, 2) ** 2 == a * b for a in range(1, 30) for b in range(1, 30)), "EF04 figura: ((a + b)/2)² − ((a − b)/2)² = ab (altura do semicírculo)")
+ok([x * (10 - x) for x in range(1, 6)] == [9, 16, 21, 24, 25] and all(x * (S - x) == Fr(S, 2) ** 2 - (x - Fr(S, 2)) ** 2 for S in range(2, 40) for x in range(1, S)) and 9 * 1 == 9 and 7 * 3 == 21, "EF04 teorema 3 e abertura: soma 10 dá produtos 9, 16, 21, 24, 25; x(S − x) = (S/2)² − (x − S/2)²")
+ok(all((a + b + c) ** 3 >= 27 * a * b * c and (((a + b + c) ** 3 == 27 * a * b * c) == (a == b == c)) for a, b, c in prd_(range(1, 10), repeat=3)) and all((a + b + c + d) ** 4 >= 256 * a * b * c * d for a, b, c, d in prd_(range(1, 10), repeat=4)), "EF04 teorema 4: aritmética ≥ geométrica para ternas e quádruplas de 1 a 9 (igualdade nas ternas só com os três iguais)")
+ok(Fr(15, 4) == Fr(375, 100) and abs(64 ** 0.25 - 2.83) < 0.005 and abs(14 / 3 - 4.67) < 0.005 and round(64 ** (1 / 3), 9) == 4, "EF04 teorema 4, números: 1, 2, 4, 8 → 3,75 e ≈ 2,83; 2, 4, 8 → ≈ 4,67 e 4")
+ok(Fr(240, 3 + 2) == 48 and Fr(120, 40) == 3 and Fr(120, 60) == 2 and Fr(2 * 40 * 60, 100) == 48, "EF04 chute: 240 km em 5 h dão 48 km/h, a média harmônica de 40 e 60")
+ok(2 * 3 + Fr(18, 3) == 12 and isq_(2 * 18) == 6 and Fr(18, 2) == 9 and Fr(40 * 40, 8) == 200 and 20 + 2 * 10 == 40 and 20 * 10 == 200, "EF04 exemplos 2 e 3 (primeiro acesso): mínimo 12 em x = 3; cercado de 200 m² (20 por 10)")
+ok(all(a * (L - 2 * a) <= L * L / 8 + 1e-9 for L in (20, 24, 40, 60, 80, 100) for a in [k / 100 for k in range(1, 50 * L)]), "EF04 exemplo 3: numa grade fina, nenhuma largura dá área acima de L²/8")
+ok(Fr(7 + 12, 2) == Fr(19, 2) and isq_(3 * 12) == 6 and Fr(2 * 3 * 6, 9) == 4 and Fr(1 + 49, 2) == 25 and Fr(14, 2) ** 2 == 49 and 2 * 6 == 12 and 2 * 5 == 10 and Fr(36, 4) ** 2 == 81 and 4 * 9 == 36, "EF04 exercícios 1 a 11 (primeiro acesso): 9,5; 6; 4; 5; 49; 12; 10; 81 cm²; 36 m")
+ok(2 * 4 * 8 == 4 ** 3 and Fr(24 * 24, 24) == 24 and 2 * 6 == 3 * 4 == 12 and 2 * isq_(3 * 12) == 12 and Fr(12, 3) ** 3 == 64 and Fr(180, 100) * Fr(125, 100) == Fr(225, 100) and Fr(15, 10) ** 2 == Fr(225, 100), "EF04 exercícios 12 a 16 (primeiro acesso): 4; 24 (x = 6, y = 4); 12; 64 dm³; 50% ao ano")
+gr_ = [k / 1000 for k in range(1, 20000)]
+ok(abs(min(x * x + 16 / x for x in gr_) - 12) < 1e-9 and 2 ** 2 + Fr(16, 2) == 12 and 2 * 2 * Fr(8, 2) * Fr(8, 2) == 64 and abs(max(x * x * (6 - 2 * x) for x in gr_ if x < 3) - 8) < 1e-9 and 2 * 2 * (6 - 4) == 8, "EF04 chefão (c) e (e): numa grade fina, mínimo de x² + 16/x é 12 (em x = 2) e máximo de x²(6 − 2x) é 8 (em x = 2)")
+ok(all(Fr(a, b) + Fr(b, a) >= 2 and (a + b) * (Fr(1, a) + Fr(1, b)) >= 4 for a in range(1, 30) for b in range(1, 30)) and all(a * a + b * b + c * c >= a * b + b * c + c * a for a, b, c in prd_(range(1, 12), repeat=3)), "EF04 chefão (a), (b) e (d): conferidos em todos os inteiros pequenos")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)

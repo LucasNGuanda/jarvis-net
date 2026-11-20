@@ -123,4 +123,46 @@
       q("[data-v=st]").innerHTML = e.vazio ? "Ponha pelo menos um aluno." : `Cada nota conta tantas vezes quantos alunos a tiraram: soma = ${xs.map((x, i) => (fs[i] ? `${x} · ${fs[i]}` : null)).filter(Boolean).join(" + ")} = ${e.sxf}, e a média é ${e.sxf} ÷ ${e.n} = ${nt(e.media)}. Divide-se pelo número de <b>alunos</b> (${e.n}), não pelo número de linhas da tabela (6). Para a variância, o atalho: média dos quadrados menos o quadrado da média = ${nt(e.sx2f / e.n)} − ${nt(e.media ** 2)} = ${nt(e.atalho)}.`; };
     xs.forEach((_, i) => q(`[data-v=f${i}]`).addEventListener("input", (ev) => { const n = fs.slice(); n[i] = ev.target.value; poe({ fs: n }); }));
     SIM.arFreq._ult = { poe, est }; desenha(); };
+
+  /* ---------- EF04 ---------- */
+  /* as quatro médias de uma lista de números positivos */
+  R.medias = (v) => { const n = v.length; return { ma: v.reduce((a, b) => a + b, 0) / n, mg: Math.pow(v.reduce((a, b) => a * b, 1), 1 / n), mh: n / v.reduce((a, b) => a + 1 / b, 0), mq: Math.sqrt(v.reduce((a, b) => a + b * b, 0) / n) }; };
+  /* semicírculo de diâmetro a + b: o raio é a média aritmética e a altura no ponto de emenda é a geométrica. o = { semNum } */
+  R.semiFig = (a, b, D, o = {}) => { const W = 560, H = o.h || 240, d = a + b, k = 360 / d, x0 = 100, y0 = H - 40, r = (d / 2) * k, cx = x0 + r, px = x0 + a * k, hg = Math.sqrt(a * b) * k, ma = d / 2, mg = Math.sqrt(a * b), e = 1, Y = (h) => y0 - h * e;
+    let s = `<path d="M ${x0} ${y0} A ${r} ${r * e} 0 0 1 ${x0 + 2 * r} ${y0}" style="fill:var(--mod);fill-opacity:.08;stroke:var(--ink3);stroke-width:1.5"/><line x1="${x0}" y1="${y0}" x2="${x0 + 2 * r}" y2="${y0}" style="stroke:var(--ink2);stroke-width:1.5"/>`;
+    s += `<line x1="${px}" y1="${y0}" x2="${px}" y2="${Y(hg)}" style="stroke:var(--warn);stroke-width:3"/><line x1="${cx}" y1="${y0}" x2="${cx}" y2="${Y(r)}" style="stroke:var(--ok);stroke-width:3"/><circle cx="${px}" cy="${y0}" r="3.5" style="fill:var(--ink2)"/>`;
+    s += T((x0 + px) / 2, y0 + 18, o.semNum ? "a" : "a = " + nt(a), { f: 12, c: "var(--ink2)" }) + T((px + x0 + 2 * r) / 2, y0 + 18, o.semNum ? "b" : "b = " + nt(b), { f: 12, c: "var(--ink2)" });
+    const lado = px <= cx ? -1 : 1; s += T(cx - lado * 8, Y(r / 2), o.semNum ? "raio" : "raio = " + nt(ma), { f: 11, w: 700, c: "var(--ok)", a: lado < 0 ? "start" : "end" }) + (Math.abs(px - cx) > 4 || o.semNum ? T(px + lado * 8, Y(hg / 2), o.semNum ? "altura" : "altura = " + nt(mg), { f: 11, w: 700, c: "var(--warn)", a: lado < 0 ? "end" : "start" }) : "");
+    return D ? D.svg(W, H, s, "figura") : `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block;margin:0 auto">${s}</svg>`; };
+  /* retângulo com os lados rotulados. o = { rw, rh, esc (unidades que cabem na largura), fantasma: lado do quadrado tracejado, dentro } */
+  R.retFig = (w, h, D, o = {}) => { const W = 560, H = o.H || 190, k = Math.min(400 / (o.esc || w), (H - 50) / (o.escH || h)), rw = w * k, rh = h * k, x = (W - rw) / 2, y = (H - 30 - rh) / 2 + 4; let s = "";
+    if (o.fantasma) { const q = o.fantasma * k; s += `<rect x="${(W - q) / 2}" y="${(H - 30 - q) / 2 + 4}" width="${q}" height="${q}" rx="3" style="fill:none;stroke:var(--ok);stroke-width:1.5;stroke-dasharray:6 5"/>`; }
+    s += `<rect x="${x}" y="${y}" width="${rw}" height="${rh}" rx="3" style="fill:var(--mod);fill-opacity:.22;stroke:var(--mod);stroke-width:2"/>` + T(W / 2, Math.max(y + rh, o.fantasma ? (H - 30 + o.fantasma * k) / 2 + 4 : 0) + 17, o.rw === undefined ? nt(w) : o.rw, { f: 12, c: "var(--ink2)" }) + T(Math.min(x, o.fantasma ? (W - o.fantasma * k) / 2 : x) - 8, y + rh / 2 + 4, o.rh === undefined ? nt(h) : o.rh, { f: 12, c: "var(--ink2)", a: "end" }) + (o.dentro ? T(W / 2, y + rh / 2 + 4, o.dentro, { f: 12, w: 700, c: "var(--ink)" }) : "");
+    return D ? D.svg(W, H, s, "figura") : `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block;margin:0 auto">${s}</svg>`; };
+
+  /* nome: "Semicírculo das médias: o raio nunca perde da altura" · matéria: Matemática · tema: EF04 */
+  SIM.arMedias = (el, F) => { let a = 4, b = 16;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("a", "a", 1, 20, a, 160)}${sl("b", "b", 1, 20, b, 160)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => Object.assign({ a, b, iguais: a === b }, R.medias([a, b]));
+    const poe = (o) => { ({ a, b } = { a, b, ...o }); a = Math.max(1, Math.min(20, Math.round(+a))); b = Math.max(1, Math.min(20, Math.round(+b))); desenha(); };
+    const desenha = () => { const e = est(); ["a", "b"].forEach((k) => { q(`[data-v=${k}]`).value = String({ a, b }[k]); q(`[data-r=${k}]`).textContent = { a, b }[k]; });
+      q("[data-v=pal]").innerHTML = R.semiFig(a, b, null);
+      q("[data-v=lt]").innerHTML = vis("harmônica", nt(e.mh)) + vis("geométrica", nt(e.mg)) + vis("aritmética", nt(e.ma)) + vis("quadrática", nt(e.mq));
+      q("[data-v=st]").innerHTML = `O diâmetro mede a + b = ${a + b}, então o raio é a média <b>aritmética</b>, ${nt(e.ma)}. A altura levantada no ponto que separa a de b mede √(a · b) = √${a * b}, a média <b>geométrica</b>, ${nt(e.mg)}. Nenhuma altura dentro do semicírculo passa do raio: ${e.iguais ? "com a = b a altura está no centro e <b>é</b> o raio. As quatro médias coincidem." : `por isso ${nt(e.mg)} &lt; ${nt(e.ma)}. Na ordem: harmônica &lt; geométrica &lt; aritmética &lt; quadrática. Aproxime a de b e veja as quatro se juntarem.`}`; };
+    ["a", "b"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
+    SIM.arMedias._ult = { poe, est }; desenha(); };
+
+  /* nome: "Soma fixa: qual retângulo tem a maior área?" · matéria: Matemática · tema: EF04 */
+  SIM.arSomaFixa = (el, F) => { let S = 20, x = 4;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("S", "soma dos dois lados", 4, 40, S, 160)}${sl("x", "largura", 1, 39, x, 220)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => ({ S, x, y: S - x, area: x * (S - x), maxima: (S * S) / 4, falta: (S / 2 - x) ** 2, perimetro: 2 * S, quadrado: 2 * x === S });
+    const poe = (o) => { ({ S, x } = { S, x, ...o }); S = Math.max(4, Math.min(40, Math.round(+S))); x = Math.max(1, Math.min(S - 1, Math.round(+x))); desenha(); };
+    const desenha = () => { const e = est(); q("[data-v=x]").max = String(S - 1); ["S", "x"].forEach((k) => { q(`[data-v=${k}]`).value = String({ S, x }[k]); q(`[data-r=${k}]`).textContent = { S, x }[k]; });
+      q("[data-v=pal]").innerHTML = R.retFig(x, e.y, null, { esc: S, escH: S, H: 250, fantasma: S / 2, dentro: "área " + nt(e.area) });
+      q("[data-v=lt]").innerHTML = vis("lados", `${x} e ${e.y}`) + vis("perímetro", e.perimetro) + vis("área", nt(e.area)) + vis("área do quadrado", nt(e.maxima)) + vis("quanto falta", nt(e.falta));
+      q("[data-v=st]").innerHTML = `Os dois lados somam sempre ${S} (perímetro ${e.perimetro}). A área é ${x} · ${e.y} = ${nt(e.area)}. O quadrado tracejado, de lado ${nt(S / 2)}, tem área ${nt(e.maxima)}. ${e.quadrado ? "O retângulo <b>é</b> o quadrado: a área não passa disso." : `Faltam ${nt(e.falta)}, que é exatamente o quadrado da distância da largura até ${nt(S / 2)}: (${nt(S / 2)} − ${x})² = ${nt(e.falta)}. Quanto mais perto do quadrado, maior a área.`}`; };
+    ["S", "x"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
+    SIM.arSomaFixa._ult = { poe, est }; desenha(); };
 })();
