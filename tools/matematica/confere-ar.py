@@ -106,5 +106,39 @@ ok(all(any(v == 3 * a + 5 * b for a in range(40) for b in range(25)) for v in ra
 ok(fat(60) == {2: 2, 3: 1, 5: 1} and 6 * 10 == 60, "TN02 teorema 5: 60 = 6·10 = 2·3·2·5")
 ok(1 != 1 * 2 // 2 + 5 and all(k * (k + 1) / 2 + 5 + (k + 1) == (k + 1) * (k + 2) / 2 + 5 for k in G5), "TN02 pegadinha e exercício 9: o passo da fórmula falsa é identidade, e a base falha (1 ≠ 6)")
 
+# ---------- TN03 ----------
+ok(38 % 12 == 14 % 12 == 2 and (38 - 14) % 12 == 0 and 16 % 7 == 2 and 24 % 7 == 3 and 40 == 7 * 5 + 5 and 16 * 24 == 384 == 7 * 54 + 6, "TN03: 38 ≡ 14 (mod 12); 16 ≡ 2 e 24 ≡ 3 (mod 7); 40 → 5; 384 → 6")
+ok(all((a + c) % m == (a % m + c % m) % m and (a * c) % m == ((a % m) * (c % m)) % m and (a - c) % m == (a % m - c % m) % m for m in range(2, 25) for a in range(0, 41) for c in range(0, 41)), "TN03 teorema 1: soma, diferença e produto podem ser feitos nos restos (m até 24, números até 40)")
+ok(all(pow(a, n, m) == pow(a % m, n, m) == (a ** n) % m for m in range(2, 20) for a in range(1, 30) for n in range(1, 12)), "TN03 teorema 1: potência com a base trocada pelo resto")
+ok(6 % 4 == 2 % 4 and 3 % 4 != 1 % 4 and (-5) % 7 == 2 and (12 * 19) % 7 == 4 == (5 * 5) % 7 and 12 % 7 == 5 == 19 % 7 and 228 == 7 * 32 + 4, "TN03 pegadinha e chute: 6 ≡ 2 mas 3 ≢ 1 (mod 4); −5 ≡ 2 (mod 7); 12·19 = 228 → 4")
+ok([pow(7, k, 10) for k in range(1, 6)] == [7, 9, 3, 1, 7] and 2026 == 4 * 506 + 2 and pow(7, 2026, 10) == 9 and len(str(7 ** 2026)) == 1713, "TN03 abertura: ciclo 7, 9, 3, 1; 7²⁰²⁶ termina em 9 e tem 1713 algarismos")
+ok([pow(3, k, 7) for k in range(1, 7)] == [3, 2, 6, 4, 5, 1] and [pow(2, k, 10) for k in range(1, 9)] == [2, 4, 8, 6, 2, 4, 8, 6], "TN03 teorema 2: potências de 3 módulo 7 e de 2 módulo 10")
+
+
+def periodo(a, m):
+    visto, v, k = {}, a % m, 1
+    while v not in visto:
+        visto[v] = k
+        v = v * a % m
+        k += 1
+    return visto[v] - 1, k - visto[v]
+
+
+ok(all((periodo(a, m)[0] == 0 and pow(a, periodo(a, m)[1], m) == 1) for m in range(2, 60) for a in range(1, 60) if gcd(a, m) == 1), "TN03 teorema 2: com mdc 1 o ciclo começa no início e passa pelo 1 (a e m até 59)")
+primos = [q for q in range(2, 100) if all(q % d for d in range(2, q))]
+ok(all(pow(a, q - 1, q) == 1 for q in primos for a in range(1, 200) if a % q), "TN03 teorema 3 (Fermat): a^(p − 1) ≡ 1 para os primos até 97")
+ok(sorted((3 * k) % 7 for k in range(1, 7)) == [1, 2, 3, 4, 5, 6] and [(3 * k) % 7 for k in range(1, 7)] == [3, 6, 2, 5, 1, 4] and 3 ** 6 == 729 == 7 * 104 + 1, "TN03 teorema 3: 3, 6, 2, 5, 1, 4 e 3⁶ = 729 = 7·104 + 1")
+ok(all(sorted((a * k) % q for k in range(1, q)) == list(range(1, q)) for q in primos for a in range(1, q)), "TN03 teorema 3: a, 2a, …, (p − 1)a são 1, …, p − 1 em outra ordem")
+ok((5 * 3) % 7 == 1 and (3 * 3) % 7 == 2 and (5 * 2) % 7 == 3 and (3 * 7) % 10 == 1 and [(4 * k) % 10 for k in range(1, 6)] == [4, 8, 2, 6, 0] and gcd(4, 10) == 2, "TN03 teorema 4: inverso de 5 (mod 7) é 3; 5x ≡ 3 dá x ≡ 2; 3·7 ≡ 1 (mod 10); 4 não tem inverso módulo 10")
+ok(all((gcd(a, m) == 1) == any((a * u) % m == 1 for u in range(m)) for m in range(2, 61) for a in range(1, m)), "TN03 teorema 4: existe inverso exatamente quando o mdc é 1 (m até 60)")
+ok(pow(3, 100, 7) == 4 and 100 == 6 * 16 + 4 and pow(3, 4, 7) == 4, "TN03 exemplo 1 (primeiro acesso): 3¹⁰⁰ ≡ 4 (mod 7)")
+ok(all(pow(8, n, 7) == 1 and (2 ** (3 * n) - 1) % 7 == 0 for n in range(1, 60)), "TN03 chefão (a): 2^(3n) − 1 é múltiplo de 7")
+ok(sorted(set(x * x % 4 for x in range(100))) == [0, 1] and 2023 == 4 * 505 + 3 and not any(x * x + y * y == 2023 for x in range(46) for y in range(46)), "TN03 chefão (b): quadrados deixam 0 ou 1 por 4; 2023 ≡ 3; x² + y² = 2023 não tem solução")
+ok(pow(3, 2025, 7) == 6 and 2025 == 6 * 337 + 3 and pow(7, 2026, 100) == 49 and [pow(7, k, 100) for k in range(1, 5)] == [7, 49, 43, 1] and 43 * 7 == 301, "TN03 chefão (c) e (d): 3²⁰²⁵ ≡ 6 (mod 7); 7²⁰²⁶ termina em 49")
+ok(min(x for x in range(1, 100) if x % 3 == 2 and x % 5 == 3) == 8 and [x for x in range(1, 50) if x % 3 == 2 and x % 5 == 3] == [8, 23, 38], "TN03 chefão (e): menor solução 8, e as outras de 15 em 15")
+ok(sorted(set(x * x % 10 for x in range(10))) == [0, 1, 4, 5, 6, 9] and [x * x % 10 for x in range(10)] == [0, 1, 4, 9, 6, 5, 6, 9, 4, 1], "TN03 exercício 15: últimos algarismos dos quadrados")
+ok(pow(2, 100, 13) == 3 and (347 * 26) % 9 == (5 * 8) % 9 == 4 and 347 * 26 == 9022 and 9122 % 9 == 5 and (-5) % 7 == 100 % 7 == 2, "TN03 exercícios 11, 13 e 8 (primeiro acesso): 2¹⁰⁰ ≡ 3 (mod 13); 347·26 = 9022 e 9122 falha na prova dos nove; −5 ≡ 100 (mod 7)")
+ok(all(int(str(d) * k) % 11 == (d if k % 2 else 0) and int(str(d) * k) % 9 == (d * k) % 9 for d in range(1, 10) for k in range(1, 60)), "TN03 exercício 16: resto de dd…d por 11 e por 9")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)
