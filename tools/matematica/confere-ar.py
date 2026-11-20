@@ -70,5 +70,41 @@ ok(mmc(mmc(12, 18), 30) == 180 and gcd(180, 252) == 36 and (180 // 36) * (252 //
 ok(len([x for x in range(1, 101) if x % 2 == 0 or x % 3 == 0]) == 67 == 50 + 33 - 16, "TN01 exercício 10 (primeiro acesso): 67 múltiplos de 2 ou de 3 até 100")
 ok(1014 % 6 == 0 and all(x % 6 for x in [1004, 1010, 1015, 1021]) and 40 % gcd(12, 18) != 0, "TN01 exercícios 8 e 13 (primeiro acesso): só 1014 é divisível por 6; 40 não é múltiplo de 6")
 
+# ---------- TN02 ----------
+R200 = range(1, 201)
+ok(all(sum(range(1, n + 1)) == n * (n + 1) // 2 for n in R200) and sum(range(1, 5)) == 10 and sum(range(1, 6)) == 15, "TN02 teorema 1: 1 + … + n = n(n + 1)/2 até 200; 10 e 15")
+ok(all(6 * sum(k * k for k in range(1, n + 1)) == n * (n + 1) * (2 * n + 1) for n in R200) and 1 + 4 + 9 == 14 and 14 + 16 == 30 == 4 * 5 * 9 // 6, "TN02 teorema 2: soma dos quadrados até 200; 14 e 30")
+ok(all(sum(k ** 3 for k in range(1, n + 1)) == (n * (n + 1) // 2) ** 2 for n in R200), "TN02 e chefão (a): soma dos cubos = quadrado da soma, até 200")
+ok(all(sum(2 * k - 1 for k in range(1, n + 1)) == n * n for n in R200) and sum(range(1, 14, 2)) == 49 and 49 + 15 == 64, "TN02: soma dos ímpares = n²; 1 + 3 + … + 13 = 49 e 49 + 15 = 64")
+ok(all(3 * sum(k * (k + 1) for k in range(1, n + 1)) == n * (n + 1) * (n + 2) for n in R200) and all(sum(2 * k for k in range(1, n + 1)) == n * (n + 1) for n in R200), "TN02 exemplo 1: 1·2 + … + n(n + 1) = n(n + 1)(n + 2)/3 e 2 + 4 + … + 2n = n(n + 1), até 200")
+G5 = [Fr(-3), Fr(0), Fr(1, 2), Fr(2), Fr(7)]
+ok(all(k * (k + 1) * (k + 2) / 3 + (k + 1) * (k + 2) == (k + 1) * (k + 2) * (k + 3) / 3 and k * k + 2 * k + 1 == (k + 1) ** 2 and k * (k + 1) + 2 * (k + 1) == (k + 1) * (k + 2) for k in G5), "TN02 exemplo 1: as três contas do passo são identidades")
+ok(all(k * (k + 1) / 2 + (k + 1) == (k + 1) * (k + 2) / 2 and k * (k + 1) * (2 * k + 1) / 6 + (k + 1) ** 2 == (k + 1) * (k + 2) * (2 * k + 3) / 6 and 2 * k * k + 7 * k + 6 == (k + 2) * (2 * k + 3) for k in G5), "TN02 teoremas 1 e 2: os passos são identidades")
+ok(all((k * (k + 1) / 2) ** 2 + (k + 1) ** 3 == ((k + 1) * (k + 2) / 2) ** 2 for k in G5), "TN02 chefão (a): o passo da soma dos cubos é identidade")
+ok(all((a ** n - 1) % (a - 1) == 0 for a in (4, 5, 6, 7, 9) for n in range(1, 60)) and (4 ** 4 - 1) == 255 == 3 * 85, "TN02 teorema 3 e exemplo 2: aⁿ − 1 é múltiplo de a − 1; 255 = 3·85")
+ok(all((4 ** n + 6 * n - 1) % 9 == 0 for n in range(1, 80)), "TN02 exercício 10: 4ⁿ + 6n − 1 é múltiplo de 9")
+ok([n for n in range(1, 60) if not 2 ** n > n * n] == [2, 3, 4] and all(2 * k * k >= (k + 1) ** 2 for k in range(3, 300)) and 2 * 2 * 2 < 9, "TN02 teorema 4: 2ⁿ > n² falha só em 2, 3, 4; 2k² ≥ (k + 1)² a partir de k = 3")
+ok(max(n for n in range(1, 60) if not factorial(n) > 2 ** n) == 3 and max(n for n in range(1, 60) if not factorial(n) > 3 ** n) == 6 and max(n for n in range(1, 60) if not 2 ** n > n ** 3) == 9 and max(n for n in range(1, 60) if not 2 ** n > 10 * n) == 5, "TN02 exercício 6: n! > 2ⁿ desde 4; n! > 3ⁿ desde 7; 2ⁿ > n³ desde 10; 2ⁿ > 10n desde 6")
+ok(all((1 + x) ** n >= 1 + n * x for x in [Fr(-1), Fr(-1, 2), Fr(0), Fr(1, 3), Fr(2)] for n in range(1, 40)), "TN02 chefão (b): Bernoulli em cinco valores de x")
+
+
+def hanoi(n):
+    return 1 if n == 1 else 2 * hanoi(n - 1) + 1
+
+
+ok(all(hanoi(n) == 2 ** n - 1 for n in range(1, 20)), "TN02 exercício 11: a recorrência a(n + 1) = 2a(n) + 1 dá 2ⁿ − 1")
+ok(all(sum(Fr(1, k * (k + 1)) for k in range(1, n + 1)) == Fr(n, n + 1) for n in range(1, 120)), "TN02 exercício 8: 1/(1·2) + … + 1/(n(n + 1)) = n/(n + 1)")
+ok(all(sum(k * factorial(k) for k in range(1, n + 1)) == factorial(n + 1) - 1 for n in range(1, 30)) and [1, 5, 23, 119] == [factorial(n + 1) - 1 for n in range(1, 5)], "TN02 exercício 15: 1·1! + … + n·n! = (n + 1)! − 1; somas parciais 1, 5, 23, 119")
+ok([1 + n * (n + 1) // 2 for n in (1, 2, 3)] == [2, 4, 7], "TN02 exercício 13: 1, 2 e 3 retas dão 2, 4 e 7 regiões")
+primo = lambda v: v > 1 and all(v % q for q in range(2, int(v ** 0.5) + 1))
+ok(all(primo(n * n + n + 41) for n in range(40)) and 40 * 40 + 40 + 41 == 1681 == 41 * 41 and 41 * 41 + 41 + 41 == 1763 == 41 * 43 and [n for n in range(46) if not primo(n * n + n + 41)] == [40, 41, 44], "TN02 abertura: n² + n + 41 é primo de 0 a 39; 1681 = 41²; 1763 = 41·43")
+fib = [0, 1, 1]
+while len(fib) < 60:
+    fib.append(fib[-1] + fib[-2])
+ok(all(sum(fib[1:n + 1]) == fib[n + 2] - 1 for n in range(1, 50)) and fib[1:10] == [1, 1, 2, 3, 5, 8, 13, 21, 34], "TN02 chefão (d): F₁ + … + Fₙ = Fₙ₊₂ − 1")
+ok(all(any(v == 3 * a + 5 * b for a in range(40) for b in range(25)) for v in range(8, 100)) and not any(7 == 3 * a + 5 * b for a in range(4) for b in range(3)), "TN02 chefão (e): 3 e 5 pagam todo valor de 8 a 99; o 7 não")
+ok(fat(60) == {2: 2, 3: 1, 5: 1} and 6 * 10 == 60, "TN02 teorema 5: 60 = 6·10 = 2·3·2·5")
+ok(1 != 1 * 2 // 2 + 5 and all(k * (k + 1) / 2 + 5 + (k + 1) == (k + 1) * (k + 2) / 2 + 5 for k in G5), "TN02 pegadinha e exercício 9: o passo da fórmula falsa é identidade, e a base falha (1 ≠ 6)")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)

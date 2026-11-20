@@ -19,7 +19,7 @@ window.CATALOGO.push(
   ] },
   { id:"AR", area:"mat", letra:"AR", cor:"--mO", nome:"Aritmética", desc:"Divisibilidade, MDC, MMC, primos e congruências.", temas:[
     ["TN01","Divisibilidade, MDC e MMC",["MB01","MB03"],true],
-    ["TN02","PIF: Princípio da Indução Finita",[]],
+    ["TN02","PIF: Princípio da Indução Finita",["TN01","SPG01"],true],
     ["TN03","Aritmética Modular",[]],
     ["BN01","Bases de Numeração",[]],
     ["CNJ01","Teoria de Conjuntos",[]],
