@@ -1,9 +1,9 @@
-// Verificação do site como ele é servido no GitHub Pages (numa subpasta /site-fisica/, por HTTP).
+// Verificação do site como ele é servido no GitHub Pages (numa subpasta /jarvis-net/, por HTTP).
 // Uso: node tools/verifica-site.js            (sobe um servidor local, percorre as páginas como ADM e imprime um relatório)
 // Confere: arquivos que não carregam (404), links internos que não levam a lugar nenhum, links externos (só lista),
 // imagens sem texto alternativo, e os tempos de carregamento da tela inicial.
 const http = require('http'), fs = require('fs'), path = require('path'), { chromium } = require('playwright');
-const RAIZ = path.resolve(__dirname, '..'), PRE = '/site-fisica/';
+const RAIZ = path.resolve(__dirname, '..'), PRE = '/jarvis-net/';
 const TIPOS = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.xml': 'application/xml', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json' };
 const srv = http.createServer((q, r) => { let u = decodeURIComponent(q.url.split('?')[0]); if (!u.startsWith(PRE)) { r.writeHead(404); return r.end('fora'); } u = u.slice(PRE.length) || 'index.html'; const f = path.join(RAIZ, u);
   if (!f.startsWith(RAIZ) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { r.writeHead(404, { 'content-type': 'text/html; charset=utf-8' }); return r.end(fs.readFileSync(path.join(RAIZ, '404.html'))); }
