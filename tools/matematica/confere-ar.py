@@ -387,5 +387,40 @@ ok(len([x for x in range(1, 1000) if 3 not in dg_(x)]) == 728 == 9 ** 3 - 1, "CB
 ok(len([x for x in n3_ if len(set(dg_(x))) == 2]) == 243 == 900 - 648 - 9, "CB01 chefão (e): 243 números de 3 algarismos com exatamente dois iguais")
 ok(len([m for m in range(8)]) == 8 == 2 ** 3, "CB01 teorema 3: {a, b, c} tem 8 subconjuntos")
 
+# ---------- CB02 ----------
+from itertools import permutations as pm_
+from math import factorial as ft_
+ana_ = lambda w: len(set(pm_(w)))
+ok(ft_(5) == 120 and ft_(10) == 3628800 and 3628800 // 86400 == 42 and 3628800 % 86400 == 0 and [ft_(k) for k in range(9)] == [1, 1, 2, 6, 24, 120, 720, 5040, 40320], "CB02 abertura e tabela: 5! = 120; 10! = 3 628 800 segundos são exatamente 42 dias; fatoriais de 0 a 8")
+ok(ana_("AMOR") == 24 and ana_("CASA") == 12 and ana_("BANANA") == 60 == 720 // 12 and ana_("ARARA") == 10 and len(set(pm_("ABC"))) == 6, "CB02 chute e teorema 2: AMOR 24, CASA 12, BANANA 60, ARARA 10 (enumerados)")
+ok(all(ana_(w) == v for w, v in [("BATATA", 60), ("PAPAI", 30), ("TERRA", 60), ("ABACAXI", 840), ("MACACA", 60), ("OVO", 3), ("LIVRO", 120), ("CINEMA", 720)]), "CB02 exercícios 5 e 7: anagramas das palavras da lista (enumerados)")
+ok(ft_(2 + 3) == 120 and ft_(2) + ft_(3) == 8 and ft_(6) == 720 and 2 * ft_(3) == 12 and ft_(6) // ft_(3) == 120, "CB02 pegadinha: (2 + 3)! = 120 e 2! + 3! = 8; 6! = 720 e 2 · 3! = 12; 6!/3! = 120")
+def juntos_(n):
+    return len([f for f in pm_(range(n)) if abs(f.index(0) - f.index(1)) == 1])
+ok(all(juntos_(n) == 2 * ft_(n - 1) for n in range(3, 8)) and juntos_(5) == 48 and 120 - 48 == 72, "CB02 teorema 4, exemplo 2 e exercícios 8 e 11: duas pessoas juntas numa fila de n, 2 · (n − 1)! (enumerado de 3 a 7); com 5: 48 juntas e 72 separadas")
+def rodas_(n, junto=None):
+    s = set()
+    for f in pm_(range(n)):
+        i = f.index(0); g = f[i:] + f[:i]
+        if junto is None or ((abs(g.index(junto[0]) - g.index(junto[1])) in (1, n - 1)) == junto[2]):
+            s.add(g)
+    return len(s)
+ok(all(rodas_(n) == ft_(n - 1) for n in range(3, 8)) and rodas_(4) == 6, "CB02 teorema 3 e exercício 9: rodas de n pessoas, (n − 1)! (filas agrupadas por giro, n de 3 a 7)")
+ok(all(rodas_(n, (0, 1, True)) == 2 * ft_(n - 2) for n in range(4, 8)) and rodas_(6, (0, 1, False)) == 72 == 120 - 48, "CB02 exercício 16 e chefão (d): casal junto na roda, 2 · (n − 2)!; roda de 6 com dois separados: 72 (enumerado)")
+def vj_(w):
+    vs = [i for i, l in enumerate(w) if l in "AEIOU"]
+    return len([f for f in pm_(range(len(w))) if max(f.index(i) for i in vs) - min(f.index(i) for i in vs) == len(vs) - 1])
+ok(vj_("CINEMA") == 144 and vj_("AMOR") == 12 and vj_("LIVRO") == 48 and vj_("ESCOLA") == 144 and vj_("PERNA") == 48 and vj_("FILA") == 12, "CB02 exercício 12: vogais juntas (CINEMA 144, AMOR 12, LIVRO 48, ESCOLA 144), enumerado")
+ok(all(ana_("D" * a + "C" * b) == ft_(a + b) // (ft_(a) * ft_(b)) for a in range(2, 6) for b in range(2, 5)) and ana_("DDDCC") == 10, "CB02 exercício 13 e figura: caminhos na grade = anagramas de D…DC…C (10 na grade 3 × 2)")
+lst_ = sorted("".join(x) for x in pm_("AMOR"))
+def pos_(w):
+    return 1 + sum(len([y for y in w[i + 1:] if y < x]) * ft_(len(w) - 1 - i) for i, x in enumerate(w))
+ok(lst_[0] == "AMOR" and lst_[-1] == "ROMA" and len(lst_) == 24 and all(pos_(w) == i + 1 for i, w in enumerate(lst_)), "CB02 exercício 14: AMOR é o 1º e ROMA o 24º; a conta 'letras menores × fatorial' dá a posição certa para os 24 anagramas")
+zer_ = lambda n: len(str(ft_(n))) - len(str(ft_(n)).rstrip("0"))
+ok(zer_(100) == 24 and zer_(30) == 7 and all(zer_(n) == n // 5 + n // 25 + n // 125 for n in range(1, 200)), "CB02 exercício 15 e chefão (b): zeros no fim de n! contados no próprio número (100! tem 24; 30! tem 7)")
+ok(ft_(8) // (ft_(3) * ft_(5)) == 56 and 10 * 9 == 90 and 6 * 7 == 42 and ft_(6) == 720, "CB02 exercícios 1 a 3 e exemplo 3 (primeiro acesso): 720; 90; 56; n(n + 1) = 42 dá n = 6")
+ok(len([x for x in pm_("12345") if int(x[-1]) % 2 == 0]) == 48 and all(len([x for x in pm_(range(1, n + 1)) if x[-1] % 2 == 0]) == (n // 2) * ft_(n - 1) for n in range(4, 8)), "CB02 exercício 10: números pares formados com 1, …, n (48 para n = 5), enumerado")
+ok(all(ft_(n) > 2 ** n for n in range(4, 41)) and ft_(3) < 2 ** 3 and ft_(10) // (ft_(5) * ft_(3)) == 5040 and 3628800 // 720 == 5040 and len("ARARAQUARA") == 10 and "ARARAQUARA".count("A") == 5 and "ARARAQUARA".count("R") == 3 and all(sum(k * ft_(k) for k in range(1, n + 1)) == ft_(n + 1) - 1 for n in range(1, 30)), "CB02 chefão (a), (c) e (e): n! > 2ⁿ de 4 a 40 (e falso em 3); ARARAQUARA 5040; soma k · k! = (n + 1)! − 1")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)

@@ -30,7 +30,7 @@ window.CATALOGO.push(
     ["EF03","Estatística",["EF01","MB01"],true],
     ["EF04","Desigualdade das Médias",["EF03","MB03"],true],
     ["CB01","Princípio Fundamental da Contagem",["TN01","MB03"],true],
-    ["CB02","Fatorial e Permutações",[]],
+    ["CB02","Fatorial e Permutações",["CB01","TN01"],true],
     ["CB03","Arranjos e Combinações",[]],
     ["CB04","Aprofundamento em Combinatória",[]],
     ["PB01","Teoria das Probabilidades",[]],
