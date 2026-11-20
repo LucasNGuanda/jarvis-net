@@ -199,6 +199,9 @@
   const HIST = "jarvis:buscas";
   const hist = () => { try { const v = JSON.parse(localStorage.getItem(HIST)); return Array.isArray(v) ? v : []; } catch (e) { return []; } };
   const guardaHist = (q) => { q = q.trim(); if (!q) return; try { localStorage.setItem(HIST, JSON.stringify([q].concat(hist().filter((x) => x !== q)).slice(0, 8))); } catch (e) {} };
+  /* apaga o histórico de perguntas: tudo (sem argumento) ou uma pergunta só. Toca APENAS na chave jarvis:buscas. */
+  J.limpaHistorico = (uma) => { try { if (uma === undefined) localStorage.removeItem(HIST); else { const r = hist().filter((x) => x !== uma); if (r.length) localStorage.setItem(HIST, JSON.stringify(r)); else localStorage.removeItem(HIST); } } catch (e) {} };
+  J.historico = hist;
   /* vai para o destino de uma pergunta de navegação */
   function destino(nav) {
     if (nav.nivel && AC() && !AC().engrenagem(nav.nivel)) return { msg: nav.resposta + " Isso pede o código de configurações.", href: "#/codigos" };
@@ -218,7 +221,10 @@
       const inp = form.querySelector("input"), painel = document.createElement("div"); painel.className = "jb-painel" + (modo === "home" ? " cima" : ""); painel.setAttribute("role", "listbox"); painel.hidden = true; form.appendChild(painel);
       let sel = -1, t = null;
       const mostra = (html) => { painel.innerHTML = html; painel.hidden = !html; sel = -1; };
-      const historico = () => { const h = hist(); mostra(h.length ? `<div class="jb-rot">buscas recentes</div>` + h.map((x) => `<button type="button" class="jb-hist">${esc(x)}</button>`).join("") : `<div class="jb-rot">digite um tema, uma fórmula, um cientista ou um código (A08, CI07…)</div>`); };
+      const VAZIO = `<div class="jb-rot">digite um tema, uma fórmula, um cientista ou um código (A08, CI07…)</div>`;
+      /* histórico: um X em cada pergunta e o botão "Limpar histórico" (com confirmação). Só mexe na chave jarvis:buscas. */
+      const historico = () => { const h = hist(); mostra(h.length ? `<div class="jb-rot jb-rot-hist"><span>buscas recentes</span><button type="button" class="jb-limpa">Limpar histórico</button></div>` + h.map((x, k) => `<div class="jb-hlinha"><button type="button" class="jb-hist">${esc(x)}</button><button type="button" class="jb-hx" data-k="${k}" aria-label="Apagar esta pergunta do histórico" title="Apagar esta pergunta">×</button></div>`).join("") : VAZIO); };
+      const confirmaLimpar = () => mostra(`<div class="jb-conf" role="alertdialog" aria-label="Limpar histórico"><p class="jb-msg">Apagar todas as perguntas do Jarvis? Isso não apaga seu progresso.</p><div class="jb-conf-bts"><button type="button" class="jb-sim">Apagar</button><button type="button" class="jb-nao">Cancelar</button></div></div>`);
       const sugere = () => { const q = inp.value.trim(); if (!q) return historico(); const r = J.buscar(q, { max: 8 }); mostra(r.livres.length ? r.livres.map(item).join("") : r.temTrancado ? TRANCADO : `<p class="jb-msg">nada ainda… Enter para eu procurar melhor</p>`); };
       const responde = () => {
         const q = inp.value.trim(); if (!q) return historico(); guardaHist(q);
@@ -240,6 +246,11 @@
       });
       painel.addEventListener("mousedown", (e) => e.preventDefault()); /* clicar no painel não tira o foco do campo */
       painel.addEventListener("click", (e) => {
+        if (e.target.closest(".jb-limpa, .jb-nao, .jb-sim, .jb-hx")) e.stopPropagation(); /* o botão clicado some ao redesenhar: sem isto, o clique chegaria ao documento como "fora do campo" e fecharia o painel */
+        if (e.target.closest(".jb-limpa")) { confirmaLimpar(); return; }
+        if (e.target.closest(".jb-nao")) { historico(); return; }
+        if (e.target.closest(".jb-sim")) { J.limpaHistorico(); historico(); inp.focus(); return; }
+        const x = e.target.closest(".jb-hx"); if (x) { J.limpaHistorico(hist()[+x.dataset.k]); historico(); return; }
         const h = e.target.closest(".jb-hist"); if (h) { inp.value = h.textContent; responde(); return; } const a = e.target.closest("a"); if (a) { guardaHist(inp.value); if (a.dataset.el) { e.preventDefault(); fecha(); J.abreElemento(a.dataset.el); return; } if (a.dataset.mol) J.abreMolecula(a.dataset.mol); fecha(); } });
       document.addEventListener("click", (e) => { if (modo === "home" && !form.contains(e.target)) mostra(""); });
       return { inp, painel, responde, sugere };
