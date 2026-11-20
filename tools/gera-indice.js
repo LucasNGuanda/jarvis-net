@@ -48,9 +48,11 @@ module.exports.gera = gera;
 
 if (require.main === module) (async () => {
   const { temas, erros } = await gera();
+  /* moléculas do visualizador: só id, nome e fórmula (o catálogo inteiro, com coordenadas, continua sendo baixado só na página dele) */
+  let moleculas = []; try { const w = {}; new Function('window', fs.readFileSync(path.join(RAIZ, 'assets/moleculas-dados.js'), 'utf8'))(w); moleculas = w.MOLECULAS.lista.map((m) => [m.id, m.nome, m.formula]); } catch (e) { console.log('moléculas fora do índice: ' + e.message); }
   const saida = `/* GERADO por tools/gera-indice.js (β 4.2): NÃO EDITAR À MÃO. Rodar de novo depois de escrever ou mudar um tema.
    ${Object.keys(temas).length} temas escritos. As chaves são as de F.registrar; nomes e módulos vêm dos catálogos. */
-window.INDICE_BUSCA = ${JSON.stringify({ versao: 1, temas })};
+window.INDICE_BUSCA = ${JSON.stringify({ versao: 1, temas, moleculas })};
 `;
   fs.writeFileSync(path.join(RAIZ, 'assets/indice-busca.js'), saida);
   const n = Object.values(temas).reduce((a, t) => a + t.secoes.length, 0);
