@@ -52,7 +52,7 @@ window.CATALOGO.push(
     ["GP02","Semelhança e Teorema de Tales",["GP01","MB04"],true],
     ["GP03","Polígonos",["GP01","MB05"],true],
     ["GP04","Circunferência",["GP01","GP02"],true],
-    ["GP05","Quadriláteros",[]],
+    ["GP05","Quadriláteros",["GP03","GP02"],true],
     ["GP06","Triângulos e Pontos Notáveis",[]],
     ["GP07","Triângulo Retângulo",[]],
     ["GP08","Trigonometria em Triângulos Quaisquer",[]],

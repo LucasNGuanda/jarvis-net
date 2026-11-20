@@ -189,5 +189,35 @@ def pitot_(t):
 ok(all(pitot_(t) for t in [(2, 3, 4, 3), (3, 3, 5, 2), (2, 4, 3, 5), (4, 2, 3, 3), (3, 5, 4, 2)]), "GP04 exercício 15: os cinco quadriláteros circunscritos das figuras têm os lados pedidos, os quatro lados à mesma distância do centro (tangentes) e AB + CD = BC + DA")
 ok(all(perto(sqrt(r * r - h * h), d) for h, d, r in [(4, 3, 5), (12, 5, 13), (6, 8, 10), (5, 12, 13), (15, 8, 17), (3, 4, 5), (8, 6, 10)]) and (3 - 1) + (4 - 1) == 5 and all(perto(abs(a * 1 + b * 1 - c) / hypot(a, b), 1) for a, b, c in [(1, 0, 0), (0, 1, 0), (3, 4, 12)]), "GP04 exercício 16 e chefão (e): corda e distância ao centro; o círculo de centro (1, 1) e raio 1 é tangente aos três lados do triângulo 3, 4, 5")
 
+# ---------- GP05 ----------
+def med_(p, q): return ((p[0] + q[0]) / 2, (p[1] + q[1]) / 2)
+def paral_():
+    a = (random.uniform(-3, 3), random.uniform(-3, 3)); u = (random.uniform(1, 5), random.uniform(-1, 1)); w = (random.uniform(-2, 2), random.uniform(1, 4))
+    b = (a[0] + u[0], a[1] + u[1]); d = (a[0] + w[0], a[1] + w[1]); c = (b[0] + w[0], b[1] + w[1])
+    return perto(dist(a, b), dist(c, d)) and perto(dist(b, c), dist(d, a)) and perto(ang(d, a, b), ang(b, c, d)) and perto(ang(d, a, b) + ang(a, b, c), 180) and perto(dist(med_(a, c), med_(b, d)), 0, 1e-9)
+ok(all(paral_() for _ in range(500)) and med_((0, 0), (5, 2)) == med_((4, 0), (1, 2)) == (2.5, 1.0), "GP05 teorema 1: em 500 paralelogramos sorteados, lados e ângulos opostos iguais, consecutivos suplementares e diagonais com o mesmo ponto médio")
+def los_(d1, d2):
+    q = [(0, -d2 / 2), (d1 / 2, 0), (0, d2 / 2), (-d1 / 2, 0)]; l = [dist(q[i], q[(i + 1) % 4]) for i in range(4)]
+    return all(perto(x, l[0]) for x in l) and perto(l[0], sqrt((d1 / 2) ** 2 + (d2 / 2) ** 2)) and perto(ang(q[1], q[0], q[2]), ang(q[2], q[0], q[3]))
+ok(all(los_(2 * b, 2 * a) and perto(sqrt(a * a + b * b), c) for a, b, c in [(3, 4, 5), (6, 8, 10), (5, 12, 13), (8, 15, 17), (9, 12, 15), (12, 16, 20)]) and hypot(4, 3) == 5, "GP05 teorema 2, exemplo 3 e exercícios 4 e 5: losango (quatro lados iguais à hipotenusa das meias diagonais, diagonal bissetriz) e diagonal do retângulo")
+def trap_2():
+    B = random.uniform(4, 12); b = random.uniform(1, B - 0.5); h = random.uniform(1, 6); d = random.uniform(-3, 6)
+    q = [(0, 0), (B, 0), (d + b, h), (d, h)]; m = med_(q[0], q[3]); n = med_(q[1], q[2]); p1 = med_(q[0], q[2]); p2 = med_(q[1], q[3])
+    return perto(dist(m, n), (B + b) / 2) and perto(m[1], n[1]) and perto(dist(p1, p2), (B - b) / 2) and perto(p1[1], m[1]) and perto(p2[1], m[1])
+ok(all(trap_2() for _ in range(500)) and (14 + 6) / 2 == 10 and (14 - 6) / 2 == 4, "GP05 teorema 3 e exemplo 2: em 500 trapézios sorteados, base média = (B + b)/2, paralela às bases; pontos médios das diagonais sobre ela, à distância (B − b)/2")
+def var_():
+    q = [(random.uniform(-5, 5), random.uniform(-5, 5)) for _ in range(4)]; m = [med_(q[i], q[(i + 1) % 4]) for i in range(4)]
+    return perto(m[1][0] - m[0][0], m[2][0] - m[3][0], 1e-9) and perto(m[1][1] - m[0][1], m[2][1] - m[3][1], 1e-9) and perto(dist(m[0], m[1]), dist(q[0], q[2]) / 2) and perto(dist(m[1], m[2]), dist(q[1], q[3]) / 2)
+ok(all(var_() for _ in range(1000)) and [med_(*s) for s in [((0, 0), (6, 0)), ((6, 0), (8, 4)), ((8, 4), (2, 6)), ((2, 6), (0, 0))]] == [(3.0, 0.0), (7.0, 2.0), (5.0, 5.0), (1.0, 3.0)], "GP05 teorema 4 e exercício 12: Varignon em 1000 quadriláteros sorteados (inclusive não convexos e cruzados); o exemplo numérico do texto")
+def bisP_(a, b, g=64):
+    A = (0, 0); B = (a, 0); Dp = polar(A, b, g); C = (a + Dp[0], Dp[1]); E = (Dp[0] + b, Dp[1])
+    return perto(ang(B, A, E), ang(E, A, Dp)) and perto(dist(E, C), a - b)
+def retO_(th):
+    w = 4 * cos(radians(th / 2)); h = 4 * sin(radians(th / 2)); o = (w / 2, h / 2)
+    return perto(ang((w, 0), o, (w, h)), th) and perto(ang(o, (w, h), (w, 0)), (180 - th) / 2)
+ok(all(bisP_(a, b) for a in range(8, 15) for b in range(3, 8)) and all(retO_(th) for th in range(30, 81, 2)), "GP05 exercícios 13 e 14: bissetriz no paralelogramo (EC = AB − AD, medido) e ângulo entre diagonal e lado do retângulo")
+ok(180 - 65 == 115 and 28 / 2 - 9 == 5 and 2 * 5 + 2 * 3.5 == 17 and 4 * 5 == 20 and 70 / 2 == 35 and (11 + 5) / 2 == 8 and 2 * 10 - 7 == 13 and 180 - 68 == 112 and abs(5 * sqrt(2) - 7.07) < 0.005 and (15 - 7) / 2 == 4 and 10 + 7 == 17 and 10 - 6 == 4 and (180 - 50) / 2 == 65 and hypot(9 - 6, 4) == 5 and sqrt(25 - 9) == 4, "GP05 exercícios (primeiro acesso): 115°; 5; 17; 5; 20; 35°; 8; 13; 112°; 7,07; 4; 17; 4; 65°; 5; 4")
+ok(2 * 35 + 10 == 80 and 3 * 35 - 5 == 100 and 80 + 100 == 180 and perto(ang((0, 0), inter((0, 0), (8, 8), (10, 0), (2, 8)), (10, 0)), 90) and dist((0, 0), (2, 8)) == dist((10, 0), (8, 8)), "GP05 exemplo 1 (primeiro acesso) e chefão (e): ângulos 80° e 100°; o trapézio isósceles de bases 10 e 6 e altura 8 tem diagonais perpendiculares")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)
