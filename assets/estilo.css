@@ -26,7 +26,7 @@
 /* ---------- cores: tema escuro (padrão) ---------- */
 :root{
   --bg:#0d1117; --bg2:#121821; --card:#161d28; --card2:#1b2331;
-  --ink:#e6eaf2; --ink2:#a3adbf; --ink3:#6f7a8e; --line:#263043; --line2:#33405a;
+  --ink:#e6eaf2; --ink2:#a3adbf; --ink3:#7d8aa0; --line:#263043; --line2:#33405a;
   --acc:#7aa7ff;                   /* destaque neutro (links, foco) */
   --ok:#4cc38a; --warn:#e8b04b; --bad:#ef6b6b;
   /* uma cor por módulo */
