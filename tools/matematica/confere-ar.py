@@ -140,5 +140,41 @@ ok(sorted(set(x * x % 10 for x in range(10))) == [0, 1, 4, 5, 6, 9] and [x * x %
 ok(pow(2, 100, 13) == 3 and (347 * 26) % 9 == (5 * 8) % 9 == 4 and 347 * 26 == 9022 and 9122 % 9 == 5 and (-5) % 7 == 100 % 7 == 2, "TN03 exercícios 11, 13 e 8 (primeiro acesso): 2¹⁰⁰ ≡ 3 (mod 13); 347·26 = 9022 e 9122 falha na prova dos nove; −5 ≡ 100 (mod 7)")
 ok(all(int(str(d) * k) % 11 == (d if k % 2 else 0) and int(str(d) * k) % 9 == (d * k) % 9 for d in range(1, 10) for k in range(1, 60)), "TN03 exercício 16: resto de dd…d por 11 e por 9")
 
+# ---------- BN01 ----------
+DIG = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+
+def base(n, b):
+    if n == 0:
+        return "0"
+    d = ""
+    while n:
+        d = DIG[n % b] + d
+        n //= b
+    return d
+
+
+ok(base(45, 2) == "101101" and base(45, 8) == "55" and base(45, 16) == "2D" and 32 + 8 + 4 + 1 == 45 and 5 * 8 + 5 == 45, "BN01: 45 = 101101₂ = 55₈ = 2D₁₆")
+ok(base(2026, 2) == "11111101010" and base(2026, 8) == "3752" and base(2026, 16) == "7EA" and 1024 + 512 + 256 + 128 + 64 + 32 + 8 + 2 == 2026 and 2 * 1000 + 2 * 10 + 6 == 2026, "BN01 chefão (b) e exemplo 3: 2026 em binário, octal e hexadecimal")
+ok(all(int(base(n, b), b) == n for n in range(0, 5001) for b in range(2, 17)), "BN01 teorema 1: ida e volta de base para n até 5000, bases de 2 a 16")
+passos, n = [], 45
+while n:
+    passos.append((n, n // 2, n % 2))
+    n //= 2
+ok(passos == [(45, 22, 1), (22, 11, 0), (11, 5, 1), (5, 2, 1), (2, 1, 0), (1, 0, 1)], "BN01 teorema 1: divisões sucessivas de 45 por 2")
+ok(all(len(base(n, b)) == k for b in range(2, 17) for k in range(1, 6) for n in (b ** (k - 1), b ** k - 1)) and all(b ** (len(base(n, b)) - 1) <= n < b ** len(base(n, b)) for n in range(1, 3000) for b in range(2, 17)), "BN01 teorema 3: k algarismos exatamente quando b^(k − 1) ≤ n < b^k")
+ok(int("1000", 2) == 8 and int("1111", 2) == 15 and 2 ** 9 == 512 <= 1000 < 1024 == 2 ** 10 and len(base(1000, 2)) == 10 and 2 ** 10 - 1 == 1023, "BN01 teorema 3 e abertura: 1000 tem 10 algarismos binários; dez dedos contam até 1023")
+ok(all(sum(DIG.index(c) for c in base(n, b)) % (b - 1) == n % (b - 1) for n in range(1, 4000) for b in range(3, 17)), "BN01 teorema 4 e chefão (a): soma dos algarismos ≡ número (mod b − 1)")
+ok(base(2026, 7) == "5623" and 5 * 343 + 6 * 49 + 2 * 7 + 3 == 2026 and 5 + 6 + 2 + 3 == 16 and 2026 % 6 == 16 % 6 == 4, "BN01 teorema 4: 5623₇ = 2026; soma 16; resto 4 por 6")
+ok(all(base(n, 8) == "".join(str(int(g, 2)) for g in [base(n, 2).zfill(-(-len(base(n, 2)) // 3) * 3)[i:i + 3] for i in range(0, -(-len(base(n, 2)) // 3) * 3, 3)]).lstrip("0") for n in range(1, 5000)), "BN01 teorema 2: agrupar de 3 em 3 dá o octal (n até 4999)")
+ok(all(base(n, 16) == "".join(DIG[int(g, 2)] for g in [base(n, 2).zfill(-(-len(base(n, 2)) // 4) * 4)[i:i + 4] for i in range(0, -(-len(base(n, 2)) // 4) * 4, 4)]).lstrip("0") for n in range(1, 5000)), "BN01 teorema 2: agrupar de 4 em 4 dá o hexadecimal (n até 4999)")
+ok(base(11 + 6, 2) == "10001" and base(11, 2) == "1011" and base(6, 2) == "110", "BN01: 1011₂ + 110₂ = 10001₂")
+ok([b for b in range(5, 40) if (b + 3) * 4 == b * b] == [6] and int("13", 6) == 9 and base(36, 6) == "100", "BN01 chefão (c): 13·4 = 100 só na base 6")
+ok(len(str(2 ** 100)) == 31 and int(100 * 0.30103) == 30, "BN01 chefão (d): 2¹⁰⁰ tem 31 algarismos")
+pesos = sorted(set(a * 1 + b * 3 + c * 9 + d * 27 for a in (-1, 0, 1) for b in (-1, 0, 1) for c in (-1, 0, 1) for d in (-1, 0, 1)))
+ok(27 - 9 + 3 - 1 == 20 and pesos == list(range(-40, 41)) and 3 ** 4 == 81, "BN01 chefão (e): 20 = 27 − 9 + 3 − 1; os pesos 1, 3, 9, 27 dão todo inteiro de −40 a 40, sem repetir")
+ok(Fr(1, 2) + Fr(1, 8) == Fr(5, 8) and float(Fr(5, 8)) == 0.625 and base(181, 2) == "10110101" and base(194, 5) == "1234" and base(100, 3) == "10201" and base(37, 2) == "100101", "BN01 exercícios (primeiro acesso): 0,101₂ = 0,625; 181, 194, 100 e 37 nas bases 2, 5, 3 e 2")
+ok(int("142", 7) == 79 and 2026 % 7 == 3 and 80 == 2 ** 4 * 5 and base(80, 2) == "1010000" and 4 * 5 ** 2 == 100 and (int("101101", 2), int("56", 8), int("2C", 16), int("133", 5)) == (45, 46, 44, 43), "BN01 exercícios 10 a 14 (primeiro acesso)")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)

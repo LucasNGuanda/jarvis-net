@@ -88,4 +88,47 @@
       q("[data-v=st]").innerHTML = `Os restos de ${a}¹, ${a}², ${a}³… na divisão por ${m} só podem ser ${m} valores, então em algum momento repetem, e daí em diante andam em ciclo de tamanho ${e.periodo}${e.pre ? ` (depois de ${e.pre} ${e.pre === 1 ? "valor" : "valores"} de entrada)` : ""}. Para o expoente ${n}, basta saber em que casa do ciclo ele cai: a de número ${e.pos}, resto ${e.resto}. ${e.primo && e.coprimos ? `Como ${m} é primo e não divide ${a}, o pequeno teorema de Fermat garante ${a}${SUPN(m - 1)} ≡ 1: o período (${e.periodo}) divide ${m - 1}.` : !e.coprimos ? `Aqui ${a} e ${m} têm fator comum (mdc ${M.mdc(a, m)}): o resto 1 nunca aparece.` : ""}`; };
     ["a", "m", "n"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
     SIM.arCiclo._ult = { poe, est }; desenha(); };
+
+  /* ---------- BN01 ---------- */
+  const DIG = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  /* algarismos de n na base b (do mais significativo para o menos) e a volta */
+  R.paraBase = (n, b) => { n = Math.abs(Math.round(n)); if (n === 0) return [0]; const d = []; while (n > 0) { d.unshift(n % b); n = Math.floor(n / b); } return d; };
+  R.deBase = (digs, b) => digs.reduce((t, d) => t * b + d, 0);
+  R.baseTxt = (n, b) => R.paraBase(n, b).map((d) => DIG[d]).join("");
+  R.lerBase = (txt, b) => { let t = 0; for (const c of String(txt).toUpperCase()) { const d = DIG.indexOf(c); if (d < 0 || d >= b) return NaN; t = t * b + d; } return t; };
+  R.sub = (n) => String(n).split("").map((c) => "₀₁₂₃₄₅₆₇₈₉"[+c]).join("");
+  /* divisões sucessivas por b: [[dividendo, quociente, resto], …] */
+  R.divisoes = (n, b) => { const p = []; while (n > 0) { p.push([n, Math.floor(n / b), n % b]); n = Math.floor(n / b); } return p; };
+  /* casas: os algarismos em caixas, com o valor de cada posição embaixo. o = { semPeso, interroga } */
+  R.casas = (n, b, D, o = {}) => { const d = R.paraBase(n, b), W = 560, w = Math.min(64, Math.floor(500 / d.length)), x0 = (W - w * d.length) / 2, H = o.semPeso ? 60 : 96; let s = "";
+    d.forEach((v, i) => { const e = d.length - 1 - i; s += `<rect x="${x0 + i * w + 3}" y="10" width="${w - 6}" height="40" rx="7" style="fill:${v ? "color-mix(in srgb,var(--mod) 26%,var(--card2))" : "var(--card2)"};stroke:${v ? "var(--mod)" : "var(--line)"}"/>` + T(x0 + i * w + w / 2, 37, o.interroga ? "?" : DIG[v], { f: 19, w: 700 }) + (o.semPeso ? "" : T(x0 + i * w + w / 2, 68, w < 40 ? `${b}${SUPN(e)}` : `${b}${SUPN(e)} = ${b ** e}`, { f: w < 52 ? 9.5 : 11, c: "var(--ink3)" }) + (v && w >= 40 ? T(x0 + i * w + w / 2, 86, `${v} × ${b ** e}`, { f: 10, c: "var(--ink2)" }) : "")); });
+    return D ? D.svg(W, H, s, "figura") : `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block;margin:0 auto">${s}</svg>`; };
+
+  /* nome: "Mudar de base: o mesmo número com outros algarismos" · matéria: Matemática · tema: BN01 */
+  SIM.arBases = (el, F) => { let n = 45, b = 2;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("n", "número (em decimal)", 0, 1023, n, 240)}${sl("b", "base", 2, 16, b, 130)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const d = R.paraBase(n, b); return { n, b, digs: d, txt: R.baseTxt(n, b), volta: R.deBase(d, b), divisoes: R.divisoes(n, b), algarismos: d.length }; };
+    const poe = (o) => { ({ n, b } = { n, b, ...o }); n = Math.max(0, Math.min(1023, Math.round(+n))); b = Math.max(2, Math.min(16, Math.round(+b))); desenha(); };
+    const desenha = () => { const e = est(); q("[data-v=n]").value = String(n); q("[data-v=b]").value = String(b); q("[data-r=n]").textContent = n; q("[data-r=b]").textContent = b;
+      q("[data-v=pal]").innerHTML = R.casas(n, b, null);
+      q("[data-v=lt]").innerHTML = vis("em decimal", n) + vis(`na base ${b}`, e.txt) + vis("algarismos", e.algarismos);
+      q("[data-v=st]").innerHTML = n === 0 ? "Zero se escreve 0 em qualquer base." : `Divisões sucessivas por ${b}: ${e.divisoes.map(([x, k, r]) => `${x} = ${b} · ${k} + ${r}`).join("; ")}. Os restos, lidos <b>do último para o primeiro</b>, são os algarismos: ${e.txt}. Conferindo pela soma das casas: ${e.digs.map((d, i) => (d ? `${d} · ${b ** (e.digs.length - 1 - i)}` : null)).filter(Boolean).join(" + ")} = ${e.volta}.${b > 10 ? " Acima da base 10 faltam algarismos, e usam-se letras: A = 10, B = 11, C = 12, D = 13, E = 14, F = 15." : ""}`; };
+    ["n", "b"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
+    SIM.arBases._ult = { poe, est }; desenha(); };
+
+  /* nome: "Somar em outra base: quando vai um?" · matéria: Matemática · tema: BN01 */
+  SIM.arSomaBase = (el, F) => { let a = 11, c = 6, b = 2;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts">${sl("a", "1ª parcela (decimal)", 0, 255, a, 150)}${sl("c", "2ª parcela (decimal)", 0, 255, c, 150)}${sl("b", "base", 2, 16, b, 110)}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s);
+    const est = () => { const A1 = R.paraBase(a, b).reverse(), C1 = R.paraBase(c, b).reverse(), n = Math.max(A1.length, C1.length), res = [], vai = []; let v = 0; for (let i = 0; i < n; i++) { const t = (A1[i] || 0) + (C1[i] || 0) + v; vai.push(v); res.push(t % b); v = Math.floor(t / b); } if (v) { res.push(v); vai.push(v); } return { a, c, b, soma: a + c, res: res.slice().reverse(), vai: vai.slice().reverse(), txt: res.slice().reverse().map((d) => DIG[d]).join(""), vaiUns: vai.filter((x) => x).length, volta: R.deBase(res.slice().reverse(), b) }; };
+    const poe = (o) => { ({ a, c, b } = { a, c, b, ...o }); a = Math.max(0, Math.min(255, Math.round(+a))); c = Math.max(0, Math.min(255, Math.round(+c))); b = Math.max(2, Math.min(16, Math.round(+b))); desenha(); };
+    const desenha = () => { const e = est(); ["a", "c", "b"].forEach((k) => { q(`[data-v=${k}]`).value = String({ a, c, b }[k]); q(`[data-r=${k}]`).textContent = { a, c, b }[k]; });
+      const n = e.res.length, W = 560, w = 40, x0 = (W + n * w) / 2, lin = (digs, y, cor, f = 20) => digs.map((d, i) => (d === null ? "" : T(x0 - (digs.length - i) * w + w / 2, y, d, { f, w: 700, c: cor }))).join(""), pad = (v) => { const d = R.paraBase(v, b).map((x) => DIG[x]); return Array(n - d.length).fill(null).concat(d); };
+      const s = lin(e.vai.map((v) => (v ? v : null)), 22, "var(--warn)", 13) + lin(pad(a), 52, "var(--ink)") + lin(pad(c), 84, "var(--ink)") + T(x0 - n * w - 14, 84, "+", { f: 20, w: 700, c: "var(--ink2)" }) + `<line x1="${x0 - n * w - 28}" y1="96" x2="${x0 + 4}" y2="96" style="stroke:var(--ink2);stroke-width:2"/>` + lin(e.res.map((d) => DIG[d]), 126, "var(--mod)");
+      q("[data-v=pal]").innerHTML = `<svg viewBox="0 0 ${W} 140" style="width:100%;max-width:${W}px;display:block;margin:0 auto">${s}</svg>`;
+      q("[data-v=lt]").innerHTML = vis(`${a} + ${c}`, e.soma) + vis(`na base ${b}`, e.txt) + vis("vezes que foi um", e.vaiUns);
+      q("[data-v=st]").innerHTML = `Soma-se coluna por coluna, da direita para a esquerda, como na base 10. A diferença é só quando "vai um": na base ${b}, a coluna transborda quando a soma chega a ${b} (e não a 10). Então escreve-se o resto por ${b} e leva-se o quociente para a coluna seguinte. Os números pequenos em cima são os "vai um". Resultado: ${e.txt} na base ${b}, que vale ${e.volta} em decimal.`; };
+    ["a", "c", "b"].forEach((k) => q(`[data-v=${k}]`).addEventListener("input", (ev) => poe({ [k]: ev.target.value })));
+    SIM.arSomaBase._ult = { poe, est }; desenha(); };
 })();

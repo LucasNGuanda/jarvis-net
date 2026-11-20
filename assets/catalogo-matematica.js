@@ -21,7 +21,7 @@ window.CATALOGO.push(
     ["TN01","Divisibilidade, MDC e MMC",["MB01","MB03"],true],
     ["TN02","PIF: Princípio da Indução Finita",["TN01","SPG01"],true],
     ["TN03","Aritmética Modular",["TN01","TN02"],true],
-    ["BN01","Bases de Numeração",[]],
+    ["BN01","Bases de Numeração",["TN01","MB03"],true],
     ["CNJ01","Teoria de Conjuntos",[]],
     ["CNJ02","Conjuntos Numéricos",[]],
     ["RLM01","Raciocínio Lógico",[]],
