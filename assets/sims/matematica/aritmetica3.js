@@ -136,4 +136,68 @@
       q("[data-v=st]").innerHTML = `Bolinha cheia: o extremo pertence ao intervalo (colchete virado para dentro). Bolinha vazia: não pertence (colchete virado para fora). Na <b>interseção</b> um extremo só fica se pertencer aos dois; na <b>união</b>, basta pertencer a um; na <b>diferença</b> A − B, os extremos de B trocam de tipo: onde B incluía o ponto, A − B exclui, e vice-versa.`; };
     ["A", "B"].forEach((k) => { ["a", "b"].forEach((x) => { q(`[data-v=${k}${x}]`).addEventListener("input", (ev) => poe({ [k]: { [x]: ev.target.value } })); q(`[data-f=${k}${x}]`).addEventListener("click", () => poe({ [k]: { ["f" + x]: !(k === "A" ? P : Q)["f" + x] } })); }); });
     SIM.arIntervalos._ult = { poe, est }; desenha(); };
+
+  /* ---------- RLM01 ---------- */
+  /* fórmulas com p e q (f devolve verdadeiro ou falso) */
+  R.LOG = [
+    { id: "e", txt: "p ∧ q", tex: "p \\land q", f: (p, q) => p && q, fala: "p e q" },
+    { id: "ou", txt: "p ∨ q", tex: "p \\lor q", f: (p, q) => p || q, fala: "p ou q" },
+    { id: "se", txt: "p → q", tex: "p \\to q", f: (p, q) => !p || q, fala: "se p, então q" },
+    { id: "sse", txt: "p ↔ q", tex: "p \\leftrightarrow q", f: (p, q) => p === q, fala: "p se, e somente se, q" },
+    { id: "npouq", txt: "¬p ∨ q", tex: "\\lnot p \\lor q", f: (p, q) => !p || q, fala: "não p, ou q" },
+    { id: "contra", txt: "¬q → ¬p", tex: "\\lnot q \\to \\lnot p", f: (p, q) => q || !p, fala: "se não q, então não p (contrapositiva)" },
+    { id: "recip", txt: "q → p", tex: "q \\to p", f: (p, q) => !q || p, fala: "se q, então p (recíproca)" },
+    { id: "inversa", txt: "¬p → ¬q", tex: "\\lnot p \\to \\lnot q", f: (p, q) => p || !q, fala: "se não p, então não q (inversa)" },
+    { id: "nse", txt: "¬(p → q)", tex: "\\lnot(p \\to q)", f: (p, q) => p && !q, fala: "não é verdade que p implica q" },
+    { id: "penq", txt: "p ∧ ¬q", tex: "p \\land \\lnot q", f: (p, q) => p && !q, fala: "p e não q" },
+    { id: "ne", txt: "¬(p ∧ q)", tex: "\\lnot(p \\land q)", f: (p, q) => !(p && q), fala: "não (p e q)" },
+    { id: "npounq", txt: "¬p ∨ ¬q", tex: "\\lnot p \\lor \\lnot q", f: (p, q) => !p || !q, fala: "não p ou não q" },
+    { id: "nou", txt: "¬(p ∨ q)", tex: "\\lnot(p \\lor q)", f: (p, q) => !(p || q), fala: "não (p ou q)" },
+    { id: "npenq", txt: "¬p ∧ ¬q", tex: "\\lnot p \\land \\lnot q", f: (p, q) => !p && !q, fala: "não p e não q" },
+  ];
+  const LIN = [[true, true], [true, false], [false, true], [false, false]];
+  R.tabV = (e) => LIN.map(([p, q]) => !!e.f(p, q));
+  R.vf = (b) => (b ? "V" : "F");
+  /* tabela-verdade em SVG: colunas p, q e as fórmulas pedidas. o = { interroga: [índices de coluna trocados por "?"], destaca: [linhas] } */
+  R.figTab = (es, D, o = {}) => { const W = 560, cw = Math.min(120, Math.floor(400 / es.length)), x0 = (W - (100 + cw * es.length)) / 2, H = 28 + 5 * 28; let s = "";
+    const cel = (x, y, w, t, cab, cor) => `<rect x="${x}" y="${y}" width="${w}" height="26" rx="4" style="fill:${cab ? "var(--card2)" : cor || "none"};stroke:var(--line)"/>` + T(x + w / 2, y + 18, t, { f: cab ? 12.5 : 14, w: cab ? 700 : 600, c: t === "V" ? "var(--ok)" : t === "F" ? "var(--bad)" : "var(--ink)" });
+    s += cel(x0, 8, 48, "p", true) + cel(x0 + 50, 8, 48, "q", true) + es.map((e, k) => cel(x0 + 100 + k * cw, 8, cw - 2, e.txt, true)).join("");
+    LIN.forEach(([p, q], i) => { const y = 36 + i * 28, d = (o.destaca || []).includes(i) ? "color-mix(in srgb,var(--warn) 18%,transparent)" : null; s += cel(x0, y, 48, R.vf(p), false, d) + cel(x0 + 50, y, 48, R.vf(q), false, d) + es.map((e, k) => cel(x0 + 100 + k * cw, y, cw - 2, (o.interroga || []).includes(k) ? "?" : R.vf(e.f(p, q)), false, d)).join(""); });
+    return D ? D.svg(W, H, s, "figura") : `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block;margin:0 auto">${s}</svg>`; };
+
+  /* nome: "Tabela-verdade: duas fórmulas dizem a mesma coisa?" · matéria: Matemática · tema: RLM01 */
+  SIM.arTabela = (el, F) => { let a = "se", b = "contra";
+    const linha = (k, v) => `<div class="bts escolha" style="margin-top:6px"><b style="width:76px;font-size:13px">${k === "a" ? "1ª fórmula" : "2ª fórmula"}</b>${R.LOG.map((e) => `<button class="bt peq" data-${k}="${e.id}" aria-pressed="${e.id === v}">${e.txt}</button>`).join("")}</div>`;
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div>${linha("a", a)}${linha("b", b)}</div></div><div class="palco" data-v="pal" style="padding:6px 0"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), acha = (id) => R.LOG.find((e) => e.id === id) || R.LOG[0];
+    const est = () => { const ea = acha(a), eb = acha(b), ta = R.tabV(ea), tb = R.tabV(eb), dif = ta.map((v, i) => (v !== tb[i] ? i : -1)).filter((i) => i >= 0); return { a, b, ta, tb, equivalentes: dif.length === 0, opostas: dif.length === 4, diferem: dif }; };
+    const poe = (o) => { ({ a, b } = { a, b, ...o }); a = acha(a).id; b = acha(b).id; desenha(); };
+    const desenha = () => { const e = est(), ea = acha(a), eb = acha(b); el.querySelectorAll("[data-a]").forEach((x) => x.setAttribute("aria-pressed", x.dataset.a === a)); el.querySelectorAll("[data-b]").forEach((x) => x.setAttribute("aria-pressed", x.dataset.b === b));
+      q("[data-v=pal]").innerHTML = R.figTab([ea, eb], null, { destaca: e.diferem });
+      q("[data-v=lt]").innerHTML = vis(ea.txt, e.ta.map(R.vf).join(" ")) + vis(eb.txt, e.tb.map(R.vf).join(" ")) + vis("equivalentes?", e.equivalentes ? "sim" : "não");
+      q("[data-v=st]").innerHTML = e.equivalentes ? `As duas colunas são idênticas nas quatro linhas: "${ea.fala}" e "${eb.fala}" são <b>equivalentes</b>, isto é, dizem a mesma coisa em qualquer situação.` : e.opostas ? `As colunas são opostas em todas as linhas: cada fórmula é a <b>negação</b> da outra.` : `As colunas diferem ${e.diferem.length === 1 ? "na linha destacada" : "nas linhas destacadas"} (p = ${e.diferem.map((i) => R.vf(LIN[i][0]) + ", q = " + R.vf(LIN[i][1])).join("; p = ")}): as fórmulas <b>não</b> são equivalentes. Basta uma linha diferente.`; };
+    el.querySelectorAll("[data-a]").forEach((x) => x.addEventListener("click", () => poe({ a: x.dataset.a }))); el.querySelectorAll("[data-b]").forEach((x) => x.addEventListener("click", () => poe({ b: x.dataset.b })));
+    SIM.arTabela._ult = { poe, est }; desenha(); };
+
+  /* frases com quantificador: a região do diagrama de que a frase fala, o que diz dela e qual é a negação */
+  R.QUANT = [
+    { id: "todo", txt: "Todo A é B", reg: 1, diz: "vazio", neg: "algumnao", fala: "não existe A fora de B" },
+    { id: "algumnao", txt: "Algum A não é B", reg: 1, diz: "existe", neg: "todo", fala: "existe pelo menos um A fora de B" },
+    { id: "nenhum", txt: "Nenhum A é B", reg: 3, diz: "vazio", neg: "algum", fala: "não existe nada que seja A e B ao mesmo tempo" },
+    { id: "algum", txt: "Algum A é B", reg: 3, diz: "existe", neg: "nenhum", fala: "existe pelo menos um que é A e B ao mesmo tempo" },
+  ];
+  R.figQuant = (q, D, o = {}) => R.venn(2, D, { pinta: q.diz === "vazio" ? [q.reg] : [], rot: { [q.reg]: q.diz === "vazio" ? "vazio" : "●" }, cor: "var(--ink3)", U: false, nomes: o.nomes });
+
+  /* nome: "Todo, algum, nenhum: a frase e a sua negação" · matéria: Matemática · tema: RLM01 */
+  SIM.arQuant = (el, F) => { let id = "todo";
+    el.insertAdjacentHTML("beforeend", `<div class="ctrls"><div><div class="bts escolha">${R.QUANT.map((x) => `<button class="bt peq" data-k="${x.id}" aria-pressed="${x.id === id}">${x.txt}</button>`).join("")}</div></div></div><div class="palco" data-v="pal" style="padding:6px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px"></div><div class="leitor" data-v="lt"></div><div class="status" data-v="st"></div>`);
+    const q = (s) => el.querySelector(s), acha = (k) => R.QUANT.find((x) => x.id === k) || R.QUANT[0];
+    const est = () => { const x = acha(id), n = acha(x.neg); return { id, frase: x.txt, negacao: n.txt, regiao: x.reg, diz: x.diz, negDiz: n.diz, mesmaRegiao: x.reg === n.reg }; };
+    const poe = (o) => { ({ id } = { id, ...o }); id = acha(id).id; desenha(); };
+    const desenha = () => { const x = acha(id), n = acha(x.neg); el.querySelectorAll("[data-k]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.k === id));
+      q("[data-v=pal]").innerHTML = `<div>${R.figQuant(x, null)}</div><div>${R.figQuant(n, null)}</div>`;
+      q("[data-v=lt]").innerHTML = vis("frase", x.txt) + vis("negação", n.txt);
+      q("[data-v=st]").innerHTML = `À esquerda, a frase: "${x.txt}" diz que ${x.fala}. À direita, a negação: "${n.txt}", isto é, ${n.fala}. As duas falam da <b>mesma região</b> do diagrama, e dizem o contrário sobre ela: uma diz que está vazia, a outra diz que tem alguém (●). Por isso a negação de "todo" não é "nenhum": "nenhum" fala de outra região.`; };
+    el.querySelectorAll("[data-k]").forEach((b) => b.addEventListener("click", () => poe({ id: b.dataset.k })));
+    SIM.arQuant._ult = { poe, est }; desenha(); };
 })();

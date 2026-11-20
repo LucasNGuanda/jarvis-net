@@ -249,5 +249,45 @@ ok(all((dentro(A_, x) or dentro(B_, x)) == dentro((-3, 5, True, True), x) and (d
 ok(len([x for x in range(-2, 6) if dentro((-2, 5, False, True), x)]) == 7 and len([x for x in range(2, 6)]) == 4 and 3 - 1 == 2, "CNJ02 exercícios 5 e 6 e pegadinha (primeiro acesso): ]−2, 5] tem 7 inteiros; [2, 5] tem 4; ]1, 3] mede 2")
 ok(len([n for n in range(1, 101) if round(n ** 0.5) ** 2 == n]) == 10 and 50 - 7 == 43 and 7 * 7 < 50 < 8 * 8 and (0.2 + 0.25) / 2 == 0.225, "CNJ02 exercícios 8, 10, 12 e 16 (primeiro acesso)")
 
+# ---------- RLM01 ----------
+BB = [(True, True), (True, False), (False, True), (False, False)]
+imp = lambda a, b: (not a) or b
+col = lambda f: [f(p_, q_) for p_, q_ in BB]
+ok(col(lambda p_, q_: p_ and q_) == [True, False, False, False] and col(lambda p_, q_: p_ or q_) == [True, True, True, False] and col(imp) == [True, False, True, True] and col(lambda p_, q_: p_ == q_) == [True, False, False, True], "RLM01: tabelas de e, ou, se… então e se, e somente se")
+ok(col(imp) == col(lambda p_, q_: (not p_) or q_) == col(lambda p_, q_: imp(not q_, not p_)), "RLM01 teorema 1: p → q ≡ ¬p ∨ q ≡ ¬q → ¬p")
+ok(col(lambda p_, q_: imp(q_, p_)) == [True, True, False, True] != col(imp) and col(lambda p_, q_: imp(not p_, not q_)) == col(lambda p_, q_: imp(q_, p_)), "RLM01 teorema 1: a recíproca tem coluna V, V, F, V (diferente) e a inversa tem a mesma coluna da recíproca")
+ok(col(lambda p_, q_: not (p_ and q_)) == col(lambda p_, q_: (not p_) or (not q_)) and col(lambda p_, q_: not (p_ or q_)) == col(lambda p_, q_: (not p_) and (not q_)) and col(lambda p_, q_: not imp(p_, q_)) == col(lambda p_, q_: p_ and not q_), "RLM01 teorema 2: De Morgan e ¬(p → q) ≡ p ∧ ¬q")
+ok(all(imp(imp(p_, q_) and imp(q_, r_), imp(p_, r_)) for p_ in (True, False) for q_ in (True, False) for r_ in (True, False)), "RLM01 chefão (a): a transitividade da condicional é tautologia nas 8 linhas")
+ok(12 % 6 == 0 and 12 % 2 == 0 and 8 % 6 != 0 and 8 % 2 == 0 and all(n % 2 == 0 for n in range(-600, 600) if n % 6 == 0), "RLM01: todo múltiplo de 6 é par; 8 é par e não é múltiplo de 6")
+ok(not (8 % 2 == 0 and all(8 % d for d in range(2, 8))) and (9 % 2 == 1 and 9 % 3 == 0), "RLM01 teorema 2: '8 é par e primo' é falsa; 9 é ímpar e não é primo")
+
+
+def pior_caso(casas, k):
+    # maior número de objetos que ainda NÃO obriga k numa casa (busca exaustiva em distribuições não crescentes)
+    melhor = 0
+
+    def rec(i, usado, lim):
+        nonlocal melhor
+        if i == casas:
+            melhor = max(melhor, usado)
+            return
+        for c in range(0, min(lim, k - 1) + 1):
+            rec(i + 1, usado + c, c)
+
+    rec(0, 0, k - 1)
+    return melhor
+
+
+ok(all(pior_caso(n_, k_) + 1 == n_ * (k_ - 1) + 1 for n_ in range(1, 7) for k_ in range(2, 6)), "RLM01 teorema 3: com n(k − 1) objetos ainda dá para evitar k numa casa, e com um a mais não dá (busca em casos pequenos)")
+ok((2 - 1) * 12 + 1 == 13 and 3 + 1 == 4 and 4 * (3 - 1) + 1 == 9 and 2 ** 4 == 16, "RLM01 exercícios 6, 10, 11 e 16 (primeiro acesso): 16 linhas; 13 pessoas; 4 meias; 9 cartas")
+sols = [(a, b, c) for a in (True, False) for b in (True, False) for c in (True, False) if a == (not b) and b == (not c) and c == ((not a) and (not b))]
+ok(sols == [(False, True, False)], "RLM01 exemplo 3 e exercício 13: no problema dos três, só o segundo fala a verdade (solução única)")
+sols2 = [(a, b) for a in (True, False) for b in (True, False) if a == ((not a) or (not b))]
+ok(sols2 == [(True, False)], "RLM01 chefão (d): quem diz 'pelo menos um de nós mente' é veraz e o outro mente")
+vogal, par = lambda c: c in "AEIOU", lambda c: c in "02468"
+precisa = [c for c in "AK47" if any((vogal(c) and not par(o)) or (vogal(o) and c.isdigit() and not par(c)) for o in ("A", "K", "4", "7") if o.isdigit() != c.isdigit())]
+ok(precisa == ["A", "7"], "RLM01 chefão (e): só A e 7 podem esconder uma violação da regra 'vogal → par'")
+ok(len([1 for p_ in (True, False) for q_ in (True, False) for r_ in (True, False) if imp(p_ or q_, r_)]) == 5 and all(any((x - y) % 10 == 0 for i, x in enumerate(L11) for y in L11[i + 1:]) for L11 in ([3, 14, 25, 36, 47, 58, 69, 70, 81, 92, 103], list(range(100, 111)))), "RLM01 exercício 14 (primeiro acesso): (p ∨ q) → r é verdadeira em 5 linhas; chefão (c) em dois exemplos de 11 inteiros")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)
