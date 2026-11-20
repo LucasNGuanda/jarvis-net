@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- O Jarvis é uma página só: os temas são rotas por "#" (ex.: #/A01), e buscadores não tratam o que vem depois do "#" como outra página.
+     Por isso a única URL real é a raiz. Atualizar o lastmod a cada publicação. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lucasnguanda.github.io/site-fisica/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
   </url>
 </urlset>
