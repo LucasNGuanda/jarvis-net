@@ -193,7 +193,7 @@
     return "";
   }
   /* elemento: liga a tabela periódica (ferramenta de rodapé) e abre a ficha dele. Molécula: vai ao visualizador e abre a molécula quando ele estiver pronto. */
-  J.abreElemento = (z) => { const T = window.TABELA; if (!T || (AC() && !AC().materia("quimica"))) return false; T.ligaSalvo(true); /* liga a ferramenta de rodapé como o interruptor faria (e desliga a calculadora: só uma por vez) */ T.abre(true); if (T._) { T._.modo("ficha"); T._.define({ sel: +z }); } return true; };
+  J.abreElemento = (z) => { const T = window.TABELA; if (!T || (AC() && !AC().materia("quimica"))) return false; T.ligaSalvo(true); /* liga a ferramenta de rodapé como o interruptor faria (e desliga a calculadora: só uma por vez) */ T.abre(true); if (T._) { T._.modo("ficha"); T._.define({ sel: +z }); if (T._.fichaCel) T._.fichaCel(true); /* no celular a ficha é uma tela cheia */ } return true; };
   J.abreMolecula = (id) => { let n = 0; const tenta = () => { const m = window.SIM && window.SIM.qMoleculas && window.SIM.qMoleculas._ult; if (m && document.querySelector(".qm, [id^=lab-] canvas, canvas")) { try { m.abre([id]); return; } catch (e) {} } if (++n < 40) setTimeout(tenta, 150); }; setTimeout(tenta, 200); };
   /* histórico curto (jarvis:buscas, entra no exportar) */
   const HIST = "jarvis:buscas";

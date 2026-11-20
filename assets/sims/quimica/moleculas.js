@@ -136,10 +136,12 @@
     const grade = () => { const n = mods.length || 1; return n === 4 ? { c: 2, l: 2 } : { c: n, l: 1 }; }; /* 1, 2 ou 3 lado a lado; 4 em dois por dois */
     const q = (ts) => { if (!vivo) return; const dt = Math.min(0.05, (ts - t0) / 1000 || 0); t0 = ts; if (girar && !arr) { R = mm(rotY(dt * 0.45), R); sujo = true; } if (sujo) { pinta(); sujo = false; } requestAnimationFrame(q); };
     const pos = (e) => { const b = cv.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
-    cv.addEventListener("pointerdown", (e) => { arr = { p: pos(e), andou: 0 }; cv.setPointerCapture(e.pointerId); });
-    cv.addEventListener("pointermove", (e) => { if (!arr) return; const p = pos(e), dx = p[0] - arr.p[0], dy = p[1] - arr.p[1]; arr.andou += Math.abs(dx) + Math.abs(dy); arr.p = p; R = mm(mm(rotY(dx * 0.01), rotX(dy * 0.01)), R); sujo = true; });
-    const solta = (e) => { if (!arr) return; const clique = arr.andou < 4, p = arr.p; arr = null; if (clique && aoClicar) { const g = grade(), k = Math.min(mods.length - 1, Math.floor(p[0] / (cv.clientWidth / g.c)) + g.c * Math.floor(p[1] / (cv.clientHeight / g.l))); let melhor = -1, mz = -1e9; (ult[k] || []).forEach((a, i) => { if (a.vis && Math.hypot(a.x - p[0], a.y - p[1]) <= Math.max(a.r, 9) && a.z > mz) { mz = a.z; melhor = i; } }); aoClicar(k, melhor); } };
-    cv.addEventListener("pointerup", solta); cv.addEventListener("pointercancel", () => (arr = null));
+    const dedos = new Map(); let pinca = null; /* pinça: dois dedos na tela. A distância entre eles muda o zoom; enquanto houver dois dedos, nada gira. */
+    const dist = () => { const v = [...dedos.values()]; return Math.hypot(v[0][0] - v[1][0], v[0][1] - v[1][1]); };
+    cv.addEventListener("pointerdown", (e) => { dedos.set(e.pointerId, pos(e)); if (dedos.size === 2) { pinca = { d: dist() || 1, z: zoom }; if (arr) arr.andou = 99; } else if (dedos.size === 1) arr = { p: pos(e), andou: 0 }; try { cv.setPointerCapture(e.pointerId); } catch (x) {} });
+    cv.addEventListener("pointermove", (e) => { if (dedos.has(e.pointerId)) dedos.set(e.pointerId, pos(e)); if (pinca && dedos.size >= 2) { zoom = Math.max(0.4, Math.min(3, pinca.z * (dist() / pinca.d))); sujo = true; return; } if (!arr || pinca) return; const p = pos(e), dx = p[0] - arr.p[0], dy = p[1] - arr.p[1]; arr.andou += Math.abs(dx) + Math.abs(dy); arr.p = p; R = mm(mm(rotY(dx * 0.01), rotX(dy * 0.01)), R); sujo = true; });
+    const solta = (e) => { dedos.delete(e.pointerId); if (pinca) { if (dedos.size === 0) { pinca = null; arr = null; } return; } if (!arr) return; const clique = arr.andou < 4, p = arr.p; arr = null; if (clique && aoClicar) { const g = grade(), k = Math.min(mods.length - 1, Math.floor(p[0] / (cv.clientWidth / g.c)) + g.c * Math.floor(p[1] / (cv.clientHeight / g.l))); let melhor = -1, mz = -1e9; (ult[k] || []).forEach((a, i) => { if (a.vis && Math.hypot(a.x - p[0], a.y - p[1]) <= Math.max(a.r, 9) && a.z > mz) { mz = a.z; melhor = i; } }); aoClicar(k, melhor); } };
+    cv.addEventListener("pointerup", solta); cv.addEventListener("pointercancel", (e) => { dedos.delete(e.pointerId); if (!dedos.size) pinca = null; arr = null; });
     cv.addEventListener("wheel", (e) => { e.preventDefault(); zoom = Math.max(0.4, Math.min(3, zoom * (e.deltaY < 0 ? 1.1 : 1 / 1.1))); sujo = true; }, { passive: false });
     cv.addEventListener("dblclick", () => { R = R0(); zoom = 1; sujo = true; });
     const ro = window.ResizeObserver ? new ResizeObserver(() => (sujo = true)) : null; if (ro) ro.observe(cv);
@@ -186,7 +188,19 @@
   .mv-nc{display:inline-block;font:600 11px var(--f-text);color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 60%,transparent);border-radius:5px;padding:0 6px;margin-left:6px;vertical-align:1px}
   .mv-modelo{color:var(--ink2);font-size:13px;margin-top:6px}
   .vc{display:grid;grid-template-columns:minmax(0,1fr) 300px;border-bottom:1px solid var(--line)}.vc-dir{border-left:1px solid var(--line);background:var(--card2);padding:12px 14px;display:flex;flex-direction:column;gap:12px}
-  .vc-dir h5{margin:0 0 5px;font:600 12px var(--f-text);color:var(--ink2)}.vc-pos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.vc-pos select{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--line2);border-radius:7px;padding:5px 4px;font:500 13px var(--f-text)}`;
+  .vc-dir h5{margin:0 0 5px;font:600 12px var(--f-text);color:var(--ink2)}.vc-pos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.vc-pos select{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--line2);border-radius:7px;padding:5px 4px;font:500 13px var(--f-text)}
+  @media (max-width:700px){
+    .mv,.vc{grid-template-columns:minmax(0,1fr)}
+    .mv-esq{padding:10px}
+    .mv-dir,.vc-dir{border-left:0;border-top:1px solid var(--line);max-height:none}
+    .mv-bts{gap:8px}.mv-bts .bt,.vc-dir .bt,.mv-ficha .bt{min-height:44px;min-width:44px;padding:0 13px;font-size:14px}
+    .mv-busca{scroll-margin-top:8px}.mv-busca input{height:46px;font-size:16px}
+    .mv-lista{max-height:264px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+    .mv-it{min-height:44px;align-items:center;font-size:15px}.mv-it .n{font-size:14px}
+    .mv-ficha{padding:12px 12px 4px}.mv-fc dl{grid-template-columns:112px 1fr}
+    .vc-dir .bts{display:flex;flex-wrap:wrap;gap:8px}.vc-pos{grid-template-columns:repeat(2,1fr);gap:8px}.vc-pos select{height:44px;font-size:16px}
+  }`;
+  const noCel = () => !!(window.matchMedia && matchMedia("(max-width:700px)").matches);
   const estilo = () => { if (!document.getElementById("mv-css")) { const s = document.createElement("style"); s.id = "mv-css"; s.textContent = CSS; document.head.appendChild(s); } };
   const escrito = (cod) => (window.CATALOGO || []).some((md) => /^(Q|EQ)/.test(md.id) && md.temas.some((t) => t[0] === cod && t[3]));
   const bt = (k, nome, on) => `<button class="bt peq" data-b="${k}" aria-pressed="${!!on}">${nome}</button>`;
@@ -216,7 +230,7 @@
         ${isos.length && abertos.length === 1 ? `<p style="margin:8px 0 0"><button class="bt peq" data-iso="${[m].concat(isos).slice(0, 4).map((x) => x.id).join(",")}">ver ao lado ${isos.length === 1 ? "do isômero: " + isos[0].nome : "dos isômeros (" + isos.length + ")"}</button></p>` : ""}</div>`; };
     const abre = (ids) => { abertos = ids.slice(0, 4).map((id) => dados.lista.find((m) => m.id === id)).filter(Boolean); if (!abertos.length) return;
       mods = abertos.length === 1 && abertos[0].tipo === "ionico" ? modelosIonicos(abertos[0], dados.lista) : abertos.filter((m) => m.tipo !== "ionico").map(modelo); if (abertos.length > 1) mods.forEach((m) => (m.rotulo = m.reg.nome)); else if (!mods[0].ionico) mods[0].rotulo = "";
-      angs = mods.map(centroPadrao); pal.mostra(mods); aplica(); const f = q("[data-v=ficha]"); f.classList.toggle("dupla", abertos.length > 1); f.innerHTML = abertos.map(ficha).join("");
+      angs = mods.map(centroPadrao); pal.mostra(mods); aplica(); if (mods.length > 1 && window.TABELA && TABELA.avisoCel) TABELA.avisoCel("moleculas", q(".mv-esq")); /* celular: vários modelos lado a lado ficam pequenos; avisa uma vez */ const f = q("[data-v=ficha]"); f.classList.toggle("dupla", abertos.length > 1); f.innerHTML = abertos.map(ficha).join("");
       el.querySelectorAll(".mv-it").forEach((b) => b.setAttribute("aria-pressed", abertos.some((m) => m.id === b.dataset.id))); el.dataset.abertos = abertos.map((m) => m.id).join(","); };
     const lista = (itens, busca) => { let h = "", g = ""; itens.forEach(({ m, como }) => { if (!busca && m.grupo !== g) { g = m.grupo; h += `<div class="mv-grupo">${g}</div>`; } h += `<button class="mv-it" data-id="${m.id}" aria-pressed="${abertos.some((x) => x.id === m.id)}"><span class="f">${fBonita(m.formula)}</span><span class="n">${m.nome}</span>${busca ? `<small>${como}</small>` : ""}</button>`; }); q("[data-v=lista]").innerHTML = h || `<div class="mv-nota" style="padding:10px 4px">Nada no catálogo com esse nome, fórmula ou SMILES.</div>`; };
     const busca = () => { const t = q("#mv-q").value, r = SIM.qMolBusca(dados.lista, t), a = q("[data-v=achou]");
@@ -224,10 +238,14 @@
       lista(r.itens, true);
       if (r.porFormula.length > 1) { a.innerHTML = `<b>${r.porFormula.length} isômeros</b> com a fórmula ${fBonita(r.porFormula[0].formula)}: mesma fórmula, moléculas diferentes. ${r.porFormula.length > 4 ? "Os 4 primeiros estão lado a lado." : "Estão lado a lado."}`; abre(r.porFormula.map((m) => m.id)); }
       else { a.innerHTML = r.itens.length ? `${r.itens.length} ${r.itens.length === 1 ? "resultado" : "resultados"}` : ""; if (r.itens.length) abre([(r.porFormula[0] || r.itens[0].m).id]); } }; /* abre o melhor resultado; os outros ficam na lista */
-    el.addEventListener("click", (e) => { const it = e.target.closest(".mv-it"); if (it) return abre([it.dataset.id]); const iso = e.target.closest("[data-iso]"); if (iso) return abre(iso.dataset.iso.split(","));
+    el.addEventListener("click", (e) => { const it = e.target.closest(".mv-it"); if (it) { abre([it.dataset.id]); if (noCel()) { q("#mv-q").blur(); q(".mv-palco").scrollIntoView({ block: "center", behavior: reduz() ? "auto" : "smooth" }); } return; } const iso = e.target.closest("[data-iso]"); if (iso) return abre(iso.dataset.iso.split(","));
       const z = e.target.closest("[data-z]"); if (z) return z.dataset.z === "0" ? pal.recentra() : pal.zoom(z.dataset.z === "+" ? 1.2 : 1 / 1.2);
       const b = e.target.closest("[data-b]"); if (!b || b.disabled) return; const k = b.dataset.b, on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", on); if (k === "g") return pal.girar(on); op[k] = on; aplica(); });
-    q("#mv-q").addEventListener("input", () => dados && busca());
+    q("#mv-q").addEventListener("input", () => { if (dados) busca(); if (noCel()) q(".mv-busca").scrollIntoView({ block: "start" }); /* o que muda acima do campo não o tira do lugar */ });
+    /* celular: quando o teclado sobe (a área visível encolhe) com o campo em foco, o campo vai para o alto da tela e a lista fica logo abaixo */
+    const sobe = () => { if (noCel() && document.activeElement === q("#mv-q")) q(".mv-busca").scrollIntoView({ block: "start" }); };
+    q("#mv-q").addEventListener("focus", () => setTimeout(sobe, 250)); if (window.visualViewport) { visualViewport.addEventListener("resize", sobe); F.aoSair(() => visualViewport.removeEventListener("resize", sobe)); }
+    q("#mv-q").addEventListener("keydown", (e) => { if (e.key === "Enter" && noCel()) { e.target.blur(); q(".mv-palco").scrollIntoView({ block: "center" }); } });
     SIM.qMoleculas._ult = { pal, abre: (ids) => abre(ids), estado: () => ({ abertos: abertos.map((m) => m.id), mods: mods.length, op: Object.assign({}, op), angs: angs.slice(), lp: mods.map((m) => m.lp.length) }) };
     carrega().then((d) => { dados = d; q("[data-v=nota]").innerHTML = `A busca por SMILES só encontra moléculas <b>deste catálogo</b> (${d.lista.length}), comparando o texto com o SMILES da ficha. Ela não desenha molécula nova.`; lista(d.lista.map((m) => ({ m })), false); abre(["h2o"]); }).catch(() => { q("[data-v=msg]").textContent = "O catálogo de moléculas não carregou. Recarregue a página."; });
   };

@@ -84,6 +84,31 @@
   @keyframes tp-entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   .tp-dir.tp-troca>*{animation:tp-entra .18s ease-out both}
   @media print{.tp-barra,.tp-gaveta{display:none}}
+  .tp-fx{display:none}.tp-av:empty{display:none}
+  @media (max-width:700px){
+    body.tp-on{padding-bottom:46px}
+    .tp-barra{height:44px}
+    .tp-gaveta{bottom:44px;top:0;height:auto;z-index:70}.tp-barra{z-index:71}
+    .tp-aberta .tp-gaveta{will-change:auto}.tp-fon .tp-barra{visibility:hidden}
+    .tp-topo{flex-wrap:wrap;padding:8px 10px;gap:8px}
+    .tp-topo b{font-size:14px;margin-right:0}
+    .tp-topo input[type=search]{flex:1;min-width:0;width:auto;height:44px;font-size:16px;padding:0 10px}
+    .tp-x{order:2;width:44px;height:44px;font-size:18px;flex:none;margin-left:0}
+    .tp-modos{order:3;flex:0 0 100%;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;gap:6px}
+    .tp-modos .bt,.tp-ctl .bt{min-height:44px;min-width:44px;padding:0 13px;font-size:14px;white-space:nowrap;flex:none}
+    .tp-corpo{padding:8px 10px;gap:0}
+    .tp-esq{gap:6px}
+    .tp-ctl{min-height:44px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:13.5px}
+    .tp-ctl>*{flex:none}.tp-ctl input[type=range]{width:min(60vw,300px);height:44px}.tp-ctl select{height:44px;font-size:16px}
+    .tp-grade{grid-template-columns:repeat(18,46px);grid-template-rows:repeat(7,46px) 12px repeat(2,46px);overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;justify-content:start;align-content:start;padding:2px 2px 10px}
+    .tp-c b{font-size:16px}.tp-c i{font-size:8px}
+    .tp-rod{max-height:54px;overflow:auto;font-size:11.5px}
+    .tp-dir{position:fixed;left:0;right:0;top:0;bottom:0;width:auto;z-index:80;border:0;border-radius:0;padding:62px 16px 24px;font-size:15.5px;transform:translateY(102%);visibility:hidden;transition:transform .28s cubic-bezier(.2,.8,.2,1),visibility 0s linear .28s}
+    .tp-fon .tp-dir{transform:none;visibility:visible;transition:transform .28s cubic-bezier(.2,.8,.2,1),visibility 0s}
+    .tp-dir td{padding:8px 0}
+    .tp-fon .tp-fx{display:flex;align-items:center;gap:6px;position:fixed;top:9px;right:10px;z-index:81;height:44px;min-width:44px;padding:0 14px;border:1px solid var(--line2);border-radius:22px;background:var(--bg2);color:var(--ink);font:600 14px var(--f-text);cursor:pointer}
+  }
+  @media (max-width:700px) and (prefers-reduced-motion:reduce){.tp-dir,.tp-fon .tp-dir{transition:none!important}}
   @media (prefers-reduced-motion:reduce){.tp-gaveta,.tp-aberta .tp-gaveta,.tp-barra,.tp-c{transition:none!important}.tp-dir.tp-troca>*{animation:none!important}}`;
 
   /* ---------- estado da interface ---------- */
@@ -100,7 +125,7 @@
     if (raiz) return; const st = document.createElement("style"); st.textContent = CSS; document.head.appendChild(st);
     raiz = document.createElement("div"); raiz.className = "tp"; raiz.hidden = true;
     raiz.innerHTML = `<div class="tp-gaveta" role="dialog" aria-label="Tabela periódica"><div class="tp-topo"><b>Tabela periódica</b><input type="search" placeholder="nome, símbolo ou Z" aria-label="Buscar elemento por nome, símbolo ou número atômico"><div class="tp-modos">${MODOS.map(([k, n]) => `<button class="bt peq" data-modo="${k}" aria-pressed="${k === modo}">${n}</button>`).join("")}</div><button class="tp-x" aria-label="Fechar a tabela periódica" title="Fechar (Esc)">✕</button></div>
-      <div class="tp-corpo"><div class="tp-esq"><div class="tp-ctl"></div><div class="tp-grade"></div><p class="tp-rod"><b>★</b> é um critério do Jarvis (elementos que mais aparecem em química geral de OBQ e ITA), <b>não</b> uma estatística de provas. · O <b>raio</b> mostrado é o de <b>van der Waals</b>. · <b>"sem dado"</b>: valor que não existe medido ou em que as fontes discordam; nada foi preenchido de memória.</p></div><aside class="tp-dir" aria-live="polite"></aside></div></div>
+      <div class="tp-corpo"><div class="tp-esq"><div class="tp-av"></div><div class="tp-ctl"></div><div class="tp-grade"></div><p class="tp-rod"><b>★</b> é um critério do Jarvis (elementos que mais aparecem em química geral de OBQ e ITA), <b>não</b> uma estatística de provas. · O <b>raio</b> mostrado é o de <b>van der Waals</b>. · <b>"sem dado"</b>: valor que não existe medido ou em que as fontes discordam; nada foi preenchido de memória.</p></div><aside class="tp-dir" aria-live="polite"></aside><button class="tp-fx" type="button" aria-label="Fechar a ficha e voltar à tabela">✕ fechar</button></div></div>
       <button class="tp-barra" aria-expanded="false" title="Abrir a tabela periódica">${mini()}<span>Tabela periódica</span><span class="tp-seta">▲</span></button>`;
     document.body.appendChild(raiz);
     let g = ""; for (let z = 1; z <= 118; z++) { const [l, c] = T.pos(z), e = EL(z); g += `<button class="tp-c" data-z="${z}" style="grid-row:${l > 8 ? l : l};grid-column:${c}" title="${nome(z)} (Z = ${z})"><small>${z}</small><b>${e ? e.s : "?"}</b><i>${nome(z)}</i><span class="tp-m"></span></button>`; }
@@ -108,12 +133,29 @@
     q(".tp-grade").innerHTML = g.replace(/grid-row:(9|10);/g, (m, l) => `grid-row:${l};`);
     q(".tp-barra").addEventListener("click", () => T.abre(!raiz.classList.contains("tp-aberta")));
     q(".tp-x").addEventListener("click", () => T.abre(false));
-    q(".tp-grade").addEventListener("click", (ev) => { const b = ev.target.closest(".tp-c"); if (!b) return; const z = +b.dataset.z; if (modo === "cmp") { cmp = [cmp[1], z]; } if (modo === "conf") zfill = z; sel = z; pinta(); });
+    q(".tp-grade").addEventListener("click", (ev) => { const b = ev.target.closest(".tp-c"); if (!b) return; const z = +b.dataset.z; if (modo === "cmp") { cmp = [cmp[1], z]; } if (modo === "conf") zfill = z; sel = z; pinta(); if (cel()) { if (modo !== "cmp") fichaCel(true); else if (++toquesCmp % 2 === 0) fichaCel(true); /* comparar: a tela cheia abre no segundo elemento tocado */ } });
+    q(".tp-fx").addEventListener("click", () => fichaCel(false));
+    q(".tp-topo input").addEventListener("keydown", (ev) => { if (ev.key === "Enter" && cel() && acha().length) { ev.target.blur(); fichaCel(true); } }); /* teclado do celular: "ir" abre a ficha do primeiro achado */
+    arrasta(q(".tp-topo"));
     q(".tp-modos").addEventListener("click", (ev) => { const b = ev.target.closest("[data-modo]"); if (!b) return; para(); modo = b.dataset.modo; controles(); pinta(); });
     q(".tp-topo input").addEventListener("input", (ev) => { busca = ev.target.value.trim().toLowerCase(); const a = acha(); if (a.length) sel = a[0]; pinta(); });
-    document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && raiz && raiz.classList.contains("tp-aberta")) { ev.stopPropagation(); T.abre(false); } }, true);
+    document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && raiz && raiz.classList.contains("tp-aberta")) { ev.stopPropagation(); if (raiz.classList.contains("tp-fon")) fichaCel(false); else T.abre(false); } }, true);
     controles(); pinta();
   }
+  /* ---------- celular (β 11.5): tela de até 700 px. No computador nada disto roda. ---------- */
+  const cel = () => !!(window.matchMedia && matchMedia("(max-width:700px)").matches);
+  let toquesCmp = 0;
+  const fichaCel = (on) => { if (!raiz) return; raiz.classList.toggle("tp-fon", !!on && cel()); if (on && cel()) q(".tp-dir").scrollTop = 0; };
+  /* puxar o cabeçalho da gaveta para baixo com o dedo fecha a tabela (o X e a barra também fecham) */
+  function arrasta(alvo) { let y0 = null; alvo.addEventListener("touchstart", (e) => { y0 = e.target.closest("input, button, .tp-modos") ? null : e.touches[0].clientY; }, { passive: true });
+    alvo.addEventListener("touchend", (e) => { if (y0 !== null && e.changedTouches[0].clientY - y0 > 60) T.abre(false); y0 = null; }, { passive: true }); }
+  /* aviso de celular: uma vez por ferramenta, com botão de fechar. Guardado em fisica:aviso-cel (configuração do site, não progresso). */
+  const K_AV = "fisica:aviso-cel", CSS_AV = `.av-cel{display:none}@media (max-width:700px){.av-cel{display:flex;align-items:flex-start;gap:10px;margin:0 0 8px;padding:10px 6px 10px 12px;border:1px solid color-mix(in srgb,var(--warn) 55%,transparent);background:color-mix(in srgb,var(--warn) 10%,var(--card));border-radius:10px;font:13.5px/1.4 var(--f-text);color:var(--ink)} .av-cel span{flex:1;padding-top:2px}.av-cel button{flex:none;width:44px;height:44px;margin:-6px 0;border:0;border-radius:50%;background:none;color:var(--ink2);font-size:18px;cursor:pointer}}`;
+  T.avisoCel = (chave, onde) => { if (!onde || !cel()) return null; let v = le(K_AV); if (!v || typeof v !== "object") v = {}; if (v[chave] || onde.querySelector(".av-cel")) return null;
+    if (!document.getElementById("av-cel-css")) { const st = document.createElement("style"); st.id = "av-cel-css"; st.textContent = CSS_AV; document.head.appendChild(st); }
+    const d = document.createElement("div"); d.className = "av-cel"; d.setAttribute("role", "note"); d.innerHTML = `<span>Obs.: no celular esta ferramenta não funciona muito bem. Para a melhor experiência, use um computador.</span><button type="button" aria-label="Fechar o aviso">✕</button>`;
+    d.querySelector("button").addEventListener("click", () => { let w = le(K_AV); if (!w || typeof w !== "object") w = {}; w[chave] = true; grava(K_AV, w); d.remove(); }); onde.prepend(d); return d; };
+  T.cel = cel;
   const semAcento = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   const acha = () => { if (!busca) return []; const b = semAcento(busca), r = []; for (let z = 1; z <= 118; z++) { const e = EL(z); if (String(z) === b || (e && e.s.toLowerCase() === b)) r.unshift(z); else if (semAcento(nome(z)).includes(b) && b.length > 1) r.push(z); } return r; };
   T.busca = (texto) => { busca = String(texto).trim().toLowerCase(); return acha(); };
@@ -173,14 +215,14 @@
     return `<h4 style="font-size:20px">${ano}<span>${antigos + ate.length} elementos conhecidos</span></h4><table>${linha("conhecidos desde a Antiguidade", antigos)}${linha("descobertos até " + ano, ate.length)}${semAno ? linha("sem ano nos dados (fontes discordam)", semAno) : ""}</table><p style="margin:10px 0 2px;color:var(--ink2)">Descobertos nos 25 anos anteriores:</p><table>${novos.map((e) => linha(e.ano + " · " + e.s + " (" + nome(e.z) + ")", e.autor || "sem dado")).join("") || linha("—", "")}</table>${men.length ? `<p class="tp-nota">Lacunas que Mendeleiev deixou na tabela${D().anoMendeleiev ? " (previsões de " + D().anoMendeleiev + ")" : ""}: ${men.map((m) => m.eka + " = " + nome(m.z) + " (" + (EL(m.z) ? EL(m.z).ano : "?") + ")").join("; ")}.</p>` : ""}`; }
 
   /* ---------- ligar, desligar, abrir ---------- */
-  T.abre = (on) => { if (!raiz) return; raiz.classList.toggle("tp-aberta", on); q(".tp-barra").setAttribute("aria-expanded", on); q(".tp-barra").title = on ? "Baixar a tabela periódica" : "Abrir a tabela periódica"; if (!on) para(); };
+  T.abre = (on) => { if (!raiz) return; if (!on) fichaCel(false); else T.avisoCel("tabela", q(".tp-av")); raiz.classList.toggle("tp-aberta", on); q(".tp-barra").setAttribute("aria-expanded", on); q(".tp-barra").title = on ? "Baixar a tabela periódica" : "Abrir a tabela periódica"; if (!on) para(); };
   T.liga = (on) => { if (on && !pode()) on = false; if (on) monta(); ligadaAgora = !!on;
     if (raiz) { if (on) { raiz.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => { if (ligadaAgora) raiz.classList.add("tp-vis"); })); }
       else { T.abre(false); raiz.classList.remove("tp-vis"); const some = () => { if (!ligadaAgora) raiz.hidden = true; }; if (semMovimento()) some(); else setTimeout(some, 290); } }
     document.body.classList.toggle("tp-on", !!on); sincroniza(); };
   T.ligaSalvo = (on) => { grava(K_ON, !!on); if (on) { grava(K_USO, true); if (window.CALC && CALC.ligaSalvo) CALC.ligaSalvo(false); if (window.CALC2 && CALC2.ligaSalvo) CALC2.ligaSalvo(false); } T.liga(on); };
   T.ligada = () => !!le(K_ON);
-  T._ = { EL, FAM, PROP, acha: () => acha(), modo: (m) => { modo = m; controles(); pinta(); }, estado: () => ({ modo, sel, cmp, prop, fam, temp, zfill, ano }), define: (o) => { if (o.sel) sel = o.sel; if (o.cmp) cmp = o.cmp; if (o.prop) prop = o.prop; if (o.fam) fam = o.fam; if (o.temp !== undefined) temp = o.temp; if (o.zfill) zfill = o.zfill; if (o.ano) ano = o.ano; controles(); pinta(); } };
+  T._ = { EL, FAM, PROP, acha: () => acha(), modo: (m) => { modo = m; controles(); pinta(); }, fichaCel, estado: () => ({ modo, sel, cmp, prop, fam, temp, zfill, ano, fichaCel: !!raiz && raiz.classList.contains("tp-fon") }), define: (o) => { if (o.sel) sel = o.sel; if (o.cmp) cmp = o.cmp; if (o.prop) prop = o.prop; if (o.fam) fam = o.fam; if (o.temp !== undefined) temp = o.temp; if (o.zfill) zfill = o.zfill; if (o.ano) ano = o.ano; controles(); pinta(); } };
 
   /* interruptores: ao lado do título (páginas iniciais da Química) e, depois da primeira vez, na engrenagem */
   const novoSw = (id, rot) => { const b = document.createElement("button"); b.className = "interruptor" + (id ? "" : " tp-sw"); if (id) b.id = id; b.type = "button"; b.setAttribute("role", "switch"); b.setAttribute("aria-label", rot); b.title = rot; b.innerHTML = "<span></span>"; b.addEventListener("click", () => T.ligaSalvo(!T.ligada())); return b; };
