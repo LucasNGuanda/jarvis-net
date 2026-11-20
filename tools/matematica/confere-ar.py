@@ -176,5 +176,30 @@ ok(27 - 9 + 3 - 1 == 20 and pesos == list(range(-40, 41)) and 3 ** 4 == 81, "BN0
 ok(Fr(1, 2) + Fr(1, 8) == Fr(5, 8) and float(Fr(5, 8)) == 0.625 and base(181, 2) == "10110101" and base(194, 5) == "1234" and base(100, 3) == "10201" and base(37, 2) == "100101", "BN01 exercícios (primeiro acesso): 0,101₂ = 0,625; 181, 194, 100 e 37 nas bases 2, 5, 3 e 2")
 ok(int("142", 7) == 79 and 2026 % 7 == 3 and 80 == 2 ** 4 * 5 and base(80, 2) == "1010000" and 4 * 5 ** 2 == 100 and (int("101101", 2), int("56", 8), int("2C", 16), int("133", 5)) == (45, 46, 44, 43), "BN01 exercícios 10 a 14 (primeiro acesso)")
 
+# ---------- CNJ01 ----------
+A1, B1 = {1, 2, 3, 4, 5, 6}, {4, 5, 6, 7, 8}
+ok(A1 | B1 == set(range(1, 9)) and A1 & B1 == {4, 5, 6} and A1 - B1 == {1, 2, 3} and B1 - A1 == {7, 8} and 6 + 5 - 3 == 8, "CNJ01: operações com A = {1..6} e B = {4..8}; 6 + 5 − 3 = 8")
+ok(all(len(list(itertools.chain.from_iterable(itertools.combinations(range(n), k) for k in range(n + 1)))) == 2 ** n for n in range(0, 13)), "CNJ01 teorema 1: 2ⁿ subconjuntos, listando todos (n até 12)")
+ok(len([c for k in range(4) for c in itertools.combinations([1, 2, 3], k)]) == 8, "CNJ01 teorema 1: {1, 2, 3} tem 8 subconjuntos")
+U12 = set(range(1, 13))
+A2, B2 = {x for x in U12 if x % 2 == 0}, {x for x in U12 if x % 3 == 0}
+ok(A2 | B2 == {2, 3, 4, 6, 8, 9, 10, 12} and U12 - (A2 | B2) == {1, 5, 7, 11} and U12 - A2 == {1, 3, 5, 7, 9, 11} and U12 - B2 == {1, 2, 4, 5, 7, 8, 10, 11} and (U12 - A2) & (U12 - B2) == {1, 5, 7, 11}, "CNJ01 teorema 2: exemplo de De Morgan com múltiplos de 2 e de 3 até 12")
+U5 = set(range(1, 6))
+sub5 = [set(c) for k in range(6) for c in itertools.combinations(sorted(U5), k)]
+ok(all(U5 - (X | Y) == (U5 - X) & (U5 - Y) and U5 - (X & Y) == (U5 - X) | (U5 - Y) for X in sub5 for Y in sub5), "CNJ01 teorema 2: as duas leis de De Morgan nos 1024 pares de subconjuntos de {1, …, 5}")
+ok(all(X - (Y | W) == (X - Y) & (X - W) for X in sub5 for Y in sub5 for W in sub5), "CNJ01 chefão (a): A − (B ∪ C) = (A − B) ∩ (A − C) nos 32 768 trios")
+ok(all((X | Y == Y and X & Y == X) for X in sub5 for Y in sub5 if X <= Y), "CNJ01 chefão (b): se A ⊂ B, então A ∪ B = B e A ∩ B = A")
+ok(25 + 18 - 10 == 33 and 40 - 33 == 7 and 25 + 18 == 43, "CNJ01 abertura e teorema 3: 25 + 18 − 10 = 33 e 7 de fora")
+ok(all(len(X | Y) == len(X) + len(Y) - len(X & Y) for X in sub5 for Y in sub5), "CNJ01 teorema 3: n(A ∪ B) = n(A) + n(B) − n(A ∩ B)")
+M2, M3, M5 = [{x for x in range(1, 61) if x % k == 0} for k in (2, 3, 5)]
+ok((len(M2), len(M3), len(M5), len(M2 & M3), len(M2 & M5), len(M3 & M5), len(M2 & M3 & M5)) == (30, 20, 12, 10, 6, 4, 2) and len(M2 | M3 | M5) == 44 == 30 + 20 + 12 - 10 - 6 - 4 + 2, "CNJ01 teorema 4: de 1 a 60, 44 múltiplos de 2, 3 ou 5")
+ok(all(len(X | Y | W) == len(X) + len(Y) + len(W) - len(X & Y) - len(X & W) - len(Y & W) + len(X & Y & W) for X in sub5 for Y in sub5 for W in sub5), "CNJ01 teorema 4: inclusão e exclusão com três conjuntos, em todos os trios")
+ok(2 ** 8 == 256 == len([c for k in range(11) for c in itertools.combinations(range(1, 11), k) if 1 in c and 2 not in c]), "CNJ01 chefão (c): 256 subconjuntos de {1, …, 10} com o 1 e sem o 2")
+ok(70 + 75 + 80 - 200 == 25 == 100 - (30 + 25 + 20), "CNJ01 chefão (d): pelo menos 25%")
+ok(len([x for x in range(1, 101) if x % 2 and x % 3 and x % 5]) == 26 and 50 + 33 + 20 - 16 - 10 - 6 + 3 == 74, "CNJ01 chefão (e): 26 números de 1 a 100 não são múltiplos de 2, 3 nem 5")
+r = {7: 5, 3: 7, 5: 4, 6: 6, 1: 12, 2: 9, 4: 10, 0: 8}
+ok(sum(r.values()) == 61 and r[1] + r[3] + r[5] + r[7] == 28 and r[2] + r[3] + r[6] + r[7] == 27 and r[4] + r[5] + r[6] + r[7] == 25 and 28 - 7 - 4 - 5 == 12, "CNJ01 exemplo 3 (primeiro acesso): 61 estudantes; 28, 27 e 25; só a primeira: 12")
+ok(15 + 8 + 10 + 7 == 40 and 28 + 25 - 40 == 13 and 100 - (50 + 33 - 16) == 33 and 4 * 3 == 12 and 2 ** 5 - 1 == 31, "CNJ01 exemplo 2 e exercícios 7, 13, 14 e 15 (primeiro acesso)")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)

@@ -22,7 +22,7 @@ window.CATALOGO.push(
     ["TN02","PIF: Princípio da Indução Finita",["TN01","SPG01"],true],
     ["TN03","Aritmética Modular",["TN01","TN02"],true],
     ["BN01","Bases de Numeração",["TN01","MB03"],true],
-    ["CNJ01","Teoria de Conjuntos",[]],
+    ["CNJ01","Teoria de Conjuntos",["TN01","TN02"],true],
     ["CNJ02","Conjuntos Numéricos",[]],
     ["RLM01","Raciocínio Lógico",[]],
     ["EF01","Porcentagem",[]],
