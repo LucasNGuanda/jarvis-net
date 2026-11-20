@@ -33,7 +33,7 @@ window.CATALOGO.push(
     ["CB02","Fatorial e Permutações",["CB01","TN01"],true],
     ["CB03","Arranjos e Combinações",["CB02","CB01"],true],
     ["CB04","Aprofundamento em Combinatória",["CB03","CNJ01"],true],
-    ["PB01","Teoria das Probabilidades",[]],
+    ["PB01","Teoria das Probabilidades",["CB03","CNJ01"],true],
     ["PB02","Probabilidade Condicional",[]],
   ] },
   { id:"GE", area:"mat", letra:"GE", cor:"--mU", nome:"Geometria", desc:"Plana, espacial e analítica.", temas:[

@@ -479,5 +479,30 @@ ok(all(cam_(a, b, (i, j)) == c4_(a + b, a) - c4_(i + j, i) * c4_(a - i + b - j, 
 ok(c4_(9, 2) == 36 and len([1 for x in range(3, 11) for y in range(11 - x)]) == 36 and len([1 for x in range(6) for y in range(6) for z in range(6) if x + y + z <= 5]) == 56 == c4_(8, 3), "CB04 exercícios 12 e 15 (primeiro acesso): 36; 56")
 ok(len([1 for x in range(1, 11) for y in range(1, 11) for z in range(1, 11) if x + y + z == 20]) == 63 == c4_(19, 2) - 3 * c4_(9, 2) and len([x for x in range(1, 1001) if x % 2 and x % 3 and x % 5]) == 266 and 500 + 333 + 200 - 166 - 100 - 66 + 33 == 734 and D_[6] == 5 * (44 + 9) == 265, "CB04 chefão (b), (c) e (e): 63 soluções; 266 números; D(6) = 265")
 
+# ---------- PB01 ----------
+from itertools import product as pp_, combinations as pc_, permutations as pq_
+from math import comb as pk_, factorial as pf_
+dd_ = list(pp_(range(1, 7), repeat=2))
+ok([len([d for d in dd_ if sum(d) == s]) for s in range(2, 13)] == [1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1] and all(len([d for d in dd_ if sum(d) == s]) == 6 - abs(s - 7) for s in range(2, 13)) and Fr(5, 36) == Fr(len([d for d in dd_ if sum(d) == 8]), 36), "PB01 abertura e exemplo 1: somas de dois dados (1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 casos); soma 8: 5/36")
+ok(len([d for d in dd_ if d[0] == d[1]]) == 6 and len([d for d in dd_ if sum(d) >= 10]) == 6 and len([d for d in dd_ if d[0] * d[1] % 2]) == 9 and len([d for d in dd_ if 6 in d]) == 11 and len([d for d in dd_ if sum(d) % 2 == 0]) == 18 and len([d for d in dd_ if sum(d) <= 5]) == 10 and len([d for d in dd_ if d[0] > d[1]]) == 15 and 36 - 25 == 11, "PB01 exercício 9 e teorema 4: eventos com dois dados (6, 6, 9, 11, 18, 10 e 15 casos)")
+nai_ = "CPEO"; val_ = ["A"] + [str(k) for k in range(2, 11)] + ["J", "Q", "K"]
+bar_ = [(v, n) for n in nai_ for v in val_]
+fig_ = lambda c: c[0] in "JQK"; ver_ = lambda c: c[1] in "CO"
+ok(len(bar_) == 52 and len([c for c in bar_ if c[1] == "C" or fig_(c)]) == 22 and Fr(22, 52) == Fr(11, 26) and len([c for c in bar_ if c[1] == "C" or c[0] == "K"]) == 16 and Fr(16, 52) == Fr(4, 13) and len([c for c in bar_ if ver_(c) or c[0] == "K"]) == 28 and len([c for c in bar_ if ver_(c) or fig_(c)]) == 32 and len([c for c in bar_ if c[1] == "P" or c[0] in ("2", "4", "6", "8", "10")]) == 28 and len([c for c in bar_ if ver_(c) or c[0] == "A"]) == 28 and len([c for c in bar_ if fig_(c)]) == 12 and len([c for c in bar_ if fig_(c) and c[1] == "P"]) == 3, "PB01 exemplo 2, teorema 2 e exercícios 6 e 7: contagens no baralho de 52 (copas ou figura 22; copas ou rei 16; vermelha ou rei 28; vermelha ou figura 32)")
+ok([len([m for m in pp_("CK", repeat=3) if m.count("C") == k]) for k in range(4)] == [1, 3, 3, 1] and all(len([m for m in pp_("CK", repeat=n) if m.count("C") == k]) == pk_(n, k) for n in range(1, 9) for k in range(n + 1)) and len([m for m in pp_("CK", repeat=2) if m.count("C") == 1]) == 2, "PB01 chute e teorema 3: duas moedas (2 de 4 casos); três moedas (1, 3, 3, 1); n moedas: C(n, k) casos (enumerado até n = 8)")
+ok(all(len([s for s in pp_(range(1, 7), repeat=n) if 6 in s]) == 6 ** n - 5 ** n for n in range(1, 7)) and 6 ** 4 - 5 ** 4 == 671 and abs(671 / 1296 * 100 - 51.77) < 0.005 and abs((5 / 6) ** 4 - 0.4823) < 0.00005, "PB01 teorema 4 e exemplo 3: pelo menos um 6 em n lançamentos, 6ⁿ − 5ⁿ sequências (enumerado até n = 6); com 4: 671/1296 ≈ 51,77%")
+ok(Fr(3, 10) == Fr(30, 100) and 100 - 45 - 30 == 25 and Fr(pk_(3, 2), 8) == Fr(3, 8) and Fr(4, 36) == Fr(1, 9) and 50 + 20 - 10 == 60 and abs(100 * (1 - 1 / 8) - 87.5) < 1e-9 and Fr(pk_(4, 2), pk_(10, 2)) == Fr(2, 15) and Fr(20, pk_(9, 2)) == Fr(5, 9) and abs(100 * (216 - 125) / 216 - 42.13) < 0.005, "PB01 exercícios 2, 3, 4, 5, 8, 10, 11, 12 e 13 (primeiro acesso): 30%; 3/8; 1/9; 25%; 60%; 87,5%; 2/15; 5/9; 42,13%")
+ok(len([p for p in pc_(["v"] * 4 + ["a"] * 6, 2) if p == ("v", "v")]) == 6 and pk_(10, 2) == 45 and len([p for p in pc_(["h"] * 5 + ["m"] * 4, 2) if set(p) == {"h", "m"}]) == 20, "PB01 exercícios 11 e 12: pares de bolas vermelhas (6 de 45) e pares mistos (20 de 36), enumerados")
+def vj2_(w):
+    vs = [i for i, x in enumerate(w) if x in "AEIOU"]
+    return Fr(len([f for f in pq_(range(len(w))) if max(f.index(i) for i in vs) - min(f.index(i) for i in vs) == len(vs) - 1]), pf_(len(w)))
+ok(vj2_("CINEMA") == Fr(1, 5) and vj2_("AMOR") == Fr(1, 2) and vj2_("LIVRO") == Fr(2, 5) and vj2_("FILA") == Fr(1, 2) and all(Fr(len([f for f in pq_(range(n)) if abs(f.index(0) - f.index(1)) == 1]), pf_(n)) == Fr(2, n) for n in range(3, 8)), "PB01 exercícios 14 e 15: vogais juntas (CINEMA 1/5) e duas pessoas juntas numa fila (2/n), enumerados")
+ok(all(len([s for s in pp_(range(7), repeat=k) if len(set(s)) < k]) == 7 ** k - pf_(7) // pf_(7 - k) for k in range(2, 6)) and abs(100 * (1 - 210 / 343) - 38.78) < 0.005, "PB01 exercício 16: pelo menos dois no mesmo dia da semana (38,78% com 3 pessoas), enumerado")
+ok(len([s for s in pp_(range(1, 7), repeat=3) if sum(s) == 10]) == 27 and Fr(27, 216) == Fr(1, 8) and [len([d for d in dd_ if sum(d) == 10 - a]) for a in range(1, 7)] == [4, 5, 6, 5, 4, 3], "PB01 chefão (b): 27 das 216 sequências de três dados somam 10")
+ok(pk_(52, 5) == 2598960 and pk_(13, 5) == 1287 and Fr(4 * 1287, 2598960) == Fr(33, 16660) and abs(33 / 16660 * 100 - 0.198) < 0.0005 and abs((5 / 6) ** 12 - 0.1122) < 0.00005 and abs((5 / 6) ** 13 - 0.0935) < 0.00005 and [n for n in range(1, 50) if 1 - (5 / 6) ** n > 0.9][0] == 13, "PB01 chefão (c) e (d): 5148/2 598 960 = 33/16 660 ≈ 0,198%; 13 lançamentos")
+pr23_ = 1.0
+for i_ in range(23): pr23_ *= (365 - i_) / 365
+ok(abs(pr23_ - 0.4927) < 0.00005 and abs(1 - pr23_ - 0.5073) < 0.00005 and pk_(23, 2) == 253 and 365 - 22 == 343, "PB01 chefão (e): 23 aniversários (modelo de 365 dias iguais): 1 − 0,4927 = 0,5073; 253 pares")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)
