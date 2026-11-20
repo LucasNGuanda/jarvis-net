@@ -264,5 +264,43 @@ ok(all(a * a + b * b + c * c == d * d for a, b, c, d in [(2, 3, 6, 7), (1, 2, 2,
 ok(hypot(5, 12) == 13 and sqrt(17 ** 2 - 8 ** 2) == 15 and abs(hypot(2, 3) - 3.61) < 0.005 and 3 * 4 / 5 == 2.4 and 8 ** 2 / 10 == 6.4 and sqrt(4 * 9) == 6 and 3 + 36 / 3 == 15 and abs(7 * sqrt(2) - 9.90) < 0.005 and 12 / 2 == 6 and sqrt(100 - 36) == 8 and hypot(9, 12) == 15 and [x for x in range(1, 200) if x * x + (x + 7) ** 2 == 169] == [5] and perto(sqrt(25 + 2 * 5 * 2.4), 7) and hypot(12, 5) == 13, "GP07 exercícios (primeiro acesso): 13; 15; 3,61; 2,4; 6,4; 6; 15; 9,90; 6; 8 dm; 15 km; 7; 5; 7; 13 m")
 ok([n for n in range(2, 10000) if (n - 1) ** 2 + n ** 2 == (n + 1) ** 2] == [4] and hypot(15, 20) == 25 and 15 * 20 / 25 == 12 and 400 / 25 == 16 and 225 / 25 == 9 and 16 * 9 == 144 and (15 + 20 - 25) / 2 == 5, "GP07 chefão (d) e (e): só n = 4 dá três inteiros consecutivos (busca até 10 000); triângulo 15, 20, 25: h = 12, projeções 16 e 9, raio inscrito 5")
 
+# ---------- GP09 ----------
+def cad_(ps): return abs(sum(ps[i][0] * ps[(i + 1) % len(ps)][1] - ps[(i + 1) % len(ps)][0] * ps[i][1] for i in range(len(ps)))) / 2
+def bas_():
+    b = random.uniform(2, 9); h = random.uniform(1, 6); d = random.uniform(-4, 6); B = random.uniform(1, 9); e = random.uniform(-3, 5)
+    return perto(cad_([(0, 0), (b, 0), (b + d, h), (d, h)]), b * h) and perto(cad_([(0, 0), (b, 0), (d, h)]), b * h / 2) and perto(cad_([(0, 0), (b, 0), (e + B, h), (e, h)]), (b + B) * h / 2)
+ok(all(bas_() for _ in range(1000)) and 5 * 3 == 15, "GP09 teoremas 1 e 2: em 1000 figuras sorteadas, o cadarço confirma paralelogramo = b·h, triângulo = b·h/2 e trapézio = (B + b)·h/2, com qualquer inclinação")
+def perp_():
+    d1 = random.uniform(2, 9); d2 = random.uniform(2, 9); x = random.uniform(0.1, d1 - 0.1); y = random.uniform(0.1, d2 - 0.1)
+    return perto(cad_([(-x, 0), (0, -y), (d1 - x, 0), (0, d2 - y)]), d1 * d2 / 2)
+ok(all(perp_() for _ in range(1000)) and 10 * 6 / 2 == 30, "GP09 teorema 2 e chefão (d): em 1000 quadriláteros de diagonais perpendiculares (não só losangos), área = d1·d2/2")
+def her_():
+    t = tri_sorteado(); a, b, c = dist(t[1], t[2]), dist(t[0], t[2]), dist(t[0], t[1]); p = (a + b + c) / 2; i = incentro(*t); r = abs((t[1][0] - t[0][0]) * (t[0][1] - i[1]) - (t[0][0] - i[0]) * (t[1][1] - t[0][1])) / c
+    return perto(sqrt(p * (p - a) * (p - b) * (p - c)), cad_(t), 1e-6) and perto(p * r, cad_(t), 1e-6)
+ok(all(her_() for _ in range(1000)) and all(perto(sqrt((a + b + c) / 2 * ((a + b + c) / 2 - a) * ((a + b + c) / 2 - b) * ((a + b + c) / 2 - c)), s) for a, b, c, s in [(13, 14, 15, 84), (5, 5, 6, 12), (7, 15, 20, 42), (9, 10, 17, 36), (13, 13, 10, 60), (6, 25, 29, 60), (10, 17, 21, 84), (5, 12, 13, 30)]), "GP09 teorema 3: em 1000 triângulos sorteados, Heron e semiperímetro × raio inscrito coincidem com o cadarço; os oito triângulos de lados inteiros têm as áreas inteiras dos enunciados")
+def regp_(n, l):
+    rr = l / (2 * sin(pi / n)); ap = rr * cos(pi / n); return perto(cad_([polar((0, 0), rr, 360 * i / n) for i in range(n)]), n * l / 2 * ap)
+ok(all(regp_(n, l) for n in range(3, 13) for l in (1, 2, 3.5)) and perto(cad_([polar((0, 0), 2, 60 * i) for i in range(6)]), 6 * sqrt(3)) and all(perto(cad_([(0, 0), (l, 0), (l / 2, l * sqrt(3) / 2)]), l * l * sqrt(3) / 4) for l in range(1, 20)), "GP09 teorema 4 e exercícios 8 e 9: polígono regular = semiperímetro × apótema (3 a 12 lados); hexágono de lado 2: 6√3; equilátero: l²√3/4")
+def pick_():
+    while True:
+        ps = [(round(6 + r * cos(radians(t))), round(4 + r * sin(radians(t)))) for t, r in [(90 + 72 * i + random.uniform(-25, 25), random.uniform(1.5, 4)) for i in range(5)]]
+        if len(set(ps)) == 5 and cad_(ps) > 1: break
+    def dentro(x, y):
+        w = 0; nb = False
+        for i in range(5):
+            p, q = ps[i], ps[(i + 1) % 5]; cr = (q[0] - p[0]) * (y - p[1]) - (q[1] - p[1]) * (x - p[0])
+            if cr == 0 and min(p[0], q[0]) <= x <= max(p[0], q[0]) and min(p[1], q[1]) <= y <= max(p[1], q[1]): nb = True
+            if p[1] <= y:
+                if q[1] > y and cr > 0: w += 1
+            elif q[1] <= y and cr < 0: w -= 1
+        return 2 if nb else (1 if w else 0)
+    cont = [dentro(x, y) for x in range(0, 13) for y in range(0, 10)]
+    return cont.count(1) + cont.count(2) / 2 - 1 == cad_(ps)
+ok(all(pick_() for _ in range(300)), "GP09 laboratório e exemplo 3: teorema de Pick conferido em 300 pentágonos de malha sorteados em forma de estrela em volta de um ponto (I + B/2 − 1 = área do cadarço)")
+MAL_ = [[(1, 1), (6, 1), (7, 4), (3, 5)], [(1, 1), (7, 2), (5, 5), (2, 4)], [(2, 1), (6, 1), (7, 3), (4, 5), (1, 3)], [(1, 1), (5, 1), (7, 4), (4, 5), (1, 4)], [(1, 2), (4, 1), (7, 3), (5, 5)]]
+ok([cad_(m) for m in MAL_] == [16.5, 14.0, 16.0, 18.0, 11.5], "GP09 exemplo 3 e exercício 12: áreas dos cinco polígonos de malha, pelo cadarço: 16,5; 14; 16; 18; 11,5")
+ok((10 + 6) * 4 / 2 == 32 and 7 * 4 == 28 and 9 * 6 / 2 == 27 and 8 * 4 == 32 and (12 + 8) * 5 / 2 == 50 and 10 * 6 / 2 == 30 and 6 * 8 / 2 == 24 and abs(16 * sqrt(3) / 4 - 6.93) < 0.005 and abs(6 * 4 * sqrt(3) / 4 - 10.39) < 0.005 and 80 - 12 == 68 and 2 * 42 / 12 == 7 and 60 / 18 == 10 / 3 and 40 * 2 / 5 == 16 and (10 + 4) * 4 / 2 == 28 and 3 * 64 / 8 == 24, "GP09 exemplo 1 e exercícios 1 a 6, 8 a 11 e 13 a 16 (primeiro acesso): 32; 28; 27; 32; 50; 30; 24; 6,93; 10,39; 68; 7; 3,33; 16; 28; 24")
+ok(perto(cad_([(0, 0), (8, 4), (4, 8)]), 24) and sqrt(21 * 8 * 7 * 6) == 84 and 168 / 14 == 12 and 168 / 15 == 11.2 and abs(168 / 13 - 12.92) < 0.005 and 84 / 21 == 4 and all(perto(cad_([(0, 0), (8 * m / (m + n), 0), (3, 5)]) / cad_([(0, 0), (8, 0), (3, 5)]), m / (m + n)) for m, n in [(2, 3), (1, 2), (3, 1), (1, 4), (3, 2), (1, 1), (5, 3)]), "GP09 exercícios 14 e 16 e chefão (e): razão de áreas = razão das bases (medido); triângulo AMN no quadrado de lado 8 tem área 24; triângulo 13, 14, 15: área 84, alturas 12,92, 12 e 11,2, raio 4")
+
 print("\n" + ("tudo certo" if not falhas else f"{falhas} FALHA(S)"))
 sys.exit(1 if falhas else 0)

@@ -368,4 +368,42 @@
       status: (P) => { const e = est(P); return `A está preso à semicircunferência de diâmetro BC, então o ângulo em A é sempre reto. A altura h divide a hipotenusa (a = ${nt(e.a, 2)}) nas projeções m = ${nt(e.m, 2)} e n = ${nt(e.n, 2)}. Arraste A e confira, de dois em dois, os valores do leitor: <b>h² = m · n</b>, <b>c² = a · m</b>, <b>b² = a · n</b> e <b>a · h = b · c</b>. Somando a segunda com a terceira: b² + c² = a · (m + n) = a², o teorema de Pitágoras.`; } });
     function est(P) { P = P || pa.P; const H = [P.A[0], Pb[1]]; return { A: P.A.slice(), a: G.dist(Pb, Pc), b: G.dist(P.A, Pc), c: G.dist(P.A, Pb), h: G.dist(P.A, H), m: G.dist(Pb, H), n: G.dist(H, Pc), reto: G.ang(Pb, P.A, Pc) }; }
     SIM.geMetricas._ult = { poe: pa.poe, est: () => est() }; };
+
+  /* ---------- GP09 ---------- */
+  /* área com sinal pela "fórmula do cadarço"; pontos de coordenadas inteiras na borda (mdc) e no interior (Pick) */
+  G.cadarco = (ps) => ps.reduce((t, P, i) => t + G.vet(P, ps[(i + 1) % ps.length]), 0) / 2;
+  G.borda = (ps) => ps.reduce((t, P, i) => { const Q = ps[(i + 1) % ps.length]; return t + M.mdc(Math.abs(Math.round(Q[0] - P[0])), Math.abs(Math.round(Q[1] - P[1]))); }, 0);
+  G.dentro = (P, ps) => { let c = false; for (let i = 0, j = ps.length - 1; i < ps.length; j = i++) { const A0 = ps[i], B0 = ps[j]; if (A0[1] > P[1] !== B0[1] > P[1] && P[0] < ((B0[0] - A0[0]) * (P[1] - A0[1])) / (B0[1] - A0[1]) + A0[0]) c = !c; } return c; };
+  G.heron = (a, b, c) => { const p = (a + b + c) / 2; return Math.sqrt(Math.max(0, p * (p - a) * (p - b) * (p - c))); };
+  /* malha quadriculada (para figuras): n × m quadradinhos de lado 1, com um polígono por cima. o = { nomes, pts } */
+  G.malha = (nx, ny, ps, D, o = {}) => { const segs = []; for (let i = 0; i <= nx; i++) segs.push([[i, 0], [i, ny], { cor: "var(--line)", larg: 1 }]); for (let j = 0; j <= ny; j++) segs.push([[0, j], [nx, j], { cor: "var(--line)", larg: 1 }]);
+    return G.fig({ segs, pols: ps ? [{ pts: ps, op: 0.25 }] : [], pts: (ps || []).map((P, i) => [P, o.nomes ? o.nomes[i] : "", { pos: G.fora(P, [ps.reduce((t, q) => t + q[0], 0) / ps.length, ps.reduce((t, q) => t + q[1], 0) / ps.length], 13), r: 3.5 }]).concat(o.pts || []), hmax: o.hmax || 250, vista: [-0.4, nx + 0.4, -0.4, ny + 0.4], marg: 8 }, D); };
+
+  /* nome: "Mesma base, mesma altura: arraste o vértice e veja a área" · matéria: Matemática · tema: GP09 */
+  SIM.geArea = (el, F) => { let trilho = false, yT = 4.4;
+    const pa = G.arrasta(el, { vista: [0, 10, 0, 6], pts: { A: [2, 1.2], B: [7, 1.2], C: [4, 4.4] }, ctrls: `<div class="ctrls"><div><div class="bts"><button class="bt peq" data-b="tri"></button></div></div></div>`,
+      limita: (k, p, P) => { if (k === "C" && trilho) { const d = G.sub(P.B, P.A), L = Math.hypot(...d) || 1, u = [d[0] / L, d[1] / L]; return G.soma(P.C, G.esc(u, G.pint(G.sub(p, P.C), u))); } return p; },
+      cena: (P) => { const e = est(P), d = G.sub(P.B, P.A), L = Math.hypot(...d) || 1, u = [d[0] / L, d[1] / L], H = G.pe(P.C, P.A, P.B), t = G.param(H, P.A, P.B), segs = [[P.C, H, { cor: "#4c8dff", larg: 2 }]]; if (t < 0 || t > 1) segs.push([t < 0 ? P.A : P.B, H, { trac: true, cor: "var(--ink3)", larg: 1.2 }]);
+        return { pols: [{ pts: [P.A, P.B, P.C], op: 0.25 }], retas: [[P.C, G.soma(P.C, u), { cor: trilho ? "var(--warn)" : "var(--line)", trac: true, larg: trilho ? 1.8 : 1.2 }]], segs, angs: e.area > 0.05 ? [[P.C, H, t > 0.5 ? P.A : P.B, { reto: true, cor: "var(--ink3)", r: 12 }]] : [], meds: [[P.A, P.B, "b = " + nt(e.base), { lado: G.vet(d, G.sub(P.C, P.A)) > 0 ? -1 : 1 }], [P.C, H, "h = " + nt(e.h), { lado: 1, cor: "#4c8dff", af: 28 }]] }; },
+      posRot: (k, P) => G.fora(P[k], G.baricentro(P.A, P.B, P.C), 20),
+      leitor: (P) => { const e = est(P); return vis("base", nt(e.base)) + vis("altura", nt(e.h)) + vis("base × altura ÷ 2", nt((e.base * e.h) / 2)) + vis("área (pelos vértices)", nt(e.area)); },
+      status: (P) => { const e = est(P); return `A área do triângulo é metade de base vezes altura: ${nt(e.base)} · ${nt(e.h)} ÷ 2 = <b>${nt(e.area)}</b>. A altura é a distância de C à <b>reta</b> da base (quando o triângulo é obtusângulo, o pé da altura cai fora do lado). ${trilho ? "Com o trilho ligado, C só anda na reta tracejada, paralela à base: a altura não muda, e a área também não, por mais que o triângulo entorte." : "Ligue o trilho e arraste C: ele passa a andar só na paralela à base, e a área fica parada."}`; } });
+    function est(P) { P = P || pa.P; const base = G.dist(P.A, P.B), H = G.pe(P.C, P.A, P.B); return { A: P.A.slice(), B: P.B.slice(), C: P.C.slice(), base, h: G.dist(P.C, H), area: G.area([P.A, P.B, P.C]), trilho, pe: G.param(H, P.A, P.B) }; }
+    const bt = el.querySelector("[data-b=tri]"), rot = () => (bt.textContent = "trilho paralelo à base: " + (trilho ? "ligado" : "desligado")); rot();
+    const poe = (o) => { if (o.trilho !== undefined) { trilho = !!o.trilho; rot(); } const q = {}; ["A", "B", "C"].forEach((k) => { if (o[k]) q[k] = o[k]; }); pa.poe(q); };
+    bt.addEventListener("click", () => poe({ trilho: !trilho }));
+    SIM.geArea._ult = { poe, est: () => est() }; };
+
+  /* nome: "Polígono na malha: arraste os vértices e confira a área" · matéria: Matemática · tema: GP09 */
+  SIM.geMalha = (el, F) => { const NX = 12, NY = 8;
+    const pa = G.arrasta(el, { vista: [-0.5, NX + 0.5, -0.5, NY + 0.5], hmax: 400, marg: 12, pts: { A: [2, 1], B: [9, 2], C: [10, 6], D: [5, 7], E: [1, 4] }, limita: (k, p) => [Math.max(0, Math.min(NX, Math.round(p[0]))), Math.max(0, Math.min(NY, Math.round(p[1])))],
+      cena: (P) => { const ps = ["A", "B", "C", "D", "E"].map((k) => P[k]), e = est(P), segs = [], pts = []; for (let i = 0; i <= NX; i++) segs.push([[i, 0], [i, NY], { cor: "var(--line)", larg: 1 }]); for (let j = 0; j <= NY; j++) segs.push([[0, j], [NX, j], { cor: "var(--line)", larg: 1 }]);
+        if (!e.cruzado) for (let i = 0; i <= NX; i++) for (let j = 0; j <= NY; j++) if (G.dentro([i, j], ps) && !naBorda([i, j], ps)) pts.push([[i, j], "", { r: 3, cor: "#4c8dff" }]);
+        return { segs, pols: [{ pts: ps, op: 0.22 }], pts }; },
+      posRot: (k, P) => { const ps = ["A", "B", "C", "D", "E"].map((q) => P[q]); return G.fora(P[k], [ps.reduce((t, q) => t + q[0], 0) / 5, ps.reduce((t, q) => t + q[1], 0) / 5], 19); },
+      leitor: (P) => { const e = est(P); return e.cruzado ? vis("polígono", "cruzado") : vis("área (cadarço)", nt(e.area)) + vis("pontos dentro (I)", e.I) + vis("pontos na borda (B)", e.B) + vis("I + B ÷ 2 − 1", nt(e.I + e.B / 2 - 1)); },
+      status: (P) => { const e = est(P); return e.cruzado ? "Os lados se cruzaram: desfaça o cruzamento." : `Os vértices grudam nos pontos da malha (cada quadradinho tem área 1). A área, calculada pela fórmula do cadarço com as coordenadas dos vértices, é <b>${nt(e.area)}</b>. Outro jeito, que funciona para todo polígono com vértices na malha (teorema de Pick): conte os pontos de dentro (azuis, ${e.I}) e os da borda (${e.B}): ${e.I} + ${e.B} ÷ 2 − 1 = ${nt(e.I + e.B / 2 - 1)}. Os dois resultados coincidem sempre.`; } });
+    function naBorda(X, ps) { return ps.some((P, i) => { const Q = ps[(i + 1) % ps.length]; return Math.abs(G.vet(G.sub(Q, P), G.sub(X, P))) < 1e-9 && G.pint(G.sub(X, P), G.sub(X, Q)) <= 1e-9; }); }
+    function est(P) { P = P || pa.P; const ps = ["A", "B", "C", "D", "E"].map((k) => P[k]), toca = ps.some((V, i) => ps.some((P0, j) => j !== i && (j + 1) % ps.length !== i && naBorda(V, [P0, ps[(j + 1) % ps.length]].concat([P0])))), cz = G.cruzado(ps) || toca || Math.abs(G.cadarco(ps)) < 1e-9; let I = 0; if (!cz) for (let i = 0; i <= NX; i++) for (let j = 0; j <= NY; j++) if (G.dentro([i, j], ps) && !naBorda([i, j], ps)) I++; return { pts: ps.map((p) => p.slice()), area: Math.abs(G.cadarco(ps)), I, B: G.borda(ps), cruzado: cz }; }
+    SIM.geMalha._ult = { poe: pa.poe, est: () => est() }; };
 })();
