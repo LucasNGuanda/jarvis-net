@@ -37,6 +37,12 @@
         }
       }
     }
+    /* elementos químicos: nome → abre a tabela periódica nesse elemento. Só o NOME entra (símbolos de 1 ou 2 letras dariam ruído: "pa", "na", "os"...). */
+    const EL = window.SIM && window.SIM.ELEM;
+    if (EL && EL.nome && window.TABELA) EL.nome.forEach((nm, k) => { if (nm) poe({ tipo: "elemento", grupo: "el:" + (k + 1), mat: "quimica", area: null, z: k + 1, simb: EL.simb[k], titulo: nm, href: "#", exato: true }, [[nm, 8]]); });
+    /* moléculas do visualizador (nome e fórmula vêm no índice gerado) */
+    const MOLS = (window.INDICE_BUSCA && window.INDICE_BUSCA.moleculas) || [], mv = (window.CATALOGO || []).find((m) => m.temas.some((t) => t[0] === "MV01" && t[3]));
+    if (mv) MOLS.forEach(([id, nm, fm]) => poe({ tipo: "molecula", grupo: "mol:" + id, mat: materiaDe(mv.area), area: mv.area, mol: id, formula: fm, titulo: nm, href: F.href("MV01", materiaDe(mv.area)), exato: true }, [[nm, 6.5], [fm, 8]]));
     B.un = un; B.voc = voc; B.palavras = [...voc.keys()].sort(); B.formulas = formulas; B.comIndice = !!window.INDICE_BUSCA;
   }
   const pronto = () => { if (!B.un || (!B.comIndice && window.INDICE_BUSCA)) constroi(); };
@@ -51,27 +57,41 @@
   });
 
   /* ---------- distância de edição (com corte: desiste cedo se passar de k) ---------- */
+  /* conta como UM erro: letra trocada, faltando, sobrando, ou duas letras vizinhas invertidas ("magnetimso") */
   function lev(a, b, k) {
     if (Math.abs(a.length - b.length) > k) return k + 1;
-    let ant = Array.from({ length: b.length + 1 }, (_, j) => j);
+    let ant2 = null, ant = Array.from({ length: b.length + 1 }, (_, j) => j);
     for (let i = 1; i <= a.length; i++) { const cur = [i]; let menor = i;
-      for (let j = 1; j <= b.length; j++) { let v = Math.min(ant[j] + 1, cur[j - 1] + 1, ant[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); cur.push(v); if (v < menor) menor = v; }
-      if (menor > k) return k + 1; ant = cur; }
+      for (let j = 1; j <= b.length; j++) { let v = Math.min(ant[j] + 1, cur[j - 1] + 1, ant[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); if (ant2 && i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, ant2[j - 2] + 1); cur.push(v); if (v < menor) menor = v; }
+      if (menor > k && (!ant2 || Math.min(...ant) > k)) return k + 1; ant2 = ant; ant = cur; }
     return ant[b.length];
   }
+  /* quantos erros de digitação se toleram: proporcional ao tamanho da palavra */
+  const tolera = (n) => (n < 4 ? 0 : n <= 6 ? 1 : n <= 10 ? 2 : 3);
+  J._lev = lev; J._tolera = tolera;
   /* palavras do índice parecidas com t: [palavra, fator] */
   function parecidas(t, folga = 0) {
     const r = [], P = B.palavras;
     if (B.voc.has(t)) r.push([t, 1]);
     if (t.length >= 3) { let lo = 0, hi = P.length; while (lo < hi) { const m = (lo + hi) >> 1; if (P[m] < t) lo = m + 1; else hi = m; } for (let i = lo; i < P.length && P[i].startsWith(t); i++) if (P[i] !== t) r.push([P[i], t.length <= 3 ? 0.45 : 0.8]); } /* "mol" não deve valer o mesmo que "molas" */
-    if (t.length >= 4 && !/^\d+$/.test(t)) { const k = (t.length <= 6 ? 1 : 2) + folga; for (const w of P) { if (w === t || Math.abs(w.length - t.length) > k || w.length < 3) continue; const d = lev(t, w, k); if (d <= k) r.push([w, d === 1 ? 0.75 : 0.6]); } }
+    if (t.length >= 4 && !/^\d+$/.test(t)) { const k = Math.min(tolera(t.length) + folga, t.length <= 6 ? 2 : 3), c0 = t[0]; for (const w of P) { if (w === t || Math.abs(w.length - t.length) > k || w.length < 3) continue; if (k > 2 && w[0] !== c0 && w[1] !== c0 && w[0] !== t[1]) continue; /* com 3 erros, pelo menos o começo tem de parecer */ const d = lev(t, w, k); if (d <= k) r.push([w, d === 1 ? 0.75 : d === 2 ? 0.6 : 0.45]); } }
     return r;
   }
 
   /* ---------- busca (pura: sem mexer na tela) ---------- */
+  /* dicionário: assets/jarvis-sinonimos.js (abreviações com peso cheio, sinônimos com 0,9) + os sinônimos antigos do jarvis-config.js */
+  function dicionario() {
+    if (B.dic) return B.dic; const S = window.JARVIS_SIN || {}, d = [];
+    const junta = (obj, peso) => { for (const [k, lista] of Object.entries(obj || {})) { const kn = norm(k); if (kn && Array.isArray(lista)) d.push({ k: kn, lista: lista.map(norm).filter(Boolean), peso, uma: !kn.includes(" ") }); } };
+    junta(S.abreviacoes, 1); junta(S.sinonimos, 0.9); junta(CFG().sinonimos, 0.9); return (B.dic = d);
+  }
   function variantes(q) {
-    const qn = " " + norm(q) + " ", vs = [{ t: toks(q), peso: 1 }];
-    for (const [k, lista] of Object.entries(CFG().sinonimos || {})) { const kn = norm(k); if (kn && qn.includes(" " + kn + " ")) lista.forEach((e) => vs.push({ t: toks(qn.replace(" " + kn + " ", " " + e + " ")), peso: 0.9 })); }
+    pronto(); const qn = " " + norm(q) + " ", t0 = toks(q), vs = [{ t: t0, peso: 1 }], crus = norm(q).split(" ").filter(Boolean);
+    for (const e of dicionario()) {
+      if (qn.includes(" " + e.k + " ")) { e.lista.forEach((x) => vs.push({ t: toks(qn.replace(" " + e.k + " ", " " + x + " ")), peso: e.peso, sin: true })); continue; }
+      /* chave de uma palavra digitada com erro pequeno ("baskara" → "bhaskara"), só se a palavra digitada não existe no site */
+      if (e.uma && e.k.length >= 5) for (const w of crus) { if (w.length < 5 || B.voc.has(w) || Math.abs(w.length - e.k.length) > 2) continue; const k = Math.min(2, tolera(e.k.length)); if (lev(w, e.k, k) <= k) { e.lista.forEach((x) => vs.push({ t: toks(qn.replace(" " + w + " ", " " + x + " ")), peso: e.peso * 0.9, sin: true })); break; } }
+    }
     return vs.filter((v) => v.t.length);
   }
   function pontua(q, folga = 0) {
@@ -79,17 +99,22 @@
     for (const v of variantes(q)) {
       const porUn = new Map(); /* unidade → [soma, acertos, palavras] */
       v.t.forEach((t) => { const melhor = new Map();
-        for (const [w, f] of parecidas(t, folga)) for (const [i, [peso, vezes]] of B.voc.get(w)) { const s = peso * f * (1 + 0.3 * Math.log(vezes)); /* aparecer mais vezes desempata */ const a = melhor.get(i); if (!a || a[0] < s) melhor.set(i, [s, w]); }
+        for (const [w, f] of parecidas(t, folga)) for (const [i, [peso, vezes]] of B.voc.get(w)) { if (f < 0.8 && B.un[i].exato) continue; /* elemento e molécula: só palavra exata ou começo de palavra, nunca "parecido" */ const s = peso * f * (1 + 0.3 * Math.log(vezes)); /* aparecer mais vezes desempata */ const a = melhor.get(i); if (!a || a[0] < s) melhor.set(i, [s, w]); }
         for (const [i, [s, w]] of melhor) { const a = porUn.get(i) || [0, 0, []]; a[0] += s; a[1]++; a[2].push(w); porUn.set(i, a); } });
       const n = v.t.length, minimo = folga ? 0.5 : n <= 2 ? 1 : 0.6, frase = v.t.join(" ");
       for (const [i, [s, ac, ws]] of porUn) {
         const cob = ac / n; if (cob < minimo) continue; const u = B.un[i];
         let nota = s * cob * cob * v.peso; if (n > 1 && norm([u.titulo, u.nome, u.secaoTit].join(" ")).includes(frase)) nota *= 1.5; if (u.tipo === "tema" && !u.pronto) nota *= 0.85;
-        const g = grupos.get(u.grupo); if (!g) grupos.set(u.grupo, { u, nota, palavras: ws, soma: nota }); else { g.soma += nota; if (g.nota < nota) Object.assign(g, { u, nota, palavras: ws }); }
+        /* o TÍTULO vale mais que o corpo: título igual ao que foi digitado sobe bastante; título que começa assim, um pouco */
+        if (!u.secao && !v.sin) { const tit = toks(u.tipo === "tema" ? u.nome : u.titulo).join(" "); if (tit === frase) nota *= 1.6; else if (tit.startsWith(frase + " ")) nota *= 1.3; else if (n === 1 && (" " + tit + " ").includes(" " + frase + " ")) nota *= 1.1; }
+        if (v.sin && u.secao) nota *= 0.8; /* sinônimo aponta para temas, não para um trecho solto */
+        let g = grupos.get(u.grupo); if (!g) grupos.set(u.grupo, (g = { u, nota, palavras: ws, soma: nota })); else { g.soma += nota; if (g.nota < nota) Object.assign(g, { u, nota, palavras: ws }); }
+        if (!v.sin && (!g.dir || g.dir.nota < nota)) g.dir = { u, nota, palavras: ws }; /* melhor trecho achado pela palavra DIGITADA (não por sinônimo) */
       }
     }
     /* fórmulas digitadas */
     const qc = compacta(q); if (/[=^]/.test(q) && qc.length >= 3) for (const f of B.formulas) if (f.compacto.includes(qc)) { const g = grupos.get(f.base.grupo), nota = 9 + qc.length / 4; if (!g || g.nota < nota) grupos.set(f.base.grupo, { u: f.base, nota, palavras: [], formula: f.tex }); }
+    for (const g of grupos.values()) { if (g.dir && g.dir.u !== g.u) { g.u = g.dir.u; g.palavras = g.dir.palavras; } delete g.dir; } /* o sinônimo ajuda a ORDENAR; o link e o trechinho mostrados são os da palavra digitada, quando ela foi achada */
     for (const g of grupos.values()) if (g.soma) g.nota += 0.3 * Math.min(g.soma - g.nota, 2 * g.nota); /* o tema que fala do assunto em várias seções sobe um pouco */
     return [...grupos.values()].sort((a, b) => b.nota - a.nota);
   }
@@ -149,6 +174,8 @@
   const texHtml = (tex) => { try { if (window.katex) return window.katex.renderToString(tex, { throwOnError: false, displayMode: false }); } catch (e) {} return esc(tex); };
   function item(r, k) {
     const u = r.u, mn = nomeMat(u.mat);
+    if (u.tipo === "elemento") return `<a class="jb-item" href="#" data-el="${u.z}" data-k="${k}" role="option"><span class="jb-onde">${esc(mn)} · tabela periódica · <b>${esc(u.simb)}</b></span><span class="jb-nome">${esc(u.titulo)} (Z = ${u.z})</span><span class="jb-secao">abre a ficha do elemento na tabela periódica</span></a>`;
+    if (u.tipo === "molecula") return `<a class="jb-item" href="${esc(u.href)}" data-mol="${esc(u.mol)}" data-k="${k}" role="option"><span class="jb-onde">${esc(mn)} · Moléculas · <b>MV01</b></span><span class="jb-nome">${esc(u.titulo)} (${esc(u.formula)})</span><span class="jb-secao">abre a molécula no visualizador 3D</span></a>`;
     const onde = u.tipo === "tema" ? `${esc(mn)} · ${esc(u.mod.nome)} · <b>${esc(u.cod)}</b>` : u.tipo === "modulo" ? `${esc(mn)} · módulo <b>${esc(u.mod.id)}</b>` : u.tipo === "aba" ? `${esc(mn)} · aba` : "matéria";
     const nome = u.tipo === "tema" ? u.nome : u.tipo === "aba" ? u.aba + (u.titulo !== u.aba ? " · " + u.titulo : "") : u.titulo;
     const sub = u.secaoTit ? `<span class="jb-secao">§ ${esc(u.secaoTit)}</span>` : "", tr = r.formula ? `<span class="jb-trecho jb-tex">${texHtml(r.formula)}</span>` : u.texto ? `<span class="jb-trecho">${trecho(r)}</span>` : "";
@@ -165,10 +192,16 @@
     if (res.tipo === "nada") return `<p class="jb-msg">Não achei nada sobre “${esc(q)}”.${res.perto.length ? " O mais perto que eu tenho:" : res.temTrancado ? "" : " Nem parecido: pode ser que ainda não exista no site."}</p>${res.perto.map(item).join("")}${res.temTrancado ? TRANCADO : ""}`;
     return "";
   }
+  /* elemento: liga a tabela periódica (ferramenta de rodapé) e abre a ficha dele. Molécula: vai ao visualizador e abre a molécula quando ele estiver pronto. */
+  J.abreElemento = (z) => { const T = window.TABELA; if (!T || (AC() && !AC().materia("quimica"))) return false; T.ligaSalvo(true); /* liga a ferramenta de rodapé como o interruptor faria (e desliga a calculadora: só uma por vez) */ T.abre(true); if (T._) { T._.modo("ficha"); T._.define({ sel: +z }); if (T._.fichaCel) T._.fichaCel(true); /* no celular a ficha é uma tela cheia */ } return true; };
+  J.abreMolecula = (id) => { let n = 0; const tenta = () => { const m = window.SIM && window.SIM.qMoleculas && window.SIM.qMoleculas._ult; if (m && document.querySelector(".qm, [id^=lab-] canvas, canvas")) { try { m.abre([id]); return; } catch (e) {} } if (++n < 40) setTimeout(tenta, 150); }; setTimeout(tenta, 200); };
   /* histórico curto (jarvis:buscas, entra no exportar) */
   const HIST = "jarvis:buscas";
   const hist = () => { try { const v = JSON.parse(localStorage.getItem(HIST)); return Array.isArray(v) ? v : []; } catch (e) { return []; } };
   const guardaHist = (q) => { q = q.trim(); if (!q) return; try { localStorage.setItem(HIST, JSON.stringify([q].concat(hist().filter((x) => x !== q)).slice(0, 8))); } catch (e) {} };
+  /* apaga o histórico de perguntas: tudo (sem argumento) ou uma pergunta só. Toca APENAS na chave jarvis:buscas. */
+  J.limpaHistorico = (uma) => { try { if (uma === undefined) localStorage.removeItem(HIST); else { const r = hist().filter((x) => x !== uma); if (r.length) localStorage.setItem(HIST, JSON.stringify(r)); else localStorage.removeItem(HIST); } } catch (e) {} };
+  J.historico = hist;
   /* vai para o destino de uma pergunta de navegação */
   function destino(nav) {
     if (nav.nivel && AC() && !AC().engrenagem(nav.nivel)) return { msg: nav.resposta + " Isso pede o código de configurações.", href: "#/codigos" };
@@ -188,7 +221,10 @@
       const inp = form.querySelector("input"), painel = document.createElement("div"); painel.className = "jb-painel" + (modo === "home" ? " cima" : ""); painel.setAttribute("role", "listbox"); painel.hidden = true; form.appendChild(painel);
       let sel = -1, t = null;
       const mostra = (html) => { painel.innerHTML = html; painel.hidden = !html; sel = -1; };
-      const historico = () => { const h = hist(); mostra(h.length ? `<div class="jb-rot">buscas recentes</div>` + h.map((x) => `<button type="button" class="jb-hist">${esc(x)}</button>`).join("") : `<div class="jb-rot">digite um tema, uma fórmula, um cientista ou um código (A08, CI07…)</div>`); };
+      const VAZIO = `<div class="jb-rot">digite um tema, uma fórmula, um cientista ou um código (A08, CI07…)</div>`;
+      /* histórico: um X em cada pergunta e o botão "Limpar histórico" (com confirmação). Só mexe na chave jarvis:buscas. */
+      const historico = () => { const h = hist(); mostra(h.length ? `<div class="jb-rot jb-rot-hist"><span>buscas recentes</span><button type="button" class="jb-limpa">Limpar histórico</button></div>` + h.map((x, k) => `<div class="jb-hlinha"><button type="button" class="jb-hist">${esc(x)}</button><button type="button" class="jb-hx" data-k="${k}" aria-label="Apagar esta pergunta do histórico" title="Apagar esta pergunta">×</button></div>`).join("") : VAZIO); };
+      const confirmaLimpar = () => mostra(`<div class="jb-conf" role="alertdialog" aria-label="Limpar histórico"><p class="jb-msg">Apagar todas as perguntas do Jarvis? Isso não apaga seu progresso.</p><div class="jb-conf-bts"><button type="button" class="jb-sim">Apagar</button><button type="button" class="jb-nao">Cancelar</button></div></div>`);
       const sugere = () => { const q = inp.value.trim(); if (!q) return historico(); const r = J.buscar(q, { max: 8 }); mostra(r.livres.length ? r.livres.map(item).join("") : r.temTrancado ? TRANCADO : `<p class="jb-msg">nada ainda… Enter para eu procurar melhor</p>`); };
       const responde = () => {
         const q = inp.value.trim(); if (!q) return historico(); guardaHist(q);
@@ -209,7 +245,13 @@
         else if (e.key === "Escape") { e.preventDefault(); fecha(); inp.blur(); }
       });
       painel.addEventListener("mousedown", (e) => e.preventDefault()); /* clicar no painel não tira o foco do campo */
-      painel.addEventListener("click", (e) => { const h = e.target.closest(".jb-hist"); if (h) { inp.value = h.textContent; responde(); return; } const a = e.target.closest("a"); if (a) { guardaHist(inp.value); fecha(); } });
+      painel.addEventListener("click", (e) => {
+        if (e.target.closest(".jb-limpa, .jb-nao, .jb-sim, .jb-hx")) e.stopPropagation(); /* o botão clicado some ao redesenhar: sem isto, o clique chegaria ao documento como "fora do campo" e fecharia o painel */
+        if (e.target.closest(".jb-limpa")) { confirmaLimpar(); return; }
+        if (e.target.closest(".jb-nao")) { historico(); return; }
+        if (e.target.closest(".jb-sim")) { J.limpaHistorico(); historico(); inp.focus(); return; }
+        const x = e.target.closest(".jb-hx"); if (x) { J.limpaHistorico(hist()[+x.dataset.k]); historico(); return; }
+        const h = e.target.closest(".jb-hist"); if (h) { inp.value = h.textContent; responde(); return; } const a = e.target.closest("a"); if (a) { guardaHist(inp.value); if (a.dataset.el) { e.preventDefault(); fecha(); J.abreElemento(a.dataset.el); return; } if (a.dataset.mol) J.abreMolecula(a.dataset.mol); fecha(); } });
       document.addEventListener("click", (e) => { if (modo === "home" && !form.contains(e.target)) mostra(""); });
       return { inp, painel, responde, sugere };
     },

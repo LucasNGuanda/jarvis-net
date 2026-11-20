@@ -864,6 +864,28 @@ a.jv-mat.trancado:hover{transform:none;box-shadow:none;border-color:var(--line2)
 .jb-tranc a,.jb-msg a{color:var(--acc);font-weight:600}
 .jb-hist{display:block;width:100%;text-align:left;background:none;border:0;border-radius:10px;padding:8px 12px;color:var(--ink2);font:14px var(--f-text);cursor:pointer;height:auto}
 .jb-hist:hover,.jb-hist.sel{background:var(--card2);color:var(--ink)}
+.jb-rot-hist{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.jb-limpa{white-space:nowrap;background:none;border:1px solid var(--line2);border-radius:8px;padding:3px 9px;color:var(--ink2);font:600 11px var(--f-text);letter-spacing:.02em;text-transform:none;cursor:pointer;height:auto}
+.jb-limpa:hover,.jb-limpa:focus-visible{color:var(--bad);border-color:var(--bad)}
+.jb-hlinha{display:flex;align-items:center;gap:2px}
+.jb-hlinha .jb-hist{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.jb-hx{flex:none;width:30px;height:30px;border:0;border-radius:8px;background:none;color:var(--ink3);font:18px/1 var(--f-text);cursor:pointer}
+.jb-hx:hover,.jb-hx:focus-visible{background:var(--card2);color:var(--bad)}
+.jb-conf{padding:6px 4px 8px}
+.jb-conf-bts{display:flex;gap:8px;padding:2px 12px 4px}
+.jb-conf-bts button{border-radius:8px;padding:7px 14px;font:600 13px var(--f-text);cursor:pointer;height:auto;border:1px solid var(--line2);background:var(--card2);color:var(--ink)}
+.jb-conf-bts .jb-sim{border-color:var(--bad);color:var(--bad)}
+.jb-conf-bts .jb-sim:hover,.jb-conf-bts .jb-sim:focus-visible{background:var(--bad);color:var(--bg)}
+.jv-pergunta .jb-painel button{width:auto;height:auto;display:block;place-items:initial;cursor:pointer;border-radius:10px;background:none;color:var(--ink2)}
+.jv-pergunta .jb-painel .jb-hist{width:100%;text-align:left}
+.jv-pergunta .jb-painel .jb-hist:hover,.jv-pergunta .jb-painel .jb-hist.sel{background:var(--card2);color:var(--ink)}
+.jv-pergunta .jb-painel .jb-limpa{border:1px solid var(--line2);border-radius:8px;white-space:nowrap}
+.jv-pergunta .jb-painel .jb-limpa:hover,.jv-pergunta .jb-painel .jb-limpa:focus-visible{color:var(--bad);border-color:var(--bad)}
+.jv-pergunta .jb-painel .jb-hx{width:30px;height:30px;border-radius:8px;color:var(--ink3)}
+.jv-pergunta .jb-painel .jb-hx:hover,.jv-pergunta .jb-painel .jb-hx:focus-visible{background:var(--card2);color:var(--bad)}
+.jv-pergunta .jb-painel .jb-conf-bts button{border:1px solid var(--line2);border-radius:8px;background:var(--card2);color:var(--ink)}
+.jv-pergunta .jb-painel .jb-conf-bts .jb-sim{border-color:var(--bad);color:var(--bad)}
+.jv-pergunta .jb-painel .jb-conf-bts .jb-sim:hover,.jv-pergunta .jb-painel .jb-conf-bts .jb-sim:focus-visible{background:var(--bad);color:var(--bg)}
 .jb-modal{position:fixed;inset:0;z-index:3000;background:rgba(5,8,14,.55);backdrop-filter:blur(2px);display:flex;justify-content:center;align-items:flex-start;padding:12vh 16px 0}
 .jb-caixa{width:min(100%,680px)}
 .jb-caixa .jv-pergunta{width:100%;box-shadow:0 18px 40px rgba(0,0,0,.4)}
