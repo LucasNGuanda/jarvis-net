@@ -39,7 +39,7 @@ window.CATALOGO.push(
   { id:"GE", area:"mat", letra:"GE", cor:"--mU", nome:"Geometria", desc:"Plana, espacial e analítica.", temas:[
     ["TG01","Arcos e Ângulos",["GP10","GP01"],true],
     ["TG02","Trigonometria no Triângulo Retângulo",["GP07","GP02","TG01"],true],
-    ["TG03","Ciclo Trigonométrico",[]],
+    ["TG03","Ciclo Trigonométrico",["TG02","TG01"],true],
     ["TG04","Introdução às Equações Trigonométricas",[]],
     ["TG05","Arcos Compostos",[]],
     ["TG06","Transformações Trigonométricas",[]],
