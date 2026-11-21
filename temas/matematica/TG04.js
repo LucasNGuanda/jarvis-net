@@ -1,6 +1,6 @@
 /* Matemática TG04 · Introdução às Equações Trigonométricas.
    Contas conferidas em Python (tools/matematica/confere-ge.py), por VARREDURA: para cada equação, todos os ângulos de 0° a 360° (de meio em meio grau)
-   são testados na equação original, e a lista encontrada é comparada com a do texto. Equações fundamentais (sen, cos, tg), arco multiplicado,
+   são testados na equação original (nos exercícios, de quarto em quarto de grau), e a lista encontrada é comparada com a do texto. Equações fundamentais (sen, cos, tg), arco multiplicado,
    equações do 2º grau em sen x ou cos x, sen x = k·cos x, produtos nulos, intervalos diferentes de uma volta e sen ax = sen bx.
    TODAS as figuras estão em escala. Nos exercícios com sorteio, o campo py repete a varredura (tests/tvaria.js + tools/confere-py.py). */
 F.registrar("matematica/TG04", {
@@ -14,7 +14,7 @@ F.registrar("matematica/TG04", {
     const pyv = (txt) => txt.replace("−", "-").replace(/√(\d)/g, "sqrt($1)"), lst = (a) => a.map((g) => nt(g) + "°").join(", "), lstE = (a) => (a.length > 1 ? a.slice(0, -1).map((g) => nt(g) + "°").join(", ") + " e " + nt(a[a.length - 1]) + "°" : lst(a));
     const SC = T.VS.sc, TGV = T.VS.tg, MEIO = SC.filter((x) => Math.abs(x[2]) > 0.1 && Math.abs(x[2]) < 0.9), pega = (f) => esc(f === "tg" ? TGV.filter((x) => x[2] !== 0) : MEIO);
     /* varredura em Python: lista dos x (em graus, de meio em meio) com f(k·x) = v */
-    const varre = (f, v, k = 1, a0 = 0, a1 = 360) => `[x / 2 for x in range(${2 * a0}, ${2 * a1}) if abs(${PF[f]}(math.radians(${k} * x / 2)) - (${pyv(v[1])})) < 1e-9]`;
+    const varre = (f, v, k = 1, a0 = 0, a1 = 360) => `[x / 4 for x in range(${4 * a0}, ${4 * a1}) if abs(${PF[f]}(math.radians(${k} * x / 4)) - (${pyv(v[1])})) < 1e-9]`;
     const varreE = (expr, a0 = 0, a1 = 360) => `[x for x in range(${a0}, ${a1}) if abs(${expr.split("S").join("math.sin(math.radians(x))").split("C").join("math.cos(math.radians(x))").split("TG").join("math.tan(math.radians(x))")}) < 1e-9]`;
     /* ciclo com a reta do valor e (se pts) os pontos-solução marcados */
     const figV = (f, v, o = {}) => { const s = T.sols(f, v), L = Math.hypot(1, v), lin = f === "sen" ? [[-1.3, v], [1.3, v]] : f === "cos" ? [[v, -1.3], [v, 1.3]] : [[-1.3 / L, (-1.3 * v) / L], [1.3 / L, (1.3 * v) / L]];
