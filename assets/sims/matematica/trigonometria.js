@@ -47,4 +47,37 @@
     const poe = (o) => { if (o.total !== undefined) total = Math.max(-1800, Math.min(1800, +o.total)); pa.redesenha(); };
     el.querySelectorAll("[data-d]").forEach((b) => b.addEventListener("click", () => poe({ total: b.dataset.d === "zero" ? 0 : total + +b.dataset.d })));
     SIM.tgVoltas._ult = { poe, est: () => est(), arrasta: pa.poe }; };
+
+  /* ---------- TG02 ---------- */
+  /* razões de um triângulo retângulo de catetos op (oposto ao ângulo) e adj: { hip, sen, cos, tg, g (graus) } */
+  T.razoes = (op, adj) => { const hip = Math.hypot(op, adj); return { op, adj, hip, sen: op / hip, cos: adj / hip, tg: op / adj, g: Math.atan2(op, adj) / RAD }; };
+  /* seno, cosseno e tangente de 30°, 45° e 60° escritos de forma exata (TeX e texto) */
+  T.NOT = { 30: { sen: ["\\dfrac{1}{2}", "1/2"], cos: ["\\dfrac{\\sqrt{3}}{2}", "√3/2"], tg: ["\\dfrac{\\sqrt{3}}{3}", "√3/3"] }, 45: { sen: ["\\dfrac{\\sqrt{2}}{2}", "√2/2"], cos: ["\\dfrac{\\sqrt{2}}{2}", "√2/2"], tg: ["1", "1"] }, 60: { sen: ["\\dfrac{\\sqrt{3}}{2}", "√3/2"], cos: ["\\dfrac{1}{2}", "1/2"], tg: ["\\sqrt{3}", "√3"] } };
+
+  /* nome: "Seno, cosseno e tangente: arraste o triângulo retângulo" · matéria: Matemática · tema: TG02 */
+  SIM.tgRazoes = (el, F) => { const V = [1, 0.9]; let tq = 0.5;
+    const pa = G.arrasta(el, { vista: [0, 10, 0, 6], pts: { P: [7, 4.5], Q: [4, 2.7] }, rot: { P: "P", Q: "Q" },
+      limita: (k, p, P) => { if (k === "P") return [Math.max(V[0] + 1.5, Math.min(9.3, p[0])), Math.max(V[1] + 0.6, Math.min(5.6, p[1]))]; const d = G.sub(P.P, V); tq = Math.max(0.25, Math.min(0.85, G.pint(G.sub(p, V), d) / G.pint(d, d))); return G.soma(V, G.esc(d, tq)); },
+      cena: (P) => { P.Q = G.soma(V, G.esc(G.sub(P.P, V), tq)); const H = [P.P[0], V[1]], Hq = [P.Q[0], V[1]];
+        return { pols: [{ pts: [V, H, P.P], cor: "var(--mod)", op: 0.1 }, { pts: [V, Hq, P.Q], cor: "#4c8dff", op: 0.22 }], segs: [[V, P.P, { cor: "var(--ink)", larg: 2 }], [H, P.P, { cor: "var(--warn)", larg: 2.4 }], [V, H, { cor: "#3dd68c", larg: 2.4 }], [Hq, P.Q, { cor: "#4c8dff", larg: 1.8 }]],
+          angs: [[V, H, P.P, { reto: true, cor: "var(--ink3)", r: 12 }], [V, Hq, P.Q, { reto: true, cor: "var(--ink3)", r: 9 }], [H, V, P.P, { rot: "α", r: 34, dr: 16 }]], pts: [[V, "V", { pos: [-12, -6], r: 3 }]],
+          meds: [[H, P.P, "oposto", { lado: -1, cor: "var(--warn)", af: 36 }], [V, H, "adjacente", { lado: -1, cor: "#3dd68c" }]], txt: [] }; },
+      posRot: (k) => (k === "P" ? [0, 18] : [-14, 14]),
+      leitor: (P) => { const e = est(P); return vis("α", G.gr(e.g)) + vis("oposto", nt(e.op)) + vis("adjacente", nt(e.adj)) + vis("hipotenusa", nt(e.hip)) + vis("sen α", nt(e.sen, 3)) + vis("cos α", nt(e.cos, 3)) + vis("tg α", nt(e.tg, 3)); },
+      status: (P) => { const e = est(P), q = e.peq; return `No triângulo grande: sen α = oposto ÷ hipotenusa = ${nt(e.op)} ÷ ${nt(e.hip)} = <b>${nt(e.sen, 3)}</b>; cos α = adjacente ÷ hipotenusa = ${nt(e.adj)} ÷ ${nt(e.hip)} = <b>${nt(e.cos, 3)}</b>; tg α = oposto ÷ adjacente = <b>${nt(e.tg, 3)}</b>. No triângulo azul, menor e com o mesmo ângulo: ${nt(q.op)} ÷ ${nt(q.hip)} = ${nt(q.sen, 3)}, ${nt(q.adj)} ÷ ${nt(q.hip)} = ${nt(q.cos, 3)} e ${nt(q.op)} ÷ ${nt(q.adj)} = ${nt(q.tg, 3)}: as mesmas razões, porque os dois triângulos são semelhantes. Arraste Q: os lados mudam e as razões ficam. Arraste P: o ângulo muda e as razões mudam com ele.`; } });
+    function est(P) { P = P || pa.P; const e = T.razoes(P.P[1] - V[1], P.P[0] - V[0]); e.peq = T.razoes(P.Q[1] - V[1], P.Q[0] - V[0]); e.t = tq; e.P = P.P.slice(); e.Q = P.Q.slice(); return e; }
+    SIM.tgRazoes._ult = { poe: (o) => { if (o.t !== undefined) { tq = Math.max(0.25, Math.min(0.85, o.t)); pa.redesenha(); } const q = {}; if (o.P) q.P = o.P; if (o.Q) q.Q = o.Q; if (o.P || o.Q) pa.poe(q); }, est: () => est() }; };
+
+  /* nome: "Medir uma altura à distância: arraste o observador e o topo da torre" · matéria: Matemática · tema: TG02 */
+  SIM.tgAltura = (el, F) => { const y0 = 0.8, xT = 8.6, U = 10;
+    const pa = G.arrasta(el, { vista: [0, 10, 0, 6], pts: { O: [2.6, y0], T: [xT, 4.3] }, rot: { O: "O", T: "T" },
+      limita: (k, p) => (k === "O" ? [Math.max(0.6, Math.min(xT - 1.2, p[0])), y0] : [xT, Math.max(y0 + 0.8, Math.min(5.6, p[1]))]),
+      cena: (P) => { const B = [xT, y0], e = est(P);
+        return { pols: [{ pts: [[xT - 0.22, y0], [xT + 0.22, y0], [xT + 0.22, P.T[1]], [xT - 0.22, P.T[1]]], cor: "var(--mod)", op: 0.35 }], segs: [[[0.2, y0], [9.8, y0], { cor: "var(--ink3)", larg: 1.6 }], [P.O, P.T, { cor: "var(--warn)", larg: 1.8, trac: true }]],
+          angs: [[B, P.O, P.T, { rot: "α", r: 34, dr: 16 }]], meds: [[P.O, B, "d = " + nt(e.d, 1) + " m", { lado: -1 }], [B, P.T, "h", { lado: -1, cor: "var(--mod)", af: 24 }]] }; },
+      posRot: (k) => (k === "O" ? [-4, 18] : [0, 18]),
+      leitor: (P) => { const e = est(P); return vis("distância d", nt(e.d, 1) + " m") + vis("ângulo de elevação α", G.gr(e.g)) + vis("tg α", nt(e.tg, 3)) + vis("d · tg α", nt(e.d * e.tg, 1) + " m") + vis("altura da torre", nt(e.h, 1) + " m"); },
+      status: (P) => { const e = est(P); return `O observador O olha para o topo T da torre. A linha de visada (tracejada) faz com o chão o <b>ângulo de elevação</b> α = ${G.gr(e.g)}. No triângulo retângulo formado, a altura é o cateto oposto e a distância é o adjacente: tg α = h ÷ d, logo <b>h = d · tg α</b> = ${nt(e.d, 1)} · ${nt(e.tg, 3)} = ${nt(e.h, 1)} m. É assim que se mede uma altura sem subir: basta a distância e o ângulo. Arraste O: chegando perto, o ângulo cresce, e o produto d · tg α não muda. Arraste T para mudar a torre.`; } });
+    function est(P) { P = P || pa.P; const d = (xT - P.O[0]) * U, h = (P.T[1] - y0) * U, r = T.razoes(h, d); return { d, h, g: r.g, tg: r.tg, O: P.O.slice(), T: P.T.slice() }; }
+    SIM.tgAltura._ult = { poe: pa.poe, est: () => est() }; };
 })();
