@@ -55,7 +55,7 @@ window.CATALOGO.push(
     ["GP05","Quadriláteros",["GP03","GP02"],true],
     ["GP06","Triângulos e Pontos Notáveis",["GP01","GP04"],true],
     ["GP07","Triângulo Retângulo",["GP02","GP06"],true],
-    ["GP08","Trigonometria em Triângulos Quaisquer",[]],
+    ["GP08","Trigonometria em Triângulos Quaisquer",["TG03","TG02","GP07","GP04"],true],
     ["GP09","Área de Polígonos",["GP05","GP07"],true],
     ["GP10","Área de Círculo",["GP09","GP04"],true],
     ["GE07","Geometria de Posição",[]],

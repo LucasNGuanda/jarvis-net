@@ -439,4 +439,34 @@
       status: (P) => { const e = est(P); return `O setor laranja vai de A até B, no sentido anti-horário. Ele é a fração ${G.gr(e.g)} ÷ 360° = ${nt(e.g / 360, 3)} do círculo, e o arco e a área do setor são essa mesma fração da circunferência (${nt(2 * Math.PI * e.r)}) e da área do círculo (${nt(Math.PI * e.r * e.r)}). O <b>segmento circular</b> é a parte entre a corda AB e o arco: ${e.g < 180 ? `setor menos o triângulo OAB (em azul), ${nt(e.area)} − ${nt(e.tri)} = ${nt(e.segmento)}.` : `com mais de 180°, é o setor <b>mais</b> o triângulo OAB: ${nt(e.area)} + ${nt(-e.tri)} = ${nt(e.segmento)}.`} Arraste A para mudar o raio e B para mudar o ângulo.`; } });
     function est(P) { P = P || pa.P; const r = G.dist(P.A, C), gA = G.dir(C, P.A), g = (((G.dir(C, P.B) - gA) % 360) + 360) % 360; return Object.assign({ r, gA, g, A: P.A.slice(), B: P.B.slice() }, G.setor(r, g)); }
     SIM.geSetor._ult = { poe: pa.poe, est: () => est() }; };
+
+  /* ---------- GP08 ---------- */
+  /* triângulo dado por dois lados e o ângulo entre eles (b = AC, c = AB, ângulo em A): vértices A, B, C */
+  G.lal = (b, c, Ag) => [[0, 0], [c, 0], G.polar([0, 0], b, Ag)];
+  /* lei dos cossenos: terceiro lado; e o ângulo oposto ao lado a, dados os três lados */
+  G.cosLado = (b, c, Ag) => Math.sqrt(b * b + c * c - 2 * b * c * Math.cos(Ag * RAD));
+  G.cosAng = (a, b, c) => Math.acos(Math.max(-1, Math.min(1, (b * b + c * c - a * a) / (2 * b * c)))) / RAD;
+
+  /* nome: "Lei dos senos: arraste os vértices e veja o diâmetro aparecer" · matéria: Matemática · tema: GP08 */
+  SIM.geLeiSenos = (el, F) => {
+    const pa = G.arrasta(el, { vista: [0, 10, 0, 6.6], hmax: 360, pts: { A: [3.6, 5.2], B: [2.6, 1.6], C: [7.4, 1.6] },
+      cena: (P) => { const e = est(P); if (!e.O || e.R > 40) return { pols: [{ pts: [P.A, P.B, P.C] }] }; const D2 = G.soma(e.O, G.sub(e.O, P.B));
+        return { circs: [[e.O, e.R, { cor: "#4c8dff", op: 0.04, larg: 1.4 }]], pols: [{ pts: [P.A, P.B, P.C] }], segs: [[P.B, D2, { cor: "#4c8dff", larg: 1.4, trac: true }], [D2, P.C, { cor: "#4c8dff", larg: 1.2, trac: true }]], pts: [[e.O, "O", { pos: [10, 10], r: 3, cor: "#4c8dff" }], [D2, "D", { pos: G.fora(D2, e.O, 14), r: 3, cor: "#4c8dff" }]], angs: [[P.B, P.A, P.C, { rot: G.gr(e.A, 0), r: 22, dr: 16 }]], meds: [[P.B, P.C, "a = " + nt(e.a), { lado: G.vet(G.sub(P.C, P.B), G.sub(P.A, P.B)) > 0 ? -1 : 1 }]] }; },
+      posRot: (k, P) => G.fora(P[k], G.baricentro(P.A, P.B, P.C), 20),
+      leitor: (P) => { const e = est(P); return vis("a ÷ sen A", nt(e.ra, 3)) + vis("b ÷ sen B", nt(e.rb, 3)) + vis("c ÷ sen C", nt(e.rc, 3)) + vis("diâmetro 2R", nt(2 * e.R, 3)) + vis("ângulos", `${G.gr(e.A, 0)}, ${G.gr(e.B, 0)}, ${G.gr(e.C, 0)}`); },
+      status: (P) => { const e = est(P); return `Em qualquer triângulo, cada lado dividido pelo seno do ângulo oposto dá o mesmo número: ${nt(e.a)} ÷ sen ${G.gr(e.A)} = ${nt(e.b)} ÷ sen ${G.gr(e.B)} = ${nt(e.c)} ÷ sen ${G.gr(e.C)} = <b>${nt(e.ra, 3)}</b>. Esse número é o <b>diâmetro</b> do círculo que passa pelos três vértices (em azul). O motivo está no desenho: BD é um diâmetro, o ângulo em D enxerga o lado a do mesmo arco que o ângulo em A (ou é o suplemento dele, quando A é obtuso), e o triângulo BCD é retângulo em C, de modo que a = 2R · sen A. Arraste os vértices: os três quocientes mudam juntos.`; } });
+    function est(P) { P = P || pa.P; const t = G.tri(P.A, P.B, P.C), O = t.area > 1e-6 ? G.circun(P.A, P.B, P.C) : null, R = O ? G.dist(O, P.A) : Infinity, s = (g) => Math.sin(g * RAD); return Object.assign(t, { O, R, ra: t.a / s(t.A), rb: t.b / s(t.B), rc: t.c / s(t.C) }); }
+    SIM.geLeiSenos._ult = { poe: pa.poe, est: () => est() }; };
+
+  /* nome: "Lei dos cossenos: abra e feche o ângulo" · matéria: Matemática · tema: GP08 */
+  SIM.geLeiCossenos = (el, F) => { const Aa = [3.2, 1.4];
+    const pa = G.arrasta(el, { vista: [0, 10, 0, 6.6], hmax: 360, pts: { B: [7.2, 1.4], C: G.polar(Aa, 3, 60) }, rot: { B: "B", C: "C" },
+      limita: (k, p) => { if (k === "B") return [Math.max(Aa[0] + 1.5, Math.min(9, p[0])), Aa[1]]; const g = Math.max(8, Math.min(172, p[1] <= Aa[1] ? (p[0] > Aa[0] ? 8 : 172) : G.dir(Aa, p))), d = Math.max(1.2, Math.min(4.6, G.dist(p, Aa))); return G.polar(Aa, d, g); },
+      cena: (P) => { const e = est(P), Cr = [Aa[0], Aa[1] + e.b];
+        return { pols: [{ pts: [Aa, P.B, P.C] }], segs: [[Aa, Cr, { cor: "var(--ink3)", larg: 1.2, trac: true }], [P.B, Cr, { cor: "var(--ink3)", larg: 1.2, trac: true }], [P.B, P.C, { cor: "var(--warn)", larg: 2.6 }]], angs: [[P.B, Aa, P.C, { rot: G.gr(e.A, 0), r: 24, dr: 18 }]], pts: [[Aa, "A", { pos: [-12, -10], r: 3 }], [Cr, "", { r: 3, cor: "var(--ink3)" }]], meds: [[Aa, P.B, "c = " + nt(e.c), { lado: -1 }], [P.C, Aa, "b = " + nt(e.b), { lado: e.A > 90 ? 1 : -1 }]], txt: [[G.soma(G.medio(P.B, P.C), [0.25, 0.3]), "a = " + nt(e.a), { f: 12, w: 700, cor: "var(--warn)", a: "start" }]] }; },
+      posRot: (k, P) => (k === "B" ? [10, -16] : G.fora(P.C, Aa, 20)),
+      leitor: (P) => { const e = est(P); return vis("ângulo A", G.gr(e.A)) + vis("b² + c²", nt(e.pit)) + vis("− 2bc · cos A", nt(e.corr)) + vis("soma", nt(e.pit + e.corr)) + vis("a² (medido)", nt(e.a * e.a)) + vis("a", nt(e.a)); },
+      status: (P) => { const e = est(P); return `Os lados b e c têm tamanho fixo enquanto você gira C em volta de A. Com A = 90°, vale Pitágoras: a² = b² + c² = ${nt(e.pit)} (é o triângulo tracejado, com hipotenusa ${nt(Math.sqrt(e.pit))}). Agora A = ${G.gr(e.A)}: ${Math.abs(e.A - 90) < 0.5 ? "o triângulo é retângulo e a correção é zero." : e.A < 90 ? "o ângulo fechou, o lado a encolheu, e é preciso <b>tirar</b> 2bc · cos A do Pitágoras." : "o ângulo abriu, o lado a cresceu, e a correção − 2bc · cos A fica <b>positiva</b>, porque o cosseno de ângulo obtuso é negativo."} a² = ${nt(e.pit)} ${e.corr < 0 ? "−" : "+"} ${nt(Math.abs(e.corr))} = ${nt(e.pit + e.corr)}, que é o quadrado do lado medido no desenho (${nt(e.a)}² = ${nt(e.a * e.a)}). Arraste B para mudar c, e aproxime ou afaste C de A para mudar b.`; } });
+    function est(P) { P = P || pa.P; const b = G.dist(Aa, P.C), c = G.dist(Aa, P.B), Ag = G.ang(P.B, Aa, P.C), a = G.dist(P.B, P.C); return { a, b, c, A: Ag, pit: b * b + c * c, corr: -2 * b * c * Math.cos(Ag * RAD), B: P.B.slice(), C: P.C.slice() }; }
+    SIM.geLeiCossenos._ult = { poe: (o) => { const q = {}; if (o.B) q.B = o.B; if (o.c !== undefined) q.B = [Aa[0] + o.c, Aa[1]]; if (o.C) q.C = o.C; if (o.b !== undefined || o.A !== undefined) { const e = est(); q.C = G.polar(Aa, o.b === undefined ? e.b : o.b, o.A === undefined ? e.A : o.A); } pa.poe(q); }, est: () => est() }; };
 })();
