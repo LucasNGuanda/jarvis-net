@@ -37,7 +37,7 @@ window.CATALOGO.push(
     ["PB02","Probabilidade Condicional",[]],
   ] },
   { id:"GE", area:"mat", letra:"GE", cor:"--mU", nome:"Geometria", desc:"Plana, espacial e analítica.", temas:[
-    ["TG01","Arcos e Ângulos",[]],
+    ["TG01","Arcos e Ângulos",["GP10","GP01"],true],
     ["TG02","Trigonometria no Triângulo Retângulo",[]],
     ["TG03","Ciclo Trigonométrico",[]],
     ["TG04","Introdução às Equações Trigonométricas",[]],
