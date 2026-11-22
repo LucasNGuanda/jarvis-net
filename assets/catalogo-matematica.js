@@ -42,7 +42,7 @@ window.CATALOGO.push(
     ["TG03","Ciclo Trigonométrico",["TG02","TG01"],true],
     ["TG04","Introdução às Equações Trigonométricas",["TG03","TG01"],true],
     ["TG05","Arcos Compostos",["TG03","TG04","GP08"],true],
-    ["TG06","Transformações Trigonométricas",[]],
+    ["TG06","Transformações Trigonométricas",["TG05","TG04","TG03"],true],
     ["TG07","Equações Trigonométricas Avançadas",[]],
     ["TG08","Inequações Trigonométricas",[]],
     ["TG09","Funções Trigonométricas",[]],
