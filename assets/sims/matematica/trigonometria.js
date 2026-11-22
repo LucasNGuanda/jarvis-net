@@ -263,4 +263,56 @@
     function est() { const x = T.aux(a, b); return { a, b, c, R: x.R, alfa: x.alfa, sols: x.R < 1e-12 ? [] : T.linear(a, b, c) }; }
     const poe = (o) => { if (o.a !== undefined) a = +o.a; if (o.b !== undefined) b = +o.b; if (o.c !== undefined) c = +o.c; pa.redesenha(); };
     SIM.tgOnda._ult = { poe, est: () => est(), arrasta: pa.poe }; };
+
+  /* ---------- TG08 ---------- */
+  /* arcos (em graus, percorridos no sentido anti-horário, de < ate) → intervalos dentro de [0°, 360°], em ordem, colando os que se tocam */
+  T.normInts = (arcos) => { let o = []; arcos.forEach(([de, ate]) => { if (ate - de >= 360 - 1e-9) { o.push([0, 360]); return; } while (de < 0) { de += 360; ate += 360; } while (de >= 360) { de -= 360; ate -= 360; } if (ate > 360) { o.push([de, 360]); o.push([0, ate - 360]); } else o.push([de, ate]); });
+    o = o.filter((x) => x[1] - x[0] > 1e-9).sort((x, y) => x[0] - y[0]); const r = []; o.forEach((x) => { const u = r[r.length - 1]; if (u && x[0] <= u[1] + 1e-9) u[1] = Math.max(u[1], x[1]); else r.push(x.slice()); }); return r.map(([a, b]) => [+arr(a).toFixed(6) === 0 && a > 180 ? 360 : +(+a).toFixed(6), +(+b).toFixed(6)]); };
+  /* inequação f(x) op v, com f em "sen", "cos", "tg" e op em ">" ou "<" (os extremos não mudam os arcos): { arcos, ints, total } */
+  T.ineq = (f, op, v) => { let arcos = []; const mai = op[0] === ">";
+    if (f === "tg") { const t = Math.atan(v) / RAD; arcos = mai ? [[t, 90], [t + 180, 270]] : [[-90, t], [90, t + 180]]; }
+    else if (v >= 1 - 1e-12) arcos = mai ? [] : [[0, 360]]; else if (v <= -1 + 1e-12) arcos = mai ? [[0, 360]] : [];
+    else if (f === "sen") { const a = Math.asin(v) / RAD; arcos = mai ? [[a, 180 - a]] : [[180 - a, 360 + a]]; } else { const b = Math.acos(v) / RAD; arcos = mai ? [[-b, b]] : [[b, 360 - b]]; }
+    const ints = T.normInts(arcos); return { arcos, ints, total: +ints.reduce((s, x) => s + x[1] - x[0], 0).toFixed(6) }; };
+  /* interseção de duas listas de intervalos */
+  T.cruza = (A1, B1) => { const o = []; A1.forEach(([a, b]) => B1.forEach(([c, d]) => { const lo = Math.max(a, c), hi = Math.min(b, d); if (hi - lo > 1e-9) o.push([lo, hi]); })); return o.sort((x, y) => x[0] - y[0]); };
+  /* intervalos escritos por extenso; es = símbolo usado nos extremos ("<" ou "≤") */
+  T.intsTxt = (ints, es = "<") => (ints.length ? ints.map(([a, b]) => `${nt(a, 1)}° ${es} x ${es} ${nt(b, 1)}°`).join(" ou ") : "nenhum x");
+  const arcosFig = (C, R, ints, cor) => ints.map(([a, b]) => [C, R, a, b, { cor: cor || "var(--warn)", larg: 7 }]);
+
+  /* nome: "Inequação no ciclo: arraste o valor e veja o arco das soluções" · matéria: Matemática · tema: TG08 */
+  SIM.tgIneq = (el, F) => { const C = [4, 3], R = 2.2, NS = T.VS.sc.map((x) => x[2]), NT = T.VS.tg.map((x) => x[2]); let f = "sen", op = ">", v = 0.5;
+    const pos = () => (f === "sen" ? [C[0], C[1] + R * v] : f === "cos" ? [C[0] + R * v, C[1]] : [C[0] + R, C[1] + R * v]);
+    const pa = G.arrasta(el, { vista: [0, 10, 0, 6], pts: { V: [C[0], C[1] + R * 0.5] }, rot: { V: "" }, ctrls: `<div class="ctrls"><div><div class="bts">${["sen", "cos", "tg"].map((k) => `<button class="bt peq" data-f="${k}">${k} x</button>`).join("")}<button class="bt peq" data-o="&gt;">&gt; valor</button><button class="bt peq" data-o="&lt;">&lt; valor</button></div></div></div>`,
+      limita: (k, p) => { if (f === "cos") v = gruda(Math.max(-1.25, Math.min(1.25, (p[0] - C[0]) / R)), NS); else v = gruda(Math.max(-1.25, Math.min(1.25, (p[1] - C[1]) / R)), f === "sen" ? NS : NT.filter((x) => Math.abs(x) < 1.25)); return pos(); },
+      cena: (P) => { P.V = pos(); const e = est(), segs = [[[C[0] - 2.9, C[1]], [C[0] + 2.9, C[1]], { cor: "var(--ink3)", larg: 1.2 }], [[C[0], 0.2], [C[0], 5.8], { cor: "var(--ink3)", larg: 1.2 }]], pols = [], m = op === ">";
+        if (f === "sen") { segs.push([[C[0] - 2.9, P.V[1]], [C[0] + 2.9, P.V[1]], { cor: "#4c8dff", larg: 1.6, trac: true }]); pols.push({ pts: [[C[0] - 2.9, P.V[1]], [C[0] + 2.9, P.V[1]], [C[0] + 2.9, m ? 5.8 : 0.2], [C[0] - 2.9, m ? 5.8 : 0.2]], cor: "#4c8dff", op: 0.08, larg: 0.1 }); }
+        else if (f === "cos") { segs.push([[P.V[0], 0.2], [P.V[0], 5.8], { cor: "#4c8dff", larg: 1.6, trac: true }]); pols.push({ pts: [[P.V[0], 0.2], [P.V[0], 5.8], [m ? C[0] + 2.9 : C[0] - 2.9, 5.8], [m ? C[0] + 2.9 : C[0] - 2.9, 0.2]], cor: "#4c8dff", op: 0.08, larg: 0.1 }); }
+        else { segs.push([[C[0] + R, 0.2], [C[0] + R, 5.8], { cor: "var(--ink3)", larg: 1, trac: true }]); const d = G.sub(P.V, C), L = Math.hypot(d[0], d[1]); segs.push([G.soma(C, G.esc(d, -2.9 / L)), G.soma(C, G.esc(d, 3.2 / L)), { cor: "#4c8dff", larg: 1.6, trac: true }]); segs.push([P.V, [C[0] + R, m ? 5.8 : 0.2], { cor: "#4c8dff", larg: 4 }]); }
+        const ex = []; e.ints.forEach(([a, b]) => { [a, b].forEach((g) => { if (g > 1e-6 && g < 360 - 1e-6) ex.push(g); }); });
+        return { circs: [[C, R, { cor: "var(--mod)", op: 0.05 }]], pols, segs, arcos: arcosFig(C, R, e.ints), pts: [...new Set(ex.map((g) => +g.toFixed(4)))].map((g) => [G.polar(C, R, g), G.gr(g), { pos: G.fora(G.polar(C, R, g), C, 24), r: 4.5, cor: "var(--warn)" }]), txt: [[[8.5, 5.3], `${f} x ${op} ${nt(v, 3)}`, { f: 13, w: 700 }], [[8.5, 4.8], e.total >= 360 - 1e-6 ? "todo x serve" : e.total < 1e-6 ? "nenhum x serve" : `arco de ${G.gr(e.total)} no total`, { f: 11, cor: "var(--ink2)" }]] }; },
+      leitor: () => { const e = est(); return vis("inequação", `${f} x ${op} ${nt(v, 3)}`) + vis("solução de 0° a 360°", e.total >= 360 - 1e-6 ? "todos os ângulos" : T.intsTxt(e.ints)) + vis("medida total dos arcos", G.gr(e.total)) + vis("fração da volta", nt(e.total / 360, 3)); },
+      status: () => { const e = est(), m = op === ">"; const como = f === "sen" ? `O seno é a ordenada: a inequação pede os pontos do ciclo <b>${m ? "acima" : "abaixo"}</b> da reta horizontal (a região azul).` : f === "cos" ? `O cosseno é a abscissa: a inequação pede os pontos do ciclo <b>à ${m ? "direita" : "esquerda"}</b> da reta vertical (a região azul).` : `A tangente é lida na reta vertical da direita: a inequação pede os arcos cuja reta pela origem chega a essa reta <b>${m ? "acima" : "abaixo"}</b> do valor (o trecho azul grosso). Em 90° e 270° a tangente não existe, e esses pontos nunca entram.`;
+        return `Arraste o ponto para mudar o valor e use os botões para trocar a função e o sentido. ${como} A resposta de uma inequação é um <b>arco</b> (em laranja), e não pontos soltos: os extremos do arco são as soluções da <b>equação</b> correspondente. Agora: ${e.total >= 360 - 1e-6 ? "o ciclo inteiro serve" : e.total < 1e-6 ? "nenhum ponto do ciclo serve" : T.intsTxt(e.ints) + " (mais voltas inteiras)"}.`; } });
+    function est() { return Object.assign({ f, op, v }, T.ineq(f, op, v)); }
+    const poe = (o) => { if (o.f) f = o.f; if (o.op) op = o.op; if (o.v !== undefined) v = +o.v; el.querySelectorAll("[data-f]").forEach((b) => b.classList.toggle("on", b.dataset.f === f)); el.querySelectorAll("[data-o]").forEach((b) => b.classList.toggle("on", b.dataset.o === op)); pa.redesenha(); };
+    el.querySelectorAll("[data-f]").forEach((b) => b.addEventListener("click", () => poe({ f: b.dataset.f, v: Math.max(-1.25, Math.min(1.25, v)) }))); el.querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => poe({ op: b.dataset.o }))); poe({});
+    SIM.tgIneq._ult = { poe, est: () => est(), arrasta: pa.poe }; };
+
+  /* nome: "Entre dois valores: a faixa que corta o ciclo" · matéria: Matemática · tema: TG08 */
+  SIM.tgFaixa = (el, F) => { const C = [5, 3], R = 2.2, NS = T.VS.sc.map((x) => x[2]); let f = "sen", v1 = 0.5, v2 = Math.sqrt(3) / 2;
+    const pos = (v) => (f === "sen" ? [C[0], C[1] + R * v] : [C[0] + R * v, C[1]]);
+    const pa = G.arrasta(el, { vista: [0, 10, 0, 6], pts: { A: [C[0], C[1] + R * 0.5], B: [C[0], C[1] + R * Math.sqrt(3) / 2] }, rot: { A: "", B: "" }, ctrls: `<div class="ctrls"><div><div class="bts">${["sen", "cos"].map((k) => `<button class="bt peq" data-f="${k}">a &lt; ${k} x &lt; b</button>`).join("")}</div></div></div>`,
+      limita: (k, p) => { const w = gruda(Math.max(-1.2, Math.min(1.2, f === "sen" ? (p[1] - C[1]) / R : (p[0] - C[0]) / R)), NS); if (k === "A") v1 = w; else v2 = w; return pos(w); },
+      cena: (P) => { P.A = pos(v1); P.B = pos(v2); const e = est(), lo = e.lo, hi = e.hi, segs = [[[C[0] - 2.9, C[1]], [C[0] + 2.9, C[1]], { cor: "var(--ink3)", larg: 1.2 }], [[C[0], 0.2], [C[0], 5.8], { cor: "var(--ink3)", larg: 1.2 }]], ex = [];
+        const banda = f === "sen" ? [[C[0] - 2.9, C[1] + R * lo], [C[0] + 2.9, C[1] + R * lo], [C[0] + 2.9, C[1] + R * hi], [C[0] - 2.9, C[1] + R * hi]] : [[C[0] + R * lo, 0.2], [C[0] + R * hi, 0.2], [C[0] + R * hi, 5.8], [C[0] + R * lo, 5.8]];
+        [lo, hi].forEach((w) => segs.push(f === "sen" ? [[C[0] - 2.9, C[1] + R * w], [C[0] + 2.9, C[1] + R * w], { cor: "#4c8dff", larg: 1.4, trac: true }] : [[C[0] + R * w, 0.2], [C[0] + R * w, 5.8], { cor: "#4c8dff", larg: 1.4, trac: true }]));
+        e.ints.forEach(([a, b]) => [a, b].forEach((g) => { if (g > 1e-6 && g < 360 - 1e-6) ex.push(+g.toFixed(4)); }));
+        return { circs: [[C, R, { cor: "var(--mod)", op: 0.05 }]], pols: [{ pts: banda, cor: "#4c8dff", op: 0.1, larg: 0.1 }], segs, arcos: arcosFig(C, R, e.ints), pts: [...new Set(ex)].map((g) => [G.polar(C, R, g), G.gr(g), { pos: G.fora(G.polar(C, R, g), C, 24), r: 4, cor: "var(--warn)" }]), txt: [[[8.9, 5.3], `${nt(lo, 3)} < ${f} x < ${nt(hi, 3)}`, { f: 12, w: 700 }], [[8.9, 4.85], `${e.ints.length} arco${e.ints.length === 1 ? "" : "s"}, ${G.gr(e.total)} no total`, { f: 10, cor: "var(--ink2)" }]] }; },
+      leitor: () => { const e = est(); return vis("inequação dupla", `${nt(e.lo, 3)} < ${f} x < ${nt(e.hi, 3)}`) + vis("solução de 0° a 360°", T.intsTxt(e.ints)) + vis("medida total", G.gr(e.total)); },
+      status: () => { const e = est(); return `Arraste os dois pontos: eles marcam os valores a e b. A inequação dupla ${nt(e.lo, 3)} &lt; ${f} x &lt; ${nt(e.hi, 3)} pede os pontos do ciclo <b>dentro da faixa</b> azul. Ela é a <b>interseção</b> de duas inequações simples (${f} x &gt; ${nt(e.lo, 3)} e ${f} x &lt; ${nt(e.hi, 3)}): fica só o que serve para as duas. ${e.ints.length ? `Agora a faixa corta o ciclo em ${e.ints.length} arco${e.ints.length === 1 ? "" : "s"}: ${T.intsTxt(e.ints)}.` : "Agora a faixa não toca o ciclo: não há solução."} Repare que, para o ${f === "sen" ? "seno, os arcos são simétricos em relação ao eixo vertical" : "cosseno, os arcos são simétricos em relação ao eixo horizontal"}.`; } });
+    function est() { const lo = Math.min(v1, v2), hi = Math.max(v1, v2), ints = T.cruza(T.ineq(f, ">", lo).ints, T.ineq(f, "<", hi).ints); return { f, lo, hi, ints, total: +ints.reduce((s, x) => s + x[1] - x[0], 0).toFixed(6) }; }
+    const poe = (o) => { if (o.f) f = o.f; if (o.v1 !== undefined) v1 = +o.v1; if (o.v2 !== undefined) v2 = +o.v2; el.querySelectorAll("[data-f]").forEach((b) => b.classList.toggle("on", b.dataset.f === f)); pa.redesenha(); };
+    el.querySelectorAll("[data-f]").forEach((b) => b.addEventListener("click", () => poe({ f: b.dataset.f }))); poe({});
+    SIM.tgFaixa._ult = { poe, est: () => est(), arrasta: pa.poe }; };
 })();

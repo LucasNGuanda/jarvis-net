@@ -44,7 +44,7 @@ window.CATALOGO.push(
     ["TG05","Arcos Compostos",["TG03","TG04","GP08"],true],
     ["TG06","Transformações Trigonométricas",["TG05","TG04","TG03"],true],
     ["TG07","Equações Trigonométricas Avançadas",["TG04","TG05","TG06"],true],
-    ["TG08","Inequações Trigonométricas",[]],
+    ["TG08","Inequações Trigonométricas",["TG04","TG03","TG07"],true],
     ["TG09","Funções Trigonométricas",[]],
     ["TG10","Funções Trigonométricas Inversas",[]],
     ["TG11","Desigualdades Trigonométricas",[]],

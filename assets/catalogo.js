@@ -1,7 +1,7 @@
 /* Catálogo de módulos e temas, na ordem de estudo.
    pronto:true = o arquivo temas/<cod>.js existe.
    marcas: ★ cai muito | ! difícil | !! muito difícil | ? confuso | ∫ cálculo | ITA | RU */
-window.VERSAO = "α 2.0";
+window.VERSAO = "α 2.1";
 /* Áreas (abas do topo). Cada área pertence a uma matéria (assets/materias.js); o topo mostra só as abas da matéria atual.
    inicio = rota da página inicial da aba; anim = desenho da página inicial (em app.js, F.ANIM); icone = SVG da aba. */
 window.AREAS = [
